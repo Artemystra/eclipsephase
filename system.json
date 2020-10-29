@@ -24,6 +24,6 @@
   "secondaryTokenAttribute": "power",
   "url": "https://github.com/DerDiemen/eclipsephase",
   "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/master/system.json",
-  "download": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT",
+  "download": "https://github.com/DerDiemen/eclipsephase/archive/master.zip",
   "license": "LICENSE.txt"
 }
