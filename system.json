@@ -23,7 +23,7 @@
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "power",
   "url": "",
-  "manifest": "",
-  "download": "",
+  "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/blob/master/system.json",
+  "download": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT",
   "license": "LICENSE.txt"
 }
