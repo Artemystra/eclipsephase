@@ -257,19 +257,28 @@
 }
 
 .input-small {
-  max-width: 40px;
+  max-width: 40px!important;
   height: 26px;
-  margin: 0 0.2em 0 0em!important;
 }
 
 .input-medium {
-  max-width: 60px;
-  margin: 0 0.2em 0 0em!important;
+  max-width: 60px!important;
 }
 
 .input-large {
-  max-width: 150px;
+  max-width: 100px!important;
+}
+
+.input-XL {
+  max-width: 180px!important;
+}
+
+.item-standard-margin {
   margin: 0 0.2em 0 0em!important;
+}
+
+.item-standard-margin-large {
+  margin: 0 1em!important;
 }
 
 .skills {
