@@ -101,24 +101,7 @@
             </div>
             <h2 class="topMargin">Special Skills</h2>
             <div class="skills grid grid-2col">
-               {{!--  {{#each data.specSkill as |skill key|}}
-                <div class="flexrow flex-group-center">
-                    <label class="resource-label input-medium rollable" data-roll="d100" data-label="rolls a {{key}} check">roll</label>
-                    <input type="text" name="data.specSkill.{{key}}.skillName" value="{{skillName}}"/>
-                    <input class="input-small" type="text" name="data.specSkill.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
-                    <select  class="selectrace"  name="data.race.value"  data-type="String">
 
-                        {{#select actor.data.specSkill.{{key}}.aptitude}}
-
-                        {{#each actor.data.data.specSkill.{{key}}.aptitude as |aptitude key|}}
-
-                        <option  value="{{key}}">{{race.label}}</option> {{/each}} {{/select}}
-
-                    </select>
-                    <span class="resource-label input-small">{{numberFormat skill.derived decimals=0}}</span>
-                </div>
-                {{/each}}
-            </div> --}}
         </div>
 
         {{!-- Owned Items Tab --}}
