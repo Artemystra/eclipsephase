@@ -276,6 +276,11 @@
   margin-bottom: 30px;
 }
 
+.roll-label {
+  max-width: 26px;
+  max-height: 26px;
+}
+
 .icon-small {
   height: 30px;
   border: none;
