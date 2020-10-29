@@ -67,7 +67,7 @@
         <div class="skills grid grid-2col">
             {{#each data.skillsIns as |skill key|}}
             <div class="flexrow flex-group-center">
-                <span class="resource-label input-small">{{key}}</span>
+                <span class="resource-label input-large">{{key}}</span>
                 <input class="input-small" type="text" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                 <span class="resource-label input-small">{{numberFormat skill.derived decimals=0}}</span>
                 <label for="data.skillsIns.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="rolls a {{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
@@ -80,7 +80,7 @@
             <div class="skills grid grid-2col">
                 {{#each data.skillsMox as |skill key|}}
                 <div class="flexrow flex-group-center">
-                    <span class="resource-label input-small">{{key}}</span>
+                    <span class="resource-label input-large">{{key}}</span>
                     <input class="input-small" type="text" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label input-small">{{numberFormat skill.derived decimals=0}}</span>
                     <label for="data.skillsMox.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="rolls a {{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
@@ -93,7 +93,7 @@
             <div class="skills grid grid-2col">
                 {{#each data.skillsVig as |skill key|}}
                 <div class="flexrow flex-group-center">
-                    <span class="resource-label input-small">{{key}}</span>
+                    <span class="resource-label input-large">{{key}}</span>
                     <input class="input-small" type="text" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label input-small">{{numberFormat skill.derived decimals=0}}</span>
                     <label for="data.skillsVig.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="rolls a {{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
