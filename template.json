@@ -1,0 +1,185 @@
+{
+  "Actor": {
+    "types": ["character","npc"],
+    "templates": {
+      "base": {
+        "mental": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "physical": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        }
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "biography": "",
+      "attributes": {
+        "level": {
+          "value": 1
+        }
+      },
+      "aptitudes": {
+        "cog": {
+          "value": 0
+        },
+        "int": {
+          "value": 0
+        },
+        "ref": {
+          "value": 0
+        },
+        "sav": {
+          "value": 0
+        },
+        "som": {
+          "value": 0
+        },
+        "wil": {
+          "value": 0
+        }
+      },
+      "skillsIns" : {
+        "infosec" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "interface" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "perceive" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "program" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "research" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "survival" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        }
+      },
+      "skillsMox" : {
+        "deceive" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "kniesics" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "persuade" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "provoke" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "psi" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        }
+      },
+      "skillsVig" : {
+        "athletics" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "fray" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "free fall" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "guns" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "infiltrate" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        },
+        "melee" : {
+          "value" :0,
+          "specname" : "",
+          "spec" : false
+        }
+      },
+      "pools" : {
+        "insight" : {
+          "value" :0
+        },
+        "moxie" : {
+          "value" :0
+        },
+        "vigor" : {
+          "value" :0
+        },
+        "flex" : {
+          "value" :0
+        }
+      },
+      "specSkill" : {
+        "special1": {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : ""
+        }
+      },
+      "knowSkill" : {
+        "skillName" : "",
+        "value" : 0,
+        "aptitude" : ["cognition", "intuition"]
+      }
+    }
+  },
+  "Item": {
+    "types": ["item", "feature", "spell"],
+    "templates": {
+      "base": {
+        "description": ""
+      }
+    },
+    "item": {
+      "templates": ["base"],
+      "quantity": 1,
+      "weight": 0
+    },
+    "feature": {
+      "templates": ["base"]
+    },
+    "spell": {
+      "templates": ["base"],
+      "spellLevel": 1
+    }
+  }
+}
