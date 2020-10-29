@@ -35,9 +35,9 @@
           <div class="abilities grid grid-3col">
             {{#each data.aptitudes as |aptitude key|}}
               <div class="abilities flexrow flex-group-center">
-                <label for="data.aptitudes.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="a {{key}} check">{{key}}</label>
+                 <span class="resource-label">{{key}}</span>
                 <input type="text" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number"/>
-                  <span class="resource-label">{{numberFormat aptitude.mod decimals=0}}</span>
+                <label for="data.aptitudes.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="a {{key}} check against {{aptitude.mod}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
               </div>
             {{/each}}
           </div>
@@ -67,11 +67,12 @@
         <div class="skills grid grid-2col">
             {{#each data.skillsIns as |skill key|}}
             <div class="flexrow flex-group-center">
-                <label for="data.skillsIns.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="rolls a {{key}} check">{{key}}</label>
-                <input class="input-small" type="text" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                <span class="resource-label input-small">{{key}}</span>
+                <input class="input-small" type="text" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                 <span class="resource-label input-small">{{numberFormat skill.derived decimals=0}}</span>
-                <label class="resource-label input-medium rollable" data-roll="d100" data-label="rolls a {{key}} {{specname}} check">SPEC</label>
-                <input type="text" name="data.skillsIns.{{key}}.specname" value="{{specname}}"/>
+                <label for="data.skillsIns.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="rolls a {{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                <input type="text" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                <label class="resource-label input-medium rollable" data-roll="d100" data-label="rolls a {{key}} {{specname}} check against {{skill.specialized}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
             </div>
             {{/each}}
         </div>
@@ -79,11 +80,12 @@
             <div class="skills grid grid-2col">
                 {{#each data.skillsMox as |skill key|}}
                 <div class="flexrow flex-group-center">
-                    <label for="data.skillsMox.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="rolls a {{key}} check">{{key}}</label>
-                    <input class="input-small" type="text" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                    <span class="resource-label input-small">{{key}}</span>
+                    <input class="input-small" type="text" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label input-small">{{numberFormat skill.derived decimals=0}}</span>
-                    <label class="resource-label input-medium rollable" data-roll="d100" data-label="rolls a {{key}} {{specname}} check">SPEC</label>
-                    <input type="text" name="data.skillsMox.{{key}}.specname" value="{{specname}}"/>
+                    <label for="data.skillsMox.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="rolls a {{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <input type="text" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                    <label class="resource-label input-medium rollable" data-roll="d100" data-label="rolls a {{key}} {{specname}} check against {{skill.specialized}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
             </div>
@@ -91,11 +93,12 @@
             <div class="skills grid grid-2col">
                 {{#each data.skillsVig as |skill key|}}
                 <div class="flexrow flex-group-center">
-                    <label for="data.skillsVig.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="rolls a {{key}} check">{{key}}</label>
-                    <input class="input-small" type="text" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                    <span class="resource-label input-small">{{key}}</span>
+                    <input class="input-small" type="text" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label input-small">{{numberFormat skill.derived decimals=0}}</span>
-                    <label class="resource-label input-medium rollable" data-roll="d100" data-label="rolls a {{key}} {{specname}} check">SPEC</label>
-                    <input type="text" name="data.skillsVig.{{key}}.specname" value="{{specname}}"/>
+                    <label for="data.skillsVig.{{key}}.value" class="resource-label rollable" data-roll="d100" data-label="rolls a {{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <input type="text" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                    <label class="resource-label input-medium rollable" data-roll="d100" data-label="rolls a {{key}} {{specname}} check against {{skill.specialized}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
             </div>
@@ -103,10 +106,10 @@
             <div class="skills grid grid-2col">
                 {{#each data.specSkills as |skill key|}}
                 <div class="flexrow flex-group-center">
-                    <label for="data.specSkills.{{key}}.value" class="rollable input-small" data-roll="d100" data-label="rolls a {{key}} check"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                     <input class="input-large" type="text" name="data.specSkills.{{key}}.skillName" value="{{skill.skillName}}" placeholder="Skill name"/>
-                    <input class="input-small" type="text" name="data.specSkills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
-                    <input class="input-small" type="text" name="data.specSkills.{{key}}.aptitude" value="{{skill.aptitude}}" data-dtype="Number"/>
+                    <input class="input-small" type="text" name="data.specSkills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                    <input class="input-small" type="text" name="data.specSkills.{{key}}.aptitude" value="{{skill.aptitude}}" data-dtype="Number" placeholder="0"/>
+                    <label for="data.specSkills.{{key}}.value" class="rollable" data-roll="d100" data-label="rolls a {{key}} check"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
             </div>
@@ -114,10 +117,10 @@
             <div class="skills grid grid-2col">
                 {{#each data.knowSkills as |skill key|}}
                 <div class="flexrow flex-group-center">
-                    <label for="data.knowSkills.{{key}}.value" class="rollable input-small" data-roll="d100" data-label="rolls a {{key}} check"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                     <input class="input-large" type="text" name="data.knowSkills.{{key}}.skillName" value="{{skill.skillName}}" placeholder="Skill name"/>
-                    <input class="input-small" type="text" name="data.knowSkills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
-                    <input class="input-small" type="text" name="data.knowSkills.{{key}}.aptitude" value="{{skill.aptitude}}" data-dtype="Number"/>
+                    <input class="input-small" type="text" name="data.knowSkills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                    <input class="input-small" type="text" name="data.knowSkills.{{key}}.aptitude" value="{{skill.aptitude}}" data-dtype="Number" placeholder="0"/>
+                    <label for="data.knowSkills.{{key}}.value" class="rollable" data-roll="d100" data-label="rolls a {{key}} check"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
             </div>

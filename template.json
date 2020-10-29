@@ -4,14 +4,14 @@
     "templates": {
       "base": {
         "mental": {
-          "value": 0,
-          "min": 0,
-          "max": 0
+          "value": null,
+          "min": null,
+          "max": null
         },
         "physical": {
-          "value": 0,
-          "min": 0,
-          "max": 0
+          "value": null,
+          "min": null,
+          "max": null
         }
       }
     },
@@ -25,211 +25,211 @@
       },
       "aptitudes": {
         "cog": {
-          "value": 0
+          "value": null
         },
         "int": {
-          "value": 0
+          "value": null
         },
         "ref": {
-          "value": 0
+          "value": null
         },
         "sav": {
-          "value": 0
+          "value": null
         },
         "som": {
-          "value": 0
+          "value": null
         },
         "wil": {
-          "value": 0
+          "value": null
         }
       },
       "skillsIns" : {
         "infosec" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "interface" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "perceive" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "program" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "research" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "survival" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         }
       },
       "skillsMox" : {
         "deceive" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "kniesics" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "persuade" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "provoke" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "psi" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         }
       },
       "skillsVig" : {
         "athletics" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "fray" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "free fall" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "guns" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "infiltrate" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         },
         "melee" : {
-          "value" :0,
+          "value" :null,
           "specname" : "",
           "spec" : false
         }
       },
       "pools" : {
         "insight" : {
-          "value" :0
+          "value" :null
         },
         "moxie" : {
-          "value" :0
+          "value" :null
         },
         "vigor" : {
-          "value" :0
+          "value" :null
         },
         "flex" : {
-          "value" :0
+          "value" :null
         }
       },
       "specSkills" : {
         "special1": {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "special2": {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "special3": {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "special4": {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "special5": {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "special6": {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         }
       },
       "knowSkills" : {
         "know1" : {
           "skillName" : "",
           "value" : null,
-          "aptitude" : 0
+          "aptitude" : null
         },
         "know2" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "know3" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "know4" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "know5" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "know6" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "know7" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "know8" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
         "know9" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         },
-        "know10" : {
+        "know1null" : {
           "skillName" : "",
-          "value" : 0,
-          "aptitude" : 0
+          "value" : null,
+          "aptitude" : null
         }
       }
     }
@@ -244,7 +244,7 @@
     "item": {
       "templates": ["base"],
       "quantity": 1,
-      "weight": 0
+      "weight": null
     },
     "feature": {
       "templates": ["base"]

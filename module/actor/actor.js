@@ -31,25 +31,31 @@ export class EclipsePhaseActor extends Actor {
     for (let [key, skill] of Object.entries(data.skillsIns)) {
       if(key === 'program' || key === 'interface' || key === 'infosec' ){
         skill.derived = skill.value + data.aptitudes.cog.value;
+        skill.specialized = skill.derived + 10;
       }
       else {
         skill.derived = skill.value + data.aptitudes.int.value;
+        skill.specialized = skill.derived + 10;
       }
     }
     for (let [key, skill] of Object.entries(data.skillsMox)) {
       if(key === 'provoke' || key === 'persuade' || key === 'kinesics' || key === 'deceive' ){
         skill.derived = skill.value + data.aptitudes.sav.value;
+        skill.specialized = skill.derived + 10;
       }
       else {
         skill.derived = skill.value + data.aptitudes.wil.value;
+        skill.specialized = skill.derived + 10;
       }
     }
     for (let [key, skill] of Object.entries(data.skillsVig)) {
       if(key === 'athletics' || key === 'free fall' || key === 'melee' ){
         skill.derived = skill.value + data.aptitudes.som.value;
+        skill.specialized = skill.derived + 10;
       }
       else {
         skill.derived = skill.value + data.aptitudes.ref.value;
+        skill.specialized = skill.derived + 10;
       }
     }
   }
