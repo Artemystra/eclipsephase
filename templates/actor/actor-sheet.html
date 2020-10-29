@@ -101,8 +101,26 @@
             </div>
             <h2 class="topMargin">Special Skills</h2>
             <div class="skills grid grid-2col">
-
-        </div>
+                {{#each data.specSkills as |skill key|}}
+                <div class="flexrow flex-group-center">
+                    <label for="data.specSkills.{{key}}.value" class="rollable input-small" data-roll="d100" data-label="rolls a {{key}} check"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <input class="input-large" type="text" name="data.specSkills.{{key}}.skillName" value="{{skill.skillName}}" placeholder="Skill name"/>
+                    <input class="input-small" type="text" name="data.specSkills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                    <input class="input-small" type="text" name="data.specSkills.{{key}}.aptitude" value="{{skill.aptitude}}" data-dtype="Number"/>
+                </div>
+                {{/each}}
+            </div>
+            <h2 class="topMargin">Know Skills</h2>
+            <div class="skills grid grid-2col">
+                {{#each data.knowSkills as |skill key|}}
+                <div class="flexrow flex-group-center">
+                    <label for="data.knowSkills.{{key}}.value" class="rollable input-small" data-roll="d100" data-label="rolls a {{key}} check"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <input class="input-large" type="text" name="data.knowSkills.{{key}}.skillName" value="{{skill.skillName}}" placeholder="Skill name"/>
+                    <input class="input-small" type="text" name="data.knowSkills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                    <input class="input-small" type="text" name="data.knowSkills.{{key}}.aptitude" value="{{skill.aptitude}}" data-dtype="Number"/>
+                </div>
+                {{/each}}
+            </div>
 
         {{!-- Owned Items Tab --}}
         <div class="tab items" data-group="primary" data-tab="items">

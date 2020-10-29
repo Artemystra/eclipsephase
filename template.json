@@ -148,17 +148,89 @@
           "value" :0
         }
       },
-      "specSkill" : {
+      "specSkills" : {
         "special1": {
           "skillName" : "",
           "value" : 0,
-          "aptitude" : ""
+          "aptitude" : 0
+        },
+        "special2": {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "special3": {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "special4": {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "special5": {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "special6": {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
         }
       },
-      "knowSkill" : {
-        "skillName" : "",
-        "value" : 0,
-        "aptitude" : ["cognition", "intuition"]
+      "knowSkills" : {
+        "know1" : {
+          "skillName" : "",
+          "value" : null,
+          "aptitude" : 0
+        },
+        "know2" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know3" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know4" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know5" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know6" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know7" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know8" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know9" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        },
+        "know10" : {
+          "skillName" : "",
+          "value" : 0,
+          "aptitude" : 0
+        }
       }
     }
   },

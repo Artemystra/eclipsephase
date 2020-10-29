@@ -258,12 +258,26 @@
 
 .input-small {
   max-width: 40px;
+  margin: 0 1em 0 0.5em!important;
 }
 
 .input-medium {
   max-width: 60px;
+  margin: 0 1em 0 0.5em!important;
+}
+
+.input-large {
+  max-width: 200px;
+  margin: 0 1em 0 0.5em!important;
 }
 
 .skills {
   margin-bottom: 30px;
+}
+
+.icon-small {
+  width: 2.2em;
+  border: none;
+  fill: #AAAAAA;
+  align-self: center!important;
 }
