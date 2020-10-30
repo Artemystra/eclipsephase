@@ -49,8 +49,8 @@
         {{!--<a class="item" data-tab="description">Description</a>--}}
         <a class="item" data-tab="skills">Skills</a>
         <a class="item" data-tab="body">Body & Mods</a>
-        <a class="item" data-tab="features">Gear</a>
-        <a class="item" data-tab="spells">Psi</a>
+        <a class="item" data-tab="gear">Gear</a>
+        <a class="item" data-tab="psi">Psi</a>
     </nav>
 
     {{!-- Sheet Body --}}
@@ -124,81 +124,31 @@
                 </div>
                 {{/each}}
             </div>
-
-        {{!-- Owned Items Tab --}}
-        <div class="tab items" data-group="primary" data-tab="items">
-            <ol class="items-list">
-                <li class="item flexrow item-header">
-                  <div class="item-image"></div>
-                  <div class="item-name">Name</div>
-                  <div class="item-controls">
-                    <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
-                  </div>
-                </li>
-            {{#each actor.gear as |item id|}}
-                <li class="item flexrow" data-item-id="{{item._id}}">
-                    <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <h4 class="item-name">{{item.name}}</h4>
-                    <div class="item-controls">
-                        <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                    </div>
-                </li>
-            {{/each}}
-            </ol>
         </div>
-
-        {{!-- Owned Features Tab --}}
-        <div class="tab features" data-group="primary" data-tab="features">
-            <ol class="items-list">
-                <li class="item flexrow item-header">
-                  <div class="item-image"></div>
-                  <div class="item-name">Name</div>
-                  <div class="item-controls">
-                    <a class="item-control item-create" title="Create item" data-type="feature"><i class="fas fa-plus"></i> Add item</a>
-                  </div>
-                </li>
-            {{#each actor.features as |item id|}}
-                <li class="item flexrow" data-item-id="{{item._id}}">
-                    <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <h4 class="item-name">{{item.name}}</h4>
-                    <div class="item-controls">
-                        <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                    </div>
-                </li>
-            {{/each}}
-            </ol>
-        </div>
-
-        {{!-- Owned Spells Tab --}}
-        <div class="tab spells" data-group="primary" data-tab="spells">
-            <ol class="items-list">
-                <li class="item flexrow item-header">
-                  <div class="item-image"></div>
-                  <div class="item-name">Name</div>
-                  <div class="item-controls"></div>
-                </li>
-                {{#each actor.spells as |spells spellLevel|}}
-                    <li class="item flexrow item-header">
-                      <div class="item-name">Level {{spellLevel}} Spells</div>
-                      <div class="item-controls">
-                        <a class="item-control item-create" title="Create item" data-type="spell" data-spell-level="{{spellLevel}}"><i class="fas fa-plus"></i> Add LVL {{spellLevel}}</a>
-                      </div>
+        {{!-- Psi Tab --}}
+        <div class="tab" data-group="primary" data-tab="psi">
+            <h2>PSI Aspects</h2>
+            <div class="skills grid grid-2col">
+                <ol>
+                {{#each data.psiAspects as |aspect key|}}
+                    <li>
+                        <div class="aspect"><input class="item-standard-margin input-XL" type="text" name="data.psiAspects.{{key}}.name" value="{{aspect.name}}" placeholder="Aspect name"/></div>
+                        <div class="aspect"><strong>+<input class="item-standard-margin input-small" type="text" name="data.psiAspects.{{key}}.infection" value="{{aspect.infection}}" placeholder="0" data-dtype="Number"/></strong></div>
+                        <div class="aspect aspectDescription">{{editor content=aspect.description target="aspect.description" button=true owner=owner editable=editable}}</div>
                     </li>
-                    {{#each spells as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <div class="item-controls">
-                                <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
                 {{/each}}
-            </ol>
+                </ol>
+            </div>
         </div>
+        {{!-- {{#each data.psiAspects as |aspect key|}}
+            <ol>
+                <li>
+                    <div class="aspect aspectName"><input class="item-standard-margin input-XL" type="text" name="data.psiAspects.{{key}}.name" value="{{aspect.name}}" placeholder="Aspect name"/></div>
+                    <div class="aspect infectionAddendum"><strong>+<input class="item-standard-margin input-small" type="text" name="data.psiAspects.{{key}}.infection" value="{{aspect.infection}}" placeholder="0" data-dtype="Number"/></strong></div>
+                    <div class="aspect aspectDescription">{{editor content=data.psiAspects.{{key}}.infection target="data.psiAspects.{{key}}.infection" button=true owner=owner editable=editable}}</div>
+                </li>
+            </ol>
+            {{/each}} --}}
 
     </section>
 </form>

@@ -231,6 +231,293 @@
           "value" : null,
           "aptitude" : null
         }
+      },
+      "rangedWeapons" : {
+        "weapon1": {
+          "name": "",
+          "firingMode": "",
+          "range": "",
+          "ammo": "",
+          "dv": "",
+          "notes": ""
+        },
+        "weapon2": {
+          "name": "",
+          "firingMode": "",
+          "range": "",
+          "ammo": "",
+          "dv": "",
+          "notes": ""
+        },
+        "weapon3": {
+          "name": "",
+          "firingMode": "",
+          "range": "",
+          "ammo": "",
+          "dv": "",
+          "notes": ""
+        }
+      },
+      "CCWeapons" : {
+        "weapon1" : {
+          "name" : "",
+          "dv" : ""
+        },
+        "weapon2" : {
+          "name" : "",
+          "dv" : ""
+        }
+      },
+      "body": {
+        "morph1": {
+          "name": "",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex":  null,
+          "movement": null,
+          "morphWare": "",
+          "morphTraits": ""
+        },
+        "morph2": {
+          "name": "",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex":  null,
+          "movement": null,
+          "morphWare": "",
+          "morphTraits": ""
+        },
+        "morph3": {
+          "name": "",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex":  null,
+          "movement": null,
+          "morphWare": "",
+          "morphTraits": ""
+        },
+        "morph4": {
+          "name": "",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex":  null,
+          "movement": null,
+          "morphWare": "",
+          "morphTraits": ""
+        },
+        "morph5": {
+          "name": "",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex":  null,
+          "movement": null,
+          "morphWare": "",
+          "morphTraits": ""
+        },
+        "morph6": {
+          "name": "",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex":  null,
+          "movement": null,
+          "morphWare": "",
+          "morphTraits": ""
+        }
+      },
+      "armor": {
+        "armor1": {
+          "name": "",
+          "energy": "",
+          "kinetic": ""
+        },
+        "armor2": {
+          "name": "",
+          "energy": "",
+          "kinetic": ""
+        },
+        "armor3": {
+          "name": "",
+          "energy": "",
+          "kinetic": ""
+        }
+      },
+      "psiStrain": {
+        "name": "",
+        "strainType": "",
+        "description": ""
+      },
+      "strainInfluence": {
+        "description": ""
+      },
+      "psiAspects": {
+        "aspect1": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+      "aspect2": {
+        "name": "",
+        "infection": null,
+        "description": ""
+        },
+        "aspect3": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect4": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect5": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect6": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect7": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect8": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect9": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect10": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect11": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect12": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect13": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect14": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect15": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect16": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect17": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect18": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect19": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect20": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect21": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect22": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect23": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect24": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect25": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect26": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect27": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect28": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect29": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        },
+        "aspect30": {
+          "name": "",
+          "infection": null,
+          "description": ""
+        }
       }
     }
   },

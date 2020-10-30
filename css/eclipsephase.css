@@ -296,3 +296,17 @@
   fill: #AAAAAA;
   margin: 0 0.3em!important;
 }
+
+.aspect {
+  display: inline-block;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 86px;
+  flex: 0 0 86px;
+  text-align: left;
+}
+
+.aspectDescription {
+  min-height: 30px;
+  min-width: 300px;
+  background-color: deeppink;
+}
