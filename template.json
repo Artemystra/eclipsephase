@@ -365,7 +365,24 @@
         "description": ""
       },
       "strainInfluence": {
-        "description": ""
+        "influence1": {
+          "description": "Physical Damage. Take 1d6"
+        },
+        "influence2": {
+          "description": ""
+        },
+        "influence3": {
+          "description": ""
+        },
+        "influence4": {
+          "description": ""
+        },
+        "influence5": {
+          "description": ""
+        },
+        "influence6": {
+          "description": ""
+        }
       },
       "psiAspects": {
         "aspect1": {

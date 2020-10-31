@@ -127,30 +127,29 @@
         </div>
         {{!-- Psi Tab --}}
         <div class="tab" data-group="primary" data-tab="psi">
-            <h2>PSI Aspects</h2>
-            <div class="skills grid grid-1col">
+            <h2>PSI Strain</h2>
+            <div class="grid">
                 <ol>
-                {{#each data.psiAspects as |aspect key|}}
-                    <li>
-                        <div class="aspect"><input class="item-standard-margin input-XL" type="text" name="data.psiAspects.{{key}}.name" value="{{aspect.name}}" placeholder="Aspect name"/></div>
-                        <div class="aspect"><strong>+<input class="item-standard-margin input-small" type="text" name="data.psiAspects.{{key}}.infection" value="{{aspect.infection}}" placeholder="0" data-dtype="Number"/></strong></div>
-                        <div class="aspect aspectDescription"><textarea id="aspect_description" name="data.psiAspects.{{key}}.description" rows="4" cols="60">{{aspect.description}}</textarea></div>
-                    </li>
+                    <li><input class="skills" type="text" name="data.psiStrain.name" value="{{data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
+                    <li><textarea id="aspect_description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.psiStrain.description}}</textarea></li>
+                </ol>
+                <ol>
+                {{#each data.strainInfluence as |influence key|}}
+                    <li><div class="aspectDescription"><textarea id="aspect_description" name="data.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
                 {{/each}}
                 </ol>
             </div>
+            <h2>PSI Aspects</h2>
+            <div class="grid">
+                {{#each data.psiAspects as |aspect key|}}
+                <div class="flexrow flex-between aspectContainer">
+                        <div class="item-standard-margin"><input class="item-standard-margin " type="text" name="data.psiAspects.{{key}}.name" value="{{aspect.name}}" placeholder="Aspect name"/></div>
+                        <div><strong>+<input class="item-standard-margin input-medium" type="text" name="data.psiAspects.{{key}}.infection" value="{{aspect.infection}}" placeholder="0" data-dtype="Number"/></strong></div>
+                        <div class="aspectDescription"><textarea id="aspect_description" name="data.psiAspects.{{key}}.description" rows="10" cols="60">{{aspect.description}}</textarea></div>
+                </div>
+                {{/each}}
+            </div>
         </div>
-        {{!-- {{#each data.psiAspects as |aspect key|}}
-            <ol>
-                <li>
-                    <div class="aspect aspectName"><input class="item-standard-margin input-XL" type="text" name="data.psiAspects.{{key}}.name" value="{{aspect.name}}" placeholder="Aspect name"/></div>
-                    <div class="aspect infectionAddendum"><strong>+<input class="item-standard-margin input-small" type="text" name="data.psiAspects.{{key}}.infection" value="{{aspect.infection}}" placeholder="0" data-dtype="Number"/></strong></div>
-                    <div class="aspect aspectDescription">{{editor content=data.psiAspects.{{key}}.infection target="data.psiAspects.{{key}}.infection" button=true owner=owner editable=editable}}</div>
-                    <div class="aspect aspectDescription"><textarea id="w3review" name="aspect_description" rows="4" cols="60">{{ aspect.description is defined ? aspect.description }}</textarea></div>
-                </li>
-            </ol>
-            {{/each}} --}}
-
     </section>
 </form>
 

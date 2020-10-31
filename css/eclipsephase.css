@@ -297,15 +297,20 @@
   margin: 0 0.3em!important;
 }
 
-.aspect {
-  display: inline-block;
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 86px;
-  flex: 0 0 86px;
-  text-align: left;
+.aspectContainer {
+  border: none;
 }
 
 .aspectDescription {
-  min-height: 30px;
-  min-width: 200px;
+  min-height: 50px;
+  min-width: 350px;
+}
+
+#aspect_description {
+  overflow: auto;
+  text-align: left;
+}
+
+ol {
+  list-style-type: none;
 }
