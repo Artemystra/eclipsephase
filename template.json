@@ -4,14 +4,17 @@
     "templates": {
       "base": {
         "mental": {
-          "value": null,
-          "min": null,
-          "max": null
+          "trauma": null,
+          "stress": null,
+          "luc": null,
+          "ir": null,
+          "tt": null
         },
         "physical": {
-          "value": null,
-          "min": null,
-          "max": null
+          "wounds": null,
+          "damage": null,
+          "dr": null,
+          "wt": null
         }
       }
     },
@@ -273,11 +276,11 @@
           "notes": ""
         }
       },
-      "body": {
+      "bodies": {
         "morph1": {
           "name": "",
-          "type": "",
-          "dur": null,
+          "type": 1.5,
+          "dur": 0,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -288,8 +291,8 @@
         },
         "morph2": {
           "name": "",
-          "type": "",
-          "dur": null,
+          "type": 1.5,
+          "dur": 0,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -300,8 +303,8 @@
         },
         "morph3": {
           "name": "",
-          "type": "",
-          "dur": null,
+          "type": 1.5,
+          "dur": 0,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -312,8 +315,8 @@
         },
         "morph4": {
           "name": "",
-          "type": "",
-          "dur": null,
+          "type": 1.5,
+          "dur": 0,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -324,8 +327,8 @@
         },
         "morph5": {
           "name": "",
-          "type": "",
-          "dur": null,
+          "type": 1.5,
+          "dur": 0,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -336,8 +339,8 @@
         },
         "morph6": {
           "name": "",
-          "type": "",
-          "dur": null,
+          "type": 1.5,
+          "dur": 0,
           "insight": null,
           "moxie": null,
           "vigor": null,

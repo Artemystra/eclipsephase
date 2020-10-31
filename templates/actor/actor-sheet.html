@@ -13,21 +13,41 @@
               and it will add a small amount of padding, a border, and will
               center all of its child elements content and text. --}}
               <div class="resource flex-group-center">
-                  <label for="data.physical.value" class="resource-label">Physical Health</label>
+                  <h2>Physical Health</h2>
                   <div class="resource-content flexrow flex-center flex-between">
-                    <input type="text" name="data.physical.value" value="{{data.physical.value}}" data-dtype="Number"/>
-                    <span> / </span>
-                    <input type="text" name="data.physical.max" value="{{data.physical.max}}" data-dtype="Number"/>
+                      <label for="data.physical.damage" class="resource-label">Damage</label>
+                      <span>  </span>
+                      <label for="data.physical.wounds" class="resource-label">Wounds</label>
                   </div>
-              </div>
-              <div class="resource flex-group-center">
-                  <label for="data.mental.value" class="resource-label">Mental Health</label>
                   <div class="resource-content flexrow flex-center flex-between">
-                    <input type="text" name="data.mental.value" value="{{data.mental.value}}" data-dtype="Number"/>
-                    <span> / </span>
-                    <input type="text" name="data.mental.max" value="{{data.mental.max}}" data-dtype="Number"/>
+                    <input type="text" name="data.physical.damage" value="{{data.physical.damage}}" data-dtype="Number" placeholder="0"/>
+                    <span>  </span>
+                    <input type="text" name="data.physical.wounds" value="{{data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
                   </div>
-              </div>
+                  <div class="resource-content flexrow flex-center flex-between">
+                      <span class="resource-label">DUR {{data.bodies.morph1.dur}}</span>
+                      <span class="resource-label">DR {{data.physical.dr}}</span>
+                      <span class="resource-label">WT {{data.physical.wt}}</span>
+                  </div>
+                </div>
+                <div class="resource flex-group-center">
+                    <h2>Mental Health</h2>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <label for="data.mental.stress" class="resource-label">Stress</label>
+                        <span>  </span>
+                        <label for="data.mental.trauma" class="resource-label">Trauma</label>
+                    </div>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.mental.stress" value="{{data.mental.stress}}" data-dtype="Number" placeholder="0"/>
+                        <span>  </span>
+                        <input type="text" name="data.mental.trauma" value="{{data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
+                    </div>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <span class="resource-label">LUC {{data.mental.luc}}</span>
+                        <span class="resource-label">IR {{data.mental.ir}}</span>
+                        <span class="resource-label">TT {{data.mental.tt}}</span>
+                    </div>
+                </div>
           </div>
           {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
           use both the "grid" and "grid-Ncol" class where "N" can be any number
@@ -130,45 +150,45 @@
             <h2>Morph</h2>
             <div class="grid grid-4col">
                 <div class="flexrow flex-group-left noBorder">
-                    <label for="data.body.morph1.name" class="resource-label labelWidth-medium">Name</label>
-                    <input type="text" name="data.body.morph1.name" value="{{data.body.morph1.name}}" placeholder="Morph name"/>
+                    <label for="data.bodies.morph1.name" class="resource-label labelWidth-medium">Name</label>
+                    <input type="text" name="data.bodies.morph1.name" value="{{data.bodies.morph1.name}}" placeholder="Morph name"/>
                 </div>
                 <div class="flexrow flex-group-left noBorder">
-                    <label for="data.body.morph1.type" class="resource-label labelWidth-small">Mod</label>
-                    <input class="input-small" type="text" name="data.body.morph1.type" value="{{data.body.morph1.type}}" placeholder="0"/>
+                    <label for="data.bodies.morph1.type" class="resource-label labelWidth-small">Mod</label>
+                    <input class="input-small" type="text" name="data.bodies.morph1.type" value="{{data.bodies.morph1.type}}" placeholder="0"/>
                 </div>
                 <div class="flexrow flex-group-left noBorder">
-                    <label for="data.body.morph1.dur" class="resource-label labelWidth-large">Durability</label>
-                    <input class="input-small" type="text" name="data.body.morph1.dur" value="{{data.body.morph1.dur}}" placeholder="0"/>
+                    <label for="data.bodies.morph1.dur" class="resource-label labelWidth-large">Durability</label>
+                    <input class="input-small" type="text" name="data.bodies.morph1.dur" value="{{data.bodies.morph1.dur}}" placeholder="0"/>
                 </div>
                 <div class="flexrow flex-group-left noBorder">
-                    <label for="data.body.morph1.movement" class="resource-label labelWidth-large">Movement</label>
-                    <input class="input-medium" type="text" name="data.body.morph1.movement" value="{{data.body.morph1.movement}}" placeholder="0/0"/>
+                    <label for="data.bodies.morph1.movement" class="resource-label labelWidth-large">Movement</label>
+                    <input class="input-medium" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0"/>
                 </div>
             </div>
             <div class="grid">
-                <div class="flexrow flex-group-left noBorder"><label for="data.body.morph1.morphWare" class="resource-label">Ware</label></div>
-                <div class="flexrow flex-group-left noBorder"><label for="data.body.morph1.morphTraits" class="resource-label">Traits</label></div>
-                <div class="textAreaDescription"><textarea id="aspect_description" name="data.body.morph1.morphWare" rows="10" cols="60">{{morph1.morphWare}}</textarea></div>
-                <div class="textAreaDescription"><textarea id="aspect_description" name="data.body.morph1.morphTraits" rows="10" cols="60">{{morph1.morphTraits}}</textarea></div>
+                <div class="flexrow flex-group-left noBorder"><label for="data.bodies.morph1.morphWare" class="resource-label">Ware</label></div>
+                <div class="flexrow flex-group-left noBorder"><label for="data.bodies.morph1.morphTraits" class="resource-label">Traits</label></div>
+                <div class="textAreaDescription"><textarea id="aspect_description" name="data.bodies.morph1.morphWare" rows="10" cols="60">{{morph1.morphWare}}</textarea></div>
+                <div class="textAreaDescription"><textarea id="aspect_description" name="data.bodies.morph1.morphTraits" rows="10" cols="60">{{morph1.morphTraits}}</textarea></div>
             </div>
             <div class="grid-4col skills">
                 <div class="flexrow flex-group-left">
                     <div class="flex-center">
-                        <label for="data.body.morph1.insight" class="resource-label labelWidth-medium">insight</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.body.morph1.insight" value="{{data.body.morph1.insight}}" placeholder="0"/>
+                        <label for="data.bodies.morph1.insight" class="resource-label labelWidth-medium">insight</label>
+                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.insight" value="{{data.bodies.morph1.insight}}" placeholder="0"/>
                     </div>
                     <div class="flex-center">
-                        <label for="data.body.morph1.moxie" class="resource-label labelWidth-medium">moxie</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.body.morph1.moxie" value="{{data.body.morph1.moxie}}" placeholder="0"/>
+                        <label for="data.bodies.morph1.moxie" class="resource-label labelWidth-medium">moxie</label>
+                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.moxie" value="{{data.bodies.morph1.moxie}}" placeholder="0"/>
                     </div>
                     <div class="flex-center">
-                        <label for="data.body.morph1.vigor" class="resource-label labelWidth-medium">vigor</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.body.morph1.vigor" value="{{data.body.morph1.vigor}}" placeholder="0"/>
+                        <label for="data.bodies.morph1.vigor" class="resource-label labelWidth-medium">vigor</label>
+                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.vigor" value="{{data.bodies.morph1.vigor}}" placeholder="0"/>
                     </div>
                     <div class="flex-center">
-                        <label for="data.body.morph1.flex" class="resource-label labelWidth-medium">flex</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.body.morph1.flex" value="{{data.body.morph1.flex}}" placeholder="0"/>
+                        <label for="data.bodies.morph1.flex" class="resource-label labelWidth-medium">flex</label>
+                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.flex" value="{{data.bodies.morph1.flex}}" placeholder="0"/>
                     </div>
                 </div>
             </div>

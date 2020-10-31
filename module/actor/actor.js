@@ -17,6 +17,13 @@ export class EclipsePhaseActor extends Actor {
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     if (actorData.type === 'character') this._prepareCharacterData(actorData);
+
+      data.physical.wt = Math.floor(data.bodies.morph1.dur / 5);
+      data.physical.dr = data.bodies.morph1.type * data.bodies.morph1.dur;
+      data.mental.luc = data.aptitudes.wil.value * 2;
+      data.mental.ir = data.mental.luc * 2;
+      data.mental.tt = Math.floor(data.mental.luc / 5);
+
   }
 
   /**
