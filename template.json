@@ -237,7 +237,8 @@
           "name": "",
           "firingMode": "",
           "range": "",
-          "ammo": "",
+          "ammoMin": "",
+          "ammoMax": "",
           "dv": "",
           "notes": ""
         },
@@ -245,7 +246,8 @@
           "name": "",
           "firingMode": "",
           "range": "",
-          "ammo": "",
+          "ammoMin": "",
+          "ammoMax": "",
           "dv": "",
           "notes": ""
         },
@@ -253,7 +255,8 @@
           "name": "",
           "firingMode": "",
           "range": "",
-          "ammo": "",
+          "ammoMin": "",
+          "ammoMax": "",
           "dv": "",
           "notes": ""
         }
@@ -261,11 +264,13 @@
       "CCWeapons" : {
         "weapon1" : {
           "name" : "",
-          "dv" : ""
+          "dv" : "",
+          "notes": ""
         },
         "weapon2" : {
           "name" : "",
-          "dv" : ""
+          "dv" : "",
+          "notes": ""
         }
       },
       "body": {
