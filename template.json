@@ -19,7 +19,9 @@
       }
     },
     "character": {
-      "templates": ["base"],
+      "templates": [
+        "base"
+      ],
       "biography": "",
       "attributes": {
         "level": {
@@ -28,214 +30,226 @@
       },
       "aptitudes": {
         "cog": {
-          "value": null
+          "value": null,
+          "label": "cognition"
         },
         "int": {
-          "value": null
+          "value": null,
+          "label": "intuition"
         },
         "ref": {
-          "value": null
+          "value": null,
+          "label": "reflexes"
         },
         "sav": {
-          "value": null
+          "value": null,
+          "label": "savvy"
         },
         "som": {
-          "value": null
+          "value": null,
+          "label": "somatics"
         },
         "wil": {
+          "value": null,
+          "label": "willpower"
+        }
+      },
+      "skillsIns": {
+        "infosec": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "interface": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "perceive": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "program": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "research": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "survival": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        }
+      },
+      "skillsMox": {
+        "deceive": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "kinesics": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "persuade": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "provoke": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "psi": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        }
+      },
+      "skillsVig": {
+        "athletics": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "fray": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "free fall": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "guns": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "infiltrate": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        },
+        "melee": {
+          "value": null,
+          "specname": "",
+          "spec": false
+        }
+      },
+      "pools": {
+        "insight": {
+          "value": null
+        },
+        "moxie": {
+          "value": null
+        },
+        "vigor": {
+          "value": null
+        },
+        "flex": {
           "value": null
         }
       },
-      "skillsIns" : {
-        "infosec" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "interface" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "perceive" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "program" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "research" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "survival" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        }
-      },
-      "skillsMox" : {
-        "deceive" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "kinesics" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "persuade" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "provoke" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "psi" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        }
-      },
-      "skillsVig" : {
-        "athletics" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "fray" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "free fall" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "guns" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "infiltrate" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        },
-        "melee" : {
-          "value" :null,
-          "specname" : "",
-          "spec" : false
-        }
-      },
-      "pools" : {
-        "insight" : {
-          "value" :null
-        },
-        "moxie" : {
-          "value" :null
-        },
-        "vigor" : {
-          "value" :null
-        },
-        "flex" : {
-          "value" :null
-        }
-      },
-      "specSkills" : {
+      "specSkills": {
         "special1": {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "specCheck": null
         },
         "special2": {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "specCheck": null
         },
         "special3": {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "specCheck": null
         },
         "special4": {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "specCheck": null
         },
         "special5": {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "specCheck": null
         },
         "special6": {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "specCheck": null
         }
       },
-      "knowSkills" : {
-        "know1" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+      "knowSkills": {
+        "know1": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know2" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know2": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know3" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know3": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know4" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know4": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know5" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know5": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know6" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know6": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know7" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know7": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know8" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know8": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know9" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know9": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         },
-        "know1null" : {
-          "skillName" : "",
-          "value" : null,
-          "aptitude" : null
+        "know1null": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null
         }
       },
-      "rangedWeapons" : {
+      "rangedWeapons": {
         "weapon1": {
           "name": "",
           "firingMode": "",
@@ -264,15 +278,15 @@
           "notes": ""
         }
       },
-      "CCWeapons" : {
-        "weapon1" : {
-          "name" : "",
-          "dv" : "",
+      "CCWeapons": {
+        "weapon1": {
+          "name": "",
+          "dv": "",
           "notes": ""
         },
-        "weapon2" : {
-          "name" : "",
-          "dv" : "",
+        "weapon2": {
+          "name": "",
+          "dv": "",
           "notes": ""
         }
       },
@@ -284,7 +298,7 @@
           "insight": null,
           "moxie": null,
           "vigor": null,
-          "flex":  null,
+          "flex": null,
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
@@ -296,7 +310,7 @@
           "insight": null,
           "moxie": null,
           "vigor": null,
-          "flex":  null,
+          "flex": null,
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
@@ -308,7 +322,7 @@
           "insight": null,
           "moxie": null,
           "vigor": null,
-          "flex":  null,
+          "flex": null,
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
@@ -320,7 +334,7 @@
           "insight": null,
           "moxie": null,
           "vigor": null,
-          "flex":  null,
+          "flex": null,
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
@@ -332,7 +346,7 @@
           "insight": null,
           "moxie": null,
           "vigor": null,
-          "flex":  null,
+          "flex": null,
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
@@ -344,7 +358,7 @@
           "insight": null,
           "moxie": null,
           "vigor": null,
-          "flex":  null,
+          "flex": null,
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
@@ -398,10 +412,10 @@
           "infection": null,
           "description": ""
         },
-      "aspect2": {
-        "name": "",
-        "infection": null,
-        "description": ""
+        "aspect2": {
+          "name": "",
+          "infection": null,
+          "description": ""
         },
         "aspect3": {
           "name": "",
@@ -543,6 +557,17 @@
           "infection": null,
           "description": ""
         }
+      },
+      "bodyTypes": {
+        "synth": {
+          "label": "Synthetic"
+        },
+        "bio": {
+          "label": "Biologic"
+        }
+      },
+      "bodyType": {
+        "value": ""
       }
     }
   },
