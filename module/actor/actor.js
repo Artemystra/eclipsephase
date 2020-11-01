@@ -39,6 +39,18 @@ export class EclipsePhaseActor extends Actor {
       data.specSkills.special5.specCheck = (data.specSkills.special5.value + parseInt(data.specSkills.special5.aptitude, 10));
       data.specSkills.special6.specCheck = (data.specSkills.special6.value + parseInt(data.specSkills.special6.aptitude, 10));
 
+    //Know Skill Derives
+      data.knowSkills.know1.knowCheck = (data.knowSkills.know1.value + parseInt(data.knowSkills.know1.aptitude, 10));
+      data.knowSkills.know2.knowCheck = (data.knowSkills.know2.value + parseInt(data.knowSkills.know2.aptitude, 10));
+      data.knowSkills.know3.knowCheck = (data.knowSkills.know3.value + parseInt(data.knowSkills.know3.aptitude, 10));
+      data.knowSkills.know4.knowCheck = (data.knowSkills.know4.value + parseInt(data.knowSkills.know4.aptitude, 10));
+      data.knowSkills.know5.knowCheck = (data.knowSkills.know5.value + parseInt(data.knowSkills.know5.aptitude, 10));
+      data.knowSkills.know6.knowCheck = (data.knowSkills.know6.value + parseInt(data.knowSkills.know6.aptitude, 10));
+      data.knowSkills.know7.knowCheck = (data.knowSkills.know7.value + parseInt(data.knowSkills.know7.aptitude, 10));
+      data.knowSkills.know8.knowCheck = (data.knowSkills.know8.value + parseInt(data.knowSkills.know8.aptitude, 10));
+      data.knowSkills.know9.knowCheck = (data.knowSkills.know9.value + parseInt(data.knowSkills.know9.aptitude, 10));
+      data.knowSkills.know10.knowCheck = (data.knowSkills.know10.value + parseInt(data.knowSkills.know10.aptitude, 10));
+
   }
 
   /**

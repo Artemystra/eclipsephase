@@ -201,52 +201,62 @@
         "know1": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know2": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know3": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know4": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know5": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know6": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know7": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know8": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
         "know9": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         },
-        "know1null": {
+        "know10": {
           "skillName": "",
           "value": null,
-          "aptitude": null
+          "aptitude": null,
+          "knowCheck": null
         }
       },
       "rangedWeapons": {
