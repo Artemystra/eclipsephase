@@ -56,8 +56,8 @@
             {{#each data.aptitudes as |aptitude key|}}
               <div class="abilities flexrow flex-group-center">
                  <span class="resource-label">{{key}}</span>
-                <input type="text" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number"/>
-                <label for="data.aptitudes.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{aptitude.mod}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                <input type="text" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+                <label for="data.aptitudes.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{aptitude.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
               </div>
             {{/each}}
           </div>
@@ -90,7 +90,7 @@
                 <span class="resource-label item-standard-margin input-large">{{key}}</span>
                 <input class="item-standard-margin input-small" type="text" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                 <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
-                <label for="data.skillsIns.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                <label for="data.skillsIns.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{skill.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                 <label class="resource-label roll-label rollable input-small" data-roll="d100" data-label="{{key}} {{specname}} check against {{skill.specialized}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
             </div>
@@ -103,7 +103,7 @@
                     <span class="resource-label item-standard-margin input-large">{{key}}</span>
                     <input class="item-standard-margin input-small" type="text" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
-                    <label for="data.skillsMox.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.skillsMox.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{skill.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                     <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                     <label class="resource-label roll-label rollable input-small" data-roll="d100" data-label="{{key}} {{specname}} check against {{skill.specialized}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
@@ -116,7 +116,7 @@
                     <span class="resource-label item-standard-margin input-large">{{key}}</span>
                     <input class="item-standard-margin input-small" type="text" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
-                    <label for="data.skillsVig.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{skill.derived}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.skillsVig.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check against {{skill.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                     <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                     <label class="resource-label roll-label item-standard-margin input-small rollable" data-roll="d100" data-label="{{key}} {{specname}} check against {{skill.specialized}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
@@ -134,7 +134,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special1.specCheck}}</span>
-                    <label for="data.specSkills.special1.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special1.skillName}} check against {{data.specSkills.special1.specCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.specSkills.special1.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special1.skillName}} check against {{data.specSkills.special1.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special2.skillName" value="{{data.specSkills.special2.skillName}}" placeholder="Skill name"/>
@@ -146,7 +146,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special2.specCheck}}</span>
-                    <label for="data.specSkills.special2.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special2.skillName}} check against {{data.specSkills.special2.specCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.specSkills.special2.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special2.skillName}} check against {{data.specSkills.special2.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special3.skillName" value="{{data.specSkills.special3.skillName}}" placeholder="Skill name"/>
@@ -158,7 +158,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special3.specCheck}}</span>
-                    <label for="data.specSkills.special3.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special3.skillName}} check against {{data.specSkills.special3.specCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.specSkills.special3.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special3.skillName}} check against {{data.specSkills.special3.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special4.skillName" value="{{data.specSkills.special4.skillName}}" placeholder="Skill name"/>
@@ -170,7 +170,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special4.specCheck}}</span>
-                    <label for="data.specSkills.special4.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special4.skillName}} check against {{data.specSkills.special4.specCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.specSkills.special4.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special4.skillName}} check against {{data.specSkills.special4.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special5.skillName" value="{{data.specSkills.special5.skillName}}" placeholder="Skill name"/>
@@ -182,7 +182,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special5.specCheck}}</span>
-                    <label for="data.specSkills.special5.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special5.skillName}} check against {{data.specSkills.special5.specCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.specSkills.special5.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special5.skillName}} check against {{data.specSkills.special5.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special6.skillName" value="{{data.specSkills.special6.skillName}}" placeholder="Skill name"/>
@@ -194,7 +194,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special6.specCheck}}</span>
-                    <label for="data.specSkills.special6.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special6.skillName}} check against {{data.specSkills.special6.specCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.specSkills.special6.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special6.skillName}} check against {{data.specSkills.special6.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
             </div>
             <h2 class="topMargin">Know Skills</h2>
@@ -209,7 +209,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know1.knowCheck}}</span>
-                    <label for="data.knowSkills.know1.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know1.skillName}} check against {{know1.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know1.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know1.skillName}} check against {{data.knowSkills.know1.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know2.skillName" value="{{data.knowSkills.know2.skillName}}" placeholder="Skill name"/>
@@ -221,7 +221,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know2.knowCheck}}</span>
-                    <label for="data.knowSkills.know2.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know2.skillName}} check against {{know2.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know2.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know2.skillName}} check against {{data.knowSkills.know2.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know3.skillName" value="{{data.knowSkills.know3.skillName}}" placeholder="Skill name"/>
@@ -233,7 +233,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know3.knowCheck}}</span>
-                    <label for="data.knowSkills.know3.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know3.skillName}} check against {{know3.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know3.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know3.skillName}} check against {{data.knowSkills.know3.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know4.skillName" value="{{data.knowSkills.know4.skillName}}" placeholder="Skill name"/>
@@ -245,7 +245,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know4.knowCheck}}</span>
-                    <label for="data.knowSkills.know4.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know4.skillName}} check against {{know4.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know4.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know4.skillName}} check against {{data.knowSkills.know4.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know5.skillName" value="{{data.knowSkills.know5.skillName}}" placeholder="Skill name"/>
@@ -257,7 +257,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know5.knowCheck}}</span>
-                    <label for="data.knowSkills.know5.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know5.skillName}} check against {{know5.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know5.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know5.skillName}} check against {{data.knowSkills.know5.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know6.skillName" value="{{data.knowSkills.know6.skillName}}" placeholder="Skill name"/>
@@ -269,7 +269,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know6.knowCheck}}</span>
-                    <label for="data.knowSkills.know6.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know6.skillName}} check against {{know6.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know6.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know6.skillName}} check against {{data.knowSkills.know6.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know7.skillName" value="{{data.knowSkills.know7.skillName}}" placeholder="Skill name"/>
@@ -281,7 +281,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know7.knowCheck}}</span>
-                    <label for="data.knowSkills.know7.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know7.skillName}} check against {{know7.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know7.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know7.skillName}} check against {{data.knowSkills.know7.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know8.skillName" value="{{data.knowSkills.know8.skillName}}" placeholder="Skill name"/>
@@ -293,7 +293,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know8.knowCheck}}</span>
-                    <label for="data.knowSkills.know8.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know8.skillName}} check against {{know8.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know8.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know8.skillName}} check against {{data.knowSkills.know8.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know9.skillName" value="{{data.knowSkills.know9.skillName}}" placeholder="Skill name"/>
@@ -305,7 +305,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know9.knowCheck}}</span>
-                    <label for="data.knowSkills.know9.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know9.skillName}} check against {{know9.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know9.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know9.skillName}} check against {{data.knowSkills.know9.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know10.skillName" value="{{data.knowSkills.know10.skillName}}" placeholder="Skill name"/>
@@ -317,7 +317,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know10.knowCheck}}</span>
-                    <label for="data.knowSkills.know10.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{know10.skillName}} check against {{know10.knowCheck}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
+                    <label for="data.knowSkills.know10.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know10.skillName}} check against {{data.knowSkills.know10.roll}}"><img src="icons/dice/d20black.svg" class="icon-small"/></label>
                 </div>
             </div>
         </div>

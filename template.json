@@ -15,6 +15,11 @@
           "damage": null,
           "dr": null,
           "wt": null
+        },
+        "mods" : {
+          "globalMod": null,
+          "traumaMod": null,
+          "woundMod": null
         }
       }
     },
@@ -31,118 +36,141 @@
       "aptitudes": {
         "cog": {
           "value": null,
-          "label": "cognition"
+          "label": "cognition",
+          "roll" : null
         },
         "int": {
           "value": null,
-          "label": "intuition"
+          "label": "intuition",
+          "roll" : null
         },
         "ref": {
           "value": null,
-          "label": "reflexes"
+          "label": "reflexes",
+          "roll" : null
         },
         "sav": {
           "value": null,
-          "label": "savvy"
+          "label": "savvy",
+          "roll" : null
         },
         "som": {
           "value": null,
-          "label": "somatics"
+          "label": "somatics",
+          "roll" : null
         },
         "wil": {
           "value": null,
-          "label": "willpower"
+          "label": "willpower",
+          "roll" : null
         }
       },
       "skillsIns": {
         "infosec": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "interface": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "perceive": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "program": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "research": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "survival": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         }
       },
       "skillsMox": {
         "deceive": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "kinesics": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "persuade": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "provoke": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "psi": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         }
       },
       "skillsVig": {
         "athletics": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "fray": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "free fall": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "guns": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "infiltrate": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         },
         "melee": {
           "value": null,
           "specname": "",
-          "spec": false
+          "spec": false,
+          "roll" : null
         }
       },
       "pools": {
@@ -164,37 +192,43 @@
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null
+          "specCheck": null,
+          "roll" : null
         },
         "special2": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null
+          "specCheck": null,
+          "roll" : null
         },
         "special3": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null
+          "specCheck": null,
+          "roll" : null
         },
         "special4": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null
+          "specCheck": null,
+          "roll" : null
         },
         "special5": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null
+          "specCheck": null,
+          "roll" : null
         },
         "special6": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null
+          "specCheck": null,
+          "roll" : null
         }
       },
       "knowSkills": {
@@ -202,61 +236,71 @@
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know2": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know3": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know4": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know5": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know6": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know7": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know8": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know9": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         },
         "know10": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "knowCheck": null
+          "knowCheck": null,
+          "roll" : null
         }
       },
       "rangedWeapons": {
