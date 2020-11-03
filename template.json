@@ -41,13 +41,69 @@
           "age": "",
           "origin": "",
           "rep": {
-            "@": null,
-            "c": null,
-            "f": null,
-            "g": null,
-            "i": null,
-            "r": null,
-            "x": null
+            "@-rep": {
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
           }
         },
         "id2": {

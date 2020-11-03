@@ -78,6 +78,7 @@
 
         {{!-- Biography Tab --}}
         <div class="tab" data-group="primary" data-tab="ego">
+            <h2>Current ID</h2>
             <div class="grid grid-2col">
                 <div class="flexrow flex-group-center">
                     <label class="input-medium resource-label" for="data.ego.id1.name">Name</label>
@@ -107,32 +108,23 @@
                         {{/each}} {{/select}}
                     </select>
                 </div>
-            <h2>General Description</h2>
+            <h3>Short Information</h3>
             {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}}
-            <div class="flexrow flex-group-center skills">
-                <label class="input-large resource-label" for="data.ego.id1.origin">Origin</label>
-                <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.origin" data-type="String">
-                    {{#select data.ego.id1.origin}}
-                    {{#each data.originList as |origin key|}}
-                    <option value="{{origin.label}}">{{origin.label}}</option>
-                    {{/each}} {{/select}}
-                </select>
-                <label class="input-medium resource-label" for="data.ego.id1.sex" >Sex</label>
-                <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.sex" data-type="String">
-                    {{#select data.ego.id1.sex}}
-                    {{#each data.sexesList as |sex key|}}
-                    <option value="{{sex.label}}">{{sex.label}}</option>
-                    {{/each}} {{/select}}
-                </select>
-                <label class="input-large resource-label" for="data.ego.id1.gender">Gender</label>
-                <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.gender" data-type="String">
-                    {{#select data.ego.id1.gender}}
-                    {{#each data.genderList as |gender key|}}
-                    <option value="{{gender.label}}">{{gender.label}}</option>
-                    {{/each}} {{/select}}
-                </select>
+            <h3>Reputation</h3>
+                <div class="skills grid grid-2col">
+                {{#each data.ego.id1.rep as |reputation key|}}
+                    <div class="flexrow flex-group-center">
+                        <label class="input-small resource-label" for="data.ego.id1.{{key}}.value">{{key}}</label>
+                        <input class="input-small" type="text" name="data.ego.id1.{{key}}.value" value="{{reputation.value}}" placeholder="0"/>
+                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.small1" {{checked reputation.small1}}>
+                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.small2" {{checked reputation.small2}}>
+                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.small3" {{checked reputation.small3}}>/
+                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.med1" {{checked reputation.med1}}>
+                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.med2" {{checked reputation.med2}}>/
+                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.large" {{checked reputation.large}}>
+                    </div>
+                {{/each}}
             </div>
-        </div>
 
         {{!--Skills Tab--}}
         <div class="tab" data-group="primary" data-tab="skills">

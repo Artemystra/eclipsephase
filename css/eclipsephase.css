@@ -355,3 +355,28 @@ ol {
   text-align: center;
   margin: 20px 0;
 }
+
+.editor {
+  max-height: 40%;
+  overflow: scroll;
+}
+
+input[type="checkbox"]{
+  -webkit-appearance:none;
+  width: 15px;
+  height: 20px;
+  background-color: #fff;
+  border: #782e22 1px solid;margin:0 auto;display:block;
+  border-radius: 100px;
+}
+
+input[type="checkbox"]:checked {
+  background-color:#258E7F;
+  padding:4px;
+  border:#fff 4px solid
+}
+
+
+h3 {
+  border-bottom: 1px solid #782e22;
+}
