@@ -66,7 +66,7 @@
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
-        {{!--<a class="item" data-tab="description">Description</a>--}}
+        <a class="item" data-tab="ego">Ego</a>
         <a class="item" data-tab="skills">Skills</a>
         <a class="item" data-tab="body">Body</a>
         <a class="item" data-tab="weapons">Weapons</a>
@@ -77,13 +77,65 @@
     <section class="sheet-body">
 
         {{!-- Biography Tab --}}
-        <div class="tab biography" data-group="primary" data-tab="description">
+        <div class="tab" data-group="primary" data-tab="ego">
+            <div class="grid grid-2col">
+                <div class="flexrow flex-group-center">
+                    <label class="input-medium resource-label" for="data.ego.id1.name">Name</label>
+                    <input type="text" name="data.ego.id1.name" value="{{data.ego.id1.name}}" placeholder="Fake Name"/>
+                </div>
+            </div>
+                <div class="flexrow flex-group-center skills">
+                    <label class="input-large resource-label" for="data.ego.id1.origin">Origin</label>
+                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.origin" data-type="String">
+                        {{#select data.ego.id1.origin}}
+                        {{#each data.originList as |origin key|}}
+                        <option value="{{origin.label}}">{{origin.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <label class="input-medium resource-label" for="data.ego.id1.sex" >Sex</label>
+                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.sex" data-type="String">
+                        {{#select data.ego.id1.sex}}
+                        {{#each data.sexesList as |sex key|}}
+                        <option value="{{sex.label}}">{{sex.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <label class="input-large resource-label" for="data.ego.id1.gender">Gender</label>
+                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.gender" data-type="String">
+                        {{#select data.ego.id1.gender}}
+                        {{#each data.genderList as |gender key|}}
+                        <option value="{{gender.label}}">{{gender.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                </div>
+            <h2>General Description</h2>
             {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}}
+            <div class="flexrow flex-group-center skills">
+                <label class="input-large resource-label" for="data.ego.id1.origin">Origin</label>
+                <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.origin" data-type="String">
+                    {{#select data.ego.id1.origin}}
+                    {{#each data.originList as |origin key|}}
+                    <option value="{{origin.label}}">{{origin.label}}</option>
+                    {{/each}} {{/select}}
+                </select>
+                <label class="input-medium resource-label" for="data.ego.id1.sex" >Sex</label>
+                <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.sex" data-type="String">
+                    {{#select data.ego.id1.sex}}
+                    {{#each data.sexesList as |sex key|}}
+                    <option value="{{sex.label}}">{{sex.label}}</option>
+                    {{/each}} {{/select}}
+                </select>
+                <label class="input-large resource-label" for="data.ego.id1.gender">Gender</label>
+                <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.gender" data-type="String">
+                    {{#select data.ego.id1.gender}}
+                    {{#each data.genderList as |gender key|}}
+                    <option value="{{gender.label}}">{{gender.label}}</option>
+                    {{/each}} {{/select}}
+                </select>
+            </div>
         </div>
 
         {{!--Skills Tab--}}
         <div class="tab" data-group="primary" data-tab="skills">
-            {{data.mods.woundMod}} {{data.mods.traumaMod}}
             <h2 class="topMargin">Insight Skills</h2>
         <div class="skills grid grid-2col">
             {{#each data.skillsIns as |skill key|}}

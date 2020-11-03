@@ -349,3 +349,9 @@ ol {
 .selectSpecApt {
   flex-grow: 0.5;
 }
+
+.flavor-text {
+  font-size: 16px!important;
+  text-align: center;
+  margin: 20px 0;
+}
