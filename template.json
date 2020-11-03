@@ -106,22 +106,6 @@
             }
           }
         },
-        "id2": {
-          "name": "",
-          "sex": "",
-          "gender": "",
-          "age": "",
-          "origin": "",
-          "rep": {
-            "@": null,
-            "c": null,
-            "f": null,
-            "g": null,
-            "i": null,
-            "r": null,
-            "x": null
-          }
-        },
         "baseline": {
           "languages": "",
           "motivations": {
