@@ -363,17 +363,19 @@ ol {
 
 input[type="checkbox"]{
   -webkit-appearance:none;
-  width: 15px;
-  height: 20px;
+  flex: 0 0 10px;
+  height: 10px;
   background-color: #fff;
-  border: #782e22 1px solid;margin:0 auto;display:block;
+  border: #2b2b2b 1px solid;margin:0 auto;display:block;
   border-radius: 100px;
+  margin: 0 5px;
 }
 
 input[type="checkbox"]:checked {
-  background-color:#258E7F;
+  background-color: #782e22;
   padding:4px;
-  border:#fff 4px solid
+  border: #2b2b2b 1px solid;
+  filter: none;
 }
 
 

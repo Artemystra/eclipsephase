@@ -2,7 +2,7 @@
   "name": "eclipsephase",
   "title": "EclipsePhase2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother. And Atropos whose code I stole.",
-  "version": "0.1.8.9.1",
+  "version": "0.1.8.9.2",
   "minimumCoreVersion": "0.5.5",
   "compatibleCoreVersion": "0.7.5",
   "templateVersion": 2,
