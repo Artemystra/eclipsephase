@@ -20,6 +20,9 @@
           "globalMod": null,
           "traumaMod": null,
           "woundMod": null
+        },
+        "initiative": {
+          "value": null
         }
       }
     },
@@ -146,6 +149,11 @@
           "label": "willpower",
           "roll" : null
         }
+      },
+      "rest": {
+        "short1": false,
+        "short2": false,
+        "long": false
       },
       "skillsIns": {
         "infosec": {
