@@ -1,0 +1,292 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Sheet Header --}}
+    <header class="sheet-header">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="200" width="200"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+            <div class="resources grid grid-2col">
+                <div class="resource flex-group-center">
+                    <h3 class="subheader">Physical Health</h3>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <label for="data.physical.damage" class="resource-label">Damage</label>
+                        <span>  </span>
+                        <label for="data.physical.wounds" class="resource-label">Wounds</label>
+                    </div>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.physical.damage" value="{{data.physical.damage}}" data-dtype="Number" placeholder="0"/>
+                        <span>  </span>
+                        <input type="text" name="data.physical.wounds" value="{{data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
+                    </div>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <span class="resource-label">DUR {{data.bodies.morph1.dur}}</span>
+                        <span class="resource-label">DR {{data.physical.dr}}</span>
+                        <span class="resource-label">WT {{data.physical.wt}}</span>
+                    </div>
+                </div>
+                <div class="resource flex-group-center">
+                    <h3 class="subheader">Mental Health</h3>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <label for="data.mental.stress" class="resource-label">Stress</label>
+                        <span>  </span>
+                        <label for="data.mental.trauma" class="resource-label">Trauma</label>
+                    </div>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.mental.stress" value="{{data.mental.stress}}" data-dtype="Number" placeholder="0"/>
+                        <span>  </span>
+                        <input type="text" name="data.mental.trauma" value="{{data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
+                    </div>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <span class="resource-label">LUC {{data.mental.luc}}</span>
+                        <span class="resource-label">IR {{data.mental.ir}}</span>
+                        <span class="resource-label">TT {{data.mental.tt}}</span>
+                    </div>
+                </div>
+            </div>
+            <h3 class="subheader">Aptitudes</h3>
+            <div class="abilities grid grid-3col">
+                {{#each data.aptitudes as |aptitude key|}}
+                <div class="abilities flexrow flex-group-center">
+                    <span class="resource-label">{{key}}</span>
+                    <input type="text" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+                    <label for="data.aptitudes.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{aptitude.label}} check <br> against <strong>{{aptitude.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                {{/each}}
+            </div>
+            <h3 class="subheader">Morph</h3>
+            <div class="flexrow flex-group-left">
+                <input class="input-XL item-standard-margin-medium" type="text" name="data.bodies.morph1.name" value="{{data.bodies.morph1.name}}" placeholder="Morph name"/>
+                <select class="selectSpecApt item-standard-margin-medium" name="data.bodyType.value" data-type="String">
+                    {{#select data.bodyType.value}}
+                    {{#each data.bodyTypes as |bod key|}}
+                    <option value="{{key}}">{{bod.label}}</option>
+                    {{/each}} {{/select}}
+                </select>
+                <label for="data.bodies.morph1.dur" class="resource-label labelWidth-small">Dur</label>
+                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.dur" value="{{data.bodies.morph1.dur}}" placeholder="0"/>
+                <label for="data.bodies.morph1.movement" class="resource-label labelWidth-small">Mov</label>
+                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0"/>
+            </div>
+            <div class="flexrow flex-group-left">
+                <label for="data.bodies.morph1.insight" class="resource-label labelWidth-medium">ins</label>
+                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.insight" value="{{data.bodies.morph1.insight}}" placeholder="0"/>
+                <label for="data.bodies.morph1.moxie" class="resource-label labelWidth-medium">mox</label>
+                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.moxie" value="{{data.bodies.morph1.moxie}}" placeholder="0"/>
+                <label for="data.bodies.morph1.vigor" class="resource-label labelWidth-medium">vig</label>
+                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.vigor" value="{{data.bodies.morph1.vigor}}" placeholder="0"/>
+                <label for="data.bodies.morph1.flex" class="resource-label labelWidth-medium">flex</label>
+                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.flex" value="{{data.bodies.morph1.flex}}" placeholder="0"/>
+            </div>
+            <div class="flexrow flex-group-left">
+                <input class="item-standard-margin-medium" type="text" name="data.armor.armor1.name" value="{{data.armor.armor1.name}}" placeholder="Armor name"/>
+                <label for="data.armor.armor1.energy" class="resource-label labelWidth-medium">energy</label>
+                <input class="input-small item-standard-margin-medium" type="text" name="data.armor.armor1.energy" value="{{data.armor.armor1.energy}}" placeholder="0"/>
+                <label for="data.armor.armor1.kinetic" class="resource-label labelWidth-medium">kinetic</label>
+                <input class="input-small item-standard-margin-medium" type="text" name="data.armor.armor1.kinetic" value="{{data.armor.armor1.kinetic}}" placeholder="0"/>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="skills">Skills</a>
+        <a class="item" data-tab="weapons">Weapons</a>
+        <a class="item" data-tab="psi">Psi</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!--Skills Tab--}}
+        <div class="tab" data-group="primary" data-tab="skills">
+            <h2 class="topMargin">Insight Skills</h2>
+            <div class="skills grid grid-2col">
+                {{#each data.skillsIns as |skill key|}}
+                <div class="flexrow flex-group-center">
+                    <span class="resource-label item-standard-margin input-large">{{key}}</span>
+                    <input class="item-standard-margin input-small" type="text" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                    <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
+                    <label for="data.skillsIns.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check <br> against <strong>{{skill.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                    <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                    <label class="resource-label roll-label rollable input-small" data-roll="d100" data-label="{{key}} ({{specname}}) check <br> against <strong>{{skill.specialized}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                {{/each}}
+            </div>
+            <h2>Moxie Skills</h2>
+            <div class="skills grid grid-2col">
+                {{#each data.skillsMox as |skill key|}}
+                <div class="flexrow flex-group-center">
+                    <span class="resource-label item-standard-margin input-large">{{key}}</span>
+                    <input class="item-standard-margin input-small" type="text" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                    <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
+                    <label for="data.skillsMox.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check <br> against <strong>{{skill.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                    <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                    <label class="resource-label roll-label rollable input-small" data-roll="d100" data-label="{{key}} ({{specname}}) check <br> against <strong>{{skill.specialized}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                {{/each}}
+            </div>
+            <h2>Vigor Skills</h2>
+            <div class="skills grid grid-2col">
+                {{#each data.skillsVig as |skill key|}}
+                <div class="flexrow flex-group-center">
+                    <span class="resource-label item-standard-margin input-large">{{key}}</span>
+                    <input class="item-standard-margin input-small" type="text" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                    <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
+                    <label for="data.skillsVig.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check <br> against <strong>{{skill.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                    <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                    <label class="resource-label roll-label item-standard-margin input-small rollable" data-roll="d100" data-label="{{key}} ({{specname}})  check <br> against <strong>{{skill.specialized}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                {{/each}}
+            </div>
+            <h2 class="topMargin">Special Skills</h2>
+            <div class="skills grid grid-2col">
+                <div class="flexrow flex-group-center">
+                    <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special1.skillName" value="{{data.specSkills.special1.skillName}}" placeholder="Skill name"/>
+                    <input class="item-standard-margin-both-large input-small" type="text" name="data.specSkills.special1.value" value="{{data.specSkills.special1.value}}" data-dtype="Number" placeholder="0"/>
+                    <select class="selectSpecApt" name="data.specSkills.special1.aptitude" data-type="String">
+                        {{#select data.specSkills.special1.aptitude}}
+                        {{#each data.aptitudes as |aptitude key|}}
+                        <option value="{{aptitude.value}}">{{aptitude.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <span class="resource-label item-standard-margin input-small">{{data.specSkills.special1.specCheck}}</span>
+                    <label for="data.specSkills.special1.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special1.skillName}} check <br> against <strong>{{data.specSkills.special1.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                <div class="flexrow flex-group-center">
+                    <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special2.skillName" value="{{data.specSkills.special2.skillName}}" placeholder="Skill name"/>
+                    <input class="item-standard-margin-both-large input-small" type="text" name="data.specSkills.special2.value" value="{{data.specSkills.special2.value}}" data-dtype="Number" placeholder="0"/>
+                    <select class="selectSpecApt" name="data.specSkills.special2.aptitude" data-type="String">
+                        {{#select data.specSkills.special2.aptitude}}
+                        {{#each data.aptitudes as |aptitude key|}}
+                        <option value="{{aptitude.value}}">{{aptitude.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <span class="resource-label item-standard-margin input-small">{{data.specSkills.special2.specCheck}}</span>
+                    <label for="data.specSkills.special2.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special2.skillName}} check <br> against <strong>{{data.specSkills.special2.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+            </div>
+            <h2 class="topMargin">Know Skills</h2>
+            <div class="skills grid grid-2col">
+                <div class="flexrow flex-group-center">
+                    <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know1.skillName" value="{{data.knowSkills.know1.skillName}}" placeholder="Skill name"/>
+                    <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know1.value" value="{{data.knowSkills.know1.value}}" data-dtype="Number" placeholder="0"/>
+                    <select class="selectSpecApt" name="data.knowSkills.know1.aptitude" data-type="String">
+                        {{#select data.knowSkills.know1.aptitude}}
+                        {{#each data.aptitudes as |aptitude key|}}
+                        <option value="{{aptitude.value}}">{{aptitude.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know1.knowCheck}}</span>
+                    <label for="data.knowSkills.know1.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know1.skillName}} check <br> against <strong>{{data.knowSkills.know1.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                <div class="flexrow flex-group-center">
+                    <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know2.skillName" value="{{data.knowSkills.know2.skillName}}" placeholder="Skill name"/>
+                    <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know2.value" value="{{data.knowSkills.know2.value}}" data-dtype="Number" placeholder="0"/>
+                    <select class="selectSpecApt" name="data.knowSkills.know2.aptitude" data-type="String">
+                        {{#select data.knowSkills.know2.aptitude}}
+                        {{#each data.aptitudes as |aptitude key|}}
+                        <option value="{{aptitude.value}}">{{aptitude.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know2.knowCheck}}</span>
+                    <label for="data.knowSkills.know2.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know2.skillName}} check <br> against <strong>{{data.knowSkills.know2.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                <div class="flexrow flex-group-center">
+                    <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know3.skillName" value="{{data.knowSkills.know3.skillName}}" placeholder="Skill name"/>
+                    <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know3.value" value="{{data.knowSkills.know3.value}}" data-dtype="Number" placeholder="0"/>
+                    <select class="selectSpecApt" name="data.knowSkills.know3.aptitude" data-type="String">
+                        {{#select data.knowSkills.know3.aptitude}}
+                        {{#each data.aptitudes as |aptitude key|}}
+                        <option value="{{aptitude.value}}">{{aptitude.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know3.knowCheck}}</span>
+                    <label for="data.knowSkills.know3.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know3.skillName}} check <br> against <strong>{{data.knowSkills.know3.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                <div class="flexrow flex-group-center">
+                    <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know4.skillName" value="{{data.knowSkills.know4.skillName}}" placeholder="Skill name"/>
+                    <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know4.value" value="{{data.knowSkills.know4.value}}" data-dtype="Number" placeholder="0"/>
+                    <select class="selectSpecApt" name="data.knowSkills.know4.aptitude" data-type="String">
+                        {{#select data.knowSkills.know4.aptitude}}
+                        {{#each data.aptitudes as |aptitude key|}}
+                        <option value="{{aptitude.value}}">{{aptitude.label}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                    <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know4.knowCheck}}</span>
+                    <label for="data.knowSkills.know4.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.knowSkills.know4.skillName}} check <br> against <strong>{{data.knowSkills.know4.roll}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+            </div>
+        </div>
+        {{!-- Weapons Tab --}}
+        <div class="tab" data-group="primary" data-tab="weapons">
+            <h2>Ranged Weapons</h2>
+            {{#each data.rangedWeapons as |ranged key|}}
+            <div class="skills">
+                <div class="flexrow flex-group-left">
+                    <label for="data.rangedWeapons.{{key}}.name" class="resource-label labelWidth-small">Name</label>
+                    <input class="item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.name" value="{{ranged.name}}" placeholder="Weapon Name"/>
+                    <label for="data.rangedWeapons.{{key}}.firingMode" class="resource-label labelWidth-medium">Mode</label>
+                    <input class="item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.firingMode" value="{{ranged.firingMode}}" placeholder="SS/SA/BF/FA"/>
+                    <label for="data.rangedWeapons.{{key}}.range" class="resource-label labelWidth-medium">range</label>
+                    <input class="input-small item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.range" value="{{ranged.range}}" placeholder="0"/>
+                    <label for="data.rangedWeapons.{{key}}.ammoMin" class="resource-label labelWidth-medium">Ammo</label>
+                    <input class="input-small" type="text" name="data.rangedWeapons.{{key}}.ammoMin" value="{{ranged.ammoMin}}" placeholder="0"/>/
+                    <input class="input-small item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.ammoMax" value="{{ranged.ammoMax}}" placeholder="0"/>
+                    <label for="data.rangedWeapons.{{key}}.dv" class="resource-label labelWidth-small">DV</label>
+                    <input type="text" name="data.rangedWeapons.{{key}}.dv" value="{{ranged.dv}}" placeholder="1d6+3"/>
+                    <label class="resource-label roll-label rollable input-small" data-roll="{{ranged.dv}}" data-label="damage with <br> <strong>{{name}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                <div class="flexrow flex-group-left">
+                    <div class="textAreaDescription"><textarea id="aspect_description" name="data.rangedWeapons.{{key}}.notes" rows="4" cols="60">{{ranged.notes}}</textarea></div>
+                </div>
+            </div>
+            {{/each}}
+            <h2>Melee Weapons</h2>
+            {{#each data.CCWeapons as |cc key|}}
+            <div class="skills">
+                <div class="flexrow flex-group-left">
+                    <label for="data.CCWeapons.{{key}}.name" class="resource-label labelWidth-small">Name</label>
+                    <input class="item-standard-margin-medium" type="text" name="data.CCWeapons.{{key}}.name" value="{{cc.name}}" placeholder="Weapon Name"/>
+                    <label for="data.CCWeapons.{{key}}.dv" class="resource-label labelWidth-small">DV</label>
+                    <input class="input-large" type="text" name="data.CCWeapons.{{key}}.dv" value="{{cc.dv}}" placeholder="1d6+3"/>
+                    <label class="resource-label roll-label rollable input-small" data-roll="{{cc.dv}}" data-label="damage with <br> <strong>{{name}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
+                </div>
+                <div class="flexrow flex-group-left">
+                    <div class="textAreaDescription"><textarea id="aspect_description" name="data.CCWeapons.{{key}}.notes" rows="4" cols="60">{{cc.notes}}</textarea></div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        </div>
+        {{!-- Psi Tab --}}
+        <div class="tab" data-group="primary" data-tab="psi">
+            <h2>PSI Strain</h2>
+            <div class="grid">
+                <ol>
+                    <li class="skills"><input type="text" name="data.psiStrain.name" value="{{data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
+                    <li><textarea id="aspect_description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.psiStrain.description}}</textarea></li>
+                </ol>
+                <ol>
+                    {{#each data.strainInfluence as |influence key|}}
+                    <li><div class="textAreaDescription"><textarea id="aspect_description" name="data.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
+                    {{/each}}
+                </ol>
+            </div>
+            <h2>PSI Aspects</h2>
+            <div>
+                <div class="flexrow flex-group-center noBorder">
+                    <div><strong>Aspect Name</strong></div>
+                    <div><strong>Modifier</strong></div>
+                    <div class="textAreaDescription"><strong>Description</strong></div>
+                </div>
+                {{#each data.psiAspects as |aspect key|}}
+                <div class="flexrow flex-center noBorder">
+                    <div><input class="item-standard-margin " type="text" name="data.psiAspects.{{key}}.name" value="{{aspect.name}}" placeholder="Aspect name"/></div>
+                    <div><strong><input class="item-standard-margin input-medium" type="text" name="data.psiAspects.{{key}}.infection" value="{{aspect.infection}}" placeholder="0" data-dtype="Number"/></strong></div>
+                    <div class="textAreaDescription"><textarea id="aspect_description" name="data.psiAspects.{{key}}.description" rows="10" cols="60">{{aspect.description}}</textarea></div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </section>
+</form>

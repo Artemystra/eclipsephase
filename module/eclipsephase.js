@@ -1,6 +1,8 @@
 // Import Modules
 import { EclipsePhaseActor } from "./actor/actor.js";
 import { EclipsePhaseActorSheet } from "./actor/actor-sheet.js";
+import { NpcSheet } from "./actor/npcSheet.js";
+import { GoonSheet } from "./actor/goonSheet.js";
 import { EclipsePhaseItem } from "./item/item.js";
 import { EclipsePhaseItemSheet } from "./item/item-sheet.js";
 
@@ -27,9 +29,12 @@ Hooks.once('init', async function() {
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("eclipsephase", EclipsePhaseActorSheet, { makeDefault: true });
+  Actors.registerSheet("eclipsephase", EclipsePhaseActorSheet, {types: ["character"], makeDefault: true });
+  Actors.registerSheet("eclipsephase", NpcSheet, {types: ["npc"], makeDefault: true });
+  Actors.registerSheet("eclipsephase", GoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("eclipsephase", EclipsePhaseItemSheet, { makeDefault: true });
+
 
   // If you need to add Handlebars helpers, here are a few useful examples:
   Handlebars.registerHelper('concat', function() {

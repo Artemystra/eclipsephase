@@ -5,15 +5,9 @@
         <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="200" width="200"/>
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
-            {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-            use both the "grid" and "grid-Ncol" class where "N" can be any number
-            from 1 to 12 and will create that number of columns.  --}}
             <div class="resources grid grid-2col">
-              {{!-- "flex-group-center" is also defined in the _grid.scss file
-              and it will add a small amount of padding, a border, and will
-              center all of its child elements content and text. --}}
               <div class="resource flex-group-center">
-                  <h3>Physical Health</h3>
+                  <h3 class="subheader">Physical Health</h3>
                   <div class="resource-content flexrow flex-center flex-between">
                       <label for="data.physical.damage" class="resource-label">Damage</label>
                       <span>  </span>
@@ -31,7 +25,7 @@
                   </div>
                 </div>
                 <div class="resource flex-group-center">
-                    <h3>Mental Health</h3>
+                    <h3 class="subheader">Mental Health</h3>
                     <div class="resource-content flexrow flex-center flex-between">
                         <label for="data.mental.stress" class="resource-label">Stress</label>
                         <span>  </span>
@@ -49,7 +43,7 @@
                     </div>
                 </div>
           </div>
-            <h3>Aptitudes</h3>
+            <h3 class="subheader">Aptitudes</h3>
           <div class="abilities grid grid-3col">
             {{#each data.aptitudes as |aptitude key|}}
               <div class="abilities flexrow flex-group-center">
@@ -59,7 +53,7 @@
               </div>
             {{/each}}
           </div>
-            <h3>Other</h3>
+            <h3 class="subheader">Other</h3>
             <div class="grid grid-3col">
                 <div class="flexrow flex-group-center">
                     <label for="data.mods.globalMod" class="resource-label">Global Mod</label>
@@ -72,10 +66,10 @@
                 <div class="resource-content flexrow flex-group-center">
                     <span class="resource-label">Rest</span>
                     <span class="resource-label">S</span>
-                    <input type="checkbox" name="data.rest.short1" {{checked data.rest.short1}}>
-                    <input type="checkbox" name="data.rest.short2" {{checked data.rest.short2}}>
+                    <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.rest.short1}}>
+                    <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.rest.short2}}>
                     <span class="resource-label">L</span>
-                    <input type="checkbox" name="data.rest.long" {{checked data.rest.long}}>
+                    <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.rest.long}}>
                 </div>
             </div>
         </div>
@@ -125,20 +119,20 @@
                         {{/each}} {{/select}}
                     </select>
                 </div>
-            <h3>Short Information</h3>
+            <h3 class="subheader">Short Information</h3>
             {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}}
-            <h3>Reputation</h3>
+            <h3 class="subheader">Reputation</h3>
                 <div class="skills grid grid-3col">
                 {{#each data.ego.id1.rep as |reputation key|}}
                     <div class="flexrow flex-group-left noBorder">
                         <label class="input-medium resource-label" for="data.ego.id1.{{key}}.value">{{key}}</label>
                         <input class="input-small" type="text" name="data.ego.id1.{{key}}.value" value="{{reputation.value}}" placeholder="0"/>
-                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.small1" {{checked reputation.small1}}>
-                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.small2" {{checked reputation.small2}}>
-                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.med1" {{checked reputation.med1}}>
-                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.med2" {{checked reputation.med2}}>/
-                        <input type="checkbox" name="data.ego.id1.rep.{{key}}.large" {{checked reputation.large}}>
+                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small1" {{checked reputation.small1}}>
+                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small2" {{checked reputation.small2}}>
+                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small3" {{checked reputation.small3}}>/
+                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.med1" {{checked reputation.med1}}>
+                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.med2" {{checked reputation.med2}}>/
+                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.large" {{checked reputation.large}}>
                     </div>
                 {{/each}}
             </div>

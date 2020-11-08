@@ -11,7 +11,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       template: "systems/eclipsephase/templates/actor/actor-sheet.html",
       width: 800,
       height: 1000,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
     });
   }
 
