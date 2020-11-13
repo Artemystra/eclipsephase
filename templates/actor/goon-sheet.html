@@ -200,11 +200,11 @@
                     <input class="input-large" type="text" name="data.CCWeapons.{{key}}.dv" value="{{cc.dv}}" placeholder="1d6+3"/>
                     <label class="resource-label roll-label rollable input-small" data-roll="{{cc.dv}}" data-label="damage with <br> <strong>{{name}}</strong>"><img src="icons/dice/d10black.svg" class="icon-small"/></label>
                 </div>
-                <div class="flexrow flex-group-left">
+                <div class="flexrow flex-group-left skills">
                     <div class="textAreaDescription"><textarea id="aspect_description" name="data.CCWeapons.{{key}}.notes" rows="4" cols="60">{{cc.notes}}</textarea></div>
                 </div>
-            </div>
             {{/each}}
+            </div>
         {{!-- Psi Tab --}}
         <div class="tab" data-group="primary" data-tab="psi">
             <h2>PSI Aspects</h2>

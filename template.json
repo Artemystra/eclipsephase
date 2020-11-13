@@ -1238,6 +1238,38 @@
           "roll": null
         }
       },
+      "skillsMox": {
+        "deceive": {
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "roll": null
+        },
+        "kinesics": {
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "roll": null
+        },
+        "persuade": {
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "roll": null
+        },
+        "provoke": {
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "roll": null
+        },
+        "psi": {
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "roll": null
+        }
+      },
       "skillsVig": {
         "athletics": {
           "value": null,
@@ -1298,24 +1330,58 @@
           "aptitude": null,
           "specCheck": null,
           "roll": null
-        },
-        "special3": {
+        }
+      },
+      "knowSkills": {
+        "know1": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null,
+          "knowCheck": null,
           "roll": null
         },
-        "special4": {
+        "know2": {
           "skillName": "",
           "value": null,
           "aptitude": null,
-          "specCheck": null,
+          "knowCheck": null,
+          "roll": null
+        },
+        "know3": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "knowCheck": null,
+          "roll": null
+        },
+        "know4": {
+          "skillName": "",
+          "value": null,
+          "aptitude": null,
+          "knowCheck": null,
           "roll": null
         }
       },
       "rangedWeapons": {
         "weapon1": {
+          "name": "",
+          "firingMode": "",
+          "range": "",
+          "ammoMin": "",
+          "ammoMax": "",
+          "dv": "",
+          "notes": ""
+        },
+        "weapon2": {
+          "name": "",
+          "firingMode": "",
+          "range": "",
+          "ammoMin": "",
+          "ammoMax": "",
+          "dv": "",
+          "notes": ""
+        },
+        "weapon3": {
           "name": "",
           "firingMode": "",
           "range": "",
@@ -1330,6 +1396,11 @@
           "name": "",
           "dv": "",
           "notes": ""
+        },
+        "weapon2": {
+          "name": "",
+          "dv": "",
+          "notes": ""
         }
       },
       "bodies": {
@@ -1341,7 +1412,9 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "morphWare": "",
+          "morphTraits": ""
         }
       },
       "armor": {
