@@ -1506,12 +1506,20 @@
       "kinetic": null,
       "cost": null
     },
-    "trait": {
+    "traits": {
       "templates": [
         "base"
       ],
-      "bonus": null,
-      "malus": null
+      "selection": "",
+      "statChange": null,
+      "type": {
+        "trait": {
+          "label": "Trait"
+        },
+        "flaw": {
+          "label": "Flaw"
+        }
+      }
     },
     "ware": {
       "templates": [

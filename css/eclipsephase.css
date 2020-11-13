@@ -148,6 +148,16 @@
   border: none;
 }
 
+.item-img {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  height: 60px;
+  width: 60px;
+  margin-right: 10px;
+  border: none;
+}
+
 .eclipsephase .sheet-header .header-fields {
   -webkit-box-flex: 1;
   -ms-flex: 1;
@@ -390,4 +400,9 @@ h2 {
 
 .item-create {
   margin-left: auto;
+}
+
+.goon {
+  height: 300px;
+  width: 300px;
 }

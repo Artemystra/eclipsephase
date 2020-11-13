@@ -5,6 +5,7 @@ import { NpcSheet } from "./actor/npcSheet.js";
 import { GoonSheet } from "./actor/goonSheet.js";
 import { EclipsePhaseItem } from "./item/item.js";
 import { EclipsePhaseItemSheet } from "./item/item-sheet.js";
+import { EclipsePhaseTraitSheet } from "./item/trait-sheet.js";
 
 Hooks.once('init', async function() {
 
@@ -33,7 +34,8 @@ Hooks.once('init', async function() {
   Actors.registerSheet("eclipsephase", NpcSheet, {types: ["npc"], makeDefault: true });
   Actors.registerSheet("eclipsephase", GoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EclipsePhaseItemSheet, { makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseItemSheet, {types: ["item"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseTraitSheet, {types: ["trait"], makeDefault: true });
 
 
   // If you need to add Handlebars helpers, here are a few useful examples:
