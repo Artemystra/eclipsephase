@@ -4,7 +4,7 @@
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother. And Atropos whose code I stole.",
   "version": "0.1.9.6",
   "minimumCoreVersion": "0.5.5",
-  "compatibleCoreVersion": "0.7.6",
+  "compatibleCoreVersion": "0.7.7",
   "templateVersion": 2,
   "author": "Diemen Kobalscheck",
   "esmodules": ["module/eclipsephase.js"],
