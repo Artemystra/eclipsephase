@@ -402,7 +402,12 @@ h2 {
   margin-left: auto;
 }
 
-.goon {
+.eclipsephase .sheet-header .profile-img-goon {
   height: 300px;
   width: 300px;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  margin-right: 10px;
+  border: none;
 }
