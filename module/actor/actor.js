@@ -19,19 +19,19 @@ export class EclipsePhaseActor extends Actor {
     if (actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon') this._prepareCharacterData(actorData);
 
     //Physical & Mental derives
-      data.physical.wt = Math.floor(data.bodies.morph1.dur / 5);
+      data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
       if (data.bodyType.value === 'synth') {
           data.physical.dr = data.bodies.morph1.dur * 2;
       }
       else if (data.bodyType.value === 'bio'){
-          data.physical.dr = data.bodies.morph1.dur * 1.5;
+          data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
       }
       data.mental.luc = data.aptitudes.wil.value * 2;
       data.mental.ir = data.mental.luc * 2;
-      data.mental.tt = Math.floor(data.mental.luc / 5);
+      data.mental.tt = Math.round(data.mental.luc / 5);
 
     //Initiative
-    data.initiative.value = Math.floor((data.aptitudes.ref.value + data.aptitudes.int.value) / 5)
+    data.initiative.value = Math.round((data.aptitudes.ref.value + data.aptitudes.int.value) / 5)
 
     //Modificators
     data.mods.woundMod = (data.physical.wounds * 10);
