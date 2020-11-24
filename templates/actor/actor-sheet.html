@@ -125,13 +125,12 @@
                 <div class="skills grid grid-3col">
                 {{#each data.ego.id1.rep as |reputation key|}}
                     <div class="flexrow flex-group-left noBorder">
-                        <label class="input-medium resource-label" for="data.ego.id1.{{key}}.value">{{key}}</label>
-                        <input class="input-small" type="text" name="data.ego.id1.{{key}}.value" value="{{reputation.value}}" placeholder="0"/>
+                        <label class="input-medium resource-label" for="data.ego.id1.rep.{{key}}.value">{{key}}</label>
+                        <input class="input-small" type="text" name="data.ego.id1.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0"/>
                         <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small1" {{checked reputation.small1}}>
                         <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small2" {{checked reputation.small2}}>
                         <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.med1" {{checked reputation.med1}}>
-                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.med2" {{checked reputation.med2}}>/
+                        <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.med1" {{checked reputation.med1}}>/
                         <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.large" {{checked reputation.large}}>
                     </div>
                 {{/each}}
