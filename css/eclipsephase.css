@@ -86,6 +86,7 @@ a:hover{
 }
 
 .flex-group-left {
+  display: flex;
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
@@ -93,6 +94,7 @@ a:hover{
 }
 
 .flex-group-right {
+  display: flex;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;
@@ -332,11 +334,16 @@ a:hover{
   margin-right: 5px;
 }
 
-.icon-small {
+.icon-small,
+.icon-hidden{
   height: 30px!important;
   width: 26px!important;
   border: none;
   margin: 0 0.2em!important;
+}
+
+.icon-hidden{
+  opacity: 0%;
 }
 
 .noBorder {
