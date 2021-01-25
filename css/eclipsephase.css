@@ -469,3 +469,11 @@ form button,
   border: 1px solid #4098d6;
 }
 
+.wa-link{
+  border: none;
+  background: #24485d;
+}
+
+a[href] {
+  color: #4098d6;
+}
