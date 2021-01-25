@@ -470,8 +470,8 @@ form button,
 }
 
 .wa-link{
-  border: none;
-  background: #24485d;
+  border: none!important;
+  background-color: #24485d!important;
 }
 
 a[href] {
