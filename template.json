@@ -27,6 +27,20 @@
         },
         "initiative": {
           "value": null
+        },
+        "pools": {
+          "insight": {
+            "value": null
+          },
+          "moxie": {
+            "value": null
+          },
+          "vigor": {
+            "value": null
+          },
+          "flex": {
+            "value": null
+          }
         }
       }
     },
@@ -265,20 +279,6 @@
           "specname": "",
           "spec": false,
           "roll": null
-        }
-      },
-      "pools": {
-        "insight": {
-          "value": null
-        },
-        "moxie": {
-          "value": null
-        },
-        "vigor": {
-          "value": null
-        },
-        "flex": {
-          "value": null
         }
       },
       "specSkills": {

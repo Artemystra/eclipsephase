@@ -4,9 +4,10 @@
   font-family: "Roboto", sans-serif;
 }
 
-.rollable:hover, .rollable:focus {
-  color: #000;
-  text-shadow: 0 0 10px red;
+.rollable:hover,
+.rollable:focus,
+a:hover{
+  text-shadow: 0 0 10px #4098d6;
   cursor: pointer;
 }
 
@@ -207,16 +208,16 @@
   height: 40px;
   border-top: 1px solid #AAA;
   border-bottom: 1px solid #AAA;
+
 }
 
 .eclipsephase .tabs .item {
-  line-height: 40px;
   font-weight: bold;
 }
 
 .eclipsephase .tabs .item.active {
-  text-decoration: underline;
   text-shadow: none;
+  color: #4098d6;
 }
 
 .eclipsephase .items-list {
@@ -333,9 +334,9 @@
 
 .icon-small {
   height: 30px!important;
+  width: 26px!important;
   border: none;
-  fill: #AAAAAA;
-  margin: 0 0.3em!important;
+  margin: 0 0.2em!important;
 }
 
 .noBorder {
@@ -381,8 +382,29 @@ input[class="sheet"]{
   margin: 0 5px;
 }
 
+input[type="text"],
+input[type="number"],
+select,
+textarea{
+  color: #d8d8d8;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+textarea::placeholder{
+  color: #8a8a8a;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus{
+  box-shadow: 0 0 5px #4098d6;
+  outline: none;
+}
+
 input[class="sheet"]:checked {
-  background-color: #782e22;
+  background-color: #4098d6;
   padding:4px;
   border: #2b2b2b 1px solid;
   filter: none;
@@ -390,12 +412,13 @@ input[class="sheet"]:checked {
 
 
 .subheader {
-  border-bottom: 1px solid #782e22;
+  border-bottom: 1px solid #24485d;
 }
 
 h2 {
   display: flex;
   flex-direction: row;
+  border-bottom: 1px solid #24485d;
 }
 
 .item-create {
@@ -411,3 +434,31 @@ h2 {
   margin-right: 10px;
   border: none;
 }
+
+.window-app .window-content {
+  color: #d8d8d8;
+  background-image: none;
+  background-color: #2b2b2b;
+  overflow-y: scroll;
+}
+
+form button,
+.dialog .dialog-buttons button.default{
+  color: #d8d8d8;
+}
+
+.color-change{
+  fill: #d8d8d8;
+}
+
+::-webkit-scrollbar-track{
+  box-shadow: 0 0 0 #999 inset;
+}
+
+::-webkit-scrollbar-thumb {
+  outline: none;
+  border-radius: 3px;
+  background: #24485d;
+  border: 1px solid #4098d6;
+}
+

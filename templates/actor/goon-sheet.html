@@ -98,6 +98,30 @@
 
         {{!--Skills Tab--}}
         <div class="tab" data-group="primary" data-tab="skills">
+            <div class="grid-4col skills">
+                <div class="flexrow flex-group-left">
+                    <div class="flex-center">
+                        <label for="data.bodies.morph1.insight" class="resource-label labelWidth-medium">insight</label>
+                        <input class="input-small item-standard-margin-small" type="text" name="data.pools.insight.value" value="{{data.pools.insight.value}}" placeholder="0"/>
+                        <span class="resource-label labelWidth-medium">/ {{data.bodies.morph1.insight}}</span>
+                    </div>
+                    <div class="flex-center">
+                        <label for="data.bodies.morph1.moxie" class="resource-label labelWidth-medium">moxie</label>
+                        <input class="input-small item-standard-margin-small" type="text" name="data.pools.moxie.value" value="{{data.pools.moxie.value}}" placeholder="0"/>
+                        <span class="resource-label labelWidth-medium">/ {{data.bodies.morph1.moxie}}</span>
+                    </div>
+                    <div class="flex-center">
+                        <label for="data.bodies.morph1.vigor" class="resource-label labelWidth-medium">vigor</label>
+                        <input class="input-small item-standard-margin-small" type="text" name="data.pools.vigor.value" value="{{data.pools.vigor.value}}" placeholder="0"/>
+                        <span class="resource-label labelWidth-medium">/ {{data.bodies.morph1.vigor}}</span>
+                    </div>
+                    <div class="flex-center">
+                        <label for="data.bodies.morph1.flex" class="resource-label labelWidth-medium">flex</label>
+                        <input class="input-small item-standard-margin-small" type="text" name="data.pools.flex.value" value="{{data.pools.flex.value}}" placeholder="0"/>
+                        <span class="resource-label labelWidth-medium">/ {{data.bodies.morph1.flex}}</span>
+                    </div>
+                </div>
+            </div>
             <h2 class="topMargin">Skills</h2>
             <div class="skills grid grid-2col">
                 {{#each data.skillsIns as |skill key|}}
