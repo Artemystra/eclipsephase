@@ -1471,6 +1471,7 @@
       "ccWeapon",
       "armor",
       "trait",
+      "flaw",
       "ware",
       "aspect",
       "program"
@@ -1579,20 +1580,19 @@
       "kinetic": null,
       "cost": null
     },
-    "traits": {
+    "trait": {
       "templates": [
         "base"
       ],
-      "selection": "",
       "statChange": null,
-      "type": {
-        "trait": {
-          "label": "Trait"
-        },
-        "flaw": {
-          "label": "Flaw"
-        }
-      }
+      "qualityType": ""
+    },
+    "flaw": {
+      "templates": [
+        "base"
+      ],
+      "statChange": null,
+      "qualityType": ""
     },
     "ware": {
       "templates": [

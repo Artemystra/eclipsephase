@@ -20,8 +20,12 @@ export class EclipsePhaseActor extends Actor {
 
     //Physical & Mental derives
       data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
-      if (data.bodyType.value === 'synth') {
-          data.physical.dr = data.bodies.morph1.dur * 2;
+
+    if (data.bodyType.value === 'synth' && data[trait].name === 'test'){
+      data.physical.dr = Math.round(data.bodies.morph1.dur * 5);
+    }
+      if (data.bodyType.value === 'synth'){
+        data.physical.dr = Math.round(data.bodies.morph1.dur * 2);
       }
       else if (data.bodyType.value === 'bio'){
           data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);

@@ -2,7 +2,7 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseTraitSheet extends ItemSheet {
+export class EclipsePhaseFlawSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {

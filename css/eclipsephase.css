@@ -525,8 +525,10 @@ ol {
   overflow: scroll;
 }
 
-.journal-sheet form .editor {
+.journal-sheet form .editor,
+.item .editor{
   max-height: 100%;
+  height: 100%;
 }
 
 .item-create {

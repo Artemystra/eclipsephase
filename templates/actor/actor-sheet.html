@@ -85,8 +85,37 @@
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
-        {{!-- Biography Tab --}}
+        {{!-- Ego Tab --}}
         <div class="tab" data-group="primary" data-tab="ego">
+            <div class="grid-2col">
+                <div class="qualities">
+                    <h3 class="subheader">Traits</h3>
+                    {{#each actor.trait as |item id|}}
+                    <li class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                        <div class="item-image flex-group-left"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <div class="item-controls flex-group-right">
+                            <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                    {{/each}}
+                </div>
+                <div class="qualities">
+                    <h3 class="subheader">Flaws</h3>
+                    {{#each actor.flaw as |item id|}}
+                    <li class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                        <div class="item-image flex-group-left"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <div class="item-controls flex-group-right">
+                            <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                    {{/each}}
+                </div>
+            </div>
+
             <h2>Current ID</h2>
             <div class="grid grid-2col">
                 <div class="flexrow flex-group-center">

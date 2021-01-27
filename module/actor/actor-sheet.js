@@ -44,6 +44,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const actorData = sheetData.actor;
 
     // Initialize containers.
+
     const gear = [];
     const features = [];
     const spells = {
@@ -58,8 +59,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       8: [],
       9: []
     };
-    const specSkill = [];
-    const knowSkill = [];
+    const trait = [];
+    const flaw = [];
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
@@ -80,17 +81,17 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           spells[i.data.spellLevel].push(i);
         }
       }
-      else if (i.type === 'knowSkill') {
-        knowSkill.push(i)
+      else if (i.type === 'trait') {
+        trait.push(i)
       }
-      else if (i.type === 'specSkill') {
-        specSkill.push(i)
+      else if (i.type === 'flaw') {
+        flaw.push(i)
       }
     }
 
     // Assign and return
-    actorData.specSkills = specSkill;
-    actorData.knowSkills = knowSkill;
+    actorData.trait = trait;
+    actorData.flaw = flaw;
     actorData.gear = gear;
     actorData.features = features;
     actorData.spells = spells;
