@@ -1466,7 +1466,7 @@
   },
   "Item": {
     "types": [
-      "item",
+      "gear",
       "rangedWeapon",
       "ccWeapon",
       "armor",
@@ -1478,36 +1478,20 @@
     ],
     "templates": {
       "base": {
-        "description": ""
+        "description": "",
+        "active": false
       },
       "buyable": {
-        "cost": {
-          "min": {
-            "label": "Minor"
-          },
-          "mod": {
-            "label": "Moderate"
-          },
-          "maj": {
-            "label": "Major"
-          }
-        }
+        "cost": "",
+        "slotType": ""
       }
     },
-    "item": {
+    "gear": {
       "templates": [
         "base",
         "buyable"
       ],
-      "quantity": null,
-      "slotType": {
-        "accessoire": {
-          "label": "Accessoire"
-        },
-        "bulky": {
-          "label": "Bulky"
-        }
-      }
+      "quantity": null
     },
     "rangedWeapon": {
       "templates": [
@@ -1518,58 +1502,14 @@
       "ammoMin": null,
       "ammoMax": null,
       "dv": null,
-      "firingMode": {
-        "ss": {
-          "label": "SS"
-        },
-        "sa": {
-          "label": "SA"
-        },
-        "saBF": {
-          "label": "SA/BF"
-        },
-        "bfFA": {
-          "label": "BF/FA"
-        },
-        "saBFfa": {
-          "label": "SA/BF/FA"
-        }
-      },
-      "slotType": {
-        "sideArm": {
-          "label": "Sidearm"
-        },
-        "oneHanded": {
-          "label": "One Handed"
-        },
-        "twoHanded": {
-          "label": "Two Handed"
-        },
-        "bulky": {
-          "label": "Bulky"
-        }
-      }
+      "firingMode": ""
     },
     "ccWeapon": {
       "templates": [
         "base",
         "buyable"
       ],
-      "dv": null,
-      "slotType": {
-        "sideArm": {
-          "label": "Sidearm"
-        },
-        "oneHanded": {
-          "label": "One Handed"
-        },
-        "twoHanded": {
-          "label": "Two Handed"
-        },
-        "bulky": {
-          "label": "Bulky"
-        }
-      }
+      "dv": null
     },
     "armor": {
       "template": [
@@ -1577,8 +1517,7 @@
         "buyable"
       ],
       "energy": null,
-      "kinetic": null,
-      "cost": null
+      "kinetic": null
     },
     "trait": {
       "templates": [

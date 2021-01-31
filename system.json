@@ -2,14 +2,14 @@
   "name": "eclipsephase",
   "title": "EclipsePhase2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT (based on and butchered Atropos code). I thank my mother.",
-  "version": "0.2.3.5",
+  "version": "0.2.4",
   "minimumCoreVersion": "0.5.5",
   "compatibleCoreVersion": "0.7.9",
   "templateVersion": 2,
   "author": "Diemen Kobalscheck",
   "esmodules": ["module/eclipsephase.js"],
   "styles": ["css/eclipsephase.css"],
-  "scripts": [],
+  "scripts": ["module/effects.js"],
   "packs": [],
   "languages": [
     {
@@ -18,8 +18,8 @@
       "path": "lang/en.json"
     }
   ],
-  "gridDistance": 5,
-  "gridUnits": "ft",
+  "gridDistance": 2,
+  "gridUnits": "m",
   "primaryTokenAttribute": "physical",
   "secondaryTokenAttribute": "mental",
   "url": "https://github.com/DerDiemen/eclipsephase",

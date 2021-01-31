@@ -1,0 +1,24 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+        <div class="flexrow flex-group-left">
+            <label class="input-medium resource-label" for="data.selection" >Type</label>
+            <select class="selectSpecApt item-standard-margin-medium" name="data.qualityType" data-type="String">
+                {{#select data.qualityType}}
+                {{#each config.qualityTypes as |name type|}}
+                <option value="{{type}}">{{name}}</option>
+                {{/each}} {{/select}}
+            </select>
+            <label class="input-large resource-label" for="data.statChange">Bonus/Malus</label>
+            <input type="number" name="data.statChange" value="{{data.statChange}}" placeholder="Fake Name"/>
+        </div>
+            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+    </section>
+</form>

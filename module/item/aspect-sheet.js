@@ -2,7 +2,7 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseItemSheet extends ItemSheet {
+export class EclipsePhaseAspectSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
@@ -30,6 +30,7 @@ export class EclipsePhaseItemSheet extends ItemSheet {
   /** @override */
   getData() {
     const data = super.getData();
+    data.config = CONFIG.eclipsephase;
     return data;
   }
 

@@ -1,0 +1,74 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+        <div class="flexrow flex-group-center">
+            <table>
+                <tr>
+                    <td>
+                        <label class="resource-label">Firing Mode</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Range</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Max Ammo</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">DV</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Slot</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Cost</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="data.firingMode" data-type="String">
+                            {{#select data.firingMode}}
+                            {{#each config.firingModes as |name mode|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="text" name="data.range" value="{{data.range}}" placeholder="e.g. 120m"/>
+                    </td>
+                    <td>
+                        <input class="input-small" type="number" name="data.ammoMax" value="{{data.ammoMax}}" placeholder="Max"/>
+                    </td>
+                    <td>
+                        <input class="input-large" type="text" name="data.dv" value="{{data.dv}}" placeholder="e.g. 1d10+1"/>
+                    </td>
+                    <td>
+                        <select name="data.slotType" data-type="String">
+                            {{#select data.slotType}}
+                            {{#each config.itemTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="data.cost" data-type="String">
+                            {{#select data.cost}}
+                            {{#each config.costTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <p></p>
+        <h2>Notes</h2>
+            <input type="text" name="data.description" value="{{data.description}}" placeholder="Long, Fixed, Silencer etc."/>
+    </section>
+</form>
