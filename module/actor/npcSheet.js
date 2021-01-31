@@ -66,10 +66,10 @@ export class NpcSheet extends ActorSheet {
                     spells[i.data.spellLevel].push(i);
                 }
             }
-            else if (i.type === 'rangedweapon') {
+            else if (i.type === 'rangedWeapon') {
                 rangedweapon.push(i)
             }
-            else if (i.type === 'ccweapon') {
+            else if (i.type === 'ccWeapon') {
                 ccweapon.push(i)
             }
             else if (i.type === 'armor') {
@@ -84,7 +84,7 @@ export class NpcSheet extends ActorSheet {
         }
 
         // Assign and return
-        actorData.rangedweapon = rangedweapon;
+        actorData.rangedWeapon = rangedweapon;
         actorData.ccweapon = ccweapon;
         actorData.armor = armor;
         actorData.ware = ware;
