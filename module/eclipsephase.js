@@ -4,9 +4,15 @@ import { EclipsePhaseActorSheet } from "./actor/actor-sheet.js";
 import { NpcSheet } from "./actor/npcSheet.js";
 import { GoonSheet } from "./actor/goonSheet.js";
 import { EclipsePhaseItem } from "./item/item.js";
-import { EclipsePhaseItemSheet } from "./item/item-sheet.js";
+import { EclipsePhaseGearSheet } from "./item/gear-sheet.js";
 import { EclipsePhaseTraitSheet } from "./item/trait-sheet.js";
 import { EclipsePhaseFlawSheet } from "./item/flaw-sheet.js";
+import { EclipsePhaseRangedWeaponSheet } from "./item/rangedweapon-sheet.js";
+import { EclipsePhaseCloseCombatWeaponSheet } from "./item/ccweapon-sheet.js";
+import { EclipsePhaseArmorSheet } from "./item/armor-sheet.js";
+import { EclipsePhaseWareSheet } from "./item/ware-sheet.js";
+import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
+import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
 import { eclipsephase } from "./config.js";
 
 Hooks.once('init', async function() {
@@ -37,9 +43,15 @@ Hooks.once('init', async function() {
   Actors.registerSheet("eclipsephase", NpcSheet, {types: ["npc"], makeDefault: true });
   Actors.registerSheet("eclipsephase", GoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EclipsePhaseItemSheet, {types: ["item"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseGearSheet, {types: ["gear"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseTraitSheet, {types: ["trait"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseFlawSheet, {types: ["flaw"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseRangedWeaponSheet, {types: ["rangedWeapon"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseCloseCombatWeaponSheet, {types: ["ccWeapon"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseArmorSheet, {types: ["armor"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseWareSheet, {types: ["ware"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseAspectSheet, {types: ["aspect"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseProgramSheet, {types: ["program"], makeDefault: true });
 
 
 

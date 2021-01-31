@@ -61,18 +61,21 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     };
     const trait = [];
     const flaw = [];
+    const rangedweapon = [];
+    const ccweapon = [];
+    const armor = [];
+    const ware = [];
+    const aspect = [];
+    const program = [];
+    const item = [];
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
     for (let i of sheetData.items) {
       let item = i.data;
       i.img = i.img || DEFAULT_TOKEN;
-      // Append to gear.
-      if (i.type === 'item') {
-        gear.push(i);
-      }
       // Append to features.
-      else if (i.type === 'feature') {
+      if (i.type === 'feature') {
         features.push(i);
       }
       // Append to spells.
@@ -87,11 +90,38 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       else if (i.type === 'flaw') {
         flaw.push(i)
       }
+      else if (i.type === 'rangedWeapon') {
+        rangedweapon.push(i)
+      }
+      else if (i.type === 'ccWeapon') {
+        ccweapon.push(i)
+      }
+      else if (i.type === 'armor') {
+        armor.push(i)
+      }
+      else if (i.type === 'ware') {
+        ware.push(i)
+      }
+      else if (i.type === 'aspect') {
+        aspect.push(i)
+      }
+      else if (i.type === 'program') {
+        program.push(i)
+      }
+      else if (i.type === 'gear') {
+        gear.push(i)
+      }
     }
 
     // Assign and return
     actorData.trait = trait;
     actorData.flaw = flaw;
+    actorData.rangedWeapon = rangedweapon;
+    actorData.ccweapon = ccweapon;
+    actorData.armor = armor;
+    actorData.ware = ware;
+    actorData.aspect = aspect;
+    actorData.program = program;
     actorData.gear = gear;
     actorData.features = features;
     actorData.spells = spells;

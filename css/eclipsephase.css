@@ -261,7 +261,8 @@ input[class="sheet"]{
 input[type="text"],
 input[type="number"],
 select,
-textarea{
+textarea,
+.sidebar-tab .directory-header .header-search input{
   color: #d8d8d8;
   background: #1f1f1f;
 }
@@ -299,7 +300,8 @@ h2 {
 }
 
 form button,
-.dialog .dialog-buttons button.default{
+.dialog .dialog-buttons button.default,
+.dialog .dialog-buttons button{
   color: #d8d8d8;
 }
 
@@ -528,7 +530,7 @@ ol {
 .journal-sheet form .editor,
 .item .editor{
   max-height: 100%;
-  height: 100%;
+  height: 95%;
 }
 
 .item-create {
@@ -543,4 +545,50 @@ ol {
   flex: 0 0 100px;
   margin-right: 10px;
   border: none;
+}
+
+.qualities {
+  margin-bottom: 30px;
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #1f1f1f;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.collapsibleactive, .collapsible:hover {
+  border: #4098d6;
+  box-shadow: 0 0 10px #4098d6 inset
+}
+
+.collapsible:focus {
+  box-shadow: none;
+  border: none;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.itemdescription {
+  padding: 5px;
+  background-color: #414141;
+}
+
+.noBG {
+  background: none;
+}
+
+.noMargin {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.weaponslist {
+  margin-bottom: 40px;
 }

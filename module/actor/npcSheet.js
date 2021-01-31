@@ -41,8 +41,11 @@ export class NpcSheet extends ActorSheet {
             8: [],
             9: []
         };
-        const specSkill = [];
-        const knowSkill = [];
+        const rangedweapon = [];
+        const ccweapon = [];
+        const armor = [];
+        const ware = [];
+        const aspect = [];
 
         // Iterate through items, allocating to containers
         // let totalWeight = 0;
@@ -63,17 +66,29 @@ export class NpcSheet extends ActorSheet {
                     spells[i.data.spellLevel].push(i);
                 }
             }
-            else if (i.type === 'knowSkill') {
-                knowSkill.push(i)
+            else if (i.type === 'rangedweapon') {
+                rangedweapon.push(i)
             }
-            else if (i.type === 'specSkill') {
-                specSkill.push(i)
+            else if (i.type === 'ccweapon') {
+                ccweapon.push(i)
+            }
+            else if (i.type === 'armor') {
+                armor.push(i)
+            }
+            else if (i.type === 'ware') {
+                ware.push(i)
+            }
+            else if (i.type === 'aspect') {
+                aspect.push(i)
             }
         }
 
         // Assign and return
-        actorData.specSkills = specSkill;
-        actorData.knowSkills = knowSkill;
+        actorData.rangedweapon = rangedweapon;
+        actorData.ccweapon = ccweapon;
+        actorData.armor = armor;
+        actorData.ware = ware;
+        actorData.aspect = aspect;
         actorData.gear = gear;
         actorData.features = features;
         actorData.spells = spells;
