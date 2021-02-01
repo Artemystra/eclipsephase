@@ -592,3 +592,11 @@ ol {
 .weaponslist {
   margin-bottom: 40px;
 }
+
+.img {
+  border: none;
+}
+
+#chat-controls .roll-type-select {
+  background: none;
+}

@@ -221,6 +221,7 @@
                     <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
                     <label class="item-image flex-group-left resource-label rollable roll-label input-small" data-roll="{{item.data.dv}}" data-label="damage with <br> <strong>{{item.name}}</strong>""><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <div class="item-controls flex-group-right input-small">
+                        <a class="item-control item-edit" title="Edit Item" style="margin-right: 5px"><i class="fas fa-edit"></i></a>
                         <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
                 </div>
@@ -253,6 +254,7 @@
                     <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
                     <label class="item-image flex-group-left resource-label rollable roll-label input-small" data-roll="{{item.data.dv}}" data-label="damage with <br> <strong>{{item.name}}</strong>""><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <div class="item-controls flex-group-right input-small">
+                        <a class="item-control item-edit" title="Edit Item" style="margin-right: 5px"><i class="fas fa-edit"></i></a>
                         <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
                 </div>
@@ -261,41 +263,6 @@
                 </div>
                 {{/each}}
             </div>
-            <h2>Ranged Weapons</h2>
-            {{#each data.rangedWeapons as |ranged key|}}
-            <div class="skills">
-                <div class="flexrow flex-group-left">
-                    <label for="data.rangedWeapons.{{key}}.name" class="resource-label labelWidth-small">Name</label>
-                    <input class="item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.name" value="{{ranged.name}}" placeholder="Weapon Name"/>
-                    <label for="data.rangedWeapons.{{key}}.firingMode" class="resource-label labelWidth-medium">Mode</label>
-                    <input class="item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.firingMode" value="{{ranged.firingMode}}" placeholder="SS/SA/BF/FA"/>
-                    <label for="data.rangedWeapons.{{key}}.range" class="resource-label labelWidth-medium">range</label>
-                    <input class="input-small item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.range" value="{{ranged.range}}" placeholder="0"/>
-                    <label for="data.rangedWeapons.{{key}}.ammoMin" class="resource-label labelWidth-medium">Ammo</label>
-                    <input class="input-small" type="text" name="data.rangedWeapons.{{key}}.ammoMin" value="{{ranged.ammoMin}}" placeholder="0"/>/
-                    <input class="input-small item-standard-margin-medium" type="text" name="data.rangedWeapons.{{key}}.ammoMax" value="{{ranged.ammoMax}}" placeholder="0"/>
-                    <label for="data.rangedWeapons.{{key}}.dv" class="resource-label labelWidth-small">DV</label>
-                    <input type="text" name="data.rangedWeapons.{{key}}.dv" value="{{ranged.dv}}" placeholder="1d6+3"/>
-                    <label class="resource-label roll-label rollable input-small" data-roll="{{ranged.dv}}" data-label="damage with <br> <strong>{{name}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                </div>
-                <div class="flexrow flex-group-left">
-                    <div class="textAreaDescription"><textarea id="aspect_description" name="data.rangedWeapons.{{key}}.notes" rows="4" cols="60">{{ranged.notes}}</textarea></div>
-                </div>
-            </div>
-            {{/each}}
-            <h2>Melee Weapons</h2>
-            {{#each data.CCWeapons as |cc key|}}
-                <div class="flexrow flex-group-left">
-                    <label for="data.CCWeapons.{{key}}.name" class="resource-label labelWidth-small">Name</label>
-                    <input class="item-standard-margin-medium" type="text" name="data.CCWeapons.{{key}}.name" value="{{cc.name}}" placeholder="Weapon Name"/>
-                    <label for="data.CCWeapons.{{key}}.dv" class="resource-label labelWidth-small">DV</label>
-                    <input class="input-large" type="text" name="data.CCWeapons.{{key}}.dv" value="{{cc.dv}}" placeholder="1d6+3"/>
-                    <label class="resource-label roll-label rollable input-small" data-roll="{{cc.dv}}" data-label="damage with <br> <strong>{{name}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                </div>
-                <div class="flexrow flex-group-left skills">
-                    <div class="textAreaDescription"><textarea id="aspect_description" name="data.CCWeapons.{{key}}.notes" rows="4" cols="60">{{cc.notes}}</textarea></div>
-                </div>
-            {{/each}}
             </div>
         {{!-- Psi Tab --}}
         <div class="tab" data-group="primary" data-tab="psi">
