@@ -9,7 +9,7 @@ export class EclipsePhaseTraitSheet extends ItemSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       width: 520,
-      height: 480,
+      height: 315,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }

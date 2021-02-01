@@ -414,6 +414,12 @@ form .notes, form .hint {
   text-shadow: 0 0 10px #4098d6;
 }
 
+#chat-controls .roll-type-select,
+optgroup .Default .Roll .Mode,
+#chat-form textarea{
+  background: #2b2b2b;
+}
+
 /* Own Styles */
 
 .displayBlock {
@@ -593,10 +599,14 @@ ol {
   margin-bottom: 40px;
 }
 
-.img {
+img {
   border: none;
 }
 
-#chat-controls .roll-type-select {
-  background: none;
+.bigIcon {
+  font-size: 48px;
+}
+
+.sheet header.sheet-header > * {
+  flex: 0.15;
 }
