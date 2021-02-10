@@ -3,22 +3,40 @@
         <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <div class="grid grid-2col">
+            </div>
         </div>
     </header>
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
         <div class="flexrow flex-group-left">
-            <label class="input-medium resource-label" for="data.selection" >Type</label>
-            <select class="selectSpecApt item-standard-margin-medium" name="data.qualityType" data-type="String">
-                {{#select data.qualityType}}
-                {{#each config.qualityTypes as |name type|}}
-                <option value="{{type}}">{{name}}</option>
-                {{/each}} {{/select}}
-            </select>
-            <label class="input-large resource-label" for="data.statChange">Bonus/Malus</label>
-            <input type="number" name="data.statChange" value="{{data.statChange}}" placeholder="Fake Name"/>
+            <table>
+                <tr>
+                    <td>
+                        <label class="resource-label">Psi Type</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Infection Modifier</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="data.psiType" data-type="String">
+                            {{#select data.psiType}}
+                            {{#each config.psiTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="input-large" type="text" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                    </td>
+                </tr>
+            </table>
         </div>
-            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+        <p></p>
+        <h2>Description</h2>
+        <div class="textAreaDescription"><textarea id="aspect_description" name="data.description" rows="10" cols="60">{{data.description}}</textarea></div>
     </section>
 </form>

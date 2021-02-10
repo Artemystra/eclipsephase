@@ -9,7 +9,7 @@ export class EclipsePhaseArmorSheet extends ItemSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       width: 520,
-      height: 480,
+      height: 445,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }

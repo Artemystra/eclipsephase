@@ -258,13 +258,24 @@ input[class="sheet"]{
   margin: 0 5px;
 }
 
+input[class="check-inline-edit"]{
+  -webkit-appearance:none;
+  flex: 0 0 10px;
+  height: 10px;
+  background-color: #fff;
+  border: #2b2b2b 1px solid;margin:0 auto;display:block;
+  border-radius: 100px;
+  margin: 0 5px;
+}
+
 input[type="text"],
 input[type="number"],
 select,
 textarea,
 .sidebar-tab .directory-header .header-search input{
   color: #d8d8d8;
-  background: #1f1f1f;
+  background: #2f2f2f;
+  border: none;
 }
 
 input[type="text"]::placeholder,
@@ -286,6 +297,24 @@ input[class="sheet"]:checked {
   padding:4px;
   border: #2b2b2b 1px solid;
   filter: none;
+}
+
+input [class="leftField"],
+input [class="leftField"]:focus,
+input [class="leftField"]::placeholder{
+  text-align: left!important;
+}
+
+input [class="centerField"],
+input [class="centerField"]:focus,
+input [class="centerField"]::placeholder{
+  text-align: center!important;
+}
+
+input [class="rightField"],
+input [class="rightField"]:focus,
+input [class="rightField"]::placeholder{
+  text-align: right!important;
 }
 
 
@@ -420,6 +449,11 @@ optgroup .Default .Roll .Mode,
   background: #2b2b2b;
 }
 
+#module-management .package-list .package-title {
+  color: #d8d8d8;
+  font-weight: normal;
+}
+
 /* Own Styles */
 
 .displayBlock {
@@ -441,6 +475,12 @@ optgroup .Default .Roll .Mode,
 
 .input-XL {
   max-width: 180px!important;
+}
+
+.sheet-inline-edit {
+  min-height: 20px!important;
+  max-height: 20px!important;
+  margin-right: 5px!important;
 }
 
 .item-standard-margin {
@@ -609,4 +649,13 @@ img {
 
 .sheet header.sheet-header > * {
   flex: 0.15;
+}
+
+.textarea {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  resize: both;
+  min-height: 20px;
+  line-height: 20px;
 }

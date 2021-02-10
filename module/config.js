@@ -13,10 +13,15 @@ eclipsephase.firingModes = {
     saBFfa: "SA/BF/FA"
 }
 
-eclipsephase.itemTypes = {
+eclipsephase.weaponTypes = {
     sidearm: "Sidearm",
     oneHanded: "One Handed",
     twoHanded: "Two Handed",
+    bulky: "Bulky"
+}
+
+eclipsephase.gearTypes = {
+    accessory: "Accessory",
     bulky: "Bulky"
 }
 
@@ -24,4 +29,16 @@ eclipsephase.costTypes = {
     minor: "Minor",
     moderate: "Moderate",
     major: "Major"
+}
+
+eclipsephase.programLevels = {
+    intruder: "Intruder",
+    user: "User",
+    admin: "Admin",
+    owner: "Owner"
+}
+
+eclipsephase.psiTypes = {
+    chi: "Chi",
+    gamma: "Gamma"
 }

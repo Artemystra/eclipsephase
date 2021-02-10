@@ -1479,7 +1479,7 @@
     "templates": {
       "base": {
         "description": "",
-        "active": false
+        "active": true
       },
       "buyable": {
         "cost": "",
@@ -1491,7 +1491,7 @@
         "base",
         "buyable"
       ],
-      "quantity": null
+      "quantity": 1
     },
     "rangedWeapon": {
       "templates": [
@@ -1545,12 +1545,15 @@
       "templates": [
         "base"
       ],
-      "infection": null
+      "infection": null,
+      "psiType": ""
     },
     "program": {
       "templates": [
         "base"
-      ]
+      ],
+      "quantity": 1,
+      "programLevel": ""
     }
   }
 }
