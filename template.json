@@ -397,47 +397,6 @@
           "roll": null
         }
       },
-      "rangedWeapons": {
-        "weapon1": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon2": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon3": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        }
-      },
-      "CCWeapons": {
-        "weapon1": {
-          "name": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon2": {
-          "name": "",
-          "dv": "",
-          "notes": ""
-        }
-      },
       "bodies": {
         "morph1": {
           "name": "",
@@ -551,158 +510,6 @@
           "description": ""
         },
         "influence6": {
-          "description": ""
-        }
-      },
-      "psiAspects": {
-        "aspect1": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect2": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect3": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect4": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect5": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect6": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect7": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect8": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect9": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect10": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect11": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect12": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect13": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect14": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect15": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect16": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect17": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect18": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect19": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect20": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect21": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect22": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect23": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect24": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect25": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect26": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect27": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect28": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect29": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect30": {
-          "name": "",
-          "infection": null,
           "description": ""
         }
       },
@@ -1038,47 +845,6 @@
           "roll": null
         }
       },
-      "rangedWeapons": {
-        "weapon1": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon2": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon3": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        }
-      },
-      "CCWeapons": {
-        "weapon1": {
-          "name": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon2": {
-          "name": "",
-          "dv": "",
-          "notes": ""
-        }
-      },
       "bodies": {
         "morph1": {
           "name": "",
@@ -1122,58 +888,6 @@
           "description": ""
         },
         "influence6": {
-          "description": ""
-        }
-      },
-      "psiAspects": {
-        "aspect1": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect2": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect3": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect4": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect5": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect6": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect7": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect8": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect9": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect10": {
-          "name": "",
-          "infection": null,
           "description": ""
         }
       },
@@ -1362,47 +1076,6 @@
           "roll": null
         }
       },
-      "rangedWeapons": {
-        "weapon1": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon2": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon3": {
-          "name": "",
-          "firingMode": "",
-          "range": "",
-          "ammoMin": "",
-          "ammoMax": "",
-          "dv": "",
-          "notes": ""
-        }
-      },
-      "CCWeapons": {
-        "weapon1": {
-          "name": "",
-          "dv": "",
-          "notes": ""
-        },
-        "weapon2": {
-          "name": "",
-          "dv": "",
-          "notes": ""
-        }
-      },
       "bodies": {
         "morph1": {
           "name": "",
@@ -1422,33 +1095,6 @@
           "name": "",
           "energy": "",
           "kinetic": ""
-        }
-      },
-      "psiAspects": {
-        "aspect1": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect2": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect3": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect4": {
-          "name": "",
-          "infection": null,
-          "description": ""
-        },
-        "aspect5": {
-          "name": "",
-          "infection": null,
-          "description": ""
         }
       },
       "bodyTypes": {

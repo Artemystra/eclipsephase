@@ -544,7 +544,7 @@ optgroup .Default .Roll .Mode,
   border: none;
 }
 
-#aspect_description {
+.description {
   overflow: auto;
   text-align: left;
 }
