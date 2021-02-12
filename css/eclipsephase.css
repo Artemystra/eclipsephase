@@ -135,12 +135,13 @@
 }
 
 .eclipsephase .sheet-header .profile-img {
+  height: 300px;
+  width: 300px;
   -webkit-box-flex: 0;
   -ms-flex: 0 0 100px;
   flex: 0 0 100px;
-  height: 360px;
-  width: 300px;
   margin-right: 10px;
+  margin-top: 65px;
   border: none;
 }
 
@@ -160,14 +161,24 @@
   flex: 1;
 }
 
-.eclipsephase .sheet-header h1.charname {
-  height: 50px;
+.eclipsephase .sheet-header h1.goonname {
+  height: 40px;
   padding: 0px;
-  margin: 5px 0;
+  margin: 22px 8px 0px 0px;
   border-bottom: 0;
+  font-size: 22px;
 }
 
-.eclipsephase .sheet-header h1.charname input {
+.eclipsephase .sheet-header h1.charname {
+  height: 40px;
+  padding: 0px;
+  margin: 22px 8px 0px 0px;
+  border-bottom: 0;
+  font-size: 22px;
+}
+
+.eclipsephase .sheet-header h1.charname input,
+.eclipsephase .sheet-header h1.goonname input{
   width: 100%;
   height: 100%;
   margin: 0;
@@ -454,6 +465,20 @@ optgroup .Default .Roll .Mode,
   font-weight: normal;
 }
 
+.window-app .window-header {
+  background: #1d1d1d;
+}
+
+.filepicker .display-modes a {
+  background: #1d1d1d;
+}
+
+.filepicker .display-modes a.active {
+  text-shadow: 0 0 6px #4098d6;
+  border: 1px solid #191813;
+  background: #5a5a5a;
+}
+
 /* Own Styles */
 
 .displayBlock {
@@ -590,6 +615,7 @@ ol {
   -ms-flex: 0 0 100px;
   flex: 0 0 100px;
   margin-right: 10px;
+  margin-top: 10px;
   border: none;
 }
 
@@ -658,4 +684,8 @@ img {
   resize: both;
   min-height: 20px;
   line-height: 20px;
+}
+
+.headroom {
+  flex: 0.65!important;
 }

@@ -2,9 +2,11 @@
 
     {{!-- Sheet Header --}}
     <header class="sheet-header">
-        <img class="profile-img-goon" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="200" width="200"/>
+        <div class="headroom">
+            <img class="profile-img-goon" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="200" width="200"/>
+            <h1 class="goonname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+        </div>
         <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
             <div class="resources grid grid-2col">
                 <div class="resource flex-group-center">
                     <h3 class="subheader">Physical Health</h3>
@@ -63,26 +65,24 @@
                     {{/each}} {{/select}}
                 </select>
                 <label for="data.bodies.morph1.dur" class="resource-label labelWidth-small">Dur</label>
-                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.dur" value="{{data.bodies.morph1.dur}}" placeholder="0"/>
+                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.bodies.morph1.dur}}" placeholder="0"/>
                 <label for="data.bodies.morph1.movement" class="resource-label labelWidth-small">Mov</label>
-                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0"/>
+                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0"/>
             </div>
-            <div class="flexrow flex-group-left">
+            <div class="flexrow flex-group-right">
                 <label for="data.bodies.morph1.insight" class="resource-label labelWidth-medium">ins</label>
-                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.insight" value="{{data.bodies.morph1.insight}}" placeholder="0"/>
+                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.insight" value="{{data.bodies.morph1.insight}}" placeholder="0"/>
                 <label for="data.bodies.morph1.moxie" class="resource-label labelWidth-medium">mox</label>
-                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.moxie" value="{{data.bodies.morph1.moxie}}" placeholder="0"/>
+                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.moxie" value="{{data.bodies.morph1.moxie}}" placeholder="0"/>
                 <label for="data.bodies.morph1.vigor" class="resource-label labelWidth-medium">vig</label>
-                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.vigor" value="{{data.bodies.morph1.vigor}}" placeholder="0"/>
-                <label for="data.bodies.morph1.flex" class="resource-label labelWidth-medium">flex</label>
-                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.flex" value="{{data.bodies.morph1.flex}}" placeholder="0"/>
+                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.vigor" value="{{data.bodies.morph1.vigor}}" placeholder="0"/>
             </div>
             <div class="flexrow flex-group-left">
                 <input class="item-standard-margin-medium" type="text" name="data.armor.armor1.name" value="{{data.armor.armor1.name}}" placeholder="Armor name"/>
                 <label for="data.armor.armor1.energy" class="resource-label labelWidth-medium">energy</label>
-                <input class="input-small item-standard-margin-medium" type="text" name="data.armor.armor1.energy" value="{{data.armor.armor1.energy}}" placeholder="0"/>
+                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.armor.armor1.energy" value="{{data.armor.armor1.energy}}" placeholder="0"/>
                 <label for="data.armor.armor1.kinetic" class="resource-label labelWidth-medium">kinetic</label>
-                <input class="input-small item-standard-margin-medium" type="text" name="data.armor.armor1.kinetic" value="{{data.armor.armor1.kinetic}}" placeholder="0"/>
+                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.armor.armor1.kinetic" value="{{data.armor.armor1.kinetic}}" placeholder="0"/>
             </div>
         </div>
     </header>
@@ -131,17 +131,6 @@
                         <span class="resource-label labelWidth-medium">/
                         {{#if data.bodies.morph1.vigor}}
                                 {{data.bodies.morph1.vigor}}
-                            {{else}}
-                                0
-                            {{/if}}
-                        </span>
-                    </div>
-                    <div class="flex-center">
-                        <label for="data.bodies.morph1.flex" class="resource-label labelWidth-medium">flex</label>
-                        <input class="input-small item-standard-margin-small" type="text" name="data.pools.flex.value" value="{{data.pools.flex.value}}" placeholder="0"/>
-                        <span class="resource-label labelWidth-medium">/
-                        {{#if data.bodies.morph1.flex}}
-                                {{data.bodies.morph1.flex}}
                             {{else}}
                                 0
                             {{/if}}
@@ -285,7 +274,6 @@
                 </div>
                 {{#each actor.rangedWeapon as |item id|}}
                 <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                    <input type="checkbox" class="sheet" name="item.data.active" {{checked item.data.active}}>
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <h4 class="item-image flex-group-left noMargin"><strong>{{item.name}}</strong></h4>
                     <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
@@ -323,7 +311,6 @@
                 {{#each actor.ccweapon as |item id|}}
                 {{log "MyItem" this}}
                 <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                    <input type="checkbox" class="sheet" name="item.data.active" {{checked item.data.active}}>
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <h4 class="item-image flex-group-left noMargin"><strong>{{item.name}}</strong></h4>
                     <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
