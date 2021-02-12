@@ -258,6 +258,7 @@
         </div>
         {{!-- Weapons Tab --}}
         <div class="tab" data-group="primary" data-tab="weapons">
+            {{#if actor.rangedWeapon}}
             <div class="weaponslist">
                 <div class="grid grid-2col">
                     <div>
@@ -273,27 +274,29 @@
                     </div>
                 </div>
                 {{#each actor.rangedWeapon as |item id|}}
+                {{log "MyItem" this}}
                 <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <h4 class="item-image flex-group-left noMargin"><strong>{{item.name}}</strong></h4>
+                    <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                     <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
-                    <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
+                    <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
                     <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
                     <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
-                    <input class="input-small" type="text" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
+                    <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="text" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
                     <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
                     <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
                     <label class="item-image flex-group-left resource-label rollable roll-label input-small" data-roll="{{item.data.dv}}" data-label="damage with <br> <strong>{{item.name}}</strong>""><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <div class="item-controls flex-group-right input-small">
-                        <a class="item-control item-edit" title="Edit Item" style="margin-right: 5px"><i class="fas fa-edit"></i></a>
                         <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
                 </div>
-                <div class="itemdescription" style="margin-bottom: 10px">
-                    <strong>Notes:</strong> {{item.data.description}}
+                <div class="item itemdescription" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                 </div>
                 {{/each}}
             </div>
+            {{/if}}
+            {{#if actor.ccweapon}}
             <div class="weaponslist">
                 <div class="grid grid-2col">
                     <div>
@@ -309,23 +312,22 @@
                     </div>
                 </div>
                 {{#each actor.ccweapon as |item id|}}
-                {{log "MyItem" this}}
                 <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <h4 class="item-image flex-group-left noMargin"><strong>{{item.name}}</strong></h4>
+                    <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                     <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
                     <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
                     <label class="item-image flex-group-left resource-label rollable roll-label input-small" data-roll="{{item.data.dv}}" data-label="damage with <br> <strong>{{item.name}}</strong>""><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <div class="item-controls flex-group-right input-small">
-                        <a class="item-control item-edit" title="Edit Item" style="margin-right: 5px"><i class="fas fa-edit"></i></a>
                         <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
                 </div>
                 <div class="itemdescription" style="margin-bottom: 10px">
-                    <strong>Notes:</strong> {{item.data.description}}
+                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                 </div>
                 {{/each}}
             </div>
+            {{/if}}
         </div>
         </div>
         {{!-- Psi Tab --}}

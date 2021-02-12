@@ -129,6 +129,9 @@ export class NpcSheet extends ActorSheet {
                 li.addEventListener("dragstart", handler, false);
             });
         }
+
+        //Item Input Fields
+        html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
     }
 
     _onItemCreate(event) {
@@ -167,6 +170,16 @@ export class NpcSheet extends ActorSheet {
             });
         }
 
+    }
+
+    _onSkillEdit(event) {
+        event.preventDefault();
+        let element = event.currentTarget;
+        let itemId = element.closest(".item").dataset.itemId;
+        let item = this.actor.getOwnedItem(itemId);
+        let field = element.dataset.field;
+
+        return item.update({ [field]: element.value });
     }
 
 }
