@@ -485,28 +485,28 @@ optgroup .Default .Roll .Mode,
 
 /* World Anvil Integration */
 .mce-content-body {
-  color: #d8d8d8;
-  font-family: "Roboto", sans-serif;
+  color: #d8d8d8!important;
+  font-family: "Roboto", sans-serif!important;
 }
 
 .mce-content-body p {
-  font-size: 16px;
+  font-size: 16px!important;
 }
 
 .mce-content-body h1 {
-  border-bottom: #4098d6;
+  border-bottom: #4098d6!important;
 }
 
 .world-anvil header.section {
-  border-bottom: #4098d6;
+  border-bottom: #4098d6!important;
 }
 
 .world-anvil a.article-link {
-  color: #d8d8d8;
+  color: #d8d8d8!important;
 }
 
 .world-anvil .world-anvil-link {
-  color: #d8d8d8;
+  color: #d8d8d8!important;
 }
 
 /* Own Styles */
