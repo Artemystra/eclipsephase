@@ -479,6 +479,24 @@ optgroup .Default .Roll .Mode,
   background: #5a5a5a;
 }
 
+.journal-sheet form h1 {
+  border-bottom: #4098d6;
+}
+
+/* World Anvil Integration */
+.mce-content-body {
+  color: #d8d8d8;
+  font-family: "Roboto", sans-serif;
+}
+
+.mce-content-body p {
+  font-size: 16px;
+}
+
+.mce-content-body h1 {
+  border-bottom: #4098d6;
+}
+
 /* Own Styles */
 
 .displayBlock {
