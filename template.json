@@ -12,13 +12,15 @@
           "stress": null,
           "luc": null,
           "ir": null,
-          "tt": null
+          "tt": null,
+          "min": 0
         },
         "physical": {
           "wounds": null,
           "damage": null,
           "dr": null,
-          "wt": null
+          "wt": null,
+          "min": 0
         },
         "mods": {
           "globalMod": null,
@@ -491,7 +493,8 @@
       "psiStrain": {
         "name": "",
         "strainType": "",
-        "description": ""
+        "description": "",
+        "infection": ""
       },
       "strainInfluence": {
         "influence1": {

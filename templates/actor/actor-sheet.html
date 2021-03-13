@@ -653,6 +653,8 @@
                     <li><textarea class="description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.psiStrain.description}}</textarea></li>
                 </ol>
                 <ol>
+                    <span class="resource-label item-standard-margin input-large"><strong>Infection Rating</strong></span>
+                    <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.psiStrain.infection}}" placeholder="0"/>
                 {{#each data.strainInfluence as |influence key|}}
                     <li><div class="textAreaDescription"><textarea class="description" name="data.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
                 {{/each}}
