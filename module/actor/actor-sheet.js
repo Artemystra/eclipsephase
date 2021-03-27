@@ -1,3 +1,4 @@
+import * as Dice from "../dice.js"
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -154,7 +155,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     });
 
     // Rollable abilities.
-    html.find('.rollable').click(this._onRoll.bind(this));
+    html.find('.task-check').click(this._onTaskCheck.bind(this));
+    html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
     // Drag events for macros.
     if (this.actor.owner) {
@@ -166,7 +168,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       });
 
       //Item Input Fields
-
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
     }
@@ -204,21 +205,37 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onRoll(event) {
+  _onTaskCheck(event) {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
+    const actorData = this.actor.data.data;
 
-    if (dataset.roll) {
-      let roll = new Roll(dataset.roll, this.actor.data.data);
-        let label = dataset.label ? `Rolls ${dataset.label}` : '';
-        roll.roll().toMessage({
-          speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-          flavor: label
-        });
-      }
-
+      Dice.TaskCheck ({
+        skillName : dataset.name,
+        specName : dataset.specname,
+        rollType : dataset.type,
+        skillValue : dataset.rollvalue,
+        actorData : actorData,
+        askForOptions : event.shiftKey,
+        optionsSettings: game.settings.get("eclipsephase", "showTaskOptions")
+      });
     }
+
+  _onDamageRoll(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const actorData = this.actor.data.data;
+
+      Dice.DamageRoll ({
+        weaponName : dataset.weaponname,
+        weaponDamage : dataset.roll,
+        actorData : actorData,
+        askForOptions : event.shiftKey,
+        optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
+      });
+  }
 
   _onSkillEdit(event) {
     event.preventDefault();

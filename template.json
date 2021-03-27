@@ -25,7 +25,8 @@
         "mods": {
           "globalMod": null,
           "traumaMod": null,
-          "woundMod": null
+          "woundMod": null,
+          "iniMod": null
         },
         "initiative": {
           "value": null

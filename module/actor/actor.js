@@ -45,61 +45,61 @@ export class EclipsePhaseActor extends Actor {
     //Derived Skills
     for (let [key, aptitude] of Object.entries(data.aptitudes)) {
       aptitude.mod = aptitude.value * 3;
-      aptitude.roll = (aptitude.value * 3) - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+      aptitude.roll = (aptitude.value * 3) - data.mods.woundMod - data.mods.traumaMod;
     }
     for (let [key, skill] of Object.entries(data.skillsIns)) {
       if(key === 'program' || key === 'interface' || key === 'infosec' ){
         skill.derived = skill.value + data.aptitudes.cog.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else if (key === 'perceive') {
         skill.derived = skill.value + data.aptitudes.int.value * 2;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else {
         skill.derived = skill.value + data.aptitudes.int.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
     }
     for (let [key, skill] of Object.entries(data.skillsMox)) {
       if(key === 'provoke' || key === 'persuade' || key === 'kinesics' || key === 'deceive' ){
         skill.derived = skill.value + data.aptitudes.sav.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else {
         skill.derived = skill.value + data.aptitudes.wil.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
     }
     for (let [key, skill] of Object.entries(data.skillsVig)) {
       if(key === 'athletics' || key === 'free fall' || key === 'melee' ){
         skill.derived = skill.value + data.aptitudes.som.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else if (key === 'fray'){
         skill.derived = (skill.value + data.aptitudes.ref.value * 2);
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else {
         skill.derived = skill.value + data.aptitudes.ref.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
     }
     for (let [key, spec] of Object.entries(data.specSkills)) {
       spec.specCheck = (spec.value + parseInt(spec.aptitude, 10));
-      spec.roll = spec.specCheck - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+      spec.roll = spec.specCheck - data.mods.woundMod - data.mods.traumaMod;
     }
     for (let [key, know] of Object.entries(data.knowSkills)) {
       know.knowCheck = (know.value + parseInt(know.aptitude, 10));
-      know.roll = know.knowCheck - data.mods.woundMod - data.mods.traumaMod + (data.mods.globalMod);
+      know.roll = know.knowCheck - data.mods.woundMod - data.mods.traumaMod;
     }
 
 

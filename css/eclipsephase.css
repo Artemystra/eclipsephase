@@ -241,6 +241,27 @@
 
 /* Colors */
 
+
+
+span.fail {
+  font-size: 20px;
+  color: #db2a2a;
+  opacity: 1;
+}
+
+span.success {
+  font-size: 20px;
+  color: #2bb42b;
+  opacity: 1;
+}
+
+.message-timestamp,
+.message-sender,
+.flavor-text {
+  color: #d8d8d8;
+  opacity: 1;
+}
+
 .window-app .window-content {
   color: #d8d8d8;
   background: none;
@@ -250,7 +271,7 @@
 .window-app .window-content::after{
   content: "";
   background-image: url(../lib/img/background2.jpg);
-  opacity: 0.8;
+  opacity: 0.7;
   top: 0;
   left: 0;
   bottom: 0;
@@ -259,12 +280,30 @@
   z-index: -1;
 }
 
+#chat-log .message {
+  background-image: url(../lib/img/background2.jpg);
+  opacity: 0.8;
+  color: #d8d8d8;
+  border: #131313 2px solid;
+}
+
+.dice-roll .dice-total,
+.dice-roll .dice-formula{
+  border: #131313 1.5px solid;
+  border-radius: 3px;
+  box-shadow: none;
+  background-color: #2b2b2b;
+  opacity: 1;
+}
+
 input[class="sheet"]{
   -webkit-appearance:none;
   flex: 0 0 10px;
   height: 10px;
   background-color: #fff;
-  border: #2b2b2b 1px solid;margin:0 auto;display:block;
+  border: #2b2b2b 1px solid;
+  margin:0 auto;
+  display:block;
   border-radius: 100px;
   margin: 0 5px;
 }
@@ -384,6 +423,10 @@ hljs-string{
   color: #4098d6;
 }
 
+.damage-roll:hover,
+.damage-roll:focus,
+.task-check:hover,
+.task-check:focus,
 .rollable:hover,
 .rollable:focus,
 a:hover{

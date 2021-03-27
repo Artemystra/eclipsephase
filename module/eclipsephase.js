@@ -15,6 +15,26 @@ import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
 import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
 import { eclipsephase } from "./config.js";
 
+function registerSystemSettings() {
+  game.settings.register("eclipsephase", "showTaskOptions", {
+    config: true,
+    scope: "client",
+    name: "Default Show Skill Modifier Dialog",
+    hint: "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet",
+    type: Boolean,
+    default: true
+  });
+
+  game.settings.register("eclipsephase", "showDamageOptions", {
+    config: true,
+    scope: "client",
+    name: "Default Show Damage Dialog",
+    hint: "Check this option to show the damage-dialog per default when clicking any damage roll icon on the character sheet",
+    type: Boolean,
+    default: true
+  });
+}
+
 Hooks.once('init', async function() {
 
   game.eclipsephase = {
@@ -69,12 +89,19 @@ Hooks.once('init', async function() {
   Handlebars.registerHelper('toLowerCase', function(str) {
     return str.toLowerCase();
   });
+
+  registerSystemSettings();
 });
 
 Hooks.once("ready", async function() {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => createEclipsePhaseMacro(data, slot));
 });
+
+/**
+ Async function to open a dialog
+ */
+
 
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */

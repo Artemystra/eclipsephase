@@ -11,9 +11,9 @@
                 <div class="resource flex-group-center">
                     <h3 class="subheader">Physical Health</h3>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <label for="data.physical.damage" class="resource-label">Damage</label>
+                        <label class="resource-label">Damage</label>
                         <span>  </span>
-                        <label for="data.physical.wounds" class="resource-label">Wounds</label>
+                        <label class="resource-label">Wounds</label>
                     </div>
                     <div class="resource-content flexrow flex-center flex-between">
                         <input type="text" name="data.physical.damage" value="{{data.physical.damage}}" data-dtype="Number" placeholder="0"/>
@@ -29,9 +29,9 @@
                 <div class="resource flex-group-center">
                     <h3 class="subheader">Mental Health</h3>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <label for="data.mental.stress" class="resource-label">Stress</label>
+                        <label class="resource-label">Stress</label>
                         <span>  </span>
-                        <label for="data.mental.trauma" class="resource-label">Trauma</label>
+                        <label class="resource-label">Trauma</label>
                     </div>
                     <div class="resource-content flexrow flex-center flex-between">
                         <input type="text" name="data.mental.stress" value="{{data.mental.stress}}" data-dtype="Number" placeholder="0"/>
@@ -51,7 +51,7 @@
                 <div class="abilities flexrow flex-group-center">
                     <span class="resource-label">{{key}}</span>
                     <input type="text" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-                    <label for="data.aptitudes.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{aptitude.label}} check <br> against <strong>{{aptitude.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="resource-label roll-label task-check" data-roll="d100" data-label="{{aptitude.label}} check <br> against <strong>{{aptitude.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
             </div>
@@ -64,24 +64,24 @@
                     <option value="{{key}}">{{bod.label}}</option>
                     {{/each}} {{/select}}
                 </select>
-                <label for="data.bodies.morph1.dur" class="resource-label labelWidth-small">Dur</label>
+                <label class="resource-label labelWidth-small">Dur</label>
                 <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.bodies.morph1.dur}}" placeholder="0"/>
-                <label for="data.bodies.morph1.movement" class="resource-label labelWidth-small">Mov</label>
+                <label class="resource-label labelWidth-small">Mov</label>
                 <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0"/>
             </div>
             <div class="flexrow flex-group-right">
-                <label for="data.bodies.morph1.insight" class="resource-label labelWidth-medium">ins</label>
+                <label class="resource-label labelWidth-medium">ins</label>
                 <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.insight" value="{{data.bodies.morph1.insight}}" placeholder="0"/>
-                <label for="data.bodies.morph1.moxie" class="resource-label labelWidth-medium">mox</label>
+                <label class="resource-label labelWidth-medium">mox</label>
                 <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.moxie" value="{{data.bodies.morph1.moxie}}" placeholder="0"/>
-                <label for="data.bodies.morph1.vigor" class="resource-label labelWidth-medium">vig</label>
+                <label class="resource-label labelWidth-medium">vig</label>
                 <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.vigor" value="{{data.bodies.morph1.vigor}}" placeholder="0"/>
             </div>
             <div class="flexrow flex-group-left">
                 <input class="item-standard-margin-medium" type="text" name="data.armor.armor1.name" value="{{data.armor.armor1.name}}" placeholder="Armor name"/>
-                <label for="data.armor.armor1.energy" class="resource-label labelWidth-medium">energy</label>
+                <label class="resource-label labelWidth-medium">energy</label>
                 <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.armor.armor1.energy" value="{{data.armor.armor1.energy}}" placeholder="0"/>
-                <label for="data.armor.armor1.kinetic" class="resource-label labelWidth-medium">kinetic</label>
+                <label class="resource-label labelWidth-medium">kinetic</label>
                 <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.armor.armor1.kinetic" value="{{data.armor.armor1.kinetic}}" placeholder="0"/>
             </div>
         </div>
@@ -103,7 +103,7 @@
             <div class="grid-4col skills">
                 <div class="flexrow flex-group-left">
                     <div class="flex-center">
-                        <label for="data.bodies.morph1.insight" class="resource-label labelWidth-medium">insight</label>
+                        <label class="resource-label labelWidth-medium">insight</label>
                         <input class="input-small item-standard-margin-small" type="text" name="data.pools.insight.value" value="{{data.pools.insight.value}}" placeholder="0"/>
                         <span class="resource-label labelWidth-medium">/
                             {{#if data.bodies.morph1.insight}}
@@ -114,7 +114,7 @@
                         </span>
                     </div>
                     <div class="flex-center">
-                        <label for="data.bodies.morph1.moxie" class="resource-label labelWidth-medium">moxie</label>
+                        <label class="resource-label labelWidth-medium">moxie</label>
                         <input class="input-small item-standard-margin-small" type="text" name="data.pools.moxie.value" value="{{data.pools.moxie.value}}" placeholder="0"/>
                         <span class="resource-label labelWidth-medium">/
                         {{#if data.bodies.morph1.moxie}}
@@ -125,7 +125,7 @@
                         </span>
                     </div>
                     <div class="flex-center">
-                        <label for="data.bodies.morph1.vigor" class="resource-label labelWidth-medium">vigor</label>
+                        <label class="resource-label labelWidth-medium">vigor</label>
                         <input class="input-small item-standard-margin-small" type="text" name="data.pools.vigor.value" value="{{data.pools.vigor.value}}" placeholder="0"/>
                         <span class="resource-label labelWidth-medium">/
                         {{#if data.bodies.morph1.vigor}}
@@ -144,9 +144,9 @@
                     <span class="resource-label item-standard-margin input-large">{{key}}</span>
                     <input class="item-standard-margin input-small" type="text" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
-                    <label for="data.skillsIns.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check <br> against <strong>{{skill.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="resource-label roll-label task-check" data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                    <label class="resource-label roll-label rollable input-small" data-roll="d100" data-label="{{key}} ({{specname}}) check <br> against <strong>{{skill.specialized}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
                 {{#each data.skillsVig as |skill key|}}
@@ -154,9 +154,9 @@
                     <span class="resource-label item-standard-margin input-large">{{key}}</span>
                     <input class="item-standard-margin input-small" type="text" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
-                    <label for="data.skillsVig.{{key}}.value" class="resource-label roll-label rollable" data-roll="d100" data-label="{{key}} check <br> against <strong>{{skill.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="resource-label roll-label task-check" data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                    <label class="resource-label roll-label item-standard-margin input-small rollable" data-roll="d100" data-label="{{key}} ({{specname}})  check <br> against <strong>{{skill.specialized}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="resource-label roll-label item-standard-margin input-small task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
                 <div class="flexrow flex-group-center">
@@ -169,7 +169,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special1.specCheck}}</span>
-                    <label for="data.specSkills.special1.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special1.skillName}} check <br> against <strong>{{data.specSkills.special1.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.specSkills.special1.skillName}}" data-rollvalue="{{data.specSkills.special1.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special2.skillName" value="{{data.specSkills.special2.skillName}}" placeholder="Skill name"/>
@@ -181,7 +181,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special2.specCheck}}</span>
-                    <label for="data.specSkills.special2.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special2.skillName}} check <br> against <strong>{{data.specSkills.special2.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.specSkills.special2.skillName}}" data-rollvalue="{{data.specSkills.special2.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special3.skillName" value="{{data.specSkills.special3.skillName}}" placeholder="Skill name"/>
@@ -193,7 +193,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special3.specCheck}}</span>
-                    <label for="data.specSkills.special3.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special3.skillName}} check <br> against <strong>{{data.specSkills.special3.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.specSkills.special3.skillName}}" data-rollvalue="{{data.specSkills.special3.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special4.skillName" value="{{data.specSkills.special4.skillName}}" placeholder="Skill name"/>
@@ -205,7 +205,7 @@
                         {{/each}} {{/select}}
                     </select>
                     <span class="resource-label item-standard-margin input-small">{{data.specSkills.special4.specCheck}}</span>
-                    <label for="data.specSkills.special4.value" class="roll-label input-small rollable" data-roll="d100" data-label="{{data.specSkills.special4.skillName}} check <br> against <strong>{{data.specSkills.special4.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.specSkills.special4.skillName}}" data-rollvalue="{{data.specSkills.special4.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
             </div>
             {{#if actor.rangedWeapon}}
@@ -216,10 +216,10 @@
                     </div>
                     <div class="flexrow flex-group-right noBG">
                         <label class="resource-label labelWidth-large">Roll Guns</label>
-                        <label class="resource-label rollable roll-label input-small" data-roll="d100" data-label="Guns check <br> against <strong>{{data.skillsVig.guns.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{#if data.skillsVig.guns.specname}}
                         <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.guns.specname}}</label>
-                        <label class="resource-label roll-label rollable input-small" data-roll="d100" data-label="Guns ({{data.skillsVig.guns.specname}})  check <br> against <strong>{{data.skillsVig.guns.specialized}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.skillsVig.guns.specname}}" data-rollvalue="{{data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
@@ -235,7 +235,7 @@
                     <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="text" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
                     <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
                     <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                    <label class="item-image flex-group-left resource-label rollable roll-label input-small" data-roll="{{item.data.dv}}" data-label="damage with <br> <strong>{{item.name}}</strong>""><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <div class="item-controls flex-group-right input-small">
                         <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
@@ -254,10 +254,10 @@
                     </div>
                     <div class="flexrow flex-group-right noBG">
                         <label class="resource-label labelWidth-large">Roll Melee</label>
-                        <label class="resource-label rollable roll-label input-small" data-roll="d100" data-label="Melee check <br> against <strong>{{data.skillsVig.melee.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{#if data.skillsVig.melee.specname}}
                         <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.melee.specname}}</label>
-                        <label class="resource-label roll-label rollable input-small" data-roll="d100" data-label="Guns ({{data.skillsVig.melee.specname}})  check <br> against <strong>{{data.skillsVig.melee.specialized}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.skillsVig.melee.specname}}" data-rollvalue="{{data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
@@ -267,7 +267,7 @@
                     <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                     <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
                     <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                    <label class="item-image flex-group-left resource-label rollable roll-label input-small" data-roll="{{item.data.dv}}" data-label="damage with <br> <strong>{{item.name}}</strong>""><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     <div class="item-controls flex-group-right input-small">
                         <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
