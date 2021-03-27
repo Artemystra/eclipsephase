@@ -56,21 +56,17 @@
             {{/each}}
           </div>
             <h3 class="subheader">Other</h3>
-            <div class="grid grid-3col">
-                <div class="flexrow flex-group-center">
-                    <label class="resource-label">Global Mod</label>
-                    <input class="input-small" type="text" name="data.mods.globalMod" value="{{data.mods.globalMod}}" data-dtype="Number" placeholder="0"/>
-                </div>
+            <div class="grid grid-2col">
                 <div class="resource-content flexrow flex-group-center">
-                    <span class="resource-label">Initiative</span>
-                    <span class="resource-label">{{data.initiative.value}}</span>
+                    <span class="resource-label">Initiative Mod</span>
+                    <input class="input-medium" type="text" name="data.mods.iniMod" value="{{data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
                 </div>
                 <div class="resource-content flexrow flex-group-center">
                     <span class="resource-label">Rest</span>
-                    <span class="resource-label">S</span>
+                    <span class="resource-label">Short</span>
                     <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.rest.short1}}>
                     <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.rest.short2}}>
-                    <span class="resource-label">L</span>
+                    <span class="resource-label">Long</span>
                     <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.rest.long}}>
                 </div>
             </div>

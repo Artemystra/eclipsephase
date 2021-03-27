@@ -51,7 +51,7 @@
                 <div class="abilities flexrow flex-group-center">
                     <span class="resource-label">{{key}}</span>
                     <input type="text" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-                    <label class="resource-label roll-label task-check" data-roll="d100" data-label="{{aptitude.label}} check <br> against <strong>{{aptitude.roll}}</strong>"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="resource-label roll-label task-check" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 {{/each}}
             </div>
