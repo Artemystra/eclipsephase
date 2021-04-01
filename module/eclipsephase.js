@@ -13,6 +13,8 @@ import { EclipsePhaseArmorSheet } from "./item/armor-sheet.js";
 import { EclipsePhaseWareSheet } from "./item/ware-sheet.js";
 import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
 import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
+import { EclipsePhaseSpecialSkillSheet } from "./item/specialskill-sheet.js";
+import { EclipsePhaseKnowSkillSheet } from "./item/knowskill-sheet.js";
 import { eclipsephase } from "./config.js";
 
 function registerSystemSettings() {
@@ -72,6 +74,8 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseWareSheet, {types: ["ware"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseAspectSheet, {types: ["aspect"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseProgramSheet, {types: ["program"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseKnowSkillSheet, {types: ["knowSkill"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseSpecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
 
 
 

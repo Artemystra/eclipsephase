@@ -42,3 +42,17 @@ eclipsephase.psiTypes = {
     chi: "Chi",
     gamma: "Gamma"
 }
+
+eclipsephase.aptitudes = {
+    cog: "Cognition",
+    int: "Intuition",
+    ref: "Reflexes",
+    sav: "Savvy",
+    som: "Somatics",
+    wil: "Willpower"
+}
+
+eclipsephase.knowAptitudes = {
+    cog: "Cognition",
+    int: "Intuition"
+}

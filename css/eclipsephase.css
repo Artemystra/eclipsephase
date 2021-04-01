@@ -575,7 +575,7 @@ optgroup .Default .Roll .Mode,
   max-width: 180px!important;
 }
 
-.sheet-inline-edit {
+.weaponslist .sheet-inline-edit {
   min-height: 20px!important;
   max-height: 20px!important;
   margin-right: 5px!important;

@@ -1,0 +1,17 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+        <div class="flexrow flex-group-center">
+            <input class="item-standard-margin" type="text" name="name" value="{{item.name}}" placeholder="Skill name"/>
+            <input class="item-standard-margin-both-large input-small" type="text" name="data.value" value="{{data.value}}" data-dtype="Number" placeholder="0"/>
+            <label class="flex-group-center input-small item-standard-margin-medium"><strong>{{data.roll}}</strong></label>
+            <select class="input-XL" name="data.aptitude" data-type="String">
+                {{#select data.aptitude}}
+                {{#each config.knowAptitudes as |name type|}}
+                <option value="{{name}}">{{name}}</option>
+                {{/each}} {{/select}}
+            </select>
+        </div>
+    </section>
+</form>

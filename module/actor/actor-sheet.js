@@ -31,6 +31,9 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       this._prepareCharacterItems(data);
     }
 
+    //Prepare dropdowns
+    data.config = CONFIG.eclipsephase;
+
     return data;
   }
 
@@ -43,23 +46,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    */
   _prepareCharacterItems(sheetData) {
     const actorData = sheetData.actor;
+    const data = actorData.data;
 
     // Initialize containers.
 
     const gear = [];
-    const features = [];
-    const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: []
-    };
+    const know = [];
+    const special = [];
     const trait = [];
     const flaw = [];
     const rangedweapon = [];
@@ -76,14 +69,40 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       let item = i.data;
       i.img = i.img || DEFAULT_TOKEN;
       // Append to features.
-      if (i.type === 'feature') {
-        features.push(i);
+      if (i.type === 'specialSkill') {
+        let aptSelect = 0;
+        if (i.data.aptitude === "Intuition") {
+          aptSelect = data.aptitudes.int.value;
+        }
+        else if (i.data.aptitude === "Cognition") {
+          aptSelect = data.aptitudes.cog.value;
+        }
+        else if (i.data.aptitude === "Reflexes") {
+          aptSelect = data.aptitudes.ref.value;
+        }
+        else if (i.data.aptitude === "Somatics") {
+          aptSelect = data.aptitudes.som.value;
+        }
+        else if (i.data.aptitude === "Willpower") {
+          aptSelect = data.aptitudes.wil.value;
+        }
+        else if (i.data.aptitude === "Savvy") {
+          aptSelect = data.aptitudes.sav.value;
+        }
+        i.roll = Number(i.data.value) + aptSelect;
+        special.push(i);
       }
       // Append to spells.
-      else if (i.type === 'spell') {
-        if (i.data.spellLevel != undefined) {
-          spells[i.data.spellLevel].push(i);
+      else if (i.type === 'knowSkill') {
+        let aptSelect = 0;
+        if (i.data.aptitude === "Intuition") {
+          aptSelect = data.aptitudes.int.value;
         }
+        else if (i.data.aptitude === "Cognition") {
+          aptSelect = data.aptitudes.cog.value;
+        }
+        i.roll = Number(i.data.value) + aptSelect;
+        know.push(i);
       }
       else if (i.type === 'trait') {
         trait.push(i)
@@ -124,8 +143,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.aspect = aspect;
     actorData.program = program;
     actorData.gear = gear;
-    actorData.features = features;
-    actorData.spells = spells;
+    actorData.knowSkill = know;
+    actorData.specialSkill = special;
   }
 
   /* -------------------------------------------- */

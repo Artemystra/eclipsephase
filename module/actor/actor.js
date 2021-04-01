@@ -13,10 +13,38 @@ export class EclipsePhaseActor extends Actor {
     const actorData = this.data;
     const data = actorData.data;
     const flags = actorData.flags;
+    const item = this.items;
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     if (actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon') this._prepareCharacterData(actorData);
+
+    for (let value of item ) {
+      let key = value.type;
+      let aptSelect = 0;
+      console.log(value);
+      if (value.data.data.aptitude === "Intuition") {
+        aptSelect = data.aptitudes.int.value;
+      }
+      else if (value.data.data.aptitude === "Cognition") {
+        aptSelect = data.aptitudes.cog.value;
+      }
+      else if (value.data.data.aptitude === "Reflexes") {
+        aptSelect = data.aptitudes.ref.value;
+      }
+      else if (value.data.data.aptitude === "Somatics") {
+        aptSelect = data.aptitudes.som.value;
+      }
+      else if (value.data.data.aptitude === "Willpower") {
+        aptSelect = data.aptitudes.wil.value;
+      }
+      else if (value.data.data.aptitude === "Savvy") {
+        aptSelect = data.aptitudes.sav.value;
+      }
+      if(key === 'specialSkill' || key === 'knowSkill'){
+        value.data.data.roll = Number(value.data.data.value) + aptSelect;
+      }
+    }
 
     //Physical & Mental derives
       data.physical.wt = Math.round(data.bodies.morph1.dur / 5);

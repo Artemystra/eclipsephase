@@ -1124,7 +1124,9 @@
       "flaw",
       "ware",
       "aspect",
-      "program"
+      "program",
+      "specialSkill",
+      "knowSkill"
     ],
     "templates": {
       "base": {
@@ -1204,6 +1206,17 @@
       ],
       "quantity": 1,
       "programLevel": ""
+    },
+    "specialSkill": {
+      "name": "",
+      "value": null,
+      "aptitude": null,
+      "roll": 0
+    },
+    "knowSkill": {
+      "name": "",
+      "value": null,
+      "aptitude": null
     }
   }
 }
