@@ -554,6 +554,10 @@ optgroup .Default .Roll .Mode,
 
 /* Own Styles */
 
+.hoverable {
+  cursor: pointer;
+}
+
 .separator {
   display: flex;
   align-items: center;
@@ -649,8 +653,8 @@ optgroup .Default .Roll .Mode,
 
 .icon-small,
 .icon-hidden{
-  height: 30px!important;
-  width: 26px!important;
+  height: 22px!important;
+  width: 22px!important;
   border: none;
   margin: 0 0.2em!important;
 }

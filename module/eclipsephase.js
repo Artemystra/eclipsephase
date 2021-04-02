@@ -15,6 +15,8 @@ import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
 import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
 import { EclipsePhaseSpecialSkillSheet } from "./item/specialskill-sheet.js";
 import { EclipsePhaseKnowSkillSheet } from "./item/knowskill-sheet.js";
+import {EclipsePhaseMorphTraitSheet} from "./item/morphtrait-sheet.js";
+import {EclipsePhaseMorphFlawSheet} from "./item/morphflaw-sheet.js";
 import { eclipsephase } from "./config.js";
 
 function registerSystemSettings() {
@@ -68,6 +70,8 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseGearSheet, {types: ["gear"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseTraitSheet, {types: ["trait"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseFlawSheet, {types: ["flaw"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseMorphTraitSheet, {types: ["morphTrait"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseMorphFlawSheet, {types: ["morphFlaw"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseRangedWeaponSheet, {types: ["rangedWeapon"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseCloseCombatWeaponSheet, {types: ["ccWeapon"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseArmorSheet, {types: ["armor"], makeDefault: true });

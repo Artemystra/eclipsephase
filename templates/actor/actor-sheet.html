@@ -93,9 +93,8 @@
                     {{#each actor.trait as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding: 0px 5px;">
                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                        <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
                         <div class="item-controls flex-group-right" style="flex: 0.2;">
-                            <a class="item-control item-edit" title="Edit Item" style="margin-right: 5px"><i class="fas fa-edit"></i></a>
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
@@ -109,9 +108,8 @@
                     {{#each actor.flaw as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding: 0px 5px;">
                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                        <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
                         <div class="item-controls flex-group-right" style="flex: 0.2;">
-                            <a class="item-control item-edit" title="Edit Item" style="margin-right: 5px"><i class="fas fa-edit"></i></a>
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
@@ -260,13 +258,13 @@
                 <div>
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <a class="item-control item-delete item-standard-margin" style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                        <label class="flex-group-center flex-group-left item-control item-edit item-standard-margin" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{item.name}}</strong></label>
+                        <label class="flex-group-center flex-group-left item-control item-edit item-standard-margin hoverable" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{item.name}}</strong></label>
                         <input class="input-small sheet-inline-edit" data-field="data.value" type="text" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
-                        <label class="flex-group-center input-small item-control item-edit"><strong>{{item.roll}}</strong></label>
+                        <label class="flex-group-center input-small item-control item-edit hoverable"><strong>{{item.roll}}</strong></label>
                         {{#if item.data.aptitude}}
-                        <label class="flex-group-center input-large item-control item-edit"><strong>{{item.data.aptitude}}</strong></label>
+                        <label class="flex-group-center input-large item-control item-edit hoverable"><strong>{{item.data.aptitude}}</strong></label>
                         {{else}}
-                        <label class="flex-group-center input-large item-control item-edit"><strong>Choose Apt</strong></label>
+                        <label class="flex-group-center input-large item-control item-edit hoverable"><strong>Choose Apt</strong></label>
                         {{/if}}
                         <label class="item-standard-margin-medium resource-label roll-label task-check" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     </div>
@@ -292,13 +290,13 @@
                     <div>
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <a class="item-control item-delete item-standard-margin" style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                            <label class="flex-group-center flex-group-left item-control item-edit item-standard-margin" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{item.name}}</strong></label>
+                            <label class="flex-group-center flex-group-left item-control item-edit item-standard-margin hoverable" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{item.name}}</strong></label>
                             <input class="input-small sheet-inline-edit item-standard-margin" data-field="data.value" type="text" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
-                            <label class="flex-group-center input-small item-control item-edit"><strong>{{item.roll}}</strong></label>
+                            <label class="flex-group-center input-small item-control item-edit hoverable"><strong>{{item.roll}}</strong></label>
                             {{#if item.data.aptitude}}
-                            <label class="flex-group-center input-large item-control item-edit"><strong>{{item.data.aptitude}}</strong></label>
+                            <label class="flex-group-center input-large item-control item-edit hoverable"><strong>{{item.data.aptitude}}</strong></label>
                             {{else}}
-                            <label class="flex-group-center input-large item-control item-edit"><strong>Choose Apt</strong></label>
+                            <label class="flex-group-center input-large item-control item-edit hoverable"><strong>Choose Apt</strong></label>
                             {{/if}}
                             <label class="item-standard-margin-medium resource-label roll-label task-check" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         </div>
@@ -328,11 +326,51 @@
                     <label class="resource-label labelWidth-large">Movement</label>
                     <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
                 </div>
-            <div class="grid">
-                <div class="flexrow flex-group-left noBorder"><label class="resource-label">Ware</label></div>
-                <div class="flexrow flex-group-left noBorder"><label class="resource-label">Traits</label></div>
-                <div class="textAreaDescription"><textarea class="description" name="data.bodies.morph1.morphWare" rows="10" cols="60">{{data.bodies.morph1.morphWare}}</textarea></div>
-                <div class="textAreaDescription"><textarea class="description" name="data.bodies.morph1.morphTraits" rows="10" cols="60">{{data.bodies.morph1.morphTraits}}</textarea></div>
+            <div class="grid grid-2col">
+                <div>
+                    <h3 class="subheader">Ware</h3>
+                    <div class="textAreaDescription"><textarea class="description" name="data.bodies.morph1.morphWare" rows="10" cols="60">{{data.bodies.morph1.morphWare}}</textarea></div>
+                    {{#each actor.ware as |item id|}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding: 0px 5px;">
+                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
+                        <div class="item-controls flex-group-right" style="flex: 0.2;">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    <div class="itemdescription" style="margin-bottom: 10px">
+                        <strong>Description:</strong> {{item.data.description}}
+                    </div>
+                    {{/each}}
+                </div>
+                <div>
+                    <h3 class="subheader">Morph Traits</h3>
+                    <div class="textAreaDescription"><textarea class="description" name="data.bodies.morph1.morphTraits" rows="10" cols="60">{{data.bodies.morph1.morphTraits}}</textarea></div>
+                    {{#each actor.morphTrait as |item id|}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding: 0px 5px;">
+                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                        <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
+                        <div class="item-controls flex-group-right" style="flex: 0.2;">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    <div class="itemdescription" style="margin-bottom: 10px">
+                        <strong>Description:</strong> {{item.data.description}}
+                    </div>
+                    {{/each}}
+                    {{#each actor.morphFlaw as |item id|}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding: 0px 5px;">
+                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                        <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
+                        <div class="item-controls flex-group-right" style="flex: 0.2;">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    <div class="itemdescription" style="margin-bottom: 10px">
+                        <strong>Description:</strong> {{item.data.description}}
+                    </div>
+                    {{/each}}
+                </div>
             </div>
             <div class="grid-4col skills">
                 <div class="flexrow flex-group-left">
@@ -364,6 +402,21 @@
                     <label class="resource-label labelWidth-medium">kinetic</label>
                     <input class="input-small item-standard-margin-medium" type="text" name="data.armor.armor1.kinetic" value="{{data.armor.armor1.kinetic}}" placeholder="0" style="text-align: center"/>
                 </div>
+                {{#each actor.armor as |item id|}}
+                <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                    <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                    <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.energy}}</strong></label>
+                    <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.kinetic}}</strong></label>
+                    <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                    <div class="item-controls flex-group-right input-small">
+                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                    </div>
+                </div>
+                <div class="item itemdescription" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                </div>
+                {{/each}}
             </div>
         </div>
         {{!-- Gear Tab --}}
@@ -384,7 +437,6 @@
                     </div>
                 </div>
                 {{#each actor.rangedWeapon as |item id|}}
-                {{log "MyItem" this}}
                 <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
@@ -530,7 +582,6 @@
                     </div>
                 </div>
                 {{#each actor.aspect as |item id|}}
-                {{log "MyAspect" this}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
                         <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
                         <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.1;"><i>Psi-{{item.data.psiType}}</i></label>

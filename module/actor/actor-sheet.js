@@ -55,6 +55,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const special = [];
     const trait = [];
     const flaw = [];
+    const morphtrait = [];
+    const morphflaw = [];
     const rangedweapon = [];
     const ccweapon = [];
     const armor = [];
@@ -110,6 +112,12 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       else if (i.type === 'flaw') {
         flaw.push(i)
       }
+      else if (i.type === 'morphTrait') {
+        morphtrait.push(i)
+      }
+      else if (i.type === 'morphFlaw') {
+        morphflaw.push(i)
+      }
       else if (i.type === 'rangedWeapon') {
         rangedweapon.push(i)
       }
@@ -136,6 +144,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     // Assign and return
     actorData.trait = trait;
     actorData.flaw = flaw;
+    actorData.morphTrait = morphtrait;
+    actorData.morphFlaw = morphflaw;
     actorData.rangedWeapon = rangedweapon;
     actorData.ccweapon = ccweapon;
     actorData.armor = armor;

@@ -25,6 +25,11 @@ eclipsephase.gearTypes = {
     bulky: "Bulky"
 }
 
+eclipsephase.armorTypes = {
+    main: "Main Armor",
+    additional: "Additional Armor"
+}
+
 eclipsephase.costTypes = {
     minor: "Minor",
     moderate: "Moderate",
