@@ -17,6 +17,7 @@ import { EclipsePhaseSpecialSkillSheet } from "./item/specialskill-sheet.js";
 import { EclipsePhaseKnowSkillSheet } from "./item/knowskill-sheet.js";
 import {EclipsePhaseMorphTraitSheet} from "./item/morphtrait-sheet.js";
 import {EclipsePhaseMorphFlawSheet} from "./item/morphflaw-sheet.js";
+import {EclipsePhaseVehicleSheet} from "./item/vehicle-sheet.js";
 import { eclipsephase } from "./config.js";
 
 function registerSystemSettings() {
@@ -80,6 +81,7 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseProgramSheet, {types: ["program"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseKnowSkillSheet, {types: ["knowSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseSpecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseVehicleSheet, {types: ["vehicle"], makeDefault: true });
 
 
 

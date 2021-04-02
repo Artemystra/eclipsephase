@@ -48,6 +48,7 @@ export class GoonSheet extends ActorSheet {
         const armor = [];
         const ware = [];
         const aspect = [];
+        const vehicle = [];
 
         // Iterate through items, allocating to containers
         // let totalWeight = 0;
@@ -83,6 +84,11 @@ export class GoonSheet extends ActorSheet {
             else if (i.type === 'aspect') {
                 aspect.push(i)
             }
+            else if (i.type === 'vehicle') {
+                i.wt = Math.round(i.data.dur / 5);
+                i.dr = Math.round(i.data.dur * 2);
+                vehicle.push(i)
+            }
         }
 
         // Assign and return
@@ -94,6 +100,7 @@ export class GoonSheet extends ActorSheet {
         actorData.gear = gear;
         actorData.features = features;
         actorData.spells = spells;
+        actorData.vehicle = vehicle;
     }
 
     activateListeners(html) {

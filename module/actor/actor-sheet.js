@@ -63,6 +63,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const ware = [];
     const aspect = [];
     const program = [];
+    const vehicle = [];
     const item = [];
 
     // Iterate through items, allocating to containers
@@ -139,6 +140,11 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       else if (i.type === 'gear') {
         gear.push(i)
       }
+      else if (i.type === 'vehicle') {
+        i.wt = Math.round(i.data.dur / 5);
+        i.dr = Math.round(i.data.dur * 2);
+        vehicle.push(i)
+      }
     }
 
     // Assign and return
@@ -155,6 +161,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.gear = gear;
     actorData.knowSkill = know;
     actorData.specialSkill = special;
+    actorData.vehicle = vehicle
   }
 
   /* -------------------------------------------- */

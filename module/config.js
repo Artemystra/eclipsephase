@@ -33,7 +33,8 @@ eclipsephase.armorTypes = {
 eclipsephase.costTypes = {
     minor: "Minor",
     moderate: "Moderate",
-    major: "Major"
+    major: "Major",
+    rare: "Rare"
 }
 
 eclipsephase.programLevels = {
@@ -60,4 +61,12 @@ eclipsephase.aptitudes = {
 eclipsephase.knowAptitudes = {
     cog: "Cognition",
     int: "Intuition"
+}
+
+eclipsephase.vehicleSize = {
+    vs: "Very Small",
+    s: "Small",
+    m: "Medium",
+    l: "Large",
+    vl: "Very Large"
 }

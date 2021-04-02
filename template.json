@@ -969,7 +969,8 @@
       "aspect",
       "program",
       "specialSkill",
-      "knowSkill"
+      "knowSkill",
+      "vehicle"
     ],
     "templates": {
       "base": {
@@ -1074,6 +1075,21 @@
       "name": "",
       "value": null,
       "aptitude": null
+    },
+    "vehicle": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "vig": null,
+      "flex": null,
+      "armor": null,
+      "dur": null,
+      "wounds": null,
+      "curVig": null,
+      "curFlex": null,
+      "curDur": null,
+      "mov": null
     }
   }
 }

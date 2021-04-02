@@ -1,0 +1,76 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+        <div class="flexrow flex-group-center">
+            <table>
+                <tr>
+                    <td>
+                        <label class="resource-label">Vigor</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Flex</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Armor</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">DUR</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Movement</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Size</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Cost</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="input-medium"type="number" name="data.vig" value="{{data.vig}}" placeholder="e.g. 1"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="data.flex" value="{{data.flex}}" placeholder="e.g. 1"/>
+                    </td>
+                    <td>
+                        <input class="input-medium" type="text" name="data.armor" value="{{data.armor}}" placeholder="e.g. 2/2"/>
+                    </td>
+                    <td>
+                        <input class="input-medium" type="number" name="data.dur" value="{{data.dur}}" placeholder="e.g. 20"/>
+                    </td>
+                    <td>
+                        <input class="input-large" type="text" name="data.mov" value="{{data.mov}}" placeholder="e.g. 8/32 Rotor"/>
+                    </td>
+                    <td>
+                        <select name="data.slotType" data-type="String">
+                            {{#select data.slotType}}
+                            {{#each config.vehicleSize as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="data.cost" data-type="String">
+                            {{#select data.cost}}
+                            {{#each config.costTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <p></p>
+
+        <h2>Notes</h2>
+            <input type="text" name="data.description" value="{{data.description}}" placeholder="Long, Fixed, Silencer etc."/>
+    </section>
+</form>

@@ -241,8 +241,6 @@
 
 /* Colors */
 
-
-
 span.fail {
   font-size: 20px;
   color: #db2a2a;
@@ -534,6 +532,7 @@ optgroup .Default .Roll .Mode,
 
 .mce-content-body p {
   font-size: 16px!important;
+  color: #d8d8d8!important;
 }
 
 .mce-content-body h1 {
@@ -549,6 +548,10 @@ optgroup .Default .Roll .Mode,
 }
 
 .world-anvil .world-anvil-link {
+  color: #d8d8d8!important;
+}
+
+body#tinymce.mce-content-body {
   color: #d8d8d8!important;
 }
 
