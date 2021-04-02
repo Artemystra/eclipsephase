@@ -293,9 +293,7 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "movement": null
         },
         "morph2": {
           "name": "",
@@ -305,9 +303,7 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "movement": null
         },
         "morph3": {
           "name": "",
@@ -317,9 +313,7 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "movement": null
         },
         "morph4": {
           "name": "",
@@ -329,9 +323,7 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "movement": null
         },
         "morph5": {
           "name": "",
@@ -341,9 +333,7 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "movement": null
         },
         "morph6": {
           "name": "",
@@ -353,26 +343,7 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
-        }
-      },
-      "armor": {
-        "armor1": {
-          "name": "",
-          "energy": "",
-          "kinetic": ""
-        },
-        "armor2": {
-          "name": "",
-          "energy": "",
-          "kinetic": ""
-        },
-        "armor3": {
-          "name": "",
-          "energy": "",
-          "kinetic": ""
+          "movement": null
         }
       },
       "psiStrain": {
@@ -747,13 +718,6 @@
           "morphTraits": ""
         }
       },
-      "armor": {
-        "armor1": {
-          "name": "",
-          "energy": "",
-          "kinetic": ""
-        }
-      },
       "psiStrain": {
         "name": "",
         "strainType": "",
@@ -976,13 +940,6 @@
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
-        }
-      },
-      "armor": {
-        "armor1": {
-          "name": "",
-          "energy": "",
-          "kinetic": ""
         }
       },
       "bodyTypes": {

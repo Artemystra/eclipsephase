@@ -79,13 +79,6 @@
                 <label class="resource-label labelWidth-medium">vig</label>
                 <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.vigor" value="{{data.bodies.morph1.vigor}}" placeholder="0"/>
             </div>
-            <div class="flexrow flex-group-left">
-                <input class="item-standard-margin-medium" type="text" name="data.armor.armor1.name" value="{{data.armor.armor1.name}}" placeholder="Armor name"/>
-                <label class="resource-label labelWidth-medium">energy</label>
-                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.armor.armor1.energy" value="{{data.armor.armor1.energy}}" placeholder="0"/>
-                <label class="resource-label labelWidth-medium">kinetic</label>
-                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.armor.armor1.kinetic" value="{{data.armor.armor1.kinetic}}" placeholder="0"/>
-            </div>
             {{#each actor.armor as |item id|}}
             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                 <input class="sheet-inline-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>

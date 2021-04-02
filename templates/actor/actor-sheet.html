@@ -329,7 +329,6 @@
             <div class="grid grid-2col">
                 <div>
                     <h3 class="subheader">Ware</h3>
-                    <div class="textAreaDescription"><textarea class="description" name="data.bodies.morph1.morphWare" rows="10" cols="60">{{data.bodies.morph1.morphWare}}</textarea></div>
                     {{#each actor.ware as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding: 0px 5px;">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
@@ -345,7 +344,6 @@
                 </div>
                 <div>
                     <h3 class="subheader">Morph Traits</h3>
-                    <div class="textAreaDescription"><textarea class="description" name="data.bodies.morph1.morphTraits" rows="10" cols="60">{{data.bodies.morph1.morphTraits}}</textarea></div>
                     {{#each actor.morphTrait as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding: 0px 5px;">
                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
@@ -394,14 +392,6 @@
             </div>
             <h2>Armor</h2>
             <div>
-                <div class="flexrow flex-group-left noBorder">
-                    <label class="resource-label labelWidth-medium">Name</label>
-                    <input class="item-standard-margin-medium" type="text" name="data.armor.armor1.name" value="{{data.armor.armor1.name}}" placeholder="Armor name"/>
-                    <label class="resource-label labelWidth-medium">energy</label>
-                    <input class="input-small item-standard-margin-medium" type="text" name="data.armor.armor1.energy" value="{{data.armor.armor1.energy}}" placeholder="0" style="text-align: center"/>
-                    <label class="resource-label labelWidth-medium">kinetic</label>
-                    <input class="input-small item-standard-margin-medium" type="text" name="data.armor.armor1.kinetic" value="{{data.armor.armor1.kinetic}}" placeholder="0" style="text-align: center"/>
-                </div>
                 {{#each actor.armor as |item id|}}
                 <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
