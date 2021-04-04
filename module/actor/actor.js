@@ -19,33 +19,6 @@ export class EclipsePhaseActor extends Actor {
     // things organized.
     if (actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon') this._prepareCharacterData(actorData);
 
-    for (let value of item ) {
-      let key = value.type;
-      let aptSelect = 0;
-      console.log(value);
-      if (value.data.data.aptitude === "Intuition") {
-        aptSelect = data.aptitudes.int.value;
-      }
-      else if (value.data.data.aptitude === "Cognition") {
-        aptSelect = data.aptitudes.cog.value;
-      }
-      else if (value.data.data.aptitude === "Reflexes") {
-        aptSelect = data.aptitudes.ref.value;
-      }
-      else if (value.data.data.aptitude === "Somatics") {
-        aptSelect = data.aptitudes.som.value;
-      }
-      else if (value.data.data.aptitude === "Willpower") {
-        aptSelect = data.aptitudes.wil.value;
-      }
-      else if (value.data.data.aptitude === "Savvy") {
-        aptSelect = data.aptitudes.sav.value;
-      }
-      if(key === 'specialSkill' || key === 'knowSkill'){
-        value.data.data.roll = Number(value.data.data.value) + aptSelect;
-      }
-    }
-
     //Physical & Mental derives
       data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
 
@@ -121,15 +94,44 @@ export class EclipsePhaseActor extends Actor {
         skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
     }
-    for (let [key, spec] of Object.entries(data.specSkills)) {
-      spec.specCheck = (spec.value + parseInt(spec.aptitude, 10));
-      spec.roll = spec.specCheck - data.mods.woundMod - data.mods.traumaMod;
-    }
-    for (let [key, know] of Object.entries(data.knowSkills)) {
-      know.knowCheck = (know.value + parseInt(know.aptitude, 10));
-      know.roll = know.knowCheck - data.mods.woundMod - data.mods.traumaMod;
+
+    if (actorData.type === 'npc' || actorData.type === 'goon'){
+      for (let [key, spec] of Object.entries(data.specSkills)) {
+        spec.specCheck = (spec.value + parseInt(spec.aptitude, 10));
+        spec.roll = spec.specCheck - data.mods.woundMod - data.mods.traumaMod;
+      }
+      for (let [key, know] of Object.entries(data.knowSkills)) {
+        know.knowCheck = (know.value + parseInt(know.aptitude, 10));
+        know.roll = know.knowCheck - data.mods.woundMod - data.mods.traumaMod;
+      }
     }
 
+    for (let value of item ) {
+      let key = value.type;
+      let aptSelect = 0;
+      console.log(value);
+      if (value.data.data.aptitude === "Intuition") {
+        aptSelect = data.aptitudes.int.value;
+      }
+      else if (value.data.data.aptitude === "Cognition") {
+        aptSelect = data.aptitudes.cog.value;
+      }
+      else if (value.data.data.aptitude === "Reflexes") {
+        aptSelect = data.aptitudes.ref.value;
+      }
+      else if (value.data.data.aptitude === "Somatics") {
+        aptSelect = data.aptitudes.som.value;
+      }
+      else if (value.data.data.aptitude === "Willpower") {
+        aptSelect = data.aptitudes.wil.value;
+      }
+      else if (value.data.data.aptitude === "Savvy") {
+        aptSelect = data.aptitudes.sav.value;
+      }
+      if(key === 'specialSkill' || key === 'knowSkill'){
+        value.data.data.roll = Number(value.data.data.value) + aptSelect;
+      }
+    }
 
   }
 

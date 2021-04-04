@@ -108,37 +108,37 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         know.push(i);
       }
       else if (i.type === 'trait') {
-        trait.push(i)
+        trait.push(i);
       }
       else if (i.type === 'flaw') {
-        flaw.push(i)
+        flaw.push(i);
       }
       else if (i.type === 'morphTrait') {
-        morphtrait.push(i)
+        morphtrait.push(i);
       }
       else if (i.type === 'morphFlaw') {
-        morphflaw.push(i)
+        morphflaw.push(i);
       }
       else if (i.type === 'rangedWeapon') {
-        rangedweapon.push(i)
+        rangedweapon.push(i);
       }
       else if (i.type === 'ccWeapon') {
-        ccweapon.push(i)
+        ccweapon.push(i);
       }
       else if (i.type === 'armor') {
-        armor.push(i)
+        armor.push(i);
       }
       else if (i.type === 'ware') {
-        ware.push(i)
+        ware.push(i);
       }
       else if (i.type === 'aspect') {
-        aspect.push(i)
+        aspect.push(i);
       }
       else if (i.type === 'program') {
-        program.push(i)
+        program.push(i);
       }
       else if (i.type === 'gear') {
-        gear.push(i)
+        gear.push(i);
       }
       else if (i.type === 'vehicle') {
         i.wt = Math.round(i.data.dur / 5);
@@ -161,7 +161,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.gear = gear;
     actorData.knowSkill = know;
     actorData.specialSkill = special;
-    actorData.vehicle = vehicle
+    actorData.vehicle = vehicle;
   }
 
   /* -------------------------------------------- */

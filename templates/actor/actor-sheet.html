@@ -526,6 +526,8 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
+                        {{/if}}
+                        {{#if actor.morphFlaw}}
                         {{#each actor.morphFlaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>

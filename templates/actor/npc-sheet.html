@@ -238,26 +238,26 @@
                 <div class="noMargin grid grid-2col listBackground shape5">
                     <div class="flexrow flex-group-center">
                         <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special1.skillName" value="{{data.specSkills.special1.skillName}}" placeholder="Skill name"/>
-                        <input class="item-standard-margin-both-large input-small" type="text" name="data.specSkills.special1.value" value="{{data.specSkills.special1.value}}" data-dtype="Number" placeholder="0"/>
+                        <input class="item-standard-margin-both-large input-small" type="number" name="data.specSkills.special1.value" value="{{data.specSkills.special1.value}}" data-dtype="Number" placeholder="0"/>
                         <select class="selectSpecApt" name="data.specSkills.special1.aptitude" data-type="String">
                             {{#select data.specSkills.special1.aptitude}}
                             {{#each data.aptitudes as |aptitude key|}}
                             <option value="{{aptitude.value}}">{{aptitude.label}}</option>
                             {{/each}} {{/select}}
                         </select>
-                        <span class="resource-label item-standard-margin input-small">{{data.specSkills.special1.specCheck}}</span>
+                        <span class="resource-label item-standard-margin input-small alignCenter">{{data.specSkills.special1.specCheck}}</span>
                         <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.specSkills.special1.skillName}}" data-rollvalue="{{data.specSkills.special1.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     </div>
                     <div class="flexrow flex-group-center">
                         <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special2.skillName" value="{{data.specSkills.special2.skillName}}" placeholder="Skill name"/>
-                        <input class="item-standard-margin-both-large input-small" type="text" name="data.specSkills.special2.value" value="{{data.specSkills.special2.value}}" data-dtype="Number" placeholder="0"/>
+                        <input class="item-standard-margin-both-large input-small" type="number" name="data.specSkills.special2.value" value="{{data.specSkills.special2.value}}" data-dtype="Number" placeholder="0"/>
                         <select class="selectSpecApt" name="data.specSkills.special2.aptitude" data-type="String">
                             {{#select data.specSkills.special2.aptitude}}
                             {{#each data.aptitudes as |aptitude key|}}
                             <option value="{{aptitude.value}}">{{aptitude.label}}</option>
                             {{/each}} {{/select}}
                         </select>
-                        <span class="resource-label item-standard-margin input-small">{{data.specSkills.special2.specCheck}}</span>
+                        <span class="resource-label item-standard-margin input-small alignCenter">{{data.specSkills.special2.specCheck}}</span>
                         <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.specSkills.special2.skillName}}" data-rollvalue="{{data.specSkills.special2.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     </div>
                 </div>
@@ -272,50 +272,50 @@
                     <div class="noMargin grid grid-2col">
                         <div class="flexrow flex-group-center">
                             <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know1.skillName" value="{{data.knowSkills.know1.skillName}}" placeholder="Skill name"/>
-                            <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know1.value" value="{{data.knowSkills.know1.value}}" data-dtype="Number" placeholder="0"/>
+                            <input class="item-standard-margin-both-large input-small" type="number" name="data.knowSkills.know1.value" value="{{data.knowSkills.know1.value}}" data-dtype="Number" placeholder="0"/>
                             <select class="selectSpecApt" name="data.knowSkills.know1.aptitude" data-type="String">
                                 {{#select data.knowSkills.know1.aptitude}}
                                 {{#each data.aptitudes as |aptitude key|}}
                                 <option value="{{aptitude.value}}">{{aptitude.label}}</option>
                                 {{/each}} {{/select}}
                             </select>
-                            <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know1.knowCheck}}</span>
+                            <span class="resource-label item-standard-margin input-small alignCenter">{{data.knowSkills.know1.knowCheck}}</span>
                             <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.knowSkills.know1.skillName}}" data-rollvalue="{{data.knowSkills.know1.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         </div>
                         <div class="flexrow flex-group-center">
                             <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know2.skillName" value="{{data.knowSkills.know2.skillName}}" placeholder="Skill name"/>
-                            <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know2.value" value="{{data.knowSkills.know2.value}}" data-dtype="Number" placeholder="0"/>
+                            <input class="item-standard-margin-both-large input-small" type="number" name="data.knowSkills.know2.value" value="{{data.knowSkills.know2.value}}" data-dtype="Number" placeholder="0"/>
                             <select class="selectSpecApt" name="data.knowSkills.know2.aptitude" data-type="String">
                                 {{#select data.knowSkills.know2.aptitude}}
                                 {{#each data.aptitudes as |aptitude key|}}
                                 <option value="{{aptitude.value}}">{{aptitude.label}}</option>
                                 {{/each}} {{/select}}
                             </select>
-                            <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know2.knowCheck}}</span>
+                            <span class="resource-label item-standard-margin input-small alignCenter">{{data.knowSkills.know2.knowCheck}}</span>
                             <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.knowSkills.know2.skillName}}" data-rollvalue="{{data.knowSkills.know2.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         </div>
                         <div class="flexrow flex-group-center">
                             <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know3.skillName" value="{{data.knowSkills.know3.skillName}}" placeholder="Skill name"/>
-                            <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know3.value" value="{{data.knowSkills.know3.value}}" data-dtype="Number" placeholder="0"/>
+                            <input class="item-standard-margin-both-large input-small" type="number" name="data.knowSkills.know3.value" value="{{data.knowSkills.know3.value}}" data-dtype="Number" placeholder="0"/>
                             <select class="selectSpecApt" name="data.knowSkills.know3.aptitude" data-type="String">
                                 {{#select data.knowSkills.know3.aptitude}}
                                 {{#each data.aptitudes as |aptitude key|}}
                                 <option value="{{aptitude.value}}">{{aptitude.label}}</option>
                                 {{/each}} {{/select}}
                             </select>
-                            <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know3.knowCheck}}</span>
+                            <span class="resource-label item-standard-margin input-small alignCenter">{{data.knowSkills.know3.knowCheck}}</span>
                             <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.knowSkills.know3.skillName}}" data-rollvalue="{{data.knowSkills.know3.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         </div>
                         <div class="flexrow flex-group-center">
                             <input class="item-standard-margin input-XL" type="text" name="data.knowSkills.know4.skillName" value="{{data.knowSkills.know4.skillName}}" placeholder="Skill name"/>
-                            <input class="item-standard-margin-both-large input-small" type="text" name="data.knowSkills.know4.value" value="{{data.knowSkills.know4.value}}" data-dtype="Number" placeholder="0"/>
+                            <input class="item-standard-margin-both-large input-small" type="number" name="data.knowSkills.know4.value" value="{{data.knowSkills.know4.value}}" data-dtype="Number" placeholder="0"/>
                             <select class="selectSpecApt" name="data.knowSkills.know4.aptitude" data-type="String">
                                 {{#select data.knowSkills.know4.aptitude}}
                                 {{#each data.aptitudes as |aptitude key|}}
                                 <option value="{{aptitude.value}}">{{aptitude.label}}</option>
                                 {{/each}} {{/select}}
                             </select>
-                            <span class="resource-label item-standard-margin input-small">{{data.knowSkills.know4.knowCheck}}</span>
+                            <span class="resource-label item-standard-margin input-small alignCenter">{{data.knowSkills.know4.knowCheck}}</span>
                             <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.knowSkills.know4.skillName}}" data-rollvalue="{{data.knowSkills.know4.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         </div>
                     </div>
