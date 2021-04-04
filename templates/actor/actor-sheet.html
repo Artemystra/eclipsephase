@@ -691,7 +691,7 @@
                         {{/if}}
                     </div>
                 </div>
-                <div class="itemBackground shape3">
+                <div class="itemBackground">
                     {{#each actor.rangedWeapon as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
@@ -708,7 +708,7 @@
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
-                    <div class="item itemdescriptionImportant shape3" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <div class="item itemdescriptionImportant shape3" data-item-id="{{item._id}}">
                         <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                     </div>
                     {{/each}}
@@ -728,7 +728,7 @@
                         {{/if}}
                     </div>
                 </div>
-                <div class="itemBackground shape3">
+                <div class="itemBackground">
                     {{#each actor.ccweapon as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
@@ -740,7 +740,7 @@
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
-                    <div class="itemdescriptionImportant shape3" style="margin-bottom: 10px">
+                    <div class="itemdescriptionImportant shape3">
                         <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                     </div>
                     {{/each}}
