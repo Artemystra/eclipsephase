@@ -756,7 +756,7 @@
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                                <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
+                                <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
                                 <label class="flex-group-center noMargin flex-group-left" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
                                 <input class="input-small sheet-inline-edit" data-field="data.quantity" type="text" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
                                 <div class="item-controls flex-group-right input-small">
@@ -789,7 +789,7 @@
                         {{#each actor.program as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
+                                <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
                                 <input class="input-small sheet-inline-edit" data-field="data.quantity" type="text" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
                                 <div class="item-controls flex-group-right input-small">
                                     <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
