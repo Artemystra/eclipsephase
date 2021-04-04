@@ -610,7 +610,7 @@
                 </div>
                     <div class="topLine">
                         <div class="item" data-item-id="{{item._id}}" style="padding: 0">
-                            <table style="margin: 0px; text-align: center;">
+                            <table class="noMargin alignCenter">
                                 <tr>
                                     <td>
                                         <label class="resource-label">Type</label>
@@ -648,7 +648,7 @@
                                         <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
                                     </td>
                                     <td>
-                                        <input class="input-small sheet-inline-edit noMargin" data-field="data.curDur" type="text" name="item.data.curDur" value="{{item.data.curDur}}" placeholder="0"/>
+                                        <input class="input-small sheet-inline-edit noMargin" data-field="data.curDur" type="number" name="item.data.curDur" value="{{item.data.curDur}}" placeholder="0"/>
                                         <label class="flex-group-center noMargin noBG"><strong>/ {{item.data.dur}}</strong></label>
                                     </td>
                                     <td>
@@ -664,10 +664,14 @@
                                     </td>
                                 </tr>
                             </table>
+                            <table class="noMargin alignCenter">
+                                <tr>
+                                    <td>
+                                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
-                    <div class="item itemdescription" data-item-id="{{item._id}}" style="margin-bottom: 10px">
-                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
-                    </div>
                 </div>
             </div>
             {{/each}}
@@ -696,7 +700,7 @@
                         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
                         <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
                         <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
-                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="text" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
+                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
                         <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
                         <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
                         <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
@@ -704,7 +708,7 @@
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
-                    <div class="item itemdescription" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <div class="item itemdescriptionImportant shape3" data-item-id="{{item._id}}" style="margin-bottom: 10px">
                         <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                     </div>
                     {{/each}}
@@ -736,7 +740,7 @@
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
-                    <div class="itemdescription" style="margin-bottom: 10px">
+                    <div class="itemdescriptionImportant shape3" style="margin-bottom: 10px">
                         <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                     </div>
                     {{/each}}
