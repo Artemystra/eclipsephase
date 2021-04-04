@@ -64,6 +64,12 @@
           "gender": "",
           "age": "",
           "origin": "",
+          "languages": "",
+          "motivations": {
+            "motivation1": "",
+            "motivation2": "",
+            "motivation3": ""
+          },
           "rep": {
             "@-rep": {
               "value": null,
@@ -128,14 +134,6 @@
               "med2": false,
               "large": false
             }
-          }
-        },
-        "baseline": {
-          "languages": "",
-          "motivations": {
-            "motivation1": "",
-            "motivation2": "",
-            "motivation3": ""
           }
         }
       },
@@ -382,117 +380,6 @@
       },
       "bodyType": {
         "value": ""
-      },
-      "genderList": {
-        "gender1": {
-          "label": "Cisgender"
-        },
-        "gender2": {
-          "label": "Transgender"
-        },
-        "gender3": {
-          "label": "Non-Binary"
-        },
-        "gender4": {
-          "label": "Genderfluid"
-        },
-        "gender5": {
-          "label": "Agender"
-        },
-        "gender6": {
-          "label": "Bigender"
-        },
-        "gender7": {
-          "label": "Polygender"
-        },
-        "gender8": {
-          "label": "Neutrois"
-        },
-        "gender9": {
-          "label": "Gender Apathetic"
-        },
-        "gender10": {
-          "label": "Intergender"
-        },
-        "gender11": {
-          "label": "Demigender"
-        },
-        "gender12": {
-          "label": "Greygender"
-        },
-        "gender13": {
-          "label": "Aporagender"
-        },
-        "gender14": {
-          "label": "Maverique"
-        },
-        "gender15": {
-          "label": "Novigender"
-        }
-      },
-      "sexesList": {
-        "sex1": {
-          "label": "Male"
-        },
-        "sex2": {
-          "label": "Female"
-        },
-        "sex3": {
-          "label": "Intersex"
-        },
-        "sex4": {
-          "label": "Dyadic"
-        }
-      },
-      "originList": {
-        "origin1": {
-          "label": "Anarchist"
-        },
-        "origin2": {
-          "label": "Argonaut"
-        },
-        "origin3": {
-          "label": "Barsoomian"
-        },
-        "origin4": {
-          "label": "Brinker"
-        },
-        "origin5": {
-          "label": "Criminal"
-        },
-        "origin6": {
-          "label": "Extropian"
-        },
-        "origin7": {
-          "label": "Hypercorp"
-        },
-        "origin8": {
-          "label": "Jovian"
-        },
-        "origin9": {
-          "label": "Lunar/Orbital"
-        },
-        "origin10": {
-          "label": "Mercurial"
-        },
-        "origin11": {
-          "label": "Reclaimer"
-        },
-        "origin12": {
-          "label": "Scum"
-        },
-        "origin13": {
-          "label": "Socialite"
-        },
-        "origin14": {
-          "label": "Titanian"
-        },
-        "origin15": {
-          "label": "Venusian"
-        },
-        "origin16": {
-          "label": "Regional"
-        }
       }
     },
     "npc": {
@@ -1082,10 +969,15 @@
         "buyable"
       ],
       "vig": null,
+      "mox": null,
+      "ins": null,
       "flex": null,
+      "type": null,
       "armor": null,
       "dur": null,
       "wounds": null,
+      "curIns": null,
+      "curMox": null,
       "curVig": null,
       "curFlex": null,
       "curDur": null,

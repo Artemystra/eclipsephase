@@ -70,3 +70,53 @@ eclipsephase.vehicleSize = {
     l: "Large",
     vl: "Very Large"
 }
+
+eclipsephase.vehicleType = {
+    robot: "Robot",
+    vehicle: "Vehicle",
+    morph: "Morph"
+}
+
+eclipsephase.genders = {
+    cis: "Cisgender",
+    trans: "Transgender",
+    nonBi: "Non-Binary",
+    fluid: "Genderfluid",
+    aGen: "Agender",
+    biGen: "Bigender",
+    polGen: "Polygender",
+    neu: "Neutrois",
+    genAp: "Gender Apathetic",
+    inter: "Intergender",
+    demi: "Demigender",
+    grey: "Greygender",
+    apora: "Aporagender",
+    mav: "Maverique",
+    novi: "Novigender"
+}
+
+eclipsephase.sexes = {
+    male: "Male",
+    female: "Female",
+    inter: "Intersex",
+    dyadic: "Dyadic"
+}
+
+eclipsephase.origins = {
+    anarchist: "Anarchist",
+    argonaut: "Argonaut",
+    barsoomian: "Barsoomian",
+    brinker: "Brinker",
+    criminal: "Criminal",
+    extropian: "Extropian",
+    hypercorps: "Hypercorp",
+    jovian: "Jovian",
+    lunar: "Lunar/Orbital",
+    mercurial: "Mercurial",
+    reclaimer: "Reclaimer",
+    scum: "Scum",
+    socialite: "Socialite",
+    titanian: "Titanian",
+    venusian: "Venusian",
+    regional: "Regional"
+}

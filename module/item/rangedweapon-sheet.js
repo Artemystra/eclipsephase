@@ -9,7 +9,7 @@ export class EclipsePhaseRangedWeaponSheet extends ItemSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       width: 700,
-      height: 330,
+      height: 270,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }

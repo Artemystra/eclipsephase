@@ -12,6 +12,15 @@
             <table>
                 <tr>
                     <td>
+                        <label class="resource-label">Type</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Insight</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Moxie</label>
+                    </td>
+                    <td>
                         <label class="resource-label">Vigor</label>
                     </td>
                     <td>
@@ -35,10 +44,24 @@
                 </tr>
                 <tr>
                     <td>
-                        <input class="input-medium"type="number" name="data.vig" value="{{data.vig}}" placeholder="e.g. 1"/>
+                        <select name="data.type" data-type="String">
+                            {{#select data.type}}
+                            {{#each config.vehicleType as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="data.flex" value="{{data.flex}}" placeholder="e.g. 1"/>
+                        <input class="input-medium"type="number" name="data.ins" value="{{data.ins}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="data.mox" value="{{data.mox}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="data.vig" value="{{data.vig}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="data.flex" value="{{data.flex}}" placeholder="0"/>
                     </td>
                     <td>
                         <input class="input-medium" type="text" name="data.armor" value="{{data.armor}}" placeholder="e.g. 2/2"/>
@@ -71,6 +94,6 @@
         <p></p>
 
         <h2>Notes</h2>
-            <input type="text" name="data.description" value="{{data.description}}" placeholder="Long, Fixed, Silencer etc."/>
+            <input type="text" name="data.description" value="{{data.description}}" placeholder="e.g. additions, special tweaks etc."/>
     </section>
 </form>

@@ -3,15 +3,25 @@
     {{!-- Sheet Body --}}
     <section class="sheet-body">
         <div class="flexrow flex-group-center">
-            <input class="item-standard-margin" type="text" name="name" value="{{item.name}}" placeholder="Skill name"/>
-            <input class="item-standard-margin-both-large input-small" type="text" name="data.value" value="{{data.value}}" data-dtype="Number" placeholder="0"/>
-            <label class="flex-group-center input-small item-standard-margin-medium"><strong>{{data.roll}}</strong></label>
-            <select class="input-XL" name="data.aptitude" data-type="String">
-                {{#select data.aptitude}}
-                {{#each config.aptitudes as |name type|}}
-                <option value="{{name}}">{{name}}</option>
-                {{/each}} {{/select}}
-            </select>
+            <table>
+                <tr>
+                    <td><label class="resource-label">Name</label></td>
+                    <td><label class="resource-label">Value</label></td>
+                    <td><label class="resource-label">Total</label></td>
+                    <td><label class="resource-label">Aptitude</label></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="name" value="{{item.name}}" placeholder="Skill name"/></td>
+                    <td><input class="input-small" type="number" name="data.value" value="{{data.value}}" data-dtype="Number" placeholder="0"/></td>
+                    <td><label class="input-small"><strong>{{data.roll}}</strong></label></td>
+                    <td><select class="input-XL" name="data.aptitude" data-type="String">
+                        {{#select data.aptitude}}
+                        {{#each config.aptitudes as |name type|}}
+                        <option value="{{name}}">{{name}}</option>
+                        {{/each}} {{/select}}
+                    </select></td>
+                </tr>
+            </table>
         </div>
     </section>
 </form>

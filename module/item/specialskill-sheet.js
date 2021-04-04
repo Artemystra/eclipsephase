@@ -9,7 +9,7 @@ export class EclipsePhaseSpecialSkillSheet extends ItemSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       width: 600,
-      height: 100,
+      height: 130,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
