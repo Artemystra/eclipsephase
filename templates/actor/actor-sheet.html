@@ -526,8 +526,7 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{/if}}
-                        {{#if actor.morphFlaw}}
+                        {{else if actor.morphFlaw}}
                         {{#each actor.morphFlaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
@@ -819,18 +818,18 @@
         <div class="tab" data-group="primary" data-tab="psi">
             <div class="contentBox">
                 <div class="flexrow">
-                    <h3 class="subheader">Gear</h3>
+                    <h3 class="subheader">Infection Type</h3>
                     <div class="alignRight flexGrowThreeQuarter">
+                        <span class="resource-label  input-large"><strong>Infection Rating</strong></span>
+                        <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.psiStrain.infection}}" placeholder="0"/>
                     </div>
                 </div>
-                <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 87%, 25% 87%, 35% 100%, 97% 100%, 100% 95%);">
+                <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
                     <ol>
                         <li class="skills"><input type="text" name="data.psiStrain.name" value="{{data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
                         <li><textarea class="description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.psiStrain.description}}</textarea></li>
                     </ol>
                     <ol>
-                        <span class="resource-label  input-large"><strong>Infection Rating</strong></span>
-                        <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.psiStrain.infection}}" placeholder="0"/>
                         {{#each data.strainInfluence as |influence key|}}
                         <li><div class="textAreaDescription"><textarea class="description" name="data.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
                         {{/each}}

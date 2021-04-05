@@ -609,6 +609,10 @@ optgroup .Default .Roll .Mode,
 }
 
 /* Own Styles */
+.dialog .form-group {
+  margin: 0;
+}
+
 .eclipsephase .sheet-body .tab .item {
   padding: 0.2em 5px;
   min-height: 30px;
@@ -653,15 +657,15 @@ h3.subheaderMirror {
 }
 
 .flexGrowThreeQuarter {
-  flex-grow: 1.25;
+  flex-grow: 1.25!important;
 }
 
 .flexGrowHalf {
-  flex-grow: 0.5;
+  flex-grow: 0.5!important;
 }
 
 .flexGrowQuarter {
-  flex-grow: 0.35;
+  flex-grow: 0.35!important;
 }
 
 .alignRight {

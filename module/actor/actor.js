@@ -14,6 +14,7 @@ export class EclipsePhaseActor extends Actor {
     const data = actorData.data;
     const flags = actorData.flags;
     const item = this.items;
+    const psiMod = 0;
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
@@ -41,6 +42,13 @@ export class EclipsePhaseActor extends Actor {
     //Modificators
     data.mods.woundMod = (data.physical.wounds * 10);
     data.mods.traumaMod = (data.mental.trauma * 10);
+
+    //Psi-Calculator
+    if (actorData.type === "npc" || actorData.type === "character") {
+      data.psiStrain.new = 0;
+      data.psiStrain.current = Number(data.psiStrain.infection) + data.psiStrain.new;
+      console.log("The 'Psi current'-calculation from actor.js: " + data.psiStrain.current)
+    }
 
 
     //Derived Skills
@@ -94,7 +102,7 @@ export class EclipsePhaseActor extends Actor {
         skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
     }
-
+    //Deprecated skill calculations (only used fpr Goons & NPCs atm.)
     if (actorData.type === 'npc' || actorData.type === 'goon'){
       for (let [key, spec] of Object.entries(data.specSkills)) {
         spec.specCheck = (spec.value + parseInt(spec.aptitude, 10));
@@ -106,6 +114,7 @@ export class EclipsePhaseActor extends Actor {
       }
     }
 
+      //Showing skill calculations for know/spec skills also in the item-dialog
     for (let value of item ) {
       let key = value.type;
       let aptSelect = 0;

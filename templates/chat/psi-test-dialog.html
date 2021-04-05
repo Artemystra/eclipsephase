@@ -1,5 +1,5 @@
 <form>
-    <div class="grid">
+    <div class="grid noMargin">
         <div class="contentBox">
             <div class="flexrow">
                 <h3 class="subheader">Modifier</h3><div class="flexGrowHalf"></div>
@@ -15,10 +15,21 @@
             <div class="form-group listBackground">
                 <select name="RollMode">
                     <option value="public">Public Roll</option>
-                    <option value="private">Private GM Roll</option>
+                    <option selected="selected" value="private">Private GM Roll</option>
                     <option value="blind">Blind GM Roll</option>
                 </select>
             </div>
+        </div>
+    </div>
+    <div class="contentBox">
+        <div class="flexrow">
+            <h3 class="subheader">Infection Calculator</h3><div class="flexGrowHalf"></div>
+        </div>
+        <div class="form-group listBackground">
+            <label class="input-large">Base cost</label>
+            <input class="input-small item-standard-margin-both-large" type="number" name="AspectNumber" value="0" />
+            <label class="input-medium item-standard-margin-both-large">Pushes</label>
+            <input class="input-small" type="number" name="PushesNumber" value="0" />
         </div>
     </div>
 </form>
