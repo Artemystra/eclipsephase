@@ -656,6 +656,13 @@ h3.subheaderMirror {
   text-align: end;
 }
 
+h3.subheaderBlank {
+  padding: 0.3em 1em 0.2em 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+}
+
 .flexGrowThreeQuarter {
   flex-grow: 1.25!important;
 }
