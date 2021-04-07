@@ -58,81 +58,357 @@
         }
       },
       "ego": {
-        "id1": {
-          "name": "",
-          "sex": "",
-          "gender": "",
-          "age": "",
-          "origin": "",
-          "languages": "",
-          "motivations": {
-            "motivation1": "",
-            "motivation2": "",
-            "motivation3": ""
+        "sex": "",
+        "gender": "",
+        "age": "",
+        "origin": "",
+        "languages": "",
+        "motivations": {
+          "motivation1": "",
+          "motivation2": "",
+          "motivation3": ""
+        },
+        "idSelected": "ID1",
+        "egoFlex": null,
+        "ids": {
+          "id1": {
+            "name": "none",
+            "rep": {
+              "@-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "c-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "f-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "g-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "i-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "r-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "x-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              }
+            }
           },
-          "rep": {
-            "@-rep": {
-              "value": null,
-              "small1": false,
-              "small2": false,
-              "small3": false,
-              "med1": false,
-              "med2": false,
-              "large": false
-            },
-            "c-rep": {
-              "value": null,
-              "small1": false,
-              "small2": false,
-              "small3": false,
-              "med1": false,
-              "med2": false,
-              "large": false
-            },
-            "f-rep": {
-              "value": null,
-              "small1": false,
-              "small2": false,
-              "small3": false,
-              "med1": false,
-              "med2": false,
-              "large": false
-            },
-            "g-rep": {
-              "value": null,
-              "small1": false,
-              "small2": false,
-              "small3": false,
-              "med1": false,
-              "med2": false,
-              "large": false
-            },
-            "i-rep": {
-              "value": null,
-              "small1": false,
-              "small2": false,
-              "small3": false,
-              "med1": false,
-              "med2": false,
-              "large": false
-            },
-            "r-rep": {
-              "value": null,
-              "small1": false,
-              "small2": false,
-              "small3": false,
-              "med1": false,
-              "med2": false,
-              "large": false
-            },
-            "x-rep": {
-              "value": null,
-              "small1": false,
-              "small2": false,
-              "small3": false,
-              "med1": false,
-              "med2": false,
-              "large": false
+          "id2": {
+            "name": "none",
+            "rep": {
+              "@-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "c-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "f-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "g-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "i-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "r-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "x-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              }
+            }
+          },
+          "id3": {
+            "name": "none",
+            "rep": {
+              "@-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "c-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "f-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "g-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "i-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "r-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "x-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              }
+            }
+          },
+          "id4": {
+            "name": "none",
+            "rep": {
+              "@-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "c-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "f-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "g-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "i-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "r-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "x-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              }
+            }
+          },
+          "id5": {
+            "name": "none",
+            "rep": {
+              "@-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "c-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "f-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "g-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "i-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "r-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              },
+              "x-rep": {
+                "value": null,
+                "small1": false,
+                "small2": false,
+                "small3": false,
+                "med1": false,
+                "med2": false,
+                "large": false
+              }
             }
           }
         }

@@ -22,17 +22,17 @@
                       </div>
                   </div>
                   <div class="flex-group-center listBackground shape2">
-                      <div class="resource-content flexrow flex-center flex-between">
+                      <div class="resource-content flexrow flex-center">
                           <label class="alignCenter resource-label">Damage</label>
                           <span>  </span>
                           <label class="alignCenter resource-label">Wounds</label>
                       </div>
-                      <div class="flexrow flex-center flex-between">
+                      <div class="flexrow flex-center">
                           <input type="number" name="data.physical.damage" value="{{data.physical.damage}}" data-dtype="Number" placeholder="0"/>
                           <span>  </span>
                           <input type="number" name="data.physical.wounds" value="{{data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
                       </div>
-                      <div class="resource-content flexrow flex-center flex-between">
+                      <div class="resource-content flexrow flex-center">
                           <span class="resource-value">DUR {{data.bodies.morph1.dur}}</span>
                           <span class="resource-value">DR {{data.physical.dr}}</span>
                           <span class="resource-value">WT {{data.physical.wt}}</span>
@@ -46,17 +46,17 @@
                         <h3 class="subheaderMirror">Mental</h3>
                     </div>
                     <div class="listBackground shape1 flex-group-center">
-                        <div class="resource-content flexrow flex-center flex-between">
+                        <div class="resource-content flexrow flex-center">
                             <label class="resource-label alignCenter">Stress</label>
                             <span>  </span>
                             <label class="resource-label alignCenter">Trauma</label>
                         </div>
-                        <div class="resource-content flexrow flex-center flex-between">
+                        <div class="resource-content flexrow flex-center">
                             <input type="number" name="data.mental.stress" value="{{data.mental.stress}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
                             <input type="number" name="data.mental.trauma" value="{{data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
                         </div>
-                        <div class="resource-content flexrow flex-center flex-between">
+                        <div class="resource-content flexrow flex-center">
                             <span class="resource-value">LUC {{data.mental.luc}}</span>
                             <span class="resource-value">IR {{data.mental.ir}}</span>
                             <span class="resource-value">TT {{data.mental.tt}}</span>
@@ -129,6 +129,20 @@
         {{/if}}
     </nav>
 
+    {{!-- ID Tabs Navigation
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="ego">Ego</a>
+        <a class="item" data-tab="skills">Skills</a>
+        <a class="item" data-tab="body">Body</a>
+        {{#if actor.vehicle}}
+        <a class="item" data-tab="vehicles">Vehicles</a>
+        {{/if}}
+        <a class="item" data-tab="weapons">Inventory</a>
+        {{#if actor.aspect}}
+        <a class="item" data-tab="psi">Psi</a>
+        {{/if}}
+    </nav> --}}
+
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
@@ -142,22 +156,22 @@
                 </div>
                 <div class="itemBackground flexrow flex-group-center skills">
                     <label class="input-large resource-label alignCenter" >Origin</label>
-                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.origin" data-type="String" >
-                        {{#select data.ego.id1.origin}}
+                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.origin" data-type="String" >
+                        {{#select data.ego.origin}}
                         {{#each config.origins as |origin key|}}
                         <option value="{{origin}}">{{origin}}</option>
                         {{/each}} {{/select}}
                     </select>
                     <label class="input-medium resource-label alignCenter" >Sex</label>
-                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.sex" data-type="String">
-                        {{#select data.ego.id1.sex}}
+                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.sex" data-type="String">
+                        {{#select data.ego.sex}}
                         {{#each config.sexes as |sex key|}}
                         <option value="{{sex}}">{{sex}}</option>
                         {{/each}} {{/select}}
                     </select>
                     <label class="input-large resource-label alignCenter" >Gender</label>
-                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.id1.gender" data-type="String">
-                        {{#select data.ego.id1.gender}}
+                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.gender" data-type="String">
+                        {{#select data.ego.gender}}
                         {{#each config.genders as |gender key|}}
                         <option value="{{gender}}">{{gender}}</option>
                         {{/each}} {{/select}}
@@ -167,19 +181,19 @@
                     <div class="flexrow flex-group-center">
                         <label class="input-large resource-label alignLeft" >Motivations</label>
                         <div class="flexrow">
-                            <input class="alignCenter" type="text" name="data.ego.id1.motivations.motivation1" value='{{#if data.ego.id1.motivations.motivation1}}"{{data.ego.id1.motivations.motivation1}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                            <input class="alignCenter" type="text" name="data.ego.id1.motivations.motivation2" value='{{#if data.ego.id1.motivations.motivation2}}"{{data.ego.id1.motivations.motivation2}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                            <input class="alignCenter" type="text" name="data.ego.id1.motivations.motivation3" value='{{#if data.ego.id1.motivations.motivation3}}"{{data.ego.id1.motivations.motivation3}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.ego.motivations.motivation1}}"{{data.ego.motivations.motivation1}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.ego.motivations.motivation2}}"{{data.ego.motivations.motivation2}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.ego.motivations.motivation3}}"{{data.ego.motivations.motivation3}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
                         </div>
                     </div>
                 </div>
                 <div class="itemBackground flexrow flex-group-center skills">
                     <label class="input-large resource-label" >Languages</label>
-                    <input type="text" name="data.ego.id1.languages" value="{{data.ego.id1.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
+                    <input type="text" name="data.ego.id1.languages" value="{{data.ego.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
                 </div>
             </div>
-            <div class="grid grid-2col">
-                <div class="contentBox">
+            <div class="flexrow flex-between">
+                <div class="contentBox" style="flex: 0.4">
                     <div class="flexrow">
                         <h3 class="subheader">Traits</h3>
                         <div class="alignRight flexGrowHalf">
@@ -206,7 +220,15 @@
                         {{/if}}
                     </div>
                 </div>
-                <div class="contentBox">
+                <div class="contentBox" style="flex: 0.15;">
+                    <div class="flexrow">
+                        <h3 class="subheaderBlank">Ego Flex</h3>
+                    </div>
+                    <div class="form-group listBackground noMargin shape5">
+                        <input type="number" name="data.ego.egoFlex" value="{{data.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
+                    </div>
+                </div>
+                <div class="contentBox" style="flex: 0.4">
                     <div class="flexrow">
                         <div class="alignRight flexGrowHalf">
                         </div>
@@ -238,29 +260,133 @@
                 <div class="flexrow">
                     <h3 class="subheader">Current ID</h3>
                     <div class="alignRight flexGrowThreeQuarter">
+                        <label class="resource-value">Activated</label>
+                        <select class="selectSpecApt item-standard-margin-medium input-XL" name="data.ego.idSelected" data-type="String">
+                            {{#select data.ego.idSelected}}
+                            <option value="ID1">ID1: {{data.ego.ids.id1.name}}</option>
+                            <option value="ID2">ID2: {{data.ego.ids.id2.name}}</option>
+                            <option value="ID3">ID3: {{data.ego.ids.id3.name}}</option>
+                            <option value="ID4">ID4: {{data.ego.ids.id4.name}}</option>
+                            <option value="ID5">ID5: {{data.ego.ids.id5.name}}</option>
+                            {{/select}}
+                        </select>
                     </div>
                 </div>
+                {{#if (eq data.ego.idSelected "ID1")}}
                 <div class="contentBox">
                     <div class="flexrow flex-group-center listBackground">
                         <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.id1.name" value="{{data.ego.id1.name}}" placeholder="Fake Name" style="text-align: left"/>
+                        <input type="text" name="data.ego.ids.id1.name" value="{{data.ego.ids.id1.name}}" placeholder="Fake Name" style="text-align: left"/>
                     </div>
                     <div class="listBackground shape4">
                         <div class="skills grid grid-3col">
-                            {{#each data.ego.id1.rep as |reputation key|}}
+                            {{#each data.ego.ids.id1.rep as |reputation key|}}
                             <div class="flexrow flex-group-left noBorder">
                                 <label class="input-medium resource-label" >{{key}}</label>
-                                <input class="input-small" type="text" name="data.ego.id1.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
-                                <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small1" {{checked reputation.small1}}>
-                                <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small2" {{checked reputation.small2}}>
-                                <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.med1" {{checked reputation.med1}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.id1.rep.{{key}}.large" {{checked reputation.large}}>
+                                <input class="input-small" type="text" name="data.ego.ids.id1.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.small1" {{checked reputation.small1}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.small2" {{checked reputation.small2}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.small3" {{checked reputation.small3}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.med1" {{checked reputation.med1}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.large" {{checked reputation.large}}>
                             </div>
                             {{/each}}
                         </div>
                     </div>
                 </div>
+                {{/if}}
+                {{#if (eq data.ego.idSelected "ID2")}}
+                <div class="contentBox">
+                    <div class="flexrow flex-group-center listBackground">
+                        <label class="input-medium resource-label" >Name</label>
+                        <input type="text" name="data.ego.ids.id2.name" value="{{data.ego.ids.id2.name}}" placeholder="Fake Name" style="text-align: left"/>
+                    </div>
+                    <div class="listBackground shape4">
+                        <div class="skills grid grid-3col">
+                            {{#each data.ego.ids.id2.rep as |reputation key|}}
+                            <div class="flexrow flex-group-left noBorder">
+                                <label class="input-medium resource-label" >{{key}}</label>
+                                <input class="input-small" type="text" name="data.ego.ids.id2.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.small1" {{checked reputation.small1}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.small2" {{checked reputation.small2}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.small3" {{checked reputation.small3}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.med1" {{checked reputation.med1}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.large" {{checked reputation.large}}>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{#if (eq data.ego.idSelected "ID3")}}
+                <div class="contentBox">
+                    <div class="flexrow flex-group-center listBackground">
+                        <label class="input-medium resource-label" >Name</label>
+                        <input type="text" name="data.ego.ids.id3.name" value="{{data.ego.ids.id3.name}}" placeholder="Fake Name" style="text-align: left"/>
+                    </div>
+                    <div class="listBackground shape4">
+                        <div class="skills grid grid-3col">
+                            {{#each data.ego.ids.id3.rep as |reputation key|}}
+                            <div class="flexrow flex-group-left noBorder">
+                                <label class="input-medium resource-label" >{{key}}</label>
+                                <input class="input-small" type="text" name="data.ego.ids.id3.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.small1" {{checked reputation.small1}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.small2" {{checked reputation.small2}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.small3" {{checked reputation.small3}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.med1" {{checked reputation.med1}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.large" {{checked reputation.large}}>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{#if (eq data.ego.idSelected "ID4")}}
+                <div class="contentBox">
+                    <div class="flexrow flex-group-center listBackground">
+                        <label class="input-medium resource-label" >Name</label>
+                        <input type="text" name="data.ego.ids.id4.name" value="{{data.ego.ids.id4.name}}" placeholder="Fake Name" style="text-align: left"/>
+                    </div>
+                    <div class="listBackground shape4">
+                        <div class="skills grid grid-3col">
+                            {{#each data.ego.ids.id4.rep as |reputation key|}}
+                            <div class="flexrow flex-group-left noBorder">
+                                <label class="input-medium resource-label" >{{key}}</label>
+                                <input class="input-small" type="text" name="data.ego.ids.id4.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.small1" {{checked reputation.small1}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.small2" {{checked reputation.small2}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.small3" {{checked reputation.small3}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.med1" {{checked reputation.med1}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.large" {{checked reputation.large}}>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+                {{#if (eq data.ego.idSelected "ID5")}}
+                <div class="contentBox">
+                    <div class="flexrow flex-group-center listBackground">
+                        <label class="input-medium resource-label" >Name</label>
+                        <input type="text" name="data.ego.ids.id5.name" value="{{data.ego.ids.id5.name}}" placeholder="Fake Name" style="text-align: left"/>
+                    </div>
+                    <div class="listBackground shape4">
+                        <div class="skills grid grid-3col">
+                            {{#each data.ego.ids.id5.rep as |reputation key|}}
+                            <div class="flexrow flex-group-left noBorder">
+                                <label class="input-medium resource-label" >{{key}}</label>
+                                <input class="input-small" type="text" name="data.ego.ids.id5.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.small1" {{checked reputation.small1}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.small2" {{checked reputation.small2}}>
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.small3" {{checked reputation.small3}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.med1" {{checked reputation.med1}}>/
+                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.large" {{checked reputation.large}}>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
             </div>
             <div class="flexrow">
                 <h3 class="subheader">Additional Information</h3>
@@ -355,7 +481,7 @@
                         <h3 class="subheader">Flex</h3>
                         <div class="alignRight flexGrowQuarter">
                             <input class="input-xs -small" type="number" name="data.pools.flex.value" value="{{data.pools.flex.value}}" placeholder="0"/>
-                            <span class="resource-label labelWidth-medium">/ {{#if data.bodies.morph1.flex}}{{data.bodies.morph1.flex}}{{else}}0{{/if}}</span>
+                            <span class="resource-value">/ {{#if data.pools.flex.totalFlex}}{{data.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
                     <div class="listBackground shape2">
@@ -692,6 +818,7 @@
                 </div>
                 <div class="itemBackground">
                     {{#each actor.rangedWeapon as |item id|}}
+                    {{log "Waffenstatus: " this}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>

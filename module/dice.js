@@ -27,7 +27,7 @@ export async function TaskCheck({
     visualImpairment = "",
     prone = false,
     firingMode = "",
-    smartlink = false,
+    smartlink = true,
     running = false,
     superiorPosition = false,
     calledShot = false,
@@ -88,133 +88,135 @@ export async function TaskCheck({
     let gunsMod = 0;
     let gunAnnounce = "";
     let gunModTitle = "";
-    console.log("Smartlink: " + smartlink);
-    console.log("Running: " + running);
-    console.log("Superior Position: " + superiorPosition);
-    console.log("Called Shot: " + calledShot);
-    console.log("In Melee: " + inMelee);
-    console.log("Covered Attacker: " + coverAttacker);
-    //Guns roll modifications
-    if (!smartlink) {
-        gunsMod -= 10;
-        gunAnnounce += "<br>No Smartgun (-10)";
-    }
-    if (running) {
-        gunsMod -= 20;
-        gunAnnounce += "<br>Running (-20)";
-    }
-    if (superiorPosition) {
-        gunsMod += 20;
-        gunAnnounce += "<br>Superior Position (+20)";
-    }
-    if (calledShot) {
-        gunsMod -= 10;
-        gunAnnounce += "<br>Called Shot (-10)";
-    }
-    if (inMelee) {
-        gunsMod -= 20;
-        gunAnnounce += "<br>Stuck in Melee (-10)";
+
+    if (skillName === "guns"){
+        console.log("Smartlink: " + smartlink);
+        console.log("Running: " + running);
+        console.log("Superior Position: " + superiorPosition);
+        console.log("Called Shot: " + calledShot);
+        console.log("In Melee: " + inMelee);
+        console.log("Covered Attacker: " + coverAttacker);
+        //Guns roll modifications
+        if (!smartlink) {
+            gunsMod -= 10;
+            gunAnnounce += "<br>No Smartgun (-10)";
+        }
+        if (running) {
+            gunsMod -= 20;
+            gunAnnounce += "<br>Running (-20)";
+        }
+        if (superiorPosition) {
+            gunsMod += 20;
+            gunAnnounce += "<br>Superior Position (+20)";
+        }
+        if (calledShot) {
+            gunsMod -= 10;
+            gunAnnounce += "<br>Called Shot (-10)";
+        }
+        if (inMelee) {
+            gunsMod -= 20;
+            gunAnnounce += "<br>Stuck in Melee (-10)";
+        }
+
+        if (coverAttacker) {
+            gunsMod -= 10;
+            gunAnnounce += "<br>In Cover (-10)";
+        }
+
+        if (aim === "quick") {
+            gunsMod += 10;
+            gunAnnounce += "<br>Quick Aim (+10)";
+        }
+        else if (aim === "long") {
+            gunsMod += 30;
+            gunAnnounce += "<br>Long Aim (+30)";
+        }
+
+        if (size === "xs") {
+            gunsMod -= 30;
+            gunAnnounce += "<br>Very Small Target (-30)";
+        }
+        else if (size === "s") {
+            gunsMod -= 10;
+            gunAnnounce += "<br>Small Target (-10)";
+        }
+        else if (size === "l") {
+            gunsMod += 10;
+            gunAnnounce += "<br>Large Target (+10)";
+        }
+        else if (size === "xl") {
+            gunsMod += 30;
+            gunAnnounce += "<br>Very Large Target (+30)";
+        }
+
+        if (range === "range" && prone) {
+            gunsMod -= 20;
+            gunAnnounce += "<br>Prone at Range (-20)";
+        }
+        else if (range === "beyond" && prone) {
+            gunsMod -= 30;
+            gunAnnounce += "<br>Prone Beyond Range (-30)";
+        }
+        else if (range === "beyond+" && prone) {
+            gunsMod -= 40;
+            gunAnnounce += "<br>Prone Far Beyond Range (-40)";
+        }
+        else if (range === "range") {
+            gunsMod -= 10;
+            gunAnnounce += "<br>At Range (-10)";
+        }
+        else if (range === "beyond") {
+            gunsMod -= 20;
+            gunAnnounce += "<br>Beyond Range (-20)";
+        }
+        else if (range === "beyond+") {
+            gunsMod -= 30;
+            gunAnnounce += "<br>Far Beyond Range (-30)";
+        }
+
+
+        if (coverDefender === "minor") {
+            gunsMod -= 10;
+            gunAnnounce += "<br>Target in minor Cover (-10)";
+        }
+        else if (coverDefender === "moderate") {
+            gunsMod -= 20;
+            gunAnnounce += "<br>Target in moderate Cover (-20)";
+        }
+        else if (coverDefender === "major") {
+            gunsMod -= 30;
+            gunAnnounce += "<br>Target in major Cover (-30)";
+        }
+
+        if (visualImpairment === "minor") {
+            gunsMod -= 10;
+            gunAnnounce += "<br>Minor Visual Impairment (-10)";
+        }
+        else if (visualImpairment === "major") {
+            gunsMod -= 20;
+            gunAnnounce += "<br>Moderate Visual Impaired (-20)";
+        }
+        else if (visualImpairment === "blind") {
+            gunsMod -= 30;
+            gunAnnounce += "<br>Blind (-30)";
+        }
+
+        if (firingMode === "burst") {
+            gunsMod += 10;
+            gunAnnounce += "<br>Wide Burst (+10)";
+        }
+        else if (firingMode === "fullAuto") {
+            gunsMod += 30;
+            gunAnnounce += "<br>Wide Full Auto (+30)";
+        }
+        else if (firingMode === "indirect") {
+            gunsMod -= 20;
+            gunAnnounce += "<br>Indirect (-20)";
+        }
+
+        gunModTitle = gunAnnounce ? "<p/><u>Shooting Modifiers</u>" : "";
     }
 
-    if (coverAttacker) {
-        gunsMod -= 10;
-        gunAnnounce += "<br>In Cover (-10)";
-    }
-
-    if (aim === "quick") {
-        gunsMod += 10;
-        gunAnnounce += "<br>Quick Aim (+10)";
-    }
-    else if (aim === "long") {
-        gunsMod += 30;
-        gunAnnounce += "<br>Long Aim (+30)";
-    }
-
-    if (size === "xs") {
-        gunsMod -= 30;
-        gunAnnounce += "<br>Very Small Target (-30)";
-    }
-    else if (size === "s") {
-        gunsMod -= 10;
-        gunAnnounce += "<br>Small Target (-10)";
-    }
-    else if (size === "l") {
-        gunsMod += 10;
-        gunAnnounce += "<br>Large Target (+10)";
-    }
-    else if (size === "xl") {
-        gunsMod += 30;
-        gunAnnounce += "<br>Very Large Target (+30)";
-    }
-
-    if (range === "range" && prone) {
-        gunsMod -= 20;
-        gunAnnounce += "<br>Prone at Range (-20)";
-    }
-    else if (range === "beyond" && prone) {
-        gunsMod -= 30;
-        gunAnnounce += "<br>Prone Beyond Range (-30)";
-    }
-    else if (range === "beyond+" && prone) {
-        gunsMod -= 40;
-        gunAnnounce += "<br>Prone Far Beyond Range (-40)";
-    }
-    else if (range === "range") {
-        gunsMod -= 10;
-        gunAnnounce += "<br>At Range (-10)";
-    }
-    else if (range === "beyond") {
-        gunsMod -= 20;
-        gunAnnounce += "<br>Beyond Range (-20)";
-    }
-    else if (range === "beyond+") {
-        gunsMod -= 30;
-        gunAnnounce += "<br>Far Beyond Range (-30)";
-    }
-
-
-    if (coverDefender === "minor") {
-        gunsMod -= 10;
-        gunAnnounce += "<br>Target in minor Cover (-10)";
-    }
-    else if (coverDefender === "moderate") {
-        gunsMod -= 20;
-        gunAnnounce += "<br>Target in moderate Cover (-20)";
-    }
-    else if (coverDefender === "major") {
-        gunsMod -= 30;
-        gunAnnounce += "<br>Target in major Cover (-30)";
-    }
-
-    if (visualImpairment === "minor") {
-        gunsMod -= 10;
-        gunAnnounce += "<br>Minor Visual Impairment (-10)";
-    }
-    else if (visualImpairment === "major") {
-        gunsMod -= 20;
-        gunAnnounce += "<br>Moderate Visual Impaired (-20)";
-    }
-    else if (visualImpairment === "blind") {
-        gunsMod -= 30;
-        gunAnnounce += "<br>Blind (-30)";
-    }
-
-    if (firingMode === "burst") {
-        gunsMod += 10;
-        gunAnnounce += "<br>Wide Burst (+10)";
-    }
-    else if (firingMode === "fullAuto") {
-        gunsMod += 30;
-        gunAnnounce += "<br>Wide Full Auto (+30)";
-    }
-    else if (firingMode === "indirect") {
-        gunsMod -= 20;
-        gunAnnounce += "<br>Indirect (-20)";
-    }
-
-    gunModTitle = gunAnnounce ? "<p/><u>Shooting Modifiers</u>" : "";
-    console.log("The Guns Mod: " + gunsMod);
-    console.log("The Gun Announce:" + gunAnnounce);
 
     //General roll modifications
     let woundMod = Number(actorData.mods.woundMod) + Number(actorData.mods.traumaMod);

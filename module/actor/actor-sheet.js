@@ -282,5 +282,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     return item.update({ [field]: element.value });
     }
+
   }
 

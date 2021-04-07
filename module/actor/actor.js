@@ -142,6 +142,10 @@ export class EclipsePhaseActor extends Actor {
       }
     }
 
+    if (actorData.type === "character") {
+      data.pools.flex.totalFlex = Number(data.bodies.morph1.flex)+Number(data.ego.egoFlex);
+    }
+
   }
 
   /**
