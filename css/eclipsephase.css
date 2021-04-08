@@ -333,6 +333,7 @@ select,
   background: transparent;
   border: none;
   height: 20px;
+  padding: 0;
 }
 
 textarea {
@@ -668,7 +669,7 @@ h3.subheaderBlank {
 }
 
 .flexGrowHalf {
-  flex-grow: 0.5!important;
+  flex-grow: 0.49!important;
 }
 
 .flexGrowQuarter {
@@ -993,4 +994,21 @@ img {
 
 .headSpace {
   margin: 10px 0 5px 0;
+}
+
+.truncate {
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pill {
+  max-width: 110px;
+  background-color: #2f2f2f;
+  margin-right: 5px;
+}
+
+.trunContainer {
+  max-width: 100%;
 }

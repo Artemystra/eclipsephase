@@ -30,7 +30,15 @@
                         </select>
                     </td>
                     <td>
-                        <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                        {{#if data.homebrew}}
+                            <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                        {{else}}
+                            {{#if (eq data.psiType "Chi")}}
+                            -
+                            {{else}}
+                            <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                            {{/if}}
+                        {{/if}}
                     </td>
                 </tr>
             </table>

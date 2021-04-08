@@ -45,8 +45,9 @@ eclipsephase.programLevels = {
 }
 
 eclipsephase.psiTypes = {
-    chi: "Chi",
-    gamma: "Gamma"
+    none: "Select",
+    gamma: "Gamma",
+    chi: "Chi"
 }
 
 eclipsephase.aptitudes = {

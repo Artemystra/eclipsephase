@@ -15,9 +15,16 @@ export class EclipsePhaseActor extends Actor {
     const flags = actorData.flags;
     const item = this.items;
     const psiMod = 0;
+    const brewStatus = game.settings.get("eclipsephase", "superBrew");
 
-    // Make separate methods for each Actor type (character, npc, etc.) to keep
-    // things organized.
+    // Homebrew Switch
+    if (brewStatus) {
+      data.homebrew = true;
+    }
+    else {
+      data.homebrew = false;
+    }
+
     if (actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon') this._prepareCharacterData(actorData);
 
     //Physical & Mental derives
@@ -102,8 +109,9 @@ export class EclipsePhaseActor extends Actor {
         skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
     }
-    //Deprecated skill calculations (only used fpr Goons & NPCs atm.)
+    //NPCs & Goons only
     if (actorData.type === 'npc' || actorData.type === 'goon'){
+      //Deprecated skill calculations (only used fpr Goons & NPCs atm.)
       for (let [key, spec] of Object.entries(data.specSkills)) {
         spec.specCheck = (spec.value + parseInt(spec.aptitude, 10));
         spec.roll = spec.specCheck - data.mods.woundMod - data.mods.traumaMod;

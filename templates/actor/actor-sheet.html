@@ -129,20 +129,6 @@
         {{/if}}
     </nav>
 
-    {{!-- ID Tabs Navigation
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="ego">Ego</a>
-        <a class="item" data-tab="skills">Skills</a>
-        <a class="item" data-tab="body">Body</a>
-        {{#if actor.vehicle}}
-        <a class="item" data-tab="vehicles">Vehicles</a>
-        {{/if}}
-        <a class="item" data-tab="weapons">Inventory</a>
-        {{#if actor.aspect}}
-        <a class="item" data-tab="psi">Psi</a>
-        {{/if}}
-    </nav> --}}
-
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
@@ -181,15 +167,15 @@
                     <div class="flexrow flex-group-center">
                         <label class="input-large resource-label alignLeft" >Motivations</label>
                         <div class="flexrow">
-                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.ego.motivations.motivation1}}"{{data.ego.motivations.motivation1}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.ego.motivations.motivation2}}"{{data.ego.motivations.motivation2}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.ego.motivations.motivation3}}"{{data.ego.motivations.motivation3}}" {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.ego.motivations.motivation1}}{{data.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.ego.motivations.motivation2}}{{data.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.ego.motivations.motivation3}}{{data.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
                         </div>
                     </div>
                 </div>
                 <div class="itemBackground flexrow flex-group-center skills">
                     <label class="input-large resource-label" >Languages</label>
-                    <input type="text" name="data.ego.id1.languages" value="{{data.ego.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
+                    <input type="text" name="data.ego.languages" value="{{data.ego.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
                 </div>
             </div>
             <div class="flexrow flex-between">
@@ -496,7 +482,7 @@
                 <div class="contentBox">
                     {{#if actor.specialSkill}}
                     <div class="flexrow">
-                        <h3 class="subheader">Special Skills</h3>
+                        <h3 class="subheader">Exotic Skills</h3>
                         <div class="alignRight flexGrowHalf">
                             <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
                         </div>
@@ -507,7 +493,7 @@
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                <label class="resource-label item-control item-edit hoverable" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
+                                <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
                                 <input class="input-small sheet-inline-edit" data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
                                 <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 {{#if item.data.aptitude}}
@@ -639,7 +625,7 @@
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor.morphTrait}}
+                        {{#if actor.morphTrait.present}}
                         {{#each actor.morphTrait as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
@@ -652,7 +638,6 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{else if actor.morphFlaw}}
                         {{#each actor.morphFlaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
@@ -937,7 +922,7 @@
                         {{/each}}
                     </div>
                 </div>
-                <i style="font-size: 12px; margin-bottom: 10px;">Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i><p/>
+                {{#if data.homebrew}}<i style="font-size: 12px; margin-bottom: 10px;">Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i><p/>{{/if}}
             </div>
             {{/if}}
             </div>
@@ -970,19 +955,17 @@
                     </div>
                 </div>
                 <div class="listBackground">
-                    {{#if actor.aspect}}
                     {{#each actor.aspect as |item id|}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
-                        <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
-                        <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.1;"><i>Psi-{{item.data.psiType}}</i></label>
-                        <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.2; justify-content: center"><strong>{{item.data.infection}}</strong></label>
-                        <div class="textAreaDescription" style="flex-grow: 1!important"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                            <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
+                            <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.1;"><i>Psi-{{item.data.psiType}}</i></label>
+                            <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.2; justify-content: center"><strong>{{item.data.infection}}</strong></label>
+                            <div class="textAreaDescription" style="flex-grow: 1!important"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
+                            <div class="item-controls flex-group-right input-small">
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </div>
                         </div>
-                    </div>
                     {{/each}}
-                    {{/if}}
                 </div>
             </div>
         </div>

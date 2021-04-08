@@ -103,15 +103,16 @@
                         </div>
                     </div>
                     <div class="headSpace">
-                        <div class="flexrow flex-group-right">
-                            <span class="resource-label flex-group-center">Ini Mod</span>
-                            <input class="input-small" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
-                            <label class="resource-label labelWidth-medium">ins</label>
-                            <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.insight" value="{{data.bodies.morph1.insight}}" placeholder="0"/>
-                            <label class="resource-label labelWidth-medium">mox</label>
-                            <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.moxie" value="{{data.bodies.morph1.moxie}}" placeholder="0"/>
-                            <label class="resource-label labelWidth-medium">vig</label>
-                            <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.vigor" value="{{data.bodies.morph1.vigor}}" placeholder="0"/>
+                        <div class="flexrow flex-group-left">
+                            <div class="flexGrowHalf">
+                                <span class="resource-label flex-group-center">Ini Mod</span>
+                                <input class="input-small" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                            </div>
+                            <div class="flexGrowHalf">
+                                <label class="resource-label labelWidth-medium">Thread Level</label>
+                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.threatLevel.current}}" placeholder="0"/>/
+                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.threatLevel.total}}" placeholder="0"/>
+                            </div>
                         </div>
                     </div>
                     <div class="headSpace">
@@ -154,39 +155,6 @@
                     <h3 class="subheader">Overview</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <div class="flexrow flex-group-left">
-                            <div class="flex-center">
-                                <label class="resource-label labelWidth-medium">insight</label>
-                                <input class="input-small item-standard-margin-small" type="number" name="data.pools.insight.value" value="{{data.pools.insight.value}}" placeholder="0"/>
-                                <span class="resource-label labelWidth-medium">/
-                            {{#if data.bodies.morph1.insight}}
-                                {{data.bodies.morph1.insight}}
-                            {{else}}
-                                0
-                            {{/if}}
-                        </span>
-                            </div>
-                            <div class="flex-center">
-                                <label class="resource-label labelWidth-medium">moxie</label>
-                                <input class="input-small item-standard-margin-small" type="number" name="data.pools.moxie.value" value="{{data.pools.moxie.value}}" placeholder="0"/>
-                                <span class="resource-label labelWidth-medium">/
-                        {{#if data.bodies.morph1.moxie}}
-                                {{data.bodies.morph1.moxie}}
-                            {{else}}
-                                0
-                            {{/if}}
-                        </span>
-                            </div>
-                            <div class="flex-center">
-                                <label class="resource-label labelWidth-medium">vigor</label>
-                                <input class="input-small item-standard-margin-small" type="number" name="data.pools.vigor.value" value="{{data.pools.vigor.value}}" placeholder="0"/>
-                                <span class="resource-label labelWidth-medium">/
-                        {{#if data.bodies.morph1.vigor}}
-                                {{data.bodies.morph1.vigor}}
-                            {{else}}
-                                0
-                            {{/if}}
-                        </span>
-                            </div>
                         </div>
                     </div>
                 </div>

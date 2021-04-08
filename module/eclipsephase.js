@@ -38,6 +38,15 @@ function registerSystemSettings() {
     type: Boolean,
     default: true
   });
+
+  game.settings.register("eclipsephase", "superBrew", {
+    config: true,
+    scope: "world",
+    name: "Diemen's Special Brew",
+    hint: "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!",
+    type: Boolean,
+    default: false
+  });
 }
 
 Hooks.once('init', async function() {
@@ -77,7 +86,7 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseCloseCombatWeaponSheet, {types: ["ccWeapon"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseArmorSheet, {types: ["armor"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseWareSheet, {types: ["ware"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseAspectSheet, {types: ["aspect"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseAspectSheet, {types: ["aspect"], makeDefault: true});
   Items.registerSheet("eclipsephase", EclipsePhaseProgramSheet, {types: ["program"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseKnowSkillSheet, {types: ["knowSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseSpecialSkillSheet, {types: ["specialSkill"], makeDefault: true });

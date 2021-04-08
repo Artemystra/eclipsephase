@@ -45,6 +45,12 @@
             "value": null
           }
         }
+      },
+      "npc": {
+        "threatLevel": {
+          "current": null,
+          "total": null
+        }
       }
     },
     "character": {
@@ -52,11 +58,6 @@
         "base"
       ],
       "biography": "",
-      "attributes": {
-        "level": {
-          "value": 1
-        }
-      },
       "ego": {
         "sex": "",
         "gender": "",
@@ -562,7 +563,7 @@
         "morph1": {
           "name": "",
           "type": 1.5,
-          "dur": 0,
+          "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -572,7 +573,7 @@
         "morph2": {
           "name": "",
           "type": 1.5,
-          "dur": 0,
+          "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -582,7 +583,7 @@
         "morph3": {
           "name": "",
           "type": 1.5,
-          "dur": 0,
+          "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -592,7 +593,7 @@
         "morph4": {
           "name": "",
           "type": 1.5,
-          "dur": 0,
+          "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -602,7 +603,7 @@
         "morph5": {
           "name": "",
           "type": 1.5,
-          "dur": 0,
+          "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -612,7 +613,7 @@
         "morph6": {
           "name": "",
           "type": 1.5,
-          "dur": 0,
+          "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
@@ -660,12 +661,13 @@
     },
     "npc": {
       "templates": [
-        "base"
+        "base",
+        "npc"
       ],
-      "attributes": {
-        "level": {
-          "value": 1
-        }
+      "motivations": {
+        "motivation1": "",
+        "motivation2": "",
+        "motivation3": ""
       },
       "aptitudes": {
         "cog": {
@@ -920,13 +922,9 @@
     },
     "goon": {
       "templates": [
-        "base"
+        "base",
+        "npc"
       ],
-      "attributes": {
-        "level": {
-          "value": 1
-        }
-      },
       "aptitudes": {
         "cog": {
           "value": null,

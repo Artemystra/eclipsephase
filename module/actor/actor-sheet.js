@@ -22,9 +22,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   getData() {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
-    for (let attr of Object.values(data.data.attributes)) {
-      attr.isCheckbox = attr.dtype === "Boolean";
-    }
 
     // Prepare items.
     if (this.actor.data.type == 'character') {
@@ -114,9 +111,11 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         flaw.push(i);
       }
       else if (i.type === 'morphTrait') {
+        morphtrait.present = true
         morphtrait.push(i);
       }
       else if (i.type === 'morphFlaw') {
+        morphtrait.present = true
         morphflaw.push(i);
       }
       else if (i.type === 'rangedWeapon') {
@@ -248,13 +247,14 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const actorData = this.actor.data.data;
 
       Dice.TaskCheck ({
-        skillName : dataset.name,
+        skillName : dataset.name.toLowerCase(),
         specName : dataset.specname,
         rollType : dataset.type,
         skillValue : dataset.rollvalue,
         actorData : actorData,
         askForOptions : event.shiftKey,
-        optionsSettings: game.settings.get("eclipsephase", "showTaskOptions")
+        optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
+        brewStatus: game.settings.get("eclipsephase", "superBrew")
       });
     }
 

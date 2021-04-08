@@ -7,7 +7,7 @@ export class NpcSheet extends ActorSheet {
             classes: ["eclipsephase", "sheet", "actor"],
             template: "systems/eclipsephase/templates/actor/npc-sheet.html",
             width: 800,
-            height: 600,
+            height: 780,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
         });
     }
@@ -15,9 +15,6 @@ export class NpcSheet extends ActorSheet {
     getData() {
         const data = super.getData();
         data.dtypes = ["String", "Number", "Boolean"];
-        for (let attr of Object.values(data.data.attributes)) {
-            attr.isCheckbox = attr.dtype === "Boolean";
-        }
         if (this.actor.data.type == 'npc') {
             this._prepareCharacterItems(data);
         }
@@ -49,6 +46,8 @@ export class NpcSheet extends ActorSheet {
         const ware = [];
         const aspect = [];
         const vehicle = [];
+        const morphtrait = [];
+        const morphflaw = [];
 
         // Iterate through items, allocating to containers
         // let totalWeight = 0;
@@ -56,7 +55,7 @@ export class NpcSheet extends ActorSheet {
             let item = i.data;
             i.img = i.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (i.type === 'item') {
+            if (i.type === 'gear') {
                 gear.push(i);
             }
             // Append to features.
@@ -89,6 +88,14 @@ export class NpcSheet extends ActorSheet {
                 i.dr = Math.round(i.data.dur * 2);
                 vehicle.push(i)
             }
+            else if (i.type === 'morphTrait') {
+                morphtrait.present = true
+                morphtrait.push(i)
+            }
+            else if (i.type === 'morphFlaw') {
+                morphtrait.present = true
+                morphflaw.push(i)
+            }
         }
 
         // Assign and return
@@ -101,6 +108,8 @@ export class NpcSheet extends ActorSheet {
         actorData.features = features;
         actorData.spells = spells;
         actorData.vehicle = vehicle;
+        actorData.morphTrait = morphtrait;
+        actorData.morphFlaw = morphflaw;
     }
 
     activateListeners(html) {
@@ -173,13 +182,14 @@ export class NpcSheet extends ActorSheet {
         const actorData = this.actor.data.data;
 
         Dice.TaskCheck ({
-            skillName : dataset.name,
+            skillName : dataset.name.toLowerCase(),
             specName : dataset.specname,
             rollType : dataset.type,
             skillValue : dataset.rollvalue,
             actorData : actorData,
             askForOptions : event.shiftKey,
-            optionsSettings: game.settings.get("eclipsephase", "showTaskOptions")
+            optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
+            brewStatus: game.settings.get("eclipsephase", "superBrew")
         });
     }
 

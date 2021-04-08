@@ -15,9 +15,6 @@ export class GoonSheet extends ActorSheet {
     getData() {
         const data = super.getData();
         data.dtypes = ["String", "Number", "Boolean"];
-        for (let attr of Object.values(data.data.attributes)) {
-            attr.isCheckbox = attr.dtype === "Boolean";
-        }
         if (this.actor.data.type == 'goon') {
             this._prepareCharacterItems(data);
         }
@@ -173,13 +170,14 @@ export class GoonSheet extends ActorSheet {
         const actorData = this.actor.data.data;
 
         Dice.TaskCheck ({
-            skillName : dataset.name,
+            skillName : dataset.name.toLowerCase(),
             specName : dataset.specname,
             rollType : dataset.type,
             skillValue : dataset.rollvalue,
             actorData : actorData,
             askForOptions : event.shiftKey,
-            optionsSettings: game.settings.get("eclipsephase", "showTaskOptions")
+            optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
+            brewStatus: game.settings.get("eclipsephase", "superBrew")
         });
     }
 

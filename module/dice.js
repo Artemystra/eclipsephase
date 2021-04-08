@@ -8,6 +8,7 @@ export async function TaskCheck({
     skillValue = null,
     askForOptions = false,
     optionsSettings = null,
+    brewStatus = false,
     //Roll
     rollType = "",
     rollModeSelection = null,
@@ -33,7 +34,7 @@ export async function TaskCheck({
     calledShot = false,
     inMelee = false
     } = {}) {
-
+    console.log("The Skill Name from Dice.js: " + skillName)
     //Guns check dialog
     if (askForOptions != optionsSettings && skillName === "guns") {
         let checkOptions = await GetGunsTaskOptions(rollType);
@@ -60,7 +61,7 @@ export async function TaskCheck({
     }
 
     //Psi check dialog
-    else if (askForOptions != optionsSettings && skillName === "psi") {
+    else if (askForOptions != optionsSettings && skillName === "psi" && brewStatus === true) {
         let checkOptions = await GetPsiTaskOptions(rollType);
 
         if (checkOptions.cancelled) {
@@ -99,119 +100,119 @@ export async function TaskCheck({
         //Guns roll modifications
         if (!smartlink) {
             gunsMod -= 10;
-            gunAnnounce += "<br>No Smartgun (-10)";
+            gunAnnounce += "<br>No Smartgun (<strong>-10</strong>)";
         }
         if (running) {
             gunsMod -= 20;
-            gunAnnounce += "<br>Running (-20)";
+            gunAnnounce += "<br>Running (<strong>-20</strong>)";
         }
         if (superiorPosition) {
             gunsMod += 20;
-            gunAnnounce += "<br>Superior Position (+20)";
+            gunAnnounce += "<br>Superior Position (<strong>+20</strong>)";
         }
         if (calledShot) {
             gunsMod -= 10;
-            gunAnnounce += "<br>Called Shot (-10)";
+            gunAnnounce += "<br>Called Shot (<strong>-10</strong>)";
         }
         if (inMelee) {
             gunsMod -= 20;
-            gunAnnounce += "<br>Stuck in Melee (-10)";
+            gunAnnounce += "<br>Stuck in Melee (<strong>-10</strong>)";
         }
 
         if (coverAttacker) {
             gunsMod -= 10;
-            gunAnnounce += "<br>In Cover (-10)";
+            gunAnnounce += "<br>In Cover (<strong>-10</strong>)";
         }
 
         if (aim === "quick") {
             gunsMod += 10;
-            gunAnnounce += "<br>Quick Aim (+10)";
+            gunAnnounce += "<br>Quick Aim (<strong>+10</strong>)";
         }
         else if (aim === "long") {
             gunsMod += 30;
-            gunAnnounce += "<br>Long Aim (+30)";
+            gunAnnounce += "<br>Long Aim (<strong>+30</strong>)";
         }
 
         if (size === "xs") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Very Small Target (-30)";
+            gunAnnounce += "<br>Very Small Target (<strong>-30</strong>)";
         }
         else if (size === "s") {
             gunsMod -= 10;
-            gunAnnounce += "<br>Small Target (-10)";
+            gunAnnounce += "<br>Small Target (<strong>-10</strong>)";
         }
         else if (size === "l") {
             gunsMod += 10;
-            gunAnnounce += "<br>Large Target (+10)";
+            gunAnnounce += "<br>Large Target (<strong>+10</strong>)";
         }
         else if (size === "xl") {
             gunsMod += 30;
-            gunAnnounce += "<br>Very Large Target (+30)";
+            gunAnnounce += "<br>Very Large Target (<strong>+30</strong>)";
         }
 
         if (range === "range" && prone) {
             gunsMod -= 20;
-            gunAnnounce += "<br>Prone at Range (-20)";
+            gunAnnounce += "<br>Prone at Range (<strong>-20</strong>)";
         }
         else if (range === "beyond" && prone) {
             gunsMod -= 30;
-            gunAnnounce += "<br>Prone Beyond Range (-30)";
+            gunAnnounce += "<br>Prone Beyond Range (<strong>-30</strong>)";
         }
         else if (range === "beyond+" && prone) {
             gunsMod -= 40;
-            gunAnnounce += "<br>Prone Far Beyond Range (-40)";
+            gunAnnounce += "<br>Prone Far Beyond Range (<strong>-40</strong>)";
         }
         else if (range === "range") {
             gunsMod -= 10;
-            gunAnnounce += "<br>At Range (-10)";
+            gunAnnounce += "<br>At Range (<strong>-10</strong>)";
         }
         else if (range === "beyond") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Beyond Range (-20)";
+            gunAnnounce += "<br>Beyond Range (<strong>-20</strong>)";
         }
         else if (range === "beyond+") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Far Beyond Range (-30)";
+            gunAnnounce += "<br>Far Beyond Range (<strong>-30</strong>)";
         }
 
 
         if (coverDefender === "minor") {
             gunsMod -= 10;
-            gunAnnounce += "<br>Target in minor Cover (-10)";
+            gunAnnounce += "<br>Target in minor Cover (<strong>-10</strong>)";
         }
         else if (coverDefender === "moderate") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Target in moderate Cover (-20)";
+            gunAnnounce += "<br>Target in moderate Cover (<strong>-20</strong>)";
         }
         else if (coverDefender === "major") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Target in major Cover (-30)";
+            gunAnnounce += "<br>Target in major Cover (<strong>-30</strong>)";
         }
 
         if (visualImpairment === "minor") {
             gunsMod -= 10;
-            gunAnnounce += "<br>Minor Visual Impairment (-10)";
+            gunAnnounce += "<br>Minor Visual Impairment <strong>-10</strong>";
         }
         else if (visualImpairment === "major") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Moderate Visual Impaired (-20)";
+            gunAnnounce += "<br>Moderate Visual Impaired <strong>-20</strong>";
         }
         else if (visualImpairment === "blind") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Blind (-30)";
+            gunAnnounce += "<br>Blind (<strong>-30</strong>)";
         }
 
         if (firingMode === "burst") {
             gunsMod += 10;
-            gunAnnounce += "<br>Wide Burst (+10)";
+            gunAnnounce += "<br>Wide Burst (<strong>+10</strong>)";
         }
         else if (firingMode === "fullAuto") {
             gunsMod += 30;
-            gunAnnounce += "<br>Wide Full Auto (+30)";
+            gunAnnounce += "<br>Wide Full Auto (<strong>+30</strong>)";
         }
         else if (firingMode === "indirect") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Indirect (-20)";
+            gunAnnounce += "<br>Indirect (<strong>-20</strong>)";
         }
 
         gunModTitle = gunAnnounce ? "<p/><u>Shooting Modifiers</u>" : "";
@@ -227,8 +228,8 @@ export async function TaskCheck({
     spec = specName ? "(" + specName + ")" : "";
     let situationalPlus = globalMod>0 ? "+" : "";
     let modAnnounce = rollMod ? "<u>Applied Mods:</u> <br>" : "";
-    let woundAnnounce = woundMod ? "Wound/Trauma:<strong> -" + woundMod + "<br>" : "";
-    let globalAnnounce = globalMod ? "</strong>Situational:<strong>"+ situationalPlus + globalMod : "";
+    let woundAnnounce = woundMod ? "Wound/Trauma:<strong> -" + woundMod + "</strong><br>" : "";
+    let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong>" : "";
 
     //The dice roll
     let roll = new Roll(rollFormula).roll();
@@ -296,13 +297,13 @@ export async function TaskCheck({
         aspectPushes -= 2
     }
     infectionMod = aspectPushes>0 ? aspectBase*aspectPushes : aspectBase;
-    if (skillName === "psi") {
+    if (skillName === "psi" && brewStatus === true && aspectBase) {
         infectionMod += Number(actorData.psiStrain.infection)
-        infectionAddition = "<p/>Infection raises to:" + infectionMod
+        infectionAddition = "<p/><u>Infection raises to:</u><br><strong>" + infectionMod + "</strong>"
     }
 
     //Chat message constructor
-    let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + "</strong></h5>";
+    let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + "</h5>";
     roll.toMessage({
         speaker: ChatMessage.getSpeaker({actor: this.actor}),
         flavor: label,
