@@ -489,7 +489,6 @@
                     </div>
                     <div class="listBackground shape2" style="padding-left: 0;">
                         {{#each actor.specialSkill as |item id|}}
-                        {{log "my special snowflake:" this}}
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding-left: 0;">
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -655,6 +654,7 @@
                         </div>
                         {{/each}}
                         {{#each actor.morphFlaw as |item id|}}
+                        {{log "My Morph Flaw " this}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -819,7 +819,6 @@
                 </div>
                 <div class="itemBackground">
                     {{#each actor.rangedWeapon as |item id|}}
-                    {{log "Waffenstatus: " this}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>

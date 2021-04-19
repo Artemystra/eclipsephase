@@ -560,6 +560,7 @@
         }
       },
       "bodies": {
+        "activeMorph": 1,
         "morph1": {
           "name": "",
           "type": 1.5,
@@ -1195,14 +1196,16 @@
         "base"
       ],
       "statChange": null,
-      "qualityType": ""
+      "qualityType": "",
+      "boundTo": null
     },
     "morphFlaw": {
       "templates": [
         "base"
       ],
       "statChange": null,
-      "qualityType": ""
+      "qualityType": "",
+      "boundTo": null
     },
     "ware": {
       "templates": [
@@ -1210,7 +1213,8 @@
         "buyable"
       ],
       "bonus": null,
-      "malus": null
+      "malus": null,
+      "boundTo": null
     },
     "aspect": {
       "templates": [
