@@ -1228,12 +1228,14 @@
     },
     "specialSkill": {
       "name": "",
+      "specname" : "",
       "value": null,
       "aptitude": null,
       "roll": 0
     },
     "knowSkill": {
       "name": "",
+      "specname" : "",
       "value": null,
       "aptitude": null
     },

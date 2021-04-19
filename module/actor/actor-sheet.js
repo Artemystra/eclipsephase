@@ -90,6 +90,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           aptSelect = data.aptitudes.sav.value;
         }
         i.roll = Number(i.data.value) + aptSelect;
+        i.specroll = Number(i.data.value) + aptSelect + 10;
         special.push(i);
       }
       // Append to spells.
@@ -102,6 +103,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           aptSelect = data.aptitudes.cog.value;
         }
         i.roll = Number(i.data.value) + aptSelect;
+        i.specroll = Number(i.data.value) + aptSelect + 10;
         know.push(i);
       }
       else if (i.type === 'trait') {
@@ -267,6 +269,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       Dice.DamageRoll ({
         weaponName : dataset.weaponname,
         weaponDamage : dataset.roll,
+        weaponType : dataset.type,
         actorData : actorData,
         askForOptions : event.shiftKey,
         optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")

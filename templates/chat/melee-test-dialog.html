@@ -1,0 +1,48 @@
+<form>
+    <div class="grid">
+        <div class="contentBox">
+            <div class="flexrow">
+                <h3 class="subheader">Modifier</h3><div class="flexGrowHalf"></div>
+            </div>
+            <div class="form-group listBackground">
+                <input type="number" name="GlobalMod" placeholder="0" />
+            </div>
+        </div>
+        <div class="contentBox">
+            <div class="flexrow">
+                <div class="flexGrowHalf"></div><h3 class="subheaderMirror">Mode</h3>
+            </div>
+            <div class="form-group listBackground">
+                <select name="RollMode">
+                    <option value="public">Public Roll</option>
+                    <option value="private">Private GM Roll</option>
+                    <option value="blind">Blind GM Roll</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="contentBox">
+            <div class="flexrow">
+                <h3 class="subheader">Targets</h3><div class="flexGrowHalf"></div>
+            </div>
+            <div class="form-group listBackground">
+                <label class="resource-value">Number of targets</label>
+                <input class="alignCenter input-small" type="number" name="NumberTargets" placeholder="1" />
+            </div>
+        </div>
+        <div class="contentBox">
+            <div class="flexrow">
+                <h3 class="subheaderBlank">Attack Type</h3>
+            </div>
+            <div class="form-group listBackground">
+                <select name="HitType" style="max-width: 160px">
+                    <option value="none">Standard Attack</option>
+                    <option value="charge">Charge Attack (-10 +1d6 DV)</option>
+                    <option value="aggressive">Aggressive Hit (+10)</option>
+                    <option value="aggressiveCharge">Aggressive Charge(+1d6 DV)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>

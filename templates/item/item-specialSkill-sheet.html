@@ -9,6 +9,7 @@
                     <td><label class="resource-label">Value</label></td>
                     <td><label class="resource-label">Total</label></td>
                     <td><label class="resource-label">Aptitude</label></td>
+                    <td><label class="resource-label">Specialization</label></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="name" value="{{item.name}}" placeholder="Skill name"/></td>
@@ -20,6 +21,7 @@
                         <option value="{{name}}">{{name}}</option>
                         {{/each}} {{/select}}
                     </select></td>
+                    <td><input class="input-large" type="text" name="data.specname" value="{{data.specname}}" placeholder="Spec name"/></td>
                 </tr>
             </table>
         </div>

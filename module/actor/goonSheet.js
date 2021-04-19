@@ -190,6 +190,7 @@ export class GoonSheet extends ActorSheet {
         Dice.DamageRoll ({
             weaponName : dataset.weaponname,
             weaponDamage : dataset.roll,
+            weaponType : dataset.type,
             actorData : actorData,
             askForOptions : event.shiftKey,
             optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
