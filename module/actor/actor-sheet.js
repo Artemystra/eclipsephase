@@ -201,7 +201,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         armor.push(i);
       }
       else if (i.type === 'ware') {
-        ware[i.data.boundTo].push(i);
+          ware[i.data.boundTo].push(i);
       }
       else if (i.type === 'aspect') {
         aspect.push(i);
