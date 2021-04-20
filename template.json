@@ -560,10 +560,10 @@
         }
       },
       "bodies": {
-        "activeMorph": 1,
+        "activeMorph": "morph1",
         "morph1": {
           "name": "",
-          "type": 1.5,
+          "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
@@ -573,7 +573,7 @@
         },
         "morph2": {
           "name": "",
-          "type": 1.5,
+          "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
@@ -583,7 +583,7 @@
         },
         "morph3": {
           "name": "",
-          "type": 1.5,
+          "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
@@ -593,7 +593,7 @@
         },
         "morph4": {
           "name": "",
-          "type": 1.5,
+          "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
@@ -603,7 +603,7 @@
         },
         "morph5": {
           "name": "",
-          "type": 1.5,
+          "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
@@ -613,7 +613,7 @@
         },
         "morph6": {
           "name": "",
-          "type": 1.5,
+          "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,

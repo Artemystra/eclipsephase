@@ -24,7 +24,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     data.dtypes = ["String", "Number", "Boolean"];
 
     // Prepare items.
-    if (this.actor.data.type == 'character') {
+    if (this.actor.data.type === 'character') {
       this._prepareCharacterItems(data);
     }
 
@@ -34,6 +34,22 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     return data;
   }
 
+  //Binds morphFlaws/Traits/Gear to a singular morph
+  async _onDropItemCreate(itemData) {
+
+    // Create a Consumable spell scroll on the Inventory tab
+    if (itemData.type === "morphFlaw" || itemData.type === "morphTrait" || itemData.type === "ware") {
+      let actor = this.actor;
+      let actorData = actor.data.data;
+      let currentMorph = actorData.bodies.activeMorph
+      let data = itemData.data;
+      data.boundTo = currentMorph;
+    }
+
+    // Create the owned item as normal
+    return super._onDropItemCreate(itemData);
+  }
+
   /**
    * Organize and classify Items for Character sheets.
    *
@@ -41,7 +57,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    *
    * @return {undefined}
    */
-  _prepareCharacterItems(sheetData) {
+ async _prepareCharacterItems(sheetData) {
     const actorData = sheetData.actor;
     const data = actorData.data;
 
@@ -52,12 +68,33 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const special = [];
     const trait = [];
     const flaw = [];
-    const morphtrait = [];
-    const morphflaw = [];
+    const morphtrait = {
+        morph1: [],
+        morph2: [],
+        morph3: [],
+        morph4: [],
+        morph5: [],
+        morph6: []
+    };
+    const morphflaw = {
+        morph1: [],
+        morph2: [],
+        morph3: [],
+        morph4: [],
+        morph5: [],
+        morph6: []
+    };;
     const rangedweapon = [];
     const ccweapon = [];
     const armor = [];
-    const ware = [];
+    const ware = {
+        morph1: [],
+        morph2: [],
+        morph3: [],
+        morph4: [],
+        morph5: [],
+        morph6: []
+    };;
     const aspect = [];
     const program = [];
     const vehicle = [];
@@ -113,12 +150,46 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         flaw.push(i);
       }
       else if (i.type === 'morphTrait') {
-        morphtrait.present = true
-        morphtrait.push(i);
+        if (i.data.boundTo === "morph1"){
+            morphtrait.present1 = true;
+        }
+        else if (i.data.boundTo === "morph2"){
+              morphtrait.present2 = true;
+        }
+        else if (i.data.boundTo === "morph3"){
+              morphtrait.present3 = true;
+        }
+        else if (i.data.boundTo === "morph4"){
+            morphtrait.present4 = true;
+        }
+        else if (i.data.boundTo === "morph5"){
+            morphtrait.present5 = true;
+        }
+        else if (i.data.boundTo === "morph6"){
+            morphtrait.present6 = true;
+        }
+        morphtrait[i.data.boundTo].push(i);
       }
       else if (i.type === 'morphFlaw') {
-        morphtrait.present = true
-        morphflaw.push(i);
+          if (i.data.boundTo === "morph1"){
+              morphtrait.present1 = true;
+          }
+          else if (i.data.boundTo === "morph2"){
+              morphtrait.present2 = true;
+          }
+          else if (i.data.boundTo === "morph3"){
+              morphtrait.present3 = true;
+          }
+          else if (i.data.boundTo === "morph4"){
+              morphtrait.present4 = true;
+          }
+          else if (i.data.boundTo === "morph5"){
+              morphtrait.present5 = true;
+          }
+          else if (i.data.boundTo === "morph6"){
+              morphtrait.present6 = true;
+          }
+        morphflaw[i.data.boundTo].push(i);
       }
       else if (i.type === 'rangedWeapon') {
         rangedweapon.push(i);
@@ -130,7 +201,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         armor.push(i);
       }
       else if (i.type === 'ware') {
-        ware.push(i);
+        ware[i.data.boundTo].push(i);
       }
       else if (i.type === 'aspect') {
         aspect.push(i);
@@ -163,9 +234,17 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.knowSkill = know;
     actorData.specialSkill = special;
     actorData.vehicle = vehicle;
+
+      console.log("Morph Flaw Array", actorData.morphFlaw)
+      console.log("Morph Trait Array", actorData.morphTrait)
+      console.log("Ware Array", actorData.ware)
+
+      console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
   /* -------------------------------------------- */
+
+  _onDrop
 
   /** @override */
   activateListeners(html) {
@@ -232,6 +311,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     };
     // Remove the type from the dataset since it's in the itemData.type prop.
     delete itemData.data["type"];
+    // Update Item on Creation
+    if (itemData.type === "specialSkill" || itemData.type === "knowSkill") {
+      itemData.name = "New Skill";
+    }
 
     // Finally, create the item!
     return this.actor.createOwnedItem(itemData);
@@ -287,4 +370,5 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
 
   }
+
 

@@ -78,7 +78,10 @@ eclipsephase.vehicleType = {
     morph: "Morph"
 }
 
-
+eclipsephase.bodyTypes = {
+    synth: "Synthetic",
+    bio: "Biologic"
+}
 
 eclipsephase.genders = {
     cis: "Cisgender",
