@@ -149,48 +149,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       else if (i.type === 'flaw') {
         flaw.push(i);
       }
-      else if (i.type === 'morphTrait') {
-        if (i.data.boundTo === "morph1"){
-            morphtrait.present1 = true;
-        }
-        else if (i.data.boundTo === "morph2"){
-              morphtrait.present2 = true;
-        }
-        else if (i.data.boundTo === "morph3"){
-              morphtrait.present3 = true;
-        }
-        else if (i.data.boundTo === "morph4"){
-            morphtrait.present4 = true;
-        }
-        else if (i.data.boundTo === "morph5"){
-            morphtrait.present5 = true;
-        }
-        else if (i.data.boundTo === "morph6"){
-            morphtrait.present6 = true;
-        }
-        morphtrait[i.data.boundTo].push(i);
-      }
-      else if (i.type === 'morphFlaw') {
-          if (i.data.boundTo === "morph1"){
-              morphtrait.present1 = true;
-          }
-          else if (i.data.boundTo === "morph2"){
-              morphtrait.present2 = true;
-          }
-          else if (i.data.boundTo === "morph3"){
-              morphtrait.present3 = true;
-          }
-          else if (i.data.boundTo === "morph4"){
-              morphtrait.present4 = true;
-          }
-          else if (i.data.boundTo === "morph5"){
-              morphtrait.present5 = true;
-          }
-          else if (i.data.boundTo === "morph6"){
-              morphtrait.present6 = true;
-          }
-        morphflaw[i.data.boundTo].push(i);
-      }
       else if (i.type === 'rangedWeapon') {
         rangedweapon.push(i);
       }
@@ -199,9 +157,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       }
       else if (i.type === 'armor') {
         armor.push(i);
-      }
-      else if (i.type === 'ware') {
-          ware[i.data.boundTo].push(i);
       }
       else if (i.type === 'aspect') {
         aspect.push(i);
@@ -217,6 +172,54 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         i.dr = Math.round(i.data.dur * 2);
         vehicle.push(i)
       }
+    }
+
+    for (let i of sheetData.items) {
+        if (i.type === 'ware' && i.data.boundTo) {
+            ware[i.data.boundTo].push(i);
+        }
+        else if (i.type === 'morphFlaw' && i.data.boundTo) {
+            if (i.data.boundTo === "morph1"){
+                morphtrait.present1 = true;
+            }
+            else if (i.data.boundTo === "morph2"){
+                morphtrait.present2 = true;
+            }
+            else if (i.data.boundTo === "morph3"){
+                morphtrait.present3 = true;
+            }
+            else if (i.data.boundTo === "morph4"){
+                morphtrait.present4 = true;
+            }
+            else if (i.data.boundTo === "morph5"){
+                morphtrait.present5 = true;
+            }
+            else if (i.data.boundTo === "morph6"){
+                morphtrait.present6 = true;
+            }
+            morphflaw[i.data.boundTo].push(i);
+        }
+        else if (i.type === 'morphTrait' && i.data.boundTo) {
+            if (i.data.boundTo === "morph1"){
+                morphtrait.present1 = true;
+            }
+            else if (i.data.boundTo === "morph2"){
+                morphtrait.present2 = true;
+            }
+            else if (i.data.boundTo === "morph3"){
+                morphtrait.present3 = true;
+            }
+            else if (i.data.boundTo === "morph4"){
+                morphtrait.present4 = true;
+            }
+            else if (i.data.boundTo === "morph5"){
+                morphtrait.present5 = true;
+            }
+            else if (i.data.boundTo === "morph6"){
+                morphtrait.present6 = true;
+            }
+            morphtrait[i.data.boundTo].push(i);
+        }
     }
 
     // Assign and return
