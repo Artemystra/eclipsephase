@@ -288,8 +288,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
       //Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
-
     }
+
+    //show on hover
+      html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
   }
 
   /**
@@ -371,6 +373,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     return item.update({ [field]: element.value });
     }
+
+    _onToggleReveal(event) {
+      const reveals = event.currentTarget.getElementsByClassName("far");
+      $.each(reveals, function (index, value){
+        $(value).toggleClass("hidden");
+      })
+  }
 
   }
 
