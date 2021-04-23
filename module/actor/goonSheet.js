@@ -13,7 +13,7 @@ export class GoonSheet extends ActorSheet {
     }
 
     getData() {
-        const data = super.getData();
+        const data = super.getData().data;
         data.dtypes = ["String", "Number", "Boolean"];
         if (this.actor.data.type == 'goon') {
             this._prepareCharacterItems(data);
@@ -128,7 +128,7 @@ export class GoonSheet extends ActorSheet {
         html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
         // Drag events for macros.
-        if (this.actor.owner) {
+        if (this.actor.isOwner) {
             let handler = ev => this._onDragItemStart(ev);
             html.find('li.item').each((i, li) => {
                 if (li.classList.contains("inventory-header")) return;

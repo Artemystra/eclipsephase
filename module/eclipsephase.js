@@ -67,8 +67,8 @@ Hooks.once('init', async function() {
   };
 
   // Define custom Entity classes
-  CONFIG.Actor.entityClass = EclipsePhaseActor;
-  CONFIG.Item.entityClass = EclipsePhaseItem;
+  CONFIG.Actor.documentClass = EclipsePhaseActor;
+  CONFIG.Item.documentClass = EclipsePhaseItem;
   CONFIG.eclipsephase = eclipsephase;
 
   // Register sheet application classes

@@ -22,9 +22,9 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   getData() {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
-
     // Prepare items.
-    if (this.actor.data.type === 'character') {
+      console.log("Super getData ", data);
+    if (data.data.type === 'character') {
       this._prepareCharacterItems(data);
     }
 
@@ -58,7 +58,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @return {undefined}
    */
  async _prepareCharacterItems(sheetData) {
-    const actorData = sheetData.actor;
+    const actorData = this;
     const data = actorData.data;
 
     // Initialize containers.
@@ -238,11 +238,14 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.specialSkill = special;
     actorData.vehicle = vehicle;
 
-      console.log("Morph Flaw Array", actorData.morphFlaw)
-      console.log("Morph Trait Array", actorData.morphTrait)
-      console.log("Ware Array", actorData.ware)
+    console.log("Normal Traits: ", actorData.trait)
+    console.log("Normal Flaws: ", actorData.flaw)
 
-      console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
+    console.log("Morph Flaw Array", actorData.morphFlaw)
+    console.log("Morph Trait Array", actorData.morphTrait)
+    console.log("Ware Array", actorData.ware)
+
+    console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
   /* -------------------------------------------- */
@@ -278,7 +281,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.owner) {
+    if (this.actor.isOwner) {
       let handler = ev => this._onDragItemStart(ev);
       html.find('li.item').each((i, li) => {
         if (li.classList.contains("inventory-header")) return;
