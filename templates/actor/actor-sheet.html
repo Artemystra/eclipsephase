@@ -7,10 +7,10 @@
                 <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
             </div>
             <div>
-                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+                <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
             </div>
             <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
-                <input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="width: auto; font-size: 20px; max-width: 250px; text-shadow: 0 0 5px #161616"/>
+                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 20px; max-width: 250px; text-shadow: 0 0 5px #161616"/>
             </div>
         </div>
         <div class="header-fields" style="margin-top: 25px;">
@@ -120,11 +120,11 @@
         <a class="item" data-tab="ego">Ego</a>
         <a class="item" data-tab="skills">Skills</a>
         <a class="item" data-tab="body">Body</a>
-        {{#if actor._sheet.vehicle}}
+        {{#if data.vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
         {{/if}}
         <a class="item" data-tab="weapons">Inventory</a>
-        {{#if actor._sheet.aspect}}
+        {{#if data.aspect}}
         <a class="item" data-tab="psi">Psi</a>
         {{/if}}
     </nav>
@@ -186,8 +186,8 @@
                         </div>
                     </div>
                     <div class="itemBackground shape2">
-                        {{#if actor._sheet.trait}}
-                        {{#each actor._sheet.trait as |item id|}}
+                        {{#if data.trait}}
+                        {{#each data.trait as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -221,8 +221,8 @@
                         <h3 class="subheaderMirror">Flaws</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor._sheet.flaw}}
-                        {{#each actor._sheet.flaw as |item id|}}
+                        {{#if data.flaw}}
+                        {{#each data.flaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit hoverable"><strong>{{item.name}}</strong></h4>
@@ -262,7 +262,7 @@
                 <div class="contentBox">
                     <div class="flexrow flex-group-center listBackground">
                         <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id1.name" value="{{data.ego.ids.id1.name}}" placeholder="Fake Name" style="text-align: left"/>
+                        <input type="text" name="data.ego.ids.id1.name" value="{{data.data.ego.ids.id1.name}}" placeholder="Fake Name" style="text-align: left"/>
                     </div>
                     <div class="listBackground shape4">
                         <div class="skills grid grid-3col">
@@ -285,7 +285,7 @@
                 <div class="contentBox">
                     <div class="flexrow flex-group-center listBackground">
                         <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id2.name" value="{{data.ego.ids.id2.name}}" placeholder="Fake Name" style="text-align: left"/>
+                        <input type="text" name="data.ego.ids.id2.name" value="{{data.data.ego.ids.id2.name}}" placeholder="Fake Name" style="text-align: left"/>
                     </div>
                     <div class="listBackground shape4">
                         <div class="skills grid grid-3col">
@@ -308,7 +308,7 @@
                 <div class="contentBox">
                     <div class="flexrow flex-group-center listBackground">
                         <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id3.name" value="{{data.ego.ids.id3.name}}" placeholder="Fake Name" style="text-align: left"/>
+                        <input type="text" name="data.ego.ids.id3.name" value="{{data.data.ego.ids.id3.name}}" placeholder="Fake Name" style="text-align: left"/>
                     </div>
                     <div class="listBackground shape4">
                         <div class="skills grid grid-3col">
@@ -331,7 +331,7 @@
                 <div class="contentBox">
                     <div class="flexrow flex-group-center listBackground">
                         <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id4.name" value="{{data.ego.ids.id4.name}}" placeholder="Fake Name" style="text-align: left"/>
+                        <input type="text" name="data.ego.ids.id4.name" value="{{data.data.ego.ids.id4.name}}" placeholder="Fake Name" style="text-align: left"/>
                     </div>
                     <div class="listBackground shape4">
                         <div class="skills grid grid-3col">
@@ -354,7 +354,7 @@
                 <div class="contentBox">
                     <div class="flexrow flex-group-center listBackground">
                         <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id5.name" value="{{data.ego.ids.id5.name}}" placeholder="Fake Name" style="text-align: left"/>
+                        <input type="text" name="data.ego.ids.id5.name" value="{{data.data.ego.ids.id5.name}}" placeholder="Fake Name" style="text-align: left"/>
                     </div>
                     <div class="listBackground shape4">
                         <div class="skills grid grid-3col">
@@ -379,7 +379,7 @@
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
-            {{editor content=data.data.biography target="data.data.biography" button=true owner=owner editable=editable}}
+            {{editor content=data.data.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
         </div>
         {{!--Skills Tab--}}
         <div class="tab" data-group="primary" data-tab="skills">
@@ -595,7 +595,7 @@
                                             </li>
                                             <p/>
                                             <li>
-                                                <label class="resource-value">Acquire a Clue: </label>
+                                                <label class="resource-value">Define the Environment: </label>
                                                 You may introduce an environmental
                                                 factor to a scene. Its presence must be plausible. It should provide
                                                 a new detail that does not drastically alter the scene. Examples
@@ -604,7 +604,7 @@
                                             </li>
                                             <p/>
                                             <li>
-                                                <label class="resource-value">Acquire a Clue: </label>
+                                                <label class="resource-value">Define a Relationship: </label>
                                                 You may introduce a new, plausible relationship
                                                 between your character and an existing NPC. This should be a
                                                 loose/minor connection rather than a close/serious tie. For example,
@@ -631,7 +631,7 @@
                     </div>
                 </div>
                 <div class="contentBox">
-                    {{#if actor._sheet.specialSkill}}
+                    {{#if data.specialSkill}}
                     <div class="flexrow">
                         <h3 class="subheader">Exotic Skills</h3>
                         <div class="alignRight flexGrowHalf">
@@ -639,7 +639,7 @@
                         </div>
                     </div>
                     <div class="listBackground shape2" style="padding-left: 0;">
-                        {{#each actor._sheet.specialSkill as |item id|}}
+                        {{#each data.specialSkill as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding-left: 0;">
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -671,7 +671,7 @@
                     {{/if}}
                 </div>
                 <div class="contentBox">
-                    {{#if actor._sheet.knowSkill}}
+                    {{#if data.knowSkill}}
                     <div class="flexrow">
                         <h3 class="subheader">Know Skills</h3>
                         <div class="alignRight flexGrowHalf">
@@ -679,7 +679,7 @@
                         </div>
                     </div>
                     <div class="listBackground shape2">
-                        {{#each actor._sheet.knowSkill as |item id|}}
+                        {{#each data.knowSkill as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -963,8 +963,8 @@
                         </div>
                     </div>
                     <div class="itemBackground shape2">
-                        {{#if actor._sheet.ware.morph1}}
-                        {{#each actor._sheet.ware.morph1 as |item id|}}
+                        {{#if data.ware.morph1}}
+                        {{#each data.ware.morph1 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -990,9 +990,8 @@
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor._sheet.morphTrait.present1}}
-                        {{#each actor._sheet.morphTrait.morph1 as |item id|}}
-                        {{log "My Morph Trait " this}}
+                        {{#if data.morphTrait.present1}}
+                        {{#each data.morphTrait.morph1 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1004,8 +1003,7 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{#each actor._sheet.morphFlaw.morph1 as |item id|}}
-                        {{log "My Morph Flaw " this}}
+                        {{#each data.morphFlaw.morph1 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1035,9 +1033,8 @@
                         </div>
                     </div>
                     <div class="itemBackground shape2">
-                        {{#if actor._sheet.ware.morph2}}
-                        {{#each actor._sheet.ware.morph2 as |item id|}}
-                        {{log "My Morph Ware " this}}
+                        {{#if data.ware.morph2}}
+                        {{#each data.ware.morph2 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1063,9 +1060,8 @@
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor._sheet.morphTrait.present2}}
-                        {{#each actor._sheet.morphTrait.morph2 as |item id|}}
-                        {{log "My Morph Trait " this}}
+                        {{#if data.morphTrait.present2}}
+                        {{#each data.morphTrait.morph2 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1077,8 +1073,7 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{#each actor._sheet.morphFlaw.morph2 as |item id|}}
-                        {{log "My Morph Flaw " this}}
+                        {{#each data.morphFlaw.morph2 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1108,9 +1103,8 @@
                         </div>
                     </div>
                     <div class="itemBackground shape2">
-                        {{#if actor._sheet.ware.morph3}}
-                        {{#each actor._sheet.ware.morph3 as |item id|}}
-                        {{log "My Morph Ware " this}}
+                        {{#if data.ware.morph3}}
+                        {{#each data.ware.morph3 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1136,9 +1130,8 @@
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor._sheet.morphTrait.present3}}
-                        {{#each actor._sheet.morphTrait.morph3 as |item id|}}
-                        {{log "My Morph Trait " this}}
+                        {{#if data.morphTrait.present3}}
+                        {{#each data.morphTrait.morph3 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1150,8 +1143,7 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{#each actor._sheet.morphFlaw.morph3 as |item id|}}
-                        {{log "My Morph Flaw " this}}
+                        {{#each data.morphFlaw.morph3 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1181,9 +1173,8 @@
                         </div>
                     </div>
                     <div class="itemBackground shape2">
-                        {{#if actor._sheet.ware.morph4}}
-                        {{#each actor._sheet.ware.morph4 as |item id|}}
-                        {{log "My Morph Ware " this}}
+                        {{#if data.ware.morph4}}
+                        {{#each data.ware.morph4 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1209,9 +1200,8 @@
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor._sheet.morphTrait.present4}}
-                        {{#each actor._sheet.morphTrait.morph4 as |item id|}}
-                        {{log "My Morph Trait " this}}
+                        {{#if data.morphTrait.present4}}
+                        {{#each data.morphTrait.morph4 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1223,8 +1213,7 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{#each actor._sheet.morphFlaw.morph4 as |item id|}}
-                        {{log "My Morph Flaw " this}}
+                        {{#each data.morphFlaw.morph4 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1254,9 +1243,8 @@
                         </div>
                     </div>
                     <div class="itemBackground shape2">
-                        {{#if actor._sheet.ware.morph5}}
-                        {{#each actor._sheet.ware.morph5 as |item id|}}
-                        {{log "My Morph Ware " this}}
+                        {{#if data.ware.morph5}}
+                        {{#each data.ware.morph5 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1282,9 +1270,8 @@
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor._sheet.morphTrait.present5}}
-                        {{#each actor._sheet.morphTrait.morph5 as |item id|}}
-                        {{log "My Morph Trait " this}}
+                        {{#if data.morphTrait.present5}}
+                        {{#each data.morphTrait.morph5 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1296,8 +1283,7 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{#each actor._sheet.morphFlaw.morph5 as |item id|}}
-                        {{log "My Morph Flaw " this}}
+                        {{#each data.morphFlaw.morph5 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1327,9 +1313,8 @@
                         </div>
                     </div>
                     <div class="itemBackground shape2">
-                        {{#if actor._sheet.ware.morph6}}
-                        {{#each actor._sheet.ware.morph6 as |item id|}}
-                        {{log "My Morph Ware " this}}
+                        {{#if data.ware.morph6}}
+                        {{#each data.ware.morph6 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1355,9 +1340,8 @@
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
                     <div class="itemBackground shape1">
-                        {{#if actor._sheet.morphTrait.present6}}
-                        {{#each actor._sheet.morphTrait.morph6 as |item id|}}
-                        {{log "My Morph Trait " this}}
+                        {{#if data.morphTrait.present6}}
+                        {{#each data.morphTrait.morph6 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1369,8 +1353,7 @@
                             <strong>Description:</strong> {{item.data.description}}
                         </div>
                         {{/each}}
-                        {{#each actor._sheet.morphFlaw.morph6 as |item id|}}
-                        {{log "My Morph Flaw " this}}
+                        {{#each data.morphFlaw.morph6 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
                             <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
@@ -1398,8 +1381,8 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#if actor._sheet.armor}}
-                    {{#each actor._sheet.armor as |item id|}}
+                    {{#if data.armor}}
+                    {{#each data.armor as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
@@ -1424,7 +1407,7 @@
         </div>
         {{!-- Vehicles Tab --}}
         <div class="tab" data-group="primary" data-tab="vehicles">
-            {{#each actor._sheet.vehicle as |item id|}}
+            {{#each data.vehicle as |item id|}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
@@ -1521,21 +1504,21 @@
         </div>
         {{!-- Gear Tab --}}
         <div class="tab" data-group="primary" data-tab="weapons">
-            {{#if actor._sheet.rangedWeapon}}
+            {{#if data.rangedWeapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Ranged Weapons</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <label class="resource-label labelWidth-large">Roll Guns</label>
                         <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{#if data.skillsVig.guns.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.guns.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.skillsVig.guns.specname}}" data-rollvalue="{{data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        {{#if data.data.skillsVig.guns.specname}}
+                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.guns.specname}}</label>
+                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each actor._sheet.rangedWeapon as |item id|}}
+                    {{#each data.rangedWeapon as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
@@ -1558,21 +1541,21 @@
                 </div>
             </div>
             {{/if}}
-            {{#if actor._sheet.ccweapon}}
+            {{#if data.ccweapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Close Combat Weapons</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <label class="resource-label labelWidth-large">Roll Melee</label>
                         <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{#if data.skillsVig.melee.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.melee.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.skillsVig.melee.specname}}" data-rollvalue="{{data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        {{#if data.data.skillsVig.melee.specname}}
+                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.melee.specname}}</label>
+                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each actor._sheet.ccweapon as |item id|}}
+                    {{#each data.ccweapon as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
@@ -1590,7 +1573,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if actor._sheet.gear}}
+            {{#if data.gear}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Gear</h3>
@@ -1599,7 +1582,7 @@
                 </div>
                 <div class="itemBackground shape4">
                     <div class="grid grid-2col">
-                        {{#each actor._sheet.gear as |item id|}}
+                        {{#each data.gear as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
@@ -1624,7 +1607,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if actor._sheet.program}}
+            {{#if data.program}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Prepared Programs</h3>
@@ -1633,7 +1616,7 @@
                 </div>
                 <div class="itemBackground shape5">
                     <div class="grid grid-2col">
-                        {{#each actor._sheet.program as |item id|}}
+                        {{#each data.program as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
@@ -1665,13 +1648,13 @@
                     <h3 class="subheader">Infection Type</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <span class="resource-label  input-large"><strong>Infection Rating</strong></span>
-                        <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.psiStrain.infection}}" placeholder="0"/>
+                        <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.data.psiStrain.infection}}" placeholder="0"/>
                     </div>
                 </div>
                 <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
                     <ol>
-                        <li class="skills"><input type="text" name="data.psiStrain.name" value="{{data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
-                        <li><textarea class="description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.psiStrain.description}}</textarea></li>
+                        <li class="skills"><input type="text" name="data.psiStrain.name" value="{{data.data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
+                        <li><textarea class="description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.data.psiStrain.description}}</textarea></li>
                     </ol>
                     <ol>
                         {{#each data.data.strainInfluence as |influence key|}}
@@ -1687,7 +1670,7 @@
                     </div>
                 </div>
                 <div class="listBackground">
-                    {{#each actor._sheet.aspect as |item id|}}
+                    {{#each data.aspect as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
                             <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
                             <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.1;"><i>Psi-{{item.data.psiType}}</i></label>

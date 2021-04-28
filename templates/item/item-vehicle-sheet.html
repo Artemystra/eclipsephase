@@ -45,36 +45,36 @@
                 <tr>
                     <td>
                         <select name="data.type" data-type="String">
-                            {{#select data.type}}
+                            {{#select data.data.type}}
                             {{#each config.vehicleType as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="data.ins" value="{{data.ins}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="data.ins" value="{{data.data.ins}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="data.mox" value="{{data.mox}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="data.mox" value="{{data.data.mox}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="data.vig" value="{{data.vig}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="data.vig" value="{{data.data.vig}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="data.flex" value="{{data.flex}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="data.flex" value="{{data.data.flex}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium" type="text" name="data.armor" value="{{data.armor}}" placeholder="e.g. 2/2"/>
+                        <input class="input-medium" type="text" name="data.armor" value="{{data.data.armor}}" placeholder="e.g. 2/2"/>
                     </td>
                     <td>
-                        <input class="input-medium" type="number" name="data.dur" value="{{data.dur}}" placeholder="e.g. 20"/>
+                        <input class="input-medium" type="number" name="data.dur" value="{{data.data.dur}}" placeholder="e.g. 20"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="data.mov" value="{{data.mov}}" placeholder="e.g. 8/32 Rotor"/>
+                        <input class="input-large" type="text" name="data.mov" value="{{data.data.mov}}" placeholder="e.g. 8/32 Rotor"/>
                     </td>
                     <td>
                         <select name="data.slotType" data-type="String">
-                            {{#select data.slotType}}
+                            {{#select data.data.slotType}}
                             {{#each config.vehicleSize as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -82,7 +82,7 @@
                     </td>
                     <td>
                         <select name="data.cost" data-type="String">
-                            {{#select data.cost}}
+                            {{#select data.data.cost}}
                             {{#each config.costTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -94,6 +94,6 @@
         <p></p>
 
         <h2>Notes</h2>
-            <input type="text" name="data.description" value="{{data.description}}" placeholder="e.g. additions, special tweaks etc."/>
+            <input type="text" name="data.description" value="{{data.data.description}}" placeholder="e.g. additions, special tweaks etc."/>
     </section>
 </form>

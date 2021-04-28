@@ -869,6 +869,7 @@ h3.subheaderBlank {
 .description {
   overflow: auto;
   text-align: left;
+  resize: none;
 }
 
 ol {
@@ -878,6 +879,7 @@ ol {
 .textAreaDescription {
   border-radius: 0;
   flex-grow: 3!important;
+  resize: none;
 }
 
 .selectSpecApt {

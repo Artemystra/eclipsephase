@@ -16,6 +16,7 @@ export class EclipsePhaseActor extends Actor {
     const item = this.items;
     const psiMod = 0;
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
+    console.log("Value of data in actor.js ", data);
 
     // Homebrew Switch
     if (brewStatus) {
@@ -43,7 +44,6 @@ export class EclipsePhaseActor extends Actor {
     if (actorData.type === "npc" || actorData.type === "character") {
       data.psiStrain.new = 0;
       data.psiStrain.current = Number(data.psiStrain.infection) + data.psiStrain.new;
-      console.log("The 'Psi current'-calculation from actor.js: " + data.psiStrain.current)
     }
 
 
@@ -126,7 +126,6 @@ export class EclipsePhaseActor extends Actor {
     for (let value of item ) {
       let key = value.type;
       let aptSelect = 0;
-      console.log(value);
       if (value.data.data.aptitude === "Intuition") {
         aptSelect = data.aptitudes.int.value;
       }
@@ -147,6 +146,7 @@ export class EclipsePhaseActor extends Actor {
       }
       if(key === 'specialSkill' || key === 'knowSkill'){
         value.data.data.roll = Number(value.data.data.value) + aptSelect;
+        console.log("Value of aptSelect ", value);
       }
     }
     //Characters only

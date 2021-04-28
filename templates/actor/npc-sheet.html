@@ -7,10 +7,10 @@
                 <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
             </div>
             <div>
-                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+                <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
             </div>
             <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
-                <input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="width: auto; font-size: 20px; max-width: 250px; text-shadow: 0 0 5px #161616"/>
+                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 20px; max-width: 250px; text-shadow: 0 0 5px #161616"/>
             </div>
         </div>
         <div class="header-fields">
@@ -28,14 +28,14 @@
                             <label class="alignCenter resource-label">Wounds</label>
                         </div>
                         <div class="flexrow flex-center flex-between">
-                            <input type="number" name="data.physical.damage" value="{{data.physical.damage}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.physical.damage" value="{{data.data.physical.damage}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
-                            <input type="number" name="data.physical.wounds" value="{{data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.physical.wounds" value="{{data.data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <span class="resource-value">DUR {{data.bodies.morph1.dur}}</span>
-                            <span class="resource-value">DR {{data.physical.dr}}</span>
-                            <span class="resource-value">WT {{data.physical.wt}}</span>
+                            <span class="resource-value">DUR {{data.data.bodies.morph1.dur}}</span>
+                            <span class="resource-value">DR {{data.data.physical.dr}}</span>
+                            <span class="resource-value">WT {{data.data.physical.wt}}</span>
                         </div>
                     </div>
                 </div>
@@ -52,14 +52,14 @@
                             <label class="resource-label alignCenter">Trauma</label>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <input type="number" name="data.mental.stress" value="{{data.mental.stress}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.mental.stress" value="{{data.data.mental.stress}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
-                            <input type="number" name="data.mental.trauma" value="{{data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.mental.trauma" value="{{data.data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <span class="resource-value">LUC {{data.mental.luc}}</span>
-                            <span class="resource-value">IR {{data.mental.ir}}</span>
-                            <span class="resource-value">TT {{data.mental.tt}}</span>
+                            <span class="resource-value">LUC {{data.data.mental.luc}}</span>
+                            <span class="resource-value">IR {{data.data.mental.ir}}</span>
+                            <span class="resource-value">TT {{data.data.mental.tt}}</span>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="listBackground grid grid-3col noMargin">
-                    {{#each data.aptitudes as |aptitude key|}}
+                    {{#each data.data.aptitudes as |aptitude key|}}
                     <div class="abilities flexrow flex-group-center">
                         <span class="resource-label alignCenter">{{key}}</span>
                         <input class="input-small" type="number" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
@@ -91,12 +91,12 @@
                         <div class="flexrow flex-group-left">
                             <div class="flexGrowHalf">
                                 <span class="resource-label flex-group-center">Ini Mod</span>
-                                <input class="input-small" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                                <input class="input-small" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
                             </div>
                             <div class="flexGrowHalf">
                                 <label class="resource-label labelWidth-medium">Thread Level</label>
-                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.threatLevel.current}}" placeholder="0"/>/
-                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.threatLevel.total}}" placeholder="0"/>
+                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.data.threatLevel.current}}" placeholder="0"/>/
+                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.data.threatLevel.total}}" placeholder="0"/>
                             </div>
                         </div>
                     </div>
@@ -112,9 +112,9 @@
         </div>
         <div class="itemBackground">
             <div class="flexrow">
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.ego.motivations.motivation1}}{{data.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.ego.motivations.motivation2}}{{data.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.ego.motivations.motivation3}}{{data.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.data.ego.motivations.motivation1}}{{data.data.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.data.ego.motivations.motivation2}}{{data.data.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.data.ego.motivations.motivation3}}{{data.data.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
             </div>
         </div>
     </div>
@@ -122,10 +122,10 @@
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="skills">Mental</a>
         <a class="item" data-tab="weapons">Physical</a>
-        {{#if actor.vehicle}}
+        {{#if data.vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
         {{/if}}
-        {{#if actor.aspect}}
+        {{#if data.aspect}}
         <a class="item" data-tab="psi">Psi</a>
         {{/if}}
     </nav>
@@ -144,7 +144,7 @@
                         </div>
                     </div>
                     <div class="listBackground shape2">
-                        {{#each data.skillsIns as |skill key|}}
+                        {{#each data.data.skillsIns as |skill key|}}
                         <div class="flexrow flex-group-center">
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
@@ -167,7 +167,7 @@
                         </div>
                     </div>
                     <div class="listBackground shape2">
-                        {{#each data.skillsVig as |skill key|}}
+                        {{#each data.data.skillsVig as |skill key|}}
                         <div class="flexrow flex-group-center">
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
@@ -190,7 +190,7 @@
                         </div>
                     </div>
                     <div class="listBackground shape2">
-                        {{#each data.skillsMox as |skill key|}}
+                        {{#each data.data.skillsMox as |skill key|}}
                         <div class="flexrow flex-group-center">
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
@@ -207,6 +207,7 @@
                     </div>
                 </div>
             </div>
+            {{!-- Know Skills & Special Skills Deprecated --}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Exotic Skills</h3>
@@ -215,16 +216,16 @@
                 </div>
                 <div class="noMargin grid grid-2col listBackground shape5">
                     <div class="flexrow flex-group-center">
-                        <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special1.skillName" value="{{data.specSkills.special1.skillName}}" placeholder="Skill name"/>
-                        <input class="item-standard-margin-both-large input-small" type="number" name="data.specSkills.special1.value" value="{{data.specSkills.special1.value}}" data-dtype="Number" placeholder="0"/>
+                        <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special1.skillName" value="{{data.data.specSkills.special1.skillName}}" placeholder="Skill name"/>
+                        <input class="item-standard-margin-both-large input-small" type="number" name="data.specSkills.special1.value" value="{{data.data.specSkills.special1.value}}" data-dtype="Number" placeholder="0"/>
                         <select class="selectSpecApt" name="data.specSkills.special1.aptitude" data-type="String">
-                            {{#select data.specSkills.special1.aptitude}}
+                            {{#select data.data.specSkills.special1.aptitude}}
                             {{#each data.aptitudes as |aptitude key|}}
                             <option value="{{aptitude.value}}">{{aptitude.label}}</option>
                             {{/each}} {{/select}}
                         </select>
-                        <span class="resource-label item-standard-margin input-small alignCenter">{{data.specSkills.special1.specCheck}}</span>
-                        <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.specSkills.special1.skillName}}" data-rollvalue="{{data.specSkills.special1.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <span class="resource-label item-standard-margin input-small alignCenter">{{data.data.specSkills.special1.specCheck}}</span>
+                        <label class="roll-label input-small task-check" data-type="skill" data-name="{{data.data.specSkills.special1.skillName}}" data-rollvalue="{{data.data.specSkills.special1.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     </div>
                     <div class="flexrow flex-group-center">
                         <input class="item-standard-margin input-XL" type="text" name="data.specSkills.special2.skillName" value="{{data.specSkills.special2.skillName}}" placeholder="Skill name"/>
@@ -302,21 +303,21 @@
         </div>
         {{!-- Weapons Tab --}}
         <div class="tab" data-group="primary" data-tab="weapons">
-            {{#if actor.rangedWeapon}}
+            {{#if data.rangedWeapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Ranged Weapons</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <label class="resource-label labelWidth-large">Roll Guns</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{#if data.skillsVig.guns.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.guns.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.skillsVig.guns.specname}}" data-rollvalue="{{data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        {{#if data.data.skillsVig.guns.specname}}
+                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.guns.specname}}</label>
+                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each actor.rangedWeapon as |item id|}}
+                    {{#each data.rangedWeapon as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
@@ -339,21 +340,21 @@
                 </div>
             </div>
             {{/if}}
-            {{#if actor.ccweapon}}
+            {{#if data.ccweapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Close Combat Weapons</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <label class="resource-label labelWidth-large">Roll Melee</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{#if data.skillsVig.melee.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.melee.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.skillsVig.melee.specname}}" data-rollvalue="{{data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.melee.specname}}</label>
+                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each actor.ccweapon as |item id|}}
+                    {{#each data.ccweapon as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
@@ -381,13 +382,13 @@
                     <div class="listBackground noMargin">
                         <div class="flexrow flex-between headspace">
                             <div>
-                                <input class="input-large" type="text" name="data.bodies.morph1.name" value="{{data.bodies.morph1.name}}" placeholder="Morph name"/>
+                                <input class="input-large" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
                             </div>
                             <div>
                                 <select class="selectSpecApt item-standard-margin-medium" name="data.bodyType.value" data-type="String">
-                                    {{#select data.bodyType.value}}
-                                    {{#each data.bodyTypes as |bod key|}}
-                                    <option value="{{key}}">{{bod.label}}</option>
+                                    {{#select data.data.bodyType.value}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                             </div>
@@ -395,11 +396,11 @@
                         <div class="flexrow flex-between headSpace">
                             <div>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.bodies.morph1.dur}}" placeholder="0"/>
+                                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0"/>
                             </div>
                             <div>
                                 <label class="resource-label labelWidth-small">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0"/>
+                                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0"/>
                             </div>
                         </div>
                         <div class="headSpace">
@@ -408,8 +409,8 @@
                                 <label class="resource-label">Traits:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if actor.morphTrait}}
-                                {{#each actor.morphTrait as |item id|}}
+                                {{#if data.morphTrait}}
+                                {{#each data.morphTrait as |item id|}}
                                 <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                                     <div class="item-controls flex-group-right" style="flex: 0.2;">
@@ -426,8 +427,8 @@
                                 <label class="resource-label">Flaws:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if actor.morphFlaw}}
-                                {{#each actor.morphFlaw as |item id|}}
+                                {{#if data.morphFlaw}}
+                                {{#each data.morphFlaw as |item id|}}
                                 <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                                     <div class="item-controls flex-group-right" style="flex: 0.2;">
@@ -444,8 +445,8 @@
                                 <label class="resource-label">Ware:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if actor.ware}}
-                                {{#each actor.ware as |item id|}}
+                                {{#if data.ware}}
+                                {{#each data.ware as |item id|}}
                                 <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                                     <div class="item-controls flex-group-right" style="flex: 0.2;">
@@ -468,8 +469,8 @@
                     </div>
                     <div class="listBackground noMargin">
                         <div class="headSpace">
-                            {{#if actor.armor}}
-                            {{#each actor.armor as |item id|}}
+                            {{#if data.armor}}
+                            {{#each data.armor as |item id|}}
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <div class="flexrow">
                                     <input class="sheet-inline-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
@@ -499,8 +500,8 @@
                                 <label class="resource-label">Gear:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if actor.gear}}
-                                {{#each actor.gear as |item id|}}
+                                {{#if data.gear}}
+                                {{#each data.gear as |item id|}}
                                 <div class="item flexrow trunContainer" data-item-id="{{item._id}}">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                                     <label class="flex-group-center noMargin alignCenter" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
@@ -520,8 +521,7 @@
         </div>
         {{!-- Vehicles Tab --}}
         <div class="tab" data-group="primary" data-tab="vehicles">
-            {{#each actor.vehicle as |item id|}}
-            {{log "My little Pwny:" this}}
+            {{#each data.vehicle as |item id|}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
@@ -616,19 +616,19 @@
         <div class="tab" data-group="primary" data-tab="psi">
             <div class="contentBox">
                 <div class="flexrow">
-                    <h3 class="subheader">Gear</h3>
+                    <h3 class="subheader">Psi</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                     </div>
                 </div>
                 <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 87%, 25% 87%, 35% 100%, 97% 100%, 100% 95%);">
                     <ol>
-                        <li class="skills"><input type="text" name="data.psiStrain.name" value="{{data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
-                        <li><textarea class="description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.psiStrain.description}}</textarea></li>
+                        <li class="skills"><input type="text" name="data.psiStrain.name" value="{{data.data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
+                        <li><textarea class="description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.data.psiStrain.description}}</textarea></li>
                     </ol>
                     <ol>
                         <span class="resource-label  input-large"><strong>Infection Rating</strong></span>
-                        <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.psiStrain.infection}}" placeholder="0"/>
-                        {{#each data.strainInfluence as |influence key|}}
+                        <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.data.psiStrain.infection}}" placeholder="0"/>
+                        {{#each data.data.strainInfluence as |influence key|}}
                         <li><div class="textAreaDescription"><textarea class="description" name="data.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
                         {{/each}}
                     </ol>
@@ -641,13 +641,13 @@
                     </div>
                 </div>
                 <div class="listBackground">
-                    {{#if actor.aspect}}
-                    {{#each actor.aspect as |item id|}}
+                    {{#if data.aspect}}
+                    {{#each data.aspect as |item id|}}
                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
                         <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
                         <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.1;"><i>Psi-{{item.data.psiType}}</i></label>
                         <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.2; justify-content: center"><strong>{{item.data.infection}}</strong></label>
-                        <div class="textAreaDescription" style="flex-grow: 1!important"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
+                        <div style="flex-grow: 1!important"><textarea class="sheet-inline-edit textAreaDescription" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
                         <div class="item-controls flex-group-right input-small">
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>

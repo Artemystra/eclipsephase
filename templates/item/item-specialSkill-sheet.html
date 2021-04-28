@@ -13,15 +13,15 @@
                 </tr>
                 <tr>
                     <td><input type="text" name="name" value="{{item.name}}" placeholder="Skill name"/></td>
-                    <td><input class="input-small" type="number" name="data.value" value="{{data.value}}" data-dtype="Number" placeholder="0"/></td>
-                    <td><label class="input-small"><strong>{{data.roll}}</strong></label></td>
+                    <td><input class="input-small" type="number" name="data.value" value="{{data.data.value}}" data-dtype="Number" placeholder="0"/></td>
+                    <td><label class="input-small"><strong>{{data.data.roll}}</strong></label></td>
                     <td><select class="input-XL" name="data.aptitude" data-type="String">
-                        {{#select data.aptitude}}
+                        {{#select data.data.aptitude}}
                         {{#each config.aptitudes as |name type|}}
                         <option value="{{name}}">{{name}}</option>
                         {{/each}} {{/select}}
                     </select></td>
-                    <td><input class="input-large" type="text" name="data.specname" value="{{data.specname}}" placeholder="Spec name"/></td>
+                    <td><input class="input-large" type="text" name="data.specname" value="{{data.data.specname}}" placeholder="Spec name"/></td>
                 </tr>
             </table>
         </div>

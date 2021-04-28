@@ -13,17 +13,20 @@ export class GoonSheet extends ActorSheet {
     }
 
     getData() {
-        const data = super.getData().data;
+        const data = super.getData();
         data.dtypes = ["String", "Number", "Boolean"];
-        if (this.actor.data.type == 'goon') {
+        if (data.data.type == 'goon') {
             this._prepareCharacterItems(data);
         }
+
+        //Prepare dropdowns
+        data.config = CONFIG.eclipsephase;
 
         return data;
 }
 
     _prepareCharacterItems(sheetData) {
-        const actorData = sheetData.actor;
+        const actorData = sheetData.data;
 
         // Initialize containers.
         const gear = [];

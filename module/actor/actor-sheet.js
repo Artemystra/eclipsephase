@@ -58,7 +58,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @return {undefined}
    */
  async _prepareCharacterItems(sheetData) {
-    const actorData = this;
+    const actorData = sheetData.data;
     const data = actorData.data;
 
     // Initialize containers.
@@ -83,7 +83,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         morph4: [],
         morph5: [],
         morph6: []
-    };;
+    };
     const rangedweapon = [];
     const ccweapon = [];
     const armor = [];
@@ -94,7 +94,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         morph4: [],
         morph5: [],
         morph6: []
-    };;
+    };
     const aspect = [];
     const program = [];
     const vehicle = [];
@@ -238,14 +238,16 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.specialSkill = special;
     actorData.vehicle = vehicle;
 
-    console.log("Normal Traits: ", actorData.trait)
-    console.log("Normal Flaws: ", actorData.flaw)
 
-    console.log("Morph Flaw Array", actorData.morphFlaw)
-    console.log("Morph Trait Array", actorData.morphTrait)
-    console.log("Ware Array", actorData.ware)
+    //console.log("What is actorData? ", actorData)
+    //console.log("Normal Traits: ", actorData.trait)
+    //console.log("Normal Flaws: ", actorData.flaw)
 
-    console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
+    //console.log("Morph Flaw Array", actorData.morphFlaw)
+    // console.log("Morph Trait Array", actorData.morphTrait)
+    //console.log("Ware Array", actorData.ware)
+
+    //console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
   /* -------------------------------------------- */

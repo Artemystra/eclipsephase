@@ -23,20 +23,20 @@
                 <tr>
                     <td>
                         <select name="data.psiType" data-type="String">
-                            {{#select data.psiType}}
+                            {{#select data.data.psiType}}
                             {{#each config.psiTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        {{#if data.homebrew}}
-                            <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                        {{#if data.data.homebrew}}
+                            <input class="input-large" type="number" name="data.infection" value="{{data.data.infection}}" placeholder="e.g. 3"/>
                         {{else}}
-                            {{#if (eq data.psiType "Chi")}}
+                            {{#if (eq data.data.psiType "Chi")}}
                             -
                             {{else}}
-                            <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                            <input class="input-large" type="number" name="data.infection" value="{{data.data.infection}}" placeholder="e.g. 3"/>
                             {{/if}}
                         {{/if}}
                     </td>

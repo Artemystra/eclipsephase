@@ -26,14 +26,14 @@
                 </tr>
                 <tr>
                     <td>
-                        <input class="input-large" type="text" name="data.energy" value="{{data.energy}}" placeholder="e.g. 10"/>
+                        <input class="input-large" type="text" name="data.energy" value="{{data.data.energy}}" placeholder="e.g. 10"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="data.kinetic" value="{{data.kinetic}}" placeholder="e.g. 10"/>
+                        <input class="input-large" type="text" name="data.kinetic" value="{{data.data.kinetic}}" placeholder="e.g. 10"/>
                     </td>
                     <td>
                         <select name="data.slotType" data-type="String">
-                            {{#select data.slotType}}
+                            {{#select data.data.slotType}}
                             {{#each config.armorTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -41,7 +41,7 @@
                     </td>
                     <td>
                         <select name="data.cost" data-type="String">
-                            {{#select data.cost}}
+                            {{#select data.data.cost}}
                             {{#each config.costTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -52,6 +52,6 @@
         </div>
         <p></p>
         <h2>Notes</h2>
-        <input type="text" name="data.description" value="{{data.description}}" placeholder="Any additional modifications etc."/>
+        <input type="text" name="data.description" value="{{data.data.description}}" placeholder="Any additional modifications etc."/>
     </section>
 </form>
