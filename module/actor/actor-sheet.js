@@ -279,16 +279,27 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     // Drag events for macros.
     if (this.actor.owner) {
-      let handler = ev => this._onDragItemStart(ev);
-      html.find('li.item').each((i, li) => {
-        if (li.classList.contains("inventory-header")) return;
-        li.setAttribute("draggable", true);
-        li.addEventListener("dragstart", handler, false);
+        let handler = ev => this._onDragItemStart(ev);
+        html.find('li.item').each((i, li) => {
+            if (li.classList.contains("inventory-header")) return;
+            li.setAttribute("draggable", true);
+            li.addEventListener("dragstart", handler, false);
+        });
+    }
+    //Edit Item Input Fields
+    html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
+
+    //Edit Item Checkboxes
+      html.find('.equipped.checkBox').click(ev => {
+          const itemId = event.currentTarget.closest(".equipped.checkBox").dataset.itemId;
+          const item = this.actor.getOwnedItem(itemId);
+          let toggle = !item.data.data.active;
+          const updateData = {
+              "data.active": toggle
+          };
+          const updated = item.update(updateData);
       });
 
-      //Item Input Fields
-      html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
-    }
 
     //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
