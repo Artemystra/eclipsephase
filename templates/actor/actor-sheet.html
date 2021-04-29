@@ -1427,7 +1427,7 @@
         {{!-- Vehicles Tab --}}
         <div class="tab" data-group="primary" data-tab="vehicles">
             {{#each actor.vehicle.Vehicle as |item id|}}
-            <div class="contentBox">
+            <div class="item contentBox" data-item-id="{{item._id}}">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
                     <div class="alignRight flexGrowThreeQuarter">
@@ -1438,7 +1438,7 @@
                         {{/if}}
                         {{#if item.data.mox}}
                         <label class="resource-label">Mox</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMOx" value="{{item.data.curMox}}" placeholder="0"/>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMox" value="{{item.data.curMox}}" placeholder="0"/>
                         <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.mox}}</strong></label>
                         {{/if}}
                         {{#if item.data.vig}}
@@ -1521,7 +1521,7 @@
             </div>
             {{/each}}
             {{#each actor.vehicle.Robot as |item id|}}
-            <div class="contentBox">
+            <div class="item contentBox" data-item-id="{{item._id}}">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
                     <div class="alignRight flexGrowThreeQuarter">
@@ -1532,7 +1532,7 @@
                         {{/if}}
                         {{#if item.data.mox}}
                         <label class="resource-label">Mox</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMOx" value="{{item.data.curMox}}" placeholder="0"/>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMox" value="{{item.data.curMox}}" placeholder="0"/>
                         <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.mox}}</strong></label>
                         {{/if}}
                         {{#if item.data.vig}}
