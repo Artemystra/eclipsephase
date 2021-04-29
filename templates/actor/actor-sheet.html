@@ -120,11 +120,15 @@
         <a class="item" data-tab="ego">Ego</a>
         <a class="item" data-tab="skills">Skills</a>
         <a class="item" data-tab="body">Body</a>
-        {{#if data.vehicle}}
+        {{#if data.vehicle.Vehicle}}
+        <a class="item" data-tab="vehicles">Vehicles</a>
+        {{else if data.vehicle.Robot}}
         <a class="item" data-tab="vehicles">Vehicles</a>
         {{/if}}
         <a class="item" data-tab="weapons">Inventory</a>
-        {{#if data.aspect}}
+        {{#if data.aspect.Chi}}
+        <a class="item" data-tab="psi">Psi</a>
+        {{else if data.aspect.Gamma}}
         <a class="item" data-tab="psi">Psi</a>
         {{/if}}
     </nav>
