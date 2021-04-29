@@ -2,7 +2,7 @@
   "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "minimumCoreVersion": "0.5.5",
   "compatibleCoreVersion": "0.7.9",
   "templateVersion": 2,
@@ -10,7 +10,42 @@
   "esmodules": ["module/eclipsephase.js"],
   "styles": ["css/eclipsephase.css"],
   "scripts": ["module/effects.js"],
-  "packs": [],
+  "packs": [
+    {
+      "name": "ware",
+      "label": "Ware",
+      "system": "eclipsephase",
+      "path": "./packs/ware.db",
+      "entity": "Item"
+    },
+    {
+      "name": "ego-traits",
+      "label": "Ego Traits",
+      "system": "eclipsephase",
+      "path": "./packs/ego-traits.db",
+      "entity": "Item"
+    },
+    {
+      "name": "morph-traits",
+      "label": "Morph Traits",
+      "system": "eclipsephase",
+      "path": "./packs/morph-traits.db",
+      "entity": "Item"
+    },
+    {
+      "name": "armor",
+      "label": "Armor",
+      "system": "eclipsephase",
+      "path": "./packs/armor.db",
+      "entity": "Item"
+    },
+    {
+      "name": "weapons",
+      "label": "Weapons",
+      "system": "eclipsephase",
+      "path": "./packs/weapons.db",
+      "entity": "Item"
+    }],
   "languages": [
     {
       "lang": "en",
@@ -23,7 +58,7 @@
   "primaryTokenAttribute": "bodies.morph1.dur",
   "secondaryTokenAttribute": "mental.luc",
   "url": "https://github.com/DerDiemen/eclipsephase",
-  "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/v0.4.8/system.json",
-  "download": "https://github.com/DerDiemen/eclipsephase/archive/v0.4.8/eclipsephase-0.4.8.zip",
+  "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/v0.4.9/system.json",
+  "download": "https://github.com/DerDiemen/eclipsephase/archive/v0.4.9/eclipsephase-0.4.9.zip",
   "license": "LICENSE.txt"
 }
