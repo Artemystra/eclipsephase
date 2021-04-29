@@ -95,9 +95,16 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         morph5: [],
         morph6: []
     };;
-    const aspect = [];
+    const aspect = {
+        Chi: [],
+        Gamma: []
+    };
     const program = [];
-    const vehicle = [];
+    const vehicle = {
+        Robot: [],
+        Vehicle: [],
+        Morph: []
+    };
     const item = [];
 
     // Iterate through items, allocating to containers
@@ -159,7 +166,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         armor.push(i);
       }
       else if (i.type === 'aspect') {
-        aspect.push(i);
+        aspect[i.data.psiType].push(i);
       }
       else if (i.type === 'program') {
         program.push(i);
@@ -170,7 +177,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       else if (i.type === 'vehicle') {
         i.wt = Math.round(i.data.dur / 5);
         i.dr = Math.round(i.data.dur * 2);
-        vehicle.push(i)
+        vehicle[i.data.type].push(i)
       }
     }
 
@@ -237,12 +244,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.knowSkill = know;
     actorData.specialSkill = special;
     actorData.vehicle = vehicle;
-
-      console.log("Morph Flaw Array", actorData.morphFlaw)
-      console.log("Morph Trait Array", actorData.morphTrait)
-      console.log("Ware Array", actorData.ware)
-
-      console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
   /* -------------------------------------------- */
