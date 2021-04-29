@@ -95,9 +95,16 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         morph5: [],
         morph6: []
     };
-    const aspect = [];
-    const program = [];
-    const vehicle = [];
+      const aspect = {
+          Chi: [],
+          Gamma: []
+      };
+      const program = [];
+      const vehicle = {
+          Robot: [],
+          Vehicle: [],
+          Morph: []
+      };
     const item = [];
 
     // Iterate through items, allocating to containers
@@ -159,7 +166,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         armor.push(i);
       }
       else if (i.type === 'aspect') {
-        aspect.push(i);
+        aspect[i.data.psiType].push(i);
       }
       else if (i.type === 'program') {
         program.push(i);
@@ -170,7 +177,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       else if (i.type === 'vehicle') {
         i.wt = Math.round(i.data.dur / 5);
         i.dr = Math.round(i.data.dur * 2);
-        vehicle.push(i)
+        vehicle[i.data.type].push(i)
       }
     }
 
@@ -284,18 +291,31 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     // Drag events for macros.
     if (this.actor.isOwner) {
-      let handler = ev => this._onDragItemStart(ev);
-      html.find('li.item').each((i, li) => {
-        if (li.classList.contains("inventory-header")) return;
-        li.setAttribute("draggable", true);
-        li.addEventListener("dragstart", handler, false);
+        let handler = ev => this._onDragItemStart(ev);
+        html.find('li.item').each((i, li) => {
+            if (li.classList.contains("inventory-header")) return;
+            li.setAttribute("draggable", true);
+            li.addEventListener("dragstart", handler, false);
+        });
+    }
+      //Edit Item Input Fields
+      html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
+
+//Edit Item Input Fields
+      html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
+
+      //Edit Item Checkboxes
+      html.find('.equipped.checkBox').click(ev => {
+          const itemId = event.currentTarget.closest(".equipped.checkBox").dataset.itemId;
+          const item = this.actor.getOwnedItem(itemId);
+          let toggle = !item.data.data.active;
+          const updateData = {
+              "data.active": toggle
+          };
+          const updated = item.update(updateData);
       });
 
-      //Item Input Fields
-      html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
-    }
-
-    //show on hover
+      //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
   }
 

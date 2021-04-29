@@ -1383,19 +1383,34 @@
                 <div class="itemBackground">
                     {{#if data.armor}}
                     {{#each data.armor as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                            <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
-                            <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
-                            <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
-                            <div class="item-controls flex-group-right input-small">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                            </div>
+                    {{#if data.active}}
+                    <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
+                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <div class="item-controls flex-group-right input-small">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
-                        <div class="item itemdescriptionImportant" data-item-id="{{item._id}}" style="margin-bottom: 10px">
-                            <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                    </div>
+                    {{else}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
+                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <div class="item-controls flex-group-right input-small">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
+                    </div>
+                    {{/if}}
+                    <div class="item itemdescriptionImportant" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                    </div>
                     {{/each}}
                     {{else}}
                     <div class="flex-group-center">
@@ -1407,8 +1422,8 @@
         </div>
         {{!-- Vehicles Tab --}}
         <div class="tab" data-group="primary" data-tab="vehicles">
-            {{#each data.vehicle as |item id|}}
-            <div class="contentBox">
+            {{#each data.vehicle.Vehicle as |item id|}}
+            <div class="item contentBox" data-item-id="{{item._id}}">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
                     <div class="alignRight flexGrowThreeQuarter">
@@ -1419,7 +1434,7 @@
                         {{/if}}
                         {{#if item.data.mox}}
                         <label class="resource-label">Mox</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMOx" value="{{item.data.curMox}}" placeholder="0"/>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMox" value="{{item.data.curMox}}" placeholder="0"/>
                         <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.mox}}</strong></label>
                         {{/if}}
                         {{#if item.data.vig}}
@@ -1439,7 +1454,7 @@
                             <table class="noMargin alignCenter">
                                 <tr>
                                     <td>
-                                        <label class="resource-label">Type</label>
+                                        <label class="resource-label">Passengers</label>
                                     </td>
                                     <td>
                                         <label class="resource-label">Armor</label>
@@ -1465,7 +1480,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label class="flex-group-center noMargin noBG"><strong>{{item.data.type}}</strong></label>
+                                        <label class="flex-group-center noMargin noBG"><strong>{{item.data.pass}}</strong></label>
                                     </td>
                                     <td>
                                         <input class="input-small sheet-inline-edit" data-field="data.armor" type="text" name="data.armor" value="{{data.armor}}" placeholder="2/2"/>
@@ -1501,9 +1516,97 @@
                 </div>
             </div>
             {{/each}}
+            {{#each data.vehicle.Robot as |item id|}}
+            <div class="item contentBox" data-item-id="{{item._id}}">
+                <div class="flexrow">
+                    <h3 class="subheader">{{item.name}}</h3>
+                    <div class="alignRight flexGrowThreeQuarter">
+                        {{#if item.data.ins}}
+                        <label class="resource-label">Ins</label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curIns" type="number" name="item.data.curIns" value="{{item.data.curIns}}" placeholder="0"/>
+                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.ins}}</strong></label>
+                        {{/if}}
+                        {{#if item.data.mox}}
+                        <label class="resource-label">Mox</label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMox" value="{{item.data.curMox}}" placeholder="0"/>
+                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.mox}}</strong></label>
+                        {{/if}}
+                        {{#if item.data.vig}}
+                        <label class="resource-label">Vig</label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curVig" type="number" name="item.data.curVig" value="{{item.data.curVig}}" placeholder="0"/>
+                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.vig}}</strong></label>
+                        {{/if}}
+                        {{#if item.data.flex}}
+                        <label class="resource-label">Flex</label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curFlex" type="number" name="item.data.curFlex" value="{{item.data.curFlex}}" placeholder="0"/>
+                        <label class="flex-group-center"><strong>/ {{item.data.flex}}</strong></label>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="topLine">
+                    <div class="item" data-item-id="{{item._id}}" style="padding: 0">
+                        <table class="noMargin alignCenter">
+                            <tr>
+                                <td>
+                                    <label class="resource-label">Armor</label>
+                                </td>
+                                <td>
+                                    <label class="resource-label">WT</label>
+                                </td>
+                                <td>
+                                    <label class="resource-label">Damage / DUR</label>
+                                </td>
+                                <td>
+                                    <label class="resource-label">DR</label>
+                                </td>
+                                <td>
+                                    <label class="resource-label">Movement</label>
+                                </td>
+                                <td>
+                                    <label class="resource-label">Size</label>
+                                </td>
+                                <td>
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input class="input-small sheet-inline-edit" data-field="data.armor" type="text" name="data.armor" value="{{data.armor}}" placeholder="2/2"/>
+                                </td>
+                                <td>
+                                    <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
+                                </td>
+                                <td>
+                                    <input class="input-small sheet-inline-edit noMargin" data-field="data.curDur" type="number" name="item.data.curDur" value="{{item.data.curDur}}" placeholder="0"/>
+                                    <label class="flex-group-center noMargin noBG"><strong>/ {{item.data.dur}}</strong></label>
+                                </td>
+                                <td>
+                                    <label class="flex-group-center noMargin noBG"><strong>{{item.dr}}</strong></label>
+                                </td>
+                                <td>
+                                    <label class="flex-group-center noMargin noBG"><strong>{{item.data.mov}}</strong></label>
+                                </td>
+                                <td>
+                                    <label class="flex-group-center noMargin noBG"><strong>{{item.data.slotType}}</strong></label>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="noMargin alignCenter">
+                            <tr>
+                                <td>
+                                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
         </div>
         {{!-- Gear Tab --}}
-        <div class="tab" data-group="primary" data-tab="weapons">
+        <div class="tab gear" data-group="primary" data-tab="weapons">
             {{#if data.rangedWeapon}}
             <div class="contentBox">
                 <div class="flexrow">
@@ -1519,7 +1622,9 @@
                 </div>
                 <div class="itemBackground">
                     {{#each data.rangedWeapon as |item id|}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    {{#if this.data.active}}
+                    <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                         <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
@@ -1534,6 +1639,24 @@
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
+                    {{else}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
+                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
+                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
+                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <div class="item-controls flex-group-right input-small">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    {{/if}}
                     <div class="item itemdescriptionImportant shape3" data-item-id="{{item._id}}">
                         <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                     </div>
@@ -1556,7 +1679,9 @@
                 </div>
                 <div class="itemBackground">
                     {{#each data.ccweapon as |item id|}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    {{#if this.data.active}}
+                    <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                         <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
@@ -1566,6 +1691,19 @@
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                         </div>
                     </div>
+                    {{else}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                        <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
+                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <div class="item-controls flex-group-right input-small">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    {{/if}}
                     <div class="item itemdescriptionImportant shape3" data-item-id="{{item._id}}">
                         <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                     </div>
@@ -1580,19 +1718,33 @@
                     <div class="alignRight flexGrowThreeQuarter">
                     </div>
                 </div>
-                <div class="itemBackground shape4">
+                <div class="itemBackground">
                     <div class="grid grid-2col">
                         {{#each data.gear as |item id|}}
                         <div>
-                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                            {{#if this.data.active}}
+                            <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                 <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
                                 <label class="flex-group-center noMargin flex-group-left" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
-                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="text" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
                                 <div class="item-controls flex-group-right input-small">
                                     <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 </div>
                             </div>
+                            {{else}}
+                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                                <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                                <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
+                                <label class="flex-group-center noMargin flex-group-left" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
+                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <div class="item-controls flex-group-right input-small">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                            {{/if}}
                             {{#if item.data.description}}
                             <div class="itemdescription" style="margin-bottom: 10px">
                                 <label class="flex-group-center noMargin flex-group-left" style="background: none;">{{item.data.description}}</label>
@@ -1663,18 +1815,30 @@
                     </ol>
                 </div>
             </div>
+            {{#if data.aspect.Gamma}}
             <div class="contentBox">
                 <div class="flexrow">
-                    <h3 class="subheader">Psi Aspects</h3>
+                    <h3 class="subheader">Psi Gamma</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                     </div>
                 </div>
                 <div class="listBackground">
-                    {{#each data.aspect as |item id|}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                        <label class="noMargin flex-group-left resource-value" style="flex: 0.4;">Name</label>
+                        <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.3;">Action</label>
+                        <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.3;">Duration</label>
+                        <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.2;">Mod</label>
+                        <label class="noMargin flex-group-left resource-value" style="font-size: 12px; flex: 1; justify-content: center">Description</label>
+                        <div class="item-controls flex-group-right input-small">
+                            <a class="item-control item-delete icon-hidden" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    {{#each data.aspect.Gamma as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
                             <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
-                            <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.1;"><i>Psi-{{item.data.psiType}}</i></label>
-                            <label class="noMargin flex-group-left" style="font-size: 12px; flex: 0.2; justify-content: center"><strong>{{item.data.infection}}</strong></label>
+                            <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.3;"><i>{{item.data.actionType}}</i></label>
+                            <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.3;"><i>{{item.data.duration}}</i></label>
+                            <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.2; justify-content: center"><strong>{{item.data.infection}}</strong></label>
                             <div class="textAreaDescription" style="flex-grow: 1!important"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
                             <div class="item-controls flex-group-right input-small">
                                 <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -1683,6 +1847,34 @@
                     {{/each}}
                 </div>
             </div>
+            {{/if}}
+            {{#if data.aspect.Chi}}
+            <div class="contentBox">
+                <div class="flexrow">
+                    <h3 class="subheader">Psi Chi</h3>
+                    <div class="alignRight flexGrowThreeQuarter">
+                    </div>
+                </div>
+                <div class="listBackground">
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                        <label class="noMargin flex-group-left resource-value" style="flex: 1.2;">Name</label>
+                        <label class="noMargin flex-group-left resource-value" style="font-size: 12px; flex: 1; justify-content: center">Description</label>
+                        <div class="item-controls flex-group-right input-small">
+                            <a class="item-control item-delete icon-hidden" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    {{#each data.aspect.Chi as |item id|}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                        <label class="noMargin flex-group-left" style="flex: 1.2;"><strong>{{item.name}}</strong></label>
+                        <div class="textAreaDescription" style="flex-grow: 1!important;"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
+                        <div class="item-controls flex-group-right input-small">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
         </div>
     </section>
 </form>

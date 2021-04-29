@@ -16,7 +16,6 @@ export class EclipsePhaseActor extends Actor {
     const item = this.items;
     const psiMod = 0;
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
-    console.log("Value of data in actor.js ", data);
 
     // Homebrew Switch
     if (brewStatus) {
@@ -146,7 +145,6 @@ export class EclipsePhaseActor extends Actor {
       }
       if(key === 'specialSkill' || key === 'knowSkill'){
         value.data.data.roll = Number(value.data.data.value) + aptSelect;
-        console.log("Value of aptSelect ", value);
       }
     }
     //Characters only

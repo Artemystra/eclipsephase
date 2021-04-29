@@ -14,12 +14,19 @@
                     <td>
                         <label class="resource-label">Type</label>
                     </td>
+                    {{#if (eq data.data.type "Morph")}}
                     <td>
                         <label class="resource-label">Insight</label>
                     </td>
                     <td>
                         <label class="resource-label">Moxie</label>
                     </td>
+                    {{/if}}
+                    {{#if (eq data.data.type "Vehicle")}}
+                    <td>
+                        <label class="resource-label">Passengers</label>
+                    </td>
+                    {{/if}}
                     <td>
                         <label class="resource-label">Vigor</label>
                     </td>
@@ -51,12 +58,19 @@
                             {{/each}} {{/select}}
                         </select>
                     </td>
+                    {{#if (eq data.data.type "Morph")}}
+                    <td>
+                        <input class="input-medium"type="number" name="data.ins" value="{{data.ins}}" placeholder="0"/>
+                    </td>
                     <td>
                         <input class="input-medium"type="number" name="data.ins" value="{{data.data.ins}}" placeholder="0"/>
                     </td>
+                    {{/if}}
+                    {{#if (eq data.data.type "Vehicle")}}
                     <td>
                         <input class="input-medium"type="number" name="data.mox" value="{{data.data.mox}}" placeholder="0"/>
                     </td>
+                    {{/if}}
                     <td>
                         <input class="input-medium"type="number" name="data.vig" value="{{data.data.vig}}" placeholder="0"/>
                     </td>
