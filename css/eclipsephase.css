@@ -640,7 +640,7 @@ table {
 }
 
 table tr:first-child{
-  background: #161616;
+  background: #1f1f1f;
 }
 
 table tr:nth-child(even){

@@ -14,7 +14,7 @@
                     <td>
                         <label class="resource-label">Type</label>
                     </td>
-                    {{#if (eq data.type "morph")}}
+                    {{#if (eq data.type "Morph")}}
                     <td>
                         <label class="resource-label">Insight</label>
                     </td>
@@ -22,7 +22,7 @@
                         <label class="resource-label">Moxie</label>
                     </td>
                     {{/if}}
-                    {{#if (eq data.type "vehicle")}}
+                    {{#if (eq data.type "Vehicle")}}
                     <td>
                         <label class="resource-label">Passengers</label>
                     </td>
@@ -54,11 +54,11 @@
                         <select name="data.type" data-type="String">
                             {{#select data.type}}
                             {{#each config.vehicleType as |name type|}}
-                            <option value="{{type}}">{{name}}</option>
+                            <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
-                    {{#if (eq data.type "morph")}}
+                    {{#if (eq data.type "Morph")}}
                     <td>
                         <input class="input-medium"type="number" name="data.ins" value="{{data.ins}}" placeholder="0"/>
                     </td>
@@ -66,7 +66,7 @@
                         <input class="input-medium"type="number" name="data.mox" value="{{data.mox}}" placeholder="0"/>
                     </td>
                     {{/if}}
-                    {{#if (eq data.type "vehicle")}}
+                    {{#if (eq data.type "Vehicle")}}
                     <td>
                         <input class="input-medium"type="number" name="data.pass" value="{{data.pass}}" placeholder="0"/>
                     </td>
