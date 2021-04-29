@@ -11,6 +11,7 @@
     {{!-- Sheet Body --}}
     <section class="sheet-body">
         <div class="flexrow flex-group-center">
+            {{#if data.homebrew}}
             <table>
                 <tr>
                     <td>
@@ -30,18 +31,67 @@
                         </select>
                     </td>
                     <td>
-                        {{#if data.homebrew}}
-                            <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                        <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
+                    </td>
+                </tr>
+            </table>
+            {{else}}
+            <table>
+                <tr>
+                    <td>
+                        <label class="resource-label">Psi Type</label>
+                    </td>
+                    {{#if (eq data.psiType "Chi")}}
+                    {{else}}
+                    <td>
+                        <label class="resource-label">Action</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Duration</label>
+                    </td>
+                    {{/if}}
+                    <td>
+                        <label class="resource-label">Infection Modifier</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="data.psiType" data-type="String">
+                            {{#select data.psiType}}
+                            {{#each config.psiTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    {{#if (eq data.psiType "Chi")}}
+                    {{else}}
+                    <td>
+                        <select name="data.actionType" data-type="String">
+                            {{#select data.actionType}}
+                            {{#each config.actionTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="data.duration" data-type="String">
+                            {{#select data.duration}}
+                            {{#each config.duration as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    {{/if}}
+                    <td>
+                        {{#if (eq data.psiType "Chi")}}
+                        -
                         {{else}}
-                            {{#if (eq data.psiType "Chi")}}
-                            -
-                            {{else}}
-                            <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
-                            {{/if}}
+                        <input class="input-large" type="number" name="data.infection" value="{{data.infection}}" placeholder="e.g. 3"/>
                         {{/if}}
                     </td>
                 </tr>
             </table>
+            {{/if}}
         </div>
         <p></p>
         <h2>Description</h2>

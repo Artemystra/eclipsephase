@@ -1438,9 +1438,11 @@
                         <div class="item" data-item-id="{{item._id}}" style="padding: 0">
                             <table class="noMargin alignCenter">
                                 <tr>
+                                    {{#if item.data.pass}}
                                     <td>
-                                        <label class="resource-label">Type</label>
+                                        <label class="resource-label">Passengers</label>
                                     </td>
+                                    {{/if}}
                                     <td>
                                         <label class="resource-label">Armor</label>
                                     </td>
@@ -1464,9 +1466,11 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    {{#if item.data.pass}}
                                     <td>
-                                        <label class="flex-group-center noMargin noBG"><strong>{{item.data.type}}</strong></label>
+                                        <label class="flex-group-center noMargin noBG"><strong>{{item.data.pass}}</strong></label>
                                     </td>
+                                    {{/if}}
                                     <td>
                                         <input class="input-small sheet-inline-edit" data-field="data.armor" type="text" name="data.armor" value="{{data.armor}}" placeholder="2/2"/>
                                     </td>

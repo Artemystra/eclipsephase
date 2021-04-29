@@ -21,8 +21,10 @@ eclipsephase.weaponTypes = {
 }
 
 eclipsephase.gearTypes = {
+    digital: "Digital",
     accessory: "Accessory",
-    bulky: "Bulky"
+    bulky: "Bulky",
+    notMobile: "Not Mobile"
 }
 
 eclipsephase.armorTypes = {
@@ -48,6 +50,20 @@ eclipsephase.psiTypes = {
     none: "Select",
     gamma: "Gamma",
     chi: "Chi"
+}
+
+eclipsephase.actionTypes = {
+    quick: "Quick",
+    task: "Task",
+    complex: "Complex"
+}
+
+eclipsephase.duration = {
+    instant: "Instant",
+    action: "Actions Turns",
+    minutes: "Minutes",
+    hours: "Hours",
+    sustained: "Sustained"
 }
 
 eclipsephase.aptitudes = {
