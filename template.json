@@ -1221,7 +1221,9 @@
         "base"
       ],
       "infection": null,
-      "psiType": ""
+      "psiType": "",
+      "actionType": "",
+      "duration": ""
     },
     "program": {
       "templates": [
@@ -1261,7 +1263,8 @@
       "curVig": null,
       "curFlex": null,
       "curDur": null,
-      "mov": null
+      "mov": null,
+      "pass": null
     }
   }
 }
