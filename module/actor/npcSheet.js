@@ -44,7 +44,10 @@ export class NpcSheet extends ActorSheet {
         const ccweapon = [];
         const armor = [];
         const ware = [];
-        const aspect = [];
+        const aspect = {
+            Chi: [],
+            Gamma: []
+        };
         const vehicle = [];
         const morphtrait = [];
         const morphflaw = [];
@@ -81,7 +84,7 @@ export class NpcSheet extends ActorSheet {
                 ware.push(i)
             }
             else if (i.type === 'aspect') {
-                aspect.push(i)
+                aspect[i.data.psiType].push(i);
             }
             else if (i.type === 'vehicle') {
                 i.wt = Math.round(i.data.dur / 5);

@@ -243,6 +243,10 @@
 
 /* Colors */
 
+.atHand {
+  outline: #4098d6 2px inset;
+}
+
 span.fail {
   font-size: 20px;
   color: #db2a2a;
@@ -296,13 +300,13 @@ span.success {
   opacity: 1;
 }
 
-input[class="sheet"]{
+input[class="sheet"],
+input[class="sheet equipped checkBox"]{
   -webkit-appearance:none;
   flex: 0 0 10px;
   height: 10px;
   background-color: #fff;
   border: #2b2b2b 1px solid;
-  margin:0 auto;
   display:block;
   border-radius: 100px;
   margin: 0 5px;
@@ -313,7 +317,8 @@ input[class="check-inline-edit"]{
   flex: 0 0 10px;
   height: 10px;
   background-color: #fff;
-  border: #2b2b2b 1px solid;margin:0 auto;display:block;
+  border: #2b2b2b 1px solid;
+  display:block;
   border-radius: 100px;
   margin: 0 5px;
 }
@@ -365,11 +370,17 @@ textarea:focus{
   outline: none;
 }
 
-input[class="sheet"]:checked {
+input[class="sheet"]:checked,
+input[class="sheet equipped checkBox"]:checked{
   background-color: #4098d6;
   padding:4px;
   border: #2b2b2b 1px solid;
   filter: none;
+}
+
+input[class="sheet equipped checkBox"],
+input[class="sheet equipped checkBox"]:checked{
+  margin: 0 15px 0 0;
 }
 
 input [class="leftField"],
@@ -629,7 +640,7 @@ table {
 }
 
 table tr:first-child{
-  background: #161616;
+  background: #1f1f1f;
 }
 
 table tr:nth-child(even){
@@ -949,6 +960,13 @@ ol {
 .itemdescriptionImportant {
   padding: 5px;
   background-color: #2b2b2b;
+  margin-top: 2px;
+}
+
+.gear .item {
+  padding: 0.2em 5px;
+  min-height: 30px;
+  margin-top: 4px;
 }
 
 .noBG {
