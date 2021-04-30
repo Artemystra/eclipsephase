@@ -23,7 +23,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
-      console.log("Super getData ", data);
     if (data.data.type === 'character') {
       this._prepareCharacterItems(data);
     }
@@ -274,14 +273,14 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     // Update Inventory Item
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
+      const item = this.actor.items.get(li.data("itemId"));
       item.sheet.render(true);
     });
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteOwnedItem(li.data("itemId"));
+      this.actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
       li.slideUp(200, () => this.render(false));
     });
 
@@ -307,7 +306,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
           const itemId = event.currentTarget.closest(".equipped.checkBox").dataset.itemId;
-          const item = this.actor.getOwnedItem(itemId);
+          const item = this.actor.items.get(itemId);
           let toggle = !item.data.data.active;
           const updateData = {
               "data.active": toggle
@@ -347,7 +346,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
 
     // Finally, create the item!
-    return this.actor.createOwnedItem(itemData);
+    return this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 
   /**
@@ -393,7 +392,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     event.preventDefault();
     let element = event.currentTarget;
     let itemId = element.closest(".item").dataset.itemId;
-    let item = this.actor.getOwnedItem(itemId);
+    let item = this.actor.items.get(itemId);
     let field = element.dataset.field;
 
     return item.update({ [field]: element.value });

@@ -1730,8 +1730,8 @@
                             <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                                 <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                                <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
-                                <label class="flex-group-center noMargin flex-group-left" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
+                                <label class="item-control item-edit hoverable truncate alignLeft"><strong>{{item.name}}</strong></label>
+                                <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
                                 <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
                                 <div class="item-controls flex-group-right input-small">
                                     <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -1741,8 +1741,8 @@
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                                <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
-                                <label class="flex-group-center noMargin flex-group-left" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
+                                <label class="item-control item-edit hoverable truncate alignLeft"><strong>{{item.name}}</strong></label>
+                                <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
                                 <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
                                 <div class="item-controls flex-group-right input-small">
                                     <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>

@@ -1101,4 +1101,5 @@ h3.inline {
 
 .directory .directory-header .header-search input {
   background: none;
+  margin: 10px 3px;
 }
