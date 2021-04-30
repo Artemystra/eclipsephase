@@ -1098,3 +1098,7 @@ h3.inline {
   padding: 3em 2em 2em 3.5em;
   clip-path: polygon(71% 0, 73% 5%, 97% 5%, 100% 10%, 100% 100%, 3% 100%, 0 96%, 0 0, 26% 0);
 }
+
+.directory .directory-header .header-search input {
+  background: none;
+}
