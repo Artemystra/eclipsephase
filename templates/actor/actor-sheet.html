@@ -137,7 +137,7 @@
     {{!-- Sheet Body --}}
     <section class="sheet-body">
         {{!-- Ego Tab --}}
-        <div class="tab" data-group="primary" data-tab="ego">
+        <div class="tab ego" data-group="primary" data-tab="ego">
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Personal</h3>
@@ -189,18 +189,27 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="itemBackground shape2">
+                    <div class="listBackground" style="position: relative; z-index: 2;">
                         {{#if data.trait}}
                         {{#each data.trait as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -209,6 +218,7 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
                 </div>
                 <div class="contentBox" style="flex: 0.15;">
                     <div class="flexrow">
@@ -224,18 +234,27 @@
                         </div>
                         <h3 class="subheaderMirror">Flaws</h3>
                     </div>
-                    <div class="itemBackground shape1">
+                    <div class="listBackground" style="position: relative; z-index: 2;">
                         {{#if data.flaw}}
                         {{#each data.flaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name item-control item-edit hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -244,6 +263,7 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -45px;"></div>
                 </div>
             </div>
             <div class="contentBox">
@@ -393,7 +413,7 @@
                         <h3 class="subheader">Insight Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             <label class="resource-label labelWidth-medium">pool </label>
-                                <i class="far fa-question-circle hidden revealer tooltip">
+                                <i class="far fa-question-circle hidden info tooltip">
                                     <div role="tooltip">
                                         <div class="insight">
                                             <h3 class="inline">Insight</h3>
@@ -430,29 +450,32 @@
                             <span class="resource-value">/ {{#if data.data.pools.insight.totalInsight}}{{data.data.pools.insight.totalInsight}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground shape2">
+                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
                         {{#each data.data.skillsIns as |skill key|}}
-                        <div class="flexrow flex-group-center">
+                        <div class="flexrow flex-group-center reveal">
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-value  input-small">{{numberFormat skill.derived decimals=0}}</span>
-                            <label class="resource-label roll-label task-check" data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             {{#if this.specname}}
-                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                             {{else}}
                             <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                             {{/if}}
                         </div>
                         {{/each}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
                         <h3 class="subheader">Vigor Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             <label class="resource-label labelWidth-medium">pool </label>
-                            <i class="far fa-question-circle hidden revealer tooltip">
+                            <i class="far fa-question-circle hidden info tooltip">
                                 <div role="tooltip">
                                     <div class="vigor">
                                         <h3 class="inline">Vigor</h3>
@@ -486,29 +509,32 @@
                             <span class="resource-value">/ {{#if data.data.pools.vigor.totalVigor}}{{data.data.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground shape2">
+                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
                         {{#each data.data.skillsVig as |skill key|}}
-                        <div class="flexrow flex-group-center">
+                        <div class="flexrow flex-group-center reveal">
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-value  input-small">{{numberFormat skill.derived decimals=0}}</span>
-                            <label class="resource-label roll-label task-check" data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             {{#if this.specname}}
-                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                             {{else}}
                             <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                             {{/if}}
                         </div>
                         {{/each}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
                         <h3 class="subheader">Moxie Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             <label class="resource-label labelWidth-medium">pool </label>
-                            <i class="far fa-question-circle hidden revealer tooltip">
+                            <i class="far fa-question-circle hidden info tooltip">
                                 <div role="tooltip">
                                     <div class="moxie">
                                         <h3 class="inline">Moxie</h3>
@@ -551,29 +577,32 @@
                             <span class="resource-value">/ {{#if data.data.pools.moxie.totalMoxie}}{{data.data.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground shape2">
+                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
                         {{#each data.data.skillsMox as |skill key|}}
-                        <div class="flexrow flex-group-center">
+                        <div class="flexrow flex-group-center reveal">
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-value  input-small">{{numberFormat skill.derived decimals=0}}</span>
-                            <label class="resource-label roll-label task-check" data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             {{#if this.specname}}
-                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                             {{else}}
                             <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                             {{/if}}
                         </div>
                         {{/each}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
                         <h3 class="subheader">Flex</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             <label class="resource-label labelWidth-medium">pool </label>
-                            <i class="far fa-question-circle hidden revealer tooltip">
+                            <i class="far fa-question-circle hidden info tooltip">
                                 <div role="tooltip">
                                     <div class="flex">
                                         <h3 class="inline">Flex</h3>
@@ -625,7 +654,7 @@
                             <span class="resource-value">/ {{#if data.data.pools.flex.totalFlex}}{{data.data.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground shape2">
+                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
                         <span class="resource-value">Recover Pools</span><br/>
                         You recover the points by using a rest action.<p/>
                         <span class="resource-value">Short Rest</span><br/>
@@ -633,6 +662,7 @@
                         <span class="resource-value">Long Rest</span><br/>
                         Completely restores pools over 4 hours (8 w/o biomods)<p/>
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
                 </div>
                 <div class="contentBox">
                     {{#if data.specialSkill}}
@@ -642,25 +672,25 @@
                             <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
                         </div>
                     </div>
-                    <div class="listBackground shape2" style="padding-left: 0;">
+                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
                         {{#each data.specialSkill as |item id|}}
                         <div>
-                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="padding-left: 0;">
+                            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
                                 <input class="input-small sheet-inline-edit" data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
-                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 {{#if item.data.aptitude}}
-                                <label class="-medium resource-label roll-label task-check" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
                                 {{#if item.data.specname}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
-                                <label class="roll-label task-check" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                 {{else}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: #999; text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                                 {{else}}
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: #e52424;">Choose Apt</u></label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
@@ -668,6 +698,7 @@
                         </div>
                         {{/each}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
                     {{else}}
                     <div class="separator">
                         <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Exotic Skill</a>
@@ -682,25 +713,25 @@
                             <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
                         </div>
                     </div>
-                    <div class="listBackground shape2">
+                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
                         {{#each data.knowSkill as |item id|}}
                         <div>
-                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 <label class="resource-label item-control item-edit hoverable" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
                                 <input class="input-small sheet-inline-edit " data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
-                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 {{#if item.data.aptitude}}
-                                <label class="-medium resource-label roll-label task-check" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
                                 {{#if item.data.specname}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
-                                <label class="roll-label task-check" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                 {{else}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: #999; text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                                 {{else}}
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: #e52424;">Choose Apt</u></label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
@@ -708,6 +739,7 @@
                         </div>
                         {{/each}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
                     {{else}}
                     <div class="separator">
                         <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Know Skill</a>
@@ -717,7 +749,7 @@
             </div>
         </div>
         {{!-- Body Tab --}}
-        <div class="tab" data-group="primary" data-tab="body">
+        <div class="tab body" data-group="primary" data-tab="body">
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Current Morph</h3>
@@ -966,18 +998,27 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="itemBackground shape2">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.ware.morph1}}
                         {{#each data.ware.morph1 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -986,6 +1027,8 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    </div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -993,30 +1036,48 @@
                         </div>
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
-                    <div class="itemBackground shape1">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.morphTrait.present1}}
                         {{#each data.morphTrait.morph1 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{#each data.morphFlaw.morph1 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1024,6 +1085,8 @@
                             <label class="resource-label">This morph is traitless</label>
                         </div>
                         {{/if}}
+                    </div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
                     </div>
                 </div>
             </div>
@@ -1036,18 +1099,27 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="itemBackground shape2">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.ware.morph2}}
                         {{#each data.ware.morph2 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1056,6 +1128,8 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    </div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -1063,30 +1137,48 @@
                         </div>
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
-                    <div class="itemBackground shape1">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.morphTrait.present2}}
                         {{#each data.morphTrait.morph2 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{#each data.morphFlaw.morph2 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1094,6 +1186,8 @@
                             <label class="resource-label">This morph is traitless</label>
                         </div>
                         {{/if}}
+                    </div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
                     </div>
                 </div>
             </div>
@@ -1106,18 +1200,27 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="itemBackground shape2">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.ware.morph3}}
                         {{#each data.ware.morph3 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1126,6 +1229,8 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    </div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -1133,30 +1238,48 @@
                         </div>
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
-                    <div class="itemBackground shape1">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.morphTrait.present3}}
                         {{#each data.morphTrait.morph3 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{#each data.morphFlaw.morph3 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1164,6 +1287,8 @@
                             <label class="resource-label">This morph is traitless</label>
                         </div>
                         {{/if}}
+                    </div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
                     </div>
                 </div>
             </div>
@@ -1176,18 +1301,27 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="itemBackground shape2">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.ware.morph4}}
                         {{#each data.ware.morph4 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1196,6 +1330,8 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    </div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -1203,30 +1339,48 @@
                         </div>
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
-                    <div class="itemBackground shape1">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.morphTrait.present4}}
                         {{#each data.morphTrait.morph4 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{#each data.morphFlaw.morph4 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1234,6 +1388,8 @@
                             <label class="resource-label">This morph is traitless</label>
                         </div>
                         {{/if}}
+                    </div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
                     </div>
                 </div>
             </div>
@@ -1246,18 +1402,27 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="itemBackground shape2">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.ware.morph5}}
                         {{#each data.ware.morph5 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1266,6 +1431,8 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    </div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -1273,30 +1440,48 @@
                         </div>
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
-                    <div class="itemBackground shape1">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.morphTrait.present5}}
                         {{#each data.morphTrait.morph5 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{#each data.morphFlaw.morph5 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1304,6 +1489,8 @@
                             <label class="resource-label">This morph is traitless</label>
                         </div>
                         {{/if}}
+                    </div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
                     </div>
                 </div>
             </div>
@@ -1316,18 +1503,27 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="itemBackground shape2">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.ware.morph6}}
                         {{#each data.ware.morph6 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1336,6 +1532,8 @@
                         </div>
                         {{/if}}
                     </div>
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    </div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -1343,30 +1541,48 @@
                         </div>
                         <h3 class="subheaderMirror">Morph Traits</h3>
                     </div>
-                    <div class="itemBackground shape1">
+                    <div class="itemBackground" style="position: relative; z-index: 2;">
                         {{#if data.morphTrait.present6}}
                         {{#each data.morphTrait.morph6 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{#each data.morphFlaw.morph6 as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name item-control item-edit noMargin hoverable"><strong>{{item.name}}</strong></h4>
-                            <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                        </div>
-                        <div class="itemdescription" style="margin-bottom: 10px">
-                            <strong>Description:</strong> {{item.data.description}}
+                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                {{#if item.data.description}}
+                                <div class="itemDescription shape3">
+                                    {{item.data.description}}
+                                </div>
+                                {{/if}}
+                                <div class="flexrow flex-between item-controls">
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                </div>
+                            </div>
                         </div>
                         {{/each}}
                         {{else}}
@@ -1374,6 +1590,8 @@
                             <label class="resource-label">This morph is traitless</label>
                         </div>
                         {{/if}}
+                    </div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
                     </div>
                 </div>
             </div>
@@ -1395,8 +1613,20 @@
                         <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
                         <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
                         <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        <div class="flex-group-right slideShow">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                        </div>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            {{#if item.data.description}}
+                            <div class="itemDescription shape3">
+                                {{item.data.description}}
+                            </div>
+                            {{/if}}
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-edit resource-label editWithLabel" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                <a class="item-control item-delete resource-label editWithLabel alignRight" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                            </div>
                         </div>
                     </div>
                     {{else}}
@@ -1407,14 +1637,23 @@
                         <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
                         <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
                         <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        <div class="flex-group-right slideShow">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                        </div>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            {{#if item.data.description}}
+                            <div class="itemDescription shape3">
+                                {{item.data.description}}
+                            </div>
+                            {{/if}}
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-edit resource-label editWithLabel" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                <a class="item-control item-delete resource-label editWithLabel alignRight" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                            </div>
                         </div>
                     </div>
                     {{/if}}
-                    <div class="item itemdescriptionImportant" data-item-id="{{item._id}}" style="margin-bottom: 10px">
-                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
-                    </div>
                     {{/each}}
                     {{else}}
                     <div class="flex-group-center">
@@ -1627,9 +1866,12 @@
                 <div class="itemBackground">
                     {{#each data.rangedWeapon as |item id|}}
                     {{#if this.data.active}}
-                    <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                    <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
-                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <div class="flexrow flex-group-center input-small">
+                            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                        </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                         <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
                         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
@@ -1637,16 +1879,28 @@
                         <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
                         <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
                         <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
-                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+                        <div class="flex-group-right slideShow">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                        </div>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            <div class="itemDescription shape3">
+                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                            </div>
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                            </div>
                         </div>
                     </div>
                     {{else}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
-                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <div class="flexrow flex-group-center input-small">
+                            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                        </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                         <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
                         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
@@ -1654,16 +1908,22 @@
                         <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
                         <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
                         <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
-                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+                        <div class="flex-group-right slideShow">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                        </div>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            <div class="itemDescription shape3">
+                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                            </div>
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                            </div>
                         </div>
                     </div>
                     {{/if}}
-                    <div class="item itemdescriptionImportant shape3" data-item-id="{{item._id}}">
-                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
-                    </div>
                     {{/each}}
                 </div>
             </div>
@@ -1684,33 +1944,54 @@
                 <div class="itemBackground">
                     {{#each data.ccweapon as |item id|}}
                     {{#if this.data.active}}
-                    <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                    <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
-                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <div class="flexrow flex-group-center input-small">
+                            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                        </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
-                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
+                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+                        <div class="flex-group-right slideShow" style="max-width: 115px;">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                        </div>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            <div class="itemDescription shape3">
+                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                            </div>
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                            </div>
                         </div>
                     </div>
                     {{else}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    <div class="item flexrow flex-group-center offHand reveal weaponItem" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
-                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <div class="flexrow flex-group-center input-small">
+                            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                        </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
-                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
+                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+                        <div class="flex-group-right slideShow" style="max-width: 115px;">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                        </div>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            <div class="itemDescription shape3">
+                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                            </div>
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                            </div>
                         </div>
                     </div>
                     {{/if}}
-                    <div class="item itemdescriptionImportant shape3" data-item-id="{{item._id}}">
-                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
-                    </div>
                     {{/each}}
                 </div>
             </div>
@@ -1730,31 +2011,47 @@
                             <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                                 <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                                <label class="item-control item-edit hoverable truncate alignLeft"><strong>{{item.name}}</strong></label>
+                                <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                                 <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
                                 <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
-                                <div class="item-controls flex-group-right input-small">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <div class="flex-group-right slideShow">
+                                    <a><i class="fas fa-plus icon-small"></i></a>
+                                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                </div>
+                                <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                    {{#if item.data.description}}
+                                    <div class="itemDescription shape3">
+                                        {{item.data.description}}
+                                    </div>
+                                    {{/if}}
+                                    <div class="flexrow flex-between item-controls">
+                                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                    </div>
                                 </div>
                             </div>
                             {{else}}
-                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                            <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}">
                                 <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                                <label class="item-control item-edit hoverable truncate alignLeft"><strong>{{item.name}}</strong></label>
+                                <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                                 <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
                                 <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
-                                <div class="item-controls flex-group-right input-small">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <div class="flex-group-right slideShow">
+                                    <a><i class="fas fa-plus icon-small"></i></a>
+                                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                 </div>
-                            </div>
-                            {{/if}}
-                            {{#if item.data.description}}
-                            <div class="itemdescription" style="margin-bottom: 10px">
-                                <label class="flex-group-center noMargin flex-group-left" style="background: none;">{{item.data.description}}</label>
-                            </div>
-                            {{else}}
-                            <div class="itemdescription" style="padding: 0px; margin-bottom: 10px">
+                                <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                    {{#if item.data.description}}
+                                    <div class="itemDescription shape3">
+                                        {{item.data.description}}
+                                    </div>
+                                    {{/if}}
+                                    <div class="flexrow flex-between item-controls">
+                                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                    </div>
+                                </div>
                             </div>
                             {{/if}}
                         </div>
@@ -1766,32 +2063,38 @@
             {{#if data.program}}
             <div class="contentBox">
                 <div class="flexrow">
-                    <h3 class="subheader">Prepared Programs</h3>
+                    <h3 class="subheader">Programs Loaded</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                     </div>
                 </div>
-                <div class="itemBackground shape5">
+                <div class="itemBackground" style="position: relative; z-index: 2;">
                     <div class="grid grid-2col">
                         {{#each data.program as |item id|}}
                         <div>
-                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                <label class="flex-group-center noMargin flex-group-left item-control item-edit hoverable"><strong>{{item.name}}</strong></label>
-                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="text" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
-                                <div class="item-controls flex-group-right input-small">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
+                                <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
+                                <label class="input-small"><strong>Uses</strong></label><input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <div class="flex-group-right slideShow" style="max-width: 45px;">
+                                    <a><i class="fas fa-plus icon-small"></i></a>
+                                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                </div>
+                                <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                    {{#if item.data.description}}
+                                    <div class="itemDescription shape3">
+                                        {{item.data.description}}
+                                    </div>
+                                    {{/if}}
+                                    <div class="flexrow flex-between item-controls">
+                                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                    </div>
                                 </div>
                             </div>
-                            {{#if item.data.description}}
-                            <div class="itemdescription" style="margin-bottom: 10px">
-                                <label class="flex-group-center noMargin flex-group-left" style="background: none;">{{item.data.description}}</label>
-                            </div>
-                            {{else}}
-                            <div class="itemdescription" style="padding: 0px; margin-bottom: 10px">
-                            </div>
-                            {{/if}}
                         </div>
                         {{/each}}
                     </div>
+                </div>
+                <div class="itemBackground shape5" style="height: 100px; margin-top: -75px;">
                 </div>
                 {{#if data.data.homebrew}}<i style="font-size: 12px; margin-bottom: 10px;">Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i><p/>{{/if}}
             </div>

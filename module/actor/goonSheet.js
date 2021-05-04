@@ -145,6 +145,20 @@ export class GoonSheet extends ActorSheet {
 
         //Item Input Fields
         html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
+
+        //show on hover
+        html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
+
+        //slide-show on click
+        html.find(".slideShow").click(ev => {
+            const current = $(ev.currentTarget);
+            const first = current.children().first();
+            const last = current.children().last();
+            const target = current.parent(".item").children().last();
+            first.toggleClass("noShow");
+            last.toggleClass("noShow");
+            target.slideToggle(200);
+        })
     }
 
     _onItemCreate(event) {
@@ -211,6 +225,17 @@ export class GoonSheet extends ActorSheet {
         let field = element.dataset.field;
 
         return item.update({ [field]: element.value });
+    }
+
+    _onToggleReveal(event) {
+        const reveals = event.currentTarget.getElementsByClassName("info");
+        $.each(reveals, function (index, value){
+          $(value).toggleClass("hidden");
+        })
+        const revealer = event.currentTarget.getElementsByClassName("toggle");
+        $.each(revealer, function (index, value){
+          $(value).toggleClass("noShow");
+        })
     }
 
 }

@@ -300,12 +300,12 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
-//Edit Item Input Fields
+      //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
-          const itemId = event.currentTarget.closest(".equipped.checkBox").dataset.itemId;
+          const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
           const item = this.actor.items.get(itemId);
           let toggle = !item.data.data.active;
           const updateData = {
@@ -316,6 +316,17 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
       //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
+
+      //slide-show on click
+      html.find(".slideShow").click(ev => {
+          const current = $(ev.currentTarget);
+          const first = current.children().first();
+          const last = current.children().last();
+          const target = current.parent(".item").children().last();
+          first.toggleClass("noShow");
+          last.toggleClass("noShow");
+          target.slideToggle(200);
+      })
   }
 
   /**
@@ -391,9 +402,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
 
     _onToggleReveal(event) {
-      const reveals = event.currentTarget.getElementsByClassName("far");
+      const reveals = event.currentTarget.getElementsByClassName("info");
       $.each(reveals, function (index, value){
         $(value).toggleClass("hidden");
+      })
+      const revealer = event.currentTarget.getElementsByClassName("toggle");
+      $.each(revealer, function (index, value){
+        $(value).toggleClass("noShow");
       })
   }
 

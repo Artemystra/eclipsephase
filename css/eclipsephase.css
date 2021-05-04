@@ -234,17 +234,23 @@
   margin: 0;
 }
 
-.eclipsephase .items-list .item-controls {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 86px;
-  flex: 0 0 86px;
-  text-align: right;
+.item-controls {
+  margin-top: 10px;
 }
 
 /* Colors */
 
 .atHand {
   outline: #4098d6 2px inset;
+  background: #1616166b;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.offHand {
+  background: #1616166b;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 span.fail {
@@ -621,13 +627,26 @@ optgroup .Default .Roll .Mode,
 }
 
 /* Own Styles */
+.editWithLabel {
+  max-width: 150px;
+}
+
 .dialog .form-group {
   margin: 0;
 }
 
+.gear .item,
+.body .item,
+.ego .item {
+  margin-top: 5px;
+  max-height: none!important;
+}
+
 .eclipsephase .sheet-body .tab .item {
-  padding: 0.2em 5px;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
   min-height: 30px;
+  max-height: 30px;
 }
 
 .topLine {
@@ -859,8 +878,8 @@ h3.subheaderBlank {
 
 .icon-small,
 .icon-hidden{
-  height: 22px!important;
-  width: 22px!important;
+  max-height: 24px!important;
+  max-width: 24px!important;
   border: none;
   margin: 0 0.2em!important;
 }
@@ -871,6 +890,10 @@ h3.subheaderBlank {
 
 .hidden {
   opacity: 0%;
+}
+
+.noShow {
+  display: none;
 }
 
 .noBorder {
@@ -951,22 +974,15 @@ ol {
 }
 
 /* Style the collapsible content. Note: hidden by default */
-.itemdescription {
+.itemDescription {
   padding: 5px;
   background-color: #414141;
-  display: none;
 }
 
-.itemdescriptionImportant {
-  padding: 5px;
-  background-color: #2b2b2b;
+.descriptionContainer {
   margin-top: 2px;
-}
-
-.gear .item {
-  padding: 0.2em 5px;
-  min-height: 30px;
-  margin-top: 4px;
+  flex-basis: 100%;
+  display: none;
 }
 
 .noBG {
