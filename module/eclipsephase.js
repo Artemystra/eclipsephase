@@ -15,9 +15,9 @@ import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
 import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
 import { EclipsePhaseSpecialSkillSheet } from "./item/specialskill-sheet.js";
 import { EclipsePhaseKnowSkillSheet } from "./item/knowskill-sheet.js";
-import {EclipsePhaseMorphTraitSheet} from "./item/morphtrait-sheet.js";
-import {EclipsePhaseMorphFlawSheet} from "./item/morphflaw-sheet.js";
-import {EclipsePhaseVehicleSheet} from "./item/vehicle-sheet.js";
+import { EclipsePhaseMorphTraitSheet } from "./item/morphtrait-sheet.js";
+import { EclipsePhaseMorphFlawSheet } from "./item/morphflaw-sheet.js";
+import { EclipsePhaseVehicleSheet } from "./item/vehicle-sheet.js";
 import { eclipsephase } from "./config.js";
 
 function registerSystemSettings() {
