@@ -1,7 +1,7 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
     {{!-- Sheet Header --}}
-    <header class="sheet-header" style="margin-top: -25px;">
+    <header class="sheet-header" style="margin-top: -25px; margin-bottom: -15px;">
         <div class="headroom">
             <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
                 <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
@@ -128,19 +128,21 @@
                         <div class="flexGrowHalf"></div>
                         <h3 class="subheaderMirror">Other</h3>
                     </div>
-                    <div class="listBackground flexrow flex-group-center">
-                        <span class="resource-label">Initiative Mod</span>
-                        <input class="input-medium" type="number" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
-                    </div>
-                    <div class="listBackground shape1 flexrow">
+                    <div class="listBackground flexrow flex-group-center shape1">
                         <div class="flexrow flex-group-center">
-                            <span class="resource-label alignCenter">Rest: Short</span>
-                            <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
-                            <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
+                            <span class="resource-label">Initiative Mod</span>
+                            <input class="input-small" type="number" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
                         </div>
-                        <div class="flexrow flex-group-center" style="flex: 0.5;">
-                            <span class="resource-label alignCenter input-small">Long</span>
-                            <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
+                        <div class="flexrow flex-group-left" style="flex-basis: 100%; margin-top: 19.5px; margin-bottom: 5px;">
+                            <div class="flexrow flex-group-center">
+                                <span class="resource-label alignCenter">Rest: Short</span>
+                                <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
+                                <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
+                            </div>
+                            <div class="flexrow flex-group-center" style="flex: 0.5;">
+                                <span class="resource-label alignCenter input-small">Long</span>
+                                <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -296,7 +298,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;"></div>
+                    <div class="itemBackground shape1 edgeLord"></div>
                 </div>
             </div>
             <div class="contentBox">
@@ -783,862 +785,870 @@
         </div>
         {{!-- Body Tab --}}
         <div class="tab body" data-group="primary" data-tab="body">
-            <div class="contentBox">
-                <div class="flexrow">
-                    <h3 class="subheader">Current Morph</h3>
-                    <div class="alignRight flexGrowThreeQuarter">
-                        <label class="resource-value">Sleeved:</label>
-                        <select name="data.bodies.activeMorph" data-type="text" style="width: 160px;">
-                            {{#select data.data.bodies.activeMorph}}
-                            <option value="morph1">{{#if data.data.bodies.morph1.name}}{{data.data.bodies.morph1.name}}{{else}}None{{/if}}</option>
-                            <option value="morph2">{{#if data.data.bodies.morph2.name}}{{data.data.bodies.morph2.name}}{{else}}None{{/if}}</option>
-                            <option value="morph3">{{#if data.data.bodies.morph3.name}}{{data.data.bodies.morph3.name}}{{else}}None{{/if}}</option>
-                            <option value="morph4">{{#if data.data.bodies.morph4.name}}{{data.data.bodies.morph4.name}}{{else}}None{{/if}}</option>
-                            <option value="morph5">{{#if data.data.bodies.morph5.name}}{{data.data.bodies.morph5.name}}{{else}}None{{/if}}</option>
-                            <option value="morph6">{{#if data.data.bodies.morph6.name}}{{data.data.bodies.morph6.name}}{{else}}None{{/if}}</option>
-                            {{/select}}
-                        </select>
+            <div class="flexrow">
+                <div style="flex: 0.7;">
+                    <div class="contentBox">
+                        <div class="flexrow">
+                            <h3 class="subheader">Current Morph</h3>
+                            <div class="alignRight flexGrowThreeQuarter">
+                                <label class="resource-value">Sleeved:</label>
+                                <select name="data.bodies.activeMorph" data-type="text" style="width: 120px;">
+                                    {{#select data.data.bodies.activeMorph}}
+                                    <option value="morph1">{{#if data.data.bodies.morph1.name}}{{data.data.bodies.morph1.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph2">{{#if data.data.bodies.morph2.name}}{{data.data.bodies.morph2.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph3">{{#if data.data.bodies.morph3.name}}{{data.data.bodies.morph3.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph4">{{#if data.data.bodies.morph4.name}}{{data.data.bodies.morph4.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph5">{{#if data.data.bodies.morph5.name}}{{data.data.bodies.morph5.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph6">{{#if data.data.bodies.morph6.name}}{{data.data.bodies.morph6.name}}{{else}}None{{/if}}</option>
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                        {{#if (eq data.data.bodies.activeMorph "morph1")}}
+                        <div class="itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <input class="input-XL -medium" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
+                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph1.type" data-type="String">
+                                    {{#select data.data.bodies.morph1.type}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                                <label class="resource-label labelWidth-medium">Dur</label>
+                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
+                                <label class="resource-label labelWidth-medium">Mov</label>
+                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
+                            </div>
+                        </div>
+                        <div class="grid-4col itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <div>
+                                    <label class="resource-label labelWidth-medium">insight</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.insight" value="{{data.data.bodies.morph1.insight}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">moxie</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.moxie" value="{{data.data.bodies.morph1.moxie}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">vigor</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.vigor" value="{{data.data.bodies.morph1.vigor}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">flex</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.flex" value="{{data.data.bodies.morph1.flex}}" placeholder="0"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if (eq data.data.bodies.activeMorph "morph2")}}
+                        <div class="itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <input class="input-XL -medium" type="text" name="data.bodies.morph2.name" value="{{data.data.bodies.morph2.name}}" placeholder="Morph name"/>
+                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph2.type" data-type="String">
+                                    {{#select data.data.bodies.morph2.type}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                                <label class="resource-label labelWidth-medium">Dur</label>
+                                <input class="input-small item-standard-margin-medium" type="text" name="data.data.bodies.morph2.dur" value="{{data.data.bodies.morph2.dur}}" placeholder="0" style="text-align: center"/>
+                                <label class="resource-label labelWidth-medium">Mov</label>
+                                <input class="input-medium item-standard-margin-medium" type="text" name="data.data.bodies.morph2.movement" value="{{data.data.bodies.morph2.movement}}" placeholder="0/0" style="text-align: center"/>
+                            </div>
+                        </div>
+                        <div class="grid-4col itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <div>
+                                    <label class="resource-label labelWidth-medium">insight</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.insight" value="{{data.data.bodies.morph2.insight}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">moxie</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.moxie" value="{{data.data.bodies.morph2.moxie}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">vigor</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.vigor" value="{{data.data.bodies.morph2.vigor}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">flex</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.flex" value="{{data.data.bodies.morph2.flex}}" placeholder="0"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if (eq data.data.bodies.activeMorph "morph3")}}
+                        <div class="itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <input class="input-XL -medium" type="text" name="data.bodies.morph3.name" value="{{data.data.bodies.morph3.name}}" placeholder="Morph name"/>
+                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph3.type" data-type="String">
+                                    {{#select data.data.bodies.morph3.type}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                                <label class="resource-label labelWidth-medium">Dur</label>
+                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph3.dur" value="{{data.data.bodies.morph3.dur}}" placeholder="0" style="text-align: center"/>
+                                <label class="resource-label labelWidth-medium">Mov</label>
+                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph3.movement" value="{{data.data.bodies.morph3.movement}}" placeholder="0/0" style="text-align: center"/>
+                            </div>
+                        </div>
+                        <div class="grid-4col itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <div>
+                                    <label class="resource-label labelWidth-medium">insight</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.insight" value="{{data.data.bodies.morph3.insight}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">moxie</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.moxie" value="{{data.data.bodies.morph3.moxie}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">vigor</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.vigor" value="{{data.data.bodies.morph3.vigor}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">flex</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.flex" value="{{data.data.bodies.morph3.flex}}" placeholder="0"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if (eq data.data.bodies.activeMorph "morph4")}}
+                        <div class="itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <input class="input-XL -medium" type="text" name="data.bodies.morph4.name" value="{{data.data.bodies.morph4.name}}" placeholder="Morph name"/>
+                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph4.type" data-type="String">
+                                    {{#select data.data.bodies.morph4.type}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                                <label class="resource-label labelWidth-medium">Dur</label>
+                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph4.dur" value="{{data.data.bodies.morph4.dur}}" placeholder="0" style="text-align: center"/>
+                                <label class="resource-label labelWidth-medium">Mov</label>
+                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph4.movement" value="{{data.data.bodies.morph4.movement}}" placeholder="0/0" style="text-align: center"/>
+                            </div>
+                        </div>
+                        <div class="grid-4col itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <div>
+                                    <label class="resource-label labelWidth-medium">insight</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.insight" value="{{data.data.bodies.morph4.insight}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">moxie</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.moxie" value="{{data.data.bodies.morph4.moxie}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">vigor</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.vigor" value="{{data.data.bodies.morph4.vigor}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">flex</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.flex" value="{{data.data.bodies.morph4.flex}}" placeholder="0"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if (eq data.data.bodies.activeMorph "morph5")}}
+                        <div class="itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <input class="input-XL -medium" type="text" name="data.bodies.morph5.name" value="{{data.data.bodies.morph5.name}}" placeholder="Morph name"/>
+                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph5.type" data-type="String">
+                                    {{#select data.data.bodies.morph5.type}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                                <label class="resource-label labelWidth-medium">Dur</label>
+                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph5.dur" value="{{data.data.bodies.morph5.dur}}" placeholder="0" style="text-align: center"/>
+                                <label class="resource-label labelWidth-medium">Mov</label>
+                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph5.movement" value="{{data.data.bodies.morph5.movement}}" placeholder="0/0" style="text-align: center"/>
+                            </div>
+                        </div>
+                        <div class="grid-4col itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <div>
+                                    <label class="resource-label labelWidth-medium">insight</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.insight" value="{{data.data.bodies.morph5.insight}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">moxie</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.moxie" value="{{data.data.bodies.morph5.moxie}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">vigor</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.vigor" value="{{data.data.bodies.morph5.vigor}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">flex</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.flex" value="{{data.data.bodies.morph5.flex}}" placeholder="0"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                        {{#if (eq data.data.bodies.activeMorph "morph6")}}
+                        <div class="itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <input class="input-XL -medium" type="text" name="data.bodies.morph6.name" value="{{data.data.bodies.morph6.name}}" placeholder="Morph name"/>
+                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph6.type" data-type="String">
+                                    {{#select data.data.bodies.morph6.type}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                                <label class="resource-label labelWidth-medium">Dur</label>
+                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph6.dur" value="{{data.data.bodies.morph6.dur}}" placeholder="0" style="text-align: center"/>
+                                <label class="resource-label labelWidth-medium">Mov</label>
+                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph6.movement" value="{{data.data.bodies.morph6.movement}}" placeholder="0/0" style="text-align: center"/>
+                            </div>
+                        </div>
+                        <div class="grid-4col itemBackground">
+                            <div class="flexrow flex-group-left">
+                                <div>
+                                    <label class="resource-label labelWidth-medium">insight</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.insight" value="{{data.data.bodies.morph6.insight}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">moxie</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.moxie" value="{{data.data.bodies.morph6.moxie}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">vigor</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.vigor" value="{{data.data.bodies.morph6.vigor}}" placeholder="0"/>
+                                </div>
+                                <div>
+                                    <label class="resource-label labelWidth-medium">flex</label>
+                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.flex" value="{{data.data.bodies.morph6.flex}}" placeholder="0"/>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div>
+                        {{#if (eq data.data.bodies.activeMorph "morph1")}}
+                        <div class="grid grid-2col">
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <h3 class="subheader">Ware</h3>
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.ware.morph1}}
+                                    {{#each data.ware.morph1 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is flat</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape2 edgeLord">
+                                </div>
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                    <h3 class="subheaderMirror">Morph Traits</h3>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.morphTrait.present1}}
+                                    {{#each data.morphTrait.morph1 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{#each data.morphFlaw.morph1 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is traitless</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape1 edgeLord">
+                                </div>
+                            </div>
+                        </div>
+                        {{else if (eq data.data.bodies.activeMorph "morph2")}}
+                        <div class="grid grid-2col">
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <h3 class="subheader">Ware</h3>
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.ware.morph2}}
+                                    {{#each data.ware.morph2 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is flat</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape2 edgeLord">
+                                </div>
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                    <h3 class="subheaderMirror">Morph Traits</h3>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.morphTrait.present2}}
+                                    {{#each data.morphTrait.morph2 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{#each data.morphFlaw.morph2 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is traitless</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape1 edgeLord">
+                                </div>
+                            </div>
+                        </div>
+                        {{else if (eq data.data.bodies.activeMorph "morph3")}}
+                        <div class="grid grid-2col">
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <h3 class="subheader">Ware</h3>
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.ware.morph3}}
+                                    {{#each data.ware.morph3 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is flat</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape2 edgeLord">
+                                </div>
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                    <h3 class="subheaderMirror">Morph Traits</h3>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.morphTrait.present3}}
+                                    {{#each data.morphTrait.morph3 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{#each data.morphFlaw.morph3 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is traitless</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape1 edgeLord">
+                                </div>
+                            </div>
+                        </div>
+                        {{else if (eq data.data.bodies.activeMorph "morph4")}}
+                        <div class="grid grid-2col">
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <h3 class="subheader">Ware</h3>
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.ware.morph4}}
+                                    {{#each data.ware.morph4 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is flat</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape2 edgeLord">
+                                </div>
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                    <h3 class="subheaderMirror">Morph Traits</h3>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.morphTrait.present4}}
+                                    {{#each data.morphTrait.morph4 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{#each data.morphFlaw.morph4 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is traitless</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape1 edgeLord">
+                                </div>
+                            </div>
+                        </div>
+                        {{else if (eq data.data.bodies.activeMorph "morph5")}}
+                        <div class="grid grid-2col">
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <h3 class="subheader">Ware</h3>
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.ware.morph5}}
+                                    {{#each data.ware.morph5 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is flat</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape2 edgeLord">
+                                </div>
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                    <h3 class="subheaderMirror">Morph Traits</h3>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.morphTrait.present5}}
+                                    {{#each data.morphTrait.morph5 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{#each data.morphFlaw.morph5 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is traitless</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape1 edgeLord">
+                                </div>
+                            </div>
+                        </div>
+                        {{else if (eq data.data.bodies.activeMorph "morph6")}}
+                        <div class="grid grid-2col">
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <h3 class="subheader">Ware</h3>
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.ware.morph6}}
+                                    {{#each data.ware.morph6 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is flat</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape2 edgeLord">
+                                </div>
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow">
+                                    <div class="alignRight flexGrowHalf">
+                                    </div>
+                                    <h3 class="subheaderMirror">Morph Traits</h3>
+                                </div>
+                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                    {{#if data.morphTrait.present6}}
+                                    {{#each data.morphTrait.morph6 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{#each data.morphFlaw.morph6 as |item id|}}
+                                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
+                                        <div class="flex-group-right slideShow" style="max-width: 16%;">
+                                            <a><i class="fas fa-plus icon-small"></i></a>
+                                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                                        </div>
+                                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                                            {{#if item.data.description}}
+                                            <div class="itemDescription shape3">
+                                                {{item.data.description}}
+                                            </div>
+                                            {{/if}}
+                                            <div class="flexrow flex-between item-controls">
+                                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                    {{else}}
+                                    <div class="flex-group-center">
+                                        <label class="resource-label">This morph is traitless</label>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="itemBackground shape1 edgeLord">
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
                     </div>
                 </div>
-                {{#if (eq data.data.bodies.activeMorph "morph1")}}
-                <div class="itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <input class="input-XL -medium" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
-                        <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph1.type" data-type="String">
-                            {{#select data.data.bodies.morph1.type}}
-                            {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{bodyType}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                        <label class="resource-label labelWidth-large">Durability</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
-                        <label class="resource-label labelWidth-large">Movement</label>
-                        <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
+                <div style="position: relative; flex: 0.3;">
+                    <div class="morph-imgBorder">
+                        {{#if (eq data.data.bodies.activeMorph "morph1")}}
+                        <img class="morph-img" src="{{data.data.bodies.morph1.img}}" data-edit="data.bodies.morph1.img" title="{{data.name}}'s {{data.data.bodies.morph1.name}}"/>
+                        {{else if (eq data.data.bodies.activeMorph "morph2")}}
+                        <img class="morph-img" src="{{data.data.bodies.morph2.img}}" data-edit="data.bodies.morph2.img" title="{{data.name}}'s {{data.data.bodies.morph2.name}}"/>
+                        {{else if (eq data.data.bodies.activeMorph "morph3")}}
+                        <img class="morph-img" src="{{data.data.bodies.morph3.img}}" data-edit="data.bodies.morph3.img" title="{{data.name}}'s {{data.data.bodies.morph3.name}}"/>
+                        {{else if (eq data.data.bodies.activeMorph "morph4")}}
+                        <img class="morph-img" src="{{data.data.bodies.morph4.img}}" data-edit="data.bodies.morph4.img" title="{{data.name}}'s {{data.data.bodies.morph4.name}}"/>
+                        {{else if (eq data.data.bodies.activeMorph "morph5")}}
+                        <img class="morph-img" src="{{data.data.bodies.morph5.img}}" data-edit="data.bodies.morph5.img" title="{{data.name}}'s {{data.data.bodies.morph5.name}}"/>
+                        {{else if (eq data.data.bodies.activeMorph "morph6")}}
+                        <img class="morph-img" src="{{data.data.bodies.morph6.img}}" data-edit="data.bodies.morph6.img" title="{{data.name}}'s {{data.data.bodies.morph6.name}}"/>
+                        {{/if}}
                     </div>
                 </div>
-                <div class="grid-4col itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <div>
-                            <label class="resource-label labelWidth-medium">insight</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph1.insight" value="{{data.data.bodies.morph1.insight}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">moxie</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph1.moxie" value="{{data.data.bodies.morph1.moxie}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">vigor</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph1.vigor" value="{{data.data.bodies.morph1.vigor}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">flex</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph1.flex" value="{{data.data.bodies.morph1.flex}}" placeholder="0"/>
-                        </div>
-                    </div>
-                </div>
-                {{log "a picture (morph1)? " data.data.bodies.morph1}}
-                {{log "a picture? (morph1 img)" data.data.bodies.morph1.img}}
-                {{log "a picture? (data.img)" data.img}}
-                test
-                <img class="morph-img" src="{{data.data.bodies.morph1.img}}" data-edit="bodies.morph1.img" title="{{data.name}}'s {{data.data.bodies.morph1.name}}"/>
-                {{/if}}
-                {{#if (eq data.data.bodies.activeMorph "morph2")}}
-                <div class="itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <input class="input-XL -medium" type="text" name="data.bodies.morph2.name" value="{{data.data.bodies.morph2.name}}" placeholder="Morph name"/>
-                        <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph2.type" data-type="String">
-                            {{#select data.data.bodies.morph2.type}}
-                            {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{bodyType}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                        <label class="resource-label labelWidth-large">Durability</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.data.bodies.morph2.dur" value="{{data.data.bodies.morph2.dur}}" placeholder="0" style="text-align: center"/>
-                        <label class="resource-label labelWidth-large">Movement</label>
-                        <input class="input-medium item-standard-margin-medium" type="text" name="data.data.bodies.morph2.movement" value="{{data.data.bodies.morph2.movement}}" placeholder="0/0" style="text-align: center"/>
-                    </div>
-                </div>
-                <div class="grid-4col itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <div>
-                            <label class="resource-label labelWidth-medium">insight</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph2.insight" value="{{data.data.bodies.morph2.insight}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">moxie</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph2.moxie" value="{{data.data.bodies.morph2.moxie}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">vigor</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph2.vigor" value="{{data.data.bodies.morph2.vigor}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">flex</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph2.flex" value="{{data.data.bodies.morph2.flex}}" placeholder="0"/>
-                        </div>
-                    </div>
-                </div>
-                <img class="morph-img" src="{{data.data.bodies.morph2.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph2.name}}"/>
-                {{/if}}
-                {{#if (eq data.data.bodies.activeMorph "morph3")}}
-                <div class="itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <input class="input-XL -medium" type="text" name="data.bodies.morph3.name" value="{{data.data.bodies.morph3.name}}" placeholder="Morph name"/>
-                        <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph3.type" data-type="String">
-                            {{#select data.data.bodies.morph3.type}}
-                            {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{bodyType}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                        <label class="resource-label labelWidth-large">Durability</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph3.dur" value="{{data.data.bodies.morph3.dur}}" placeholder="0" style="text-align: center"/>
-                        <label class="resource-label labelWidth-large">Movement</label>
-                        <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph3.movement" value="{{data.data.bodies.morph3.movement}}" placeholder="0/0" style="text-align: center"/>
-                    </div>
-                </div>
-                <div class="grid-4col itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <div>
-                            <label class="resource-label labelWidth-medium">insight</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph3.insight" value="{{data.data.bodies.morph3.insight}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">moxie</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph3.moxie" value="{{data.data.bodies.morph3.moxie}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">vigor</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph3.vigor" value="{{data.data.bodies.morph3.vigor}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">flex</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph3.flex" value="{{data.data.bodies.morph3.flex}}" placeholder="0"/>
-                        </div>
-                    </div>
-                </div>
-                <img class="morph-img" src="{{data.data.bodies.morph3.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph3.name}}"/>
-                {{/if}}
-                {{#if (eq data.data.bodies.activeMorph "morph4")}}
-                <div class="itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <input class="input-XL -medium" type="text" name="data.bodies.morph4.name" value="{{data.data.bodies.morph4.name}}" placeholder="Morph name"/>
-                        <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph4.type" data-type="String">
-                            {{#select data.data.bodies.morph4.type}}
-                            {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{bodyType}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                        <label class="resource-label labelWidth-large">Durability</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph4.dur" value="{{data.data.bodies.morph4.dur}}" placeholder="0" style="text-align: center"/>
-                        <label class="resource-label labelWidth-large">Movement</label>
-                        <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph4.movement" value="{{data.data.bodies.morph4.movement}}" placeholder="0/0" style="text-align: center"/>
-                    </div>
-                </div>
-                <div class="grid-4col itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <div>
-                            <label class="resource-label labelWidth-medium">insight</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph4.insight" value="{{data.data.bodies.morph4.insight}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">moxie</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph4.moxie" value="{{data.data.bodies.morph4.moxie}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">vigor</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph4.vigor" value="{{data.data.bodies.morph4.vigor}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">flex</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph4.flex" value="{{data.data.bodies.morph4.flex}}" placeholder="0"/>
-                        </div>
-                    </div>
-                </div>
-                <img class="morph-img" src="{{data.data.bodies.morph4.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph4.name}}"/>
-                {{/if}}
-                {{#if (eq data.data.bodies.activeMorph "morph5")}}
-                <div class="itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <input class="input-XL -medium" type="text" name="data.bodies.morph5.name" value="{{data.data.bodies.morph5.name}}" placeholder="Morph name"/>
-                        <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph5.type" data-type="String">
-                            {{#select data.data.bodies.morph5.type}}
-                            {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{bodyType}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                        <label class="resource-label labelWidth-large">Durability</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph5.dur" value="{{data.data.bodies.morph5.dur}}" placeholder="0" style="text-align: center"/>
-                        <label class="resource-label labelWidth-large">Movement</label>
-                        <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph5.movement" value="{{data.data.bodies.morph5.movement}}" placeholder="0/0" style="text-align: center"/>
-                    </div>
-                </div>
-                <div class="grid-4col itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <div>
-                            <label class="resource-label labelWidth-medium">insight</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph5.insight" value="{{data.data.bodies.morph5.insight}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">moxie</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph5.moxie" value="{{data.data.bodies.morph5.moxie}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">vigor</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph5.vigor" value="{{data.data.bodies.morph5.vigor}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">flex</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph5.flex" value="{{data.data.bodies.morph5.flex}}" placeholder="0"/>
-                        </div>
-                    </div>
-                </div>
-                <img class="morph-img" src="{{data.data.bodies.morph5.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph5.name}}"/>
-                {{/if}}
-                {{#if (eq data.data.bodies.activeMorph "morph6")}}
-                <div class="itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <input class="input-XL -medium" type="text" name="data.bodies.morph6.name" value="{{data.data.bodies.morph6.name}}" placeholder="Morph name"/>
-                        <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph6.type" data-type="String">
-                            {{#select data.data.bodies.morph6.type}}
-                            {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{bodyType}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                        <label class="resource-label labelWidth-large">Durability</label>
-                        <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph6.dur" value="{{data.data.bodies.morph6.dur}}" placeholder="0" style="text-align: center"/>
-                        <label class="resource-label labelWidth-large">Movement</label>
-                        <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph6.movement" value="{{data.data.bodies.morph6.movement}}" placeholder="0/0" style="text-align: center"/>
-                    </div>
-                </div>
-                <div class="grid-4col itemBackground">
-                    <div class="flexrow flex-group-left">
-                        <div>
-                            <label class="resource-label labelWidth-medium">insight</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph6.insight" value="{{data.data.bodies.morph6.insight}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">moxie</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph6.moxie" value="{{data.data.bodies.morph6.moxie}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">vigor</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph6.vigor" value="{{data.data.bodies.morph6.vigor}}" placeholder="0"/>
-                        </div>
-                        <div>
-                            <label class="resource-label labelWidth-medium">flex</label>
-                            <input class="input-small -medium" type="number" name="data.bodies.morph6.flex" value="{{data.data.bodies.morph6.flex}}" placeholder="0"/>
-                        </div>
-                    </div>
-                </div>
-                <img class="morph-img" src="{{data.data.bodies.morph6.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph6.name}}"/>
-                {{/if}}
             </div>
-            {{#if (eq data.data.bodies.activeMorph "morph1")}}
-            <div class="grid grid-2col">
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <h3 class="subheader">Ware</h3>
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.ware.morph1}}
-                        {{#each data.ware.morph1 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is flat</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                        <h3 class="subheaderMirror">Morph Traits</h3>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.morphTrait.present1}}
-                        {{#each data.morphTrait.morph1 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each data.morphFlaw.morph1 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is traitless</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-            </div>
-            {{/if}}
-            {{#if (eq data.data.bodies.activeMorph "morph2")}}
-            <div class="grid grid-2col">
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <h3 class="subheader">Ware</h3>
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.ware.morph2}}
-                        {{#each data.ware.morph2 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is flat</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                        <h3 class="subheaderMirror">Morph Traits</h3>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.morphTrait.present2}}
-                        {{#each data.morphTrait.morph2 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each data.morphFlaw.morph2 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is traitless</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-            </div>
-            {{/if}}
-            {{#if (eq data.data.bodies.activeMorph "morph3")}}
-            <div class="grid grid-2col">
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <h3 class="subheader">Ware</h3>
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.ware.morph3}}
-                        {{#each data.ware.morph3 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is flat</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                        <h3 class="subheaderMirror">Morph Traits</h3>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.morphTrait.present3}}
-                        {{#each data.morphTrait.morph3 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each data.morphFlaw.morph3 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is traitless</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-            </div>
-            {{/if}}
-            {{#if (eq data.data.bodies.activeMorph "morph4")}}
-            <div class="grid grid-2col">
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <h3 class="subheader">Ware</h3>
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.ware.morph4}}
-                        {{#each data.ware.morph4 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is flat</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                        <h3 class="subheaderMirror">Morph Traits</h3>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.morphTrait.present4}}
-                        {{#each data.morphTrait.morph4 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each data.morphFlaw.morph4 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is traitless</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-            </div>
-            {{/if}}
-            {{#if (eq data.data.bodies.activeMorph "morph5")}}
-            <div class="grid grid-2col">
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <h3 class="subheader">Ware</h3>
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.ware.morph5}}
-                        {{#each data.ware.morph5 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is flat</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                        <h3 class="subheaderMirror">Morph Traits</h3>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.morphTrait.present5}}
-                        {{#each data.morphTrait.morph5 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each data.morphFlaw.morph5 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is traitless</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-            </div>
-            {{/if}}
-            {{#if (eq data.data.bodies.activeMorph "morph6")}}
-            <div class="grid grid-2col">
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <h3 class="subheader">Ware</h3>
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.ware.morph6}}
-                        {{#each data.ware.morph6 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is flat</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="alignRight flexGrowHalf">
-                        </div>
-                        <h3 class="subheaderMirror">Morph Traits</h3>
-                    </div>
-                    <div class="itemBackground" style="position: relative; z-index: 2;">
-                        {{#if data.morphTrait.present6}}
-                        {{#each data.morphTrait.morph6 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each data.morphFlaw.morph6 as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
-                            <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right slideShow" style="max-width: 16%;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.data.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class="flex-group-center">
-                            <label class="resource-label">This morph is traitless</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
-                    </div>
-                </div>
-            </div>
-            {{/if}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Armor</h3>

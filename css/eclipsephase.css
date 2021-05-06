@@ -142,20 +142,23 @@
   border: solid #161616 5px;
 }
 
-.morph-img,
-.morphDefault-img {
-  height: 230px;
-  width: 230px;
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 100px;
-  flex: 0 0 100px;
-  margin-right: 10px;
+.morph-img{
+  min-height: 260px;
+  min-width: 260px;
+  max-height: 260px;
+  max-width: 260px;
   border: solid #161616 5px;
+  clip-path: polygon(89% 25%, 89% 75%, 50% 99%, 11% 75%, 11% 25%, 50% 5px)
 }
 
-.morphDefault-img {
--webkit-filter: grayscale(90%) blur(20%);
-filter: grayscale(90%) blur(20%);
+.morph-imgBorder{
+  z-index: 3;
+  top: -20px;
+  right: -30px;
+  background-color: #161616;
+  position: absolute;
+  padding: 0.7em;
+  clip-path: polygon(90% 25%, 90% 75%, 50% 99%, 10% 75%, 10% 25%, 50% 1%)
 }
 
 .item-img {
@@ -858,16 +861,16 @@ h3.subheaderBlank {
 }
 
 .edgeLord {
-  height: 60px; 
-  margin-top: -40px;
+  height: 40px; 
+  margin-top: -25px;
 }
 
 .shape1 {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 7% 100%, 0 84%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 7% 100%, 0 70%);
 }
 
 .shape2 {
-  clip-path: polygon(0 0, 100% 0, 100% 84%, 93% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 93% 100%, 0 100%);
 }
 
 .shape3 {
@@ -1104,7 +1107,7 @@ h3.inline {
   display: block;
   text-align: left;
   position: absolute;
-  bottom: 1em;
+  top: -0.4em;
   left: -20em;
   padding: 0.15em;
   z-index: 100;
