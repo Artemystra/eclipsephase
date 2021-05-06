@@ -12,6 +12,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       template: "systems/eclipsephase/templates/actor/actor-sheet.html",
       width: 800,
       height: 1000,
+      resizable: false,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
     });
   }
@@ -326,7 +327,29 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           last.toggleClass("noShow");
           target.slideToggle(200);
       })
+
+      html.find('img[morph1]').click(event => this._onEditThingy(event));
+
   }
+
+  /**
+     * Handle changing the actor profile image by opening a FilePicker
+     * @private
+     */
+  _onEditThingy(event) {
+    debugger
+      const fp = new FilePicker({
+          type: "image",
+          current: this.object.data.img,
+          callback: path => {
+              event.currentTarget.src = path;
+              this._onSubmit(event, {preventClose: true});
+          },
+          top: this.position.top + 40,
+          left: this.position.left + 10
+      });
+      return fp.browse();
+    }
 
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset

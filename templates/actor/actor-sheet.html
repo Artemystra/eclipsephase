@@ -296,7 +296,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;"></div>
                 </div>
             </div>
             <div class="contentBox">
@@ -836,13 +836,10 @@
                         </div>
                     </div>
                 </div>
-                {{log "a picture? " data.data.bodies.morph1}}
-                {{log "a picture? " data.data.bodies.morph1.img}}
-                {{#if data.data.bodies.morph1.img}}
-                <img class="morph-img" src="{{data.data.bodies.morph1.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph1.name}}"/>
-                {{else}}
-                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
-                {{/if}}
+                {{log "a picture (morph1)? " data.data.bodies.morph1}}
+                {{log "a picture? (morph1 img)" data.data.bodies.morph1.img}}
+                {{log "a picture? (data.img)" data.img}}
+                <img class="morph-img" src="{{data.data.bodies.morph1.img}}" data-edit="morph1" title="{{data.name}}'s {{data.data.bodies.morph1.name}}"/>
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph2")}}
                 <div class="itemBackground">
@@ -880,11 +877,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if data.data.bodies.morph1.img}}
                 <img class="morph-img" src="{{data.data.bodies.morph2.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph2.name}}"/>
-                {{else}}
-                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
-                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph3")}}
                 <div class="itemBackground">
@@ -922,11 +915,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if data.data.bodies.morph1.img}}
                 <img class="morph-img" src="{{data.data.bodies.morph3.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph3.name}}"/>
-                {{else}}
-                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
-                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph4")}}
                 <div class="itemBackground">
@@ -964,11 +953,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if data.data.bodies.morph1.img}}
                 <img class="morph-img" src="{{data.data.bodies.morph4.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph4.name}}"/>
-                {{else}}
-                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
-                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph5")}}
                 <div class="itemBackground">
@@ -1006,11 +991,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if data.data.bodies.morph1.img}}
                 <img class="morph-img" src="{{data.data.bodies.morph5.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph5.name}}"/>
-                {{else}}
-                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
-                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph6")}}
                 <div class="itemBackground">
@@ -1048,11 +1029,7 @@
                         </div>
                     </div>
                 </div>
-                {{#if data.data.bodies.morph1.img}}
                 <img class="morph-img" src="{{data.data.bodies.morph6.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph6.name}}"/>
-                {{else}}
-                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
-                {{/if}}
                 {{/if}}
             </div>
             {{#if (eq data.data.bodies.activeMorph "morph1")}}
@@ -1193,7 +1170,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
                 <div class="contentBox">
@@ -1252,7 +1229,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
             </div>
@@ -1294,7 +1271,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
                 <div class="contentBox">
@@ -1353,7 +1330,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
             </div>
@@ -1395,7 +1372,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
                 <div class="contentBox">
@@ -1454,7 +1431,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
             </div>
@@ -1496,7 +1473,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
                 <div class="contentBox">
@@ -1555,7 +1532,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
             </div>
@@ -1597,7 +1574,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
                 <div class="contentBox">
@@ -1656,7 +1633,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
             </div>

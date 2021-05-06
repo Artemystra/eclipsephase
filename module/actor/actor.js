@@ -50,7 +50,7 @@ export class EclipsePhaseActor extends Actor {
         }
       }
       if (armor.type === "armor") {
-        console.log("Hey! ", armor);
+
       }
     }
     data.physical.energyArmorTotal = energyTotal
@@ -69,7 +69,6 @@ export class EclipsePhaseActor extends Actor {
     if (data.physical.mainArmorMalus || data.physical.additionalArmorMalus) {
       data.physical.armorMalusTotal = data.physical.mainArmorMalus+data.physical.additionalArmorMalus
     }
-    console.log(data.physical.armorMalusTotal);
 
     //Initiative
     data.initiative.value = Math.round((data.aptitudes.ref.value + data.aptitudes.int.value) / 5)
@@ -141,7 +140,6 @@ export class EclipsePhaseActor extends Actor {
       for (let value of item ) {
         let key = value.type;
         let aptSelect = 0;
-        console.log("Data in actor.js for NPCs", data);
         if (value.data.data.aptitude === "Intuition") {
           aptSelect = data.aptitudes.int.value;
         }

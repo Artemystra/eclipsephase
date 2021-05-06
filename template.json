@@ -20,7 +20,13 @@
           "damage": null,
           "dr": null,
           "wt": null,
-          "min": 0
+          "min": 0,
+          "img1": null,
+          "img2": null,
+          "img3": null,
+          "img4": null,
+          "img5": null,
+          "img6": null
         },
         "mods": {
           "globalMod": null,
@@ -563,7 +569,7 @@
         "activeMorph": "morph1",
         "morph1": {
           "name": "",
-          "img": "",
+          "img": "Bilder/Spielercharaktere/Spieler/Barash2.jpg",
           "type": "",
           "dur": null,
           "insight": null,
@@ -574,7 +580,7 @@
         },
         "morph2": {
           "name": "",
-          "img": "",
+          "img": "Bilder/Spielercharaktere/Spieler/Barash2.jpg",
           "type": "",
           "dur": null,
           "insight": null,
@@ -585,7 +591,7 @@
         },
         "morph3": {
           "name": "",
-          "img": "",
+          "img": "Bilder/Spielercharaktere/Spieler/Barash2.jpg",
           "type": "",
           "dur": null,
           "insight": null,
@@ -596,7 +602,7 @@
         },
         "morph4": {
           "name": "",
-          "img": "",
+          "img": "Bilder/Spielercharaktere/Spieler/Barash2.jpg",
           "type": "",
           "dur": null,
           "insight": null,
@@ -607,7 +613,7 @@
         },
         "morph5": {
           "name": "",
-          "img": "",
+          "img": "Bilder/Spielercharaktere/Spieler/Barash2.jpg",
           "type": "",
           "dur": null,
           "insight": null,
@@ -618,7 +624,7 @@
         },
         "morph6": {
           "name": "",
-          "img": "",
+          "img": "Bilder/Spielercharaktere/Spieler/Barash2.jpg",
           "type": "",
           "dur": null,
           "insight": null,

@@ -8,6 +8,7 @@ export class GoonSheet extends ActorSheet {
             template: "systems/eclipsephase/templates/actor/goon-sheet.html",
             width: 800,
             height: 600,
+            resizable: false,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
         });
     }

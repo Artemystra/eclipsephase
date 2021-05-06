@@ -8,6 +8,7 @@ export class NpcSheet extends ActorSheet {
             template: "systems/eclipsephase/templates/actor/npc-sheet.html",
             width: 800,
             height: 780,
+            resizable: false,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
         });
     }
