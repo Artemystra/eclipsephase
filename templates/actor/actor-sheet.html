@@ -1,7 +1,7 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
     {{!-- Sheet Header --}}
-    <header class="sheet-header">
+    <header class="sheet-header" style="margin-top: -25px;">
         <div class="headroom">
             <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
                 <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
@@ -10,15 +10,55 @@
                 <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
             </div>
             <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
-                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 20px; max-width: 250px; text-shadow: 0 0 5px #161616"/>
+                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
             </div>
         </div>
-        <div class="header-fields" style="margin-top: 25px;">
+        <div class="header-fields" style="margin-top: 50px;">
             <div class="grid grid-2col noMargin">
               <div class="contentBox">
                   <div class="flexrow">
                       <h3 class="subheader">Physical</h3>
-                      <div class="flexGrowHalf">
+                      <div class="flexGrowThreeQuarter flexrow flex-group-center tooltip">
+                        <div role="tooltipNegative">
+                            <div class="armorValue">
+                                <h3 class="inline">Armor</h3>
+                                {{#if data.armor}}
+                                    <label class="resource-value">Cumulated Armor </label>
+                                    <p/>
+                                    <div class="flexrow flex-group-center">
+                                        <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/><span class="toggle resource-label alignLeft">Energy: </span><span class="toggle resource-value alignLeft item-standard-margin-medium"> {{data.data.physical.energyArmorTotal}}</span>
+                                        <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/><span class="toggle resource-label alignLeft">Kinetic: </span><span class="toggle resource-value alignLeft"> {{data.data.physical.kineticArmorTotal}}</span>
+                                    </div>
+                                    <p/>
+                                    <label class="resource-value">Armor Pieces active on You</label>
+                                    <div class="listBackground">
+                                        <span class="toggle resource-label alignLeft">Main Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.mainArmorTotal}}</span><br/>
+                                        <p/>
+                                        <span class="toggle resource-label alignLeft">Additional Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.additionalArmorTotal}}</span><br/>
+                                    </div>
+                                    <p/>
+                                    <label class="resource-value">Cumulative Malus -{{data.data.physical.armorMalusTotal}}</label>
+                                    <div class="listBackground">
+                                        <span class="toggle resource-label alignLeft">Main Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.mainArmorMalus}}</span>
+                                        <p/>
+                                        <i style="font-size: 12px; margin-bottom: 10px;">Main armor usually cover all or most of your body. You can layer multiple main armor (on GM discretion). For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
+                                        <p/>
+                                        <span class="toggle resource-label alignLeft">Additional Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.additionalArmorMalus}}</span>
+                                        <p/>
+                                        <i style="font-size: 12px; margin-bottom: 10px;">Additional armor usually includes very light armor attached to your regular one. You can layer one additional armor with no extra cost(on GM discretion). Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
+                                    </div>
+                                    <p/>
+                                    {{else}}
+                                    <label class="resource-value">You are not wearing any armor</label>
+                                    <p/>
+                                    {{/if}}
+                                    <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Body-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
+                            </div>
+                        </div>
+                        <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>
+                        <span class="toggle resource-value alignLeft">{{data.data.physical.energyArmorTotal}}</span>
+                        <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/>
+                        <span class="toggle resource-value alignLeft">{{data.data.physical.kineticArmorTotal}}</span>
                       </div>
                   </div>
                   <div class="flex-group-center listBackground shape2">
@@ -28,9 +68,9 @@
                           <label class="alignCenter resource-label">Wounds</label>
                       </div>
                       <div class="flexrow flex-center">
-                          <input type="number" name="data.data.physical.damage" value="{{data.data.physical.damage}}" data-dtype="Number" placeholder="0"/>
+                          <input type="number" name="data.physical.damage" value="{{data.data.physical.damage}}" data-dtype="Number" placeholder="0"/>
                           <span>  </span>
-                          <input type="number" name="data.data.physical.wounds" value="{{data.data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
+                          <input type="number" name="data.physical.wounds" value="{{data.data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
                       </div>
                       <div class="resource-content flexrow flex-center">
                           <span class="resource-value">DUR {{data.data.physical.dur}}</span>
@@ -41,7 +81,7 @@
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
-                        <div class="flexGrowHalf">
+                        <div class="flexGrowThreeQuarter">
                         </div>
                         <h3 class="subheaderMirror">Mental</h3>
                     </div>
@@ -52,9 +92,9 @@
                             <label class="resource-label alignCenter">Trauma</label>
                         </div>
                         <div class="resource-content flexrow flex-center">
-                            <input type="number" name="data.data.mental.stress" value="{{data.data.mental.stress}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.mental.stress" value="{{data.data.mental.stress}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
-                            <input type="number" name="data.data.mental.trauma" value="{{data.data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.mental.trauma" value="{{data.data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         <div class="resource-content flexrow flex-center">
                             <span class="resource-value">LUC {{data.data.mental.luc}}</span>
@@ -63,56 +103,49 @@
                         </div>
                     </div>
                 </div>
-          </div>
+            </div>
+          <div class="grid grid-2col">
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Aptitudes</h3>
                     <div class="flexGrowHalf">
                     </div>
                 </div>
-                <div class="listBackground grid grid-3col noMargin">
+                <div class="listBackground  shape2 grid grid-3col noMargin">
                     {{#each data.data.aptitudes as |aptitude key|}}
-                    <div class="abilities flexrow flex-group-center">
-                        <span class="resource-label alignCenter">{{key}}</span>
+                    <div class="abilities flexrow flex-group-center reveal" style="min-height: 26px;">
+                        <div class="flexrow flex-group-center input-small">
+                            <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
+                            <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        </div>
                         <input class="input-small" type="number" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-                        <label class="item-standard-margin-both-large roll-label task-check" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     </div>
                     {{/each}}
                 </div>
             </div>
             <div class="contentBox">
-                <div class="grid grid-2col noMargin noBG">
-                    <div>
-                        <div class="flexrow">
-                            <h3 class="subheader">Other</h3>
-                            <div class="flexGrowHalf">
-                            </div>
-                        </div>
-                        <div class="listBackground shape2 flexrow flex-group-center">
-                            <span class="resource-label">Initiative Mod</span>
-                            <input class="input-medium" type="number" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
-                        </div>
+                    <div class="flexrow">
+                        <div class="flexGrowHalf"></div>
+                        <h3 class="subheaderMirror">Other</h3>
                     </div>
-                    <div>
-                        <div class="flexrow">
-                            <div class="flexGrowHalf">
-                            </div>
-                            <h3 class="subheaderMirror ">Rest</h3>
+                    <div class="listBackground flexrow flex-group-center">
+                        <span class="resource-label">Initiative Mod</span>
+                        <input class="input-medium" type="number" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                    </div>
+                    <div class="listBackground shape1 flexrow">
+                        <div class="flexrow flex-group-center">
+                            <span class="resource-label alignCenter">Rest: Short</span>
+                            <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
+                            <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
                         </div>
-                        <div class="listBackground shape1 flexrow">
-                            <div class="flexrow flex-group-center">
-                                <span class="resource-label alignCenter">Short</span>
-                                <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
-                                <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
-                            </div>
-                            <div class="flexrow flex-group-center">
-                                <span class="resource-label alignCenter">Long</span>
-                                <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
-                            </div>
+                        <div class="flexrow flex-group-center" style="flex: 0.5;">
+                            <span class="resource-label alignCenter input-small">Long</span>
+                            <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
                         </div>
                     </div>
                 </div>
             </div>
+          </div>
         </div>
     </header>
     {{!-- Sheet Tab Navigation --}}
@@ -189,7 +222,7 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="listBackground" style="position: relative; z-index: 2;">
+                    <div class="listBackground edgeAbler">
                         {{#if data.trait}}
                         {{#each data.trait as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -218,7 +251,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 <div class="contentBox" style="flex: 0.15;">
                     <div class="flexrow">
@@ -234,7 +267,7 @@
                         </div>
                         <h3 class="subheaderMirror">Flaws</h3>
                     </div>
-                    <div class="listBackground" style="position: relative; z-index: 2;">
+                    <div class="listBackground edgeAbler">
                         {{#if data.flaw}}
                         {{#each data.flaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -450,7 +483,7 @@
                             <span class="resource-value">/ {{#if data.data.pools.insight.totalInsight}}{{data.data.pools.insight.totalInsight}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
+                    <div class="listBackground edgeAbler">
                         {{#each data.data.skillsIns as |skill key|}}
                         <div class="flexrow flex-group-center reveal">
                             <span class="resource-label input-large">{{key}}</span>
@@ -468,7 +501,7 @@
                         </div>
                         {{/each}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -509,7 +542,7 @@
                             <span class="resource-value">/ {{#if data.data.pools.vigor.totalVigor}}{{data.data.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
+                    <div class="listBackground edgeAbler">
                         {{#each data.data.skillsVig as |skill key|}}
                         <div class="flexrow flex-group-center reveal">
                             <span class="resource-label input-large">{{key}}</span>
@@ -527,7 +560,7 @@
                         </div>
                         {{/each}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -577,7 +610,7 @@
                             <span class="resource-value">/ {{#if data.data.pools.moxie.totalMoxie}}{{data.data.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
+                    <div class="listBackground edgeAbler">
                         {{#each data.data.skillsMox as |skill key|}}
                         <div class="flexrow flex-group-center reveal">
                             <span class="resource-label input-large">{{key}}</span>
@@ -595,7 +628,7 @@
                         </div>
                         {{/each}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 <div class="contentBox">
                     <div class="flexrow">
@@ -654,7 +687,7 @@
                             <span class="resource-value">/ {{#if data.data.pools.flex.totalFlex}}{{data.data.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
-                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
+                    <div class="listBackground edgeAbler">
                         <span class="resource-value">Recover Pools</span><br/>
                         You recover the points by using a rest action.<p/>
                         <span class="resource-value">Short Rest</span><br/>
@@ -662,7 +695,7 @@
                         <span class="resource-value">Long Rest</span><br/>
                         Completely restores pools over 4 hours (8 w/o biomods)<p/>
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 <div class="contentBox">
                     {{#if data.specialSkill}}
@@ -672,7 +705,7 @@
                             <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
                         </div>
                     </div>
-                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
+                    <div class="listBackground edgeAbler" style="padding-left: 0;">
                         {{#each data.specialSkill as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
@@ -698,7 +731,7 @@
                         </div>
                         {{/each}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape2 edgeLord"></div>
                     {{else}}
                     <div class="separator">
                         <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Exotic Skill</a>
@@ -739,7 +772,7 @@
                         </div>
                         {{/each}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -45px;"></div>
+                    <div class="itemBackground shape2 edgeLord"></div>
                     {{else}}
                     <div class="separator">
                         <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Know Skill</a>
@@ -803,6 +836,13 @@
                         </div>
                     </div>
                 </div>
+                {{log "a picture? " data.data.bodies.morph1}}
+                {{log "a picture? " data.data.bodies.morph1.img}}
+                {{#if data.data.bodies.morph1.img}}
+                <img class="morph-img" src="{{data.data.bodies.morph1.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph1.name}}"/>
+                {{else}}
+                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
+                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph2")}}
                 <div class="itemBackground">
@@ -840,6 +880,11 @@
                         </div>
                     </div>
                 </div>
+                {{#if data.data.bodies.morph1.img}}
+                <img class="morph-img" src="{{data.data.bodies.morph2.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph2.name}}"/>
+                {{else}}
+                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
+                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph3")}}
                 <div class="itemBackground">
@@ -877,6 +922,11 @@
                         </div>
                     </div>
                 </div>
+                {{#if data.data.bodies.morph1.img}}
+                <img class="morph-img" src="{{data.data.bodies.morph3.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph3.name}}"/>
+                {{else}}
+                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
+                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph4")}}
                 <div class="itemBackground">
@@ -914,6 +964,11 @@
                         </div>
                     </div>
                 </div>
+                {{#if data.data.bodies.morph1.img}}
+                <img class="morph-img" src="{{data.data.bodies.morph4.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph4.name}}"/>
+                {{else}}
+                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
+                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph5")}}
                 <div class="itemBackground">
@@ -951,6 +1006,11 @@
                         </div>
                     </div>
                 </div>
+                {{#if data.data.bodies.morph1.img}}
+                <img class="morph-img" src="{{data.data.bodies.morph5.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph5.name}}"/>
+                {{else}}
+                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
+                {{/if}}
                 {{/if}}
                 {{#if (eq data.data.bodies.activeMorph "morph6")}}
                 <div class="itemBackground">
@@ -988,6 +1048,11 @@
                         </div>
                     </div>
                 </div>
+                {{#if data.data.bodies.morph1.img}}
+                <img class="morph-img" src="{{data.data.bodies.morph6.img}}" data-edit="img" title="{{data.name}}'s {{data.data.bodies.morph6.name}}"/>
+                {{else}}
+                <img class="morphDefault-img" src="{{data.img}}" data-edit="img" title="{{data.name}}'s rest indentity"/>
+                {{/if}}
                 {{/if}}
             </div>
             {{#if (eq data.data.bodies.activeMorph "morph1")}}
@@ -1027,7 +1092,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape2" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
                 <div class="contentBox">
@@ -1086,7 +1151,7 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape1" style="height: 60px; margin-top: -50px;">
+                    <div class="itemBackground shape1" style="height: 60px; margin-top: -40px;">
                     </div>
                 </div>
             </div>
@@ -1624,13 +1689,13 @@
                             </div>
                             {{/if}}
                             <div class="flexrow flex-between item-controls">
-                                <a class="item-control item-edit resource-label editWithLabel" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                <a class="item-control item-delete resource-label editWithLabel alignRight" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
                             </div>
                         </div>
                     </div>
                     {{else}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
@@ -1648,8 +1713,8 @@
                             </div>
                             {{/if}}
                             <div class="flexrow flex-between item-controls">
-                                <a class="item-control item-edit resource-label editWithLabel" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                <a class="item-control item-delete resource-label editWithLabel alignRight" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
                             </div>
                         </div>
                     </div>
@@ -1664,7 +1729,7 @@
             </div>
         </div>
         {{!-- Vehicles Tab --}}
-        <div class="tab" data-group="primary" data-tab="vehicles">
+        <div class="tab vehicle" data-group="primary" data-tab="vehicles">
             {{#each data.vehicle.Vehicle as |item id|}}
             <div class="item contentBox" data-item-id="{{item._id}}">
                 <div class="flexrow">

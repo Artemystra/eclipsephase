@@ -563,6 +563,7 @@
         "activeMorph": "morph1",
         "morph1": {
           "name": "",
+          "img": "",
           "type": "",
           "dur": null,
           "insight": null,
@@ -573,6 +574,7 @@
         },
         "morph2": {
           "name": "",
+          "img": "",
           "type": "",
           "dur": null,
           "insight": null,
@@ -583,6 +585,7 @@
         },
         "morph3": {
           "name": "",
+          "img": "",
           "type": "",
           "dur": null,
           "insight": null,
@@ -593,6 +596,7 @@
         },
         "morph4": {
           "name": "",
+          "img": "",
           "type": "",
           "dur": null,
           "insight": null,
@@ -603,6 +607,7 @@
         },
         "morph5": {
           "name": "",
+          "img": "",
           "type": "",
           "dur": null,
           "insight": null,
@@ -613,6 +618,7 @@
         },
         "morph6": {
           "name": "",
+          "img": "",
           "type": "",
           "dur": null,
           "insight": null,

@@ -133,13 +133,29 @@
 }
 
 .eclipsephase .sheet-header .profile-img {
-  height: 300px;
-  width: 300px;
+  height: 230px;
+  width: 230px;
   -webkit-box-flex: 0;
   -ms-flex: 0 0 100px;
   flex: 0 0 100px;
   margin-right: 10px;
   border: solid #161616 5px;
+}
+
+.morph-img,
+.morphDefault-img {
+  height: 230px;
+  width: 230px;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  margin-right: 10px;
+  border: solid #161616 5px;
+}
+
+.morphDefault-img {
+-webkit-filter: grayscale(90%) blur(20%);
+filter: grayscale(90%) blur(20%);
 }
 
 .item-img {
@@ -637,8 +653,13 @@ optgroup .Default .Roll .Mode,
 
 .gear .item,
 .body .item,
-.ego .item {
+.ego .item,
+.psi .item {
   margin-top: 5px;
+  max-height: none!important;
+}
+
+.vehicle .item {
   max-height: none!important;
 }
 
@@ -742,7 +763,7 @@ h3.subheaderBlank {
   display: flex;
   align-items: center;
   text-align: center;
-  margin-bottom: 30px;
+  margin-top: 17px;
 }
 
 .separator::before,
@@ -813,7 +834,7 @@ h3.subheaderBlank {
 
 .listBackground {
   background: #1f1f1f;
-  padding: 5px 1em 10px 1em;
+  padding: 5px 1em 5px 1em;
   border-top: solid #24485d 2px;
   min-height: 40px;
 }
@@ -829,6 +850,16 @@ h3.subheaderBlank {
   background: #161616;
   padding: 1em;
   min-height: 40px;
+}
+
+.edgeAbler {
+  position: relative; 
+  z-index: 2;
+}
+
+.edgeLord {
+  height: 60px; 
+  margin-top: -40px;
 }
 
 .shape1 {
@@ -1014,6 +1045,7 @@ img {
 
 .sheet header.sheet-header > * {
   flex: 0.15;
+  margin-top: 20px;
 }
 
 .textarea {
@@ -1026,7 +1058,7 @@ img {
 }
 
 .headroom {
-  flex: 0.65!important;
+  flex: 0.45!important;
   position: relative;
 }
 
@@ -1061,7 +1093,8 @@ h3.inline {
   position: relative;
 }
 
-.tooltip div[role=tooltip] {
+.tooltip div[role=tooltip],
+.tooltip div[role=tooltipNegative]{
   display: none;
 }
 
@@ -1073,6 +1106,22 @@ h3.inline {
   position: absolute;
   bottom: 1em;
   left: -20em;
+  padding: 0.15em;
+  z-index: 100;
+  color: #d8d8d8;
+  background-color: #1f1f1f;
+  border: solid 1px #1d1d1d;
+  border-radius: 0.2em;
+  clip-path: polygon(71% 0, 73% 5%, 97% 5%, 100% 10%, 100% 100%, 3% 100%, 0 96%, 0 0, 26% 0);
+}
+
+.tooltip:hover div[role=tooltipNegative] {
+  font-family: "Roboto", sans-serif;
+  width: 350px;
+  display: block;
+  text-align: left;
+  position: absolute;
+  top: 1.8em;
   padding: 0.15em;
   z-index: 100;
   color: #d8d8d8;
@@ -1108,6 +1157,24 @@ h3.inline {
 }
 .flex {
   background-image: url(../resources/img/flex.jpg);
+  background-repeat: no-repeat;
+  background-size: 100px 100px;
+  background-color: #2b2b2b;
+  padding: 3em 2em 2em 3.5em;
+  clip-path: polygon(71% 0, 73% 5%, 97% 5%, 100% 10%, 100% 100%, 3% 100%, 0 96%, 0 0, 26% 0);
+}
+
+.information {
+  background-image: url(../resources/img/info.jpg);
+  background-repeat: no-repeat;
+  background-size: 100px 100px;
+  background-color: #2b2b2b;
+  padding: 3em 2em 2em 3.5em;
+  clip-path: polygon(71% 0, 73% 5%, 97% 5%, 100% 10%, 100% 100%, 3% 100%, 0 96%, 0 0, 26% 0);
+}
+
+.armorValue {
+  background-image: url(../resources/img/armor.jpg);
   background-repeat: no-repeat;
   background-size: 100px 100px;
   background-color: #2b2b2b;

@@ -27,22 +27,12 @@ export class NpcSheet extends ActorSheet {
 
     _prepareCharacterItems(sheetData) {
         const actorData = sheetData.data;
+        const data = actorData.data;
 
         // Initialize containers.
         const gear = [];
         const features = [];
-        const spells = {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: []
-        };
+        const special = [];
         const rangedweapon = [];
         const ccweapon = [];
         const armor = [];
@@ -67,12 +57,6 @@ export class NpcSheet extends ActorSheet {
             // Append to features.
             else if (i.type === 'feature') {
                 features.push(i);
-            }
-            // Append to spells.
-            else if (i.type === 'spell') {
-                if (i.data.spellLevel != undefined) {
-                    spells[i.data.spellLevel].push(i);
-                }
             }
             else if (i.type === 'rangedWeapon') {
                 rangedweapon.push(i)
@@ -102,6 +86,30 @@ export class NpcSheet extends ActorSheet {
                 morphtrait.present = true
                 morphflaw.push(i)
             }
+            if (i.type === 'specialSkill') {
+                let aptSelect = 0;
+                if (i.data.aptitude === "Intuition") {
+                  aptSelect = data.aptitudes.int.value;
+                }
+                else if (i.data.aptitude === "Cognition") {
+                  aptSelect = data.aptitudes.cog.value;
+                }
+                else if (i.data.aptitude === "Reflexes") {
+                  aptSelect = data.aptitudes.ref.value;
+                }
+                else if (i.data.aptitude === "Somatics") {
+                  aptSelect = data.aptitudes.som.value;
+                }
+                else if (i.data.aptitude === "Willpower") {
+                  aptSelect = data.aptitudes.wil.value;
+                }
+                else if (i.data.aptitude === "Savvy") {
+                  aptSelect = data.aptitudes.sav.value;
+                }
+                i.roll = Number(i.data.value) + aptSelect;
+                i.specroll = Number(i.data.value) + aptSelect + 10;
+                special.push(i);
+            }
         }
 
         // Assign and return
@@ -112,10 +120,10 @@ export class NpcSheet extends ActorSheet {
         actorData.aspect = aspect;
         actorData.gear = gear;
         actorData.features = features;
-        actorData.spells = spells;
         actorData.vehicle = vehicle;
         actorData.morphTrait = morphtrait;
         actorData.morphFlaw = morphflaw;
+        actorData.specialSkill = special;
     }
 
     activateListeners(html) {
@@ -176,24 +184,20 @@ export class NpcSheet extends ActorSheet {
     _onItemCreate(event) {
         event.preventDefault();
         const header = event.currentTarget;
-        // Get the type of item to create.
         const type = header.dataset.type;
-        // Grab any data associated with this control.
         const data = duplicate(header.dataset);
-        // Initialize a default name.
         const name = `New ${type.capitalize()}`;
-        // Prepare the item object.
         const itemData = {
-            name: name,
-            type: type,
-            data: data
+          name: name,
+          type: type,
+          data: data
         };
-        // Remove the type from the dataset since it's in the itemData.type prop.
         delete itemData.data["type"];
-
-        // Finally, create the item!
+        if (itemData.type === "specialSkill") {
+          itemData.name = "New Skill";
+        }
         return this.actor.createEmbeddedDocuments("Item", [itemData]);
-    }
+      }
 
     _onTaskCheck(event) {
         event.preventDefault();

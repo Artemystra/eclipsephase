@@ -32,6 +32,45 @@ export class EclipsePhaseActor extends Actor {
     data.mental.ir = data.mental.luc * 2;
     data.mental.tt = Math.round(data.mental.luc / 5);
 
+    //Calculating armor
+    let energyTotal = 0;
+    let kineticTotal = 0;
+    let mainArmorAmount = 0;
+    let additionalArmorAmount = 0;
+    for (let armor of item ) {
+      let key = armor.type;
+      if(key === 'armor' && armor.data.data.active){
+        energyTotal += parseInt(armor.data.data.energy);
+        kineticTotal += parseInt(armor.data.data.kinetic);
+        if (armor.data.data.slotType === "Main Armor") {
+          mainArmorAmount++
+        }
+        if (armor.data.data.slotType === "Additional Armor") {
+          additionalArmorAmount++
+        }
+      }
+      if (armor.type === "armor") {
+        console.log("Hey! ", armor);
+      }
+    }
+    data.physical.energyArmorTotal = energyTotal
+    data.physical.kineticArmorTotal = kineticTotal
+    data.physical.mainArmorTotal = mainArmorAmount
+    data.physical.additionalArmorTotal = additionalArmorAmount
+    data.physical.mainArmorMalus = 0
+    data.physical.additionalArmorMalus = 0
+    data.physical.armorMalusTotal = 0
+    if (mainArmorAmount > 1){
+      data.physical.mainArmorMalus = (mainArmorAmount - 1)*20
+    }
+    if (additionalArmorAmount > 1){
+      data.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
+    }
+    if (data.physical.mainArmorMalus || data.physical.additionalArmorMalus) {
+      data.physical.armorMalusTotal = data.physical.mainArmorMalus+data.physical.additionalArmorMalus
+    }
+    console.log(data.physical.armorMalusTotal);
+
     //Initiative
     data.initiative.value = Math.round((data.aptitudes.ref.value + data.aptitudes.int.value) / 5)
 
@@ -97,17 +136,37 @@ export class EclipsePhaseActor extends Actor {
         skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
     }
+
+      //Showing skill calculations for know/spec skills also in the item-dialog
+      for (let value of item ) {
+        let key = value.type;
+        let aptSelect = 0;
+        console.log("Data in actor.js for NPCs", data);
+        if (value.data.data.aptitude === "Intuition") {
+          aptSelect = data.aptitudes.int.value;
+        }
+        else if (value.data.data.aptitude === "Cognition") {
+          aptSelect = data.aptitudes.cog.value;
+        }
+        else if (value.data.data.aptitude === "Reflexes") {
+          aptSelect = data.aptitudes.ref.value;
+        }
+        else if (value.data.data.aptitude === "Somatics") {
+          aptSelect = data.aptitudes.som.value;
+        }
+        else if (value.data.data.aptitude === "Willpower") {
+          aptSelect = data.aptitudes.wil.value;
+        }
+        else if (value.data.data.aptitude === "Savvy") {
+          aptSelect = data.aptitudes.sav.value;
+        }
+        if(key === 'specialSkill' || key === 'knowSkill'){
+          value.data.data.roll = Number(value.data.data.value) + aptSelect;
+        }
+      }
+
     //NPCs & Goons only
     if (actorData.type === 'npc' || actorData.type === 'goon'){
-      //Deprecated skill calculations (only used fpr Goons & NPCs atm.)
-      for (let [key, spec] of Object.entries(data.specSkills)) {
-        spec.specCheck = (spec.value + parseInt(spec.aptitude, 10));
-        spec.roll = spec.specCheck - data.mods.woundMod - data.mods.traumaMod;
-      }
-      for (let [key, know] of Object.entries(data.knowSkills)) {
-        know.knowCheck = (know.value + parseInt(know.aptitude, 10));
-        know.roll = know.knowCheck - data.mods.woundMod - data.mods.traumaMod;
-      }
       //Calculating WT & DR
       data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
       if (data.bodyType.value === 'synth'){
@@ -119,33 +178,6 @@ export class EclipsePhaseActor extends Actor {
       else if (data.bodyType.value === 'bio'){
             data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
           }
-    }
-
-      //Showing skill calculations for know/spec skills also in the item-dialog
-    for (let value of item ) {
-      let key = value.type;
-      let aptSelect = 0;
-      if (value.data.data.aptitude === "Intuition") {
-        aptSelect = data.aptitudes.int.value;
-      }
-      else if (value.data.data.aptitude === "Cognition") {
-        aptSelect = data.aptitudes.cog.value;
-      }
-      else if (value.data.data.aptitude === "Reflexes") {
-        aptSelect = data.aptitudes.ref.value;
-      }
-      else if (value.data.data.aptitude === "Somatics") {
-        aptSelect = data.aptitudes.som.value;
-      }
-      else if (value.data.data.aptitude === "Willpower") {
-        aptSelect = data.aptitudes.wil.value;
-      }
-      else if (value.data.data.aptitude === "Savvy") {
-        aptSelect = data.aptitudes.sav.value;
-      }
-      if(key === 'specialSkill' || key === 'knowSkill'){
-        value.data.data.roll = Number(value.data.data.value) + aptSelect;
-      }
     }
     //Characters only
     //Durability

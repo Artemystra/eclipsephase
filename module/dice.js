@@ -265,13 +265,15 @@ export async function TaskCheck({
 
     //General roll modifications
     let woundMod = Number(actorData.mods.woundMod) + Number(actorData.mods.traumaMod);
+    let armorObstruction = actorData.physical.armorMalusTotal
     let rollMod = Number(globalMod) - woundMod;
-    let modSkillValue = Number(skillValue) + Number(globalMod) + Number(gunsMod) + Number(meleeMod);
+    let modSkillValue = Number(skillValue) + Number(globalMod) + Number(gunsMod) + Number(meleeMod) - armorObstruction;
 
     //Chat message variables
     spec = specName ? "(" + specName + ")" : "";
     let situationalPlus = globalMod>0 ? "+" : "";
     let modAnnounce = rollMod ? "<u>Applied Mods:</u> <br>" : "";
+    let armorModAnnounce = armorObstruction ? "Encumberance:<strong> -" + armorObstruction + "</strong><br>" : "";
     let woundAnnounce = woundMod ? "Wound/Trauma:<strong> -" + woundMod + "</strong><br>" : "";
     let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong>" : "";
 
@@ -347,7 +349,7 @@ export async function TaskCheck({
         }
 
         //Chat message constructor
-        let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
+        let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + armorModAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
         roll.toMessage({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
             flavor: label,

@@ -135,50 +135,49 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         i.roll = Number(i.data.value) + aptSelect;
         i.specroll = Number(i.data.value) + aptSelect + 10;
         special.push(i);
-      }
-      // Append to spells.
-      else if (i.type === 'knowSkill') {
-        let aptSelect = 0;
-        if (i.data.aptitude === "Intuition") {
-          aptSelect = data.aptitudes.int.value;
         }
-        else if (i.data.aptitude === "Cognition") {
-          aptSelect = data.aptitudes.cog.value;
+        else if (i.type === 'knowSkill') {
+          let aptSelect = 0;
+          if (i.data.aptitude === "Intuition") {
+            aptSelect = data.aptitudes.int.value;
+          }
+          else if (i.data.aptitude === "Cognition") {
+            aptSelect = data.aptitudes.cog.value;
+          }
+          i.roll = Number(i.data.value) + aptSelect;
+          i.specroll = Number(i.data.value) + aptSelect + 10;
+          know.push(i);
         }
-        i.roll = Number(i.data.value) + aptSelect;
-        i.specroll = Number(i.data.value) + aptSelect + 10;
-        know.push(i);
+        else if (i.type === 'trait') {
+          trait.push(i);
+        }
+        else if (i.type === 'flaw') {
+          flaw.push(i);
+        }
+        else if (i.type === 'rangedWeapon') {
+          rangedweapon.push(i);
+        }
+        else if (i.type === 'ccWeapon') {
+          ccweapon.push(i);
+        }
+        else if (i.type === 'armor') {
+          armor.push(i);
+        }
+        else if (i.type === 'aspect') {
+          aspect[i.data.psiType].push(i);
+        }
+        else if (i.type === 'program') {
+          program.push(i);
+        }
+        else if (i.type === 'gear') {
+          gear.push(i);
+        }
+        else if (i.type === 'vehicle') {
+          i.wt = Math.round(i.data.dur / 5);
+          i.dr = Math.round(i.data.dur * 2);
+          vehicle[i.data.type].push(i)
+        }
       }
-      else if (i.type === 'trait') {
-        trait.push(i);
-      }
-      else if (i.type === 'flaw') {
-        flaw.push(i);
-      }
-      else if (i.type === 'rangedWeapon') {
-        rangedweapon.push(i);
-      }
-      else if (i.type === 'ccWeapon') {
-        ccweapon.push(i);
-      }
-      else if (i.type === 'armor') {
-        armor.push(i);
-      }
-      else if (i.type === 'aspect') {
-        aspect[i.data.psiType].push(i);
-      }
-      else if (i.type === 'program') {
-        program.push(i);
-      }
-      else if (i.type === 'gear') {
-        gear.push(i);
-      }
-      else if (i.type === 'vehicle') {
-        i.wt = Math.round(i.data.dur / 5);
-        i.dr = Math.round(i.data.dur * 2);
-        vehicle[i.data.type].push(i)
-      }
-    }
 
     for (let i of sheetData.items) {
         if (i.type === 'ware' && i.data.boundTo) {

@@ -27,22 +27,12 @@ export class GoonSheet extends ActorSheet {
 
     _prepareCharacterItems(sheetData) {
         const actorData = sheetData.data;
+        const data = actorData.data;
 
         // Initialize containers.
         const gear = [];
         const features = [];
-        const spells = {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: []
-        };
+        const special = [];
         const rangedweapon = [];
         const ccweapon = [];
         const armor = [];
@@ -59,18 +49,12 @@ export class GoonSheet extends ActorSheet {
             let item = i.data;
             i.img = i.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (i.type === 'item') {
+            if (i.type === 'gear') {
                 gear.push(i);
-            }
+              }
             // Append to features.
             else if (i.type === 'feature') {
                 features.push(i);
-            }
-            // Append to spells.
-            else if (i.type === 'spell') {
-                if (i.data.spellLevel != undefined) {
-                    spells[i.data.spellLevel].push(i);
-                }
             }
             else if (i.type === 'rangedWeapon') {
                 rangedweapon.push(i)
@@ -92,6 +76,30 @@ export class GoonSheet extends ActorSheet {
                 i.dr = Math.round(i.data.dur * 2);
                 vehicle.push(i)
             }
+            if (i.type === 'specialSkill') {
+                let aptSelect = 0;
+                if (i.data.aptitude === "Intuition") {
+                  aptSelect = data.aptitudes.int.value;
+                }
+                else if (i.data.aptitude === "Cognition") {
+                  aptSelect = data.aptitudes.cog.value;
+                }
+                else if (i.data.aptitude === "Reflexes") {
+                  aptSelect = data.aptitudes.ref.value;
+                }
+                else if (i.data.aptitude === "Somatics") {
+                  aptSelect = data.aptitudes.som.value;
+                }
+                else if (i.data.aptitude === "Willpower") {
+                  aptSelect = data.aptitudes.wil.value;
+                }
+                else if (i.data.aptitude === "Savvy") {
+                  aptSelect = data.aptitudes.sav.value;
+                }
+                i.roll = Number(i.data.value) + aptSelect;
+                i.specroll = Number(i.data.value) + aptSelect + 10;
+                special.push(i);
+            }
         }
 
         // Assign and return
@@ -102,8 +110,8 @@ export class GoonSheet extends ActorSheet {
         actorData.aspect = aspect;
         actorData.gear = gear;
         actorData.features = features;
-        actorData.spells = spells;
         actorData.vehicle = vehicle;
+        actorData.specialSkill = special;
     }
 
     activateListeners(html) {
