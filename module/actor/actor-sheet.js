@@ -11,7 +11,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       classes: ["eclipsephase", "sheet", "actor"],
       template: "systems/eclipsephase/templates/actor/actor-sheet.html",
       width: 800,
-      height: 1000,
+      height: 900,
       resizable: false,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
     });
@@ -24,6 +24,27 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
+    if(data.data.img === "icons/svg/mystery-man.svg"){
+      data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph1.img === ""){
+      data.data.data.bodies.morph1.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph2.img === ""){
+      data.data.data.bodies.morph2.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph3.img === ""){
+      data.data.data.bodies.morph3.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph4.img === ""){
+      data.data.data.bodies.morph4.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph5.img === ""){
+      data.data.data.bodies.morph5.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph6.img === ""){
+      data.data.data.bodies.morph6.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
     if (data.data.type === 'character') {
       this._prepareCharacterItems(data);
     }

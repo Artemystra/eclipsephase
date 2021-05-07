@@ -16,6 +16,9 @@ export class GoonSheet extends ActorSheet {
     getData() {
         const data = super.getData();
         data.dtypes = ["String", "Number", "Boolean"];
+        if(data.data.img === "icons/svg/mystery-man.svg"){
+            data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+          }
         if (data.data.type == 'goon') {
             this._prepareCharacterItems(data);
         }

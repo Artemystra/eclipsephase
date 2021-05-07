@@ -37,7 +37,6 @@ export async function TaskCheck({
     hitType = "",
     numberOfTargets = 1
     } = {}) {
-    console.log("The Skill Name from Dice.js: " + skillName)
     //Guns check dialog
     if (askForOptions != optionsSettings && skillName === "guns") {
         let checkOptions = await GetGunsTaskOptions(rollType);
@@ -265,21 +264,21 @@ export async function TaskCheck({
 
     //General roll modifications
     let woundMod = Number(actorData.mods.woundMod) + Number(actorData.mods.traumaMod);
-    let armorObstruction = actorData.physical.armorMalusTotal
+    let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
     let rollMod = Number(globalMod) - woundMod;
-    let modSkillValue = Number(skillValue) + Number(globalMod) + Number(gunsMod) + Number(meleeMod) - armorObstruction;
+    let modSkillValue = Number(skillValue) + Number(globalMod) + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
 
     //Chat message variables
     spec = specName ? "(" + specName + ")" : "";
     let situationalPlus = globalMod>0 ? "+" : "";
     let modAnnounce = rollMod ? "<u>Applied Mods:</u> <br>" : "";
-    let armorModAnnounce = armorObstruction ? "Encumberance:<strong> -" + armorObstruction + "</strong><br>" : "";
+    let encumberanceModAnnounce = totalEncumberance ? "Encumberance:<strong> -" + totalEncumberance + "</strong><br>" : "";
     let woundAnnounce = woundMod ? "Wound/Trauma:<strong> -" + woundMod + "</strong><br>" : "";
     let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong>" : "";
 
     //The dice roll
     for (i = numberOfTargets; i > 0; i--) {
-        let roll = new Roll(rollFormula).roll();
+        let roll = await new Roll(rollFormula).evaluate({async: true});
 
         //Success check
         let rollCheck = roll.total;
@@ -349,12 +348,22 @@ export async function TaskCheck({
         }
 
         //Chat message constructor
-        let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + armorModAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-        roll.toMessage({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: label,
-            rollMode: rollModeSelection
+        if(modSkillValue>0){
+            let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
+            roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                flavor: label,
+                rollMode: rollModeSelection
         });
+        }
+        else{
+            let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
+            roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                flavor: label,
+                rollMode: rollModeSelection
+        });
+        }
     }
     //Skill check dialog constructor
     async function GetTaskOptions(rollType) {
@@ -622,12 +631,8 @@ export async function DamageRoll({
 
     let intermediateRollFormula = weaponDamage + mode + successModifier;
     let rollFormula = criticalModifier + (intermediateRollFormula);
-    let roll = new Roll(rollFormula).roll();
-    let rollCheck = roll.total;
-    console.log(successType)
-    console.log(critical)
+    let roll = await new Roll(rollFormula).evaluate({async: true});
 
-    console.log(rollCheck)
         let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
         roll.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),

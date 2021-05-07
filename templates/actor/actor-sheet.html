@@ -20,6 +20,9 @@
                       <h3 class="subheader">Physical</h3>
                       <div class="flexGrowThreeQuarter flexrow flex-group-center tooltip">
                         <div role="tooltipNegative">
+                            <div class="tooltipTopBorder">
+                                <div class="tooltipTop"></div>
+                            </div>
                             <div class="armorValue">
                                 <h3 class="inline">Armor</h3>
                                 {{#if data.armor}}
@@ -52,7 +55,10 @@
                                     <label class="resource-value">You are not wearing any armor</label>
                                     <p/>
                                     {{/if}}
-                                    <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Body-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
+                                    <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Body-Tab. You can add armor by drag & drop it out of a <label class="resource-value">COMPENDIUM <i class="fas fa-atlas"></i></label> or any other <label class="resource-value">ITEM <i class="fas fa-suitcase"></i></label> collection available.</i>
+                            </div>
+                            <div class="tooltipBottomBorder">
+                                <div class="tooltipBottom"></div>
                             </div>
                         </div>
                         <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>
@@ -150,6 +156,7 @@
           </div>
         </div>
     </header>
+
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="ego">Ego</a>
@@ -224,7 +231,7 @@
                         <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                    <div class="listBackground edgeAbler">
+                    <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
                         {{#if data.trait}}
                         {{#each data.trait as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -269,7 +276,7 @@
                         </div>
                         <h3 class="subheaderMirror">Flaws</h3>
                     </div>
-                    <div class="listBackground edgeAbler">
+                    <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
                         {{#if data.flaw}}
                         {{#each data.flaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -450,6 +457,9 @@
                             <label class="resource-label labelWidth-medium">pool </label>
                                 <i class="far fa-question-circle hidden info tooltip">
                                     <div role="tooltip">
+                                        <div class="tooltipTopBorder">
+                                            <div class="tooltipTop"></div>
+                                        </div>
                                         <div class="insight">
                                             <h3 class="inline">Insight</h3>
                                             <ul>
@@ -478,6 +488,9 @@
                                                     or analysis of the facts at hand, without needing to make a test.
                                                 </li>
                                             </ul>
+                                        </div>
+                                        <div class="tooltipBottomBorder">
+                                            <div class="tooltipBottom"></div>
                                         </div>
                                     </div>
                                 </i>
@@ -512,6 +525,9 @@
                             <label class="resource-label labelWidth-medium">pool </label>
                             <i class="far fa-question-circle hidden info tooltip">
                                 <div role="tooltip">
+                                    <div class="tooltipTopBorder">
+                                        <div class="tooltipTop"></div>
+                                    </div>
                                     <div class="vigor">
                                         <h3 class="inline">Vigor</h3>
                                         <ul>
@@ -537,6 +553,9 @@
                                                 your next recharge
                                             </li>
                                         </ul>
+                                    </div>
+                                    <div class="tooltipBottomBorder">
+                                        <div class="tooltipBottom"></div>
                                     </div>
                                 </div>
                             </i>
@@ -571,6 +590,9 @@
                             <label class="resource-label labelWidth-medium">pool </label>
                             <i class="far fa-question-circle hidden info tooltip">
                                 <div role="tooltip">
+                                    <div class="tooltipTopBorder">
+                                        <div class="tooltipTop"></div>
+                                    </div>
                                     <div class="moxie">
                                         <h3 class="inline">Moxie</h3>
                                         <ul>
@@ -606,6 +628,9 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    <div class="tooltipBottomBorder">
+                                        <div class="tooltipBottom"></div>
+                                    </div>
                                 </div>
                             </i>
                             <input class="input-xs -small" type="number" name="data.pools.moxie.value" value="{{data.data.pools.moxie.value}}" placeholder="0"/>
@@ -639,6 +664,9 @@
                             <label class="resource-label labelWidth-medium">pool </label>
                             <i class="far fa-question-circle hidden info tooltip">
                                 <div role="tooltip">
+                                    <div class="tooltipTopBorder">
+                                        <div class="tooltipTop"></div>
+                                    </div>
                                     <div class="flex">
                                         <h3 class="inline">Flex</h3>
                                         <ul>
@@ -682,6 +710,9 @@
                                             </li>
                                             <p/>
                                         </ul>
+                                    </div>
+                                    <div class="tooltipBottomBorder">
+                                        <div class="tooltipBottom"></div>
                                     </div>
                                 </div>
                             </i>
@@ -785,7 +816,7 @@
         </div>
         {{!-- Body Tab --}}
         <div class="tab body" data-group="primary" data-tab="body">
-            <div class="flexrow">
+            <div class="flexrow contentBox">
                 <div style="flex: 0.7;">
                     <div class="contentBox">
                         <div class="flexrow">
@@ -1036,7 +1067,7 @@
                                     <div class="alignRight flexGrowHalf">
                                     </div>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.ware.morph1}}
                                     {{#each data.ware.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1074,7 +1105,7 @@
                                     </div>
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.morphTrait.present1}}
                                     {{#each data.morphTrait.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1136,7 +1167,7 @@
                                     <div class="alignRight flexGrowHalf">
                                     </div>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.ware.morph2}}
                                     {{#each data.ware.morph2 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1174,7 +1205,7 @@
                                     </div>
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.morphTrait.present2}}
                                     {{#each data.morphTrait.morph2 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1236,7 +1267,7 @@
                                     <div class="alignRight flexGrowHalf">
                                     </div>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.ware.morph3}}
                                     {{#each data.ware.morph3 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1274,7 +1305,7 @@
                                     </div>
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.morphTrait.present3}}
                                     {{#each data.morphTrait.morph3 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1336,7 +1367,7 @@
                                     <div class="alignRight flexGrowHalf">
                                     </div>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.ware.morph4}}
                                     {{#each data.ware.morph4 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1374,7 +1405,7 @@
                                     </div>
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.morphTrait.present4}}
                                     {{#each data.morphTrait.morph4 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1436,7 +1467,7 @@
                                     <div class="alignRight flexGrowHalf">
                                     </div>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.ware.morph5}}
                                     {{#each data.ware.morph5 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1474,7 +1505,7 @@
                                     </div>
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.morphTrait.present5}}
                                     {{#each data.morphTrait.morph5 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1536,7 +1567,7 @@
                                     <div class="alignRight flexGrowHalf">
                                     </div>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.ware.morph6}}
                                     {{#each data.ware.morph6 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1574,7 +1605,7 @@
                                     </div>
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
-                                <div class="itemBackground" style="position: relative; z-index: 2;">
+                                <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
                                     {{#if data.morphTrait.present6}}
                                     {{#each data.morphTrait.morph6 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
@@ -1903,6 +1934,7 @@
         </div>
         {{!-- Gear Tab --}}
         <div class="tab gear" data-group="primary" data-tab="weapons">
+            {{#if data.data.hasGear}}
             {{#if data.rangedWeapon}}
             <div class="contentBox">
                 <div class="flexrow">
@@ -2152,7 +2184,19 @@
                 {{#if data.data.homebrew}}<i style="font-size: 12px; margin-bottom: 10px;">Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i><p/>{{/if}}
             </div>
             {{/if}}
+            {{else}}
+            <div class="contentBox" style="max-width: 30%; margin: auto; top: 25%">
+                <div class="flexrow">
+                    <h3 class="subheaderBlank">No Gear Present</h3>
+                </div>
+                <div class="listBackground shape3">
+                    <i style="font-size: 12px; margin-bottom: 10px;">You do not have any gear yet.<br></i><p>
+                    To add gear to your inventory, use the <label class="resource-value">COMPENDIUM <i class="fas fa-atlas"></i></label> or create new <label class="resource-value">ITEMS <i class="fas fa-suitcase"></i></label> yourself<p>
+                    <i style="font-size: 12px; margin-bottom: 10px;">Find these options in the upper right of Foundry or ask your GM to provide items to you.</i>
+                </div>
             </div>
+            {{/if}}
+        </div>
         {{!-- Psi Tab --}}
         <div class="tab" data-group="primary" data-tab="psi">
             <div class="contentBox">
