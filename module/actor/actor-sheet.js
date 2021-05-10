@@ -5,21 +5,52 @@ import * as Dice from "../dice.js"
  */
 export class EclipsePhaseActorSheet extends ActorSheet {
 
+    constructor(...args) {
+      super(...args);
+      
+      const showEverything = game.settings.get("eclipsephase", "showEverything");
+      console.log(this);
+      if(showEverything){
+        this.position.height = 900;
+        this.position.width = 800;
+      }
+      else {
+        if (!game.user.isGM && !this.actor.isOwner){
+          this.position.height = 575;
+          this.position.width = 800;
+        }
+        else{
+          this.position.height = 900;
+          this.position.width = 800;
+        }
+      }
+    }
+
+    static get defaultOptions() {
+      return mergeObject(super.defaultOptions, {
+        classes: ["eclipsephase", "sheet", "actor"],
+        resizable: false,
+        tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
+      });
+    }
+
   /** @override */
-  static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
-      classes: ["eclipsephase", "sheet", "actor"],
-      template: "systems/eclipsephase/templates/actor/actor-sheet.html",
-      width: 800,
-      height: 900,
-      resizable: false,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
-    });
+
+  get template() {
+    const showEverything = game.settings.get("eclipsephase", "showEverything");
+    if (showEverything){
+      return "systems/eclipsephase/templates/actor/actor-sheet.html"
+    }
+    else{
+      if (!game.user.isGM && !this.actor.isOwner){
+        return "systems/eclipsephase/templates/actor/actor-sheet-limited.html";
+      }
+      else{
+        return "systems/eclipsephase/templates/actor/actor-sheet.html";
+      }
+    }
   }
 
-  /* -------------------------------------------- */
-
-  /** @override */
   getData() {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];

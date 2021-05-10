@@ -576,7 +576,8 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph2": {
           "name": "",
@@ -587,7 +588,8 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph3": {
           "name": "",
@@ -598,7 +600,8 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph4": {
           "name": "",
@@ -609,7 +612,8 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph5": {
           "name": "",
@@ -620,7 +624,8 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph6": {
           "name": "",
@@ -631,7 +636,8 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         }
       },
       "psiStrain": {

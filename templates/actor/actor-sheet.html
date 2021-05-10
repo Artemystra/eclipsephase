@@ -153,7 +153,6 @@
                     </div>
                 </div>
             </div>
-          </div>
         </div>
     </header>
 
@@ -180,7 +179,7 @@
     <section class="sheet-body">
         {{!-- Ego Tab --}}
         <div class="tab ego" data-group="primary" data-tab="ego">
-            <div class="contentBox">
+            <div class="contentBox" style="margin-bottom: 10px;">
                 <div class="flexrow">
                     <h3 class="subheader">Personal</h3>
                     <div class="alignRight flexGrowThreeQuarter">
@@ -225,7 +224,7 @@
                 </div>
             </div>
             <div class="flexrow flex-between">
-                <div class="contentBox" style="flex: 0.4">
+                <div class="contentBox" style="flex: 0.4; margin-bottom: 10px;">
                     <div class="flexrow">
                         <h3 class="subheader">Traits</h3>
                         <div class="alignRight flexGrowHalf">
@@ -262,7 +261,7 @@
                     </div>
                     <div class="itemBackground shape2 edgeLord"></div>
                 </div>
-                <div class="contentBox" style="flex: 0.15;">
+                <div class="contentBox" style="flex: 0.15; margin-bottom: 10px;">
                     <div class="flexrow">
                         <h3 class="subheaderBlank">Ego Flex</h3>
                     </div>
@@ -270,7 +269,7 @@
                         <input type="number" name="data.ego.egoFlex" value="{{data.data.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
                     </div>
                 </div>
-                <div class="contentBox" style="flex: 0.4">
+                <div class="contentBox" style="flex: 0.4; margin-bottom: 10px;">
                     <div class="flexrow">
                         <div class="alignRight flexGrowHalf">
                         </div>
@@ -308,7 +307,7 @@
                     <div class="itemBackground shape1 edgeLord"></div>
                 </div>
             </div>
-            <div class="contentBox">
+            <div class="contentBox" style="margin-bottom: 10px;">
                 <div class="flexrow">
                     <h3 class="subheader">Current ID</h3>
                     <div class="alignRight flexGrowThreeQuarter">
@@ -441,8 +440,8 @@
                 {{/if}}
             </div>
             <div class="flexrow">
-                <h3 class="subheader">Additional Information</h3>
-                <div class="alignRight flexGrowThreeQuarter">
+                <h3 class="subheader">About {{data.name}}</h3>
+                <div class="alignRight flexGrowHalf">
                 </div>
             </div>
             {{editor content=data.data.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
@@ -450,7 +449,7 @@
         {{!--Skills Tab--}}
         <div class="tab" data-group="primary" data-tab="skills">
             <div class="grid grid-2col noMargin">
-                <div class="contentBox">
+                <div class="contentBox noMargin">
                     <div class="flexrow">
                         <h3 class="subheader">Insight Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
@@ -518,7 +517,7 @@
                     </div>
                     <div class="itemBackground shape2 edgeLord"></div>
                 </div>
-                <div class="contentBox">
+                <div class="contentBox noMargin">
                     <div class="flexrow">
                         <h3 class="subheader">Vigor Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
@@ -583,7 +582,7 @@
                     </div>
                     <div class="itemBackground shape2 edgeLord"></div>
                 </div>
-                <div class="contentBox">
+                <div class="contentBox noMargin">
                     <div class="flexrow">
                         <h3 class="subheader">Moxie Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
@@ -657,7 +656,7 @@
                     </div>
                     <div class="itemBackground shape2 edgeLord"></div>
                 </div>
-                <div class="contentBox">
+                <div class="contentBox noMargin">
                     <div class="flexrow">
                         <h3 class="subheader">Flex</h3>
                         <div class="alignRight flexGrowHalf reveal">
@@ -730,7 +729,7 @@
                     </div>
                     <div class="itemBackground shape2 edgeLord"></div>
                 </div>
-                <div class="contentBox">
+                <div class="contentBox noMargin">
                     {{#if data.specialSkill}}
                     <div class="flexrow">
                         <h3 class="subheader">Exotic Skills</h3>
@@ -771,7 +770,7 @@
                     </div>
                     {{/if}}
                 </div>
-                <div class="contentBox">
+                <div class="contentBox noMargin">
                     {{#if data.knowSkill}}
                     <div class="flexrow">
                         <h3 class="subheader">Know Skills</h3>
@@ -816,7 +815,7 @@
         </div>
         {{!-- Body Tab --}}
         <div class="tab body" data-group="primary" data-tab="body">
-            <div class="flexrow contentBox">
+            <div class="flexrow contentBox noMargin">
                 <div style="flex: 0.7;">
                     <div class="contentBox">
                         <div class="flexrow">
@@ -1746,6 +1745,49 @@
                     {{/if}}
                 </div>
             </div>
+            {{#if (eq data.data.bodies.activeMorph "morph1")}}
+                <div class="flexrow">
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph1.name}}{{data.data.bodies.morph1.name}}{{else}}Morph{{/if}}</h3>
+                </div>
+                {{editor content=data.data.bodies.morph1.description target="data.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq data.data.bodies.activeMorph "morph2")}}
+                <div class="flexrow">
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph2.name}}{{data.data.bodies.morph2.name}}{{else}}Morph{{/if}}</h3>
+                </div>
+                {{editor content=data.data.bodies.morph2.description target="data.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq data.data.bodies.activeMorph "morph3")}}
+                <div class="flexrow">
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph3.name}}{{data.data.bodies.morph3.name}}{{else}}Morph{{/if}}</h3>
+                </div>
+                {{editor content=data.data.bodies.morph3.description target="data.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq data.data.bodies.activeMorph "morph4")}}
+                <div class="flexrow">
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph4.name}}{{data.data.bodies.morph4.name}}{{else}}Morph{{/if}}</h3>
+                </div>
+                {{editor content=data.data.bodies.morph4.description target="data.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq data.data.bodies.activeMorph "morph5")}}
+                <div class="flexrow">
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph5.name}}{{data.data.bodies.morph5.name}}{{else}}Morph{{/if}}</h3>
+                </div>
+                {{editor content=data.data.bodies.morph5.description target="data.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq data.data.bodies.activeMorph "morph6")}}
+                <div class="flexrow">
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph6.name}}{{data.data.bodies.morph6.name}}{{else}}Morph{{/if}}</h3>
+                </div>
+                {{editor content=data.data.bodies.morph6.description target="data.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
+            {{/if}}
         </div>
         {{!-- Vehicles Tab --}}
         <div class="tab vehicle" data-group="primary" data-tab="vehicles">
