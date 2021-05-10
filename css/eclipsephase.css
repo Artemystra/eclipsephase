@@ -156,10 +156,10 @@
 }
 
 .morph-img{
-  min-height: 260px;
-  min-width: 260px;
-  max-height: 260px;
-  max-width: 260px;
+  min-height: 240px;
+  min-width: 240px;
+  max-height: 240px;
+  max-width: 240px;
   border: solid var(--pitchBorder) 5px;
   clip-path: polygon(89% 25%, 89% 75%, 50% 99%, 11% 75%, 11% 25%, 50% 5px)
 }
@@ -542,8 +542,10 @@ a:hover{
 
 .sheet .editor-content{
   background: var(--mainBackground);
-  padding-left: 1em;
+  padding: 1em;
   border-top: solid var(--accentBackground) 2px;
+  overflow-x: hidden;
+  min-height: 225px;
 }
 
 .eclipsephase .sheet-body .tab .editor {
@@ -627,11 +629,20 @@ optgroup .Default .Roll .Mode,
   border: none;
 }
 
-.tox .tox-tinymce .tox-edit-area__iframe {
-  background-color: #c5c5c5!important;
+/* Tiny MCE Styles */
+
+.tox.tox-tinymce .tox-edit-area__iframe {
+  background: var(--mainText);
 }
 
-/* World Anvil Integration */
+.tox.tox-tinymce .tox-edit-area__iframe {
+  background: var(--mainText);
+}
+
+.mce-content-body p a[href]{
+  color: var(--highlight);
+}
+
 .mce-content-body {
   color: var(--mainText)!important;
   font-family: "Roboto", sans-serif!important;
@@ -645,6 +656,8 @@ optgroup .Default .Roll .Mode,
 .mce-content-body h1 {
   border-bottom: var(--highlight)!important;
 }
+
+/* World Anvil Integration */
 
 .world-anvil header.section {
   border-bottom: var(--highlight)!important;
@@ -976,7 +989,7 @@ ol {
 
 .editor {
   max-height: 40%;
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .journal-sheet form .editor,
@@ -1123,7 +1136,7 @@ h3.inline {
   display: block;
   text-align: left;
   position: absolute;
-  top: 0.2em;
+  top: 1em;
   left: -20em;
   z-index: 100;
   color: var(--mainText);
