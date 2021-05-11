@@ -332,11 +332,7 @@ span.success {
 }
 
 .chat-message .table-draw .table-description {
-<<<<<<< HEAD
-  color: #999;
-=======
   color: var(--inactive);
->>>>>>> ec0401835c4a05f53eab1193cf265e434c3c6db7
 }
 
 .dice-roll .dice-total,

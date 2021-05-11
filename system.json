@@ -2,15 +2,9 @@
   "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-<<<<<<< HEAD
-  "version": "0.4.9.4.1",
-  "minimumCoreVersion": "0.5.5",
-  "compatibleCoreVersion": "0.7.9",
-=======
   "version": "0.4.9.8",
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.8.3",
->>>>>>> ec0401835c4a05f53eab1193cf265e434c3c6db7
   "templateVersion": 2,
   "author": "Diemen Kobalscheck",
   "esmodules": ["module/eclipsephase.js"],
@@ -85,12 +79,7 @@
   "primaryTokenAttribute": "data.health.physical",
   "secondaryTokenAttribute": "data.health.mental",
   "url": "https://github.com/DerDiemen/eclipsephase",
-<<<<<<< HEAD
-  "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/master/system.json",
-  "download": "https://github.com/DerDiemen/eclipsephase/archive/master.zip",
-=======
   "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/v0.4.9.8/system.json",
   "download": "https://github.com/DerDiemen/eclipsephase/archive/v0.4.9.8/eclipsephase-0.4.9.8.zip",
->>>>>>> ec0401835c4a05f53eab1193cf265e434c3c6db7
   "license": "LICENSE.txt"
 }
