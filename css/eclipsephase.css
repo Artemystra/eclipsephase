@@ -344,6 +344,11 @@ span.success {
   opacity: 1;
 }
 
+#token-hud .attribute.bar1 input,
+#token-hud .attribute.bar2 input{
+  text-align: center;
+}
+
 input[class="sheet"],
 input[class="sheet equipped checkBox"]{
   -webkit-appearance:none;

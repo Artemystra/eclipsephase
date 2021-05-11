@@ -100,10 +100,141 @@ export class EclipsePhaseActor extends Actor {
       console.log("Opfer!");
     }
 
-    //Physical & Mental derives
-    data.mental.luc = data.aptitudes.wil.value * 2;
-    data.mental.ir = data.mental.luc * 2;
-    data.mental.tt = Math.round(data.mental.luc / 5);
+    //Mental Health
+    data.health.mental.max = data.aptitudes.wil.value * 2;
+    data.mental.ir = data.health.mental.max * 2;
+    data.mental.tt = Math.round(data.health.mental.max / 5);
+    if(data.health.mental.value === null){
+      data.health.mental.value = data.health.mental.max;
+    }
+
+
+    //Physical Health
+    //NPCs & Goons only
+    if (actorData.type === 'npc' || actorData.type === 'goon'){
+      //Calculating WT & DR
+      data.health.physical.max = data.bodies.morph1.dur;
+      data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
+      if (data.bodyType.value === 'synth'){
+            data.physical.dr = Math.round(data.bodies.morph1.dur * 2);
+          }
+      else if (data.bodyType.value === 'bio'){
+            data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
+          }
+      if(data.health.physical.value === null){
+        data.health.physical.value = data.health.physical.max;
+      }
+    }
+    //Characters only
+    //Durability
+    if (actorData.type === "character") {
+      switch (data.bodies.activeMorph){
+        case "morph1":
+          data.health.physical.max = data.bodies.morph1.dur;
+          data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
+          if (data.bodies.morph1.type === 'synth'){
+            data.physical.dr = Math.round(data.bodies.morph1.dur * 2);
+          }
+          else if (data.bodies.morph1.type === 'bio'){
+            data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
+          }
+          break;
+        case "morph2":
+          data.health.physical.max = data.bodies.morph2.dur;
+          data.physical.wt = Math.round(data.bodies.morph2.dur / 5);
+          if (data.bodies.morph2.type === 'synth'){
+            data.physical.dr = Math.round(data.bodies.morph2.dur * 2);
+          }
+          else if (data.bodies.morph2.type === 'bio'){
+            data.physical.dr = Math.round(data.bodies.morph2.dur * 1.5);
+          }
+          break;
+        case "morph3":
+          data.health.physical.max = data.bodies.morph3.dur;
+          data.physical.wt = Math.round(data.bodies.morph3.dur / 5);
+          if (data.bodies.morph3.type === 'synth'){
+            data.physical.dr = Math.round(data.bodies.morph3.dur * 2);
+          }
+          else if (data.bodies.morph3.type === 'bio'){
+            data.physical.dr = Math.round(data.bodies.morph3.dur * 1.5);
+          }
+          break;
+        case "morph4":
+          data.health.physical.max = data.bodies.morph4.dur;
+          data.physical.wt = Math.round(data.bodies.morph4.dur / 5);
+          if (data.bodies.morph4.type === 'synth'){
+            data.physical.dr = Math.round(data.bodies.morph4.dur * 2);
+          }
+          else if (data.bodies.morph4.type === 'bio'){
+            data.physical.dr = Math.round(data.bodies.morph4.dur * 1.5);
+          }
+          break;
+        case "morph5":
+          data.health.physical.max = data.bodies.morph5.dur;
+          data.physical.wt = Math.round(data.bodies.morph5.dur / 5);
+          if (data.bodies.morph5.type === 'synth'){
+            data.physical.dr = Math.round(data.bodies.morph5.dur * 2);
+          }
+          else if (data.bodies.morph5.type === 'bio'){
+            data.physical.dr = Math.round(data.bodies.morph5.dur * 1.5);
+          }
+          break;
+        case "morph6":
+          data.health.physical.max = data.bodies.morph6.dur;
+          data.physical.wt = Math.round(data.bodies.morph6.dur / 5);
+          if (data.bodies.morph6.type === 'synth'){
+            data.physical.dr = Math.round(data.bodies.morph6.dur * 2);
+          }
+          else if (data.bodies.morph6.type === 'bio'){
+            data.physical.dr = Math.round(data.bodies.morph6.dur * 1.5);
+          }
+          break;
+      }
+
+      if(data.health.physical.value === null){
+        data.health.physical.value = data.health.physical.max;
+      }
+
+      //Pools
+      switch (data.bodies.activeMorph) {
+        case "morph1":
+          data.pools.flex.totalFlex = Number(data.bodies.morph1.flex)+Number(data.ego.egoFlex);
+          data.pools.insight.totalInsight = Number(data.bodies.morph1.insight);
+          data.pools.moxie.totalMoxie = Number(data.bodies.morph1.moxie);
+          data.pools.vigor.totalVigor = Number(data.bodies.morph1.vigor);
+          break;
+        case "morph2":
+          data.pools.flex.totalFlex = Number(data.bodies.morph2.flex)+Number(data.ego.egoFlex);
+          data.pools.insight.totalInsight = Number(data.bodies.morph2.insight);
+          data.pools.moxie.totalMoxie = Number(data.bodies.morph2.moxie);
+          data.pools.vigor.totalVigor = Number(data.bodies.morph2.vigor);
+          break;
+        case "morph3":
+          data.pools.flex.totalFlex = Number(data.bodies.morph3.flex)+Number(data.ego.egoFlex);
+          data.pools.insight.totalInsight = Number(data.bodies.morph3.insight);
+          data.pools.moxie.totalMoxie = Number(data.bodies.morph3.moxie);
+          data.pools.vigor.totalVigor = Number(data.bodies.morph3.vigor);
+          break;
+        case "morph4":
+          data.pools.flex.totalFlex = Number(data.bodies.morph4.flex)+Number(data.ego.egoFlex);
+          data.pools.insight.totalInsight = Number(data.bodies.morph4.insight);
+          data.pools.moxie.totalMoxie = Number(data.bodies.morph4.moxie);
+          data.pools.vigor.totalVigor = Number(data.bodies.morph4.vigor);
+          break;
+        case "morph5":
+          data.pools.flex.totalFlex = Number(data.bodies.morph5.flex)+Number(data.ego.egoFlex);
+          data.pools.insight.totalInsight = Number(data.bodies.morph5.insight);
+          data.pools.moxie.totalMoxie = Number(data.bodies.morph5.moxie);
+          data.pools.vigor.totalVigor = Number(data.bodies.morph5.vigor);
+          break;
+        case "morph6":
+          data.pools.flex.totalFlex = Number(data.bodies.morph6.flex)+Number(data.ego.egoFlex);
+          data.pools.insight.totalInsight = Number(data.bodies.morph6.insight);
+          data.pools.moxie.totalMoxie = Number(data.bodies.morph6.moxie);
+          data.pools.vigor.totalVigor = Number(data.bodies.morph6.vigor);
+          break;
+      }
+    }
 
     //Calculating armor
     let energyTotal = 0;
@@ -147,7 +278,7 @@ export class EclipsePhaseActor extends Actor {
     data.mods.woundMod = (data.physical.wounds * 10);
     data.mods.traumaMod = (data.mental.trauma * 10);
 
-    //Psi-Calculator
+    //Psi-Calculator - Not Working yet
     if (actorData.type === "npc" || actorData.type === "character") {
       data.psiStrain.new = 0;
       data.psiStrain.current = Number(data.psiStrain.infection) + data.psiStrain.new;
@@ -206,7 +337,7 @@ export class EclipsePhaseActor extends Actor {
       }
     }
 
-      //Showing skill calculations for know/spec skills also in the item-dialog
+      //Showing skill calculations for know/spec skills
       for (let value of item ) {
         let key = value.type;
         let aptSelect = 0;
@@ -232,126 +363,6 @@ export class EclipsePhaseActor extends Actor {
           value.data.data.roll = Number(value.data.data.value) + aptSelect;
         }
       }
-
-    //NPCs & Goons only
-    if (actorData.type === 'npc' || actorData.type === 'goon'){
-      //Calculating WT & DR
-      data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
-      if (data.bodyType.value === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 5);
-          }
-      if (data.bodyType.value === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 2);
-          }
-      else if (data.bodyType.value === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
-          }
-    }
-    //Characters only
-    //Durability
-    if (actorData.type === "character") {
-      switch (data.bodies.activeMorph){
-        case "morph1":
-          data.physical.dur = data.bodies.morph1.dur;
-          data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
-          if (data.bodies.morph1.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 2);
-          }
-          else if (data.bodies.morph1.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
-          }
-          break;
-        case "morph2":
-          data.physical.dur = data.bodies.morph2.dur;
-          data.physical.wt = Math.round(data.bodies.morph2.dur / 5);
-          if (data.bodies.morph2.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph2.dur * 2);
-          }
-          else if (data.bodies.morph2.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph2.dur * 1.5);
-          }
-          break;
-        case "morph3":
-          data.physical.dur = data.bodies.morph3.dur;
-          data.physical.wt = Math.round(data.bodies.morph3.dur / 5);
-          if (data.bodies.morph3.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph3.dur * 2);
-          }
-          else if (data.bodies.morph3.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph3.dur * 1.5);
-          }
-          break;
-        case "morph4":
-          data.physical.dur = data.bodies.morph4.dur;
-          data.physical.wt = Math.round(data.bodies.morph4.dur / 5);
-          if (data.bodies.morph4.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph4.dur * 2);
-          }
-          else if (data.bodies.morph4.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph4.dur * 1.5);
-          }
-          break;
-        case "morph5":
-          data.physical.dur = data.bodies.morph5.dur;
-          data.physical.wt = Math.round(data.bodies.morph5.dur / 5);
-          if (data.bodies.morph5.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph5.dur * 2);
-          }
-          else if (data.bodies.morph5.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph5.dur * 1.5);
-          }
-          break;
-        case "morph6":
-          data.physical.dur = data.bodies.morph6.dur;
-          data.physical.wt = Math.round(data.bodies.morph6.dur / 5);
-          if (data.bodies.morph6.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph6.dur * 2);
-          }
-          else if (data.bodies.morph6.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph6.dur * 1.5);
-          }
-          break;
-      }
-      //Pools
-      switch (data.bodies.activeMorph) {
-        case "morph1":
-          data.pools.flex.totalFlex = Number(data.bodies.morph1.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph1.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph1.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph1.vigor);
-          break;
-        case "morph2":
-          data.pools.flex.totalFlex = Number(data.bodies.morph2.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph2.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph2.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph2.vigor);
-          break;
-        case "morph3":
-          data.pools.flex.totalFlex = Number(data.bodies.morph3.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph3.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph3.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph3.vigor);
-          break;
-        case "morph4":
-          data.pools.flex.totalFlex = Number(data.bodies.morph4.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph4.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph4.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph4.vigor);
-          break;
-        case "morph5":
-          data.pools.flex.totalFlex = Number(data.bodies.morph5.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph5.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph5.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph5.vigor);
-          break;
-        case "morph6":
-          data.pools.flex.totalFlex = Number(data.bodies.morph6.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph6.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph6.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph6.vigor);
-          break;
-      }
-    }
 
   }
 

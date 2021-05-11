@@ -20,13 +20,17 @@
           "damage": null,
           "dr": null,
           "wt": null,
-          "min": 0,
-          "img1": null,
-          "img2": null,
-          "img3": null,
-          "img4": null,
-          "img5": null,
-          "img6": null
+          "min": 0
+        },
+        "health":{
+          "physical": {
+            "value": null,
+            "max": 0
+          },
+          "mental": {
+            "value": null,
+            "max": 0
+          }
         },
         "mods": {
           "globalMod": null,

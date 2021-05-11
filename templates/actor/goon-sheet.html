@@ -63,17 +63,17 @@
                   </div>
                     <div class="flex-group-center listBackground shape2">
                         <div class="resource-content flexrow flex-center flex-between">
-                            <label class="alignCenter resource-label">Damage</label>
+                            <label class="alignCenter resource-label">Health</label>
                             <span>  </span>
                             <label class="alignCenter resource-label">Wounds</label>
                         </div>
                         <div class="flexrow flex-center flex-between">
-                            <input type="number" name="data.physical.damage" value="{{data.data.physical.damage}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.health.physical.value" value="{{data.data.health.physical.value}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
                             <input type="number" name="data.physical.wounds" value="{{data.data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <span class="resource-value">DUR {{data.data.bodies.morph1.dur}}</span>
+                            <span class="resource-value">DUR {{data.data.data.health.physical.value}}</span>
                             <span class="resource-value">DR {{data.data.physical.dr}}</span>
                             <span class="resource-value">WT {{data.data.physical.wt}}</span>
                         </div>
@@ -87,17 +87,17 @@
                     </div>
                     <div class="listBackground shape1 flex-group-center">
                         <div class="resource-content flexrow flex-center flex-between">
-                            <label class="resource-label alignCenter">Stress</label>
+                            <label class="resource-label alignCenter">Health</label>
                             <span>  </span>
                             <label class="resource-label alignCenter">Trauma</label>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <input type="number" name="data.mental.stress" value="{{data.data.mental.stress}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.health.mental.value" value="{{data.data.health.mental.value}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
                             <input type="number" name="data.mental.trauma" value="{{data.data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <span class="resource-value">LUC {{data.data.mental.luc}}</span>
+                            <span class="resource-value">LUC {{data.data.health.mental.max}}</span>
                             <span class="resource-value">IR {{data.data.mental.ir}}</span>
                             <span class="resource-value">TT {{data.data.mental.tt}}</span>
                         </div>
