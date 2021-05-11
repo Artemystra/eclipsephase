@@ -33,24 +33,24 @@
                 <tr>
                     <td>
                         <select name="data.firingMode" data-type="String">
-                            {{#select data.firingMode}}
+                            {{#select data.data.firingMode}}
                             {{#each config.firingModes as |name mode|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        <input class="input-medium"type="text" name="data.range" value="{{data.range}}" placeholder="e.g. 120m"/>
+                        <input class="input-medium"type="text" name="data.range" value="{{data.data.range}}" placeholder="e.g. 120m"/>
                     </td>
                     <td>
-                        <input class="input-small" type="number" name="data.ammoMax" value="{{data.ammoMax}}" placeholder="Max"/>
+                        <input class="input-small" type="number" name="data.ammoMax" value="{{data.data.ammoMax}}" placeholder="Max"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="data.dv" value="{{data.dv}}" placeholder="e.g. 1d10+1"/>
+                        <input class="input-large" type="text" name="data.dv" value="{{data.data.dv}}" placeholder="e.g. 1d10+1"/>
                     </td>
                     <td>
                         <select name="data.slotType" data-type="String">
-                            {{#select data.slotType}}
+                            {{#select data.data.slotType}}
                             {{#each config.weaponTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -58,7 +58,7 @@
                     </td>
                     <td>
                         <select name="data.cost" data-type="String">
-                            {{#select data.cost}}
+                            {{#select data.data.cost}}
                             {{#each config.costTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -70,6 +70,6 @@
         <p></p>
 
         <h2>Notes</h2>
-            <input type="text" name="data.description" value="{{data.description}}" placeholder="Long, Fixed, Silencer etc."/>
+            <input type="text" name="data.description" value="{{data.data.description}}" placeholder="Long, Fixed, Silencer etc."/>
     </section>
 </form>
