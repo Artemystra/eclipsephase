@@ -9,8 +9,10 @@
   --pitchBackground: #1616166b ;
   --negative: #db2a2a;
   --positive: #2bb42b;
+  --iconBlue: #346d8e;
   --highlight: #4098d6;
   --mainText: #d8d8d8;
+  --inactive: #999;
   --mainBackground: #1f1f1f;
   --focusBackground: #2b2b2b;
   --highlightBackground: #414141;
@@ -327,6 +329,10 @@ span.success {
   opacity: 0.8;
   color: var(--mainText);
   border: #131313 2px solid;
+}
+
+.chat-message .table-draw .table-description {
+  color: var(--inactive);
 }
 
 .dice-roll .dice-total,
@@ -989,7 +995,12 @@ ol {
 
 .editor {
   max-height: 40%;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+.limited-editor .editor {
+  max-height: 225px;
+  overflow-x: hidden;
 }
 
 .journal-sheet form .editor,

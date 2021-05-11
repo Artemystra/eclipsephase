@@ -234,7 +234,7 @@
                         {{#if data.trait}}
                         {{#each data.trait as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                             <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                             <div class="flex-group-right slideShow" style="max-width: 16%;">
                                 <a><i class="fas fa-plus icon-small"></i></a>
@@ -279,7 +279,7 @@
                         {{#if data.flaw}}
                         {{#each data.flaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                            <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                             <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                             <div class="flex-group-right slideShow" style="max-width: 16%;">
                                 <a><i class="fas fa-plus icon-small"></i></a>
@@ -751,12 +751,12 @@
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
                                 <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                 {{else}}
-                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: #999; text-transform: capitalize;">No Spec</label>
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                                 {{else}}
                                 <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: #e52424;">Choose Apt</u></label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                             </div>
@@ -792,12 +792,12 @@
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
                                 <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                 {{else}}
-                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: #999; text-transform: capitalize;">No Spec</label>
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                                 {{else}}
                                 <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: #e52424;">Choose Apt</u></label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                             </div>
@@ -816,7 +816,7 @@
         {{!-- Body Tab --}}
         <div class="tab body" data-group="primary" data-tab="body">
             <div class="flexrow contentBox noMargin">
-                <div style="flex: 0.7;">
+                <div style="flex: 0.7; min-width: 72%;">
                     <div class="contentBox">
                         <div class="flexrow">
                             <h3 class="subheader">Current Morph</h3>
@@ -1108,7 +1108,7 @@
                                     {{#if data.morphTrait.present1}}
                                     {{#each data.morphTrait.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1129,7 +1129,7 @@
                                     {{/each}}
                                     {{#each data.morphFlaw.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1208,7 +1208,7 @@
                                     {{#if data.morphTrait.present2}}
                                     {{#each data.morphTrait.morph2 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1229,7 +1229,7 @@
                                     {{/each}}
                                     {{#each data.morphFlaw.morph2 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1308,7 +1308,7 @@
                                     {{#if data.morphTrait.present3}}
                                     {{#each data.morphTrait.morph3 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1329,7 +1329,7 @@
                                     {{/each}}
                                     {{#each data.morphFlaw.morph3 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1408,7 +1408,7 @@
                                     {{#if data.morphTrait.present4}}
                                     {{#each data.morphTrait.morph4 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1429,7 +1429,7 @@
                                     {{/each}}
                                     {{#each data.morphFlaw.morph4 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1508,7 +1508,7 @@
                                     {{#if data.morphTrait.present5}}
                                     {{#each data.morphTrait.morph5 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1529,7 +1529,7 @@
                                     {{/each}}
                                     {{#each data.morphFlaw.morph5 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1608,7 +1608,7 @@
                                     {{#if data.morphTrait.present6}}
                                     {{#each data.morphTrait.morph6 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: #47ab30;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1629,7 +1629,7 @@
                                     {{/each}}
                                     {{#each data.morphFlaw.morph6 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: #e52424;"></i></div>
+                                        <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin"><strong>{{item.name}}</strong></h4>
                                         <div class="flex-group-right slideShow" style="max-width: 16%;">
                                             <a><i class="fas fa-plus icon-small"></i></a>
@@ -1662,7 +1662,7 @@
                     </div>
                 </div>
                 <div style="position: relative; flex: 0.3;">
-                    <div class="morph-imgBorder">
+                    <div class="morph-imgBorder" style="margin-right: 5px;">
                         {{#if (eq data.data.bodies.activeMorph "morph1")}}
                         <img class="morph-img" src="{{data.data.bodies.morph1.img}}" data-edit="data.bodies.morph1.img" title="{{data.name}}'s {{data.data.bodies.morph1.name}}"/>
                         {{else if (eq data.data.bodies.activeMorph "morph2")}}

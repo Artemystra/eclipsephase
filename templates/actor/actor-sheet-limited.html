@@ -9,7 +9,7 @@
             <div>
                 <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
             </div>
-            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
+            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0; max-width: 225px;">
                 <label style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616; margin-right: 5px;">{{data.name}}</label>
             </div>
         </div>
@@ -20,7 +20,9 @@
                     </div>
                     <h3 class="subheaderMirror">About {{data.name}}</h3>
                 </div>
-                {{editor content=data.data.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
+                <div class="limited-editor">
+                    {{editor content=data.data.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
+                </div>
             </div>
         </div>
     </header>
@@ -35,19 +37,21 @@
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
-            {{#if (eq data.data.bodies.activeMorph "morph1")}}
-                {{editor content=data.data.bodies.morph1.description target="data.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph2")}}
-                {{editor content=data.data.bodies.morph2.description target="data.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph3")}}
-                {{editor content=data.data.bodies.morph3.description target="data.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph4")}}
-                {{editor content=data.data.bodies.morph4.description target="data.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph5")}}
-                {{editor content=data.data.bodies.morph5.description target="data.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph6")}}
-                {{editor content=data.data.bodies.morph6.description target="data.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
-            {{/if}}
+            <div class="limited-editor">
+                {{#if (eq data.data.bodies.activeMorph "morph1")}}
+                    {{editor content=data.data.bodies.morph1.description target="data.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
+                {{else if (eq data.data.bodies.activeMorph "morph2")}}
+                    {{editor content=data.data.bodies.morph2.description target="data.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
+                {{else if (eq data.data.bodies.activeMorph "morph3")}}
+                    {{editor content=data.data.bodies.morph3.description target="data.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
+                {{else if (eq data.data.bodies.activeMorph "morph4")}}
+                    {{editor content=data.data.bodies.morph4.description target="data.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
+                {{else if (eq data.data.bodies.activeMorph "morph5")}}
+                    {{editor content=data.data.bodies.morph5.description target="data.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
+                {{else if (eq data.data.bodies.activeMorph "morph6")}}
+                    {{editor content=data.data.bodies.morph6.description target="data.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
+                {{/if}}
+            </div>
         </div>
         <div style="position: relative; flex: 0.3;">
             <div class="morph-imgBorder" style="top: -245px;">

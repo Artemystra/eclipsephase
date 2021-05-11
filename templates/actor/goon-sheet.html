@@ -227,12 +227,12 @@
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
                                 <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                 {{else}}
-                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: #999; text-transform: capitalize;">No Spec</label>
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                                 {{else}}
                                 <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: #e52424;">Choose Apt</u></label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                             </div>
@@ -371,7 +371,7 @@
                     </div>
                     <div class="headSpace">
                         {{!-- <div class="flexrow" style="align-items: center">
-                            <i class="far fa-plus-square" style="color: #47ab30; flex: 0.05;"></i>
+                            <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
                             <label class="resource-label">Traits:</label>
                         </div>
                         <div class="flexrow headSpace">
@@ -389,7 +389,7 @@
                             {{/if}}
                         </div>
                         <div class="flexrow" style="align-items: center">
-                            <i class="far fa-minus-square" style="color: #e52424; flex: 0.05;"></i>
+                            <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
                             <label class="resource-label">Flaws:</label>
                         </div>
                         <div class="flexrow headSpace">
@@ -407,7 +407,7 @@
                             {{/if}}
                         </div> --}}
                         <div class="flexrow" style="align-items: center">
-                            <i class="fas fa-bolt" style="color: #346d8e; flex: 0.05;"></i>
+                            <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
                             <label class="resource-label">Ware:</label>
                         </div>
                         <div class="flexrow headSpace">
@@ -460,7 +460,7 @@
                     </div>
                     <div class="headSpace">
                         <div class="flexrow" style="align-items: center">
-                            <i class="fas fa-cog" style="color: #999; flex: 0.05;"></i>
+                            <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
                             <label class="resource-label">Gear:</label>
                         </div>
                         <div class="flexrow headSpace">
