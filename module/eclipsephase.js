@@ -15,9 +15,9 @@ import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
 import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
 import { EclipsePhaseSpecialSkillSheet } from "./item/specialskill-sheet.js";
 import { EclipsePhaseKnowSkillSheet } from "./item/knowskill-sheet.js";
-import {EclipsePhaseMorphTraitSheet} from "./item/morphtrait-sheet.js";
-import {EclipsePhaseMorphFlawSheet} from "./item/morphflaw-sheet.js";
-import {EclipsePhaseVehicleSheet} from "./item/vehicle-sheet.js";
+import { EclipsePhaseMorphTraitSheet } from "./item/morphtrait-sheet.js";
+import { EclipsePhaseMorphFlawSheet } from "./item/morphflaw-sheet.js";
+import { EclipsePhaseVehicleSheet } from "./item/vehicle-sheet.js";
 import { eclipsephase } from "./config.js";
 
 function registerSystemSettings() {
@@ -37,6 +37,15 @@ function registerSystemSettings() {
     hint: "Check this option to show the damage-dialog per default when clicking any damage roll icon on the character sheet",
     type: Boolean,
     default: true
+  });
+
+  game.settings.register("eclipsephase", "showEverything", {
+    config: true,
+    scope: "world",
+    name: "Always Reveal Stats",
+    hint: 'Always show character details/stats to everyone with at least "limited" permissions. If deactivated, shows "limited"-sheet of an character for everyone who is not GM nor owner of given character',
+    type: Boolean,
+    default: false
   });
 
   game.settings.register("eclipsephase", "superBrew", {
@@ -67,8 +76,8 @@ Hooks.once('init', async function() {
   };
 
   // Define custom Entity classes
-  CONFIG.Actor.entityClass = EclipsePhaseActor;
-  CONFIG.Item.entityClass = EclipsePhaseItem;
+  CONFIG.Actor.documentClass = EclipsePhaseActor;
+  CONFIG.Item.documentClass = EclipsePhaseItem;
   CONFIG.eclipsephase = eclipsephase;
 
   // Register sheet application classes

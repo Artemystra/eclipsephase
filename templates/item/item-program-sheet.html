@@ -14,7 +14,7 @@
             <div class="flexrow flex-group-left">
                 <label class="resource-label input-medium">Level: </label>
                 <select name="data.programLevel" data-type="String">
-                    {{#select data.programLevel}}
+                    {{#select data.data.programLevel}}
                     {{#each config.programLevels as |name type|}}
                     <option value="{{name}}">{{name}}</option>
                     {{/each}} {{/select}}
@@ -23,6 +23,6 @@
         </div>
         <p></p>
         <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60" placeholder="Add a description">{{data.description}}</textarea></div>
+        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60" placeholder="Add a description">{{data.data.description}}</textarea></div>
     </section>
 </form>

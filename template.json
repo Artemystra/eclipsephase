@@ -22,6 +22,16 @@
           "wt": null,
           "min": 0
         },
+        "health":{
+          "physical": {
+            "value": null,
+            "max": 0
+          },
+          "mental": {
+            "value": null,
+            "max": 0
+          }
+        },
         "mods": {
           "globalMod": null,
           "traumaMod": null,
@@ -563,63 +573,75 @@
         "activeMorph": "morph1",
         "morph1": {
           "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
           "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph2": {
           "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
           "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph3": {
           "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
           "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph4": {
           "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
           "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph5": {
           "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
           "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         },
         "morph6": {
           "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
           "type": "",
           "dur": null,
           "insight": null,
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null
+          "movement": null,
+          "description": ""
         }
       },
       "psiStrain": {

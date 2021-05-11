@@ -15,6 +15,7 @@ The following features are included
 <li>Derived stats (Ini, trauma, durability etc.)</li>
 <li>Better readable chat messages (with success/failure warnings)</li>
 <li>Drag & droppable (morph)traits, armor, ware, weapons & vehicles</li>
+<li>Simple system to show which items are carried "at hand"</li>
 <li>Initiative Tracker + Ini Modifier (on all sheets)</li>
 <li>Roll modification dialogs for all skills. Special dialogs for:</li>
 <ul>
