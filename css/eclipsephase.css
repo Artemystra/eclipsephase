@@ -291,6 +291,10 @@ span.success {
   border: #131313 2px solid;
 }
 
+.chat-message .table-draw .table-description {
+  color: #999;
+}
+
 .dice-roll .dice-total,
 .dice-roll .dice-formula{
   border: #131313 1.5px solid;
