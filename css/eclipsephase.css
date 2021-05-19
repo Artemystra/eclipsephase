@@ -274,6 +274,11 @@
 
 /* Colors */
 
+a.entity-link {
+  background: var(--pitchBorder);
+  border: none;
+}
+
 .atHand {
   outline: var(--highlight) 2px inset;
   background: var(--pitchBackground);
