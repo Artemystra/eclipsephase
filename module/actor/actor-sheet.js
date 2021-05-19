@@ -5,26 +5,78 @@ import * as Dice from "../dice.js"
  */
 export class EclipsePhaseActorSheet extends ActorSheet {
 
+    constructor(...args) {
+      super(...args);
+      
+      const showEverything = game.settings.get("eclipsephase", "showEverything");
+      console.log(this);
+      if(showEverything){
+        this.position.height = 900;
+        this.position.width = 800;
+      }
+      else {
+        if (!game.user.isGM && !this.actor.isOwner){
+          this.position.height = 575;
+          this.position.width = 800;
+        }
+        else{
+          this.position.height = 900;
+          this.position.width = 800;
+        }
+      }
+    }
+
+    static get defaultOptions() {
+      return mergeObject(super.defaultOptions, {
+        classes: ["eclipsephase", "sheet", "actor"],
+        resizable: false,
+        tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
+      });
+    }
+
   /** @override */
-  static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
-      classes: ["eclipsephase", "sheet", "actor"],
-      template: "systems/eclipsephase/templates/actor/actor-sheet.html",
-      width: 800,
-      height: 1000,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
-    });
+
+  get template() {
+    const showEverything = game.settings.get("eclipsephase", "showEverything");
+    if (showEverything){
+      return "systems/eclipsephase/templates/actor/actor-sheet.html"
+    }
+    else{
+      if (!game.user.isGM && !this.actor.isOwner){
+        return "systems/eclipsephase/templates/actor/actor-sheet-limited.html";
+      }
+      else{
+        return "systems/eclipsephase/templates/actor/actor-sheet.html";
+      }
+    }
   }
 
-  /* -------------------------------------------- */
-
-  /** @override */
   getData() {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
-
     // Prepare items.
-    if (this.actor.data.type === 'character') {
+    if(data.data.img === "icons/svg/mystery-man.svg"){
+      data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph1.img === ""){
+      data.data.data.bodies.morph1.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph2.img === ""){
+      data.data.data.bodies.morph2.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph3.img === ""){
+      data.data.data.bodies.morph3.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph4.img === ""){
+      data.data.data.bodies.morph4.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph5.img === ""){
+      data.data.data.bodies.morph5.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if(data.data.data.bodies.morph6.img === ""){
+      data.data.data.bodies.morph6.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    }
+    if (data.data.type === 'character') {
       this._prepareCharacterItems(data);
     }
 
@@ -58,7 +110,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @return {undefined}
    */
  async _prepareCharacterItems(sheetData) {
-    const actorData = sheetData.actor;
+    const actorData = sheetData.data;
     const data = actorData.data;
 
     // Initialize containers.
@@ -83,7 +135,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         morph4: [],
         morph5: [],
         morph6: []
-    };;
+    };
     const rangedweapon = [];
     const ccweapon = [];
     const armor = [];
@@ -94,17 +146,17 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         morph4: [],
         morph5: [],
         morph6: []
-    };;
-    const aspect = {
-        Chi: [],
-        Gamma: []
     };
-    const program = [];
-    const vehicle = {
-        Robot: [],
-        Vehicle: [],
-        Morph: []
-    };
+      const aspect = {
+          Chi: [],
+          Gamma: []
+      };
+      const program = [];
+      const vehicle = {
+          Robot: [],
+          Vehicle: [],
+          Morph: []
+      };
     const item = [];
 
     // Iterate through items, allocating to containers
@@ -136,50 +188,49 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         i.roll = Number(i.data.value) + aptSelect;
         i.specroll = Number(i.data.value) + aptSelect + 10;
         special.push(i);
-      }
-      // Append to spells.
-      else if (i.type === 'knowSkill') {
-        let aptSelect = 0;
-        if (i.data.aptitude === "Intuition") {
-          aptSelect = data.aptitudes.int.value;
         }
-        else if (i.data.aptitude === "Cognition") {
-          aptSelect = data.aptitudes.cog.value;
+        else if (i.type === 'knowSkill') {
+          let aptSelect = 0;
+          if (i.data.aptitude === "Intuition") {
+            aptSelect = data.aptitudes.int.value;
+          }
+          else if (i.data.aptitude === "Cognition") {
+            aptSelect = data.aptitudes.cog.value;
+          }
+          i.roll = Number(i.data.value) + aptSelect;
+          i.specroll = Number(i.data.value) + aptSelect + 10;
+          know.push(i);
         }
-        i.roll = Number(i.data.value) + aptSelect;
-        i.specroll = Number(i.data.value) + aptSelect + 10;
-        know.push(i);
+        else if (i.type === 'trait') {
+          trait.push(i);
+        }
+        else if (i.type === 'flaw') {
+          flaw.push(i);
+        }
+        else if (i.type === 'rangedWeapon') {
+          rangedweapon.push(i);
+        }
+        else if (i.type === 'ccWeapon') {
+          ccweapon.push(i);
+        }
+        else if (i.type === 'armor') {
+          armor.push(i);
+        }
+        else if (i.type === 'aspect') {
+          aspect[i.data.psiType].push(i);
+        }
+        else if (i.type === 'program') {
+          program.push(i);
+        }
+        else if (i.type === 'gear') {
+          gear.push(i);
+        }
+        else if (i.type === 'vehicle') {
+          i.wt = Math.round(i.data.dur / 5);
+          i.dr = Math.round(i.data.dur * 2);
+          vehicle[i.data.type].push(i)
+        }
       }
-      else if (i.type === 'trait') {
-        trait.push(i);
-      }
-      else if (i.type === 'flaw') {
-        flaw.push(i);
-      }
-      else if (i.type === 'rangedWeapon') {
-        rangedweapon.push(i);
-      }
-      else if (i.type === 'ccWeapon') {
-        ccweapon.push(i);
-      }
-      else if (i.type === 'armor') {
-        armor.push(i);
-      }
-      else if (i.type === 'aspect') {
-        aspect[i.data.psiType].push(i);
-      }
-      else if (i.type === 'program') {
-        program.push(i);
-      }
-      else if (i.type === 'gear') {
-        gear.push(i);
-      }
-      else if (i.type === 'vehicle') {
-        i.wt = Math.round(i.data.dur / 5);
-        i.dr = Math.round(i.data.dur * 2);
-        vehicle[i.data.type].push(i)
-      }
-    }
 
     for (let i of sheetData.items) {
         if (i.type === 'ware' && i.data.boundTo) {
@@ -244,6 +295,17 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.knowSkill = know;
     actorData.specialSkill = special;
     actorData.vehicle = vehicle;
+
+
+    //console.log("What is actorData? ", actorData)
+    //console.log("Normal Traits: ", actorData.trait)
+    //console.log("Normal Flaws: ", actorData.flaw)
+
+    //console.log("Morph Flaw Array", actorData.morphFlaw)
+    // console.log("Morph Trait Array", actorData.morphTrait)
+    //console.log("Ware Array", actorData.ware)
+
+    //console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
   /* -------------------------------------------- */
@@ -263,14 +325,14 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     // Update Inventory Item
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
+      const item = this.actor.items.get(li.data("itemId"));
       item.sheet.render(true);
     });
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteOwnedItem(li.data("itemId"));
+      this.actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
       li.slideUp(200, () => this.render(false));
     });
 
@@ -279,7 +341,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.owner) {
+    if (this.actor.isOwner) {
         let handler = ev => this._onDragItemStart(ev);
         html.find('li.item').each((i, li) => {
             if (li.classList.contains("inventory-header")) return;
@@ -287,13 +349,16 @@ export class EclipsePhaseActorSheet extends ActorSheet {
             li.addEventListener("dragstart", handler, false);
         });
     }
-    //Edit Item Input Fields
-    html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
+      //Edit Item Input Fields
+      html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
-    //Edit Item Checkboxes
+      //Edit Item Input Fields
+      html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
+
+      //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
-          const itemId = event.currentTarget.closest(".equipped.checkBox").dataset.itemId;
-          const item = this.actor.getOwnedItem(itemId);
+          const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
+          const item = this.actor.items.get(itemId);
           let toggle = !item.data.data.active;
           const updateData = {
               "data.active": toggle
@@ -301,9 +366,20 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           const updated = item.update(updateData);
       });
 
-
-    //show on hover
+      //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
+
+      //slide-show on click
+      html.find(".slideShow").click(ev => {
+          const current = $(ev.currentTarget);
+          const first = current.children().first();
+          const last = current.children().last();
+          const target = current.parent(".item").children().last();
+          first.toggleClass("noShow");
+          last.toggleClass("noShow");
+          target.slideToggle(200);
+      })
+
   }
 
   /**
@@ -314,27 +390,19 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   _onItemCreate(event) {
     event.preventDefault();
     const header = event.currentTarget;
-    // Get the type of item to create.
     const type = header.dataset.type;
-    // Grab any data associated with this control.
     const data = duplicate(header.dataset);
-    // Initialize a default name.
     const name = `New ${type.capitalize()}`;
-    // Prepare the item object.
     const itemData = {
       name: name,
       type: type,
       data: data
     };
-    // Remove the type from the dataset since it's in the itemData.type prop.
     delete itemData.data["type"];
-    // Update Item on Creation
     if (itemData.type === "specialSkill" || itemData.type === "knowSkill") {
       itemData.name = "New Skill";
     }
-
-    // Finally, create the item!
-    return this.actor.createOwnedItem(itemData);
+    return this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 
   /**
@@ -380,16 +448,20 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     event.preventDefault();
     let element = event.currentTarget;
     let itemId = element.closest(".item").dataset.itemId;
-    let item = this.actor.getOwnedItem(itemId);
+    let item = this.actor.items.get(itemId);
     let field = element.dataset.field;
 
     return item.update({ [field]: element.value });
     }
 
     _onToggleReveal(event) {
-      const reveals = event.currentTarget.getElementsByClassName("far");
+      const reveals = event.currentTarget.getElementsByClassName("info");
       $.each(reveals, function (index, value){
         $(value).toggleClass("hidden");
+      })
+      const revealer = event.currentTarget.getElementsByClassName("toggle");
+      $.each(revealer, function (index, value){
+        $(value).toggleClass("noShow");
       })
   }
 

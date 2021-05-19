@@ -1,41 +1,81 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
     {{!-- Sheet Header --}}
-    <header class="sheet-header">
+    <header class="sheet-header" style="margin-top: -25px;">
         <div class="headroom">
             <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
                 <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
             </div>
             <div>
-                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
+                <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
             </div>
             <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
-                <input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="width: auto; font-size: 20px; max-width: 250px; text-shadow: 0 0 5px #161616"/>
+                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
             </div>
         </div>
-        <div class="header-fields">
-            <div class="grid grid-2col">
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <h3 class="subheader">Physical</h3>
-                        <div class="flexGrowHalf">
+        <div class="header-fields" style="margin-top: 50px;">
+            <div class="grid grid-2col noMargin">
+              <div class="contentBox">
+                  <div class="flexrow">
+                      <h3 class="subheader">Physical</h3>
+                      <div class="flexGrowThreeQuarter flexrow flex-group-center tooltip">
+                        <div role="tooltipNegative">
+                            <div class="armorValue">
+                                <h3 class="inline">Armor</h3>
+                                {{#if data.armor}}
+                                    <label class="resource-value">Cumulated Armor </label>
+                                    <p/>
+                                    <div class="flexrow flex-group-center">
+                                        <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/><span class="toggle resource-label alignLeft">Energy: </span><span class="toggle resource-value alignLeft item-standard-margin-medium"> {{data.data.physical.energyArmorTotal}}</span>
+                                        <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/><span class="toggle resource-label alignLeft">Kinetic: </span><span class="toggle resource-value alignLeft"> {{data.data.physical.kineticArmorTotal}}</span>
+                                    </div>
+                                    <p/>
+                                    <label class="resource-value">Armor Pieces active on You</label>
+                                    <div class="listBackground">
+                                        <span class="toggle resource-label alignLeft">Main Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.mainArmorTotal}}</span><br/>
+                                        <p/>
+                                        <span class="toggle resource-label alignLeft">Additional Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.additionalArmorTotal}}</span><br/>
+                                    </div>
+                                    <p/>
+                                    <label class="resource-value">Cumulative Malus -{{data.data.physical.armorMalusTotal}}</label>
+                                    <div class="listBackground">
+                                        <span class="toggle resource-label alignLeft">Main Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.mainArmorMalus}}</span>
+                                        <p/>
+                                        <i style="font-size: 12px; margin-bottom: 10px;">For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
+                                        <p/>
+                                        <span class="toggle resource-label alignLeft">Additional Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.additionalArmorMalus}}</span>
+                                        <p/>
+                                        <i style="font-size: 12px; margin-bottom: 10px;">Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
+                                    </div>
+                                    <p/>
+                                    {{else}}
+                                    <label class="resource-value">You are not wearing any armor</label>
+                                    <p/>
+                                    {{/if}}
+                                    <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
+                            </div>
                         </div>
-                    </div>
+                        <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>
+                        <span class="toggle resource-value alignLeft">{{data.data.physical.energyArmorTotal}}</span>
+                        <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/>
+                        <span class="toggle resource-value alignLeft">{{data.data.physical.kineticArmorTotal}}</span>
+                      </div>
+                  </div>
                     <div class="flex-group-center listBackground shape2">
                         <div class="resource-content flexrow flex-center flex-between">
-                            <label class="alignCenter resource-label">Damage</label>
+                            <label class="alignCenter resource-label">Health</label>
                             <span>  </span>
                             <label class="alignCenter resource-label">Wounds</label>
                         </div>
                         <div class="flexrow flex-center flex-between">
-                            <input type="number" name="data.physical.damage" value="{{data.physical.damage}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.health.physical.value" value="{{data.data.health.physical.value}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
-                            <input type="number" name="data.physical.wounds" value="{{data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.physical.wounds" value="{{data.data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <span class="resource-value">DUR {{data.bodies.morph1.dur}}</span>
-                            <span class="resource-value">DR {{data.physical.dr}}</span>
-                            <span class="resource-value">WT {{data.physical.wt}}</span>
+                            <span class="resource-value">DUR {{data.data.data.health.physical.value}}</span>
+                            <span class="resource-value">DR {{data.data.physical.dr}}</span>
+                            <span class="resource-value">WT {{data.data.physical.wt}}</span>
                         </div>
                     </div>
                 </div>
@@ -47,268 +87,406 @@
                     </div>
                     <div class="listBackground shape1 flex-group-center">
                         <div class="resource-content flexrow flex-center flex-between">
-                            <label class="resource-label alignCenter">Stress</label>
+                            <label class="resource-label alignCenter">Health</label>
                             <span>  </span>
                             <label class="resource-label alignCenter">Trauma</label>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <input type="number" name="data.mental.stress" value="{{data.mental.stress}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.health.mental.value" value="{{data.data.health.mental.value}}" data-dtype="Number" placeholder="0"/>
                             <span>  </span>
-                            <input type="number" name="data.mental.trauma" value="{{data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
+                            <input type="number" name="data.mental.trauma" value="{{data.data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         <div class="resource-content flexrow flex-center flex-between">
-                            <span class="resource-value">LUC {{data.mental.luc}}</span>
-                            <span class="resource-value">IR {{data.mental.ir}}</span>
-                            <span class="resource-value">TT {{data.mental.tt}}</span>
+                            <span class="resource-value">LUC {{data.data.health.mental.max}}</span>
+                            <span class="resource-value">IR {{data.data.mental.ir}}</span>
+                            <span class="resource-value">TT {{data.data.mental.tt}}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="contentBox">
-                <div class="flexrow">
-                    <h3 class="subheader">Aptitudes</h3>
-                    <div class="flexGrowHalf">
-                    </div>
-                </div>
-                <div class="listBackground grid grid-3col noMargin">
-                    {{#each data.aptitudes as |aptitude key|}}
-                    <div class="abilities flexrow flex-group-center">
-                        <span class="resource-label alignCenter">{{key}}</span>
-                        <input class="input-small" type="number" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-                        <label class="item-standard-margin-both-large roll-label task-check" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-            <div class="contentBox">
-                <div class="flexrow">
-                    <h3 class="subheader">Morph</h3>
-                    <div class="flexGrowHalf">
-                    </div>
-                </div>
-                <div class="listBackground noMargin">
-                    <div class="headSpace">
-                        <div class="flexrow flex-group-left">
-                            <input class="input-XL item-standard-margin-medium" type="text" name="data.bodies.morph1.name" value="{{data.bodies.morph1.name}}" placeholder="Morph name"/>
-                            <select class="selectSpecApt item-standard-margin-medium" name="data.bodyType.value" data-type="String">
-                                {{#select data.bodyType.value}}
-                                {{#each data.bodyTypes as |bod key|}}
-                                <option value="{{key}}">{{bod.label}}</option>
-                                {{/each}} {{/select}}
-                            </select>
-                            <label class="resource-label labelWidth-small">Dur</label>
-                            <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.bodies.morph1.dur}}" placeholder="0"/>
-                            <label class="resource-label labelWidth-small">Mov</label>
-                            <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.bodies.morph1.movement}}" placeholder="0/0"/>
+            <div class="grid grid-2col">
+                <div class="contentBox">
+                    <div class="flexrow">
+                        <h3 class="subheader">Aptitudes</h3>
+                        <div class="flexGrowHalf">
                         </div>
                     </div>
-                    <div class="headSpace">
-                        <div class="flexrow flex-group-left">
-                            <div class="flexGrowHalf">
-                                <span class="resource-label flex-group-center">Ini Mod</span>
-                                <input class="input-small" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                    <div class="listBackground shape2 grid grid-3col noMargin">
+                        {{#each data.data.aptitudes as |aptitude key|}}
+                        <div class="abilities flexrow flex-group-center reveal" style="min-height: 26px;">
+                            <div class="flexrow flex-group-center input-small">
+                                <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
+                                <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                             </div>
-                            <div class="flexGrowHalf">
-                                <label class="resource-label labelWidth-medium">Thread Level</label>
-                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.threatLevel.current}}" placeholder="0"/>/
-                                <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.threatLevel.total}}" placeholder="0"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="headSpace">
-                        {{#each actor.armor as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <input class="sheet-inline-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                            <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
-                            <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
-                            <div class="item-controls flex-group-right input-small">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                            </div>
+                            <input class="input-small" type="number" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
                         </div>
                         {{/each}}
+                    </div>
+                </div>
+                <div class="contentBox">
+                    <div class="flexrow">
+                        <div class="flexGrowHalf"></div>
+                        <h3 class="subheaderMirror">Other</h3>
+                    </div>
+                    <div class="listBackground shape1">
+                        <div class="flexrow flex-group-center">
+                            <span class="resource-label">Initiative Mod</span>
+                            <input class="input-small flex-group-right" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                        </div>
+                        <div class="flexrow flex-group-center" style="margin-top: 22px;">
+                            <label class="resource-label">Threat Level</label>
+                            <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.data.threatLevel.current}}" placeholder="0"/>/
+                            <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.data.threatLevel.total}}" placeholder="0"/>                            
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
     {{!-- Sheet Tab Navigation --}}
-    {{#if actor.aspect.Chi}}
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="skills">Skills</a>
-        <a class="item" data-tab="psi">Psi</a>
-    </nav>
-    {{else if actor.aspect.Gamma}}
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="skills">Skills</a>
-        <a class="item" data-tab="psi">Psi</a>
-    </nav>
-    {{else}}
-    <nav class="sheet-tabs tabs" data-group="primary" style="display: none">
-        <a class="item" data-tab="skills">Skills</a>
-    </nav>
+        <a class="item" data-tab="weapons">Physical</a>
+    {{#if data.vehicle}}
+        <a class="item" data-tab="vehicles">Vehicles</a>
     {{/if}}
+    {{#if data.aspect.Chi}}
+        <a class="item" data-tab="psi">Psi</a>
+    {{else if data.aspect.Gamma}}
+        <a class="item" data-tab="psi">Psi</a>
+    {{/if}}
+    </nav>
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
 
-        {{!--Skills Tab--}}
-        <div class="tab" data-group="primary" data-tab="skills">
-            <div class="contentBox">
-                <div class="flexrow">
-                    <h3 class="subheader">Overview</h3>
-                    <div class="alignRight flexGrowThreeQuarter">
-                        <div class="flexrow flex-group-left">
+    {{!--Skills Tab--}}
+    <div class="tab" data-group="primary" data-tab="skills">
+            <div class="skills grid grid-2col">
+                <div class="contentBox">
+                    <div class="flexrow">
+                        <h3 class="subheader">Standard Skills</h3>
+                        <div class="alignRight flexGrowHalf">
                         </div>
                     </div>
-                </div>
-                <div class="listBackground shape3">
-                    <div class="skills grid grid-2col">
-                        {{#each data.skillsIns as |skill key|}}
-                        <div class="flexrow flex-group-center">
-                            <span class="resource-label item-standard-margin input-large">{{key}}</span>
-                            <input class="item-standard-margin input-small" type="number" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
-                            <label class="resource-label roll-label task-check" data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <div class="listBackground edgeAbler">
+                        {{#each data.data.skillsIns as |skill key|}}
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-large">{{key}}</span>
+                            <input class=" input-small" type="number" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                            <label class="resource-label roll-label task-check item-standard-margin input-small" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            {{#if this.specname}}
+                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            {{else}}
+                            <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                            {{/if}}
                         </div>
                         {{/each}}
-                        {{#each data.skillsVig as |skill key|}}
-                        <div class="flexrow flex-group-center">
-                            <span class="resource-label item-standard-margin input-large">{{key}}</span>
-                            <input class="item-standard-margin input-small" type="number" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-label item-standard-margin input-small">{{numberFormat skill.derived decimals=0}}</span>
-                            <label class="resource-label roll-label task-check" data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        {{#each data.data.skillsVig as |skill key|}}
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-large">{{key}}</span>
+                            <input class=" input-small" type="number" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                            <label class="resource-label roll-label item-standard-margin input-small task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            {{#if this.specname}}
+                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            {{else}}
+                            <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                            {{/if}}
                         </div>
                         {{/each}}
-                        <div class="flexrow flex-group-center">
-                            <input class="item-standard-margin input-large" type="text" name="data.specSkills.special1.skillName" value="{{data.specSkills.special1.skillName}}" placeholder="Skill name"/>
-                            <input class="input-small" type="number" name="data.specSkills.special1.value" value="{{data.specSkills.special1.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-label item-standard-margin input-small alignLeft">{{data.specSkills.special1.specCheck}}</span>
-                            <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                            <select class="selectSpecApt item-standard-margin-both-large input-large" name="data.specSkills.special1.aptitude" data-type="String">
-                                {{#select data.specSkills.special1.aptitude}}
-                                {{#each data.aptitudes as |aptitude key|}}
-                                <option value="{{aptitude.value}}">{{aptitude.label}}</option>
-                                {{/each}} {{/select}}
-                            </select>
-                            <label class="roll-label input-small task-check alignLeft" data-type="skill" data-name="{{data.specSkills.special1.skillName}}" data-rollvalue="{{data.specSkills.special1.roll}}" style="margin-right: 3px;"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                </div>
+                <div class="contentBox">
+                    {{#if data.specialSkill}}
+                    <div class="flexrow">
+                        <h3 class="subheader">Aditional Skills</h3>
+                        <div class="alignRight flexGrowHalf">
+                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
                         </div>
-                        <div class="flexrow flex-group-center">
-                            <input class="item-standard-margin input-large" type="text" name="data.specSkills.special2.skillName" value="{{data.specSkills.special2.skillName}}" placeholder="Skill name"/>
-                            <input class="input-small" type="number" name="data.specSkills.special2.value" value="{{data.specSkills.special2.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-label item-standard-margin input-small alignLeft">{{data.specSkills.special2.specCheck}}</span>
-                            <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                            <select class="selectSpecApt item-standard-margin-both-large input-large" name="data.specSkills.special2.aptitude" data-type="String">
-                                {{#select data.specSkills.special2.aptitude}}
-                                {{#each data.aptitudes as |aptitude key|}}
-                                <option value="{{aptitude.value}}">{{aptitude.label}}</option>
-                                {{/each}} {{/select}}
-                            </select>
-                            <label class="roll-label input-small task-check alignLeft" data-type="skill" data-name="{{data.specSkills.special2.skillName}}" data-rollvalue="{{data.specSkills.special2.roll}}" style="margin-right: 3px;"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    </div>
+                    <div class="listBackground edgeAbler" style="padding-left: 0;">
+                        {{#each data.specialSkill as |item id|}}
+                        <div>
+                            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
+                                <input class="input-small sheet-inline-edit" data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
+                                {{#if item.data.aptitude}}
+                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
+                                {{#if item.data.specname}}
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                {{else}}
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                                {{else}}
+                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
                         </div>
-                        <div class="flexrow flex-group-center">
-                            <input class="item-standard-margin input-large" type="text" name="data.specSkills.special3.skillName" value="{{data.specSkills.special3.skillName}}" placeholder="Skill name"/>
-                            <input class="input-small" type="number" name="data.specSkills.special3.value" value="{{data.specSkills.special3.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-label item-standard-margin input-small alignLeft">{{data.specSkills.special3.specCheck}}</span>
-                            <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                            <select class="selectSpecApt item-standard-margin-both-large input-large" name="data.specSkills.special3.aptitude" data-type="String">
-                                {{#select data.specSkills.special3.aptitude}}
-                                {{#each data.aptitudes as |aptitude key|}}
-                                <option value="{{aptitude.value}}">{{aptitude.label}}</option>
-                                {{/each}} {{/select}}
-                            </select>
-                            <label class="roll-label input-small task-check alignLeft" data-type="skill" data-name="{{data.specSkills.special3.skillName}}" data-rollvalue="{{data.specSkills.special3.roll}}" style="margin-right: 3px;"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        {{/each}}
+                    </div>
+                    <div class="itemBackground shape1 edgeLord"></div>
+                    {{else}}
+                    <div class="separator">
+                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Additional Skill</a>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{!-- Weapons Tab --}}
+    <div class="tab" data-group="primary" data-tab="weapons">
+        {{#if data.rangedWeapon}}
+        <div class="contentBox gear">
+            <div class="flexrow">
+                <h3 class="subheader">Ranged Weapons</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                    <label class="resource-label labelWidth-large">Roll Guns</label>
+                    <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    {{#if data.data.skillsVig.guns.specname}}
+                    <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.guns.specname}}</label>
+                    <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="itemBackground">
+                {{#each data.rangedWeapon as |item id|}}
+                <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
+                    <div class="flexrow flex-group-center input-small">
+                        <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
+                        <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                    </div>
+                    <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                    <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
+                    <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
+                    <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                    <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
+                    <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
+                    <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
+                    <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+                    <div class="flex-group-right slideShow">
+                        <a><i class="fas fa-plus icon-small"></i></a>
+                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    </div>
+                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                        <div class="itemDescription shape3">
+                            <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
                         </div>
-                        <div class="flexrow flex-group-center">
-                            <input class="item-standard-margin input-large" type="text" name="data.specSkills.special4.skillName" value="{{data.specSkills.special4.skillName}}" placeholder="Skill name"/>
-                            <input class="input-small" type="number" name="data.specSkills.special4.value" value="{{data.specSkills.special4.value}}" data-dtype="Number" placeholder="0"/>
-                            <span class="resource-label item-standard-margin input-small alignLeft">{{data.specSkills.special4.specCheck}}</span>
-                            <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                            <select class="selectSpecApt item-standard-margin-both-large input-large" name="data.specSkills.special4.aptitude" data-type="String">
-                                {{#select data.specSkills.special4.aptitude}}
-                                {{#each data.aptitudes as |aptitude key|}}
-                                <option value="{{aptitude.value}}">{{aptitude.label}}</option>
+                        <div class="flexrow flex-between item-controls">
+                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+        {{#if data.ccweapon}}
+        <div class="contentBox gear">
+            <div class="flexrow">
+                <h3 class="subheader">Close Combat Weapons</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                    <label class="resource-label labelWidth-large">Roll Melee</label>
+                    <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    {{#if data.skillsVig.melee.specname}}
+                    <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.melee.specname}}</label>
+                    <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="itemBackground">
+                {{#each data.ccweapon as |item id|}}
+                <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
+                    <div class="flexrow flex-group-center input-small">
+                        <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
+                        <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                    </div>
+                    <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                    <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
+                    <h4 class="item-image flex-group-center noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+                    <div class="flex-group-right slideShow" style="max-width: 115px;">
+                        <a><i class="fas fa-plus icon-small"></i></a>
+                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    </div>
+                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                        <div class="itemDescription shape3">
+                            <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                        </div>
+                        <div class="flexrow flex-between item-controls">
+                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+        <div class="flexrow flex-between">
+            <div class="contentBox flexGrowHalf">
+                <div class="flexrow">
+                    <h3 class="subheader">Morph</h3>
+                    <div class="alignRight flexGrowThreeQuarter">
+                    </div>
+                </div>
+                <div class="listBackground noMargin">
+                    <div class="flexrow flex-between headspace">
+                        <div>
+                            <input class="input-large" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
+                        </div>
+                        <div>
+                            <select class="selectSpecApt item-standard-margin-medium" name="data.bodyType.value" data-type="String">
+                                {{#select data.data.bodyType.value}}
+                                {{#each config.bodyTypes as |bodyType key|}}
+                                <option value="{{key}}">{{bodyType}}</option>
                                 {{/each}} {{/select}}
                             </select>
-                            <label class="roll-label input-small task-check alignLeft" data-type="skill" data-name="{{data.specSkills.special4.skillName}}" data-rollvalue="{{data.specSkills.special4.roll}}" style="margin-right: 3px;"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        </div>
+                    </div>
+                    <div class="flexrow flex-between headSpace">
+                        <div>
+                            <label class="resource-label labelWidth-small">Dur</label>
+                            <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0"/>
+                        </div>
+                        <div>
+                            <label class="resource-label labelWidth-small">Mov</label>
+                            <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0"/>
+                        </div>
+                    </div>
+                    <div class="headSpace">
+                        {{!-- <div class="flexrow" style="align-items: center">
+                            <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
+                            <label class="resource-label">Traits:</label>
+                        </div>
+                        <div class="flexrow headSpace">
+                            {{#if data.morphTrait}}
+                            {{#each data.morphTrait as |item id|}}
+                            <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                <div class="item-controls flex-group-right" style="flex: 0.2;">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <label class="resource-value" style="height: 30px;">No Morph Traits Present</label>
+                            {{/if}}
+                        </div>
+                        <div class="flexrow" style="align-items: center">
+                            <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
+                            <label class="resource-label">Flaws:</label>
+                        </div>
+                        <div class="flexrow headSpace">
+                            {{#if data.morphFlaw}}
+                            {{#each data.morphFlaw as |item id|}}
+                            <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                <div class="item-controls flex-group-right" style="flex: 0.2;">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <label class="resource-value" style="height: 30px;">No Morph Flaws Present</label>
+                            {{/if}}
+                        </div> --}}
+                        <div class="flexrow" style="align-items: center">
+                            <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
+                            <label class="resource-label">Ware:</label>
+                        </div>
+                        <div class="flexrow headSpace">
+                            {{#if data.ware}}
+                            {{#each data.ware as |item id|}}
+                            <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
+                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <label class="resource-value" style="height: 30px;">No Ware Installed</label>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
             </div>
-            {{#if actor.rangedWeapon}}
-            <div class="contentBox">
+            <div class="contentBox flexGrowHalf">
                 <div class="flexrow">
-                    <h3 class="subheader">Ranged Weapons</h3>
+                    <h3 class="subheader">Armor & Gear</h3>
                     <div class="alignRight flexGrowThreeQuarter">
-                        <label class="resource-label labelWidth-large">Roll Guns</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{#if data.skillsVig.guns.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.guns.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.skillsVig.guns.specname}}" data-rollvalue="{{data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    </div>
+                </div>
+                <div class="listBackground noMargin">
+                    <div class="headSpace">
+                        {{#if data.armor}}
+                        {{#each data.armor as |item id|}}
+                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                            <div class="flexrow">
+                                <input class="sheet-inline-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
+                            </div>
+                            <div class="flexrow flex-group-right">
+                                <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
+                            </div>
+                            <div class="flexrow flex-group-right">
+                                <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
+                            </div>
+                            <div class="flex-group-right input-small">
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <div class=" flexrow" style="height: 30px;">
+                            <label class="resource-value">Has no armor</label>
+                        </div>
                         {{/if}}
                     </div>
-                </div>
-                <div class="itemBackground">
-                    {{#each actor.rangedWeapon as |item id|}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
-                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
-                        <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
-                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
-                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
-                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                    <div class="headSpace">
+                        <div class="flexrow" style="align-items: center">
+                            <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
+                            <label class="resource-label">Gear:</label>
+                        </div>
+                        <div class="flexrow headSpace">
+                            {{#if data.gear}}
+                            {{#each data.gear as |item id|}}
+                            <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center;">
+                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                <label class="flex-group-center noMargin alignCenter" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
+                                <div class="flex-group-right" style="flex: 0.2;">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <label class="resource-value" style="height: 30px;">No Special Gear</label>
+                            {{/if}}
                         </div>
                     </div>
-                    <div class="item itemdescriptionImportant" data-item-id="{{item._id}}">
-                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
-                    </div>
-                    {{/each}}
                 </div>
             </div>
-            {{/if}}
-            {{#if actor.ccweapon}}
-            <div class="contentBox">
-                <div class="flexrow">
-                    <h3 class="subheader">Close Combat Weapons</h3>
-                    <div class="alignRight flexGrowThreeQuarter">
-                        <label class="resource-label labelWidth-large">Roll Melee</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{#if data.skillsVig.melee.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.skillsVig.melee.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.skillsVig.melee.specname}}" data-rollvalue="{{data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{/if}}
-                    </div>
-                </div>
-                <div class="itemBackground">
-                    {{#each actor.ccweapon as |item id|}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="flex-group-center noMargin flex-group-left"><strong>{{item.data.slotType}}</strong></label>
-                        <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
-                        <label class="item-image flex-group-left resource-label damage-roll roll-label input-small" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                        </div>
-                    </div>
-                    <div class="itemdescriptionImportant">
-                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-            {{/if}}
-            {{#if actor.vehicle}}
-            {{#each actor.vehicle as |item id|}}
+        </div>
+    </div>
+    {{!-- Vehicles Tab --}}
+        <div class="tab vehicle" data-group="primary" data-tab="vehicles">
+            {{#each data.vehicle as |item id|}}
+            {{log "My little Pwny:" this}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
@@ -391,49 +569,50 @@
                                 </td>
                             </tr>
                         </table>
-                    </div>
-                    <div class="item itemdescription" data-item-id="{{item._id}}" style="margin-bottom: 10px">
-                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                        <table class="noMargin alignCenter">
+                            <tr>
+                                <td>
+                                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
             {{/each}}
-            {{/if}}
+        </div>
+    {{!-- Psi Tab --}}
+    <div class="tab psi" data-group="primary" data-tab="psi">
+        {{#if data.aspect.Gamma}}
+        <div class="contentBox">
+            <div class="flexrow">
+                <h3 class="subheader">Psi Gamma</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                </div>
             </div>
-
-        {{!-- Psi Tab --}}
-        <div class="tab" data-group="primary" data-tab="psi">
-            {{#if actor.aspect.Gamma}}
-            <div class="contentBox">
-                <div class="flexrow">
-                    <h3 class="subheader">Psi Gamma</h3>
-                    <div class="alignRight flexGrowThreeQuarter">
+            <div class="listBackground">
+                <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <label class="noMargin flex-group-left resource-value" style="flex: 0.4;">Name</label>
+                    <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.3;">Action</label>
+                    <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.3;">Duration</label>
+                    <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.2;">Mod</label>
+                    <label class="noMargin flex-group-left resource-value" style="font-size: 12px; flex: 1; justify-content: center">Description</label>
+                    <div class="item-controls flex-group-right input-small">
+                        <a class="item-control item-delete icon-hidden" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
                 </div>
-                <div class="listBackground">
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
-                        <label class="noMargin flex-group-left resource-value" style="flex: 0.4;">Name</label>
-                        <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.3;">Action</label>
-                        <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.3;">Duration</label>
-                        <label class="noMargin alignCenter resource-value" style="font-size: 12px; flex: 0.2;">Mod</label>
-                        <label class="noMargin flex-group-left resource-value" style="font-size: 12px; flex: 1; justify-content: center">Description</label>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete icon-hidden" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                        </div>
+                {{#each data.aspect.Gamma as |item id|}}
+                <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
+                    <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.3;"><i>{{item.data.actionType}}</i></label>
+                    <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.3;"><i>{{item.data.duration}}</i></label>
+                    <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.2; justify-content: center"><strong>{{item.data.infection}}</strong></label>
+                    <div class="textAreaDescription" style="flex-grow: 1!important"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
+                    <div class="item-controls flex-group-right input-small">
+                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                     </div>
-                    {{#each actor.aspect.Gamma as |item id|}}
-                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
-                        <label class="noMargin flex-group-left" style="flex: 0.4;"><strong>{{item.name}}</strong></label>
-                        <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.3;"><i>{{item.data.actionType}}</i></label>
-                        <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.3;"><i>{{item.data.duration}}</i></label>
-                        <label class="noMargin alignCenter" style="font-size: 12px; flex: 0.2; justify-content: center"><strong>{{item.data.infection}}</strong></label>
-                        <div class="textAreaDescription" style="flex-grow: 1!important"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
-                        <div class="item-controls flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                        </div>
-                    </div>
-                    {{/each}}
                 </div>
+                {{/each}}
             </div>
             {{/if}}
             {{#if actor.aspect.Chi}}
@@ -464,5 +643,33 @@
             </div>
             {{/if}}
         </div>
+        {{#if data.aspect.Chi}}
+        <div class="contentBox">
+            <div class="flexrow">
+                <h3 class="subheader">Psi Chi</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                </div>
+            </div>
+            <div class="listBackground">
+                <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <label class="noMargin flex-group-left resource-value" style="flex: 1.2;">Name</label>
+                    <label class="noMargin flex-group-left resource-value" style="font-size: 12px; flex: 1; justify-content: center">Description</label>
+                    <div class="item-controls flex-group-right input-small">
+                        <a class="item-control item-delete icon-hidden" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                    </div>
+                </div>
+                {{#each data.aspect.Chi as |item id|}}
+                <div class="item flexrow flex-group-center" data-item-id="{{item._id}}" style="margin-bottom: 10px">
+                    <label class="noMargin flex-group-left" style="flex: 1.2;"><strong>{{item.name}}</strong></label>
+                    <div class="textAreaDescription" style="flex-grow: 1!important;"><textarea class="sheet-inline-edit" data-field="data.description" name="item.data.description" rows="10" cols="60" style="max-height: 80px!important;">{{item.data.description}}</textarea></div>
+                    <div class="item-controls flex-group-right input-small">
+                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+    </div>
     </section>
 </form>
