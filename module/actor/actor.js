@@ -97,7 +97,7 @@ export class EclipsePhaseActor extends Actor {
 
     //Checks if morph & ego picture are the same
     if (actorData.img === data.bodies.morph1.img){
-      console.log("Opfer!");
+      console.log("Check if the same picture is used for Ego & Body. Source: actor.js");
     }
 
     //Mental Health
