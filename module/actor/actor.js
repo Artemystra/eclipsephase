@@ -25,7 +25,8 @@ export class EclipsePhaseActor extends Actor {
       data.homebrew = false;
     }
 
-    if (actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon') this._prepareCharacterData(actorData);
+    if(actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon')
+      this._prepareCharacterData(actorData)
 
     //HOMEBREW - Encumbrance through weapons & gear
     if(data.homebrew === true && actorData.type === "character"){
@@ -128,112 +129,22 @@ export class EclipsePhaseActor extends Actor {
     //Characters only
     //Durability
     if (actorData.type === "character") {
-      switch (data.bodies.activeMorph){
-        case "morph1":
-          data.health.physical.max = data.bodies.morph1.dur;
-          data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
-          if (data.bodies.morph1.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 2);
-          }
-          else if (data.bodies.morph1.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
-          }
-          break;
-        case "morph2":
-          data.health.physical.max = data.bodies.morph2.dur;
-          data.physical.wt = Math.round(data.bodies.morph2.dur / 5);
-          if (data.bodies.morph2.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph2.dur * 2);
-          }
-          else if (data.bodies.morph2.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph2.dur * 1.5);
-          }
-          break;
-        case "morph3":
-          data.health.physical.max = data.bodies.morph3.dur;
-          data.physical.wt = Math.round(data.bodies.morph3.dur / 5);
-          if (data.bodies.morph3.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph3.dur * 2);
-          }
-          else if (data.bodies.morph3.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph3.dur * 1.5);
-          }
-          break;
-        case "morph4":
-          data.health.physical.max = data.bodies.morph4.dur;
-          data.physical.wt = Math.round(data.bodies.morph4.dur / 5);
-          if (data.bodies.morph4.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph4.dur * 2);
-          }
-          else if (data.bodies.morph4.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph4.dur * 1.5);
-          }
-          break;
-        case "morph5":
-          data.health.physical.max = data.bodies.morph5.dur;
-          data.physical.wt = Math.round(data.bodies.morph5.dur / 5);
-          if (data.bodies.morph5.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph5.dur * 2);
-          }
-          else if (data.bodies.morph5.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph5.dur * 1.5);
-          }
-          break;
-        case "morph6":
-          data.health.physical.max = data.bodies.morph6.dur;
-          data.physical.wt = Math.round(data.bodies.morph6.dur / 5);
-          if (data.bodies.morph6.type === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph6.dur * 2);
-          }
-          else if (data.bodies.morph6.type === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph6.dur * 1.5);
-          }
-          break;
-      }
 
+      let morph = data.bodies[data.bodies.activeMorph]
+
+      data.health.physical.max = morph.dur
+      data.physical.wt = Math.round(morph.dur / 5)
+      data.physical.dr = morph.type === 'synth' ? Math.round(morph.dur * 2)
+                                                : Math.round(morph.dur * 1.5)
       if(data.health.physical.value === null){
         data.health.physical.value = data.health.physical.max;
       }
 
       //Pools
-      switch (data.bodies.activeMorph) {
-        case "morph1":
-          data.pools.flex.totalFlex = Number(data.bodies.morph1.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph1.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph1.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph1.vigor);
-          break;
-        case "morph2":
-          data.pools.flex.totalFlex = Number(data.bodies.morph2.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph2.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph2.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph2.vigor);
-          break;
-        case "morph3":
-          data.pools.flex.totalFlex = Number(data.bodies.morph3.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph3.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph3.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph3.vigor);
-          break;
-        case "morph4":
-          data.pools.flex.totalFlex = Number(data.bodies.morph4.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph4.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph4.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph4.vigor);
-          break;
-        case "morph5":
-          data.pools.flex.totalFlex = Number(data.bodies.morph5.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph5.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph5.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph5.vigor);
-          break;
-        case "morph6":
-          data.pools.flex.totalFlex = Number(data.bodies.morph6.flex)+Number(data.ego.egoFlex);
-          data.pools.insight.totalInsight = Number(data.bodies.morph6.insight);
-          data.pools.moxie.totalMoxie = Number(data.bodies.morph6.moxie);
-          data.pools.vigor.totalVigor = Number(data.bodies.morph6.vigor);
-          break;
-      }
+      data.pools.flex.totalFlex = Number(morph.flex) + Number(data.ego.egoFlex)
+      data.pools.insight.totalInsight = Number(morph.insight)
+      data.pools.moxie.totalMoxie = Number(morph.moxie)
+      data.pools.vigor.totalVigor = Number(morph.vigor)
     }
 
     //Calculating armor
@@ -285,85 +196,83 @@ export class EclipsePhaseActor extends Actor {
     }
 
 
-    //Derived Skills
+    // Aptitudes
     for (let [key, aptitude] of Object.entries(data.aptitudes)) {
       aptitude.mod = aptitude.value * 3;
       aptitude.roll = (aptitude.value * 3) - data.mods.woundMod - data.mods.traumaMod;
     }
+
+    // Insight Skills
     for (let [key, skill] of Object.entries(data.skillsIns)) {
-      if(key === 'program' || key === 'interface' || key === 'infosec' ){
+      if(key === 'program' || key === 'interface' || key === 'infosec' ) {
         skill.derived = skill.value + data.aptitudes.cog.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else if (key === 'perceive') {
         skill.derived = skill.value + data.aptitudes.int.value * 2;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else {
         skill.derived = skill.value + data.aptitudes.int.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
+
+      skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+      skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
     }
+
+    // Moxie skills
     for (let [key, skill] of Object.entries(data.skillsMox)) {
       if(key === 'provoke' || key === 'persuade' || key === 'kinesics' || key === 'deceive' ){
         skill.derived = skill.value + data.aptitudes.sav.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else {
         skill.derived = skill.value + data.aptitudes.wil.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
+
+      skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+      skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
     }
+
+    // Vigor skills
     for (let [key, skill] of Object.entries(data.skillsVig)) {
       if(key === 'athletics' || key === 'free fall' || key === 'melee' ){
         skill.derived = skill.value + data.aptitudes.som.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else if (key === 'fray'){
         skill.derived = (skill.value + data.aptitudes.ref.value * 2);
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
       else {
         skill.derived = skill.value + data.aptitudes.ref.value;
-        skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-        skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
       }
+
+      skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+      skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
     }
 
-      //Showing skill calculations for know/spec skills
-      for (let value of item ) {
-        let key = value.type;
-        let aptSelect = 0;
-        if (value.data.data.aptitude === "Intuition") {
-          aptSelect = data.aptitudes.int.value;
-        }
-        else if (value.data.data.aptitude === "Cognition") {
-          aptSelect = data.aptitudes.cog.value;
-        }
-        else if (value.data.data.aptitude === "Reflexes") {
-          aptSelect = data.aptitudes.ref.value;
-        }
-        else if (value.data.data.aptitude === "Somatics") {
-          aptSelect = data.aptitudes.som.value;
-        }
-        else if (value.data.data.aptitude === "Willpower") {
-          aptSelect = data.aptitudes.wil.value;
-        }
-        else if (value.data.data.aptitude === "Savvy") {
-          aptSelect = data.aptitudes.sav.value;
-        }
-        if(key === 'specialSkill' || key === 'knowSkill'){
-          value.data.data.roll = Number(value.data.data.value) + aptSelect;
-        }
+    //Showing skill calculations for know/spec skills
+    for (let value of item ) {
+      let key = value.type;
+      let aptSelect = 0;
+      if (value.data.data.aptitude === "Intuition") {
+        aptSelect = data.aptitudes.int.value;
       }
-
+      else if (value.data.data.aptitude === "Cognition") {
+        aptSelect = data.aptitudes.cog.value;
+      }
+      else if (value.data.data.aptitude === "Reflexes") {
+        aptSelect = data.aptitudes.ref.value;
+      }
+      else if (value.data.data.aptitude === "Somatics") {
+        aptSelect = data.aptitudes.som.value;
+      }
+      else if (value.data.data.aptitude === "Willpower") {
+        aptSelect = data.aptitudes.wil.value;
+      }
+      else if (value.data.data.aptitude === "Savvy") {
+        aptSelect = data.aptitudes.sav.value;
+      }
+      if(key === 'specialSkill' || key === 'knowSkill'){
+        value.data.data.roll = Number(value.data.data.value) + aptSelect;
+      }
+    }
   }
 
   /**
@@ -371,7 +280,5 @@ export class EclipsePhaseActor extends Actor {
    */
   _prepareCharacterData(actorData) {
     const data = actorData.data;
-
-
   }
 }
