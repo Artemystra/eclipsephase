@@ -352,9 +352,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
-      //Edit Item Input Fields
-      html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
-
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
           const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
