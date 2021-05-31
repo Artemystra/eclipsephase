@@ -119,7 +119,8 @@ export class EclipsePhaseActor extends Actor {
       //Calculating WT & DR
       data.health.physical.max = data.bodies.morph1.dur  // only one morph for npcs
       data.physical.wt = Math.round(data.bodies.morph1.dur / 5)
-      data.physical.dr = eclipsephase.damageRatingMultiplier[data.bodyType.value]
+      data.physical.dr = Math.round(data.bodies.morph1.dur * 
+        eclipsephase.damageRatingMultiplier[data.bodyType.value])
 
       if(data.health.physical.value === null) {
         data.health.physical.value = data.health.physical.max
@@ -132,7 +133,8 @@ export class EclipsePhaseActor extends Actor {
 
       data.health.physical.max = morph.dur
       data.physical.wt = Math.round(morph.dur / 5)
-      data.physical.dr = eclipsephase.damageRatingMultiplier[morph.type]
+      data.physical.dr = Math.round(morph.dur * 
+        eclipsephase.damageRatingMultiplier[morph.type])
 
       if(data.health.physical.value === null) {
         data.health.physical.value = data.health.physical.max
