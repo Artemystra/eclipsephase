@@ -10,6 +10,9 @@ export class EclipsePhaseActor extends Actor {
   prepareData() {
     super.prepareData();
 
+    console.log('prepareData')
+    console.log(this.data)
+
     const actorData = this.data;
     const data = actorData.data;
     const flags = actorData.flags;
@@ -129,8 +132,9 @@ export class EclipsePhaseActor extends Actor {
     //Characters only
     //Durability
     if (actorData.type === "character") {
-
+      console.log('activeMorph = ' + data.bodies.activeMorph)
       let morph = data.bodies[data.bodies.activeMorph]
+      console.log(morph)
 
       data.health.physical.max = morph.dur
       data.physical.wt = Math.round(morph.dur / 5)
