@@ -142,3 +142,8 @@ eclipsephase.origins = {
     venusian: "Venusian",
     regional: "Regional"
 }
+
+eclipsephase.damageRatingMultiplier = {
+  synth: 2.0,
+  bio: 1.5
+}
