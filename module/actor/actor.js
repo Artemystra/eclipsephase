@@ -1,3 +1,5 @@
+import { eclipsephase } from "../config.js"
+
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -9,9 +11,6 @@ export class EclipsePhaseActor extends Actor {
    */
   prepareData() {
     super.prepareData();
-
-    console.log('prepareData')
-    console.log(this.data)
 
     const actorData = this.data;
     const data = actorData.data;
@@ -115,33 +114,28 @@ export class EclipsePhaseActor extends Actor {
 
     //Physical Health
     //NPCs & Goons only
-    if (actorData.type === 'npc' || actorData.type === 'goon'){
+    if(actorData.type === 'npc' || actorData.type === 'goon') {
+
       //Calculating WT & DR
-      data.health.physical.max = data.bodies.morph1.dur;
-      data.physical.wt = Math.round(data.bodies.morph1.dur / 5);
-      if (data.bodyType.value === 'synth'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 2);
-          }
-      else if (data.bodyType.value === 'bio'){
-            data.physical.dr = Math.round(data.bodies.morph1.dur * 1.5);
-          }
-      if(data.health.physical.value === null){
-        data.health.physical.value = data.health.physical.max;
+      data.health.physical.max = data.bodies.morph1.dur  // only one morph for npcs
+      data.physical.wt = Math.round(data.bodies.morph1.dur / 5)
+      data.physical.dr = eclipsephase.damageRatingMultiplier[data.bodyType.value]
+
+      if(data.health.physical.value === null) {
+        data.health.physical.value = data.health.physical.max
       }
     }
     //Characters only
     //Durability
-    if (actorData.type === "character") {
-      console.log('activeMorph = ' + data.bodies.activeMorph)
+    if(actorData.type === "character") {
       let morph = data.bodies[data.bodies.activeMorph]
-      console.log(morph)
 
       data.health.physical.max = morph.dur
       data.physical.wt = Math.round(morph.dur / 5)
-      data.physical.dr = morph.type === 'synth' ? Math.round(morph.dur * 2)
-                                                : Math.round(morph.dur * 1.5)
-      if(data.health.physical.value === null){
-        data.health.physical.value = data.health.physical.max;
+      data.physical.dr = eclipsephase.damageRatingMultiplier[morph.type]
+
+      if(data.health.physical.value === null) {
+        data.health.physical.value = data.health.physical.max
       }
 
       //Pools
