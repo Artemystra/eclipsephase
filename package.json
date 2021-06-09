@@ -1,23 +1,12 @@
 {
-  "name": "boilerplate",
-  "version": "1.0.0",
-  "description": "CSS compiler for the Boilerplate system",
+  "name": "eclipsephase",
+  "version": "0.4.9.4",
+  "description": "Eclipse Phase system for Foundry VTT",
   "scripts": {
-    "build": "gulp",
-    "compile": "gulp css",
-    "watch": "gulp",
-    "gulp": "gulp"
   },
-  "browserslist": [
-    "last 3 versions"
-  ],
   "author": "John Doe",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^7.0.1",
-    "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5"
   }
 }
