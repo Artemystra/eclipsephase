@@ -13,11 +13,19 @@
   ],
   "author": "John Doe",
   "license": "MIT",
-  "private": true,
   "dependencies": {
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5"
+    "gulp-sourcemaps": "^2.6.5",
+    "cb": "^0.1.0",
+    "fs": "^0.0.1-security",
+    "gulp-clean": "^0.4.0",
+    "gulp-zip": "^5.1.0",
+    "js-yaml": "^4.1.0",
+    "merge-stream": "^2.0.0",
+    "nedb": "^1.8.0",
+    "path": "^0.12.7",
+    "through2": "^4.0.2"
   }
 }

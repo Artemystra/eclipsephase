@@ -2,9 +2,9 @@
   "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "senortroll's fork of DerDiemen's eclipsephase2e system",
-  "version": "0.1.0.0",
+  "version": "0.1.0.2",
   "minimumCoreVersion": "0.8.1",
-  "compatibleCoreVersion": "0.8.4",
+  "compatibleCoreVersion": "0.8.6",
   "templateVersion": 2,
   "author": "Kris Pearson & Diemen Kobalscheck",
   "esmodules": ["module/eclipsephase.js"],
@@ -66,7 +66,15 @@
       "system": "eclipsephase",
       "path": "./packs/vehicles.db",
       "entity": "Item"
-    }],
+    },
+    {
+      "name": "skills",
+      "label": "Skills",
+      "system": "eclipsephase",
+      "path": "./packs/skills.db",
+      "entity": "Item"
+    }
+  ],
   "languages": [
     {
       "lang": "en",
@@ -79,7 +87,7 @@
   "primaryTokenAttribute": "data.health.physical",
   "secondaryTokenAttribute": "data.health.mental",
   "url": "https://github.com/senortroll/eclipsephase",
-  "manifest": "https://github.com/senortroll/eclipsephase/raw/v0.1.0.1/system.json",
-  "download": "https://github.com/senortroll/eclipsephase/archive/v0.1.0.1/eclipsephase-0.1.0.1.zip",
+  "manifest": "https://github.com/senortroll/eclipsephase/raw/v0.1.0.2/system.json",
+  "download": "https://github.com/senortroll/eclipsephase/archive/v0.1.0.2/eclipsephase-0.1.0.2.zip",
   "license": "LICENSE.txt"
 }
