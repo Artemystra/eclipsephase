@@ -352,16 +352,18 @@ export async function TaskCheck({
             let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
             roll.toMessage({
                 speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                flavor: label,
-                rollMode: rollModeSelection
+                rollMode: rollModeSelection,
+                flavor: label
+                
         });
         }
         else{
             let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
             roll.toMessage({
                 speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                flavor: label,
-                rollMode: rollModeSelection
+                rollMode: rollModeSelection,
+                flavor: label
+                
         });
         }
     }
