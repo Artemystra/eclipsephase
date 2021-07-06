@@ -16,5 +16,6 @@
   "ITEM.TypeProgram" : "Program",
   "ITEM.TypeSpecialskill" : "Special Skill",
   "ITEM.TypeKnowskill" : "Know Skill",
-  "ITEM.TypeVehicle" : "Vehicle"
+  "ITEM.TypeVehicle" : "Vehicle",
+  "ITEM.TypeDrug" : "Drug"
 }
