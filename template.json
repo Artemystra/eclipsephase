@@ -1154,7 +1154,8 @@
       "program",
       "specialSkill",
       "knowSkill",
-      "vehicle"
+      "vehicle",
+      "drug"
     ],
     "templates": {
       "base": {
@@ -1198,6 +1199,20 @@
       ],
       "energy": null,
       "kinetic": null
+    },
+    "drug": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "dermal": false,
+      "inhalation": false,
+      "injection": false,
+      "oral": false,
+      "drugType": "",
+      "duration": null,
+      "addictionMod": null,
+      "addictionType": ""
     },
     "trait": {
       "templates": [
