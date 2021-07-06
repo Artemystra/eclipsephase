@@ -237,6 +237,15 @@
   text-align: left;
 }
 
+.eclipsephase .resource-section-label {
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.eclipsephase .resource-sub-label {
+  text-align: left;
+}
+
 .eclipsephase .resource-value {
   text-transform: uppercase;
   font-weight: bold;
