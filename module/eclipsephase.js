@@ -10,6 +10,7 @@ import { EclipsePhaseFlawSheet } from "./item/flaw-sheet.js";
 import { EclipsePhaseRangedWeaponSheet } from "./item/rangedweapon-sheet.js";
 import { EclipsePhaseCloseCombatWeaponSheet } from "./item/ccweapon-sheet.js";
 import { EclipsePhaseArmorSheet } from "./item/armor-sheet.js";
+import { EclipsePhaseDrugSheet } from "./item/drug-sheet.js";
 import { EclipsePhaseWareSheet } from "./item/ware-sheet.js";
 import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
 import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
@@ -100,7 +101,7 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseKnowSkillSheet, {types: ["knowSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseSpecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseVehicleSheet, {types: ["vehicle"], makeDefault: true });
-
+  Items.registerSheet("eclipsephase", EclipsePhaseDrugSheet, {types: ["drug"], makeDefault: true });
 
 
   // If you need to add Handlebars helpers, here are a few useful examples:
