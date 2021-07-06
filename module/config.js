@@ -99,6 +99,25 @@ eclipsephase.bodyTypes = {
     bio: "Biologic"
 }
 
+eclipsephase.drugTypes = {
+    biochem: "Biochem",
+    nano: "Nano",
+    electronic: "Electronic"
+}
+/*
+eclipsephase.drugApplicationTypes = {
+    dermal: "Dermal",
+    inhalation: "Inhalation",
+    injection: "Injection",
+    oral: "Oral"
+}
+*/
+
+eclipsephase.drugAddicitonTypes = {
+    physical: "Physical",
+    mental: "Mental"
+}
+
 eclipsephase.genders = {
     cis: "Cisgender",
     trans: "Transgender",
