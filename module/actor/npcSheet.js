@@ -55,20 +55,20 @@ export class NpcSheet extends ActorSheet {
             let item = i.data;
             i.img = i.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (i.type === 'gear') {
+            if (i.data.displayCategory === 'gear') {
                 gear.push(i);
             }
             // Append to features.
             else if (i.type === 'feature') {
                 features.push(i);
             }
-            else if (i.type === 'rangedWeapon') {
+            else if (i.data.displayCategory === 'ranged') {
                 rangedweapon.push(i)
             }
-            else if (i.type === 'ccWeapon') {
+            else if (i.data.displayCategory === 'ccweapon') {
                 ccweapon.push(i)
             }
-            else if (i.type === 'armor') {
+            else if (i.data.displayCategory === 'armor') {
                 armor.push(i)
             }
             else if (i.type === 'ware') {

@@ -114,8 +114,23 @@ eclipsephase.drugApplicationTypes = {
 */
 
 eclipsephase.drugAddicitonTypes = {
+    none: "Select",
     physical: "Physical",
     mental: "Mental"
+}
+
+eclipsephase.drugCategories = {
+    cognitive: "Cognitive Drug",
+    combat: "Combat Drug",
+    health: "Health Drug",
+    nano: "Nanodrug",
+    narco: "Narcoalgorithm",
+    petals: "Petal",
+    psi: "Psi Drug",
+    rec: "Recreational",
+    social: "Social Drug",
+    toxins: "Toxin",
+    nanotox: "Nanotoxin"
 }
 
 eclipsephase.genders = {

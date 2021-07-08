@@ -11,11 +11,16 @@
         <div class="flexrow flex-group-center">
             <table>
                 <tr>
-                    <td colspan="5">
+                    <td>
+                    </td>
+                    <td colspan="4">
                         <label class="resource-section-label">Application</label>
                     </td>                                  
                 </tr>
                 <tr>
+                    <td>
+                        <label class="resource-label">Category</label>
+                    </td>
                     <td>
                         <label class="resource-sub-label">Dermal</label>
                     </td>
@@ -30,6 +35,14 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>
+                        <select name="data.category" data-type="String">
+                            {{#select data.data.category}}
+                            {{#each config.drugCategories as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>   
+                    </td>
                     <td>
                         <input style="margin:auto; display:flex" type="checkbox" class="sheet" name="data.dermal" {{checked data.data.dermal}}/>
                     </td>

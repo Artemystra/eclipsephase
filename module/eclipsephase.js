@@ -9,6 +9,7 @@ import { EclipsePhaseTraitSheet } from "./item/trait-sheet.js";
 import { EclipsePhaseFlawSheet } from "./item/flaw-sheet.js";
 import { EclipsePhaseRangedWeaponSheet } from "./item/rangedweapon-sheet.js";
 import { EclipsePhaseCloseCombatWeaponSheet } from "./item/ccweapon-sheet.js";
+import { EclipsePhaseGrenadeSheet } from "./item/grenade-sheet.js";
 import { EclipsePhaseArmorSheet } from "./item/armor-sheet.js";
 import { EclipsePhaseDrugSheet } from "./item/drug-sheet.js";
 import { EclipsePhaseWareSheet } from "./item/ware-sheet.js";
@@ -94,6 +95,7 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseMorphFlawSheet, {types: ["morphFlaw"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseRangedWeaponSheet, {types: ["rangedWeapon"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseCloseCombatWeaponSheet, {types: ["ccWeapon"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseGrenadeSheet, {types: ["grenade"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseArmorSheet, {types: ["armor"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseWareSheet, {types: ["ware"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseAspectSheet, {types: ["aspect"], makeDefault: true});
