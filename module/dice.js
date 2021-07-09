@@ -361,9 +361,10 @@ export async function TaskCheck({
             let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
             roll.toMessage({
                 speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                flavor: label,
+                flavor: label
+            },{
                 rollMode: rollModeSelection
-        });
+            });
         }
     }
     //Skill check dialog constructor
