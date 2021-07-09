@@ -207,13 +207,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         else if (i.type === 'flaw') {
           flaw.push(i);
         }
-        else if (i.type === 'rangedWeapon') {
+        else if (i.data.displayCategory === 'ranged') {
           rangedweapon.push(i);
         }
-        else if (i.type === 'ccWeapon') {
+        else if (i.data.displayCategory === 'ccweapon') {
           ccweapon.push(i);
         }
-        else if (i.type === 'armor') {
+        else if (i.data.displayCategory === 'armor') {
           armor.push(i);
         }
         else if (i.type === 'aspect') {
@@ -222,7 +222,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         else if (i.type === 'program') {
           program.push(i);
         }
-        else if (i.type === 'gear') {
+        else if (i.data.displayCategory === 'gear') {
           gear.push(i);
         }
         else if (i.type === 'vehicle') {

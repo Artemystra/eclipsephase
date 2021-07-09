@@ -466,37 +466,43 @@
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "interface": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "perceive": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "program": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "research": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "survival": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         }
       },
       "skillsMox": {
@@ -504,31 +510,36 @@
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "kinesics": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "persuade": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "provoke": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "psi": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         }
       },
       "skillsVig": {
@@ -536,37 +547,43 @@
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "fray": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "free fall": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "guns": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "infiltrate": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         },
         "melee": {
           "value": null,
           "specname": "",
           "spec": false,
-          "roll": null
+          "roll": null,
+          "mod": null
         }
       },
       "bodies": {
@@ -1154,7 +1171,9 @@
       "program",
       "specialSkill",
       "knowSkill",
-      "vehicle"
+      "vehicle",
+      "drug",
+      "grenade"
     ],
     "templates": {
       "base": {
@@ -1163,7 +1182,8 @@
       },
       "buyable": {
         "cost": "",
-        "slotType": ""
+        "slotType": "",
+        "displayCategory": ""
       }
     },
     "gear": {
@@ -1171,7 +1191,8 @@
         "base",
         "buyable"
       ],
-      "quantity": 1
+      "quantity": 1,
+      "displayCategory": "gear"
     },
     "rangedWeapon": {
       "templates": [
@@ -1182,14 +1203,28 @@
       "ammoMin": null,
       "ammoMax": null,
       "dv": null,
-      "firingMode": ""
+      "firingMode": "",
+      "displayCategory": "ranged"
+    },
+    "grenade": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "areaeffect": null,
+      "dv": null,
+      "armorused":null,
+      "quantity": 1,
+      "slotType": "Accessory",
+      "displayCategory": "gear"
     },
     "ccWeapon": {
       "templates": [
         "base",
         "buyable"
       ],
-      "dv": null
+      "dv": null,
+      "displayCategory": "ccweapon"
     },
     "armor": {
       "templates": [
@@ -1197,7 +1232,26 @@
         "buyable"
       ],
       "energy": null,
-      "kinetic": null
+      "kinetic": null,
+      "displayCategory": "armor"
+    },
+    "drug": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "category": false,
+      "dermal": false,
+      "inhalation": false,
+      "injection": false,
+      "oral": false,
+      "drugType": "",
+      "duration": null,
+      "addictionMod": null,
+      "addictionType": "",
+      "quantity": 1,
+      "slotType": "Accessory",
+      "displayCategory": "gear"
     },
     "trait": {
       "templates": [
