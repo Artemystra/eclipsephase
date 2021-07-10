@@ -94,6 +94,13 @@
       "system": "eclipsephase",
       "path": "./packs/grenades.db",
       "entity": "Item"
+    },
+    {
+      "name": "bots",
+      "label": "Bots",
+      "system": "eclipsephase",
+      "path": "./packs/bots.db",
+      "entity": "Actor"
     }],
   "languages": [
     {

@@ -27,6 +27,23 @@ eclipsephase.gearTypes = {
     notMobile: "Not Mobile"
 }
 
+eclipsephase.moveTypes = {
+    boat: "Boat",
+    hopper: "Hopper",
+    hover: "Hover",
+    ionic: "Ionic",
+    microlight: "Microlight",
+    roller: "Roller",
+    rotor: "Rotor",
+    snake: "Snake",
+    submarine: "Submarine",
+    swimmer: "Swimmer",
+    thrustvector: "Thrust Vector",
+    tracked: "Tracked",
+    walker: "Walker",
+    wheeled: "Wheeled",
+    winged: "Winged"
+}
 eclipsephase.armorTypes = {
     main: "Main Armor",
     additional: "Additional Armor"
