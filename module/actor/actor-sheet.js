@@ -58,6 +58,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     if(data.data.img === "icons/svg/mystery-man.svg"){
       data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
+    if(data.data.data.muse.img ==="")
+      data.data.data.muse.img = "systems/eclipsephase/resources/img/clippy.png";
     if(data.data.data.bodies.morph1.img === ""){
       data.data.data.bodies.morph1.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }

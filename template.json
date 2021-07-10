@@ -54,18 +54,184 @@
           "flex": {
             "value": null
           }
-        }
+        },
+        "aptitudes": {
+          "cog": {
+            "value": null,
+            "label": "cognition",
+            "roll": null
+          },
+          "int": {
+            "value": null,
+            "label": "intuition",
+            "roll": null
+          },
+          "ref": {
+            "value": null,
+            "label": "reflexes",
+            "roll": null
+          },
+          "sav": {
+            "value": null,
+            "label": "savvy",
+            "roll": null
+          },
+          "som": {
+            "value": null,
+            "label": "somatics",
+            "roll": null
+          },
+          "wil": {
+            "value": null,
+            "label": "willpower",
+            "roll": null
+          }
+        },
+        "skillsIns": {
+          "infosec": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "interface": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "perceive": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "program": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "research": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "survival": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          }
+        },
+        "skillsMox": {
+          "deceive": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "kinesics": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "persuade": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "provoke": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "psi": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          }
+        },
+        "skillsVig": {
+          "athletics": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "fray": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "free fall": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "guns": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "infiltrate": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "melee": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          }
+        }  
       },
       "npc": {
         "threatLevel": {
           "current": null,
           "total": null
         }
+      },
+      "muse": {
+          "muse":{
+            "name": null,
+            "img" : "systems/eclipsephase/resources/img/clippy.png",
+            "description": null,
+            "knowledgeskill": null
+          }
       }
     },
     "character": {
       "templates": [
-        "base"
+        "base",
+        "muse"
       ],
       "biography": "",
       "ego": {
@@ -424,167 +590,10 @@
           }
         }
       },
-      "aptitudes": {
-        "cog": {
-          "value": null,
-          "label": "cognition",
-          "roll": null
-        },
-        "int": {
-          "value": null,
-          "label": "intuition",
-          "roll": null
-        },
-        "ref": {
-          "value": null,
-          "label": "reflexes",
-          "roll": null
-        },
-        "sav": {
-          "value": null,
-          "label": "savvy",
-          "roll": null
-        },
-        "som": {
-          "value": null,
-          "label": "somatics",
-          "roll": null
-        },
-        "wil": {
-          "value": null,
-          "label": "willpower",
-          "roll": null
-        }
-      },
       "rest": {
         "short1": false,
         "short2": false,
         "long": false
-      },
-      "skillsIns": {
-        "infosec": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "interface": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "perceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "program": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "research": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "survival": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        }
-      },
-      "skillsMox": {
-        "deceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "kinesics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "persuade": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "provoke": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "psi": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        }
-      },
-      "skillsVig": {
-        "athletics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "fray": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "free fall": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "guns": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "infiltrate": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        },
-        "melee": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null,
-          "mod": null
-        }
       },
       "bodies": {
         "activeMorph": "morph1",
@@ -709,160 +718,6 @@
         "motivation2": "",
         "motivation3": ""
       },
-      "aptitudes": {
-        "cog": {
-          "value": null,
-          "label": "cognition",
-          "roll": null
-        },
-        "int": {
-          "value": null,
-          "label": "intuition",
-          "roll": null
-        },
-        "ref": {
-          "value": null,
-          "label": "reflexes",
-          "roll": null
-        },
-        "sav": {
-          "value": null,
-          "label": "savvy",
-          "roll": null
-        },
-        "som": {
-          "value": null,
-          "label": "somatics",
-          "roll": null
-        },
-        "wil": {
-          "value": null,
-          "label": "willpower",
-          "roll": null
-        }
-      },
-      "skillsIns": {
-        "infosec": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "interface": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "perceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "program": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "research": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "survival": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsMox": {
-        "deceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "kinesics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "persuade": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "provoke": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "psi": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsVig": {
-        "athletics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "fray": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "free fall": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "guns": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "infiltrate": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "melee": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "pools": {
-        "insight": {
-          "value": null
-        },
-        "moxie": {
-          "value": null
-        },
-        "vigor": {
-          "value": null
-        },
-        "flex": {
-          "value": null
-        }
-      },
       "specSkills": {
         "special1": {
           "skillName": "",
@@ -965,124 +820,6 @@
         "base",
         "npc"
       ],
-      "aptitudes": {
-        "cog": {
-          "value": null,
-          "label": "cognition",
-          "roll": null
-        },
-        "int": {
-          "value": null,
-          "label": "intuition",
-          "roll": null
-        },
-        "ref": {
-          "value": null,
-          "label": "reflexes",
-          "roll": null
-        },
-        "sav": {
-          "value": null,
-          "label": "savvy",
-          "roll": null
-        },
-        "som": {
-          "value": null,
-          "label": "somatics",
-          "roll": null
-        },
-        "wil": {
-          "value": null,
-          "label": "willpower",
-          "roll": null
-        }
-      },
-      "skillsIns": {
-        "perceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsMox": {
-        "deceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "kinesics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "persuade": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "provoke": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "psi": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsVig": {
-        "athletics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "fray": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "free fall": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "guns": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "melee": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "pools": {
-        "insight": {
-          "value": null
-        },
-        "moxie": {
-          "value": null
-        },
-        "vigor": {
-          "value": null
-        },
-        "flex": {
-          "value": null
-        }
-      },
       "specSkills": {
         "special1": {
           "skillName": "",
@@ -1141,6 +878,10 @@
           "movement": null,
           "morphWare": "",
           "morphTraits": ""
+        },
+        "armor": {
+          "energy":0,
+          "kinetic":0
         }
       },
       "bodyTypes": {

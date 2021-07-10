@@ -255,6 +255,11 @@
         <div class="contentBox gear">
             <div class="flexrow">
                 <h3 class="subheader">Ranged Weapons</h3>
+                <div class="alignRight flexGrowHalf reveal">
+                    <div class="alignRight flexGrowHalf">
+                        <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Ranged</a>
+                    </div>
+                </div>
                 <div class="alignRight flexGrowThreeQuarter">
                     <label class="resource-label labelWidth-large">Roll Guns</label>
                     <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
@@ -301,6 +306,11 @@
         <div class="contentBox gear">
             <div class="flexrow">
                 <h3 class="subheader">Close Combat Weapons</h3>
+                <div class="alignRight flexGrowHalf reveal">
+                    <div class="alignRight flexGrowHalf">
+                        <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Melee</a>
+                    </div>
+                </div>
                 <div class="alignRight flexGrowThreeQuarter">
                     <label class="resource-label labelWidth-large">Roll Melee</label>
                     <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
@@ -430,7 +440,10 @@
             <div class="contentBox flexGrowHalf">
                 <div class="flexrow">
                     <h3 class="subheader">Armor & Gear</h3>
-                    <div class="alignRight flexGrowThreeQuarter">
+                    <div class="alignRight flexGrowHalf reveal">
+                        <div class="alignRight flexGrowHalf">
+                            <a class="item-control item-create" title="Create item" data-type="armor" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Armor</a>
+                        </div>
                     </div>
                 </div>
                 <div class="listBackground noMargin">
@@ -439,7 +452,7 @@
                         {{#each data.armor as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="flexrow">
-                                <input class="sheet-inline-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
+                                <input class="sheet-inline-edit item-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
                             </div>
                             <div class="flexrow flex-group-right">
                                 <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
