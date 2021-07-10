@@ -159,6 +159,7 @@
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="ego">Ego</a>
+        <a class="item" data-tab="muse">Muse</a>
         <a class="item" data-tab="skills">Skills</a>
         <a class="item" data-tab="body">Body</a>
         {{#if data.vehicle.Vehicle}}
@@ -815,6 +816,109 @@
                     {{/if}}
                 </div>
             </div>
+        </div>
+        {{!-- Muse Tab --}}
+        <div class="tab" data-group="primary" data-tab="muse">
+            <div class="contentBox" style="margin-bottom: 10px;">
+                <div class="flexrow">
+                    <h3 class="subheader">Muse Info</h3>
+                    <div class="alignRight flexGrowThreeQuarter">
+                    </div>
+                </div>
+                <div class="itemBackground flexrow flex-group-center skills">
+                    <label class="input-large resource-label alignCenter" >Name</label>
+                    <input class="input-XL" name="data.muse.name" type="text" value="{{data.data.muse.name}}" data-dtype="Text" placeholder="e.g. Jeeves"/>
+                </div>
+            </div>        
+            <div class="grid grid-2col noMargin">
+                <div class="contentBox noMargin">
+                    <div class="flexrow">
+                        <h3 class="subheader">Muse Skills</h3>
+                    </div>
+                    <div class="listBackground edgeAbler">
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Hardware: Electronics</span>
+                            <input class=" input-small" name="Hardware: Electronics" type="number" value="30" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width:40px;">
+                                <img data-type="skill" data-name="Hardware: Electronics" data-rollvalue="30" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Infosec</span>
+                            <input class=" input-small" name="Infosec" type="number" value="30" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Infosec" data-rollvalue="30" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Interface</span>
+                            <input class=" input-small" name="Interface" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Interface" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Know: Accounting</span>
+                            <input class=" input-small" name="Know: Accounting" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Know: Accounting" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Know: Psychology</span>
+                            <input class=" input-small" name="Know: Psychology" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Know: Psychology" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Medicine: Psychosurgery</span>
+                            <input class=" input-small" name="Medicine: Psychosurgery" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Medicine: Psychosurgery" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Perceive</span>
+                            <input class=" input-small" name="Perceive" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Perceive" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Program</span>
+                            <input class=" input-small" name="Program" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Program" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <span class="resource-label input-XXL">Research</span>
+                            <input class=" input-small" name="Research" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="Research" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-group-center reveal">
+                            <input class="input-XXL" name="data.muse.knowledgeskill" type="text" value="{{data.data.muse.knowledgeskill}}" data-dtype="Text" placeholder="Know: Gardening"/>
+                            <input class=" input-small" name="knowskill" type="number" value="40" data-dtype="Number" placeholder="0" readonly/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="{{data.data.muse.knowledgeskill}}" data-rollvalue="40" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <img class="profile-img" src="{{data.data.muse.img}}" data-edit="img" title="{{data.data.muse.name}}"/>
+                </div>
+            </div>
+            <div class="flexrow">
+                <h3 class="subheader">About {{data.data.muse.name}}</h3>
+                <div class="alignRight flexGrowHalf">
+                </div>
+            </div>
+            {{editor content=data.data.muse.description target="data.muse.description" button=true owner=owner editable=this.options.editable}}
+        
         </div>
         {{!-- Body Tab --}}
         <div class="tab body" data-group="primary" data-tab="body">

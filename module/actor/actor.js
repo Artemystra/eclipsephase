@@ -28,7 +28,8 @@ export class EclipsePhaseActor extends Actor {
 
   calculateSkillvalue(key,skill,data){
     var skilldata=EclipsePhaseActor.skillkey.find(element => element.skill==key);
-    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier +skill.mod;
+    var test=eval('data.aptitudes.cog.value');
+    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier +(skill.mod?skill.mod:0);
     
     skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
     skill.specialized = skill.roll+10;

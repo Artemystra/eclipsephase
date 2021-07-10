@@ -859,6 +859,10 @@ h3.subheaderBlank {
   max-width: 180px!important;
 }
 
+.input-XXL {
+  max-width: 240px!important;
+}
+
 .weaponslist .sheet-inline-edit {
   min-height: 20px!important;
   max-height: 20px!important;
