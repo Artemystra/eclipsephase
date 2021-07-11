@@ -223,77 +223,11 @@
           "flex": null,
           "movement": null,
           "movetype": null,
+          "movement2": null,
+          "movetype2": null,
           "description": ""
-        },
-        "id": {
-          "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
-        }  
-      },
+        } 
+      },  
       "npc": {
         "threatLevel": {
           "current": null,
@@ -331,19 +265,344 @@
         "egoFlex": null,
         "ids": {
           "id1": {
-            "templates": ["id"]
-          },
+              "name": "none",
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
+              },
           "id2": {
-            "templates": ["id"]
+            "name": "none",
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id3": {
-            "templates": ["id"]
+            "name": "none",
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id4": {
-            "templates": ["id"]
+            "name": "none",
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id5": {
-            "templates": ["id"]
+            "name": "none",
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           }
         }
       },
@@ -528,6 +787,7 @@
         "base",
         "npc"
       ],
+      "stresstest": null,
       "specSkills": {
         "special1": {
           "skillName": "",

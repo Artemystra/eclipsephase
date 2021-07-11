@@ -953,10 +953,22 @@
                                 </select>
                                 <label class="resource-label labelWidth-medium">Dur</label>
                                 <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
-                                <label class="resource-label labelWidth-medium">Mov</label>
+
+                            </div>
+                            <div class="flexrow flex-group-left">
+                                 <label class="resource-label labelWidth-medium">Mov</label>
                                 <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
                                 <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
                                     {{#select data.data.bodies.morph1.movetype}}
+                                    {{#each config.moveTypes as |moveType key|}}
+                                        <option value="{{key}}">{{moveType}}</option>
+                                    {{/each}}
+                                    {{/select}}
+                                </select>
+                                <label class="resource-label labelWidth-medium">Mov 2</label>
+                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
+                                    {{#select data.data.bodies.morph1.movetype2}}
                                     {{#each config.moveTypes as |moveType key|}}
                                         <option value="{{key}}">{{moveType}}</option>
                                     {{/each}}

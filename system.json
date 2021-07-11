@@ -96,6 +96,20 @@
       "entity": "Item"
     },
     {
+      "name": "meshservices",
+      "label": "Mesh Services",
+      "system": "eclipsephase",
+      "path": "./packs/meshservices.db",
+      "entity": "Item"
+    },
+    {
+      "name": "samplecharacters",
+      "label": "Sample Characters",
+      "system": "eclipsephase",
+      "path": "./packs/samplecharacters.db",
+      "entity": "Actor"
+    },
+    {
       "name": "bots",
       "label": "Bots",
       "system": "eclipsephase",

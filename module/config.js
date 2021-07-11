@@ -66,7 +66,8 @@ eclipsephase.programLevels = {
 eclipsephase.psiTypes = {
     none: "Select",
     gamma: "Gamma",
-    chi: "Chi"
+    chi: "Chi",
+    epsilon: "Epsilon"
 }
 
 eclipsephase.actionTypes = {
@@ -113,7 +114,8 @@ eclipsephase.vehicleType = {
 
 eclipsephase.bodyTypes = {
     synth: "Synthetic",
-    bio: "Biologic"
+    bio: "Biologic",
+    info: "Infomorph"
 }
 
 eclipsephase.drugTypes = {

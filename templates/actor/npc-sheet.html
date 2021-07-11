@@ -177,6 +177,21 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="flexrow flex-between headSpace">
+                            <div>
+                                <label class="resource-label labelWidth-small">Mov 2</label>
+                                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0"/>
+                            </div>
+                            <div>
+                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
+                                    {{#select data.data.bodies.morph1.movetype2}}
+                                    {{#each config.moveTypes as |moveType key|}}
+                                        <option value="{{key}}">{{moveType}}</option>
+                                    {{/each}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
                         <div class="headSpace">
                             <div class="flexrow" style="align-items: center">
                                 <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>

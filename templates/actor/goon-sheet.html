@@ -34,6 +34,7 @@
 
         {{> systems/eclipsephase/templates/actor/partials/npcskills.html }}
 
+        </div>
     {{!-- Weapons Tab --}}
     <div class="tab" data-group="primary" data-tab="weapons">
         {{#if data.rangedWeapon}}
@@ -188,6 +189,21 @@
                         <div>
                             <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
                                 {{#select data.data.bodies.morph1.movetype}}
+                                {{#each config.moveTypes as |moveType key|}}
+                                    <option value="{{key}}">{{moveType}}</option>
+                                {{/each}}
+                                {{/select}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flexrow flex-between headSpace">
+                        <div>
+                            <label class="resource-label labelWidth-small">Mov 2</label>
+                            <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0"/>                          
+                        </div>
+                        <div>
+                            <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
+                                {{#select data.data.bodies.morph1.movetype2}}
                                 {{#each config.moveTypes as |moveType key|}}
                                     <option value="{{key}}">{{moveType}}</option>
                                 {{/each}}
