@@ -50,6 +50,15 @@ function registerSystemSettings() {
     default: false
   });
 
+  game.settings.register("eclipsephase", "effectPanel", {
+    config: true,
+    scope: "world",
+    name: "Enable Effect Panel",
+    hint: 'Enable the Effect Panel on Actors',
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register("eclipsephase", "superBrew", {
     config: true,
     scope: "world",
@@ -119,7 +128,8 @@ Hooks.once('init', async function() {
   var templates = [
     "systems/eclipsephase/templates/actor/partials/npcskills.html",
     "systems/eclipsephase/templates/actor/partials/psi.html",
-    "systems/eclipsephase/templates/actor/partials/headerblock.html"
+    "systems/eclipsephase/templates/actor/partials/headerblock.html",
+    "systems/eclipsephase/templates/actor/partials/effectsTab.html"
   ];
   loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {

@@ -26,11 +26,11 @@ export class EclipsePhaseActor extends Actor {
     {skill:"survival",aptitude:"int",multiplier:1,category:"insight"},
   ];
 
-  calculateSkillvalue(key,skill,data){
+  calculateSkillvalue(key,skill,data,actorType){
     var skilldata=EclipsePhaseActor.skillkey.find(element => element.skill==key);
-    var test=eval('data.aptitudes.cog.value');
     skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier +(skill.mod?skill.mod:0);
-    
+    if(actorType=="goon")
+      skill.derived = (skill.value?skill.value:eval('data.aptitudes.'+skilldata.aptitude+'.value')); //goons roll their value, not a calculated amount
     skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
     skill.specialized = skill.roll+10;
 
@@ -233,17 +233,17 @@ export class EclipsePhaseActor extends Actor {
 
     // Insight Skills
     for (let [key, skill] of Object.entries(data.skillsIns)) {
-      this.calculateSkillvalue(key,skill,data);
+      this.calculateSkillvalue(key,skill,data,actorData.type);
     }
 
     // Moxie skills
     for (let [key, skill] of Object.entries(data.skillsMox)) {
-      this.calculateSkillvalue(key,skill,data);
+      this.calculateSkillvalue(key,skill,data,actorData.type);
     }
 
     // Vigor skills
     for (let [key, skill] of Object.entries(data.skillsVig)) {
-      this.calculateSkillvalue(key,skill,data);
+      this.calculateSkillvalue(key,skill,data,actorData.type);
     }
 
     //Showing skill calculations for know/spec skills
@@ -269,7 +269,10 @@ export class EclipsePhaseActor extends Actor {
         aptSelect = data.aptitudes.sav.value;
       }
       if(key === 'specialSkill' || key === 'knowSkill'){
-        value.data.data.roll = Number(value.data.data.value) + aptSelect;
+        if(actorData.type=="goon")
+          value.data.data.roll = value.data.data.value?Number(value.data.data.value):aptSelect;
+        else
+          value.data.data.roll = Number(value.data.data.value) + aptSelect;
       }
     }
   }

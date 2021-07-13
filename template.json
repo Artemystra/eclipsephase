@@ -692,52 +692,6 @@
         "motivation2": "",
         "motivation3": ""
       },
-      "specSkills": {
-        "special1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        },
-        "special2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        }
-      },
-      "knowSkills": {
-        "know1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know3": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know4": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        }
-      },
       "bodies": {
         "morph1": {
           "templates": [
@@ -788,52 +742,6 @@
         "npc"
       ],
       "stresstest": null,
-      "specSkills": {
-        "special1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        },
-        "special2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        }
-      },
-      "knowSkills": {
-        "know1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know3": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know4": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        }
-      },
       "bodies": {
         "morph1": {
           "templates": [
@@ -1015,13 +923,15 @@
       "specname" : "",
       "value": null,
       "aptitude": null,
-      "roll": 0
+      "roll": 0,
+      "isThreat": false 
     },
     "knowSkill": {
       "name": "",
       "specname" : "",
       "value": null,
-      "aptitude": null
+      "aptitude": null,
+      "isThreat": false
     },
     "vehicle": {
       "templates": [

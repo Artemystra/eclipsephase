@@ -34,6 +34,9 @@
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="skills">Mental</a>
         <a class="item" data-tab="weapons">Physical</a>
+        {{#if data.showEffectsTab}}
+        <a class="item" data-tab="effects">Effects</a>
+        {{/if}}
         {{#if data.vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
         {{/if}}
@@ -428,5 +431,6 @@
         </div>
         {{> systems/eclipsephase/templates/actor/partials/psi.html }}
         </div>
+        {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
     </section>
 </form>

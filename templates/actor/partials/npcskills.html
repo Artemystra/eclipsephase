@@ -94,8 +94,8 @@
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
                                 <input class="input-small sheet-inline-edit" data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
-                                {{#if item.data.aptitude}}
-                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <span class="toggle resource-value input-small">{{numberFormat item.data.roll decimals=0}}</span>
+                                
                                 <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
                                 {{#if item.data.specname}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
@@ -104,11 +104,7 @@
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
-                                {{else}}
-                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                {{/if}}
+                               
                             </div>
                         </div>
                         {{/each}}
