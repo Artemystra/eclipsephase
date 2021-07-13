@@ -41,6 +41,7 @@ export class GoonSheet extends ActorSheet {
         const ccweapon = [];
         const armor = [];
         const ware = [];
+        const morphTrait = [];
         const aspect = {
             Chi: [],
             Gamma: []
@@ -72,6 +73,10 @@ export class GoonSheet extends ActorSheet {
             else if (i.type === 'ware') {
                 ware.push(i)
             }
+            else if (i.type === 'morphTrait' || i.type === 'morphFlaw'){
+                morphTrait.push(i);
+            }
+                
             else if (i.type === 'aspect') {
                 aspect[i.data.psiType].push(i);
             }
@@ -116,6 +121,8 @@ export class GoonSheet extends ActorSheet {
         actorData.features = features;
         actorData.vehicle = vehicle;
         actorData.specialSkill = special;
+        actorData.morphTrait = morphTrait;
+        
     }
 
     activateListeners(html) {

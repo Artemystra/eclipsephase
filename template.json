@@ -211,13 +211,29 @@
             "roll": null,
             "mod": null
           }
-        }  
-      },
+        },
+        "morph": {
+          "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex": null,
+          "movement": null,
+          "movetype": null,
+          "movement2": null,
+          "movetype2": null,
+          "description": ""
+        } 
+      },  
       "npc": {
         "threatLevel": {
           "current": null,
           "total": null
-        }
+        },
+        "description":null
       },
       "muse": {
           "muse":{
@@ -249,344 +265,344 @@
         "egoFlex": null,
         "ids": {
           "id1": {
-            "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
+              "name": "none",
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
               },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
-          },
           "id2": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id3": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id4": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id5": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           }
         }
       },
@@ -598,76 +614,34 @@
       "bodies": {
         "activeMorph": "morph1",
         "morph1": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph2": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph3": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph4": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph5": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph6": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         }
       },
       "psiStrain": {
@@ -766,16 +740,9 @@
       },
       "bodies": {
         "morph1": {
-          "name": "",
-          "type": 1.5,
-          "dur": 0,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "templates": [
+            "morph"
+          ]
         }
       },
       "psiStrain": {
@@ -820,6 +787,7 @@
         "base",
         "npc"
       ],
+      "stresstest": null,
       "specSkills": {
         "special1": {
           "skillName": "",
@@ -868,16 +836,9 @@
       },
       "bodies": {
         "morph1": {
-          "name": "",
-          "type": 1.5,
-          "dur": 0,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "templates": [
+            "morph"
+          ]
         },
         "armor": {
           "energy":0,

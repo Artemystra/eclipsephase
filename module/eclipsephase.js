@@ -104,8 +104,8 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseSpecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseVehicleSheet, {types: ["vehicle"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseDrugSheet, {types: ["drug"], makeDefault: true });
-
-
+  
+  //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
   // If you need to add Handlebars helpers, here are a few useful examples:
   Handlebars.registerHelper('concat', function() {
     var outStr = '';
@@ -116,7 +116,12 @@ Hooks.once('init', async function() {
     }
     return outStr;
   });
-
+  var templates = [
+    "systems/eclipsephase/templates/actor/partials/npcskills.html",
+    "systems/eclipsephase/templates/actor/partials/psi.html",
+    "systems/eclipsephase/templates/actor/partials/headerblock.html"
+  ];
+  loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
     return str.toLowerCase();
   });

@@ -27,6 +27,23 @@ eclipsephase.gearTypes = {
     notMobile: "Not Mobile"
 }
 
+eclipsephase.moveTypes = {
+    boat: "Boat",
+    hopper: "Hopper",
+    hover: "Hover",
+    ionic: "Ionic",
+    microlight: "Microlight",
+    roller: "Roller",
+    rotor: "Rotor",
+    snake: "Snake",
+    submarine: "Submarine",
+    swimmer: "Swimmer",
+    thrustvector: "Thrust Vector",
+    tracked: "Tracked",
+    walker: "Walker",
+    wheeled: "Wheeled",
+    winged: "Winged"
+}
 eclipsephase.armorTypes = {
     main: "Main Armor",
     additional: "Additional Armor"
@@ -49,7 +66,8 @@ eclipsephase.programLevels = {
 eclipsephase.psiTypes = {
     none: "Select",
     gamma: "Gamma",
-    chi: "Chi"
+    chi: "Chi",
+    epsilon: "Epsilon"
 }
 
 eclipsephase.actionTypes = {
@@ -96,7 +114,8 @@ eclipsephase.vehicleType = {
 
 eclipsephase.bodyTypes = {
     synth: "Synthetic",
-    bio: "Biologic"
+    bio: "Biologic",
+    info: "Infomorph"
 }
 
 eclipsephase.drugTypes = {
