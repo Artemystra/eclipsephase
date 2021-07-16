@@ -236,12 +236,24 @@
         "description":null
       },
       "muse": {
-          "muse":{
-            "name": null,
-            "img" : "systems/eclipsephase/resources/img/clippy.png",
-            "description": null,
-            "knowledgeskill": null
+        "muse": {
+          "name": null,
+          "img" : "",
+          "description": null,
+          "knowledgeskillname": null,
+          "knowledgeskillvalue": null,
+          "skills":{
+            "electronics": null,
+            "infosec": null,
+            "interface": null,
+            "accounting": null,
+            "psychology": null,
+            "psychosurgery": null,
+            "perceive": null,
+            "program": null,
+            "research": null
           }
+        }
       }
     },
     "character": {
