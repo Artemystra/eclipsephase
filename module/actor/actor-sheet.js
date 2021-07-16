@@ -59,7 +59,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
     if(data.data.data.muse.img ==="")
-      data.data.data.muse.img = "systems/eclipsephase/resources/img/clippy.png";
+      data.data.data.muse.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     if(data.data.data.bodies.morph1.img === ""){
       data.data.data.bodies.morph1.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
@@ -307,7 +307,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.specialSkill = special;
     actorData.vehicle = vehicle;
     actorData.activeEffects=effects;
-    actodData.actorType = "PC";
+    actorData.actorType = "PC";
     
 
 
