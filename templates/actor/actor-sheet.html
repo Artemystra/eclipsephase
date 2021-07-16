@@ -161,6 +161,9 @@
         <a class="item" data-tab="ego">Ego</a>
         <a class="item" data-tab="muse">Muse</a>
         <a class="item" data-tab="skills">Skills</a>
+        {{#if data.showEffectsTab}}
+        <a class="item" data-tab="effects">Effects</a>
+        {{/if}}
         <a class="item" data-tab="body">Body</a>
         {{#if data.vehicle.Vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
@@ -1950,6 +1953,7 @@
                 {{editor content=data.data.bodies.morph6.description target="data.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
             {{/if}}
         </div>
+        
         {{!-- Vehicles Tab --}}
         <div class="tab vehicle" data-group="primary" data-tab="vehicles">
             {{#each data.vehicle.Vehicle as |item id|}}
@@ -2144,7 +2148,7 @@
                     <h3 class="subheader">Ranged Weapons</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <label class="resource-label labelWidth-large">Roll Guns</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{#if data.data.skillsVig.guns.specname}}
                         <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.guns.specname}}</label>
                         <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
@@ -2222,7 +2226,7 @@
                     <h3 class="subheader">Close Combat Weapons</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <label class="resource-label labelWidth-large">Roll Melee</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{#if data.data.skillsVig.melee.specname}}
                         <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.melee.specname}}</label>
                         <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
@@ -2424,5 +2428,6 @@
         </div>
         {{> systems/eclipsephase/templates/actor/partials/psi.html }}
         </div>
+        {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
     </section>
 </form>

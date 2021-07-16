@@ -30,6 +30,8 @@ export class EclipsePhaseSpecialSkillSheet extends ItemSheet {
   /** @override */
   getData() {
     const data = super.getData();
+    if(this?.isThreat)
+      data.data.isThreat=true;
     data.config = CONFIG.eclipsephase;
     return data;
   }
