@@ -829,112 +829,34 @@
                     </div>
                 </div>
                 <div class="itemBackground flexrow flex-group-left">
-                    <label class="input-large resource-label alignCenter" >Name</label>
-                    <input class="input-XL" name="data.muse.name" type="text" value="{{data.data.muse.name}}" data-dtype="Text" placeholder="e.g. Jeeves"/>
+                    <label class="input-large resource-label" >Name</label>
+                    <input class="input-XL" name="data.muse.name" type="text" value="{{data.data.muse.name}}" data-dtype="Text" placeholder="e.g. Amusing"/>
                 </div>
             </div>        
-            <div class="flexrow contentBox noMargin"></div>
-                <div class="flex: 0.7; min-width: 72%;">
+            <div class="flexrow contentBox">
+                <div style="flex: 0.7; min-width: 73%; margin-top: 10px;">
                     <div class="flexrow">
                         <h3 class="subheader">Muse Skills</h3>
                         <div class="alignRight flexGrowThreeQuarter"></div>
                     </div>
                     <div class="listBackground edgeAbler">
-                        {{#each data.muse.skills as |skill key|}}
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-large">{{key}}</span>
-                            <input class=" input-small" type="number" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                            <input class=" input-small" type="number" name="data.skillsMox.{{key}}.mod" value="{{skill.mod}}" data-dtype="Number" placeholder="0"/>
+                        <div class="grid grid-2col noMargin" style="gap: 0;">
+                            {{#each data.data.muse.skills as |skill key|}}
+                        {{log this}}
+                        <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
+                            <input class="input-XL" type="text" name="data.muse.skills.{{key}}.skillname" value="{{skill.skillname}}" data-dtype="Text" placeholder="Skill Name" style="text-transform: uppercase;"/>
+                            <input class="input-small" type="number" name="data.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                             <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
-                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                                <img data-type="skill" data-name="{{skill.skillname}}" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
                             </div>
-                            <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                            {{#if this.specname}}
-                            <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                            {{else}}
-                            <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                            {{/if}}
                         </div>
                         {{/each}}
-                    </div>
-                    <div class="listBackground edgeAbler">
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Hardware: Electronics</span>
-                            <input class=" input-small" name="Hardware: Electronics" type="number" value="30" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width:40px;">
-                                <img data-type="skill" data-name="Hardware: Electronics" data-rollvalue="30" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Infosec</span>
-                            <input class=" input-small" name="Infosec" type="number" value="30" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Infosec" data-rollvalue="30" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Interface</span>
-                            <input class=" input-small" name="Interface" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Interface" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Know: Accounting</span>
-                            <input class=" input-small" name="Know: Accounting" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Know: Accounting" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Know: Psychology</span>
-                            <input class=" input-small" name="Know: Psychology" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Know: Psychology" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Medicine: Psychosurgery</span>
-                            <input class=" input-small" name="Medicine: Psychosurgery" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Medicine: Psychosurgery" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Perceive</span>
-                            <input class=" input-small" name="Perceive" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Perceive" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Program</span>
-                            <input class=" input-small" name="Program" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Program" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <span class="resource-label input-XXL">Research</span>
-                            <input class=" input-small" name="Research" type="number" value="60" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="Research" data-rollvalue="60" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-group-center reveal">
-                            <input class="input-XXL" name="data.muse.knowledgeskill" type="text" value="{{data.data.muse.knowledgeskill}}" data-dtype="Text" placeholder="Know: Gardening"/>
-                            <input class=" input-small" name="knowskill" type="number" value="40" data-dtype="Number" placeholder="0" readonly/>
-                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <img data-type="skill" data-name="{{data.data.muse.knowledgeskill}}" data-rollvalue="40" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                            </div>
                         </div>
                     </div>
                 </div>
                 <div style="position: relative; flex: 0.3;">
-                    <div class="morph-imgBorder" style="margin-right: 5px;">
-                        <img class="Morph-img" src="{{data.data.muse.img}}" data-edit="data.bodies.morph1.img" title="{{data.data.muse.name}}"/>
-                    </div>
+                    <img class="muse-img" src="{{data.data.muse.img}}" data-edit="data.bodies.morph1.img" title="{{data.data.muse.name}}"/>
+                </div>
             </div>
             <div class="flexrow">
                 <h3 class="subheader">About {{data.data.muse.name}}</h3>

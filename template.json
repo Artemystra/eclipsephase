@@ -243,15 +243,76 @@
           "knowledgeskillname": null,
           "knowledgeskillvalue": null,
           "skills":{
-            "electronics": null,
-            "infosec": null,
-            "interface": null,
-            "accounting": null,
-            "psychology": null,
-            "psychosurgery": null,
-            "perceive": null,
-            "program": null,
-            "research": null
+            "skill1": {
+              "value": 30,
+              "skillname": "electronics",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill2": {
+              "value": 30,
+              "skillname": "infosec",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill3": {
+              "value": 60,
+              "skillname": "interface",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill4": {
+              "value": 60,
+              "skillname": "accounting",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill5": {
+              "value": 60,
+              "skillname": "psychology",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill6": {
+              "value": 60,
+              "skillname": "psychosurgery",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill7": {
+              "value": 60,
+              "skillname": "perceive",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill8": {
+              "value": 60,
+              "skillname": "program",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill9": {
+              "value": 60,
+              "skillname": "research",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill10": {
+              "value": null,
+              "skillname": "",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            }
           }
         }
       }
