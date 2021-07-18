@@ -40,22 +40,28 @@
         </div>
     {{!-- Weapons Tab --}}
     <div class="tab" data-group="primary" data-tab="weapons">
+        <div class="flexrow">
+            <label class="resource-label labelWidth-large">Roll Guns</label>
+                <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                {{#if data.data.skillsVig.guns.specname}}
+                <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.guns.specname}}</label>
+                <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                {{/if}}
+                <label class="resource-label labelWidth-large">Roll Melee</label>
+                <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                {{#if data.skillsVig.melee.specname}}
+                <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.melee.specname}}</label>
+                <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                {{/if}}
+        </div>
         {{#if data.rangedWeapon}}
         <div class="contentBox gear">
             <div class="flexrow">
                 <h3 class="subheader">Ranged Weapons</h3>
                 <div class="alignRight flexGrowHalf reveal">
-                    <div class="alignRight flexGrowHalf">
-                        <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Ranged</a>
-                    </div>
                 </div>
                 <div class="alignRight flexGrowThreeQuarter">
-                    <label class="resource-label labelWidth-large">Roll Guns</label>
-                    <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                    {{#if data.data.skillsVig.guns.specname}}
-                    <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.guns.specname}}</label>
-                    <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                    {{/if}}
+                    <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Ranged</a>
                 </div>
             </div>
             <div class="itemBackground">
@@ -93,11 +99,8 @@
         {{else}}
         <div class="contentBox gear">
             <div class="flexrow">
-                <h3 class="subheader">Ranged Weapons</h3>
-                <div class="alignRight flexGrowHalf reveal">
-                    <div class="alignRight flexGrowHalf">
-                        <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Ranged</a>
-                    </div>
+                <div class="separator">
+                    <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a ranged weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
                 </div>
             </div>
         </div>
@@ -107,17 +110,9 @@
             <div class="flexrow">
                 <h3 class="subheader">Close Combat Weapons</h3>
                 <div class="alignRight flexGrowHalf reveal">
-                    <div class="alignRight flexGrowHalf">
-                        <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Melee</a>
-                    </div>
                 </div>
                 <div class="alignRight flexGrowThreeQuarter">
-                    <label class="resource-label labelWidth-large">Roll Melee</label>
-                    <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                    {{#if data.skillsVig.melee.specname}}
-                    <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.melee.specname}}</label>
-                    <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                    {{/if}}
+                    <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Melee</a>
                 </div>
             </div>
             <div class="itemBackground">
@@ -148,13 +143,10 @@
             </div>
         </div>
         {{else}}
-        <div class="contentBox gear">
+        <div class="contentBox gear weaponslist">
             <div class="flexrow">
-                <h3 class="subheader">Close Combat Weapons</h3>
-                <div class="alignRight flexGrowHalf reveal">
-                    <div class="alignRight flexGrowHalf">
-                        <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Melee</a>
-                    </div>
+                <div class="separator">
+                    <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a melee weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
                 </div>
             </div>
         </div>
