@@ -1,0 +1,114 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+        <div class="flexrow flex-group-center">
+            <table>
+                <tr>
+                    <td>
+                    </td>
+                    <td colspan="4">
+                        <label class="resource-section-label">Application</label>
+                    </td>                                  
+                </tr>
+                <tr>
+                    <td>
+                        <label class="resource-label">Category</label>
+                    </td>
+                    <td>
+                        <label class="resource-sub-label">Dermal</label>
+                    </td>
+                    <td>
+                        <label class="resource-sub-label">Inhalation</label>
+                    </td>
+                    <td>
+                        <label class="resource-sub-label">Injection</label>
+                    </td>
+                    <td>
+                        <label class="resource-sub-label">Oral</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="data.category" data-type="String">
+                            {{#select data.data.category}}
+                            {{#each config.drugCategories as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>   
+                    </td>
+                    <td>
+                        <input style="margin:auto; display:flex" type="checkbox" class="sheet" name="data.dermal" {{checked data.data.dermal}}/>
+                    </td>
+                    <td>
+                        <input style="margin:auto; display:flex" type="checkbox" class="sheet" name="data.inhalation" {{checked data.data.inhalation}}/>
+                    </td>
+                    <td>
+                        <input style="margin:auto; display:flex" type="checkbox" class="sheet" name="data.injection" {{checked data.data.injection}}/>
+                    </td>
+                    <td>
+                        <input style="margin:auto; display:flex" type="checkbox" class="sheet" name="data.oral" {{checked data.data.oral}}/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="resource-label">Type</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Duration</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Addiction Mod</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Addiction Type</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Cost</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="data.drugType" data-type="String">
+                            {{#select data.data.drugType}}
+                            {{#each config.drugTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <input class="input-large" type="text" name="data.duration" value="{{data.data.duration}}" placeholder="e.g. 1 hours"/>
+                    </td>
+                    <td>
+                        <input class="input-large" type="text" name="data.addictionMod" value="{{data.data.addictionMod}}" placeholder="-10"/>  
+                    </td>
+                    <td>
+                        <select name="data.addictionType" data-type="String">
+                            {{#select data.data.addictionType}}
+                            {{#each config.drugAddicitonTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="data.cost" data-type="String">
+                            {{#select data.data.cost}}
+                            {{#each config.costTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                </tr>
+             </table>
+        </div>
+        <p></p>
+        <h2>Description</h2>
+        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60">{{data.data.description}}</textarea></div>
+    </section>
+</form>

@@ -58,6 +58,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     if(data.data.img === "icons/svg/mystery-man.svg"){
       data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
+    if(data.data.data.muse.img ==="")
+      data.data.data.muse.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     if(data.data.data.bodies.morph1.img === ""){
       data.data.data.bodies.morph1.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
@@ -120,6 +122,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     const special = [];
     const trait = [];
     const flaw = [];
+    const effects = [];
     const morphtrait = {
         morph1: [],
         morph2: [],
@@ -207,13 +210,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         else if (i.type === 'flaw') {
           flaw.push(i);
         }
-        else if (i.type === 'rangedWeapon') {
+        else if (i.data.displayCategory === 'ranged') {
           rangedweapon.push(i);
         }
-        else if (i.type === 'ccWeapon') {
+        else if (i.data.displayCategory === 'ccweapon') {
           ccweapon.push(i);
         }
-        else if (i.type === 'armor') {
+        else if (i.data.displayCategory === 'armor') {
           armor.push(i);
         }
         else if (i.type === 'aspect') {
@@ -222,7 +225,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         else if (i.type === 'program') {
           program.push(i);
         }
-        else if (i.type === 'gear') {
+        else if (i.data.displayCategory === 'gear') {
           gear.push(i);
         }
         else if (i.type === 'vehicle') {
@@ -279,6 +282,14 @@ export class EclipsePhaseActorSheet extends ActorSheet {
             morphtrait[i.data.boundTo].push(i);
         }
     }
+    actorData.showEffectsTab=false
+    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
+      var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
+      for(let i of effectList){
+        effects.push(i.data);
+      }
+      actorData.showEffectsTab=true;
+    }
 
     // Assign and return
     actorData.trait = trait;
@@ -295,6 +306,9 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actorData.knowSkill = know;
     actorData.specialSkill = special;
     actorData.vehicle = vehicle;
+    actorData.activeEffects=effects;
+    actorData.actorType = "PC";
+    
 
 
     //console.log("What is actorData? ", actorData)
@@ -327,6 +341,25 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
       item.sheet.render(true);
+    });
+
+    html.find('.effect-create').click(ev => {
+      this.actor.createEmbeddedDocuments('ActiveEffect', [{
+        label: 'Active Effect',
+        icon: '/icons/svg/mystery-man.svg'
+      }]);
+    });
+
+    html.find('.effect-edit').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const effect = this.actor.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
+      effect.sheet.render(true);
+    });
+
+    html.find('.effect-delete').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      this.actor.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
+      li.slideUp(200, () => this.render(false));
     });
 
     // Delete Inventory Item

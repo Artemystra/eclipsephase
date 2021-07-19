@@ -2,14 +2,14 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseSpecialSkillSheet extends ItemSheet {
+export class EclipsePhaseDrugSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
-      width: 600,
-      height: 130,
+      width: 700,
+      height: 470,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
@@ -30,8 +30,6 @@ export class EclipsePhaseSpecialSkillSheet extends ItemSheet {
   /** @override */
   getData() {
     const data = super.getData();
-    if(this?.isThreat)
-      data.data.isThreat=true;
     data.config = CONFIG.eclipsephase;
     return data;
   }

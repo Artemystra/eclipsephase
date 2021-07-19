@@ -2,7 +2,11 @@
   "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
+<<<<<<< HEAD
   "version": "0.5.0.5",
+=======
+  "version": "0.5.0.4",
+>>>>>>> 656734d551e04f71c60dc1a077e6f85e7690bfd6
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.8.8",
   "templateVersion": 2,
@@ -66,6 +70,55 @@
       "system": "eclipsephase",
       "path": "./packs/vehicles.db",
       "entity": "Item"
+    },
+    {
+      "name": "ammo",
+      "label": "Ammo",
+      "system": "eclipsephase",
+      "path": "./packs/ammo.db",
+      "entity": "Item"
+    },
+    {
+      "name": "apps",
+      "label": "Apps",
+      "system": "eclipsephase",
+      "path": "./packs/apps.db",
+      "entity": "Item"
+    },
+    {
+      "name": "drugs-and-toxins",
+      "label": "Drugs and Toxins",
+      "system": "eclipsephase",
+      "path": "./packs/drugs-and-toxins.db",
+      "entity": "Item"
+    },
+    {
+      "name": "grenades",
+      "label": "Grenades",
+      "system": "eclipsephase",
+      "path": "./packs/grenades.db",
+      "entity": "Item"
+    },
+    {
+      "name": "meshservices",
+      "label": "Mesh Services",
+      "system": "eclipsephase",
+      "path": "./packs/meshservices.db",
+      "entity": "Item"
+    },
+    {
+      "name": "samplecharacters",
+      "label": "Sample Characters",
+      "system": "eclipsephase",
+      "path": "./packs/samplecharacters.db",
+      "entity": "Actor"
+    },
+    {
+      "name": "bots",
+      "label": "Bots",
+      "system": "eclipsephase",
+      "path": "./packs/bots.db",
+      "entity": "Actor"
     }],
   "languages": [
     {

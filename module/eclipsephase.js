@@ -9,7 +9,9 @@ import { EclipsePhaseTraitSheet } from "./item/trait-sheet.js";
 import { EclipsePhaseFlawSheet } from "./item/flaw-sheet.js";
 import { EclipsePhaseRangedWeaponSheet } from "./item/rangedweapon-sheet.js";
 import { EclipsePhaseCloseCombatWeaponSheet } from "./item/ccweapon-sheet.js";
+import { EclipsePhaseGrenadeSheet } from "./item/grenade-sheet.js";
 import { EclipsePhaseArmorSheet } from "./item/armor-sheet.js";
+import { EclipsePhaseDrugSheet } from "./item/drug-sheet.js";
 import { EclipsePhaseWareSheet } from "./item/ware-sheet.js";
 import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
 import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
@@ -44,6 +46,15 @@ function registerSystemSettings() {
     scope: "world",
     name: "Always Reveal Stats",
     hint: 'Always show character details/stats to everyone with at least "limited" permissions. If deactivated, shows "limited"-sheet of an character for everyone who is not GM nor owner of given character',
+    type: Boolean,
+    default: false
+  });
+
+  game.settings.register("eclipsephase", "effectPanel", {
+    config: true,
+    scope: "world",
+    name: "Enable Effect Panel",
+    hint: 'Enable the Effect Panel on Actors',
     type: Boolean,
     default: false
   });
@@ -93,6 +104,7 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseMorphFlawSheet, {types: ["morphFlaw"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseRangedWeaponSheet, {types: ["rangedWeapon"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseCloseCombatWeaponSheet, {types: ["ccWeapon"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseGrenadeSheet, {types: ["grenade"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseArmorSheet, {types: ["armor"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseWareSheet, {types: ["ware"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseAspectSheet, {types: ["aspect"], makeDefault: true});
@@ -100,9 +112,9 @@ Hooks.once('init', async function() {
   Items.registerSheet("eclipsephase", EclipsePhaseKnowSkillSheet, {types: ["knowSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseSpecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EclipsePhaseVehicleSheet, {types: ["vehicle"], makeDefault: true });
-
-
-
+  Items.registerSheet("eclipsephase", EclipsePhaseDrugSheet, {types: ["drug"], makeDefault: true });
+  
+  //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
   // If you need to add Handlebars helpers, here are a few useful examples:
   Handlebars.registerHelper('concat', function() {
     var outStr = '';
@@ -113,7 +125,15 @@ Hooks.once('init', async function() {
     }
     return outStr;
   });
-
+  var templates = [
+    "systems/eclipsephase/templates/actor/partials/vehicles.html",
+    "systems/eclipsephase/templates/actor/partials/npcskills.html",
+    "systems/eclipsephase/templates/actor/partials/npcweapons.html",
+    "systems/eclipsephase/templates/actor/partials/psi.html",
+    "systems/eclipsephase/templates/actor/partials/headerblock.html",
+    "systems/eclipsephase/templates/actor/partials/effectsTab.html"
+  ];
+  await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
     return str.toLowerCase();
   });

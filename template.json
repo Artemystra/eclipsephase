@@ -54,18 +54,273 @@
           "flex": {
             "value": null
           }
-        }
-      },
+        },
+        "aptitudes": {
+          "cog": {
+            "value": null,
+            "label": "cognition",
+            "roll": null
+          },
+          "int": {
+            "value": null,
+            "label": "intuition",
+            "roll": null
+          },
+          "ref": {
+            "value": null,
+            "label": "reflexes",
+            "roll": null
+          },
+          "sav": {
+            "value": null,
+            "label": "savvy",
+            "roll": null
+          },
+          "som": {
+            "value": null,
+            "label": "somatics",
+            "roll": null
+          },
+          "wil": {
+            "value": null,
+            "label": "willpower",
+            "roll": null
+          }
+        },
+        "skillsIns": {
+          "infosec": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "interface": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "perceive": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "program": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "research": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "survival": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          }
+        },
+        "skillsMox": {
+          "deceive": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "kinesics": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "persuade": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "provoke": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "psi": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          }
+        },
+        "skillsVig": {
+          "athletics": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "fray": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "free fall": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "guns": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "infiltrate": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          },
+          "melee": {
+            "value": null,
+            "specname": "",
+            "spec": false,
+            "roll": null,
+            "mod": null
+          }
+        },
+        "morph": {
+          "name": "",
+          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+          "type": "",
+          "dur": null,
+          "insight": null,
+          "moxie": null,
+          "vigor": null,
+          "flex": null,
+          "movement": null,
+          "movetype": null,
+          "movement2": null,
+          "movetype2": null,
+          "description": ""
+        } 
+      },  
       "npc": {
         "threatLevel": {
           "current": null,
           "total": null
+        },
+        "description":null
+      },
+      "muse": {
+        "muse": {
+          "name": null,
+          "img" : "",
+          "description": null,
+          "knowledgeskillname": null,
+          "knowledgeskillvalue": null,
+          "skills":{
+            "skill1": {
+              "value": 30,
+              "skillname": "electronics",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill2": {
+              "value": 30,
+              "skillname": "infosec",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill3": {
+              "value": 60,
+              "skillname": "interface",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill4": {
+              "value": 60,
+              "skillname": "accounting",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill5": {
+              "value": 60,
+              "skillname": "psychology",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill6": {
+              "value": 60,
+              "skillname": "psychosurgery",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill7": {
+              "value": 60,
+              "skillname": "perceive",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill8": {
+              "value": 60,
+              "skillname": "program",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill9": {
+              "value": 60,
+              "skillname": "research",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            },
+            "skill10": {
+              "value": null,
+              "skillname": "",
+              "spec": false,
+              "roll": null,
+              "mod": null
+            }
+          }
         }
       }
     },
     "character": {
       "templates": [
-        "base"
+        "base",
+        "muse"
       ],
       "biography": "",
       "ego": {
@@ -83,377 +338,345 @@
         "egoFlex": null,
         "ids": {
           "id1": {
-            "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
+              "name": "none",
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
               },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
-          },
           "id2": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id3": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id4": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           },
           "id5": {
             "name": "none",
-            "rep": {
-              "@-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "c-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "f-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "g-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "i-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "r-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              },
-              "x-rep": {
-                "value": null,
-                "small1": false,
-                "small2": false,
-                "small3": false,
-                "med1": false,
-                "med2": false,
-                "large": false
-              }
-            }
+                "rep": {
+                  "@-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "c-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "f-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "g-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "i-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "r-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  },
+                  "x-rep": {
+                    "value": null,
+                    "small1": false,
+                    "small2": false,
+                    "small3": false,
+                    "med1": false,
+                    "med2": false,
+                    "large": false
+                  }
+                }
           }
-        }
-      },
-      "aptitudes": {
-        "cog": {
-          "value": null,
-          "label": "cognition",
-          "roll": null
-        },
-        "int": {
-          "value": null,
-          "label": "intuition",
-          "roll": null
-        },
-        "ref": {
-          "value": null,
-          "label": "reflexes",
-          "roll": null
-        },
-        "sav": {
-          "value": null,
-          "label": "savvy",
-          "roll": null
-        },
-        "som": {
-          "value": null,
-          "label": "somatics",
-          "roll": null
-        },
-        "wil": {
-          "value": null,
-          "label": "willpower",
-          "roll": null
         }
       },
       "rest": {
@@ -461,187 +684,37 @@
         "short2": false,
         "long": false
       },
-      "skillsIns": {
-        "infosec": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "interface": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "perceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "program": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "research": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "survival": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsMox": {
-        "deceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "kinesics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "persuade": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "provoke": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "psi": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsVig": {
-        "athletics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "fray": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "free fall": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "guns": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "infiltrate": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "melee": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
       "bodies": {
         "activeMorph": "morph1",
         "morph1": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph2": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph3": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph4": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph5": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         },
         "morph6": {
-          "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "description": ""
+          "templates": [
+            "morph"
+          ]
         }
       },
       "psiStrain": {
@@ -692,218 +765,11 @@
         "motivation2": "",
         "motivation3": ""
       },
-      "aptitudes": {
-        "cog": {
-          "value": null,
-          "label": "cognition",
-          "roll": null
-        },
-        "int": {
-          "value": null,
-          "label": "intuition",
-          "roll": null
-        },
-        "ref": {
-          "value": null,
-          "label": "reflexes",
-          "roll": null
-        },
-        "sav": {
-          "value": null,
-          "label": "savvy",
-          "roll": null
-        },
-        "som": {
-          "value": null,
-          "label": "somatics",
-          "roll": null
-        },
-        "wil": {
-          "value": null,
-          "label": "willpower",
-          "roll": null
-        }
-      },
-      "skillsIns": {
-        "infosec": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "interface": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "perceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "program": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "research": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "survival": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsMox": {
-        "deceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "kinesics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "persuade": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "provoke": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "psi": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsVig": {
-        "athletics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "fray": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "free fall": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "guns": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "infiltrate": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "melee": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "pools": {
-        "insight": {
-          "value": null
-        },
-        "moxie": {
-          "value": null
-        },
-        "vigor": {
-          "value": null
-        },
-        "flex": {
-          "value": null
-        }
-      },
-      "specSkills": {
-        "special1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        },
-        "special2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        }
-      },
-      "knowSkills": {
-        "know1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know3": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know4": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        }
-      },
       "bodies": {
         "morph1": {
-          "name": "",
-          "type": 1.5,
-          "dur": 0,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "templates": [
+            "morph"
+          ]
         }
       },
       "psiStrain": {
@@ -948,182 +814,16 @@
         "base",
         "npc"
       ],
-      "aptitudes": {
-        "cog": {
-          "value": null,
-          "label": "cognition",
-          "roll": null
-        },
-        "int": {
-          "value": null,
-          "label": "intuition",
-          "roll": null
-        },
-        "ref": {
-          "value": null,
-          "label": "reflexes",
-          "roll": null
-        },
-        "sav": {
-          "value": null,
-          "label": "savvy",
-          "roll": null
-        },
-        "som": {
-          "value": null,
-          "label": "somatics",
-          "roll": null
-        },
-        "wil": {
-          "value": null,
-          "label": "willpower",
-          "roll": null
-        }
-      },
-      "skillsIns": {
-        "perceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsMox": {
-        "deceive": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "kinesics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "persuade": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "provoke": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "psi": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "skillsVig": {
-        "athletics": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "fray": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "free fall": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "guns": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        },
-        "melee": {
-          "value": null,
-          "specname": "",
-          "spec": false,
-          "roll": null
-        }
-      },
-      "pools": {
-        "insight": {
-          "value": null
-        },
-        "moxie": {
-          "value": null
-        },
-        "vigor": {
-          "value": null
-        },
-        "flex": {
-          "value": null
-        }
-      },
-      "specSkills": {
-        "special1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        },
-        "special2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "specCheck": null,
-          "roll": null
-        }
-      },
-      "knowSkills": {
-        "know1": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know2": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know3": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        },
-        "know4": {
-          "skillName": "",
-          "value": null,
-          "aptitude": null,
-          "knowCheck": null,
-          "roll": null
-        }
-      },
+      "stresstest": null,
       "bodies": {
         "morph1": {
-          "name": "",
-          "type": 1.5,
-          "dur": 0,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement": null,
-          "morphWare": "",
-          "morphTraits": ""
+          "templates": [
+            "morph"
+          ]
+        },
+        "armor": {
+          "energy":0,
+          "kinetic":0
         }
       },
       "bodyTypes": {
@@ -1154,7 +854,9 @@
       "program",
       "specialSkill",
       "knowSkill",
-      "vehicle"
+      "vehicle",
+      "drug",
+      "grenade"
     ],
     "templates": {
       "base": {
@@ -1163,7 +865,8 @@
       },
       "buyable": {
         "cost": "",
-        "slotType": ""
+        "slotType": "",
+        "displayCategory": ""
       }
     },
     "gear": {
@@ -1171,7 +874,8 @@
         "base",
         "buyable"
       ],
-      "quantity": 1
+      "quantity": 1,
+      "displayCategory": "gear"
     },
     "rangedWeapon": {
       "templates": [
@@ -1182,14 +886,28 @@
       "ammoMin": null,
       "ammoMax": null,
       "dv": null,
-      "firingMode": ""
+      "firingMode": "",
+      "displayCategory": "ranged"
+    },
+    "grenade": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "areaeffect": null,
+      "dv": null,
+      "armorused":null,
+      "quantity": 1,
+      "slotType": "Accessory",
+      "displayCategory": "gear"
     },
     "ccWeapon": {
       "templates": [
         "base",
         "buyable"
       ],
-      "dv": null
+      "dv": null,
+      "displayCategory": "ccweapon"
     },
     "armor": {
       "templates": [
@@ -1197,7 +915,26 @@
         "buyable"
       ],
       "energy": null,
-      "kinetic": null
+      "kinetic": null,
+      "displayCategory": "armor"
+    },
+    "drug": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "category": false,
+      "dermal": false,
+      "inhalation": false,
+      "injection": false,
+      "oral": false,
+      "drugType": "",
+      "duration": null,
+      "addictionMod": null,
+      "addictionType": "",
+      "quantity": 1,
+      "slotType": "Accessory",
+      "displayCategory": "gear"
     },
     "trait": {
       "templates": [
@@ -1259,13 +996,15 @@
       "specname" : "",
       "value": null,
       "aptitude": null,
-      "roll": 0
+      "roll": 0,
+      "isThreat": false 
     },
     "knowSkill": {
       "name": "",
       "specname" : "",
       "value": null,
-      "aptitude": null
+      "aptitude": null,
+      "isThreat": false
     },
     "vehicle": {
       "templates": [

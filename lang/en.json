@@ -2,11 +2,11 @@
   "ACTOR.TypeCharacter" : "Player Character",
   "ACTOR.TypeNpc" : "Non-Player Character",
   "ACTOR.TypeGoon" : "Threat",
-
   "ITEM.TypeGear" : "Gear",
   "ITEM.TypeRangedweapon" : "Ranged Weapon",
   "ITEM.TypeCcweapon" : "Close Combat Weapon",
   "ITEM.TypeArmor" : "Armor",
+  "ITEM.TypeGrenade" : "Grenade",
   "ITEM.TypeTrait" : "Trait",
   "ITEM.TypeFlaw" : "Flaw",
   "ITEM.TypeMorphtrait" : "Morph Trait",
@@ -16,5 +16,6 @@
   "ITEM.TypeProgram" : "Program",
   "ITEM.TypeSpecialskill" : "Special Skill",
   "ITEM.TypeKnowskill" : "Know Skill",
-  "ITEM.TypeVehicle" : "Vehicle"
+  "ITEM.TypeVehicle" : "Vehicle",
+  "ITEM.TypeDrug" : "Drug"
 }
