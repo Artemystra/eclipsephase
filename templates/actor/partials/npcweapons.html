@@ -1,20 +1,20 @@
 <div class="flexrow" style="margin-bottom: 20px;">
-    <div class="button task-check" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.guns.roll}}">
+    <div class="button-roll task-check" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.guns.roll}}">
         <label class="resource-label rollable labelWidth-large">Roll Guns</label>
         <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>
     {{#if data.data.skillsVig.guns.specname}}
-    <div class="button task-check" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}">
+    <div class="button-roll task-check" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}">
         <label class="resource-label rollable labelWidth-XL">Roll {{data.data.skillsVig.guns.specname}}</label>
         <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>
     {{/if}}
-    <div class="button task-check" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}">
+    <div class="button-roll task-check" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}">
         <label class="resource-label rollable labelWidth-large">Roll Melee</label>
         <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>
     {{#if data.data.skillsVig.melee.specname}}
-    <div class="button task-check" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}">
+    <div class="button-roll task-check" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}">
         <label class="resource-label rollable labelWidth-XL">Roll {{data.data.skillsVig.melee.specname}}</label>
         <label class="resource-label rollable roll-label task-check input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>

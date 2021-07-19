@@ -662,7 +662,7 @@ optgroup .Default .Roll .Mode,
   border: none;
 }
 
-.button {
+.button-roll {
   display: flex;
   align-items: center; 
   justify-content: center;

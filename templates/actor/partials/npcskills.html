@@ -13,12 +13,12 @@
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                             <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
                             </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             {{#if this.specname}}
-                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                             {{else}}
                             <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                             {{/if}}
@@ -39,12 +39,12 @@
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                             <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
                             </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             {{#if this.specname}}
-                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                             {{else}}
                             <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                             {{/if}}
@@ -65,12 +65,12 @@
                             <span class="resource-label input-large">{{key}}</span>
                             <input class=" input-small" type="number" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                             <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
                             </div>
                             <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             {{#if this.specname}}
-                            <label class="roll-label task-check" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                             {{else}}
                             <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                             {{/if}}
