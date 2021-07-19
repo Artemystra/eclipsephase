@@ -1,0 +1,30 @@
+{{!-- Effects Tab --}}
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            <div class="flexrow">
+                <h3 class="subheader">Active Effects</h3>
+                <div class="alignRight flexGrowHalf reveal">
+                    <div class="alignRight flexGrowHalf">
+                        <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Active Effect</a>
+                    </div>
+                </div>
+            </div>
+            {{#each data.activeEffects as |item id|}}
+            <div>
+                <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                   
+                    <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.label}}</strong></label>
+                    <div class="flex-group-right slideShow">
+                        <a><i class="fas fa-plus icon-small"></i></a>
+                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    </div>
+                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                        <div class="flexrow flex-between item-controls">
+                            <a class="item-control effect-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                            <a class="item-control effect-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {{/each}}
+        </div>

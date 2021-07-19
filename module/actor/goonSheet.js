@@ -41,6 +41,8 @@ export class GoonSheet extends ActorSheet {
         const ccweapon = [];
         const armor = [];
         const ware = [];
+        const morphTrait = [];
+        const effects = [];
         const aspect = {
             Chi: [],
             Gamma: []
@@ -53,25 +55,29 @@ export class GoonSheet extends ActorSheet {
             let item = i.data;
             i.img = i.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (i.type === 'gear') {
+            if (i.data.displayCategory === 'gear') {
                 gear.push(i);
               }
             // Append to features.
             else if (i.type === 'feature') {
                 features.push(i);
             }
-            else if (i.type === 'rangedWeapon') {
+            else if (i.data.displayCategory === 'ranged') {
                 rangedweapon.push(i)
             }
-            else if (i.type === 'ccWeapon') {
+            else if (i.data.displayCategory === 'ccweapon') {
                 ccweapon.push(i)
             }
-            else if (i.type === 'armor') {
+            else if (i.data.displayCategory === 'armor') {
                 armor.push(i)
             }
             else if (i.type === 'ware') {
                 ware.push(i)
             }
+            else if (i.type === 'morphTrait' || i.type === 'morphFlaw'){
+                morphTrait.push(i);
+            }
+                
             else if (i.type === 'aspect') {
                 aspect[i.data.psiType].push(i);
             }
@@ -81,6 +87,7 @@ export class GoonSheet extends ActorSheet {
                 vehicle.push(i)
             }
             if (i.type === 'specialSkill') {
+            /*
                 let aptSelect = 0;
                 if (i.data.aptitude === "Intuition") {
                   aptSelect = data.aptitudes.int.value;
@@ -100,10 +107,26 @@ export class GoonSheet extends ActorSheet {
                 else if (i.data.aptitude === "Savvy") {
                   aptSelect = data.aptitudes.sav.value;
                 }
+                
                 i.roll = Number(i.data.value) + aptSelect;
                 i.specroll = Number(i.data.value) + aptSelect + 10;
+                if(!i.data.value)
+                  i.roll=aptSelect;
+                else
+                  i.roll = Number(i.data.value);
+                i.specroll = i.roll + 10;
+                */
                 special.push(i);
             }
+        }
+
+        actorData.showEffectsTab=false
+        if(game.settings.get("eclipsephase", "effectPanel")  && game.user.isGM){
+          var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
+          for(let i of effectList){
+            effects.push(i.data);
+          }
+          actorData.showEffectsTab=true;
         }
 
         // Assign and return
@@ -116,6 +139,9 @@ export class GoonSheet extends ActorSheet {
         actorData.features = features;
         actorData.vehicle = vehicle;
         actorData.specialSkill = special;
+        actorData.morphTrait = morphTrait;
+        actorData.activeEffects = effects;
+        
     }
 
     activateListeners(html) {
@@ -131,6 +157,8 @@ export class GoonSheet extends ActorSheet {
         html.find('.item-edit').click(ev => {
             const li = $(ev.currentTarget).parents(".item");
             const item = this.actor.items.get(li.data("itemId"));
+            if(item.type=="specialSkill" || item.type=="knowSkill")
+              item.sheet.isThreat = true;
             item.sheet.render(true);
         });
 
@@ -155,6 +183,24 @@ export class GoonSheet extends ActorSheet {
             });
         }
 
+        html.find('.effect-create').click(ev => {
+            this.actor.createEmbeddedDocuments('ActiveEffect', [{
+              label: 'Active Effect',
+              icon: '/icons/svg/mystery-man.svg'
+            }]);
+          });
+      
+          html.find('.effect-edit').click(ev => {
+            const li = $(ev.currentTarget).parents(".item");
+            const effect = this.actor.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
+            effect.sheet.render(true);
+          });
+      
+          html.find('.effect-delete').click(ev => {
+            const li = $(ev.currentTarget).parents(".item");
+            this.actor.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
+            li.slideUp(200, () => this.render(false));
+          });
         //Item Input Fields
         html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 

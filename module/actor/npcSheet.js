@@ -48,27 +48,27 @@ export class NpcSheet extends ActorSheet {
         const vehicle = [];
         const morphtrait = [];
         const morphflaw = [];
-
+        const effects=[];
         // Iterate through items, allocating to containers
         // let totalWeight = 0;
         for (let i of sheetData.items) {
             let item = i.data;
             i.img = i.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (i.type === 'gear') {
+            if (i.data.displayCategory === 'gear') {
                 gear.push(i);
             }
             // Append to features.
             else if (i.type === 'feature') {
                 features.push(i);
             }
-            else if (i.type === 'rangedWeapon') {
+            else if (i.data.displayCategory === 'ranged') {
                 rangedweapon.push(i)
             }
-            else if (i.type === 'ccWeapon') {
+            else if (i.data.displayCategory === 'ccweapon') {
                 ccweapon.push(i)
             }
-            else if (i.type === 'armor') {
+            else if (i.data.displayCategory === 'armor') {
                 armor.push(i)
             }
             else if (i.type === 'ware') {
@@ -116,6 +116,14 @@ export class NpcSheet extends ActorSheet {
             }
         }
 
+        actorData.showEffectsTab=false
+        if(game.settings.get("eclipsephase", "effectPanel")  && game.user.isGM){
+          var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
+          for(let i of effectList){
+            effects.push(i.data);
+          }
+          actorData.showEffectsTab=true;
+        }
         // Assign and return
         actorData.rangedWeapon = rangedweapon;
         actorData.ccweapon = ccweapon;
@@ -128,6 +136,7 @@ export class NpcSheet extends ActorSheet {
         actorData.morphTrait = morphtrait;
         actorData.morphFlaw = morphflaw;
         actorData.specialSkill = special;
+        actorData.activeEffects = effects;
     }
 
     activateListeners(html) {
@@ -157,6 +166,24 @@ export class NpcSheet extends ActorSheet {
         html.find('.task-check').click(this._onTaskCheck.bind(this));
         html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
+        html.find('.effect-create').click(ev => {
+            this.actor.createEmbeddedDocuments('ActiveEffect', [{
+              label: 'Active Effect',
+              icon: '/icons/svg/mystery-man.svg'
+            }]);
+          });
+      
+          html.find('.effect-edit').click(ev => {
+            const li = $(ev.currentTarget).parents(".item");
+            const effect = this.actor.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
+            effect.sheet.render(true);
+          });
+      
+          html.find('.effect-delete').click(ev => {
+            const li = $(ev.currentTarget).parents(".item");
+            this.actor.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
+            li.slideUp(200, () => this.render(false));
+          });
         // Drag events for macros.
         if (this.actor.isOwner) {
             let handler = ev => this._onDragItemStart(ev);

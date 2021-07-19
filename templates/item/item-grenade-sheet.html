@@ -12,10 +12,13 @@
             <table>
                 <tr>
                     <td>
+                        <label class="resource-label">Area Effect / Type</label>
+                    </td>
+                    <td>
                         <label class="resource-label">DV</label>
                     </td>
                     <td>
-                        <label class="resource-label">Slot</label>
+                        <label class="resource-label">Armor Used</label>
                     </td>
                     <td>
                         <label class="resource-label">Cost</label>
@@ -23,14 +26,17 @@
                 </tr>
                 <tr>
                     <td>
+                        <input class="input-large" type="text" name="data.areaeffect" value="{{data.data.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
+                    </td>
+                    <td>
                         <input class="input-large" type="text" name="data.dv" value="{{data.data.dv}}" placeholder="e.g. 1d10+1"/>
                     </td>
                     <td>
-                        <select name="data.slotType" data-type="String">
-                            {{#select data.data.slotType}}
-                            {{#each config.weaponTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
-                            {{/each}} {{/select}}
+                        <select name="data.armorused" data-type="String">
+                            {{#select data.data.armorused}}
+                            <option value="na">NA</option>
+                            <option value="k">K</option>
+                            <option value="e">E</option> {{/select}}
                         </select>
                     </td>
                     <td>

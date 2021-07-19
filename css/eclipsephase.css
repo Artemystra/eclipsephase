@@ -182,8 +182,17 @@
   flex: 0 0 100px;
   height: 60px;
   width: 60px;
-  margin-right: 10px;
+  margin-right: 1px;
   border: none;
+}
+
+.muse-img{
+  min-height: 200px;
+  max-height: 200px;
+  border: solid var(--pitchBorder) 6px;
+  position: absolute;
+  border-radius: 50%;
+  margin: -5px 0 0 12px;
 }
 
 .eclipsephase .sheet-header .header-fields {
@@ -225,7 +234,8 @@
 .eclipsephase .sheet-body .tab,
 .eclipsephase .sheet-body .tab .editor {
   height: 100%;
-  padding: 10px 0 0 0;
+  padding: 5px 0 0 0;
+  min-height: 225px;
 }
 
 .eclipsephase .tox .tox-edit-area {
@@ -234,6 +244,15 @@
 
 .eclipsephase .resource-label {
   text-transform: uppercase;
+  text-align: left;
+}
+
+.eclipsephase .resource-section-label {
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.eclipsephase .resource-sub-label {
   text-align: left;
 }
 
@@ -533,16 +552,14 @@ a:hover{
 
 .eclipsephase .tabs .item:first-child {
   font-weight: bold;
-  text-align: left;
-  padding-left: 2em;
+  text-align: center;
   border-bottom: 3px solid var(--pitchBorder);
 }
 
 .eclipsephase .tabs .item.active:first-child {
   text-shadow: none;
   background-color: var(--pitchBorder);
-  text-align: left;
-  padding-left: 2em;
+  text-align: center;
   clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
 }
 
@@ -645,6 +662,21 @@ optgroup .Default .Roll .Mode,
   border: none;
 }
 
+.button-roll {
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  min-width: 120px;
+  max-width: 200px;
+  margin: 0 0 0 5px;
+  padding: 5px 0 5px 0;
+  background: var(--mainBackground);
+}
+
+.button .icon-small {
+  max-height: 18px!important;
+  max-width: 18px!important;
+}
 /* Tiny MCE Styles */
 
 .tox.tox-tinymce .tox-edit-area__iframe {
@@ -848,6 +880,10 @@ h3.subheaderBlank {
 
 .input-XL {
   max-width: 180px!important;
+}
+
+.input-XXL {
+  max-width: 240px!important;
 }
 
 .weaponslist .sheet-inline-edit {

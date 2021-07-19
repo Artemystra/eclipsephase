@@ -6,6 +6,36 @@ import { eclipsephase } from "../config.js"
  */
 export class EclipsePhaseActor extends Actor {
 
+  static skillkey=[
+    {skill:"athletics",aptitude:"som",multiplier:1,category:"vigor"},
+    {skill:"deceive",aptitude:"som",multiplier:1,category:"moxie"},
+    {skill:"fray",aptitude:"ref",multiplier:2,category:"vigor"},
+    {skill:"free fall",aptitude:"som",multiplier:1,category:"vigor"},
+    {skill:"guns",aptitude:"ref",multiplier:1,category:"vigor"},
+    {skill:"infiltrate",aptitude:"ref",multiplier:1,category:"vigor"},
+    {skill:"infosec",aptitude:"cog",multiplier:1,category:"insight"},
+    {skill:"interface",aptitude:"cog",multiplier:1,category:"insight"},
+    {skill:"kinesics",aptitude:"sav",multiplier:1,category:"moxie"},
+    {skill:"melee",aptitude:"som",multiplier:1,category:"vigor"},
+    {skill:"perceive",aptitude:"int",multiplier:2,category:"insight"},
+    {skill:"persuade",aptitude:"sav",multiplier:1,category:"moxie"},
+    {skill:"program",aptitude:"cog",multiplier:1,category:"insight"},
+    {skill:"provoke",aptitude:"sav",multiplier:1,category:"moxie"},
+    {skill:"psi",aptitude:"wil",multiplier:1,category:"moxie"},
+    {skill:"research",aptitude:"int",multiplier:1,category:"insight"},
+    {skill:"survival",aptitude:"int",multiplier:1,category:"insight"},
+  ];
+
+  calculateSkillvalue(key,skill,data,actorType){
+    var skilldata=EclipsePhaseActor.skillkey.find(element => element.skill==key);
+    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier +(skill.mod?skill.mod:0);
+    if(actorType=="goon")
+      skill.derived = (skill.value?skill.value:eval('data.aptitudes.'+skilldata.aptitude+'.value')); //goons roll their value, not a calculated amount
+    skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+    skill.specialized = skill.roll+10;
+
+  }
+
   /**
    * Augment the basic actor data with additional dynamic data.
    */
@@ -89,12 +119,11 @@ export class EclipsePhaseActor extends Actor {
     }
     
     //Determin whether any gear is present
+    data.hasGear=false;
     for(let gearCheck of item){
-      if(gearCheck.type != "rangedWeapon" && gearCheck.type != "ccWeapon" && gearCheck.type != "gear" && gearCheck.type != "program"){
-        data.hasGear = false;
-      }
-      else{
+      if(gearCheck.data.data.displayCategory === "ranged" || gearCheck.data.data.displayCategory === "ccweapon" || gearCheck.data.data.displayCategory === "gear"){
         data.hasGear = true;
+        break;
       }
     }
 
@@ -204,47 +233,17 @@ export class EclipsePhaseActor extends Actor {
 
     // Insight Skills
     for (let [key, skill] of Object.entries(data.skillsIns)) {
-      if(key === 'program' || key === 'interface' || key === 'infosec' ) {
-        skill.derived = skill.value + data.aptitudes.cog.value;
-      }
-      else if (key === 'perceive') {
-        skill.derived = skill.value + data.aptitudes.int.value * 2;
-      }
-      else {
-        skill.derived = skill.value + data.aptitudes.int.value;
-      }
-
-      skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-      skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
+      this.calculateSkillvalue(key,skill,data,actorData.type);
     }
 
     // Moxie skills
     for (let [key, skill] of Object.entries(data.skillsMox)) {
-      if(key === 'provoke' || key === 'persuade' || key === 'kinesics' || key === 'deceive' ){
-        skill.derived = skill.value + data.aptitudes.sav.value;
-      }
-      else {
-        skill.derived = skill.value + data.aptitudes.wil.value;
-      }
-
-      skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-      skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
+      this.calculateSkillvalue(key,skill,data,actorData.type);
     }
 
     // Vigor skills
     for (let [key, skill] of Object.entries(data.skillsVig)) {
-      if(key === 'athletics' || key === 'free fall' || key === 'melee' ){
-        skill.derived = skill.value + data.aptitudes.som.value;
-      }
-      else if (key === 'fray'){
-        skill.derived = (skill.value + data.aptitudes.ref.value * 2);
-      }
-      else {
-        skill.derived = skill.value + data.aptitudes.ref.value;
-      }
-
-      skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
-      skill.specialized = skill.derived + 10 - data.mods.woundMod - data.mods.traumaMod;
+      this.calculateSkillvalue(key,skill,data,actorData.type);
     }
 
     //Showing skill calculations for know/spec skills
@@ -270,7 +269,10 @@ export class EclipsePhaseActor extends Actor {
         aptSelect = data.aptitudes.sav.value;
       }
       if(key === 'specialSkill' || key === 'knowSkill'){
-        value.data.data.roll = Number(value.data.data.value) + aptSelect;
+        if(actorData.type=="goon")
+          value.data.data.roll = value.data.data.value?Number(value.data.data.value):aptSelect;
+        else
+          value.data.data.roll = Number(value.data.data.value) + aptSelect;
       }
     }
   }
