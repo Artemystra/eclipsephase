@@ -855,7 +855,7 @@
                     </div>
                 </div>
                 <div style="position: relative; flex: 0.3;">
-                    <img class="muse-img" src="{{data.data.muse.img}}" data-edit="data.bodies.morph1.img" title="{{data.data.muse.name}}"/>
+                    <img class="muse-img" src="{{data.data.muse.img}}" data-edit="data.muse.img" title="{{data.data.muse.name}}"/>
                 </div>
             </div>
             <div class="flexrow">
@@ -1995,7 +1995,7 @@
             {{/each}}
             {{#each data.vehicle.Robot as |item id|}}
             <div class="item contentBox" data-item-id="{{item._id}}">
-                <div class="flexrow">
+                <div class="flexrow" style="justify-content: flex-end;">
                     <h3 class="subheader">{{item.name}}</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         {{#if item.data.ins}}

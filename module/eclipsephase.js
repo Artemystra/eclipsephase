@@ -126,12 +126,14 @@ Hooks.once('init', async function() {
     return outStr;
   });
   var templates = [
+    "systems/eclipsephase/templates/actor/partials/vehicles.html",
     "systems/eclipsephase/templates/actor/partials/npcskills.html",
+    "systems/eclipsephase/templates/actor/partials/npcweapons.html",
     "systems/eclipsephase/templates/actor/partials/psi.html",
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/effectsTab.html"
   ];
-  loadTemplates(templates);
+  await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
     return str.toLowerCase();
   });

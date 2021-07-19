@@ -234,7 +234,7 @@
 .eclipsephase .sheet-body .tab,
 .eclipsephase .sheet-body .tab .editor {
   height: 100%;
-  padding: 10px 0 0 0;
+  padding: 5px 0 0 0;
   min-height: 225px;
 }
 
@@ -553,15 +553,13 @@ a:hover{
 .eclipsephase .tabs .item:first-child {
   font-weight: bold;
   text-align: center;
-  padding-left: 2em;
   border-bottom: 3px solid var(--pitchBorder);
 }
 
 .eclipsephase .tabs .item.active:first-child {
   text-shadow: none;
   background-color: var(--pitchBorder);
-  text-align: left;
-  padding-left: 2em;
+  text-align: center;
   clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
 }
 
@@ -664,6 +662,21 @@ optgroup .Default .Roll .Mode,
   border: none;
 }
 
+.button {
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  min-width: 120px;
+  max-width: 200px;
+  margin: 0 0 0 5px;
+  padding: 5px 0 5px 0;
+  background: var(--mainBackground);
+}
+
+.button .icon-small {
+  max-height: 18px!important;
+  max-width: 18px!important;
+}
 /* Tiny MCE Styles */
 
 .tox.tox-tinymce .tox-edit-area__iframe {
