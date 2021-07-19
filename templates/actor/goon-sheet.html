@@ -34,186 +34,184 @@
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
-
-        {{> systems/eclipsephase/templates/actor/partials/npcskills.html }}
-
-        </div>
-    {{!-- Weapons Tab --}}
-    <div class="tab" data-group="primary" data-tab="weapons">
-        {{> systems/eclipsephase/templates/actor/partials/npcweapons.html }}
-        <div class="flexrow flex-between">
-            <div class="contentBox flexGrowHalf">
-                <div class="flexrow">
-                    <h3 class="subheader">Morph</h3>
-                    <div class="alignRight flexGrowThreeQuarter">
+        {{!--Skills Tab--}}
+        {{> systems/eclipsephase/templates/actor/partials/skills.html }}
+        {{!-- Weapons Tab --}}
+        <div class="tab" data-group="primary" data-tab="weapons">
+            {{> systems/eclipsephase/templates/actor/partials/npcweapons.html }}
+            <div class="flexrow flex-between">
+                <div class="contentBox flexGrowHalf">
+                    <div class="flexrow">
+                        <h3 class="subheader">Morph</h3>
+                        <div class="alignRight flexGrowThreeQuarter">
+                        </div>
+                    </div>
+                    <div class="listBackground noMargin">
+                        <div class="flexrow flex-between headspace">
+                            <div>
+                                <input class="input-large" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
+                            </div>
+                            <div>
+                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodyType.value" data-type="String">
+                                    {{#select data.data.bodyType.value}}
+                                    {{#each config.bodyTypes as |bodyType key|}}
+                                    <option value="{{key}}">{{bodyType}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-between headSpace">
+                            <div>
+                                <label class="resource-label labelWidth-small">Dur</label>
+                                <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0"/>
+                            </div>
+                            <div>
+                                <label class="resource-label labelWidth-small">Mov</label>
+                                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0"/>                          
+                            </div>
+                            <div>
+                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
+                                    {{#select data.data.bodies.morph1.movetype}}
+                                    {{#each config.moveTypes as |moveType key|}}
+                                        <option value="{{key}}">{{moveType}}</option>
+                                    {{/each}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flexrow flex-between headSpace">
+                            <div>
+                                <label class="resource-label labelWidth-small">Mov 2</label>
+                                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0"/>                          
+                            </div>
+                            <div>
+                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
+                                    {{#select data.data.bodies.morph1.movetype2}}
+                                    {{#each config.moveTypes as |moveType key|}}
+                                        <option value="{{key}}">{{moveType}}</option>
+                                    {{/each}}
+                                    {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="headSpace">
+                            <div class="flexrow" style="align-items: center">
+                                <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
+                                <label class="resource-label">Traits:</label>
+                            </div>
+                            <div class="flexrow headSpace">
+                                {{#if data.morphTrait}}
+                                {{#each data.morphTrait as |item id|}}
+                                <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                    <div class="item-controls flex-group-right" style="flex: 0.2;">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    </div>
+                                </div>
+                                {{/each}}
+                                {{else}}
+                                <label class="resource-value" style="height: 30px;">No Morph Traits Present</label>
+                                {{/if}}
+                            </div>
+                            {{!-- <div class="flexrow" style="align-items: center">
+                                <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
+                                <label class="resource-label">Flaws:</label>
+                            </div>
+                            <div class="flexrow headSpace">
+                                {{#if data.morphFlaw}}
+                                {{#each data.morphFlaw as |item id|}}
+                                <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                    <div class="item-controls flex-group-right" style="flex: 0.2;">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    </div>
+                                </div>
+                                {{/each}}
+                                {{else}}
+                                <label class="resource-value" style="height: 30px;">No Morph Flaws Present</label>
+                                {{/if}}
+                            </div> --}}
+                            <div class="flexrow" style="align-items: center">
+                                <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
+                                <label class="resource-label">Ware:</label>
+                            </div>
+                            <div class="flexrow headSpace">
+                                {{#if data.ware}}
+                                {{#each data.ware as |item id|}}
+                                <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
+                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                    <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    </div>
+                                </div>
+                                {{/each}}
+                                {{else}}
+                                <label class="resource-value" style="height: 30px;">No Ware Installed</label>
+                                {{/if}}
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="listBackground noMargin">
-                    <div class="flexrow flex-between headspace">
-                        <div>
-                            <input class="input-large" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
-                        </div>
-                        <div>
-                            <select class="selectSpecApt item-standard-margin-medium" name="data.bodyType.value" data-type="String">
-                                {{#select data.data.bodyType.value}}
-                                {{#each config.bodyTypes as |bodyType key|}}
-                                <option value="{{key}}">{{bodyType}}</option>
-                                {{/each}} {{/select}}
-                            </select>
+                <div class="contentBox flexGrowHalf">
+                    <div class="flexrow">
+                        <h3 class="subheader">Armor & Gear</h3>
+                        <div class="alignRight reveal">
+                            <a class="item-control item-create" title="Create item" data-type="armor" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Armor</a>
                         </div>
                     </div>
-                    <div class="flexrow flex-between headSpace">
-                        <div>
-                            <label class="resource-label labelWidth-small">Dur</label>
-                            <input class="input-small item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0"/>
+                    <div class="listBackground noMargin">
+                        <div class="headSpace">
+                            {{#if data.armor}}
+                            {{#each data.armor as |item id|}}
+                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                                <div class="flexrow">
+                                    <input class="sheet-inline-edit item-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
+                                </div>
+                                <div class="flexrow flex-group-right">
+                                    <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
+                                </div>
+                                <div class="flexrow flex-group-right">
+                                    <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
+                                </div>
+                                <div class="flex-group-right input-small">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <div class=" flexrow" style="height: 30px;">
+                                <label class="resource-value">Has no armor</label>
+                            </div>
+                            {{/if}}
                         </div>
-                        <div>
-                            <label class="resource-label labelWidth-small">Mov</label>
-                            <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0"/>                          
-                        </div>
-                        <div>
-                            <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
-                                {{#select data.data.bodies.morph1.movetype}}
-                                {{#each config.moveTypes as |moveType key|}}
-                                    <option value="{{key}}">{{moveType}}</option>
+                        <div class="headSpace">
+                            <div class="flexrow" style="align-items: center">
+                                <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
+                                <label class="resource-label">Gear:</label>
+                            </div>
+                            <div class="flexrow headSpace">
+                                {{#if data.gear}}
+                                {{#each data.gear as |item id|}}
+                                <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center;">
+                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                    <label class="flex-group-center noMargin alignCenter" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
+                                    <div class="flex-group-right" style="flex: 0.2;">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    </div>
+                                </div>
                                 {{/each}}
-                                {{/select}}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flexrow flex-between headSpace">
-                        <div>
-                            <label class="resource-label labelWidth-small">Mov 2</label>
-                            <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0"/>                          
-                        </div>
-                        <div>
-                            <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
-                                {{#select data.data.bodies.morph1.movetype2}}
-                                {{#each config.moveTypes as |moveType key|}}
-                                    <option value="{{key}}">{{moveType}}</option>
-                                {{/each}}
-                                {{/select}}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="headSpace">
-                        <div class="flexrow" style="align-items: center">
-                            <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
-                            <label class="resource-label">Traits:</label>
-                        </div>
-                        <div class="flexrow headSpace">
-                            {{#if data.morphTrait}}
-                            {{#each data.morphTrait as |item id|}}
-                            <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
-                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                </div>
+                                {{else}}
+                                <label class="resource-value" style="height: 30px;">No Special Gear</label>
+                                {{/if}}
                             </div>
-                            {{/each}}
-                            {{else}}
-                            <label class="resource-value" style="height: 30px;">No Morph Traits Present</label>
-                            {{/if}}
-                        </div>
-                        {{!-- <div class="flexrow" style="align-items: center">
-                            <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
-                            <label class="resource-label">Flaws:</label>
-                        </div>
-                        <div class="flexrow headSpace">
-                            {{#if data.morphFlaw}}
-                            {{#each data.morphFlaw as |item id|}}
-                            <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
-                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                </div>
-                            </div>
-                            {{/each}}
-                            {{else}}
-                            <label class="resource-value" style="height: 30px;">No Morph Flaws Present</label>
-                            {{/if}}
-                        </div> --}}
-                        <div class="flexrow" style="align-items: center">
-                            <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
-                            <label class="resource-label">Ware:</label>
-                        </div>
-                        <div class="flexrow headSpace">
-                            {{#if data.ware}}
-                            {{#each data.ware as |item id|}}
-                            <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
-                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                </div>
-                            </div>
-                            {{/each}}
-                            {{else}}
-                            <label class="resource-value" style="height: 30px;">No Ware Installed</label>
-                            {{/if}}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="contentBox flexGrowHalf">
-                <div class="flexrow">
-                    <h3 class="subheader">Armor & Gear</h3>
-                    <div class="alignRight reveal">
-                        <a class="item-control item-create" title="Create item" data-type="armor" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Armor</a>
-                    </div>
-                </div>
-                <div class="listBackground noMargin">
-                    <div class="headSpace">
-                        {{#if data.armor}}
-                        {{#each data.armor as |item id|}}
-                        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                            <div class="flexrow">
-                                <input class="sheet-inline-edit item-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                            </div>
-                            <div class="flexrow flex-group-right">
-                                <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
-                            </div>
-                            <div class="flexrow flex-group-right">
-                                <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
-                            </div>
-                            <div class="flex-group-right input-small">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{else}}
-                        <div class=" flexrow" style="height: 30px;">
-                            <label class="resource-value">Has no armor</label>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="headSpace">
-                        <div class="flexrow" style="align-items: center">
-                            <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
-                            <label class="resource-label">Gear:</label>
-                        </div>
-                        <div class="flexrow headSpace">
-                            {{#if data.gear}}
-                            {{#each data.gear as |item id|}}
-                            <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center;">
-                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                <label class="flex-group-center noMargin alignCenter" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
-                                <div class="flex-group-right" style="flex: 0.2;">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                </div>
-                            </div>
-                            {{/each}}
-                            {{else}}
-                            <label class="resource-value" style="height: 30px;">No Special Gear</label>
-                            {{/if}}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
-    {{!-- Vehicles Tab --}}
-        {{> systems/eclipsephase/templates/actor/partials/vehicles.html }}      
-    {{!-- Psi Tab --}}
+        {{!-- Vehicles Tab --}}
+            {{> systems/eclipsephase/templates/actor/partials/vehicles.html }}      
+        {{!-- Psi Tab --}}
         <div class="tab psi" data-group="primary" data-tab="psi">
         {{> systems/eclipsephase/templates/actor/partials/psi.html }}
         </div>

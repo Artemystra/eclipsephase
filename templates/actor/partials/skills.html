@@ -1,0 +1,500 @@
+        <div class="tab" data-group="primary" data-tab="skills">
+            <div class="skills grid grid-2col">
+                <div class="contentBox">
+                    <div class="flexrow">
+                        <h3 class="subheader">Insight Skills</h3>
+                        <div class="alignRight flexGrowHalf reveal">
+                            {{#if (eq data.type "character")}}
+                            <label class="resource-label labelWidth-medium">pool </label>
+                                <i class="far fa-question-circle hidden info tooltip">
+                                    <div role="tooltip">
+                                        <div class="tooltipTopBorder">
+                                            <div class="tooltipTop"></div>
+                                        </div>
+                                        <div class="insight">
+                                            <h3 class="inline">Insight</h3>
+                                            <ul>
+                                                <li>
+                                                    <label class="resource-value">Take the Initiative: </label>
+                                                    Go first in an action turn if
+                                                    you are only taking mental or mesh actions
+                                                    and no physical movement. If multiple
+                                                    characters choose this option, they go in
+                                                    Initiative order before everyone else.
+                                                </li>
+                                                <p/>
+                                                <li>
+                                                    <label class="resource-value">Extra Action: </label>
+                                                    Take an extra complex
+                                                    mental or mesh action (or 2 quick actions)
+                                                    in an action turn. These actions may only be
+                                                    taken after everyone else has gone. If multiple characters choose
+                                                    this option, they go in Initiative order after everyone else has taken
+                                                    their turn.
+                                                </li>
+                                                <p/>
+                                                <li>
+                                                    <label class="resource-value">Acquire a Clue: </label>
+                                                    Gain a hint or lead through investigation, research,
+                                                    or analysis of the facts at hand, without needing to make a test.
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="tooltipBottomBorder">
+                                            <div class="tooltipBottom"></div>
+                                        </div>
+                                    </div>
+                                </i>
+                            <input class="input-xs -small" type="number" name="data.pools.insight.value" value="{{data.data.pools.insight.value}}" placeholder="0"/>
+                            <span class="resource-value">/ {{#if data.data.pools.insight.totalInsight}}{{data.data.pools.insight.totalInsight}}{{else}}0{{/if}}</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="listBackground edgeAbler">
+                        {{#if (ne data.type "goon")}}
+                            {{#each data.data.skillsIns as |skill key|}}
+                            <div class="flexrow flex-group-center reveal">
+                                <span class="resource-label input-large">{{key}}</span>
+                                <input class=" input-small" type="number" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                    <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                                </div>
+                                <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                                {{#if this.specname}}
+                                <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                {{else}}
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                            {{/each}}
+                        {{else}}
+                            {{#each data.data.skillsIns as |skill key|}}
+                            <div class="flexrow flex-group-center reveal">
+                                <span class="resource-label input-large">{{key}}</span>
+                                <input class=" input-small" type="number" name="data.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                    <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                                </div>
+                                <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                                {{#if this.specname}}
+                                <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                {{else}}
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                </div>
+                <div class="contentBox">
+                    <div class="flexrow">
+                        <h3 class="subheader">Vigor Skills</h3>
+                        <div class="alignRight flexGrowHalf reveal">
+                            {{#if (eq data.type "character")}}
+                            <label class="resource-label labelWidth-medium">pool </label>
+                            <i class="far fa-question-circle hidden info tooltip">
+                                <div role="tooltip">
+                                    <div class="tooltipTopBorder">
+                                        <div class="tooltipTop"></div>
+                                    </div>
+                                    <div class="vigor">
+                                        <h3 class="inline">Vigor</h3>
+                                        <ul>
+                                            <li>
+                                                <label class="resource-value">Take the Initiative: </label>
+                                                Go first in an action turn.
+                                                If multiple characters choose this option, they
+                                                go in Initiative order before everyone else.
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Extra Action: </label>
+                                                Take an extra complex physical
+                                                action (or 2 quick actions) in an action turn. This
+                                                action may only be taken after everyone else has gone. If multiple
+                                                characters choose this option, they go in Initiative order after
+                                                everyone else has taken their turn.
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Ignore Wound: </label>
+                                                Ignore the effects of 1 wound for 24 hours or until
+                                                your next recharge
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tooltipBottomBorder">
+                                        <div class="tooltipBottom"></div>
+                                    </div>
+                                </div>
+                            </i>
+                            <input class="input-xs -small" type="number" name="data.pools.vigor.value" value="{{data.data.pools.vigor.value}}" placeholder="0"/>
+                            <span class="resource-value">/ {{#if data.data.pools.vigor.totalVigor}}{{data.data.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="listBackground edgeAbler">
+                        {{#if (ne data.type "goon")}}
+                            {{#each data.data.skillsVig as |skill key|}}
+                            <div class="flexrow flex-group-center reveal">
+                                <span class="resource-label input-large">{{key}}</span>
+                                <input class=" input-small" type="number" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                    <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                                </div>
+                                <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                                {{#if this.specname}}
+                                <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                {{else}}
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                            {{/each}}
+                        {{else}}
+                            {{#each data.data.skillsVig as |skill key|}}
+                            <div class="flexrow flex-group-center reveal">
+                                <span class="resource-label input-large">{{key}}</span>
+                                <input class=" input-small" type="number" name="data.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                    <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                                </div>
+                                <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                                {{#if this.specname}}
+                                <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                {{else}}
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                </div>
+                <div class="contentBox">
+                    <div class="flexrow">
+                        <h3 class="subheader">Moxie Skills</h3>
+                        <div class="alignRight flexGrowHalf reveal">
+                            {{#if (eq data.type "character")}}
+                            <label class="resource-label labelWidth-medium">pool </label>
+                            <i class="far fa-question-circle hidden info tooltip">
+                                <div role="tooltip">
+                                    <div class="tooltipTopBorder">
+                                        <div class="tooltipTop"></div>
+                                    </div>
+                                    <div class="moxie">
+                                        <h3 class="inline">Moxie</h3>
+                                        <ul>
+                                            <li>
+                                                <label class="resource-value">Ignore Trauma: </label>
+                                                Ignore the effects of 1 trauma
+                                                for 24 hours or until your next recharge
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Refresh Rep: </label>
+                                                Restore rep network favors at a cost of 1 point for a
+                                                Minor favor and 2 points for a Moderate favor. Major favors cannot
+                                                be refreshed this way.
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Acquire a Clue: </label>
+                                                Get a tip or lead by gathering information via social
+                                                interactions without needing to make a test.
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Control Your Infection: </label>
+                                                Avoid making an Infection Test when
+                                                using a psi sleight (asyncs only).
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Negate Gaffe: </label>
+                                                Ignore a player’s social gaffe that the character
+                                                wouldn’t make.
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tooltipBottomBorder">
+                                        <div class="tooltipBottom"></div>
+                                    </div>
+                                </div>
+                            </i>
+                            <input class="input-xs -small" type="number" name="data.pools.moxie.value" value="{{data.data.pools.moxie.value}}" placeholder="0"/>
+                            <span class="resource-value">/ {{#if data.data.pools.moxie.totalMoxie}}{{data.data.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="listBackground edgeAbler">
+                        {{#if (ne data.type "goon")}}
+                            {{#each data.data.skillsMox as |skill key|}}
+                            <div class="flexrow flex-group-center reveal">
+                                <span class="resource-label input-large">{{key}}</span>
+                                <input class=" input-small" type="number" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                    <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                                </div>
+                                <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                                {{#if this.specname}}
+                                <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                {{else}}
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                            {{/each}}
+                        {{else}}
+                            {{#each data.data.skillsMox as |skill key|}}
+                            <div class="flexrow flex-group-center reveal">
+                                <span class="resource-label input-large">{{key}}</span>
+                                <input class=" input-small" type="number" name="data.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                    <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                                </div>
+                                <input type="text" class="input-large item-standard-margin-both-large" name="data.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                                {{#if this.specname}}
+                                <label class="info roll-label task-check hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                                {{else}}
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                </div>
+                {{#if (ne data.type "character")}}
+                <div class="contentBox">
+                    {{#if data.specialSkill}}
+                    <div class="flexrow">
+                        <h3 class="subheader">Additional Skills</h3>
+                        <div class="alignRight flexGrowHalf">
+                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
+                        </div>
+                    </div>
+                    <div class="listBackground edgeAbler" style="padding-left: 0;">
+                        {{#if (ne data.type "goon")}}
+                            {{#each data.specialSkill as |item id|}}
+                            <div>
+                                <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                    <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
+                                    <input class="input-small sheet-inline-edit" data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
+                                    <span class="toggle resource-value input-small">{{numberFormat item.data.roll decimals=0}}</span>
+                                    <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
+                                    {{#if item.data.specname}}
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
+                                    <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                    {{else}}
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
+                                    <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/each}}
+                        {{else}}
+                            {{#each data.specialSkill as |item id|}}
+                            <div>
+                                <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                    <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
+                                    <input class="input-small sheet-inline-edit" data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
+                                    <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                        <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                        <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.data.value}}" style="max-width: 34.5px!important;"/>
+                                    </div>
+                                    {{#if item.data.specname}}
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
+                                    <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                    {{else}}
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
+                                    <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                    {{else}}
+                    <div class="separator">
+                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Additional Skill</a>
+                    </div>
+                    {{/if}}
+                </div>
+                {{else}}
+                <div class="contentBox noMargin">
+                    <div class="flexrow">
+                        <h3 class="subheader">Flex</h3>
+                        <div class="alignRight flexGrowHalf reveal">
+                            <label class="resource-label labelWidth-medium">pool </label>
+                            <i class="far fa-question-circle hidden info tooltip">
+                                <div role="tooltip">
+                                    <div class="tooltipTopBorder">
+                                        <div class="tooltipTop"></div>
+                                    </div>
+                                    <div class="flex">
+                                        <h3 class="inline">Flex</h3>
+                                        <ul>
+                                            <li>
+                                                <label class="resource-value">Introduce NPC: </label>
+                                                A new or existing NPC
+                                                joins the scene. Their presence must be plausible.
+                                                You may define one aspect of this NPC:
+                                                their morph, factional allegiance, a noteworthy
+                                                skill, a specific trait, etc. The GM determines the
+                                                other details.
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Introduce and Item: </label>
+                                                A previously unnoticed item is added to the
+                                                scene. Its presence must be plausible. The item cannot be offensive
+                                                (no weapons) and it must be of Minor (not Rare or Restricted)
+                                                Complexity. It can be a useful tool, a necessary piece of gear, or even
+                                                a clue. The GM determines its placement within the scene and the
+                                                nature of any clues.
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Define the Environment: </label>
+                                                You may introduce an environmental
+                                                factor to a scene. Its presence must be plausible. It should provide
+                                                a new detail that does not drastically alter the scene. Examples
+                                                include hiding spots, cover, distractions, shelter, or exploitable
+                                                elements such as a ladder or window.
+                                            </li>
+                                            <p/>
+                                            <li>
+                                                <label class="resource-value">Define a Relationship: </label>
+                                                You may introduce a new, plausible relationship
+                                                between your character and an existing NPC. This should be a
+                                                loose/minor connection rather than a close/serious tie. For example,
+                                                you may have a common friend, shared history, or old but mild
+                                                rivalry. You may define the rough basics, but the GM determines
+                                                the finer points and the NPC’s attitude towards your character.
+                                            </li>
+                                            <p/>
+                                        </ul>
+                                    </div>
+                                    <div class="tooltipBottomBorder">
+                                        <div class="tooltipBottom"></div>
+                                    </div>
+                                </div>
+                            </i>
+                            <input class="input-xs -small" type="number" name="data.pools.flex.value" value="{{data.data.pools.flex.value}}" placeholder="0"/>
+                            <span class="resource-value">/ {{#if data.data.pools.flex.totalFlex}}{{data.data.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
+                        </div>
+                    </div>
+                    <div class="listBackground edgeAbler">
+                        <span class="resource-value">Recover Pools</span><br/>
+                        You recover the points by using a rest action.<p/>
+                        <span class="resource-value">Short Rest</span><br/>
+                        Restores 1d6 pools over a timeframe of 10 minutes<p/>
+                        <span class="resource-value">Long Rest</span><br/>
+                        Completely restores pools over 4 hours (8 w/o biomods)<p/>
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                </div>
+                <div class="contentBox noMargin">
+                    {{#if data.specialSkill}}
+                    <div class="flexrow">
+                        <h3 class="subheader">Exotic Skills</h3>
+                        <div class="alignRight flexGrowHalf">
+                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
+                        </div>
+                    </div>
+                    <div class="listBackground edgeAbler" style="padding-left: 0;">
+                        {{#each data.specialSkill as |item id|}}
+                        <div>
+                            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
+                                <input class="input-small sheet-inline-edit" data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
+                                {{#if item.data.aptitude}}
+                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
+                                {{#if item.data.specname}}
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                {{else}}
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                                {{else}}
+                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                    {{else}}
+                    <div class="separator">
+                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Exotic Skill</a>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="contentBox noMargin">
+                    {{#if data.knowSkill}}
+                    <div class="flexrow">
+                        <h3 class="subheader">Know Skills</h3>
+                        <div class="alignRight flexGrowHalf">
+                            <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
+                        </div>
+                    </div>
+                    <div class="listBackground" style="padding-left: 0; position: relative; z-index: 2;">
+                        {{#each data.knowSkill as |item id|}}
+                        <div>
+                            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <label class="resource-label item-control item-edit hoverable" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
+                                <input class="input-small sheet-inline-edit " data-field="data.value" type="number" name="item.data.value" value="{{item.data.value}}" placeholder="0"/>
+                                {{#if item.data.aptitude}}
+                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
+                                {{#if item.data.specname}}
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                {{else}}
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                                {{else}}
+                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                    {{else}}
+                    <div class="separator">
+                        <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Know Skill</a>
+                    </div>
+                    {{/if}}
+                </div>
+                {{/if}}
+            </div>
+            {{#if (ne data.type "character")}}
+            <div class="contentBox" style="margin-bottom: 10px;">
+                <div class="flexrow">
+                    <h3 class="subheader">Description {{data.name}}</h3>
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                </div>
+                {{editor content=data.data.description target="data.description" button=true owner=owner editable=this.options.editable}}
+            </div>
+            {{/if}}
+        </div>
