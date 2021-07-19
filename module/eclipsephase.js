@@ -1,4 +1,5 @@
 // Import Modules
+// const util = require('util');
 import { EclipsePhaseActor } from "./actor/actor.js";
 import { EclipsePhaseActorSheet } from "./actor/actor-sheet.js";
 import { NpcSheet } from "./actor/npcSheet.js";
@@ -129,12 +130,18 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/npcskills.html",
     "systems/eclipsephase/templates/actor/partials/psi.html",
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
-    "systems/eclipsephase/templates/actor/partials/effectsTab.html"
+    "systems/eclipsephase/templates/actor/partials/effectsTab.html",
+    "systems/eclipsephase/templates/actor/partials/id.html"
   ];
   loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
     return str.toLowerCase();
   });
+
+  // Helper to dump content from within the handlebars system
+  Handlebars.registerHelper('inspect', function(obj) {
+    return '> ' + JSON.stringify(obj)
+  })
 
   registerSystemSettings();
 });
