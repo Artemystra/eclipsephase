@@ -8,10 +8,10 @@
                     </div>
                 </div>
             </div>
-            {{#each data.activeEffects as |item id|}}
-            <div>
-                <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                   
+            <div class="itemBackground">
+                {{#each data.activeEffects as |item id|}}
+                <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="max-height: fit-content;">
+                
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.label}}</strong></label>
                     <div class="flex-group-right slideShow">
                         <a><i class="fas fa-plus icon-small"></i></a>
@@ -24,7 +24,6 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
             {{/each}}
+        </div>
         </div>
