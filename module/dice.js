@@ -1,3 +1,88 @@
+/* Refactoring todo
+ * - add modifiers
+ * - do the roll
+ * - format the output
+ */
+
+
+
+/**
+ * TaskRoll holds all of the intermediate and calculated values for a single roll
+ */
+export class TaskRoll {
+  constructor(taskName, baseValue) {
+    this._taskName = taskName
+    this._baseValue = baseValue
+    this._modifiers = []
+  }
+
+  get taskName() {
+    return this._taskName
+  }
+
+  get baseValue() {
+    return this._baseValue
+  }
+
+  addModifier(modifier) {
+    this._modifers.push(modifier)
+  }
+
+  toString() {
+    let str = `TaskRoll name=#{this.taskName}, value=${value}\n`
+
+    for(let mod of this.modifiers)
+      str += '  ' + mod.toString() + '\n'
+
+    return str
+  }
+}
+
+
+
+/**
+ * A single value that can modify the target number of a roll. This is used in both
+ * calculating the final result, and displaying the results to the user.
+ */
+export class TaskRollModifier {
+  constructor(text, value, type = 'add') {
+    this._text = text
+    this._value = value
+    this._type = type
+  }
+
+  get text() {
+    return this._text
+  }
+
+  get value() {
+    return this._value
+  }
+
+  get type() {
+    return this._type
+  }
+
+  toString() {
+    return `${this.text} = ${this.value}`
+  }
+}
+
+
+export async function ReputationRoll(dataset, actorData) {
+  // let id = actorData.ego.idSelected
+  // let rep = actorData.ego.ids[id].rep[dataset.name]
+
+  // // alert(JSON.stringify(rep))
+  // let value = await showOptionsDialog('systems/eclipsephase/templates/chat/rep-test-dialog.html',
+  //   `${dataset.name} reputation check`)
+  // if(value.cancelled)
+  //   return
+
+  //  alert(JSON.stringify(value.find('[id="favor-mod"]')[0].value))
+  alert('in rep roll')
+}
+
 //General & Special Task Checks
 export async function TaskCheck({
     //General
@@ -367,6 +452,10 @@ export async function TaskCheck({
             });
         }
     }
+
+
+
+
     //Skill check dialog constructor
     async function GetTaskOptions(rollType) {
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
@@ -713,3 +802,27 @@ export async function DamageRoll({
 }
 
 
+async function showOptionsDialog(template, title) {
+  const html = await renderTemplate(template, {})
+
+  return new Promise((resolve, reject) => {
+    const data = {
+      title: title,
+      content: html,
+      buttons: {
+        cancel: {
+          label: 'Cancel',
+          callback: (html) => resolve({cancelled: true})
+        },
+        normal: {
+          label: 'Roll!',
+          callback: (html) => resolve(html)
+        }
+      },
+      default: 'normal',
+      close: () => resolve({cancelled: true})
+    }
+
+    new Dialog(data, null).render(true);
+  })
+}
