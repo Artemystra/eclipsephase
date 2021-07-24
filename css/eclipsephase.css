@@ -853,6 +853,10 @@ h3.subheaderBlank {
   display: block;
 }
 
+.standard-height {
+  height: 26px;
+}
+
 .input-xs {
   max-width: 25px!important;
 }

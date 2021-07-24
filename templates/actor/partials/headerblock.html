@@ -1,4 +1,20 @@
-<div class="header-fields" style="margin-top: 50px;">
+<header class="sheet-header" style="margin-top: -25px;">
+
+    {{!-- Character Picture --}}
+    <div class="headroom">
+        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
+            <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
+        </div>
+        <div>
+            <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
+        </div>
+        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
+            <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
+        </div>
+    </div>
+
+    {{!-- Character Header Stats --}}
+    <div class="header-fields" style="margin-top: 50px;">
     <div class="grid grid-2col noMargin">
       <div class="contentBox">
           <div class="flexrow">
@@ -98,7 +114,7 @@
             </div>
             <div class="listBackground shape2 grid grid-3col noMargin">
                 {{#each data.data.aptitudes as |aptitude key|}}
-                <div class="abilities flexrow flex-group-center reveal" style="min-height: 26px;">
+                <div class="flexrow flex-group-center reveal standard-height">
                     <div class="flexrow flex-group-center input-small">
                         <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
                         <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
@@ -113,21 +129,67 @@
                 <div class="flexGrowHalf"></div>
                 <h3 class="subheaderMirror">Other</h3>
             </div>
-            <div class="listBackground shape1">
+            {{#if (eq data.type "character")}}
+            <div class="listBackground flexrow flex-group-center shape1">
                 <div class="flexrow flex-group-center">
                     <span class="resource-label">Initiative Mod</span>
+                    <input class="input-small" type="number" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                </div>
+                <div class="flexrow flex-group-left" style="flex-basis: 100%; margin-top: 19.5px; margin-bottom: 5px;">
+                    <div class="flexrow flex-group-center">
+                        <span class="resource-label alignCenter">Rest: Short</span>
+                        <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
+                        <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
+                    </div>
+                    <div class="flexrow flex-group-center" style="flex: 0.5;">
+                        <span class="resource-label alignCenter input-small">Long</span>
+                        <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="listBackground grid grid-3col shape1 noMargin">
+
+                <div class="flexrow flex-center standard-height">
+                    <label class="resource-value">Ini Mod</label>
+                </div>
+                <div class="flexrow flex-center standard-height">
+                    <label class="resource-value">Threat</label>
+                </div>
+                <div class="flexrow flex-center standard-heightr">
+                    <label class="resource-value">Stress</label>
+                </div>
+                <div class="flexrow flex-center standard-height">
                     <input class="input-small flex-group-right" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
                 </div>
-                <div class="flexrow flex-group-center" style="margin-top: 22px;">
-                    <label class="resource-label">Threat Level</label>
-                    <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.data.threatLevel.current}}" placeholder="0"/>/
-                    <input class="input-small" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.data.threatLevel.total}}" placeholder="0"/>                            
+                <div class="flexrow flex-center standard-height">
+                    <input class="input-xs standard-height" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.data.threatLevel.current}}" placeholder="0"/>/
+                    <input class="input-xs standard-height" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.data.threatLevel.total}}" placeholder="0"/>     
                 </div>
-                <div class="flexrow flex-group-center" style="margin-top: 22px;">
-                    <label class="resource-label">Stress Test</label>
+                <div class="flexrow flex-center standard-height">
                     <input class="input-medium" style="text-align: center" type="text" name="data.stresstest" value="{{data.data.stresstest}}" placeholder="1d6"/>
                 </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</header>
+
+{{!-- NPC Motivations --}}
+    {{#if (eq data.type "npc")}}
+    <div class="contentBox" style="height: 70px; max-height: 70px;">
+        <div class="flexrow">
+            <h3 class="subheader">Motivations</h3>
+            <div class="alignRight flexGrowThreeQuarter">
+            </div>
+        </div>
+        <div class="itemBackground">
+            <div class="flexrow">
+                <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.data.ego.motivations.motivation1}}{{data.data.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.data.ego.motivations.motivation2}}{{data.data.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.data.ego.motivations.motivation3}}{{data.data.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
             </div>
         </div>
     </div>
-</div>
+    {{/if}}
