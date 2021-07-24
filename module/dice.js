@@ -5,6 +5,33 @@
  */
 
 
+export const TASK_RESULT = {
+  CRITICAL_SUCCESS: 0,
+  SUCCESS_TWO: 1,
+  SUCCESS_ONE: 2,
+  SUCCESS: 3,
+  CRITICAL_FAILURE: 4,
+  FAILURE_TWO: 5,
+  FAILURE_ONE: 6,
+  FAILURE: 7
+}
+
+const TASK_RESULT_TEXT = {
+  0: { class: 'success', text: 'Critical Success' },
+  1: { class: 'success', text: 'Superior Success' },
+  2: { class: 'success', text: 'Greater Success' },
+  3: { class: 'success', text: 'Success' },
+  4: { class: 'fail', text: 'Critical Failure' },
+  5: { class: 'fail', text: 'Superior Failure' },
+  6: { class: 'fail', text: 'Greater Failure' },
+  7: { class: 'fail', text: 'Failure' }
+}
+
+
+function formatBonus(value) {
+  let pre = (value > 0) ? '+' : '' 
+  return `${pre}${value}`
+}
 
 /**
  * TaskRoll holds all of the intermediate and calculated values for a single roll
@@ -14,27 +41,124 @@ export class TaskRoll {
     this._taskName = taskName
     this._baseValue = baseValue
     this._modifiers = []
+    this._roll = null
   }
+
 
   get taskName() {
     return this._taskName
   }
 
+
   get baseValue() {
     return this._baseValue
   }
 
-  addModifier(modifier) {
-    this._modifers.push(modifier)
+
+  get modifiers() {
+    return this._modifiers
   }
 
+
+  get roll() {
+    return this._roll
+  }
+
+
+  addModifier(modifier) {
+    this.modifiers.push(modifier)
+  }
+
+
+  /**
+   * Retrieves the combined target number, taking into account the
+   * base value and all roll modifiers.
+   */
+  get totalTargetNumber() {
+    let mods = this.modifiers.map((mod) => mod.value)
+      .reduce((sum, value) => { return sum + value }, 0)
+
+    return this.baseValue + mods
+  }
+
+
+  get diceRollValue() {
+    return this._rollValue
+  }
+
+
+  /**
+   * Figure out the result of the roll, compared to the target number
+   */
+  calculateResult() {
+
+    let target = this.totalTargetNumber
+    let value = this.diceRollValue
+    let result
+
+    if(value <= target) {   // success results
+      if(value % 11 === 0)
+        result = TASK_RESULT.CRITICAL_SUCCESS
+      else if(value > 66)
+        result = TASK_RESULT.SUCCESS_TWO
+      else if(value > 33)
+        result = TASK_RESULT.SUCCESS_ONE
+      else
+        result = TASK_RESULT.SUCCESS
+    }
+    else {                  // failure results
+      if(value % 11 === 0)
+        result = TASK_RESULT.CRITICAL_FAILURE
+      else if(value < 33)
+        result = TASK_RESULT.FAILURE_TWO
+      else if(value < 66)
+        result = TASK_RESULT.FAILURE_ONE
+      else
+        result = TASK_RESULT.FAILURE
+    }
+
+    this._result = result
+  }
+
+
+  formatResult() {
+    let fields = []
+
+    let resultText = TASK_RESULT_TEXT[this._result]
+    fields.push(`<span class='${resultText.class}'>${resultText.text}</span><br/>`)
+    fields.push(`Rolled <strong>${this.taskName}</strong> check<br/>`)
+    fields.push(`against <strong>${this.totalTargetNumber}</strong><br/>`)
+
+    if(this.modifiers.length > 0) {
+      fields.push('<u>Applied Mods:</u><br/>')
+      for(let mod of this.modifiers) {
+        if(mod.value !== 0)
+          fields.push(`${mod.text} <string>${formatBonus(mod.value)}</string><br/>`)
+      }
+    }
+
+    return fields.join('\n')
+  }
+
+
   toString() {
-    let str = `TaskRoll name=#{this.taskName}, value=${value}\n`
+
+    alert(JSON.stringify(this.modifiers))
+    let str = `TaskRoll name=${this.taskName}, value=${this.baseValue}\n`
 
     for(let mod of this.modifiers)
       str += '  ' + mod.toString() + '\n'
 
     return str
+  }
+
+
+
+  async performRoll() {
+    this._roll = new Roll('d100')
+    let result = await this._roll.evaluate({async: true })
+
+    this._rollValue = parseInt(this._roll.total)
   }
 }
 
@@ -70,18 +194,52 @@ export class TaskRollModifier {
 
 
 export async function ReputationRoll(dataset, actorData) {
-  // let id = actorData.ego.idSelected
-  // let rep = actorData.ego.ids[id].rep[dataset.name]
+  let id = actorData.ego.idSelected
+  let rep = actorData.ego.ids[id].rep[dataset.name]
+  let repName = dataset.name
+  let repValue = parseInt(rep.value || 0)
 
-  // // alert(JSON.stringify(rep))
-  // let value = await showOptionsDialog('systems/eclipsephase/templates/chat/rep-test-dialog.html',
-  //   `${dataset.name} reputation check`)
-  // if(value.cancelled)
-  //   return
+  let value = await showOptionsDialog('systems/eclipsephase/templates/chat/rep-test-dialog.html',
+    `${dataset.name} reputation check`)
+  if(value.cancelled)
+    return
 
-  //  alert(JSON.stringify(value.find('[id="favor-mod"]')[0].value))
-  alert('in rep roll')
+  let favor_mod = parseInt(value.find('[id="favor-mod"]')[0].value)
+  let global_mod = parseInt(value.find('[id="global-mod"]')[0].value || 0)
+
+  let task = new TaskRoll(`${dataset.name} network`, repValue)
+
+  task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
+  if(global_mod !== 0)
+    task.addModifier(new TaskRollModifier('Situational modifier', global_mod))
+
+  applyHealthModifiers(actorData, task)
+
+  await task.performRoll()
+  task.calculateResult()
+  let result = task.formatResult()
+
+  task.roll.toMessage({
+    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+    flavor: result
+  })
+
+  // format the roll
+
+  // send it to the chat window
 }
+
+function applyHealthModifiers(actorData, taskRoll) {
+  let woundMod = parseInt(actorData.mods.woundMod)
+  let traumaMod = parseInt(actorData.mods.traumaMod)
+
+  if(woundMod > 0)
+    taskRoll.addModifier(new TaskRollModifier('Wound modifier', -woundMod))
+
+  if(traumaMod > 0)
+    taskRoll.addModifier(new TaskRollModifier('Trauma modifier', -traumaMod))
+}
+
 
 //General & Special Task Checks
 export async function TaskCheck({
