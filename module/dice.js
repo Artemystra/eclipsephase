@@ -266,11 +266,11 @@ export async function ReputationRoll(dataset, actorData) {
 
   let task = new TaskRoll(`${dataset.name} network`, repValue)
 
-  if(favor_mod !== 0)
-    task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
-
   if(global_mod !== 0)
     task.addModifier(new TaskRollModifier('Situational modifier', global_mod))
+
+  if(favor_mod !== 0)
+    task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
 
   applyHealthModifiers(actorData, task)
 
