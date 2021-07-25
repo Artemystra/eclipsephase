@@ -36,7 +36,7 @@ describe('Task Rolls', () => {
     })
   })
 
-  describe('calculateResult', () => {
+  describe('_calculateResult', () => {
     describe('success results', () => {
       let roll
 
@@ -45,23 +45,27 @@ describe('Task Rolls', () => {
       })
 
       test('critical success', () => {
-        roll._resultValue = 33
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.CRITICAL_SUCCESS)
+        roll._rollValue = 33
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.CRITICAL_SUCCESS)
       })
 
       test('two degrees of success', () => {
-        roll._resultValue = 67
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.SUCCESS_TWO)
+        roll._rollValue = 67
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.SUCCESS_TWO)
       })
 
       test('one degree of success', () => {
-        roll._resultValue = 41
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.SUCCESS_ONE)
+        roll._rollValue = 41
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.SUCCESS_ONE)
       })
 
       test('regular  success', () => {
-        roll._resultValue = 29 
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.SUCCESS)
+        roll._rollValue = 29 
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.SUCCESS)
       })
     })
 
@@ -73,23 +77,27 @@ describe('Task Rolls', () => {
       })
 
       test('critical falure', () => {
-        roll._resultValue = 55
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.CRITICAL_FAILURE)
+        roll._rollValue = 55
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.CRITICAL_FAILURE)
       })
 
       test('two degrees of falure', () => {
-        roll._resultValue = 29
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.FAILURE_TWO)
+        roll._rollValue = 29
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.FAILURE_TWO)
       })
 
       test('one degree of falure', () => {
-        roll._resultValue = 41
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.FAILURE_ONE)
+        roll._rollValue = 41
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.FAILURE_ONE)
       })
 
       test('regular  falure', () => {
-        roll._resultValue = 29 
-        expect(roll.calculateResult()).toEqual(TASK_RESULT.FAILURE_TWO)
+        roll._rollValue = 29
+        roll._calculateResult()
+        expect(roll.result).toEqual(TASK_RESULT.FAILURE_TWO)
       })
     })
   })

@@ -1,10 +1,12 @@
-/* Refactoring todo
- * - add modifiers
- * - do the roll
- * - format the output
+/*
+ * Path constants for dialog templates
  */
+const REPUTATION_TASK_DIALOG = 'systems/eclipsephase/templates/chat/rep-test-dialog.html'
 
 
+/*
+ * Task result constants
+ */
 export const TASK_RESULT = {
   CRITICAL_SUCCESS: 0,
   SUCCESS_TWO: 1,
@@ -28,10 +30,6 @@ const TASK_RESULT_TEXT = {
 }
 
 
-function formatBonus(value) {
-  let pre = (value > 0) ? '+' : '' 
-  return `${pre}${value}`
-}
 
 /**
  * TaskRoll holds all of the intermediate and calculated values for a single roll
@@ -42,6 +40,7 @@ export class TaskRoll {
     this._baseValue = baseValue
     this._modifiers = []
     this._roll = null
+    this._result = null
   }
 
 
@@ -60,7 +59,16 @@ export class TaskRoll {
   }
 
 
+  /**
+   * The Foundry Roll object that did the dice roll. Also needed to post
+   * the dice results back to the chat log.
+   * FIXME - Not sure that I like this. It might make more sense to have the 
+   * roll object be external and passed in when the task is resolved.
+   */
   get roll() {
+    if(this._roll === null)
+      throw "Dice have not been rolled yet, no Roll object exists"
+
     return this._roll
   }
 
@@ -82,15 +90,34 @@ export class TaskRoll {
   }
 
 
+  /**
+   * The numerical value of the dice roll.
+   */
   get diceRollValue() {
     return this._rollValue
+  }
+
+
+  get result() {
+    return this._result
+  }
+
+
+  /**
+   * Do the actual die roll
+   */
+  async performRoll() {
+    this._roll = new Roll('d100')
+    let result = await this._roll.evaluate({async: true })
+
+    this._rollValue = parseInt(this._roll.total)
   }
 
 
   /**
    * Figure out the result of the roll, compared to the target number
    */
-  calculateResult() {
+  _calculateResult() {
 
     let target = this.totalTargetNumber
     let value = this.diceRollValue
@@ -139,29 +166,7 @@ export class TaskRoll {
 
     return fields.join('\n')
   }
-
-
-  toString() {
-
-    alert(JSON.stringify(this.modifiers))
-    let str = `TaskRoll name=${this.taskName}, value=${this.baseValue}\n`
-
-    for(let mod of this.modifiers)
-      str += '  ' + mod.toString() + '\n'
-
-    return str
-  }
-
-
-
-  async performRoll() {
-    this._roll = new Roll('d100')
-    let result = await this._roll.evaluate({async: true })
-
-    this._rollValue = parseInt(this._roll.total)
-  }
 }
-
 
 
 /**
@@ -193,14 +198,18 @@ export class TaskRollModifier {
 }
 
 
+/**
+ * Perform a roll against the selected reputation network score (on the
+ * selected id). Output the results to the chat log.
+ */
 export async function ReputationRoll(dataset, actorData) {
   let id = actorData.ego.idSelected
   let rep = actorData.ego.ids[id].rep[dataset.name]
   let repName = dataset.name
   let repValue = parseInt(rep.value || 0)
 
-  let value = await showOptionsDialog('systems/eclipsephase/templates/chat/rep-test-dialog.html',
-    `${dataset.name} reputation check`)
+
+  let value = await showOptionsDialog(REPUTATION_TASK_DIALOG)
   if(value.cancelled)
     return
 
@@ -209,26 +218,27 @@ export async function ReputationRoll(dataset, actorData) {
 
   let task = new TaskRoll(`${dataset.name} network`, repValue)
 
-  task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
+  if(favor_mod !== 0)
+    task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
+
   if(global_mod !== 0)
     task.addModifier(new TaskRollModifier('Situational modifier', global_mod))
 
   applyHealthModifiers(actorData, task)
 
   await task.performRoll()
-  task.calculateResult()
-  let result = task.formatResult()
+  task._calculateResult()
 
   task.roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    flavor: result
+    flavor: task.formatResult()
   })
-
-  // format the roll
-
-  // send it to the chat window
 }
 
+
+/**
+ * Applies any penalties due to injury or mental trauma to the roll
+ */
 function applyHealthModifiers(actorData, taskRoll) {
   let woundMod = parseInt(actorData.mods.woundMod)
   let traumaMod = parseInt(actorData.mods.traumaMod)
@@ -239,6 +249,53 @@ function applyHealthModifiers(actorData, taskRoll) {
   if(traumaMod > 0)
     taskRoll.addModifier(new TaskRollModifier('Trauma modifier', -traumaMod))
 }
+
+
+/**
+ * Formats bonus/malus values to show a + if the number is positive
+ */
+function formatBonus(value) {
+  let pre = (value > 0) ? '+' : ''
+  return `${pre}${value}`
+}
+
+
+
+/**
+ * Generic dialog presenter
+ */
+async function showOptionsDialog(template, title) {
+  const html = await renderTemplate(template, {})
+
+  return new Promise((resolve, reject) => {
+    const data = {
+      title: title,
+      content: html,
+      buttons: {
+        cancel: {
+          label: 'Cancel',
+          callback: (html) => resolve({cancelled: true})
+        },
+        normal: {
+          label: 'Roll!',
+          callback: (html) => resolve(html)
+        }
+      },
+      default: 'normal',
+      close: () => resolve({cancelled: true})
+    }
+
+    new Dialog(data, null).render(true);
+  })
+}
+
+
+
+
+
+
+
+
 
 
 //General & Special Task Checks
@@ -959,28 +1016,3 @@ export async function DamageRoll({
     }
 }
 
-
-async function showOptionsDialog(template, title) {
-  const html = await renderTemplate(template, {})
-
-  return new Promise((resolve, reject) => {
-    const data = {
-      title: title,
-      content: html,
-      buttons: {
-        cancel: {
-          label: 'Cancel',
-          callback: (html) => resolve({cancelled: true})
-        },
-        normal: {
-          label: 'Roll!',
-          callback: (html) => resolve(html)
-        }
-      },
-      default: 'normal',
-      close: () => resolve({cancelled: true})
-    }
-
-    new Dialog(data, null).render(true);
-  })
-}
