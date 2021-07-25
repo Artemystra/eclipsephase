@@ -32,7 +32,7 @@ const TASK_RESULT_TEXT = {
 
 
 /**
- * TaskRoll holds all of the intermediate and calculated values for a single roll
+ * TaskRoll holds all of the intermediate and calculated values for a single roll.
  */
 export class TaskRoll {
   constructor(taskName, baseValue) {
@@ -44,16 +44,30 @@ export class TaskRoll {
   }
 
 
+  /**
+   * The name of the task (usually the name of the skill, but could be psi
+   * slight or reputation network.
+   * @type {string}
+   */
   get taskName() {
     return this._taskName
   }
 
 
+  /**
+   * The base value of the roll. This is unmodified value to roll again,
+   * that will (potentially) have modifiers applied to it.
+   * @type {Number}
+   */
   get baseValue() {
     return this._baseValue
   }
 
 
+  /**
+   * The list of modifiers that potentially affect this roll.
+   * @type TaskRollModifier[]
+   */
   get modifiers() {
     return this._modifiers
   }
@@ -66,13 +80,14 @@ export class TaskRoll {
    * roll object be external and passed in when the task is resolved.
    */
   get roll() {
-    if(this._roll === null)
-      throw "Dice have not been rolled yet, no Roll object exists"
-
     return this._roll
   }
 
 
+  /**
+   * Add a modifier to this roll.
+   * @param {TaskRollModifier} modifer
+   */
   addModifier(modifier) {
     this.modifiers.push(modifier)
   }
@@ -81,6 +96,7 @@ export class TaskRoll {
   /**
    * Retrieves the combined target number, taking into account the
    * base value and all roll modifiers.
+   * @type {Number}
    */
   get totalTargetNumber() {
     let mods = this.modifiers.map((mod) => mod.value)
@@ -91,26 +107,32 @@ export class TaskRoll {
 
 
   /**
-   * The numerical value of the dice roll.
+   * The result of the die roll, unmodified.
+   * @type {Number}
    */
   get diceRollValue() {
     return this._rollValue
   }
 
 
+  /**
+   * The numerical value of the dice roll. One of the TASK_RESULT constants.
+   * @type {Number}
+   */
   get result() {
     return this._result
   }
 
 
   /**
-   * Do the actual die roll
+   * Do the actual die roll and compare to the base value and modifiers
    */
   async performRoll() {
     this._roll = new Roll('d100')
     let result = await this._roll.evaluate({async: true })
 
     this._rollValue = parseInt(this._roll.total)
+    this._calculateResult()
   }
 
 
@@ -148,7 +170,12 @@ export class TaskRoll {
   }
 
 
-  formatResult() {
+  /**
+   * The result of the task roll, formatted to html.
+   * Only modifiers that are non-zero are included.
+   * @return {string} The html result
+   */
+  formattedResult() {
     let fields = []
 
     let resultText = TASK_RESULT_TEXT[this._result]
@@ -160,7 +187,7 @@ export class TaskRoll {
       fields.push('<u>Applied Mods:</u><br/>')
       for(let mod of this.modifiers) {
         if(mod.value !== 0)
-          fields.push(`${mod.text} <string>${formatBonus(mod.value)}</string><br/>`)
+          fields.push(`${mod.text} <string>${mod.formattedValue}</string><br/>`)
       }
     }
 
@@ -174,23 +201,39 @@ export class TaskRoll {
  * calculating the final result, and displaying the results to the user.
  */
 export class TaskRollModifier {
-  constructor(text, value, type = 'add') {
+  constructor(text, value) {
     this._text = text
     this._value = value
-    this._type = type
   }
 
+  /**
+   * Text of the modifier. This is what will get displayed in the chat window.
+   * @type {string}
+   */
   get text() {
     return this._text
   }
 
+
+  /**
+   * The numerical value of the modifier.
+   * @type {Number}
+   */
   get value() {
     return this._value
   }
 
-  get type() {
-    return this._type
+
+  /**
+   * The value of the modifier, formatted to a string, with a + character
+   * prepended if the value is positive.
+   * @type {string}
+   */
+  get formattedValue() {
+    let pre = (this.value > 0) ? '+' : ''
+    return `${pre}${this.value}`
   }
+
 
   toString() {
     return `${this.text} = ${this.value}`
@@ -201,20 +244,25 @@ export class TaskRollModifier {
 /**
  * Perform a roll against the selected reputation network score (on the
  * selected id). Output the results to the chat log.
+ *
+ * FIXME - Most of this function can be abstracted when(/if) other task
+ * types are converted.
  */
 export async function ReputationRoll(dataset, actorData) {
   let id = actorData.ego.idSelected
   let rep = actorData.ego.ids[id].rep[dataset.name]
   let repName = dataset.name
   let repValue = parseInt(rep.value || 0)
+  let ids = ['favor-mod', 'global-mod']
 
+  let values = await showOptionsDialog(REPUTATION_TASK_DIALOG,
+    'Reputation Roll', ids)
 
-  let value = await showOptionsDialog(REPUTATION_TASK_DIALOG)
-  if(value.cancelled)
+  if(values.cancelled)
     return
 
-  let favor_mod = parseInt(value.find('[id="favor-mod"]')[0].value)
-  let global_mod = parseInt(value.find('[id="global-mod"]')[0].value || 0)
+  let favor_mod = parseInt(values['favor-mod']) || 0
+  let global_mod = parseInt(values['global-mod']) || 0
 
   let task = new TaskRoll(`${dataset.name} network`, repValue)
 
@@ -227,17 +275,18 @@ export async function ReputationRoll(dataset, actorData) {
   applyHealthModifiers(actorData, task)
 
   await task.performRoll()
-  task._calculateResult()
 
   task.roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    flavor: task.formatResult()
+    flavor: task.formattedResult()
   })
 }
 
 
 /**
  * Applies any penalties due to injury or mental trauma to the roll
+ * @param {ActorData} actorData Where to pull the injury values from
+ * @param {TaskRoll} taskRoll Where to write the modifiers
  */
 function applyHealthModifiers(actorData, taskRoll) {
   let woundMod = parseInt(actorData.mods.woundMod)
@@ -251,21 +300,26 @@ function applyHealthModifiers(actorData, taskRoll) {
 }
 
 
-/**
- * Formats bonus/malus values to show a + if the number is positive
- */
-function formatBonus(value) {
-  let pre = (value > 0) ? '+' : ''
-  return `${pre}${value}`
-}
 
 
 
 /**
  * Generic dialog presenter
+ * @param {string} template - Path to the html template for this dialog
+ * @param {string} title - What to display in the title bar
+ * @param {string[]} ids - List of element ids to get values from
  */
-async function showOptionsDialog(template, title) {
+async function showOptionsDialog(template, title, ids) {
   const html = await renderTemplate(template, {})
+
+  function extractFormValues(html) {
+    let values = {}
+
+    for(let id of ids)
+      values[id] = html.find(`[id="${id}"]`)[0].value
+
+    return values
+  }
 
   return new Promise((resolve, reject) => {
     const data = {
@@ -278,7 +332,7 @@ async function showOptionsDialog(template, title) {
         },
         normal: {
           label: 'Roll!',
-          callback: (html) => resolve(html)
+          callback: (html) => resolve(extractFormValues(html))
         }
       },
       default: 'normal',
