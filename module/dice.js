@@ -2,7 +2,7 @@
  * Path constants for dialog templates
  */
 const REPUTATION_TASK_DIALOG = 'systems/eclipsephase/templates/chat/rep-test-dialog.html'
-
+const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
 
 /*
  * Task result constants
@@ -171,27 +171,28 @@ export class TaskRoll {
 
 
   /**
-   * The result of the task roll, formatted to html.
-   * Only modifiers that are non-zero are included.
-   * @return {string} The html result
+   * Format all of the output data so the output partial understands it.
    */
-  formattedResult() {
-    let fields = []
+  outputData() {
+    let data = {}
 
     let resultText = TASK_RESULT_TEXT[this._result]
-    fields.push(`<span class='${resultText.class}'>${resultText.text}</span><br/>`)
-    fields.push(`Rolled <strong>${this.taskName}</strong> check<br/>`)
-    fields.push(`against <strong>${this.totalTargetNumber}</strong><br/>`)
 
+    data.resultClass = resultText.class
+    data.resultText = resultText.text
+
+    data.taskName = this.taskName
+    data.targetNumber = this.totalTargetNumber
+
+    data.modifiers = []
     if(this.modifiers.length > 0) {
-      fields.push('<u>Applied Mods:</u><br/>')
       for(let mod of this.modifiers) {
         if(mod.value !== 0)
-          fields.push(`${mod.text} <string>${mod.formattedValue}</string><br/>`)
+          data.modifiers.push({text: mod.text, value: mod.formattedValue})
       }
     }
 
-    return fields.join('\n')
+    return data
   }
 }
 
@@ -276,9 +277,13 @@ export async function ReputationRoll(dataset, actorData) {
 
   await task.performRoll()
 
+
+  let outputData = task.outputData()
+  let html = await renderTemplate(TASK_RESULT_OUTPUT, outputData)
+
   task.roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    flavor: task.formattedResult()
+    content: html
   })
 }
 
