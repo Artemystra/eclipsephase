@@ -431,9 +431,15 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    */
   _onTaskCheck(event) {
     event.preventDefault();
+
     const element = event.currentTarget;
     const dataset = element.dataset;
     const actorData = this.actor.data.data;
+
+    if(dataset.type === 'rep') {
+      this._onRepRoll(dataset, actorData)
+      return
+    }
 
       Dice.TaskCheck ({
         skillName : dataset.name.toLowerCase(),
@@ -482,8 +488,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       $.each(revealer, function (index, value){
         $(value).toggleClass("noShow");
       })
-  }
+    }
 
-  }
+
+    _onRepRoll(dataset, actorData) {
+      Dice.ReputationRoll(dataset, actorData)
+    }
+
+}
 
 
