@@ -319,7 +319,6 @@ async function showOptionsDialog(template, title, names) {
 
   function extractFormValues(html) {
     let form = html[0].querySelector("form")
-    alert(JSON.stringify(form.favorMod.value))
 
     let values = {}
 
