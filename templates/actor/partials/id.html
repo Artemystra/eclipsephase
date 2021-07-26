@@ -9,13 +9,13 @@
     <div class="listBackground shape4">
         <div class="skills grid grid-3col">
             {{#each rep as |reputation key|}}
-            <div class="flexrow flex-group-left noBorder reveal">
-                <span class="input-medium resource-label" >{{key}}</span>
+            <div class="flexrow flex-group-center noBorder reveal item">
+                <span class="toggle input-medium resource-label" >{{key}}</span>
 
 
-                <div class="flexrow flex-group-center" style="max-width: 40px;">
+                <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
                   <img data-type="rep" data-name="{{key}}" data-rollvalue="{{reputation.value}}"
-                       src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                       src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
                 </div>
 
 
