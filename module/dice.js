@@ -283,7 +283,7 @@ export async function ReputationRoll(dataset, actorData) {
 
   task.roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    content: html
+    flavor: html
   })
 }
 
