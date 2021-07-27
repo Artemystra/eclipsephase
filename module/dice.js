@@ -254,16 +254,16 @@ export async function ReputationRoll(dataset, actorData) {
   let rep = actorData.ego.ids[id].rep[dataset.name]
   let repName = dataset.name
   let repValue = parseInt(rep.value || 0)
-  let ids = ['favor-mod', 'global-mod']
+  let names = ['favorMod', 'globalMod']
 
   let values = await showOptionsDialog(REPUTATION_TASK_DIALOG,
-    'Reputation Roll', ids)
+    'Reputation Roll', names)
 
   if(values.cancelled)
     return
 
-  let favor_mod = parseInt(values['favor-mod']) || 0
-  let global_mod = parseInt(values['global-mod']) || 0
+  let favor_mod = parseInt(values['favorMod']) || 0
+  let global_mod = parseInt(values['globalMod']) || 0
 
   let task = new TaskRoll(`${dataset.name} network`, repValue)
 
@@ -312,16 +312,18 @@ function applyHealthModifiers(actorData, taskRoll) {
  * Generic dialog presenter
  * @param {string} template - Path to the html template for this dialog
  * @param {string} title - What to display in the title bar
- * @param {string[]} ids - List of element ids to get values from
+ * @param {string[]} names - List of element ids to get values from
  */
-async function showOptionsDialog(template, title, ids) {
+async function showOptionsDialog(template, title, names) {
   const html = await renderTemplate(template, {})
 
   function extractFormValues(html) {
+    let form = html[0].querySelector("form")
+
     let values = {}
 
-    for(let id of ids)
-      values[id] = html.find(`[id="${id}"]`)[0].value
+    for(let name of names)
+      values[name] = form[name].value
 
     return values
   }
