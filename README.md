@@ -30,3 +30,12 @@ The following features are included
 I'm trying to improve this system on a steady basis, but it will remain a hobby project. If you have any suggestions feel free to open Issues on GIT Hub - I'll come back to you as soon as possible.
 
 I'm also happy for any support - either by saying "thanks" or buying me a kofi: https://ko-fi.com/diemen
+
+
+<strong>Initial setup</strong>
+
+`npm install`
+
+<strong>Testing</strong>
+
+`npm test`

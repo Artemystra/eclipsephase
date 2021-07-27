@@ -200,3 +200,7 @@ eclipsephase.damageRatingMultiplier = {
   synth: 2.0,
   bio: 1.5
 }
+
+eclipsephase.morphNames = [
+  "morph1", "morph2", "morph3", "morph4", "morph5", "morph6"
+]

@@ -1,35 +1,9 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
     {{!-- Sheet Header --}}
-    <header class="sheet-header" style="margin-top: -25px;">
-        <div class="headroom">
-            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
-                <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
-            </div>
-            <div>
-                <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
-            </div>
-            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
-                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
-            </div>
-        </div>
-        {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
+    
+    {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
 
-    </header>
-    <div class="contentBox" style="height: 70px; max-height: 70px;">
-        <div class="flexrow">
-            <h3 class="subheader">Motivations</h3>
-            <div class="alignRight flexGrowThreeQuarter">
-            </div>
-        </div>
-        <div class="itemBackground">
-            <div class="flexrow">
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.data.ego.motivations.motivation1}}{{data.data.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.data.ego.motivations.motivation2}}{{data.data.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.data.ego.motivations.motivation3}}{{data.data.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-            </div>
-        </div>
-    </div>
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="skills">Mental</a>

@@ -1,159 +1,7 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
     {{!-- Sheet Header --}}
-    <header class="sheet-header" style="margin-top: -25px; margin-bottom: -15px;">
-        <div class="headroom">
-            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
-                <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
-            </div>
-            <div>
-                <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
-            </div>
-            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
-                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
-            </div>
-        </div>
-        <div class="header-fields" style="margin-top: 50px;">
-            <div class="grid grid-2col noMargin">
-              <div class="contentBox">
-                  <div class="flexrow">
-                      <h3 class="subheader">Physical</h3>
-                      <div class="flexGrowThreeQuarter flexrow flex-group-center tooltip">
-                        <div role="tooltipNegative">
-                            <div class="tooltipTopBorder">
-                                <div class="tooltipTop"></div>
-                            </div>
-                            <div class="armorValue">
-                                <h3 class="inline">Armor</h3>
-                                {{#if data.armor}}
-                                    <label class="resource-value">Cumulated Armor </label>
-                                    <p/>
-                                    <div class="flexrow flex-group-center">
-                                        <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/><span class="toggle resource-label alignLeft">Energy: </span><span class="toggle resource-value alignLeft item-standard-margin-medium"> {{data.data.physical.energyArmorTotal}}</span>
-                                        <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/><span class="toggle resource-label alignLeft">Kinetic: </span><span class="toggle resource-value alignLeft"> {{data.data.physical.kineticArmorTotal}}</span>
-                                    </div>
-                                    <p/>
-                                    <label class="resource-value">Armor Pieces active on You</label>
-                                    <div class="listBackground">
-                                        <span class="toggle resource-label alignLeft">Main Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.mainArmorTotal}}</span><br/>
-                                        <p/>
-                                        <span class="toggle resource-label alignLeft">Additional Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.additionalArmorTotal}}</span><br/>
-                                    </div>
-                                    <p/>
-                                    <label class="resource-value">Cumulative Malus -{{data.data.physical.armorMalusTotal}}</label>
-                                    <div class="listBackground">
-                                        <span class="toggle resource-label alignLeft">Main Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.mainArmorMalus}}</span>
-                                        <p/>
-                                        <i style="font-size: 12px; margin-bottom: 10px;">Main armor usually cover all or most of your body. You can layer multiple main armor (on GM discretion). For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
-                                        <p/>
-                                        <span class="toggle resource-label alignLeft">Additional Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.additionalArmorMalus}}</span>
-                                        <p/>
-                                        <i style="font-size: 12px; margin-bottom: 10px;">Additional armor usually includes very light armor attached to your regular one. You can layer one additional armor with no extra cost(on GM discretion). Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
-                                    </div>
-                                    <p/>
-                                    {{else}}
-                                    <label class="resource-value">You are not wearing any armor</label>
-                                    <p/>
-                                    {{/if}}
-                                    <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Body-Tab. You can add armor by drag & drop it out of a <label class="resource-value">COMPENDIUM <i class="fas fa-atlas"></i></label> or any other <label class="resource-value">ITEM <i class="fas fa-suitcase"></i></label> collection available.</i>
-                            </div>
-                            <div class="tooltipBottomBorder">
-                                <div class="tooltipBottom"></div>
-                            </div>
-                        </div>
-                        <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>
-                        <span class="toggle resource-value alignLeft">{{data.data.physical.energyArmorTotal}}</span>
-                        <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/>
-                        <span class="toggle resource-value alignLeft">{{data.data.physical.kineticArmorTotal}}</span>
-                      </div>
-                  </div>
-                  <div class="flex-group-center listBackground shape2">
-                      <div class="resource-content flexrow flex-center">
-                          <label class="alignCenter resource-label">Health</label>
-                          <span>  </span>
-                          <label class="alignCenter resource-label">Wounds</label>
-                      </div>
-                      <div class="flexrow flex-center">
-                          <input type="number" name="data.health.physical.value" value="{{data.data.health.physical.value}}" data-dtype="Number" placeholder="0"/>
-                          <span>  </span>
-                          <input type="number" name="data.physical.wounds" value="{{data.data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
-                      </div>
-                      <div class="resource-content flexrow flex-center">
-                          <span class="resource-value">DUR {{data.data.health.physical.max}}</span>
-                          <span class="resource-value">DR {{data.data.physical.dr}}</span>
-                          <span class="resource-value">WT {{data.data.physical.wt}}</span>
-                      </div>
-                  </div>
-                </div>
-                <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="flexGrowThreeQuarter">
-                        </div>
-                        <h3 class="subheaderMirror">Mental</h3>
-                    </div>
-                    <div class="listBackground shape1 flex-group-center">
-                        <div class="resource-content flexrow flex-center">
-                            <label class="resource-label alignCenter">Health</label>
-                            <span>  </span>
-                            <label class="resource-label alignCenter">Trauma</label>
-                        </div>
-                        <div class="resource-content flexrow flex-center">
-                            <input type="number" name="data.health.mental.value" value="{{data.data.health.mental.value}}" data-dtype="Number" placeholder="0"/>
-                            <span>  </span>
-                            <input type="number" name="data.mental.trauma" value="{{data.data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
-                        </div>
-                        <div class="resource-content flexrow flex-center">
-                            <span class="resource-value">LUC {{data.data.health.mental.max}}</span>
-                            <span class="resource-value">IR {{data.data.mental.ir}}</span>
-                            <span class="resource-value">TT {{data.data.mental.tt}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          <div class="grid grid-2col">
-            <div class="contentBox">
-                <div class="flexrow">
-                    <h3 class="subheader">Aptitudes</h3>
-                    <div class="flexGrowHalf">
-                    </div>
-                </div>
-                <div class="listBackground  shape2 grid grid-3col noMargin">
-                    {{#each data.data.aptitudes as |aptitude key|}}
-                    <div class="abilities flexrow flex-group-center reveal" style="min-height: 26px;">
-                        <div class="flexrow flex-group-center input-small">
-                            <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
-                            <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        </div>
-                        <input class="input-small" type="number" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-            <div class="contentBox">
-                    <div class="flexrow">
-                        <div class="flexGrowHalf"></div>
-                        <h3 class="subheaderMirror">Other</h3>
-                    </div>
-                    <div class="listBackground flexrow flex-group-center shape1">
-                        <div class="flexrow flex-group-center">
-                            <span class="resource-label">Initiative Mod</span>
-                            <input class="input-small" type="number" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
-                        </div>
-                        <div class="flexrow flex-group-left" style="flex-basis: 100%; margin-top: 19.5px; margin-bottom: 5px;">
-                            <div class="flexrow flex-group-center">
-                                <span class="resource-label alignCenter">Rest: Short</span>
-                                <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
-                                <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
-                            </div>
-                            <div class="flexrow flex-group-center" style="flex: 0.5;">
-                                <span class="resource-label alignCenter input-small">Long</span>
-                                <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+
+    {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
@@ -317,130 +165,19 @@
                         <label class="resource-value">Activated</label>
                         <select class="selectSpecApt item-standard-margin-medium input-XL" name="data.ego.idSelected" data-type="String">
                             {{#select data.data.ego.idSelected}}
-                            <option value="ID1">ID1: {{data.data.ego.ids.id1.name}}</option>
-                            <option value="ID2">ID2: {{data.data.ego.ids.id2.name}}</option>
-                            <option value="ID3">ID3: {{data.data.ego.ids.id3.name}}</option>
-                            <option value="ID4">ID4: {{data.data.ego.ids.id4.name}}</option>
-                            <option value="ID5">ID5: {{data.data.ego.ids.id5.name}}</option>
+                            <option value="id1">ID1: {{data.data.ego.ids.id1.name}}</option>
+                            <option value="id2">ID2: {{data.data.ego.ids.id2.name}}</option>
+                            <option value="id3">ID3: {{data.data.ego.ids.id3.name}}</option>
+                            <option value="id4">ID4: {{data.data.ego.ids.id4.name}}</option>
+                            <option value="id5">ID5: {{data.data.ego.ids.id5.name}}</option>
                             {{/select}}
                         </select>
                     </div>
                 </div>
-                {{#if (eq data.data.ego.idSelected "ID1")}}
-                <div class="contentBox">
-                    <div class="flexrow flex-group-center listBackground">
-                        <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id1.name" value="{{data.data.ego.ids.id1.name}}" placeholder="Fake Name" style="text-align: left"/>
-                    </div>
-                    <div class="listBackground shape4">
-                        <div class="skills grid grid-3col">
-                            {{#each data.data.ego.ids.id1.rep as |reputation key|}}
-                            <div class="flexrow flex-group-left noBorder">
-                                <label class="input-medium resource-label" >{{key}}</label>
-                                <input class="input-small" type="text" name="data.ego.ids.id1.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.small1" {{checked reputation.small1}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.small2" {{checked reputation.small2}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.med1" {{checked reputation.med1}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id1.rep.{{key}}.large" {{checked reputation.large}}>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-                </div>
-                {{/if}}
-                {{#if (eq data.data.ego.idSelected "ID2")}}
-                <div class="contentBox">
-                    <div class="flexrow flex-group-center listBackground">
-                        <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id2.name" value="{{data.data.ego.ids.id2.name}}" placeholder="Fake Name" style="text-align: left"/>
-                    </div>
-                    <div class="listBackground shape4">
-                        <div class="skills grid grid-3col">
-                            {{#each data.data.ego.ids.id2.rep as |reputation key|}}
-                            <div class="flexrow flex-group-left noBorder">
-                                <label class="input-medium resource-label" >{{key}}</label>
-                                <input class="input-small" type="text" name="data.ego.ids.id2.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.small1" {{checked reputation.small1}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.small2" {{checked reputation.small2}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.med1" {{checked reputation.med1}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id2.rep.{{key}}.large" {{checked reputation.large}}>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-                </div>
-                {{/if}}
-                {{#if (eq data.data.ego.idSelected "ID3")}}
-                <div class="contentBox">
-                    <div class="flexrow flex-group-center listBackground">
-                        <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id3.name" value="{{data.data.ego.ids.id3.name}}" placeholder="Fake Name" style="text-align: left"/>
-                    </div>
-                    <div class="listBackground shape4">
-                        <div class="skills grid grid-3col">
-                            {{#each data.data.ego.ids.id3.rep as |reputation key|}}
-                            <div class="flexrow flex-group-left noBorder">
-                                <label class="input-medium resource-label" >{{key}}</label>
-                                <input class="input-small" type="text" name="data.ego.ids.id3.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.small1" {{checked reputation.small1}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.small2" {{checked reputation.small2}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.med1" {{checked reputation.med1}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id3.rep.{{key}}.large" {{checked reputation.large}}>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-                </div>
-                {{/if}}
-                {{#if (eq data.data.ego.idSelected "ID4")}}
-                <div class="contentBox">
-                    <div class="flexrow flex-group-center listBackground">
-                        <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id4.name" value="{{data.data.ego.ids.id4.name}}" placeholder="Fake Name" style="text-align: left"/>
-                    </div>
-                    <div class="listBackground shape4">
-                        <div class="skills grid grid-3col">
-                            {{#each data.data.ego.ids.id4.rep as |reputation key|}}
-                            <div class="flexrow flex-group-left noBorder">
-                                <label class="input-medium resource-label" >{{key}}</label>
-                                <input class="input-small" type="text" name="data.ego.ids.id4.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.small1" {{checked reputation.small1}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.small2" {{checked reputation.small2}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.med1" {{checked reputation.med1}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id4.rep.{{key}}.large" {{checked reputation.large}}>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-                </div>
-                {{/if}}
-                {{#if (eq data.data.ego.idSelected "ID5")}}
-                <div class="contentBox">
-                    <div class="flexrow flex-group-center listBackground">
-                        <label class="input-medium resource-label" >Name</label>
-                        <input type="text" name="data.ego.ids.id5.name" value="{{data.data.ego.ids.id5.name}}" placeholder="Fake Name" style="text-align: left"/>
-                    </div>
-                    <div class="listBackground shape4">
-                        <div class="skills grid grid-3col">
-                            {{#each data.data.ego.ids.id5.rep as |reputation key|}}
-                            <div class="flexrow flex-group-left noBorder">
-                                <label class="input-medium resource-label" >{{key}}</label>
-                                <input class="input-small" type="text" name="data.ego.ids.id5.rep.{{key}}.value" value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.small1" {{checked reputation.small1}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.small2" {{checked reputation.small2}}>
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.med1" {{checked reputation.med1}}>/
-                                <input type="checkbox" class="sheet" name="data.ego.ids.id5.rep.{{key}}.large" {{checked reputation.large}}>
-                            </div>
-                            {{/each}}
-                        </div>
-                    </div>
-                </div>
-                {{/if}}
+
+                {{!-- ID and reputation --}}
+                {{> systems/eclipsephase/templates/actor/partials/id.html id=data.data.ego.idSelected}}
+
             </div>
             <div class="flexrow">
                 <h3 class="subheader">About {{data.name}}</h3>
@@ -1430,7 +1167,7 @@
                     <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
                         <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
                         <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
                         <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
@@ -1454,7 +1191,7 @@
                     <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
                         <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
                         <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
                         <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>

@@ -1,4 +1,6 @@
 import * as Dice from "../dice.js"
+import { eclipsephase } from "../config.js"
+
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -58,26 +60,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     if(data.data.img === "icons/svg/mystery-man.svg"){
       data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
-    if(data.data.data.muse.img ==="")
-      data.data.data.muse.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    if(data.data.data.bodies.morph1.img === ""){
-      data.data.data.bodies.morph1.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    }
-    if(data.data.data.bodies.morph2.img === ""){
-      data.data.data.bodies.morph2.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    }
-    if(data.data.data.bodies.morph3.img === ""){
-      data.data.data.bodies.morph3.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    }
-    if(data.data.data.bodies.morph4.img === ""){
-      data.data.data.bodies.morph4.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    }
-    if(data.data.data.bodies.morph5.img === ""){
-      data.data.data.bodies.morph5.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    }
-    if(data.data.data.bodies.morph6.img === ""){
-      data.data.data.bodies.morph6.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    }
+
+    eclipsephase.morphNames.forEach(name => {
+      if(data.data.data.bodies[name].img === ""){
+        data.data.data.bodies[name].img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+      }
+    })
+
     if (data.data.type === 'character') {
       this._prepareCharacterItems(data);
     }
@@ -442,9 +431,15 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    */
   _onTaskCheck(event) {
     event.preventDefault();
+
     const element = event.currentTarget;
     const dataset = element.dataset;
     const actorData = this.actor.data.data;
+
+    if(dataset.type === 'rep') {
+      this._onRepRoll(dataset, actorData)
+      return
+    }
 
       Dice.TaskCheck ({
         skillName : dataset.name.toLowerCase(),
@@ -493,8 +488,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       $.each(revealer, function (index, value){
         $(value).toggleClass("noShow");
       })
-  }
+    }
 
-  }
+
+    _onRepRoll(dataset, actorData) {
+      Dice.ReputationRoll(dataset, actorData)
+    }
+
+}
 
 
