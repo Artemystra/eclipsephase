@@ -1,3 +1,364 @@
+/*
+ * Path constants for dialog templates
+ */
+const REPUTATION_TASK_DIALOG = 'systems/eclipsephase/templates/chat/rep-test-dialog.html'
+const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
+
+/*
+ * Task result constants
+ */
+export const TASK_RESULT = {
+  CRITICAL_SUCCESS: 0,
+  SUCCESS_TWO: 1,
+  SUCCESS_ONE: 2,
+  SUCCESS: 3,
+  CRITICAL_FAILURE: 4,
+  FAILURE_TWO: 5,
+  FAILURE_ONE: 6,
+  FAILURE: 7
+}
+
+const TASK_RESULT_TEXT = {
+  0: { class: 'success', text: 'Critical Success' },
+  1: { class: 'success', text: 'Superior Success' },
+  2: { class: 'success', text: 'Greater Success' },
+  3: { class: 'success', text: 'Success' },
+  4: { class: 'fail', text: 'Critical Failure' },
+  5: { class: 'fail', text: 'Superior Failure' },
+  6: { class: 'fail', text: 'Greater Failure' },
+  7: { class: 'fail', text: 'Failure' }
+}
+
+
+
+/**
+ * TaskRoll holds all of the intermediate and calculated values for a single roll.
+ */
+export class TaskRoll {
+  constructor(taskName, baseValue) {
+    this._taskName = taskName
+    this._baseValue = baseValue
+    this._modifiers = []
+    this._roll = null
+    this._result = null
+  }
+
+
+  /**
+   * The name of the task (usually the name of the skill, but could be psi
+   * slight or reputation network.
+   * @type {string}
+   */
+  get taskName() {
+    return this._taskName
+  }
+
+
+  /**
+   * The base value of the roll. This is unmodified value to roll again,
+   * that will (potentially) have modifiers applied to it.
+   * @type {Number}
+   */
+  get baseValue() {
+    return this._baseValue
+  }
+
+
+  /**
+   * The list of modifiers that potentially affect this roll.
+   * @type TaskRollModifier[]
+   */
+  get modifiers() {
+    return this._modifiers
+  }
+
+
+  /**
+   * The Foundry Roll object that did the dice roll. Also needed to post
+   * the dice results back to the chat log.
+   * FIXME - Not sure that I like this. It might make more sense to have the 
+   * roll object be external and passed in when the task is resolved.
+   */
+  get roll() {
+    return this._roll
+  }
+
+
+  /**
+   * Add a modifier to this roll.
+   * @param {TaskRollModifier} modifer
+   */
+  addModifier(modifier) {
+    this.modifiers.push(modifier)
+  }
+
+
+  /**
+   * Retrieves the combined target number, taking into account the
+   * base value and all roll modifiers.
+   * @type {Number}
+   */
+  get totalTargetNumber() {
+    let mods = this.modifiers.map((mod) => mod.value)
+      .reduce((sum, value) => { return sum + value }, 0)
+
+    return this.baseValue + mods
+  }
+
+
+  /**
+   * The result of the die roll, unmodified.
+   * @type {Number}
+   */
+  get diceRollValue() {
+    return this._rollValue
+  }
+
+
+  /**
+   * The numerical value of the dice roll. One of the TASK_RESULT constants.
+   * @type {Number}
+   */
+  get result() {
+    return this._result
+  }
+
+
+  /**
+   * Do the actual die roll and compare to the base value and modifiers
+   */
+  async performRoll() {
+    this._roll = new Roll('d100')
+    let result = await this._roll.evaluate({async: true })
+
+    this._rollValue = parseInt(this._roll.total)
+    this._calculateResult()
+  }
+
+
+  /**
+   * Figure out the result of the roll, compared to the target number
+   */
+  _calculateResult() {
+
+    let target = this.totalTargetNumber
+    let value = this.diceRollValue
+    let result
+
+    if(value <= target) {   // success results
+      if(value % 11 === 0)
+        result = TASK_RESULT.CRITICAL_SUCCESS
+      else if(value > 66)
+        result = TASK_RESULT.SUCCESS_TWO
+      else if(value > 33)
+        result = TASK_RESULT.SUCCESS_ONE
+      else
+        result = TASK_RESULT.SUCCESS
+    }
+    else {                  // failure results
+      if(value % 11 === 0)
+        result = TASK_RESULT.CRITICAL_FAILURE
+      else if(value < 33)
+        result = TASK_RESULT.FAILURE_TWO
+      else if(value < 66)
+        result = TASK_RESULT.FAILURE_ONE
+      else
+        result = TASK_RESULT.FAILURE
+    }
+
+    this._result = result
+  }
+
+
+  /**
+   * Format all of the output data so the output partial understands it.
+   */
+  outputData() {
+    let data = {}
+
+    let resultText = TASK_RESULT_TEXT[this._result]
+
+    data.resultClass = resultText.class
+    data.resultText = resultText.text
+
+    data.taskName = this.taskName
+    data.targetNumber = this.totalTargetNumber
+
+    data.modifiers = []
+    if(this.modifiers.length > 0) {
+      for(let mod of this.modifiers) {
+        if(mod.value !== 0)
+          data.modifiers.push({text: mod.text, value: mod.formattedValue})
+      }
+    }
+
+    return data
+  }
+}
+
+
+/**
+ * A single value that can modify the target number of a roll. This is used in both
+ * calculating the final result, and displaying the results to the user.
+ */
+export class TaskRollModifier {
+  constructor(text, value) {
+    this._text = text
+    this._value = value
+  }
+
+  /**
+   * Text of the modifier. This is what will get displayed in the chat window.
+   * @type {string}
+   */
+  get text() {
+    return this._text
+  }
+
+
+  /**
+   * The numerical value of the modifier.
+   * @type {Number}
+   */
+  get value() {
+    return this._value
+  }
+
+
+  /**
+   * The value of the modifier, formatted to a string, with a + character
+   * prepended if the value is positive.
+   * @type {string}
+   */
+  get formattedValue() {
+    let pre = (this.value > 0) ? '+' : ''
+    return `${pre}${this.value}`
+  }
+
+
+  toString() {
+    return `${this.text} = ${this.value}`
+  }
+}
+
+
+/**
+ * Perform a roll against the selected reputation network score (on the
+ * selected id). Output the results to the chat log.
+ *
+ * FIXME - Most of this function can be abstracted when(/if) other task
+ * types are converted.
+ */
+export async function ReputationRoll(dataset, actorData) {
+  let id = actorData.ego.idSelected
+  let rep = actorData.ego.ids[id].rep[dataset.name]
+  let repName = dataset.name
+  let repValue = parseInt(rep.value || 0)
+  let names = ['favorMod', 'globalMod']
+
+  let values = await showOptionsDialog(REPUTATION_TASK_DIALOG,
+    'Reputation Roll', names)
+
+  if(values.cancelled)
+    return
+
+  let favor_mod = parseInt(values['favorMod']) || 0
+  let global_mod = parseInt(values['globalMod']) || 0
+
+  let task = new TaskRoll(`${dataset.name} network`, repValue)
+
+  if(global_mod !== 0)
+    task.addModifier(new TaskRollModifier('Situational modifier', global_mod))
+
+  if(favor_mod !== 0)
+    task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
+
+  applyHealthModifiers(actorData, task)
+
+  await task.performRoll()
+
+
+  let outputData = task.outputData()
+  let html = await renderTemplate(TASK_RESULT_OUTPUT, outputData)
+
+  task.roll.toMessage({
+    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+    flavor: html
+  })
+}
+
+
+/**
+ * Applies any penalties due to injury or mental trauma to the roll
+ * @param {ActorData} actorData Where to pull the injury values from
+ * @param {TaskRoll} taskRoll Where to write the modifiers
+ */
+function applyHealthModifiers(actorData, taskRoll) {
+  let woundMod = parseInt(actorData.mods.woundMod)
+  let traumaMod = parseInt(actorData.mods.traumaMod)
+
+  if(woundMod > 0)
+    taskRoll.addModifier(new TaskRollModifier('Wound modifier', -woundMod))
+
+  if(traumaMod > 0)
+    taskRoll.addModifier(new TaskRollModifier('Trauma modifier', -traumaMod))
+}
+
+
+
+
+
+/**
+ * Generic dialog presenter
+ * @param {string} template - Path to the html template for this dialog
+ * @param {string} title - What to display in the title bar
+ * @param {string[]} names - List of element ids to get values from
+ */
+async function showOptionsDialog(template, title, names) {
+  const html = await renderTemplate(template, {})
+
+  function extractFormValues(html) {
+    let form = html[0].querySelector("form")
+
+    let values = {}
+
+    for(let name of names)
+      values[name] = form[name].value
+
+    return values
+  }
+
+  return new Promise((resolve, reject) => {
+    const data = {
+      title: title,
+      content: html,
+      buttons: {
+        cancel: {
+          label: 'Cancel',
+          callback: (html) => resolve({cancelled: true})
+        },
+        normal: {
+          label: 'Roll!',
+          callback: (html) => resolve(extractFormValues(html))
+        }
+      },
+      default: 'normal',
+      close: () => resolve({cancelled: true})
+    }
+
+    new Dialog(data, null).render(true);
+  })
+}
+
+
+
+
+
+
+
+
+
+
 //General & Special Task Checks
 export async function TaskCheck({
     //General
@@ -367,6 +728,10 @@ export async function TaskCheck({
             });
         }
     }
+
+
+
+
     //Skill check dialog constructor
     async function GetTaskOptions(rollType) {
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
@@ -711,5 +1076,4 @@ export async function DamageRoll({
 
     }
 }
-
 

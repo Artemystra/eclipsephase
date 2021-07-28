@@ -487,14 +487,4 @@
                 </div>
                 {{/if}}
             </div>
-            {{#if (ne data.type "character")}}
-            <div class="contentBox" style="margin-bottom: 10px;">
-                <div class="flexrow">
-                    <h3 class="subheader">Description {{data.name}}</h3>
-                    <div class="alignRight flexGrowHalf">
-                    </div>
-                </div>
-                {{editor content=data.data.description target="data.description" button=true owner=owner editable=this.options.editable}}
-            </div>
-            {{/if}}
         </div>

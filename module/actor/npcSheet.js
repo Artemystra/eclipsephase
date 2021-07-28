@@ -2,15 +2,50 @@ import * as Dice from "../dice.js"
 
 export class NpcSheet extends ActorSheet {
 
+    constructor(...args) {
+      super(...args);
+      
+      const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
+      console.log(this);
+      if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
+        this.position.height = 305;
+        this.position.width = 800;
+      }
+      else {
+        if (!game.user.isGM && !this.actor.isOwner){
+          this.position.height = 305;
+          this.position.width = 800;
+        }
+        else{
+          this.position.height = 600;
+          this.position.width = 800;
+        }
+      }
+    }
+
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             classes: ["eclipsephase", "sheet", "actor"],
-            template: "systems/eclipsephase/templates/actor/npc-sheet.html",
-            width: 800,
-            height: 780,
             resizable: false,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
         });
+    }
+
+    /** @override */
+
+    get template() {
+      const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
+      if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
+        return "systems/eclipsephase/templates/actor/sheet-limited.html"
+      }
+      else{
+        if (!game.user.isGM && !this.actor.isOwner){
+          return "systems/eclipsephase/templates/actor/sheet-limited.html";
+        }
+        else{
+          return "systems/eclipsephase/templates/actor/npc-sheet.html";
+        }
+      }
     }
 
     getData() {

@@ -1,23 +1,13 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
 
     {{!-- Sheet Header --}}
-    <header class="sheet-header" style="margin-top: -25px;">
-        <div class="headroom">
-            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
-                <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
-            </div>
-            <div>
-                <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
-            </div>
-            <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
-                <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
-            </div>
-        </div>
-        {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
-    </header>
+    
+    {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
+    
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="skills">Skills</a>
+        <a class="item" data-tab="description">Description</a>
+        <a class="item" data-tab="skills">Mental</a>
         <a class="item" data-tab="weapons">Physical</a>
         {{#if data.showEffectsTab}}
         <a class="item" data-tab="effects">Effects</a>
@@ -34,6 +24,17 @@
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
+        {{!--Description Tab--}}
+        <div class="tab" data-group="primary" data-tab="description">
+            <div class="contentBox" style="margin-bottom: 10px;">
+                <div class="flexrow">
+                    <h3 class="subheader">Description of {{data.name}}</h3>
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                </div>
+                {{editor content=data.data.description target="data.description" button=true owner=owner editable=this.options.editable}}
+            </div>
+        </div>
         {{!--Skills Tab--}}
         {{> systems/eclipsephase/templates/actor/partials/skills.html }}
         {{!-- Weapons Tab --}}

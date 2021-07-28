@@ -144,7 +144,6 @@
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  margin-bottom: 10px;
 }
 
 .eclipsephase .sheet-header .profile-img {
@@ -728,14 +727,6 @@ optgroup .Default .Roll .Mode,
   margin: 0;
 }
 
-.gear .item,
-.body .item,
-.ego .item,
-.psi .item {
-  flex-basis: 100%;
-  max-height: none!important;
-}
-
 .vehicle .item {
   max-height: none!important;
 }
@@ -744,7 +735,6 @@ optgroup .Default .Roll .Mode,
   padding-top: 0.2em;
   padding-bottom: 0.2em;
   min-height: 30px;
-  max-height: 30px;
 }
 
 .topLine {
@@ -860,6 +850,10 @@ h3.subheaderBlank {
 
 .displayBlock {
   display: block;
+}
+
+.standard-height {
+  height: 26px;
 }
 
 .input-xs {
