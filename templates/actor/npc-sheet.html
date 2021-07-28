@@ -6,6 +6,7 @@
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
         <a class="item" data-tab="skills">Mental</a>
         <a class="item" data-tab="weapons">Physical</a>
         {{#if data.showEffectsTab}}
@@ -23,6 +24,17 @@
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
+        {{!--Description Tab--}}
+        <div class="tab" data-group="primary" data-tab="description">
+            <div class="contentBox" style="margin-bottom: 10px;">
+                <div class="flexrow">
+                    <h3 class="subheader">Description of {{data.name}}</h3>
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                </div>
+                {{editor content=data.data.description target="data.description" button=true owner=owner editable=this.options.editable}}
+            </div>
+        </div>
         {{!--Skills Tab--}}
         {{> systems/eclipsephase/templates/actor/partials/skills.html }}
         {{!-- Weapons Tab --}}

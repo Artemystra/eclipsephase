@@ -45,10 +45,19 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "showEverything", {
     config: true,
     scope: "world",
-    name: "Always Reveal Stats",
-    hint: 'Always show character details/stats to everyone with at least "limited" permissions. If deactivated, shows "limited"-sheet of an character for everyone who is not GM nor owner of given character',
+    name: "Always Reveal Player Stats",
+    hint: 'Always show playercharacter details/stats to everyone with at least "limited" permissions. If deactivated, shows a "limited"-sheet of all player characters to everyone (not only the GM and owner of given character)',
     type: Boolean,
     default: false
+  });
+
+  game.settings.register("eclipsephase", "hideNPCs", {
+    config: true,
+    scope: "world",
+    name: "Always Hide NPC/Threat Stats",
+    hint: 'If activated, shows a "limited"-sheet of all NPCs & Threats to everyone instead of showing all details and values',
+    type: Boolean,
+    default: true
   });
 
   game.settings.register("eclipsephase", "effectPanel", {

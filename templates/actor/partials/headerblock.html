@@ -1,4 +1,4 @@
-<header class="sheet-header" style="margin-top: -25px;">
+<header class="sheet-header" style="align-items: normal;">
 
     {{!-- Character Picture --}}
     <div class="headroom">
@@ -8,19 +8,22 @@
         <div>
             <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
         </div>
-        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 4px; padding-bottom: 0">
+        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 22px; padding-bottom: 0">
             <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
         </div>
     </div>
 
     {{!-- Character Header Stats --}}
-    <div class="header-fields" style="margin-top: 50px;">
+    <div class="header-fields">
     <div class="grid grid-2col noMargin">
       <div class="contentBox">
           <div class="flexrow">
               <h3 class="subheader">Physical</h3>
               <div class="flexGrowThreeQuarter flexrow flex-group-center tooltip">
                 <div role="tooltipNegative">
+                    <div class="tooltipTopBorder">
+                        <div class="tooltipTop"></div>
+                    </div>
                     <div class="armorValue">
                         <h3 class="inline">Armor</h3>
                         {{#if data.armor}}
@@ -54,6 +57,9 @@
                             <p/>
                             {{/if}}
                             <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
+                    </div>
+                    <div class="tooltipBottomBorder">
+                        <div class="tooltipBottom"></div>
                     </div>
                 </div>
                 <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>

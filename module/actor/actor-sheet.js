@@ -45,7 +45,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
     else{
       if (!game.user.isGM && !this.actor.isOwner){
-        return "systems/eclipsephase/templates/actor/actor-sheet-limited.html";
+        return "systems/eclipsephase/templates/actor/sheet-limited.html";
       }
       else{
         return "systems/eclipsephase/templates/actor/actor-sheet.html";
