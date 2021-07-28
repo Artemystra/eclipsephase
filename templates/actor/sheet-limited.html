@@ -20,9 +20,15 @@
                     </div>
                     <h3 class="subheaderMirror">About {{data.name}}</h3>
                 </div>
+                {{#if (eq data.type "character")}}
                 <div class="limited-editor">
                     {{editor content=data.data.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
                 </div>
+                {{else}}
+                <div class="limited-editor">
+                    {{editor content=data.data.description target="data.description" button=true owner=owner editable=this.options.editable}}
+                </div>
+                {{/if}}
             </div>
         </div>
     </header>
