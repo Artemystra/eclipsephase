@@ -238,7 +238,7 @@
       "muse": {
         "muse": {
           "name": null,
-          "img" : "",
+          "img" : "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
           "description": null,
           "knowledgeskillname": null,
           "knowledgeskillvalue": null,
@@ -334,7 +334,7 @@
           "motivation2": "",
           "motivation3": ""
         },
-        "idSelected": "ID1",
+        "idSelected": "id1",
         "egoFlex": null,
         "ids": {
           "id1": {

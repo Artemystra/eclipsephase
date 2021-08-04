@@ -9,12 +9,24 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/node": "^7.14.2",
-    "@babel/preset-env": "^7.14.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/node": "^7.14.2",
+    "@babel/preset-env": "^7.14.4",
     "babel-jest": "^27.0.2",
     "jest": "^27.0.4"
+  },
+
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env", {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
   }
 }

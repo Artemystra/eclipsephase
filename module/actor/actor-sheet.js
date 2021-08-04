@@ -46,7 +46,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
     else{
       if (!game.user.isGM && !this.actor.isOwner){
-        return "systems/eclipsephase/templates/actor/actor-sheet-limited.html";
+        return "systems/eclipsephase/templates/actor/sheet-limited.html";
       }
       else{
         return "systems/eclipsephase/templates/actor/actor-sheet.html";
@@ -389,9 +389,15 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    */
   _onTaskCheck(event) {
     event.preventDefault();
+
     const element = event.currentTarget;
     const dataset = element.dataset;
     const actorData = this.actor.data.data;
+
+    if(dataset.type === 'rep') {
+      this._onRepRoll(dataset, actorData)
+      return
+    }
 
       Dice.TaskCheck ({
         skillName : dataset.name.toLowerCase(),
@@ -440,8 +446,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       $.each(revealer, function (index, value){
         $(value).toggleClass("noShow");
       })
-  }
+    }
 
-  }
+
+    _onRepRoll(dataset, actorData) {
+      Dice.ReputationRoll(dataset, actorData)
+    }
+
+}
 
 
