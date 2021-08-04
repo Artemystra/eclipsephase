@@ -4,8 +4,21 @@
             <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
         </div>
-    </header>
+    </header>    
+<nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="details">Item Details</a>
+    {{#if data.showEffectsTab}}
+    <a class="item" data-tab="effects">Effects</a>
+    {{/if}}
+</nav>
+{{!-- Sheet Body --}}
 
-    {{!-- Sheet Body --}}
+<section class="sheet-body">
+    <div class="tab details" data-group="primary" data-tab="details">
+
+
     <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60" placeholder="Add a description">{{data.data.description}}</textarea></div>
+    </div>
+    {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
+    </section>
 </form>

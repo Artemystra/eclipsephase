@@ -7,9 +7,16 @@
             </div>
         </div>
     </header>
-
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="details">Item Details</a>
+        {{#if data.showEffectsTab}}
+        <a class="item" data-tab="effects">Effects</a>
+        {{/if}}
+    </nav>
     {{!-- Sheet Body --}}
+
     <section class="sheet-body">
+        <div class="tab details" data-group="primary" data-tab="details">
         <div class="flexrow flex-group-center">
             <table>
                 <tr>
@@ -43,5 +50,7 @@
         <p></p>
         <h2>Description</h2>
         <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60">{{data.data.description}}</textarea></div>
+        </div>
+            {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
     </section>
 </form>
