@@ -108,10 +108,10 @@ Hooks.once('init', async function() {
   Actors.registerSheet("eclipsephase", GoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("eclipsephase", EclipsePhaseGearSheet, {types: ["gear","rangedWeapon","ccWeapon","grenade","armor","ware","drug"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseTraitSheet, {types: ["trait"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseFlawSheet, {types: ["flaw"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseMorphTraitSheet, {types: ["morphTrait"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseMorphFlawSheet, {types: ["morphFlaw"], makeDefault: true });
+//  Items.registerSheet("eclipsephase", EclipsePhaseTraitSheet, {types: ["trait"], makeDefault: true });
+//  Items.registerSheet("eclipsephase", EclipsePhaseFlawSheet, {types: ["flaw"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EclipsePhaseMorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
+ // Items.registerSheet("eclipsephase", EclipsePhaseMorphFlawSheet, {types: ["morphFlaw"], makeDefault: true });
  // Items.registerSheet("eclipsephase", EclipsePhaseRangedWeaponSheet, {types: ["rangedWeapon"], makeDefault: true });
  // Items.registerSheet("eclipsephase", EclipsePhaseCloseCombatWeaponSheet, {types: ["ccWeapon"], makeDefault: true });
  // Items.registerSheet("eclipsephase", EclipsePhaseGrenadeSheet, {types: ["grenade"], makeDefault: true });
