@@ -1,5 +1,6 @@
 import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js"
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers } from "../common/common-sheet-functions.js";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -322,41 +323,12 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
-    // Add Inventory Item
-    html.find('.item-create').click(this._onItemCreate.bind(this));
 
-    // Update Inventory Item
-    html.find('.item-edit').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.sheet.render(true);
-    });
 
-    html.find('.effect-create').click(ev => {
-      this.actor.createEmbeddedDocuments('ActiveEffect', [{
-        label: 'Active Effect',
-        icon: '/icons/svg/mystery-man.svg'
-      }]);
-    });
+    registerEffectHandlers(html,this.actor);
+    registerCommonHandlers(html,this.actor);
+    registerItemHandlers(html,this.actor,this);
 
-    html.find('.effect-edit').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const effect = this.actor.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
-      effect.sheet.render(true);
-    });
-
-    html.find('.effect-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
-      li.slideUp(200, () => this.render(false));
-    });
-
-    // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
-      li.slideUp(200, () => this.render(false));
-    });
 
     // Rollable abilities.
     html.find('.task-check').click(this._onTaskCheck.bind(this));
@@ -383,21 +355,21 @@ export class EclipsePhaseActorSheet extends ActorSheet {
               "data.active": toggle
           };
           const updated = item.update(updateData);
+          
+          let effUpdateData=[];
+          for(let eff of this.object.data.effects.filter(e => 
+            (e.data.disabled === toggle && e.data.origin.indexOf(itemId)>=0))){
+
+              effUpdateData.push({
+                "_id" : eff.data._id,
+                "disabled": !toggle
+              });
+          }
+          this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
       });
 
       //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
-
-      //slide-show on click
-      html.find(".slideShow").click(ev => {
-          const current = $(ev.currentTarget);
-          const first = current.children().first();
-          const last = current.children().last();
-          const target = current.parent(".item").children().last();
-          first.toggleClass("noShow");
-          last.toggleClass("noShow");
-          target.slideToggle(200);
-      })
 
   }
 
@@ -407,21 +379,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @private
    */
   _onItemCreate(event) {
-    event.preventDefault();
-    const header = event.currentTarget;
-    const type = header.dataset.type;
-    const data = duplicate(header.dataset);
-    const name = `New ${type.capitalize()}`;
-    const itemData = {
-      name: name,
-      type: type,
-      data: data
-    };
-    delete itemData.data["type"];
-    if (itemData.type === "specialSkill" || itemData.type === "knowSkill") {
-      itemData.name = "New Skill";
-    }
-    return this.actor.createEmbeddedDocuments("Item", [itemData]);
+    itemCreate(event,this.actor);
   }
 
   /**

@@ -6,6 +6,13 @@ export class EclipsePhaseItem extends Item {
   /**
    * Augment the basic Item data model with additional dynamic data.
    */
+
+  //*override //
+  get transferredEffects() {
+    return this.effects.filter(e => (e.data.transfer === true && e.data.active === true));
+  }
+
+
   prepareData() {
     super.prepareData();
 
@@ -23,7 +30,6 @@ export class EclipsePhaseItem extends Item {
       data.homebrew = false;
     }
   }
-
   /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event
