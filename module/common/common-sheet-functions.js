@@ -29,14 +29,14 @@ export function registerEffectHandlers(html,callerobj){
       });
   
       html.find('.effect-edit').click(ev => {
-        const li = $(ev.currentTarget).parents(".item");
+        const li = $(ev.currentTarget).parents(".effect");
         const effect = callerobj.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
         effect.sheet.render(true);
       });
   
       html.find('.effect-delete').click(ev => {
-        const li = $(ev.currentTarget).parents(".item");
-        callerobj.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
+        const li = $(ev.currentTarget).parents(".effect");
+        callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
         li.slideUp(200, () => caller.render(false));
       });
   
