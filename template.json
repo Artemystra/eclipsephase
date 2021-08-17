@@ -1004,6 +1004,7 @@
       "specname" : "",
       "value": null,
       "aptitude": null,
+      "roll": 0,
       "isThreat": false
     },
     "vehicle": {

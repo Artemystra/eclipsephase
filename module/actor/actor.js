@@ -272,7 +272,7 @@ export class EclipsePhaseActor extends Actor {
         if(actorData.type=="goon")
           value.data.data.roll = value.data.data.value?Number(value.data.data.value):aptSelect;
         else
-          value.data.data.roll = Number(value.data.data.value) + aptSelect;
+          value.data.data.roll = Number(value.data.data.value) + aptSelect - data.mods.woundMod - data.mods.traumaMod;
       }
     }
   }
