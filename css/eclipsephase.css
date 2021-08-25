@@ -541,7 +541,15 @@ a:hover{
   flex: 0 0 43px;
   border-top: none;
   border-bottom: 3px solid var(--pitchBorder);
+}
 
+.sheet nav.sheet-tabs.itemnav {
+  margin-top: 10px;
+  height: 40px;
+  line-height: 37px;
+  flex: 0 0 43px;
+  border-top: none;
+  border-bottom: 3px solid var(--pitchBorder);
 }
 
 .eclipsephase .tabs .item {
