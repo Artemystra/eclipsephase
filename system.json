@@ -2,7 +2,7 @@
   "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "0.5.4",
+  "version": "0.5.4.1",
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.8.9",
   "templateVersion": 2,
@@ -100,6 +100,13 @@
       "label": "Mesh Services",
       "system": "eclipsephase",
       "path": "./packs/meshservices.db",
+      "entity": "Item"
+    },
+    {
+      "name": "diemens-homebrew-items",
+      "label": "Diemen's Homebrew Items",
+      "system": "eclipsephase",
+      "path": "./packs/diemens-homebrew-items.db",
       "entity": "Item"
     },
     {
