@@ -327,7 +327,24 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     registerEffectHandlers(html,this.actor);
     registerCommonHandlers(html,this.actor);
-    registerItemHandlers(html,this.actor,this);
+   /* registerItemHandlers(html,this.actor,this);*/
+
+   // Add Inventory Item
+   html.find('.item-create').click(this._onItemCreate.bind(this));
+
+    // Update Inventory Item
+    html.find('.item-edit').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.sheet.render(true);
+    });
+
+        // Delete Inventory Item
+  html.find('.item-delete').click(ev => {
+    const li = $(ev.currentTarget).parents(".item");
+    this.actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
+    li.slideUp(200, () => this.render(false));
+  });
 
 
     // Rollable abilities.
@@ -378,8 +395,30 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
+  
+  /* DOES NOT WORK YET
+
   _onItemCreate(event) {
     itemCreate(event,this.actor);
+  }*/
+
+  _onItemCreate(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+    const type = header.dataset.type;
+    const data = duplicate(header.dataset);
+    const name = `New ${type.capitalize()}`;
+    const itemData = {
+      name: name,
+      type: type,
+      data: data
+    };
+    
+    delete itemData.data["type"];
+    if (itemData.type === "specialSkill") {
+      itemData.name = "New Skill";
+    }
+    return this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 
   /**
@@ -387,6 +426,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
+
   _onTaskCheck(event) {
     event.preventDefault();
 
