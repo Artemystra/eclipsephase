@@ -225,6 +225,8 @@
           "movetype": null,
           "movement2": null,
           "movetype2": null,
+          "movement3": null,
+          "movetype3": null,
           "description": ""
         } 
       },  
