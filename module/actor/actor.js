@@ -28,7 +28,7 @@ export class EclipsePhaseActor extends Actor {
 
   calculateSkillvalue(key,skill,data,actorType){
     var skilldata=EclipsePhaseActor.skillkey.find(element => element.skill==key);
-    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier +(skill.mod?skill.mod:0);
+    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier + parseInt(skill.mod?skill.mod:0);
     if(actorType=="goon")
       skill.derived = (skill.value?skill.value:eval('data.aptitudes.'+skilldata.aptitude+'.value')); //goons roll their value, not a calculated amount
     skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
@@ -272,7 +272,7 @@ export class EclipsePhaseActor extends Actor {
         if(actorData.type=="goon")
           value.data.data.roll = value.data.data.value?Number(value.data.data.value):aptSelect;
         else
-          value.data.data.roll = Number(value.data.data.value) + aptSelect;
+          value.data.data.roll = Number(value.data.data.value) + aptSelect - data.mods.woundMod - data.mods.traumaMod;
       }
     }
   }
