@@ -2,7 +2,7 @@
   "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "0.5.4.2",
+  "version": "0.5.4.3",
   "minimumCoreVersion": "0.8.1",
   "compatibleCoreVersion": "0.8.9",
   "templateVersion": 2,
