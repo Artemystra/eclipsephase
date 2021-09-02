@@ -167,7 +167,6 @@
 
 .morph-imgBorder{
   z-index: 3;
-  top: -20px;
   right: -30px;
   background-color: var(--pitchBorder);
   position: absolute;

@@ -257,37 +257,40 @@
                         </div>
                         {{#if (eq data.data.bodies.activeMorph "morph1")}}
                         <div class="itemBackground">
-                            <div class="flexrow flex-group-left">
-                                <input class="input-XL -medium" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
-                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph1.type" data-type="String">
+                            <div class="flexrow flex-between">
+                                <input type="text" style="margin-right: 30px; max-width: 240px;" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium labelWidth-large" name="data.bodies.morph1.type" data-type="String">
                                     {{#select data.data.bodies.morph1.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
-                                <label class="resource-label labelWidth-medium">Dur</label>
-                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
-
+                                <label class="resource-label labelWidth-small">Dur</label>
+                                <input class="input-small" type="text" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
                             </div>
-                            <div class="flexrow flex-group-left">
-                                 <label class="resource-label labelWidth-medium">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
-                                    {{#select data.data.bodies.morph1.movetype}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
-                                <label class="resource-label labelWidth-medium">Mov 2</label>
-                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0" style="text-align: center"/>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
-                                    {{#select data.data.bodies.morph1.movetype2}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
+                            <div class="flexrow flex-between">
+                                <div class="flexrow flex-between" style="margin-right: 40px;">
+                                    <label class="resource-label labelWidth-medium">Mov</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
+                                        {{#select data.data.bodies.morph1.movetype}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
+                                <div class="flexrow flex-between">
+                                    <label class="resource-label labelWidth-medium">Mov 2</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
+                                        {{#select data.data.bodies.morph1.movetype2}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="grid-4col itemBackground">
@@ -313,25 +316,40 @@
                         {{/if}}
                         {{#if (eq data.data.bodies.activeMorph "morph2")}}
                         <div class="itemBackground">
-                            <div class="flexrow flex-group-left">
-                                <input class="input-XL -medium" type="text" name="data.bodies.morph2.name" value="{{data.data.bodies.morph2.name}}" placeholder="Morph name"/>
-                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph2.type" data-type="String">
+                            <div class="flexrow flex-between">
+                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph2.name" value="{{data.data.bodies.morph2.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph2.type" data-type="String">
                                     {{#select data.data.bodies.morph2.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
-                                <label class="resource-label labelWidth-medium">Dur</label>
-                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph2.dur" value="{{data.data.bodies.morph2.dur}}" placeholder="0" style="text-align: center"/>
-                                <label class="resource-label labelWidth-medium">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph2.movement" value="{{data.data.bodies.morph2.movement}}" placeholder="0/0" style="text-align: center"/>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph2.movetype" data-type="String">
-                                    {{#select data.data.bodies.morph2.movetype}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
+                                <label class="resource-label labelWidth-small">Dur</label>
+                                <input class="input-small" type="text" name="data.bodies.morph2.dur" value="{{data.data.bodies.morph2.dur}}" placeholder="0" style="text-align: center"/>
+                            </div>
+                            <div class="flexrow flex-between">
+                                <div class="flexrow flex-between" style="margin-right: 40px;">
+                                    <label class="resource-label labelWidth-medium">Mov</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph2.movement" value="{{data.data.bodies.morph2.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph2.movetype" data-type="String">
+                                        {{#select data.data.bodies.morph2.movetype}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
+                                <div class="flexrow flex-between">
+                                    <label class="resource-label labelWidth-medium">Mov 2</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph2.movement2" value="{{data.data.bodies.morph2.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph2.movetype2" data-type="String">
+                                        {{#select data.data.bodies.morph2.movetype2}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="grid-4col itemBackground">
@@ -357,25 +375,40 @@
                         {{/if}}
                         {{#if (eq data.data.bodies.activeMorph "morph3")}}
                         <div class="itemBackground">
-                            <div class="flexrow flex-group-left">
-                                <input class="input-XL -medium" type="text" name="data.bodies.morph3.name" value="{{data.data.bodies.morph3.name}}" placeholder="Morph name"/>
-                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph3.type" data-type="String">
+                            <div class="flexrow flex-between">
+                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph3.name" value="{{data.data.bodies.morph3.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph3.type" data-type="String">
                                     {{#select data.data.bodies.morph3.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
-                                <label class="resource-label labelWidth-medium">Dur</label>
-                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph3.dur" value="{{data.data.bodies.morph3.dur}}" placeholder="0" style="text-align: center"/>
-                                <label class="resource-label labelWidth-medium">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph3.movement" value="{{data.data.bodies.morph3.movement}}" placeholder="0/0" style="text-align: center"/>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph3.movetype" data-type="String">
-                                    {{#select data.data.bodies.morph3.movetype}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
+                                <label class="resource-label labelWidth-small">Dur</label>
+                                <input class="input-small" type="text" name="data.bodies.morph3.dur" value="{{data.data.bodies.morph3.dur}}" placeholder="0" style="text-align: center"/>
+                            </div>
+                            <div class="flexrow flex-between">
+                                <div class="flexrow flex-between" style="margin-right: 40px;">
+                                    <label class="resource-label labelWidth-medium">Mov</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph3.movement" value="{{data.data.bodies.morph3.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph3.movetype" data-type="String">
+                                        {{#select data.data.bodies.morph3.movetype}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
+                                <div class="flexrow flex-between">
+                                    <label class="resource-label labelWidth-medium">Mov 2</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph3.movement2" value="{{data.data.bodies.morph3.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph3.movetype2" data-type="String">
+                                        {{#select data.data.bodies.morph3.movetype2}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="grid-4col itemBackground">
@@ -401,25 +434,40 @@
                         {{/if}}
                         {{#if (eq data.data.bodies.activeMorph "morph4")}}
                         <div class="itemBackground">
-                            <div class="flexrow flex-group-left">
-                                <input class="input-XL -medium" type="text" name="data.bodies.morph4.name" value="{{data.data.bodies.morph4.name}}" placeholder="Morph name"/>
-                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph4.type" data-type="String">
+                            <div class="flexrow flex-between">
+                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph4.name" value="{{data.data.bodies.morph4.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph4.type" data-type="String">
                                     {{#select data.data.bodies.morph4.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
-                                <label class="resource-label labelWidth-medium">Dur</label>
-                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph4.dur" value="{{data.data.bodies.morph4.dur}}" placeholder="0" style="text-align: center"/>
-                                <label class="resource-label labelWidth-medium">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph4.movement" value="{{data.data.bodies.morph4.movement}}" placeholder="0/0" style="text-align: center"/>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph4.movetype" data-type="String">
-                                    {{#select data.data.bodies.morph4.movetype}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
+                                <label class="resource-label labelWidth-small">Dur</label>
+                                <input class="input-small" type="text" name="data.bodies.morph4.dur" value="{{data.data.bodies.morph4.dur}}" placeholder="0" style="text-align: center"/>
+                            </div>
+                            <div class="flexrow flex-between">
+                                <div class="flexrow flex-between" style="margin-right: 40px;">
+                                    <label class="resource-label labelWidth-medium">Mov</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph4.movement" value="{{data.data.bodies.morph4.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph4.movetype" data-type="String">
+                                        {{#select data.data.bodies.morph4.movetype}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
+                                <div class="flexrow flex-between">
+                                    <label class="resource-label labelWidth-medium">Mov 2</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph4.movement2" value="{{data.data.bodies.morph4.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph4.movetype2" data-type="String">
+                                        {{#select data.data.bodies.morph4.movetype2}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="grid-4col itemBackground">
@@ -445,25 +493,40 @@
                         {{/if}}
                         {{#if (eq data.data.bodies.activeMorph "morph5")}}
                         <div class="itemBackground">
-                            <div class="flexrow flex-group-left">
-                                <input class="input-XL -medium" type="text" name="data.bodies.morph5.name" value="{{data.data.bodies.morph5.name}}" placeholder="Morph name"/>
-                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph5.type" data-type="String">
+                            <div class="flexrow flex-between">
+                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph5.name" value="{{data.data.bodies.morph5.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph5.type" data-type="String">
                                     {{#select data.data.bodies.morph5.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
-                                <label class="resource-label labelWidth-medium">Dur</label>
-                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph5.dur" value="{{data.data.bodies.morph5.dur}}" placeholder="0" style="text-align: center"/>
-                                <label class="resource-label labelWidth-medium">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph5.movement" value="{{data.data.bodies.morph5.movement}}" placeholder="0/0" style="text-align: center"/>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph5.movetype" data-type="String">
-                                    {{#select data.data.bodies.morph5.movetype}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
+                                <label class="resource-label labelWidth-small">Dur</label>
+                                <input class="input-small" type="text" name="data.bodies.morph5.dur" value="{{data.data.bodies.morph5.dur}}" placeholder="0" style="text-align: center"/>
+                            </div>
+                            <div class="flexrow flex-between">
+                                <div class="flexrow flex-between" style="margin-right: 40px;">
+                                    <label class="resource-label labelWidth-medium">Mov</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph5.movement" value="{{data.data.bodies.morph5.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph5.movetype" data-type="String">
+                                        {{#select data.data.bodies.morph5.movetype}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
+                                <div class="flexrow flex-between">
+                                    <label class="resource-label labelWidth-medium">Mov 2</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph5.movement2" value="{{data.data.bodies.morph5.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph5.movetype2" data-type="String">
+                                        {{#select data.data.bodies.morph5.movetype2}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="grid-4col itemBackground">
@@ -489,25 +552,40 @@
                         {{/if}}
                         {{#if (eq data.data.bodies.activeMorph "morph6")}}
                         <div class="itemBackground">
-                            <div class="flexrow flex-group-left">
-                                <input class="input-XL -medium" type="text" name="data.bodies.morph6.name" value="{{data.data.bodies.morph6.name}}" placeholder="Morph name"/>
-                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph6.type" data-type="String">
+                            <div class="flexrow flex-between">
+                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph6.name" value="{{data.data.bodies.morph6.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph6.type" data-type="String">
                                     {{#select data.data.bodies.morph6.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
-                                <label class="resource-label labelWidth-medium">Dur</label>
-                                <input class="input-small item-standard-margin-medium" type="text" name="data.bodies.morph6.dur" value="{{data.data.bodies.morph6.dur}}" placeholder="0" style="text-align: center"/>
-                                <label class="resource-label labelWidth-medium">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" type="text" name="data.bodies.morph6.movement" value="{{data.data.bodies.morph6.movement}}" placeholder="0/0" style="text-align: center"/>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph6.movetype" data-type="String">
-                                    {{#select data.data.bodies.morph6.movetype}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
+                                <label class="resource-label labelWidth-small">Dur</label>
+                                <input class="input-small" type="text" name="data.bodies.morph6.dur" value="{{data.data.bodies.morph6.dur}}" placeholder="0" style="text-align: center"/>
+                            </div>
+                            <div class="flexrow flex-between">
+                                <div class="flexrow flex-between" style="margin-right: 40px;">
+                                    <label class="resource-label labelWidth-medium">Mov</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph6.movement" value="{{data.data.bodies.morph6.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph6.movetype" data-type="String">
+                                        {{#select data.data.bodies.morph6.movetype}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
+                                <div class="flexrow flex-between">
+                                    <label class="resource-label labelWidth-medium">Mov 2</label>
+                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph6.movement2" value="{{data.data.bodies.morph6.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph6.movetype2" data-type="String">
+                                        {{#select data.data.bodies.morph6.movetype2}}
+                                        {{#each config.moveTypes as |moveType key|}}
+                                            <option value="{{key}}">{{moveType}}</option>
+                                        {{/each}}
+                                        {{/select}}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="grid-4col itemBackground">
