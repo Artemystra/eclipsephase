@@ -8,7 +8,7 @@ export class EclipsePhaseActor extends Actor {
 
   static skillkey=[
     {skill:"athletics",aptitude:"som",multiplier:1,category:"vigor"},
-    {skill:"deceive",aptitude:"som",multiplier:1,category:"moxie"},
+    {skill:"deceive",aptitude:"sav",multiplier:1,category:"moxie"},
     {skill:"fray",aptitude:"ref",multiplier:2,category:"vigor"},
     {skill:"free fall",aptitude:"som",multiplier:1,category:"vigor"},
     {skill:"guns",aptitude:"ref",multiplier:1,category:"vigor"},

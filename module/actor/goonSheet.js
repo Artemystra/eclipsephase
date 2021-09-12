@@ -122,7 +122,6 @@ export class GoonSheet extends ActorSheet {
                 vehicle.push(i)
             }
             if (i.type === 'specialSkill') {
-            /*
                 let aptSelect = 0;
                 if (i.data.aptitude === "Intuition") {
                   aptSelect = data.aptitudes.int.value;
@@ -150,7 +149,6 @@ export class GoonSheet extends ActorSheet {
                 else
                   i.roll = Number(i.data.value);
                 i.specroll = i.roll + 10;
-                */
                 special.push(i);
             }
         }

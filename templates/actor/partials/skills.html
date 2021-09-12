@@ -282,6 +282,7 @@
                     <div class="listBackground edgeAbler" style="padding-left: 0;">
                         {{#if (ne data.type "goon")}}
                             {{#each data.specialSkill as |item id|}}
+                            {{log "Special Skills NPCs: " this}}
                             <div>
                                 <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
                                     <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -291,7 +292,7 @@
                                     <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.data.roll}}" style="max-width: 34.5px!important;"/>
                                     {{#if item.data.specname}}
                                     <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
-                                    <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.data.specroll}}"/>
+                                    <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                     {{else}}
                                     <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                     <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
@@ -301,6 +302,7 @@
                             {{/each}}
                         {{else}}
                             {{#each data.specialSkill as |item id|}}
+                            {{log "Special Skills Goons: " this}}
                             <div>
                                 <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
                                     <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -312,7 +314,7 @@
                                     </div>
                                     {{#if item.data.specname}}
                                     <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
-                                    <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.data.specroll}}"/>
+                                    <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                     {{else}}
                                     <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                     <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
@@ -423,7 +425,7 @@
                                 <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.data.roll}}" style="max-width: 34.5px!important;"/>
                                 {{#if item.data.specname}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.data.specroll}}"/>
+                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="{{item.name}}" data-specname="{{item.data.specname}}" data-rollvalue="{{item.data.specroll}}"/>
                                 {{else}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
@@ -464,7 +466,7 @@
                                 <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-small task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.data.roll}}" style="max-width: 34.5px!important;"/>
                                 {{#if item.data.specname}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.data.specname}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="item.name" data-specname="{{item.data.specname}}" data-rollvalue="{{item.data.specroll}}"/>
+                                <img src="icons/svg/d10-grey.svg" class="info roll-label task-check icon-small hidden" data-type="skill" data-name="{{item.name}}" data-specname="{{item.data.specname}}" data-rollvalue="{{item.specroll}}"/>
                                 {{else}}
                                 <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
