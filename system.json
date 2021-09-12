@@ -135,7 +135,7 @@
   "primaryTokenAttribute": "data.health.physical",
   "secondaryTokenAttribute": "data.health.mental",
   "url": "https://github.com/DerDiemen/eclipsephase",
-  "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/v0.5.4.4/system.json",
-  "download": "https://github.com/DerDiemen/eclipsephase/archive/v0.5.4.4/eclipsephase-0.5.4.4.zip",
+  "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/v0.5.4.5/system.json",
+  "download": "https://github.com/DerDiemen/eclipsephase/archive/v0.5.4.5/eclipsephase-0.5.4.5.zip",
   "license": "LICENSE.txt"
 }
