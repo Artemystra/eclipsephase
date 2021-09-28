@@ -14,6 +14,7 @@ eclipsephase.firingModes = {
 }
 
 eclipsephase.weaponTypes = {
+    integrated: "Integrated",
     sidearm: "Sidearm",
     oneHanded: "One Handed",
     twoHanded: "Two Handed",

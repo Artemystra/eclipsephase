@@ -107,8 +107,8 @@ export class EclipsePhaseActor extends Actor {
       if(accessoryCount > 4){
         accessoryMalus = Math.ceil((accessoryCount-4)/4)*10;
       }
-      if(bulkyCount > 1){
-        bulkyMalus = (bulkyCount-1)*20;
+      if(bulkyCount >= 1){
+        bulkyMalus = (bulkyCount)*20;
       }
       data.physical.totalGearMalus = bulkyMalus + accessoryMalus;
     }
