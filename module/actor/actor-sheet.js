@@ -379,7 +379,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
               effUpdateData.push({
                 "_id" : eff.data._id,
-                "disabled": !toggle
+                disabled: !toggle
               });
           }
           this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
