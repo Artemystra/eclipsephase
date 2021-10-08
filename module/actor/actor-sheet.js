@@ -363,6 +363,9 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
+      //Change active/passive state of morph/body bound flaws
+      html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
+
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
           const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
@@ -401,6 +404,29 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   _onItemCreate(event) {
     itemCreate(event,this.actor);
   }*/
+
+  _onMorphSwitch(event) {
+    event.preventDefault();
+    let itemTypes = this.actor.itemTypes;
+    let mTraits = itemTypes.morphTrait;
+    let mFlaws = itemTypes.morphFlaw;
+    let mWare = itemTypes.ware;/*
+    for (i == items; i >= 0; i--) {
+      if (itemType == "morphTrait" || itemType == "morphFlaw"){
+        console.log(i);
+      }
+    }
+    /*if (itemData.type === "morphFlaw" || itemData.type === "morphTrait" || itemData.type === "ware") {
+      let actor = this.actor;
+      let actorData = actor.data.data;
+      let currentMorph = actorData.bodies.activeMorph
+      let data = itemData.data;
+      data.boundTo = currentMorph;
+    }*/
+    console.log("The Morph Traits of this Character are: ", mTraits);
+    console.log("The Morph Flaws of this Character are: ", mFlaws);
+    console.log("The Ware of this Character are: ", mWare);
+  }
 
   _onItemCreate(event) {
     event.preventDefault();
