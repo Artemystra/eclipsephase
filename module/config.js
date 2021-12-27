@@ -199,7 +199,8 @@ eclipsephase.origins = {
 
 eclipsephase.damageRatingMultiplier = {
   synth: 2.0,
-  bio: 1.5
+  bio: 1.5,
+  info: 2.0
 }
 
 eclipsephase.morphNames = [
