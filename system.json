@@ -2,9 +2,13 @@
   "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
+<<<<<<< HEAD
   "version": "0.5.4.6",
+=======
+  "version": "0.5.5",
+>>>>>>> fa86dab31be768428e0d94417f091188ab57673e
   "minimumCoreVersion": "0.8.1",
-  "compatibleCoreVersion": "0.8.9",
+  "compatibleCoreVersion": "0.9",
   "templateVersion": 2,
   "author": "Diemen Kobalscheck",
   "esmodules": ["module/eclipsephase.js"],
