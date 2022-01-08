@@ -551,9 +551,14 @@ a:hover{
   border-bottom: 3px solid var(--pitchBorder);
 }
 
+.eclipsephase .tabs {
+  justify-content: space-between;
+}
+
 .eclipsephase .tabs .item {
   font-weight: bold;
-  border-bottom: 3px solid var(--pitchBorder);
+  border-bottom: 0px solid var(--pitchBorder);
+  padding: 0 5%;
 }
 
 .eclipsephase .tabs .item:first-child {
