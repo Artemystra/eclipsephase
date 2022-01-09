@@ -228,7 +228,6 @@
   flex: 0;
 }
 
-.eclipsephase .sheet-body,
 .eclipsephase .sheet-body .tab,
 .eclipsephase .sheet-body .tab .editor {
   height: 100%;
@@ -557,14 +556,12 @@ a:hover{
 
 .eclipsephase .tabs .item {
   font-weight: bold;
-  border-bottom: 0px solid var(--pitchBorder);
   padding: 0 5%;
 }
 
 .eclipsephase .tabs .item:first-child {
   font-weight: bold;
   text-align: center;
-  border-bottom: 3px solid var(--pitchBorder);
 }
 
 .eclipsephase .tabs .item.active:first-child {
