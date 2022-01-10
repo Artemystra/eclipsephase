@@ -403,7 +403,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     event.preventDefault();
     let itemTypes = this.actor.itemTypes;
     let mTraits = itemTypes.morphTrait;
-    let mtToggle = mTraits.data;
+    let mtToggle = true;
     console.log("this is part of mTraits: ", mTraits );
     console.log("this is part of mtToggle: ", mtToggle );
     let mFlaws = itemTypes.morphFlaw.data;
@@ -411,19 +411,23 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let actor = this.actor;
     let actorData = actor.data.data;
     let currentMorph = actorData.bodies.activeMorph
+    console.log("this is my actor", actor)
+    console.log("this is my actorData", actorData)
+    console.log("this is my actors bodies", actorData.bodies)
+    console.log("The character switched to the following morph: ", currentMorph );
     for (let trait of mTraits){
       if (trait.data.data.boundTo === currentMorph){
         trait.data.data.active = true;
+        mtToggle = true
       }
       else {
         trait.data.data.active = false;
+        mtToggle = false
       }
       if (trait.data.data.active){
-        console.log("The traits current morph is: ", currentMorph );
         console.log("The trait " + trait.data.name + " is currently active, hence it's bound to " + trait.data.data.boundTo );
       }
       else {
-        console.log("The traits current morph is: ", currentMorph );
         console.log("The trait " + trait.data.name + " is currently inactive, hence it's bound to " + trait.data.data.boundTo );
       }
 
