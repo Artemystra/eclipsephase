@@ -403,36 +403,54 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     event.preventDefault();
     let itemTypes = this.actor.itemTypes;
     let mTraits = itemTypes.morphTrait;
+    let mFlaws = itemTypes.morphFlaw;
+    let mWare = itemTypes.ware;
     let mtToggle = true;
-    console.log("this is part of mTraits: ", mTraits );
-    console.log("this is part of mtToggle: ", mtToggle );
-    let mFlaws = itemTypes.morphFlaw.data;
-    let mWare = itemTypes.ware.data;
-    let actor = this.actor;
-    let actorData = actor.data.data;
-    let currentMorph = actorData.bodies.activeMorph
-    console.log("this is my actor", actor)
-    console.log("this is my actorData", actorData)
-    console.log("this is my actors bodies", actorData.bodies)
+    let currentMorph = event.currentTarget.value;
     console.log("The character switched to the following morph: ", currentMorph );
     for (let trait of mTraits){
       if (trait.data.data.boundTo === currentMorph){
-        trait.data.data.active = true;
         mtToggle = true
       }
       else {
-        trait.data.data.active = false;
         mtToggle = false
       }
-      if (trait.data.data.active){
-        console.log("The trait " + trait.data.name + " is currently active, hence it's bound to " + trait.data.data.boundTo );
+    let effUpdateData=[];
+    for(let eff of this.object.data.effects.filter(e => 
+      (e.data.disabled === mtToggle))){
+
+        effUpdateData.push({
+          "_id" : eff.data._id,
+          disabled: !mtToggle
+        });
+    }
+    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    }
+    for (let flaw of mFlaws){
+      if (flaw.data.data.boundTo === currentMorph){
+        mtToggle = true
       }
       else {
-        console.log("The trait " + trait.data.name + " is currently inactive, hence it's bound to " + trait.data.data.boundTo );
+        mtToggle = false
       }
+    let effUpdateData=[];
+    for(let eff of this.object.data.effects.filter(e => 
+      (e.data.disabled === mtToggle))){
 
-      console.log("The current effect: ", this.object.data.effects)
-    
+        effUpdateData.push({
+          "_id" : eff.data._id,
+          disabled: !mtToggle
+        });
+    }
+    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    }
+    for (let ware of mWare){
+      if (ware.data.data.boundTo === currentMorph){
+        mtToggle = true
+      }
+      else {
+        mtToggle = false
+      }
     let effUpdateData=[];
     for(let eff of this.object.data.effects.filter(e => 
       (e.data.disabled === mtToggle))){
