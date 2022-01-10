@@ -31,6 +31,11 @@ export class EclipsePhaseTraitSheet extends ItemSheet {
   getData() {
     const data = super.getData();
     data.config = CONFIG.eclipsephase;
+    data.data.showEffectsTab=true;
+    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
+      data.data.showEffectsTab=true;  
+    }
+    
     return data;
   }
 
@@ -53,6 +58,9 @@ export class EclipsePhaseTraitSheet extends ItemSheet {
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
+
+    registerEffectHandlers(html,this.item);
+    registerCommonHandlers(html,this.item);
 
     // Roll handlers, click handlers, etc. would go here.
   }

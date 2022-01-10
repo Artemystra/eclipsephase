@@ -398,34 +398,48 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  
-  /* DOES NOT WORK YET
-
-  _onItemCreate(event) {
-    itemCreate(event,this.actor);
-  }*/
 
   _onMorphSwitch(event) {
     event.preventDefault();
     let itemTypes = this.actor.itemTypes;
     let mTraits = itemTypes.morphTrait;
-    let mFlaws = itemTypes.morphFlaw;
-    let mWare = itemTypes.ware;/*
-    for (i == items; i >= 0; i--) {
-      if (itemType == "morphTrait" || itemType == "morphFlaw"){
-        console.log(i);
+    let mtToggle = mTraits.data;
+    console.log("this is part of mTraits: ", mTraits );
+    console.log("this is part of mtToggle: ", mtToggle );
+    let mFlaws = itemTypes.morphFlaw.data;
+    let mWare = itemTypes.ware.data;
+    let actor = this.actor;
+    let actorData = actor.data.data;
+    let currentMorph = actorData.bodies.activeMorph
+    for (let trait of mTraits){
+      if (trait.data.data.boundTo === currentMorph){
+        trait.data.data.active = true;
       }
+      else {
+        trait.data.data.active = false;
+      }
+      if (trait.data.data.active){
+        console.log("The traits current morph is: ", currentMorph );
+        console.log("The trait " + trait.data.name + " is currently active, hence it's bound to " + trait.data.data.boundTo );
+      }
+      else {
+        console.log("The traits current morph is: ", currentMorph );
+        console.log("The trait " + trait.data.name + " is currently inactive, hence it's bound to " + trait.data.data.boundTo );
+      }
+
+      console.log("The current effect: ", this.object.data.effects)
+    
+    let effUpdateData=[];
+    for(let eff of this.object.data.effects.filter(e => 
+      (e.data.disabled === mtToggle))){
+
+        effUpdateData.push({
+          "_id" : eff.data._id,
+          disabled: !mtToggle
+        });
     }
-    /*if (itemData.type === "morphFlaw" || itemData.type === "morphTrait" || itemData.type === "ware") {
-      let actor = this.actor;
-      let actorData = actor.data.data;
-      let currentMorph = actorData.bodies.activeMorph
-      let data = itemData.data;
-      data.boundTo = currentMorph;
-    }*/
-    console.log("The Morph Traits of this Character are: ", mTraits);
-    console.log("The Morph Flaws of this Character are: ", mFlaws);
-    console.log("The Ware of this Character are: ", mWare);
+    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    }
   }
 
   _onItemCreate(event) {

@@ -133,7 +133,8 @@ export class EclipsePhaseActor extends Actor {
     }
 
     //Mental Health
-    data.health.mental.max = data.aptitudes.wil.value * 2;
+
+    data.health.mental.max = data.aptitudes.wil.value * 2 + parseInt(data.mods.lucmod|0);
     data.mental.ir = data.health.mental.max * 2;
     data.mental.tt = Math.round(data.health.mental.max / 5);
     if(data.health.mental.value === null){
@@ -146,9 +147,9 @@ export class EclipsePhaseActor extends Actor {
     if(actorData.type === 'npc' || actorData.type === 'goon') {
 
       //Calculating WT & DR
-      data.health.physical.max = data.bodies.morph1.dur  // only one morph for npcs
-      data.physical.wt = Math.round(data.bodies.morph1.dur / 5)
-      data.physical.dr = Math.round(data.bodies.morph1.dur * 
+      data.health.physical.max = data.bodies.morph1.dur + parseInt(data.mods.durmod|0) // only one morph for npcs
+      data.physical.wt = Math.round(data.health.physical.max / 5)
+      data.physical.dr = Math.round(data.health.physical.max * 
         eclipsephase.damageRatingMultiplier[data.bodyType.value])
 
       if(data.health.physical.value === null) {
@@ -160,9 +161,9 @@ export class EclipsePhaseActor extends Actor {
     if(actorData.type === "character") {
       let morph = data.bodies[data.bodies.activeMorph]
 
-      data.health.physical.max = morph.dur
-      data.physical.wt = Math.round(morph.dur / 5)
-      data.physical.dr = Math.round(morph.dur * 
+      data.health.physical.max = morph.dur + (data.mods.durmod|0)
+      data.physical.wt = Math.round(data.health.physical.max / 5)
+      data.physical.dr = Math.round(data.health.physical.max * 
         eclipsephase.damageRatingMultiplier[morph.type])
 
       if(data.health.physical.value === null) {
@@ -170,10 +171,10 @@ export class EclipsePhaseActor extends Actor {
       }
 
       //Pools
-      data.pools.flex.totalFlex = Number(morph.flex) + Number(data.ego.egoFlex)
-      data.pools.insight.totalInsight = Number(morph.insight)
-      data.pools.moxie.totalMoxie = Number(morph.moxie)
-      data.pools.vigor.totalVigor = Number(morph.vigor)
+      data.pools.flex.totalFlex = Number(morph.flex) + Number(data.ego.egoFlex) + Number(data.pools.flex.mod);
+      data.pools.insight.totalInsight = Number(morph.insight) + Number(data.pools.insight.mod);
+      data.pools.moxie.totalMoxie = Number(morph.moxie) + Number(data.pools.moxie.mod)
+      data.pools.vigor.totalVigor = Number(morph.vigor) + Number(data.pools.vigor.mod)
     }
 
     //Calculating armor
@@ -227,8 +228,8 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(data.aptitudes)) {
-      aptitude.mod = aptitude.value * 3;
-      aptitude.roll = (aptitude.value * 3) - data.mods.woundMod - data.mods.traumaMod;
+      aptitude.calc = aptitude.value * 3 - data.mods.woundMod - data.mods.traumaMod + Number(aptitude.mod);
+      aptitude.roll = aptitude.calc;
     }
 
     // Insight Skills
