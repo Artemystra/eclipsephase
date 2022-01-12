@@ -43,7 +43,8 @@
           "lucmod": null
         },
         "initiative": {
-          "value": null
+          "value": null,
+          "display": ""
         },
         "pools": {
           "insight": {
