@@ -405,9 +405,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let mTraits = itemTypes.morphTrait;
     let mFlaws = itemTypes.morphFlaw;
     let mWare = itemTypes.ware;
-    let mtToggle = true;
+    let mtToggle = null;
+    let mfToggle = null;
+    let mwToggle = null;
     let currentMorph = event.currentTarget.value;
-    console.log("The character switched to the following morph: ", currentMorph );
     for (let trait of mTraits){
       if (trait.data.data.boundTo === currentMorph){
         mtToggle = true
@@ -417,8 +418,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       }
     let effUpdateData=[];
     for(let eff of this.object.data.effects.filter(e => 
-      (e.data.disabled === mtToggle))){
-
+      (e.data.disabled === mtToggle && e.data.origin.indexOf(trait.data._id)>=0))){
+        console.log("These are the effects on this trait: ", this.object.data.effects)
         effUpdateData.push({
           "_id" : eff.data._id,
           disabled: !mtToggle
@@ -428,36 +429,36 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
     for (let flaw of mFlaws){
       if (flaw.data.data.boundTo === currentMorph){
-        mtToggle = true
+        mfToggle = true
       }
       else {
-        mtToggle = false
+        mfToggle = false
       }
     let effUpdateData=[];
     for(let eff of this.object.data.effects.filter(e => 
-      (e.data.disabled === mtToggle))){
+      (e.data.disabled === mfToggle && e.data.origin.indexOf(flaw.data._id)>=0))){
 
         effUpdateData.push({
           "_id" : eff.data._id,
-          disabled: !mtToggle
+          disabled: !mfToggle
         });
     }
     this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
     }
     for (let ware of mWare){
       if (ware.data.data.boundTo === currentMorph){
-        mtToggle = true
+        mwToggle = true
       }
       else {
-        mtToggle = false
+        mwToggle = false
       }
     let effUpdateData=[];
     for(let eff of this.object.data.effects.filter(e => 
-      (e.data.disabled === mtToggle))){
+      (e.data.disabled === mwToggle && e.data.origin.indexOf(ware.data._id)>=0))){
 
         effUpdateData.push({
           "_id" : eff.data._id,
-          disabled: !mtToggle
+          disabled: !mwToggle
         });
     }
     this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);

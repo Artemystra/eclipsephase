@@ -210,9 +210,8 @@
                     <div class="listBackground edgeAbler">
                         <div class="grid grid-2col noMargin" style="gap: 0;">
                             {{#each data.data.muse.skills as |skill key|}}
-                        {{log this}}
                         <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
-                            <input class="input-XL" type="text" name="data.muse.skills.{{key}}.skillname" value="{{skill.skillname}}" data-dtype="Text" placeholder="Skill Name" style="text-transform: uppercase;"/>
+                            <input class="input-XL" name="data.muse.skills.{{key}}.skillname" type="text" value="{{skill.skillname}}" placeholder="Skill Name" style="text-transform: uppercase;"/>
                             <input class="input-small" type="number" name="data.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                             <div class="flexrow flex-group-center" style="max-width: 40px;">
                                 <img data-type="skill" data-name="{{skill.skillname}}" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>

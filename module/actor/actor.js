@@ -31,7 +31,7 @@ export class EclipsePhaseActor extends Actor {
     skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier + parseInt(skill.mod?skill.mod:0);
     if(actorType=="goon")
       skill.derived = (skill.value?skill.value:eval('data.aptitudes.'+skilldata.aptitude+'.value')); //goons roll their value, not a calculated amount
-    skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+    skill.roll = skill.derived - data.mods.wounds - data.mods.trauma;
     skill.specialized = skill.roll+10;
 
   }
@@ -216,9 +216,14 @@ export class EclipsePhaseActor extends Actor {
     data.initiative.value = Math.round((data.aptitudes.ref.value + data.aptitudes.int.value) / 5)
 
     //Modificators
-    data.mods.woundMod = (data.physical.wounds * 10);
-    data.mods.traumaMod = (data.mental.trauma * 10);
-
+    data.mods.wounds = (data.physical.wounds * 10)+(data.mods.woundMod * 10);
+    data.mods.trauma = (data.mental.trauma * 10)+(data.mods.traumaMod * 10);
+    if (data.mods.trauma < 0){
+      data.mods.trauma = 0
+    }
+    if (data.mods.wounds < 0){
+      data.mods.wounds = 0
+    }
     //Psi-Calculator - Not Working yet
     if (actorData.type === "npc" || actorData.type === "character") {
       data.psiStrain.new = 0;
@@ -228,7 +233,7 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(data.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 - data.mods.woundMod - data.mods.traumaMod + Number(aptitude.mod);
+      aptitude.calc = aptitude.value * 3 - data.mods.wounds - data.mods.trauma + Number(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
@@ -273,7 +278,7 @@ export class EclipsePhaseActor extends Actor {
         if(actorData.type=="goon")
           value.data.data.roll = value.data.data.value?Number(value.data.data.value):aptSelect;
         else
-          value.data.data.roll = Number(value.data.data.value) + aptSelect - data.mods.woundMod - data.mods.traumaMod;
+          value.data.data.roll = Number(value.data.data.value) + aptSelect - data.mods.wounds - data.mods.trauma;
       }
     }
   }

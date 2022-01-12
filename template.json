@@ -34,6 +34,8 @@
         },
         "mods": {
           "globalMod": null,
+          "trauma": null,
+          "wounds": null,
           "traumaMod": null,
           "woundMod": null,
           "iniMod": null,
