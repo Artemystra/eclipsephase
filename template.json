@@ -34,57 +34,72 @@
         },
         "mods": {
           "globalMod": null,
+          "trauma": null,
+          "wounds": null,
           "traumaMod": null,
           "woundMod": null,
-          "iniMod": null
+          "iniMod": null,
+          "durmod": null,
+          "lucmod": null
         },
         "initiative": {
-          "value": null
+          "value": null,
+          "display": ""
         },
         "pools": {
           "insight": {
-            "value": null
+            "value": null,
+            "mod": null
           },
           "moxie": {
-            "value": null
+            "value": null,
+            "mod": null
           },
           "vigor": {
-            "value": null
+            "value": null,
+            "mod": null
           },
           "flex": {
-            "value": null
+            "value": null,
+            "mod": null
           }
         },
         "aptitudes": {
           "cog": {
             "value": null,
             "label": "cognition",
-            "roll": null
+            "roll": null,
+            "mod": null
           },
           "int": {
             "value": null,
             "label": "intuition",
-            "roll": null
+            "roll": null,
+            "mod": null
           },
           "ref": {
             "value": null,
             "label": "reflexes",
-            "roll": null
+            "roll": null,
+            "mod": null
           },
           "sav": {
             "value": null,
             "label": "savvy",
-            "roll": null
+            "roll": null,
+            "mod": null
           },
           "som": {
             "value": null,
             "label": "somatics",
-            "roll": null
+            "roll": null,
+            "mod": null
           },
           "wil": {
             "value": null,
             "label": "willpower",
-            "roll": null
+            "roll": null,
+            "mod": null
           }
         },
         "skillsIns": {

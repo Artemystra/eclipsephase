@@ -398,34 +398,71 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  
-  /* DOES NOT WORK YET
-
-  _onItemCreate(event) {
-    itemCreate(event,this.actor);
-  }*/
 
   _onMorphSwitch(event) {
     event.preventDefault();
     let itemTypes = this.actor.itemTypes;
     let mTraits = itemTypes.morphTrait;
     let mFlaws = itemTypes.morphFlaw;
-    let mWare = itemTypes.ware;/*
-    for (i == items; i >= 0; i--) {
-      if (itemType == "morphTrait" || itemType == "morphFlaw"){
-        console.log(i);
+    let mWare = itemTypes.ware;
+    let mtToggle = null;
+    let mfToggle = null;
+    let mwToggle = null;
+    let currentMorph = event.currentTarget.value;
+    for (let trait of mTraits){
+      if (trait.data.data.boundTo === currentMorph){
+        mtToggle = true
       }
+      else {
+        mtToggle = false
+      }
+    let effUpdateData=[];
+    for(let eff of this.object.data.effects.filter(e => 
+      (e.data.disabled === mtToggle && e.data.origin.indexOf(trait.data._id)>=0))){
+        console.log("These are the effects on this trait: ", this.object.data.effects)
+        effUpdateData.push({
+          "_id" : eff.data._id,
+          disabled: !mtToggle
+        });
     }
-    /*if (itemData.type === "morphFlaw" || itemData.type === "morphTrait" || itemData.type === "ware") {
-      let actor = this.actor;
-      let actorData = actor.data.data;
-      let currentMorph = actorData.bodies.activeMorph
-      let data = itemData.data;
-      data.boundTo = currentMorph;
-    }*/
-    console.log("The Morph Traits of this Character are: ", mTraits);
-    console.log("The Morph Flaws of this Character are: ", mFlaws);
-    console.log("The Ware of this Character are: ", mWare);
+    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    }
+    for (let flaw of mFlaws){
+      if (flaw.data.data.boundTo === currentMorph){
+        mfToggle = true
+      }
+      else {
+        mfToggle = false
+      }
+    let effUpdateData=[];
+    for(let eff of this.object.data.effects.filter(e => 
+      (e.data.disabled === mfToggle && e.data.origin.indexOf(flaw.data._id)>=0))){
+
+        effUpdateData.push({
+          "_id" : eff.data._id,
+          disabled: !mfToggle
+        });
+    }
+    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    }
+    for (let ware of mWare){
+      if (ware.data.data.boundTo === currentMorph){
+        mwToggle = true
+      }
+      else {
+        mwToggle = false
+      }
+    let effUpdateData=[];
+    for(let eff of this.object.data.effects.filter(e => 
+      (e.data.disabled === mwToggle && e.data.origin.indexOf(ware.data._id)>=0))){
+
+        effUpdateData.push({
+          "_id" : eff.data._id,
+          disabled: !mwToggle
+        });
+    }
+    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    }
   }
 
   _onItemCreate(event) {

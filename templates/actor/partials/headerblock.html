@@ -138,16 +138,17 @@
             {{#if (eq data.type "character")}}
             <div class="listBackground flexrow flex-group-center shape1">
                 <div class="flexrow flex-group-center">
-                    <span class="resource-label">Initiative Mod</span>
-                    <input class="input-small" type="number" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                    <span class="resource-value flex-group-left">Ini Mod:</span>
+                    <span class="resource-label flex-group-right">{{data.data.initiative.display}}</span>
                 </div>
                 <div class="flexrow flex-group-left" style="flex-basis: 100%; margin-top: 19.5px; margin-bottom: 5px;">
-                    <div class="flexrow flex-group-center">
-                        <span class="resource-label alignCenter">Rest: Short</span>
+                    <div class="flexrow flex-group-right">
+                        <span class="resource-value flex-group-left">Rest: </span>
+                        <span class="resource-label alignCenter">Short</span>
                         <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
                         <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
                     </div>
-                    <div class="flexrow flex-group-center" style="flex: 0.5;">
+                    <div class="flexrow flex-group-right" style="flex: 0.5;">
                         <span class="resource-label alignCenter input-small">Long</span>
                         <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
                     </div>

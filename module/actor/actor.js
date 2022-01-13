@@ -28,10 +28,10 @@ export class EclipsePhaseActor extends Actor {
 
   calculateSkillvalue(key,skill,data,actorType){
     var skilldata=EclipsePhaseActor.skillkey.find(element => element.skill==key);
-    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier + parseInt(skill.mod?skill.mod:0);
+    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier + eval(skill.mod);
     if(actorType=="goon")
       skill.derived = (skill.value?skill.value:eval('data.aptitudes.'+skilldata.aptitude+'.value')); //goons roll their value, not a calculated amount
-    skill.roll = skill.derived - data.mods.woundMod - data.mods.traumaMod;
+    skill.roll = skill.derived - data.mods.wounds - data.mods.trauma;
     skill.specialized = skill.roll+10;
 
   }
@@ -133,7 +133,8 @@ export class EclipsePhaseActor extends Actor {
     }
 
     //Mental Health
-    data.health.mental.max = data.aptitudes.wil.value * 2;
+
+    data.health.mental.max = (data.aptitudes.wil.value * 2) + eval(data.mods.lucmod);
     data.mental.ir = data.health.mental.max * 2;
     data.mental.tt = Math.round(data.health.mental.max / 5);
     if(data.health.mental.value === null){
@@ -146,9 +147,9 @@ export class EclipsePhaseActor extends Actor {
     if(actorData.type === 'npc' || actorData.type === 'goon') {
 
       //Calculating WT & DR
-      data.health.physical.max = data.bodies.morph1.dur  // only one morph for npcs
-      data.physical.wt = Math.round(data.bodies.morph1.dur / 5)
-      data.physical.dr = Math.round(data.bodies.morph1.dur * 
+      data.health.physical.max = (data.bodies.morph1.dur) + eval(data.mods.durmod) // only one morph for npcs
+      data.physical.wt = Math.round(data.health.physical.max / 5)
+      data.physical.dr = Math.round(data.health.physical.max * 
         eclipsephase.damageRatingMultiplier[data.bodyType.value])
 
       if(data.health.physical.value === null) {
@@ -159,21 +160,19 @@ export class EclipsePhaseActor extends Actor {
     //Durability
     if(actorData.type === "character") {
       let morph = data.bodies[data.bodies.activeMorph]
-
-      data.health.physical.max = morph.dur
-      data.physical.wt = Math.round(morph.dur / 5)
-      data.physical.dr = Math.round(morph.dur * 
+      data.health.physical.max = morph.dur + eval(data.mods.durmod)
+      data.physical.wt = Math.round(data.health.physical.max / 5)
+      data.physical.dr = Math.round(data.health.physical.max * 
         eclipsephase.damageRatingMultiplier[morph.type])
-
       if(data.health.physical.value === null) {
         data.health.physical.value = data.health.physical.max
       }
 
       //Pools
-      data.pools.flex.totalFlex = Number(morph.flex) + Number(data.ego.egoFlex)
-      data.pools.insight.totalInsight = Number(morph.insight)
-      data.pools.moxie.totalMoxie = Number(morph.moxie)
-      data.pools.vigor.totalVigor = Number(morph.vigor)
+      data.pools.flex.totalFlex = Number(morph.flex) + Number(data.ego.egoFlex) + eval(data.pools.flex.mod);
+      data.pools.insight.totalInsight = Number(morph.insight) + eval(data.pools.insight.mod);
+      data.pools.moxie.totalMoxie = Number(morph.moxie) + eval(data.pools.moxie.mod)
+      data.pools.vigor.totalVigor = Number(morph.vigor) + eval(data.pools.vigor.mod)
     }
 
     //Calculating armor
@@ -212,12 +211,19 @@ export class EclipsePhaseActor extends Actor {
     }
 
     //Initiative
-    data.initiative.value = Math.round((data.aptitudes.ref.value + data.aptitudes.int.value) / 5)
+    data.initiative.value = Math.round((data.aptitudes.ref.value + data.aptitudes.int.value) / 5) + eval(data.mods.iniMod)
+    data.initiative.display = "1d6 + " + data.initiative.value
+
 
     //Modificators
-    data.mods.woundMod = (data.physical.wounds * 10);
-    data.mods.traumaMod = (data.mental.trauma * 10);
-
+    data.mods.wounds = (data.physical.wounds * 10)+(eval(data.mods.woundMod) * 10);
+    data.mods.trauma = (data.mental.trauma * 10)+(eval(data.mods.traumaMod) * 10);
+    if (data.mods.trauma < 0){
+      data.mods.trauma = 0
+    }
+    if (data.mods.wounds < 0){
+      data.mods.wounds = 0
+    }
     //Psi-Calculator - Not Working yet
     if (actorData.type === "npc" || actorData.type === "character") {
       data.psiStrain.new = 0;
@@ -227,8 +233,8 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(data.aptitudes)) {
-      aptitude.mod = aptitude.value * 3;
-      aptitude.roll = (aptitude.value * 3) - data.mods.woundMod - data.mods.traumaMod;
+      aptitude.calc = aptitude.value * 3 - data.mods.wounds - data.mods.trauma + eval(aptitude.mod);
+      aptitude.roll = aptitude.calc;
     }
 
     // Insight Skills
@@ -272,7 +278,7 @@ export class EclipsePhaseActor extends Actor {
         if(actorData.type=="goon")
           value.data.data.roll = value.data.data.value?Number(value.data.data.value):aptSelect;
         else
-          value.data.data.roll = Number(value.data.data.value) + aptSelect - data.mods.woundMod - data.mods.traumaMod;
+          value.data.data.roll = Number(value.data.data.value) + aptSelect - data.mods.wounds - data.mods.trauma;
       }
     }
   }

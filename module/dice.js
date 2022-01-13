@@ -294,14 +294,17 @@ export async function ReputationRoll(dataset, actorData) {
  * @param {TaskRoll} taskRoll Where to write the modifiers
  */
 function applyHealthModifiers(actorData, taskRoll) {
-  let woundMod = parseInt(actorData.mods.woundMod)
-  let traumaMod = parseInt(actorData.mods.traumaMod)
 
-  if(woundMod > 0)
-    taskRoll.addModifier(new TaskRollModifier('Wound modifier', -woundMod))
+    let woundsMod = parseInt(actorData.mods.woundMod*10)
+    let traumasMod = parseInt(actorData.mods.traumaMod*10)
+    let wounds = parseInt(actorData.mods.wounds)+woundsMod
+    let trauma = parseInt(actorData.mods.trauma)+traumasMod
 
-  if(traumaMod > 0)
-    taskRoll.addModifier(new TaskRollModifier('Trauma modifier', -traumaMod))
+  if(wounds > 0)
+    taskRoll.addModifier(new TaskRollModifier('Wound modifier', -wounds))
+
+  if(trauma > 0)
+    taskRoll.addModifier(new TaskRollModifier('Trauma modifier', -trauma))
 }
 
 
@@ -624,17 +627,20 @@ export async function TaskCheck({
 
 
     //General roll modifications
-    let woundMod = Number(actorData.mods.woundMod) + Number(actorData.mods.traumaMod);
+    let woundsTotal = Number(actorData.mods.wounds) + Number(actorData.mods.trauma)
+    console.log("this is actorData.mods.wounds" + actorData.mods.wounds + " this is actorData.mods.trauma " + actorData.mods.trauma)
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
-    let rollMod = Number(globalMod) - woundMod;
+    let rollMod = Number(globalMod) - Number(woundsTotal);
+    console.log("this is the rollMod", rollMod)
     let modSkillValue = Number(skillValue) + Number(globalMod) + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
+    console.log("this is the modSkillValue" + modSkillValue + " this is the skillValue " + skillValue)
 
     //Chat message variables
     spec = specName ? "(" + specName + ")" : "";
     let situationalPlus = globalMod>0 ? "+" : "";
     let modAnnounce = rollMod ? "<u>Applied Mods:</u> <br>" : "";
     let encumberanceModAnnounce = totalEncumberance ? "Encumberance:<strong> -" + totalEncumberance + "</strong><br>" : "";
-    let woundAnnounce = woundMod ? "Wound/Trauma:<strong> -" + woundMod + "</strong><br>" : "";
+    let woundAnnounce = woundsTotal ? "Wound/Trauma:<strong> -" + woundsTotal + "</strong><br>" : "";
     let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong>" : "";
 
     //The dice roll
