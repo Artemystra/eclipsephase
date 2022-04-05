@@ -20,7 +20,9 @@
           "damage": null,
           "dr": null,
           "wt": null,
-          "min": 0
+          "min": 0,
+          "energyArmorTotal": null,
+          "kineticArmorTotal": null
         },
         "health":{
           "physical": {
@@ -38,9 +40,13 @@
           "wounds": null,
           "traumaMod": null,
           "woundMod": null,
+          "woundMultiplier": null,
           "iniMod": null,
           "durmod": null,
-          "lucmod": null
+          "lucmod": null,
+          "ttMod": null,
+          "energyMod":null,
+          "kineticMod":null
         },
         "initiative": {
           "value": null,
