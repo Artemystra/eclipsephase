@@ -1,23 +1,21 @@
 <form class="{{cssClass}}" autocomplete="off">
     <header class="sheet-header">
         <div class="header-fields flexgrow flex-group-left" style="align-items: flex-end;">
-            <i class="far fa-plus-square bigIcon" style="flex: 0.15;"></i>
+            <img class="item-img" src="systems/eclipsephase/resources/icons/subtract.png" data-edit="img" title="{{item.name}}"/>
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
         </div>
     </header>
-
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
-        <a class="item" data-tab="description">Description</a>
+        <a class="item" data-tab="details">Description</a>
         {{#if data.showEffectsTab}}
         <a class="item" data-tab="effects">Effects</a>
         {{/if}}
     </nav>
-
     {{!-- Sheet Body --}}
     <section class="sheet-body">
         <div class="tab details" data-group="primary" data-tab="details">
-        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60">{{data.data.description}}</textarea></div>
-        </div>
-            {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
-    </section>
+        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60" placeholder="Add a description">{{data.data.description}}</textarea></div>
+</div>
+        {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
+</section>
 </form>
