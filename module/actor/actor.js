@@ -217,15 +217,16 @@ export class EclipsePhaseActor extends Actor {
     data.initiative.display = "1d6 + " + data.initiative.value
 
 
-    //Modificators
+    /*Modificators
     data.mods.wounds = (data.physical.wounds * 10)+(eval(data.mods.woundMod) * 10);
     data.mods.trauma = (data.mental.trauma * 10)+(eval(data.mods.traumaMod) * 10);
+    console.log("This is data.mods.wounds: " + data.mods.wounds + " calculated from data.physical.wounds * 10: " + data.physical.wounds * 10 + " plust data.mods.woundMod * 10: " + data.mods.woundMod * 10);
     if (data.mods.trauma < 0){
       data.mods.trauma = 0
     }
     if (data.mods.wounds < 0){
       data.mods.wounds = 0
-    }
+    }*/
     //Psi-Calculator - Not Working yet
     if (actorData.type === "npc" || actorData.type === "character") {
       data.psiStrain.new = 0;
@@ -235,8 +236,7 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(data.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 - data.mods.wounds - data.mods.trauma + eval(aptitude.mod);
-      console.log("This is apt.value*3: " + aptitude.value*3 + " plus data.mods.wounds: " + data.mods.wounds + " plus data.mods.trauma: " + data.mods.trauma + " plus eval(aptitude.mod):" + eval(aptitude.mod) )
+      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
