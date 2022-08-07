@@ -4,7 +4,7 @@
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
   "version": "0.6.3",
   "minimumCoreVersion": "0.8.1",
-  "compatibleCoreVersion": "9",
+  "compatibleCoreVersion": "10.277",
   "templateVersion": 2,
   "author": "Diemen Kobalscheck",
   "esmodules": ["module/eclipsephase.js"],
