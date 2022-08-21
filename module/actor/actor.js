@@ -42,46 +42,43 @@ export class EclipsePhaseActor extends Actor {
   prepareData() {
     super.prepareData();
 
-    const actorData = this.data;
-    const data = actorData.data;
+    console.log("top of function")
+    const actorData = this.system
     const flags = actorData.flags;
-    const item = this.items;
+    const items = this.items;
     const psiMod = 0;
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
 
     // Homebrew Switch
     if (brewStatus) {
-      data.homebrew = true;
+      actorData.homebrew = true;
     }
     else {
-      data.homebrew = false;
+      actorData.homebrew = false;
     }
 
-    console.log("this is this.system", this.system);
-
-    if(actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon')
-      this._prepareCharacterData(actorData)
+    // if(actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon')
+    //   this._prepareCharacterData(actorData)
 
     //HOMEBREW - Encumbrance through weapons & gear
-    if(data.homebrew === true && actorData.type === "character"){
+    if(actorData.homebrew === true && this.type === "character"){
       //Weapon Variables
       let weaponScore = 0
       let bulkyWeaponCount = 0
       let weaponMalus = 0;
       //Weapon loop
-      for(let weaponCheck of item){
-        let weaponData = weaponCheck.data.data
+      for(let weaponCheck of items){
         if(weaponCheck.type === "ccWeapon" || weaponCheck.type === "rangedWeapon") {
-          if(weaponData.active === true && weaponData.slotType === "Sidearm"){
+          if(weaponCheck.active === true && weaponCheck.slotType === "Sidearm"){
             weaponScore++;
           } 
-          else if(weaponData.active === true && weaponData.slotType === "One Handed"){
+          else if(weaponCheck.active === true && weaponCheck.slotType === "One Handed"){
             weaponScore += 2;
           }
-          else if(weaponData.active === true && weaponData.slotType === "Two Handed"){
+          else if(weaponCheck.active === true && weaponCheck.slotType === "Two Handed"){
             weaponScore += 5;
           }
-          else if(weaponData.active === true && weaponData.slotType === "Bulky"){
+          else if(weaponCheck.active === true && weaponCheck.slotType === "Bulky"){
             bulkyWeaponCount++;
           }
         }
@@ -90,19 +87,18 @@ export class EclipsePhaseActor extends Actor {
         
         weaponMalus = Math.ceil((weaponScore-5)/5)*10;
       }
-      data.physical.totalWeaponMalus = weaponMalus;
+      actorData.physical.totalWeaponMalus = weaponMalus;
       //Gear Variables
       let accessoryCount = 0;
       let bulkyCount = bulkyWeaponCount;
       let accessoryMalus = 0;
       let bulkyMalus = 0;
       //Gear loop
-      for(let gearCheck of item){
-        let gearData = gearCheck.data.data
-        if(gearCheck.type === "gear" && gearData.active === true && gearData.slotType === "Accessory"){
+      for(let gearCheck of items){
+        if(gearCheck.type === "gear" && gearCheck.active === true && gearCheck.slotType === "Accessory"){
           accessoryCount++;
         }
-        if(gearCheck.type === "gear" && gearData.active === true && gearData.slotType === "Bulky"){
+        if(gearCheck.type === "gear" && gearCheck.active === true && gearCheck.slotType === "Bulky"){
           bulkyCount++;
         }    
       }
@@ -112,110 +108,96 @@ export class EclipsePhaseActor extends Actor {
       if(bulkyCount >= 1){
         bulkyMalus = (bulkyCount)*20;
       }
-      data.physical.totalGearMalus = bulkyMalus + accessoryMalus;
+      actorData.physical.totalGearMalus = bulkyMalus + accessoryMalus;
     }
     //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
     else {
-      data.physical.totalWeaponMalus = 0;
-      data.physical.totalGearMalus = 0;
+      actorData.physical.totalWeaponMalus = 0;
+      actorData.physical.totalGearMalus = 0;
     }
     
     //Determin whether any gear is present
-    data.hasGear=false;
-    for(let gearCheck of item){
-      if(gearCheck.data.data.displayCategory === "ranged" || gearCheck.data.data.displayCategory === "ccweapon" || gearCheck.data.data.displayCategory === "gear"){
-        data.hasGear = true;
+    actorData.hasGear=false;
+    for(let gearCheck of items){
+      if(gearCheck.displayCategory === "ranged" || gearCheck.displayCategory === "ccweapon" || gearCheck.displayCategory === "gear"){
+        actorData.hasGear = true;
         break;
       }
     }
 
     //Checks if morph & ego picture are the same
-    if (actorData.img === data.bodies.morph1.img){
+    if (actorData.img === actorData.bodies.morph1.img){
       console.log("Check if the same picture is used for Ego & Body. Source: actor.js");
     }
 
-    //Mental Health
-
-    data.health.mental.max = (data.aptitudes.wil.value * 2) + eval(data.mods.lucmod);
-    data.mental.ir = data.health.mental.max * 2;
-    data.mental.tt = Math.round(data.health.mental.max / 5) + eval(data.mods.ttMod);
-    if(data.health.mental.value === null){
-      data.health.mental.value = data.health.mental.max;
-    }
-
+    this._calculateMentalHealth(actorData)
 
     //Physical Health
     //NPCs & Goons only
-    if(actorData.type === 'npc' || actorData.type === 'goon') {
+    if(this.type === 'npc' || this.type === 'goon') {
 
       //Calculating WT & DR
-      data.health.physical.max = (data.bodies.morph1.dur) + eval(data.mods.durmod) // only one morph for npcs
-      data.physical.wt = Math.round(data.health.physical.max / 5)
-      data.physical.dr = Math.round(data.health.physical.max * 
-        eclipsephase.damageRatingMultiplier[data.bodyType.value])
+      actorData.health.physical.max = (actorData.bodies.morph1.dur) + eval(actorData.mods.durmod) // only one morph for npcs
+      actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
+      actorData.physical.dr = Math.round(actorData.health.physical.max * 
+        eclipsephase.damageRatingMultiplier[actorData.bodyType.value])
 
-      if(data.health.physical.value === null) {
-        data.health.physical.value = data.health.physical.max
+      if(actorData.health.physical.value === null) {
+        actorData.health.physical.value = actorData.health.physical.max
       }
     }
     //Characters only
     //Durability
-    if(actorData.type === "character") {
-      let morph = data.bodies[data.bodies.activeMorph]
-      data.health.physical.max = morph.dur + eval(data.mods.durmod)
-      data.physical.wt = Math.round(data.health.physical.max / 5)
-      data.physical.dr = Math.round(data.health.physical.max * 
+    if(this.type === "character") {
+      let morph = actorData.bodies[actorData.bodies.activeMorph]
+      actorData.health.physical.max = morph.dur + eval(actorData.mods.durmod)
+      actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
+      actorData.physical.dr = Math.round(actorData.health.physical.max * 
         eclipsephase.damageRatingMultiplier[morph.type])
-      if(data.health.physical.value === null) {
-        data.health.physical.value = data.health.physical.max
+      if(actorData.health.physical.value === null) {
+        actorData.health.physical.value = actorData.health.physical.max
       }
 
-      //Pools
-      data.pools.flex.totalFlex = Number(morph.flex) + Number(data.ego.egoFlex) + eval(data.pools.flex.mod);
-      data.pools.insight.totalInsight = Number(morph.insight) + eval(data.pools.insight.mod);
-      data.pools.moxie.totalMoxie = Number(morph.moxie) + eval(data.pools.moxie.mod)
-      data.pools.vigor.totalVigor = Number(morph.vigor) + eval(data.pools.vigor.mod)
+      this._calculatePools(actorData, morph)
     }
 
-    //Calculating armor
-    let energyTotal = null;
-    let kineticTotal = null;
-    let mainArmorAmount = null;
-    let additionalArmorAmount = null;
-    for (let armor of item ) {
-      let key = armor.type;
-      if(key === 'armor' && armor.data.data.active){
-        energyTotal += parseInt(armor.data.data.energy);
-        kineticTotal += parseInt(armor.data.data.kinetic);
-        if (armor.data.data.slotType === "Main Armor") {
-          mainArmorAmount++
-        }
-        if (armor.data.data.slotType === "Additional Armor") {
-          additionalArmorAmount++
-        }
-      }
-    }
-    data.physical.energyArmorTotal = energyTotal + eval(data.mods.energyMod);
-    data.physical.kineticArmorTotal = kineticTotal + eval(data.mods.kineticMod);
-    data.physical.mainArmorTotal = mainArmorAmount
-    data.physical.additionalArmorTotal = additionalArmorAmount
-    data.physical.mainArmorMalus = 0
-    data.physical.additionalArmorMalus = 0
-    data.physical.armorMalusTotal = 0
-    if (mainArmorAmount > 1){
-      data.physical.mainArmorMalus = (mainArmorAmount - 1)*20
-    }
-    if (additionalArmorAmount > 1){
-      data.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
-    }
-    if (data.physical.mainArmorMalus || data.physical.additionalArmorMalus) {
-      data.physical.armorMalusTotal = data.physical.mainArmorMalus+data.physical.additionalArmorMalus
-    }
+    this._calculateArmor(actorData)
+    ////Calculating armor
+    //let energyTotal = null;
+    //let kineticTotal = null;
+    //let mainArmorAmount = null;
+    //let additionalArmorAmount = null;
+    //for (let armor of items ) {
+    //  let key = armor.type;
+    //  if(key === 'armor' && armor.active){
+    //    energyTotal += parseInt(armor.energy);
+    //    kineticTotal += parseInt(armor.kinetic);
+    //    if (armor.slotType === "Main Armor") {
+    //      mainArmorAmount++
+    //    }
+    //    if (armor.slotType === "Additional Armor") {
+    //      additionalArmorAmount++
+    //    }
+    //  }
+    //}
+    //actorData.physical.energyArmorTotal = energyTotal + eval(actorData.mods.energyMod);
+    //actorData.physical.kineticArmorTotal = kineticTotal + eval(actorData.mods.kineticMod);
+    //actorData.physical.mainArmorTotal = mainArmorAmount
+    //actorData.physical.additionalArmorTotal = additionalArmorAmount
+    //actorData.physical.mainArmorMalus = 0
+    //actorData.physical.additionalArmorMalus = 0
+    //actorData.physical.armorMalusTotal = 0
+    //if (mainArmorAmount > 1){
+    //  actorData.physical.mainArmorMalus = (mainArmorAmount - 1)*20
+    //}
+    //if (additionalArmorAmount > 1){
+    //  actorData.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
+    //}
+    //if (actorData.physical.mainArmorMalus || actorData.physical.additionalArmorMalus) {
+    //  actorData.physical.armorMalusTotal = actorData.physical.mainArmorMalus+data.physical.additionalArmorMalus
+    //}
 
-    //Initiative
-    data.initiative.value = Math.round((data.aptitudes.ref.value + data.aptitudes.int.value) / 5) + eval(data.mods.iniMod)
-    data.initiative.display = "1d6 + " + data.initiative.value
-
+    this._calculateInitiative(actorData)
 
     /*Modificators
     data.mods.wounds = (data.physical.wounds * 10)+(eval(data.mods.woundMod) * 10);
@@ -228,60 +210,60 @@ export class EclipsePhaseActor extends Actor {
       data.mods.wounds = 0
     }*/
     //Psi-Calculator - Not Working yet
-    if (actorData.type === "npc" || actorData.type === "character") {
-      data.psiStrain.new = 0;
-      data.psiStrain.current = Number(data.psiStrain.infection) + data.psiStrain.new;
+    if (this.type === "npc" || this.type === "character") {
+      actorData.psiStrain.new = 0;
+      actorData.psiStrain.current = Number(actorData.psiStrain.infection) + actorData.psiStrain.new;
     }
 
 
     // Aptitudes
-    for (let [key, aptitude] of Object.entries(data.aptitudes)) {
+    for (let [key, aptitude] of Object.entries(actorData.aptitudes)) {
       aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
     // Insight Skills
-    for (let [key, skill] of Object.entries(data.skillsIns)) {
-      this.calculateSkillvalue(key,skill,data,actorData.type);
+    for (let [key, skill] of Object.entries(actorData.skillsIns)) {
+      this.calculateSkillvalue(key,skill,actorData,this.type);
     }
 
     // Moxie skills
-    for (let [key, skill] of Object.entries(data.skillsMox)) {
-      this.calculateSkillvalue(key,skill,data,actorData.type);
+    for (let [key, skill] of Object.entries(actorData.skillsMox)) {
+      this.calculateSkillvalue(key,skill,actorData,this.type);
     }
 
     // Vigor skills
-    for (let [key, skill] of Object.entries(data.skillsVig)) {
-      this.calculateSkillvalue(key,skill,data,actorData.type);
+    for (let [key, skill] of Object.entries(actorData.skillsVig)) {
+      this.calculateSkillvalue(key,skill,actorData,this.type);
     }
 
     //Showing skill calculations for know/spec skills
-    for (let value of item ) {
+    for (let value of items ) {
       let key = value.type;
       let aptSelect = 0;
-      if (value.data.data.aptitude === "Intuition") {
-        aptSelect = data.aptitudes.int.value;
+      if (value.aptitude === "Intuition") {
+        aptSelect = actorData.aptitudes.int.value;
       }
-      else if (value.data.data.aptitude === "Cognition") {
-        aptSelect = data.aptitudes.cog.value;
+      else if (value.aptitude === "Cognition") {
+        aptSelect = actorData.aptitudes.cog.value;
       }
-      else if (value.data.data.aptitude === "Reflexes") {
-        aptSelect = data.aptitudes.ref.value;
+      else if (value.aptitude === "Reflexes") {
+        aptSelect = actorData.aptitudes.ref.value;
       }
-      else if (value.data.data.aptitude === "Somatics") {
-        aptSelect = data.aptitudes.som.value;
+      else if (value.aptitude === "Somatics") {
+        aptSelect = actorData.aptitudes.som.value;
       }
-      else if (value.data.data.aptitude === "Willpower") {
-        aptSelect = data.aptitudes.wil.value;
+      else if (value.aptitude === "Willpower") {
+        aptSelect = actorData.aptitudes.wil.value;
       }
-      else if (value.data.data.aptitude === "Savvy") {
-        aptSelect = data.aptitudes.sav.value;
+      else if (value.aptitude === "Savvy") {
+        aptSelect = actorData.aptitudes.sav.value;
       }
       if(key === 'specialSkill' || key === 'knowSkill'){
         if(actorData.type=="goon")
-          value.data.data.roll = value.data.data.value?Number(value.data.data.value):aptSelect;
+          value.roll = value.value?Number(value.value):aptSelect;
         else
-          value.data.data.roll = Number(value.data.data.value) + aptSelect - data.mods.wounds - data.mods.trauma;
+          value.roll = Number(value.value) + aptSelect - actorData.mods.wounds - actorData.mods.trauma;
       }
     }
   }
@@ -290,6 +272,63 @@ export class EclipsePhaseActor extends Actor {
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    const data = actorData.data;
+    // const data = actorData.data;
+  }
+
+  _calculateInitiative(actorData) {
+    actorData.initiative.value = Math.round((actorData.aptitudes.ref.value + actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
+    actorData.initiative.display = "1d6 + " + actorData.initiative.value
+  }
+
+  _calculateMentalHealth(actorData) {
+    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + eval(actorData.mods.lucmod);
+    actorData.mental.ir = actorData.health.mental.max * 2;
+    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + eval(actorData.mods.ttMod);
+    if(actorData.health.mental.value === null){
+      actorData.health.mental.value = actorData.health.mental.max;
+    }
+  }
+
+  _calculatePools(actorData, morph) {
+    actorData.pools.flex.totalFlex = Number(morph.flex) + Number(actorData.ego.egoFlex) + eval(actorData.pools.flex.mod);
+    actorData.pools.insight.totalInsight = Number(morph.insight) + eval(actorData.pools.insight.mod);
+    actorData.pools.moxie.totalMoxie = Number(morph.moxie) + eval(actorData.pools.moxie.mod)
+    actorData.pools.vigor.totalVigor = Number(morph.vigor) + eval(actorData.pools.vigor.mod)
+  }
+
+  _calculateArmor(actorData) {
+    let energyTotal = null;
+    let kineticTotal = null;
+    let mainArmorAmount = null;
+    let additionalArmorAmount = null;
+    for (let armor of this.items) {
+      let key = armor.type;
+      if(key === 'armor' && armor.active){
+        energyTotal += parseInt(armor.energy);
+        kineticTotal += parseInt(armor.kinetic);
+        if (armor.slotType === "Main Armor") {
+          mainArmorAmount++
+        }
+        if (armor.slotType === "Additional Armor") {
+          additionalArmorAmount++
+        }
+      }
+    }
+    actorData.physical.energyArmorTotal = energyTotal + eval(actorData.mods.energyMod);
+    actorData.physical.kineticArmorTotal = kineticTotal + eval(actorData.mods.kineticMod);
+    actorData.physical.mainArmorTotal = mainArmorAmount
+    actorData.physical.additionalArmorTotal = additionalArmorAmount
+    actorData.physical.mainArmorMalus = 0
+    actorData.physical.additionalArmorMalus = 0
+    actorData.physical.armorMalusTotal = 0
+    if (mainArmorAmount > 1){
+      actorData.physical.mainArmorMalus = (mainArmorAmount - 1)*20
+    }
+    if (additionalArmorAmount > 1){
+      actorData.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
+    }
+    if (actorData.physical.mainArmorMalus || actorData.physical.additionalArmorMalus) {
+      actorData.physical.armorMalusTotal = actorData.physical.mainArmorMalus+data.physical.additionalArmorMalus
+    }
   }
 }

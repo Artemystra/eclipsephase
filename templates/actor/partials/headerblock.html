@@ -30,24 +30,50 @@
                             <label class="resource-value">Cumulated Armor </label>
                             <p/>
                             <div class="flexrow flex-group-center">
-                                <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/><span class="toggle resource-label alignLeft">Energy: </span><span class="toggle resource-value alignLeft item-standard-margin-medium"> {{data.data.physical.energyArmorTotal}}</span>
-                                <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/><span class="toggle resource-label alignLeft">Kinetic: </span><span class="toggle resource-value alignLeft"> {{data.data.physical.kineticArmorTotal}}</span>
+                                <img
+                                src="systems/eclipsephase/resources/icons/power.png"
+                                class="icon-small"/><span class="toggle
+                                       resource-label alignLeft">Energy:
+                                </span><span class="toggle resource-value
+                                  alignLeft item-standard-margin-medium">
+                                  {{actor.system.physical.energyArmorTotal}}</span>
+                                <img
+                                src="systems/eclipsephase/resources/icons/shield.png"
+                                class="icon-small" style="max-width:
+                                20px!important; max-height:
+                                20px!important;"/><span class="toggle
+                                resource-label alignLeft">Kinetic: </span><span
+                              class="toggle resource-value alignLeft">
+                                {{actor.system.physical.kineticArmorTotal}}</span>
                             </div>
                             <p/>
                             <label class="resource-value">Armor Pieces active on You</label>
                             <div class="listBackground">
-                                <span class="toggle resource-label alignLeft">Main Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.mainArmorTotal}}</span><br/>
+                                <span class="toggle resource-label
+                                  alignLeft">Main Armor: </span><span
+                                  class="toggle resource-value
+                                  alignLeft">{{actor.system.physical.mainArmorTotal}}</span><br/>
                                 <p/>
-                                <span class="toggle resource-label alignLeft">Additional Armor: </span><span class="toggle resource-value alignLeft">{{data.data.physical.additionalArmorTotal}}</span><br/>
+                                <span class="toggle resource-label
+                                  alignLeft">Additional Armor: </span><span
+                                  class="toggle resource-value
+                                  alignLeft">{{actor.system.physical.additionalArmorTotal}}</span><br/>
                             </div>
                             <p/>
-                            <label class="resource-value">Cumulative Malus -{{data.data.physical.armorMalusTotal}}</label>
+                            <label class="resource-value">Cumulative Malus
+                              -{{actor.system.physical.armorMalusTotal}}</label>
                             <div class="listBackground">
-                                <span class="toggle resource-label alignLeft">Main Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.mainArmorMalus}}</span>
+                                <span class="toggle resource-label
+                                  alignLeft">Main Armor Malus: </span><span
+                                  class="toggle resource-value
+                                  alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
                                 <p/>
                                 <i style="font-size: 12px; margin-bottom: 10px;">For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
                                 <p/>
-                                <span class="toggle resource-label alignLeft">Additional Armor Malus: </span><span class="toggle resource-value alignLeft">-{{data.data.physical.additionalArmorMalus}}</span>
+                                <span class="toggle resource-label
+                                             alignLeft">Additional Armor Malus:
+                                </span><span class="toggle resource-value
+                                  alignLeft">-{{actor.system.physical.additionalArmorMalus}}</span>
                                 <p/>
                                 <i style="font-size: 12px; margin-bottom: 10px;">Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
                             </div>
@@ -63,9 +89,9 @@
                     </div>
                 </div>
                 <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>
-                <span class="toggle resource-value alignLeft">{{data.data.physical.energyArmorTotal}}</span>
+                <span class="toggle resource-value alignLeft">{{actor.system.physical.energyArmorTotal}}</span>
                 <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/>
-                <span class="toggle resource-value alignLeft">{{data.data.physical.kineticArmorTotal}}</span>
+                <span class="toggle resource-value alignLeft">{{actor.system.physical.kineticArmorTotal}}</span>
               </div>
           </div>
             <div class="flex-group-center listBackground shape2">
@@ -75,14 +101,16 @@
                     <label class="alignCenter resource-label">Wounds</label>
                 </div>
                 <div class="flexrow flex-center flex-between">
-                    <input type="number" name="data.health.physical.value" value="{{data.data.health.physical.value}}" data-dtype="Number" placeholder="0"/>
+                    <input type="number" name="system.health.physical.value"
+                                         value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/>
                     <span>  </span>
-                    <input type="number" name="data.physical.wounds" value="{{data.data.physical.wounds}}" data-dtype="Number" placeholder="0"/>
+                    <input type="number" name="system.physical.wounds"
+                                         value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/>
                 </div>
                 <div class="resource-content flexrow flex-center flex-between">
-                    <span class="resource-value">DUR {{data.data.health.physical.max}}</span>
-                    <span class="resource-value">DR {{data.data.physical.dr}}</span>
-                    <span class="resource-value">WT {{data.data.physical.wt}}</span>
+                    <span class="resource-value">DUR {{actor.system.health.physical.max}}</span>
+                    <span class="resource-value">DR {{actor.system.physical.dr}}</span>
+                    <span class="resource-value">WT {{actor.system.physical.wt}}</span>
                 </div>
             </div>
         </div>
@@ -99,14 +127,16 @@
                     <label class="resource-label alignCenter">Trauma</label>
                 </div>
                 <div class="resource-content flexrow flex-center flex-between">
-                    <input type="number" name="data.health.mental.value" value="{{data.data.health.mental.value}}" data-dtype="Number" placeholder="0"/>
+                    <input type="number" name="system.health.mental.value"
+                                         value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/>
                     <span>  </span>
-                    <input type="number" name="data.mental.trauma" value="{{data.data.mental.trauma}}" data-dtype="Number" placeholder="0"/>
+                    <input type="number" name="system.mental.trauma"
+                                         value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/>
                 </div>
                 <div class="resource-content flexrow flex-center flex-between">
-                    <span class="resource-value">LUC {{data.data.health.mental.max}}</span>
-                    <span class="resource-value">IR {{data.data.mental.ir}}</span>
-                    <span class="resource-value">TT {{data.data.mental.tt}}</span>
+                    <span class="resource-value">LUC {{actor.system.health.mental.max}}</span>
+                    <span class="resource-value">IR {{actor.system.mental.ir}}</span>
+                    <span class="resource-value">TT {{actor.system.mental.tt}}</span>
                 </div>
             </div>
         </div>
@@ -119,13 +149,13 @@
                 </div>
             </div>
             <div class="listBackground shape2 grid grid-3col noMargin">
-                {{#each data.data.aptitudes as |aptitude key|}}
+                {{#each actor.system.aptitudes as |aptitude key|}}
                 <div class="flexrow flex-group-center reveal standard-height">
                     <div class="flexrow flex-group-center input-small">
                         <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
                         <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                     </div>
-                    <input class="input-small" type="number" name="data.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+                    <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
                 </div>
                 {{/each}}
             </div>
@@ -139,18 +169,25 @@
             <div class="listBackground flexrow flex-group-center shape1">
                 <div class="flexrow flex-group-center">
                     <span class="resource-value flex-group-left">Ini Mod:</span>
-                    <span class="resource-label flex-group-right">{{data.data.initiative.display}}</span>
+                    <span class="resource-label
+                                 flex-group-right">{{actor.system.initiative.display}}</span>
                 </div>
                 <div class="flexrow flex-group-left" style="flex-basis: 100%; margin-top: 19.5px; margin-bottom: 5px;">
                     <div class="flexrow flex-group-right">
                         <span class="resource-value flex-group-left">Rest: </span>
                         <span class="resource-label alignCenter">Short</span>
-                        <input type="checkbox" class="sheet" name="data.rest.short1" {{checked data.data.rest.short1}}>
-                        <input type="checkbox" class="sheet" name="data.rest.short2" {{checked data.data.rest.short2}}>
+                        <input type="checkbox" class="sheet"
+                                               name="system.rest.short1" {{checked
+                                               actor.system.rest.short1}}>
+                        <input type="checkbox" class="sheet"
+                                               name="system.rest.short2" {{checked
+                                               actor.system.rest.short2}}>
                     </div>
                     <div class="flexrow flex-group-right" style="flex: 0.5;">
                         <span class="resource-label alignCenter input-small">Long</span>
-                        <input type="checkbox" class="sheet" name="data.rest.long" {{checked data.data.rest.long}}>
+                        <input type="checkbox" class="sheet"
+                                               name="system.rest.long" {{checked
+                                               actor.system.rest.long}}>
                     </div>
                 </div>
             </div>
@@ -167,14 +204,24 @@
                     <label class="resource-value">Stress</label>
                 </div>
                 <div class="flexrow flex-center standard-height">
-                    <input class="input-small flex-group-right" style="text-align: center" type="text" name="data.mods.iniMod" value="{{data.data.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+                    <input class="input-small flex-group-right"
+                           style="text-align: center" type="text"
+                                                      name="system.mods.iniMod"
+                                                      value="{{actor.system.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
                 </div>
                 <div class="flexrow flex-center standard-height">
-                    <input class="input-xs standard-height" style="text-align: center" type="text" name="data.threatLevel.current" value="{{data.data.threatLevel.current}}" placeholder="0"/>/
-                    <input class="input-xs standard-height" style="text-align: center" type="text" name="data.threatLevel.total" value="{{data.data.threatLevel.total}}" placeholder="0"/>     
+                    <input class="input-xs standard-height" style="text-align:
+                                  center" type="text"
+                                          name="system.threatLevel.current"
+                                          value="{{actor.system.threatLevel.current}}" placeholder="0"/>/
+                    <input class="input-xs standard-height" style="text-align:
+                                  center" type="text"
+                                          name="system.threatLevel.total"
+                                          value="{{actor.system.threatLevel.total}}" placeholder="0"/>     
                 </div>
                 <div class="flexrow flex-center standard-height">
-                    <input class="input-medium" style="text-align: center" type="text" name="data.stresstest" value="{{data.data.stresstest}}" placeholder="1d6"/>
+                    <input class="input-medium" style="text-align: center"
+                    type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
                 </div>
                 </div>
             </div>
@@ -193,9 +240,18 @@
         </div>
         <div class="itemBackground">
             <div class="flexrow">
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.data.ego.motivations.motivation1}}{{data.data.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.data.ego.motivations.motivation2}}{{data.data.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.data.ego.motivations.motivation3}}{{data.data.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text"
+                                           name="system.ego.motivations.motivation1"
+                                           value='{{#if
+                                           actor.system.ego.motivations.motivation1}}{{actor.system.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text"
+                                           name="system.ego.motivations.motivation2"
+                                           value='{{#if
+                                           actor.system.ego.motivations.motivation2}}{{actor.system.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                <input class="alignCenter" type="text"
+                                           name="system.ego.motivations.motivation3"
+                                           value='{{#if
+                                           actor.system.ego.motivations.motivation3}}{{actor.system.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
             </div>
         </div>
     </div>
