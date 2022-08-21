@@ -57,6 +57,8 @@ export class EclipsePhaseActor extends Actor {
       data.homebrew = false;
     }
 
+    console.log("this is this.system", this.system);
+
     if(actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon')
       this._prepareCharacterData(actorData)
 
@@ -136,7 +138,7 @@ export class EclipsePhaseActor extends Actor {
 
     data.health.mental.max = (data.aptitudes.wil.value * 2) + eval(data.mods.lucmod);
     data.mental.ir = data.health.mental.max * 2;
-    data.mental.tt = Math.round(data.health.mental.max / 5);
+    data.mental.tt = Math.round(data.health.mental.max / 5) + eval(data.mods.ttMod);
     if(data.health.mental.value === null){
       data.health.mental.value = data.health.mental.max;
     }
@@ -176,10 +178,10 @@ export class EclipsePhaseActor extends Actor {
     }
 
     //Calculating armor
-    let energyTotal = 0;
-    let kineticTotal = 0;
-    let mainArmorAmount = 0;
-    let additionalArmorAmount = 0;
+    let energyTotal = null;
+    let kineticTotal = null;
+    let mainArmorAmount = null;
+    let additionalArmorAmount = null;
     for (let armor of item ) {
       let key = armor.type;
       if(key === 'armor' && armor.data.data.active){
@@ -193,8 +195,8 @@ export class EclipsePhaseActor extends Actor {
         }
       }
     }
-    data.physical.energyArmorTotal = energyTotal
-    data.physical.kineticArmorTotal = kineticTotal
+    data.physical.energyArmorTotal = energyTotal + eval(data.mods.energyMod);
+    data.physical.kineticArmorTotal = kineticTotal + eval(data.mods.kineticMod);
     data.physical.mainArmorTotal = mainArmorAmount
     data.physical.additionalArmorTotal = additionalArmorAmount
     data.physical.mainArmorMalus = 0
@@ -215,15 +217,16 @@ export class EclipsePhaseActor extends Actor {
     data.initiative.display = "1d6 + " + data.initiative.value
 
 
-    //Modificators
+    /*Modificators
     data.mods.wounds = (data.physical.wounds * 10)+(eval(data.mods.woundMod) * 10);
     data.mods.trauma = (data.mental.trauma * 10)+(eval(data.mods.traumaMod) * 10);
+    console.log("This is data.mods.wounds: " + data.mods.wounds + " calculated from data.physical.wounds * 10: " + data.physical.wounds * 10 + " plust data.mods.woundMod * 10: " + data.mods.woundMod * 10);
     if (data.mods.trauma < 0){
       data.mods.trauma = 0
     }
     if (data.mods.wounds < 0){
       data.mods.wounds = 0
-    }
+    }*/
     //Psi-Calculator - Not Working yet
     if (actorData.type === "npc" || actorData.type === "character") {
       data.psiStrain.new = 0;
@@ -233,7 +236,7 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(data.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 - data.mods.wounds - data.mods.trauma + eval(aptitude.mod);
+      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 

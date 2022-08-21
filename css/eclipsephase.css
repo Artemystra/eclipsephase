@@ -17,6 +17,7 @@
   --focusBackground: #2b2b2b;
   --highlightBackground: #414141;
   --accentBackground: #24485d;
+  --color-bg-option: #1f1f1f;
 }
 
 .grid,
@@ -539,6 +540,7 @@ a:hover{
   flex: 0 0 43px;
   border-top: none;
   border-bottom: 3px solid var(--pitchBorder);
+  padding: 0;
 }
 
 .sheet nav.sheet-tabs.itemnav {
@@ -556,7 +558,7 @@ a:hover{
 
 .eclipsephase .tabs .item {
   font-weight: bold;
-  padding: 0 5%;
+  padding: 0 20px;
 }
 
 .eclipsephase .tabs .item:first-child {

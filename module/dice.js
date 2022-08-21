@@ -628,6 +628,8 @@ export async function TaskCheck({
 
     //General roll modifications
     let woundsTotal = Number(actorData.mods.wounds) + Number(actorData.mods.trauma)
+    console.log("This is actorData.mods.wounds: " + actorData.mods.wounds + " calculated from actorData.physical.wounds * 10: " + actorData.physical.wounds * 10 + " plust actorData.mods.woundMod * 10: " + actorData.mods.woundMod * 10);
+    console.log(actorData.mods);
     console.log("this is actorData.mods.wounds" + actorData.mods.wounds + " this is actorData.mods.trauma " + actorData.mods.trauma)
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
     let rollMod = Number(globalMod) - Number(woundsTotal);

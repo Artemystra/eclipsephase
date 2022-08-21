@@ -419,7 +419,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let effUpdateData=[];
     for(let eff of this.object.data.effects.filter(e => 
       (e.data.disabled === mtToggle && e.data.origin.indexOf(trait.data._id)>=0))){
-        console.log("These are the effects on this trait: ", this.object.data.effects)
+        console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
         effUpdateData.push({
           "_id" : eff.data._id,
           disabled: !mtToggle
@@ -437,7 +437,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let effUpdateData=[];
     for(let eff of this.object.data.effects.filter(e => 
       (e.data.disabled === mfToggle && e.data.origin.indexOf(flaw.data._id)>=0))){
-
+        console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
         effUpdateData.push({
           "_id" : eff.data._id,
           disabled: !mfToggle
@@ -455,7 +455,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let effUpdateData=[];
     for(let eff of this.object.data.effects.filter(e => 
       (e.data.disabled === mwToggle && e.data.origin.indexOf(ware.data._id)>=0))){
-
+        console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
         effUpdateData.push({
           "_id" : eff.data._id,
           disabled: !mwToggle

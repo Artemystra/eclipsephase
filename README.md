@@ -49,10 +49,12 @@ Creating your own active effect items is simpel, but as for now you need to now 
 <strong><u>General Mods</u></strong><p>
 data.mods.globalMod = affects all skill/aptitude tests.<br>
 data.mods.traumaMod = affects all skill/aptitude tests through trauma.<br>
-data.mods.woundMod = affects all skill/aptitude tests through trauma.<br>
+data.mods.woundMod = affects all skill/aptitude tests through wounds.<br>
+data.mods.woundMultiplier = to multiply wound effects (e.g. through PSI or (morph)flaws)<br>
 data.mods.iniMod = affects initiative. Will be added to the calculated ini + the dice roll.<br>
 data.mods.durmod = affects durability. Will also be used to calculate derived stats.<br>
-data.mods.lucmod = affects lucidity. Will also be used to calculate derived stats.<p>
+data.mods.lucmod = affects lucidity. Will also be used to calculate derived stats.<br>
+data.mods.ttMod = affects ONLY the Trauma Treshold. Will not affect any other calculations<p>
 
 <strong><u>Pool Mods</u></strong><p>
 data.pools.insight.mod = affects  the maximum insight pool.<br>
@@ -67,6 +69,9 @@ data.aptitudes.ref.mod = affects the reflexes roll. It is not affecting the refl
 data.aptitudes.sav.mod = affects the savvy roll. It is not affecting the savvy itself.<br>
 data.aptitudes.som.mod = affects  the somatics roll. It is not affecting the somatics itself.<br>
 data.aptitudes.wil.mod = affects the willpower roll. It is not affecting the willpower  itself.<p>
+
+<strong><u>Armor Mods</u></strong><p>
+data.aptitudes.cog.mod = affects the cognition roll. It is not affecting the cognition itself.<br>
 
 <strong><u>Skill Mods</u></strong><p>
 data.skillsIns.infosec.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
