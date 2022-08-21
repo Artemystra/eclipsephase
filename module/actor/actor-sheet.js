@@ -56,6 +56,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
   getData() {
     const data = super.getData();
+
     data.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
     if(data.data.img === "icons/svg/mystery-man.svg"){
@@ -63,8 +64,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
 
     eclipsephase.morphNames.forEach(name => {
-      if(data.data.data.bodies[name].img === ""){
-        data.data.data.bodies[name].img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+      if(data.data.system.bodies[name].img === ""){
+        data.data.system.bodies[name].img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
       }
     })
 
@@ -104,6 +105,11 @@ export class EclipsePhaseActorSheet extends ActorSheet {
  async _prepareCharacterItems(sheetData) {
     const actorData = sheetData.data;
     const data = actorData.data;
+
+   console.log("********")
+   console.log(sheetData)
+   console.log(actorData)
+   console.log(data)
 
     // Initialize containers.
 
@@ -155,43 +161,44 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
     for (let i of sheetData.items) {
-      let item = i.data;
+      let item = i.system;
+
       i.img = i.img || DEFAULT_TOKEN;
       // Append to features.
       if (i.type === 'specialSkill') {
         let aptSelect = 0;
-        if (i.data.aptitude === "Intuition") {
+        if (item.aptitude === "Intuition") {
           aptSelect = data.aptitudes.int.value;
         }
-        else if (i.data.aptitude === "Cognition") {
+        else if (item.aptitude === "Cognition") {
           aptSelect = data.aptitudes.cog.value;
         }
-        else if (i.data.aptitude === "Reflexes") {
+        else if (item.aptitude === "Reflexes") {
           aptSelect = data.aptitudes.ref.value;
         }
-        else if (i.data.aptitude === "Somatics") {
+        else if (item.aptitude === "Somatics") {
           aptSelect = data.aptitudes.som.value;
         }
-        else if (i.data.aptitude === "Willpower") {
+        else if (item.aptitude === "Willpower") {
           aptSelect = data.aptitudes.wil.value;
         }
-        else if (i.data.aptitude === "Savvy") {
+        else if (item.aptitude === "Savvy") {
           aptSelect = data.aptitudes.sav.value;
         }
-        i.roll = Number(i.data.value) + aptSelect;
-        i.specroll = Number(i.data.value) + aptSelect + 10;
+        i.roll = Number(item.value) + aptSelect;
+        i.specroll = Number(item.value) + aptSelect + 10;
         special.push(i);
         }
         else if (i.type === 'knowSkill') {
           let aptSelect = 0;
-          if (i.data.aptitude === "Intuition") {
+          if (item.aptitude === "Intuition") {
             aptSelect = data.aptitudes.int.value;
           }
-          else if (i.data.aptitude === "Cognition") {
+          else if (item.aptitude === "Cognition") {
             aptSelect = data.aptitudes.cog.value;
           }
-          i.roll = Number(i.data.value) + aptSelect;
-          i.specroll = Number(i.data.value) + aptSelect + 10;
+          i.roll = Number(item.value) + aptSelect;
+          i.specroll = Number(item.value) + aptSelect + 10;
           know.push(i);
         }
         else if (i.type === 'trait') {
@@ -200,83 +207,83 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         else if (i.type === 'flaw') {
           flaw.push(i);
         }
-        else if (i.data.displayCategory === 'ranged') {
+        else if (item.displayCategory === 'ranged') {
           rangedweapon.push(i);
         }
-        else if (i.data.displayCategory === 'ccweapon') {
+        else if (item.displayCategory === 'ccweapon') {
           ccweapon.push(i);
         }
-        else if (i.data.displayCategory === 'armor') {
+        else if (item.displayCategory === 'armor') {
           armor.push(i);
         }
         else if (i.type === 'aspect') {
-          aspect[i.data.psiType].push(i);
+          aspect[item.psiType].push(i);
         }
         else if (i.type === 'program') {
           program.push(i);
         }
-        else if (i.data.displayCategory === 'gear') {
+        else if (item.displayCategory === 'gear') {
           gear.push(i);
         }
         else if (i.type === 'vehicle') {
-          i.wt = Math.round(i.data.dur / 5);
-          i.dr = Math.round(i.data.dur * 2);
-          vehicle[i.data.type].push(i)
+          i.wt = Math.round(item.dur / 5);
+          i.dr = Math.round(item.dur * 2);
+          vehicle[item.type].push(i)
         }
       }
 
     for (let i of sheetData.items) {
-        if (i.type === 'ware' && i.data.boundTo) {
-            ware[i.data.boundTo].push(i);
+        if (i.type === 'ware' && item.boundTo) {
+            ware[item.boundTo].push(i);
         }
-        else if (i.type === 'morphFlaw' && i.data.boundTo) {
-            if (i.data.boundTo === "morph1"){
+        else if (i.type === 'morphFlaw' && item.boundTo) {
+            if (item.boundTo === "morph1"){
                 morphtrait.present1 = true;
             }
-            else if (i.data.boundTo === "morph2"){
+            else if (item.boundTo === "morph2"){
                 morphtrait.present2 = true;
             }
-            else if (i.data.boundTo === "morph3"){
+            else if (item.boundTo === "morph3"){
                 morphtrait.present3 = true;
             }
-            else if (i.data.boundTo === "morph4"){
+            else if (item.boundTo === "morph4"){
                 morphtrait.present4 = true;
             }
-            else if (i.data.boundTo === "morph5"){
+            else if (item.boundTo === "morph5"){
                 morphtrait.present5 = true;
             }
-            else if (i.data.boundTo === "morph6"){
+            else if (item.boundTo === "morph6"){
                 morphtrait.present6 = true;
             }
-            morphflaw[i.data.boundTo].push(i);
+            morphflaw[item.boundTo].push(i);
         }
-        else if (i.type === 'morphTrait' && i.data.boundTo) {
-            if (i.data.boundTo === "morph1"){
+        else if (i.type === 'morphTrait' && item.boundTo) {
+            if (item.boundTo === "morph1"){
                 morphtrait.present1 = true;
             }
-            else if (i.data.boundTo === "morph2"){
+            else if (item.boundTo === "morph2"){
                 morphtrait.present2 = true;
             }
-            else if (i.data.boundTo === "morph3"){
+            else if (item.boundTo === "morph3"){
                 morphtrait.present3 = true;
             }
-            else if (i.data.boundTo === "morph4"){
+            else if (item.boundTo === "morph4"){
                 morphtrait.present4 = true;
             }
-            else if (i.data.boundTo === "morph5"){
+            else if (item.boundTo === "morph5"){
                 morphtrait.present5 = true;
             }
-            else if (i.data.boundTo === "morph6"){
+            else if (item.boundTo === "morph6"){
                 morphtrait.present6 = true;
             }
-            morphtrait[i.data.boundTo].push(i);
+            morphtrait[item.boundTo].push(i);
         }
     }
     actorData.showEffectsTab=false
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
       var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
       for(let i of effectList){
-        effects.push(i.data);
+        effects.push(item);
       }
       actorData.showEffectsTab=true;
     }
@@ -370,7 +377,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       html.find('.equipped.checkBox').click(ev => {
           const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
           const item = this.actor.items.get(itemId);
-          let toggle = !item.data.data.active;
+          let toggle = !item.active;
           const updateData = {
               "data.active": toggle
           };
@@ -378,10 +385,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           
           let effUpdateData=[];
           for(let eff of this.object.data.effects.filter(e => 
-            (e.data.disabled === toggle && e.data.origin.indexOf(itemId)>=0))){
+            (e.disabled === toggle && e.origin.indexOf(itemId)>=0))){
 
               effUpdateData.push({
-                "_id" : eff.data._id,
+                "_id" : eff._id,
                 disabled: !toggle
               });
           }
