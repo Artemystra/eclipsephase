@@ -96,8 +96,8 @@
                         </div>
                     </div>
                     <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
-                        {{#if data.trait}}
-                        {{#each data.trait as |item id|}}
+                        {{#if actor.trait}}
+                        {{#each actor.trait as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                             <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -106,9 +106,9 @@
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
                             <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
+                                {{#if item.description}}
                                 <div class="itemDescription shape3">
-                                    {{item.data.description}}
+                                    {{item.description}}
                                 </div>
                                 {{/if}}
                                 <div class="flexrow flex-between item-controls">
@@ -142,8 +142,8 @@
                         <h3 class="subheaderMirror">Flaws</h3>
                     </div>
                     <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
-                        {{#if data.flaw}}
-                        {{#each data.flaw as |item id|}}
+                        {{#if actor.flaw}}
+                        {{#each actor.flaw as |item id|}}
                         <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                             <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                             <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -152,9 +152,9 @@
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
                             <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
+                                {{#if item.description}}
                                 <div class="itemDescription shape3">
-                                    {{item.data.description}}
+                                    {{item.description}}
                                 </div>
                                 {{/if}}
                                 <div class="flexrow flex-between item-controls">
@@ -192,16 +192,15 @@
                 </div>
 
                 {{!-- ID and reputation --}}
-                {{> systems/eclipsephase/templates/actor/partials/id.html
-                id=actor.system.ego.idSelected}}
+                {{> systems/eclipsephase/templates/actor/partials/id.html id=actor.system.ego.idSelected}}
 
             </div>
             <div class="flexrow">
-                <h3 class="subheader">About {{data.name}}</h3>
+                <h3 class="subheader">About {{actor.name}}</h3>
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
-            {{editor content=actor.system.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
+            {{editor content=actor.system.biography target="system.biography" button=true owner=owner editable=this.options.editable}}
         </div>
         {{!--Skills Tab--}}
         {{> systems/eclipsephase/templates/actor/partials/skills.html }}
@@ -242,7 +241,7 @@
                 </div>
                 <div style="position: relative; flex: 0.3;">
                     <img class="muse-img" src="{{actor.system.muse.img}}"
-                                          data-edit="data.muse.img"
+                                          data-edit="system.muse.img"
                                           title="{{actor.system.muse.name}}"/>
                 </div>
             </div>
@@ -821,8 +820,8 @@
                                     </div>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.ware.morph1}}
-                                    {{#each data.ware.morph1 as |item id|}}
+                                    {{#if system.ware.morph1}}
+                                    {{#each system.ware.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
