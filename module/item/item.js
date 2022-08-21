@@ -17,17 +17,19 @@ export class EclipsePhaseItem extends Item {
     super.prepareData();
 
     // Get the Item's data
-    const itemData = this.data;
-    const actorData = this.actor ? this.actor.data : {};
-    const data = itemData.data;
+    // const itemData = this.data;
+    // const actorData = this.actor ? this.actor.data : {};
+    // const data = itemData.data;
+    
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
+    let model = this.system
 
     // Homebrew Switch
     if (brewStatus) {
-      data.homebrew = true;
+      model.homebrew = true;
     }
     else {
-      data.homebrew = false;
+      model.homebrew = false;
     }
   }
   /**
