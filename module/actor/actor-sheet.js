@@ -76,6 +76,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     //Prepare dropdowns
     data.config = CONFIG.eclipsephase;
 
+
+    console.log("*******")
+    console.log(data)
+
     return data;
   }
 
@@ -98,18 +102,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   /**
    * Organize and classify Items for Character sheets.
    *
-   * @param {Object} actorData The actor to prepare.
+   * @param {Object} sheetData the object handlebars uses to render templates
    *
    * @return {undefined}
    */
  async _prepareCharacterItems(sheetData) {
-    const actorData = sheetData.data;
-    const data = actorData.data;
-
-   console.log("********")
-   console.log(sheetData)
-   console.log(actorData)
-   console.log(data)
+   const actor = sheetData.actor
+   const model = sheetData.actor.system
 
     // Initialize containers.
 
@@ -168,22 +167,22 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       if (i.type === 'specialSkill') {
         let aptSelect = 0;
         if (item.aptitude === "Intuition") {
-          aptSelect = data.aptitudes.int.value;
+          aptSelect = model.aptitudes.int.value;
         }
         else if (item.aptitude === "Cognition") {
-          aptSelect = data.aptitudes.cog.value;
+          aptSelect = model.aptitudes.cog.value;
         }
         else if (item.aptitude === "Reflexes") {
-          aptSelect = data.aptitudes.ref.value;
+          aptSelect = model.aptitudes.ref.value;
         }
         else if (item.aptitude === "Somatics") {
-          aptSelect = data.aptitudes.som.value;
+          aptSelect = model.aptitudes.som.value;
         }
         else if (item.aptitude === "Willpower") {
-          aptSelect = data.aptitudes.wil.value;
+          aptSelect = model.aptitudes.wil.value;
         }
         else if (item.aptitude === "Savvy") {
-          aptSelect = data.aptitudes.sav.value;
+          aptSelect = model.aptitudes.sav.value;
         }
         i.roll = Number(item.value) + aptSelect;
         i.specroll = Number(item.value) + aptSelect + 10;
@@ -192,10 +191,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         else if (i.type === 'knowSkill') {
           let aptSelect = 0;
           if (item.aptitude === "Intuition") {
-            aptSelect = data.aptitudes.int.value;
+            aptSelect = model.aptitudes.int.value;
           }
           else if (item.aptitude === "Cognition") {
-            aptSelect = data.aptitudes.cog.value;
+            aptSelect = model.aptitudes.cog.value;
           }
           i.roll = Number(item.value) + aptSelect;
           i.specroll = Number(item.value) + aptSelect + 10;
@@ -279,32 +278,32 @@ export class EclipsePhaseActorSheet extends ActorSheet {
             morphtrait[item.boundTo].push(i);
         }
     }
-    actorData.showEffectsTab=false
+    actor.showEffectsTab=false
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
       var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
       for(let i of effectList){
         effects.push(item);
       }
-      actorData.showEffectsTab=true;
+      actor.showEffectsTab=true;
     }
 
     // Assign and return
-    actorData.trait = trait;
-    actorData.flaw = flaw;
-    actorData.morphTrait = morphtrait;
-    actorData.morphFlaw = morphflaw;
-    actorData.rangedWeapon = rangedweapon;
-    actorData.ccweapon = ccweapon;
-    actorData.armor = armor;
-    actorData.ware = ware;
-    actorData.aspect = aspect;
-    actorData.program = program;
-    actorData.gear = gear;
-    actorData.knowSkill = know;
-    actorData.specialSkill = special;
-    actorData.vehicle = vehicle;
-    actorData.activeEffects=effects;
-    actorData.actorType = "PC";
+    actor.trait = trait;
+    actor.flaw = flaw;
+    actor.morphTrait = morphtrait;
+    actor.morphFlaw = morphflaw;
+    actor.rangedWeapon = rangedweapon;
+    actor.ccweapon = ccweapon;
+    actor.armor = armor;
+    actor.ware = ware;
+    actor.aspect = aspect;
+    actor.program = program;
+    actor.gear = gear;
+    actor.knowSkill = know;
+    actor.specialSkill = special;
+    actor.vehicle = vehicle;
+    actor.activeEffects=effects;
+    actor.actorType = "PC";
     
 
 

@@ -8,19 +8,19 @@
         <a class="item" data-tab="ego">Ego</a>
         <a class="item" data-tab="muse">Muse</a>
         <a class="item" data-tab="skills">Skills</a>
-        {{#if data.showEffectsTab}}
+        {{#if actor.showEffectsTab}}
         <a class="item" data-tab="effects">Effects</a>
         {{/if}}
         <a class="item" data-tab="body">Body</a>
-        {{#if data.vehicle.Vehicle}}
+        {{#if actor.vehicle.Vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
-        {{else if data.vehicle.Robot}}
+        {{else if actor.vehicle.Robot}}
         <a class="item" data-tab="vehicles">Vehicles</a>
         {{/if}}
         <a class="item" data-tab="weapons">Inventory</a>
-        {{#if data.aspect.Chi}}
+        {{#if actor.aspect.Chi}}
         <a class="item" data-tab="psi">Psi</a>
-        {{else if data.aspect.Gamma}}
+        {{else if actor.aspect.Gamma}}
         <a class="item" data-tab="psi">Psi</a>
         {{/if}}
     </nav>
@@ -38,22 +38,25 @@
                 </div>
                 <div class="itemBackground flexrow flex-group-center skills">
                     <label class="input-large resource-label alignCenter" >Origin</label>
-                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.origin" data-type="String" >
-                        {{#select data.data.ego.origin}}
+                    <select class="selectSpecApt item-standard-margin-medium" 
+                      name="system.ego.origin" data-type="String" >
+                        {{#select actor.system.ego.origin}}
                         {{#each config.origins as |origin key|}}
                         <option value="{{origin}}">{{origin}}</option>
                         {{/each}} {{/select}}
                     </select>
                     <label class="input-medium resource-label alignCenter" >Sex</label>
-                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.sex" data-type="String">
-                        {{#select data.data.ego.sex}}
+                    <select class="selectSpecApt item-standard-margin-medium"
+                      name="system.ego.sex" data-type="String">
+                        {{#select actor.system.ego.sex}}
                         {{#each config.sexes as |sex key|}}
                         <option value="{{sex}}">{{sex}}</option>
                         {{/each}} {{/select}}
                     </select>
                     <label class="input-large resource-label alignCenter" >Gender</label>
-                    <select class="selectSpecApt item-standard-margin-medium" name="data.ego.gender" data-type="String">
-                        {{#select data.data.ego.gender}}
+                    <select class="selectSpecApt item-standard-margin-medium"
+                      name="system.ego.gender" data-type="String">
+                        {{#select actor.system.ego.gender}}
                         {{#each config.genders as |gender key|}}
                         <option value="{{gender}}">{{gender}}</option>
                         {{/each}} {{/select}}
@@ -63,15 +66,26 @@
                     <div class="flexrow flex-group-center">
                         <label class="input-large resource-label alignLeft" >Motivations</label>
                         <div class="flexrow">
-                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation1" value='{{#if data.data.ego.motivations.motivation1}}{{data.data.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation2" value='{{#if data.data.ego.motivations.motivation2}}{{data.data.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                            <input class="alignCenter" type="text" name="data.ego.motivations.motivation3" value='{{#if data.data.ego.motivations.motivation3}}{{data.data.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text"
+                              name="system.ego.motivations.motivation1"
+                              value='{{actor.system.ego.motivations.motivation1}}'
+                              placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text"
+                              name="system.ego.motivations.motivation2"
+                              value='{{actor.system.ego.motivations.motivation2}}'
+                              placeholder="e.g. Reach the horizon"/>
+                            <input class="alignCenter" type="text"
+                              name="system.ego.motivations.motivation3"
+                              value='{{actor.system.ego.motivations.motivation3}}'
+                              placeholder="e.g. Reach the horizon"/>
+
                         </div>
                     </div>
                 </div>
                 <div class="itemBackground flexrow flex-group-center skills">
                     <label class="input-large resource-label" >Languages</label>
-                    <input type="text" name="data.ego.languages" value="{{data.data.ego.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
+                    <input type="text" name="system.ego.languages"
+                    value="{{actor.system.ego.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
                 </div>
             </div>
             <div class="flexrow flex-between">
@@ -117,7 +131,8 @@
                         <h3 class="subheaderBlank">Ego Flex</h3>
                     </div>
                     <div class="form-group listBackground noMargin shape5">
-                        <input type="number" name="data.ego.egoFlex" value="{{data.data.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
+                        <input type="number" name="system.ego.egoFlex"
+                        value="{{actor.system.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
                     </div>
                 </div>
                 <div class="contentBox" style="flex: 0.4; margin-bottom: 10px;">
@@ -163,20 +178,22 @@
                     <h3 class="subheader">Current ID</h3>
                     <div class="alignRight flexGrowThreeQuarter">
                         <label class="resource-value">Activated</label>
-                        <select class="selectSpecApt item-standard-margin-medium input-XL" name="data.ego.idSelected" data-type="String">
-                            {{#select data.data.ego.idSelected}}
-                            <option value="id1">ID1: {{data.data.ego.ids.id1.name}}</option>
-                            <option value="id2">ID2: {{data.data.ego.ids.id2.name}}</option>
-                            <option value="id3">ID3: {{data.data.ego.ids.id3.name}}</option>
-                            <option value="id4">ID4: {{data.data.ego.ids.id4.name}}</option>
-                            <option value="id5">ID5: {{data.data.ego.ids.id5.name}}</option>
+                        <select class="selectSpecApt item-standard-margin-medium
+                          input-XL" name="system.ego.idSelected" data-type="String">
+                            {{#select actor.system.ego.idSelected}}
+                            <option value="id1">ID1: {{actor.system.ego.ids.id1.name}}</option>
+                            <option value="id2">ID2: {{actor.system.ego.ids.id2.name}}</option>
+                            <option value="id3">ID3: {{actor.system.ego.ids.id3.name}}</option>
+                            <option value="id4">ID4: {{actor.system.ego.ids.id4.name}}</option>
+                            <option value="id5">ID5: {{actor.system.ego.ids.id5.name}}</option>
                             {{/select}}
                         </select>
                     </div>
                 </div>
 
                 {{!-- ID and reputation --}}
-                {{> systems/eclipsephase/templates/actor/partials/id.html id=data.data.ego.idSelected}}
+                {{> systems/eclipsephase/templates/actor/partials/id.html
+                id=actor.system.ego.idSelected}}
 
             </div>
             <div class="flexrow">
@@ -184,7 +201,7 @@
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
-            {{editor content=data.data.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
+            {{editor content=actor.system.biography target="data.biography" button=true owner=owner editable=this.options.editable}}
         </div>
         {{!--Skills Tab--}}
         {{> systems/eclipsephase/templates/actor/partials/skills.html }}
@@ -198,7 +215,8 @@
                 </div>
                 <div class="itemBackground flexrow flex-group-left">
                     <label class="input-large resource-label" >Name</label>
-                    <input class="input-XL" name="data.muse.name" type="text" value="{{data.data.muse.name}}" data-dtype="Text" placeholder="e.g. Amusing"/>
+                    <input class="input-XL" name="system.muse.name" type="text"
+                                                                  value="{{actor.system.muse.name}}" data-dtype="Text" placeholder="e.g. Amusing"/>
                 </div>
             </div>        
             <div class="flexrow contentBox">
@@ -209,10 +227,11 @@
                     </div>
                     <div class="listBackground edgeAbler">
                         <div class="grid grid-2col noMargin" style="gap: 0;">
-                            {{#each data.data.muse.skills as |skill key|}}
+                            {{#each actor.system.muse.skills as |skill key|}}
                         <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
-                            <input class="input-XL" name="data.muse.skills.{{key}}.skillname" type="text" value="{{skill.skillname}}" placeholder="Skill Name" style="text-transform: uppercase;"/>
-                            <input class="input-small" type="number" name="data.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                            <input class="input-XL" name="system.muse.skills.{{key}}.skillname" type="text" value="{{skill.skillname}}" placeholder="Skill Name" style="text-transform: uppercase;"/>
+                            <input class="input-small" type="number"
+                                                       name="system.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                             <div class="flexrow flex-group-center" style="max-width: 40px;">
                                 <img data-type="skill" data-name="{{skill.skillname}}" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
                             </div>
@@ -222,15 +241,17 @@
                     </div>
                 </div>
                 <div style="position: relative; flex: 0.3;">
-                    <img class="muse-img" src="{{data.data.muse.img}}" data-edit="data.muse.img" title="{{data.data.muse.name}}"/>
+                    <img class="muse-img" src="{{actor.system.muse.img}}"
+                                          data-edit="data.muse.img"
+                                          title="{{actor.system.muse.name}}"/>
                 </div>
             </div>
             <div class="flexrow">
-                <h3 class="subheader">About {{data.data.muse.name}}</h3>
+                <h3 class="subheader">About {{actor.system.muse.name}}</h3>
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
-            {{editor content=data.data.muse.description target="data.muse.description" button=true owner=owner editable=this.options.editable}}
+            {{editor content=actor.system.muse.description target="data.muse.description" button=true owner=owner editable=this.options.editable}}
         
         </div>
         {{!-- Body Tab --}}
@@ -242,37 +263,56 @@
                             <h3 class="subheader">Current Morph</h3>
                             <div class="alignRight flexGrowThreeQuarter">
                                 <label class="resource-value">Sleeved:</label>
-                                <select class="bodySelect" name="data.bodies.activeMorph" data-type="text" style="width: 120px;">
-                                    {{#select data.data.bodies.activeMorph}}
-                                    <option value="morph1">{{#if data.data.bodies.morph1.name}}{{data.data.bodies.morph1.name}}{{else}}None{{/if}}</option>
-                                    <option value="morph2">{{#if data.data.bodies.morph2.name}}{{data.data.bodies.morph2.name}}{{else}}None{{/if}}</option>
-                                    <option value="morph3">{{#if data.data.bodies.morph3.name}}{{data.data.bodies.morph3.name}}{{else}}None{{/if}}</option>
-                                    <option value="morph4">{{#if data.data.bodies.morph4.name}}{{data.data.bodies.morph4.name}}{{else}}None{{/if}}</option>
-                                    <option value="morph5">{{#if data.data.bodies.morph5.name}}{{data.data.bodies.morph5.name}}{{else}}None{{/if}}</option>
-                                    <option value="morph6">{{#if data.data.bodies.morph6.name}}{{data.data.bodies.morph6.name}}{{else}}None{{/if}}</option>
+                                <select class="bodySelect" name="system.bodies.activeMorph" data-type="text" style="width: 120px;">
+                                    {{#select actor.system.bodies.activeMorph}}
+                                    <option value="morph1">{{#if
+                                    actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph2">{{#if
+                                    actor.system.bodies.morph2.name}}{{actor.system.bodies.morph2.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph3">{{#if
+                                    actor.system.bodies.morph3.name}}{{actor.system.bodies.morph3.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph4">{{#if
+                                    actor.system.bodies.morph4.name}}{{actor.system.bodies.morph4.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph5">{{#if
+                                    actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}None{{/if}}</option>
+                                    <option value="morph6">{{#if
+                                    actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}None{{/if}}</option>
                                     {{/select}}
                                 </select>
                             </div>
                         </div>
-                        {{#if (eq data.data.bodies.activeMorph "morph1")}}
+                        {{#if (eq actor.system.bodies.activeMorph "morph1")}}
                         <div class="itemBackground">
                             <div class="flexrow flex-between">
-                                <input type="text" style="margin-right: 30px; max-width: 240px;" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
-                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium labelWidth-large" name="data.bodies.morph1.type" data-type="String">
-                                    {{#select data.data.bodies.morph1.type}}
+                                <input type="text" style="margin-right: 30px;
+                                max-width: 240px;"
+                                name="system.bodies.morph1.name"
+                                value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;"
+                                        class="selectSpecApt
+                                               item-standard-margin-medium
+                                               labelWidth-large" name="system.bodies.morph1.type" data-type="String">
+                                    {{#select actor.system.bodies.morph1.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small" type="number" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
+                                <input class="input-small" type="number"
+                                name="system.bodies.morph1.dur"
+                                value="{{actor.system.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
                             </div>
                             <div class="flexrow flex-between">
                                 <div class="flexrow flex-between" style="margin-right: 40px;">
                                     <label class="resource-label labelWidth-medium">Mov</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
-                                        {{#select data.data.bodies.morph1.movetype}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph1.movement"
+                                    value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph1.movetype" data-type="String">
+                                        {{#select actor.system.bodies.morph1.movetype}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -281,9 +321,14 @@
                                 </div>
                                 <div class="flexrow flex-between">
                                     <label class="resource-label labelWidth-medium">Mov 2</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
-                                        {{#select data.data.bodies.morph1.movetype2}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph1.movement2"
+                                    value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph1.movetype2" data-type="String">
+                                        {{#select actor.system.bodies.morph1.movetype2}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -296,42 +341,67 @@
                             <div class="flexrow flex-group-left">
                                 <div>
                                     <label class="resource-label labelWidth-medium">insight</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.insight" value="{{data.data.bodies.morph1.insight}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph1.insight"
+                                    value="{{actor.system.bodies.morph1.insight}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">moxie</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.moxie" value="{{data.data.bodies.morph1.moxie}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph1.moxie"
+                                    value="{{actor.system.bodies.morph1.moxie}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">vigor</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.vigor" value="{{data.data.bodies.morph1.vigor}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                           type="number"
+                                           name="system.bodies.morph1.vigor"
+                                           value="{{actor.system.bodies.morph1.vigor}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">flex</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph1.flex" value="{{data.data.bodies.morph1.flex}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                           type="number"
+                                           name="system.bodies.morph1.flex"
+                                           value="{{actor.system.bodies.morph1.flex}}" placeholder="0"/>
                                 </div>
                             </div>
                         </div>
                         {{/if}}
-                        {{#if (eq data.data.bodies.activeMorph "morph2")}}
+                        {{#if (eq actor.system.bodies.activeMorph "morph2")}}
                         <div class="itemBackground">
                             <div class="flexrow flex-between">
-                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph2.name" value="{{data.data.bodies.morph2.name}}" placeholder="Morph name"/>
-                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph2.type" data-type="String">
-                                    {{#select data.data.bodies.morph2.type}}
+                                <input style="margin-right: 30px; max-width:
+                                240px;" type="text"
+                                name="system.bodies.morph2.name"
+                                value="{{actor.system.bodies.morph2.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;"
+                                        class="selectSpecApt
+                                               item-standard-margin-medium"
+                                        name="system.bodies.morph2.type" data-type="String">
+                                    {{#select actor.system.bodies.morph2.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small" type="number" name="data.bodies.morph2.dur" value="{{data.data.bodies.morph2.dur}}" placeholder="0" style="text-align: center"/>
+                                <input class="input-small" type="number"
+                                name="system.bodies.morph2.dur"
+                                value="{{actor.system.bodies.morph2.dur}}" placeholder="0" style="text-align: center"/>
                             </div>
                             <div class="flexrow flex-between">
                                 <div class="flexrow flex-between" style="margin-right: 40px;">
                                     <label class="resource-label labelWidth-medium">Mov</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph2.movement" value="{{data.data.bodies.morph2.movement}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph2.movetype" data-type="String">
-                                        {{#select data.data.bodies.morph2.movetype}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph2.movement"
+                                    value="{{actor.system.bodies.morph2.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph2.movetype" data-type="String">
+                                        {{#select actor.system.bodies.morph2.movetype}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -340,9 +410,14 @@
                                 </div>
                                 <div class="flexrow flex-between">
                                     <label class="resource-label labelWidth-medium">Mov 2</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph2.movement2" value="{{data.data.bodies.morph2.movement2}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph2.movetype2" data-type="String">
-                                        {{#select data.data.bodies.morph2.movetype2}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph2.movement2"
+                                    value="{{actor.system.bodies.morph2.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph2.movetype2" data-type="String">
+                                        {{#select actor.system.bodies.morph2.movetype2}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -355,42 +430,66 @@
                             <div class="flexrow flex-group-left">
                                 <div>
                                     <label class="resource-label labelWidth-medium">insight</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.insight" value="{{data.data.bodies.morph2.insight}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph2.insight"
+                                    value="{{actor.system.bodies.morph2.insight}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">moxie</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.moxie" value="{{data.data.bodies.morph2.moxie}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph2.moxie"
+                                    value="{{actor.system.bodies.morph2.moxie}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">vigor</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.vigor" value="{{data.data.bodies.morph2.vigor}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph2.vigor"
+                                    value="{{actor.system.bodies.morph2.vigor}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">flex</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph2.flex" value="{{data.data.bodies.morph2.flex}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number" name="system.bodies.morph2.flex"
+                                    value="{{actor.system.bodies.morph2.flex}}" placeholder="0"/>
                                 </div>
                             </div>
                         </div>
                         {{/if}}
-                        {{#if (eq data.data.bodies.activeMorph "morph3")}}
+                        {{#if (eq actor.system.bodies.activeMorph "morph3")}}
                         <div class="itemBackground">
                             <div class="flexrow flex-between">
-                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph3.name" value="{{data.data.bodies.morph3.name}}" placeholder="Morph name"/>
-                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph3.type" data-type="String">
-                                    {{#select data.data.bodies.morph3.type}}
+                                <input style="margin-right: 30px; max-width:
+                                240px;" type="text"
+                                name="system.bodies.morph3.name"
+                                value="{{actor.system.bodies.morph3.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;"
+                                        class="selectSpecApt
+                                               item-standard-margin-medium"
+                                        name="system.bodies.morph3.type" data-type="String">
+                                    {{#select actor.system.bodies.morph3.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small" type="number" name="data.bodies.morph3.dur" value="{{data.data.bodies.morph3.dur}}" placeholder="0" style="text-align: center"/>
+                                <input class="input-small" type="number"
+                                name="system.bodies.morph3.dur"
+                                value="{{actor.system.bodies.morph3.dur}}" placeholder="0" style="text-align: center"/>
                             </div>
                             <div class="flexrow flex-between">
                                 <div class="flexrow flex-between" style="margin-right: 40px;">
                                     <label class="resource-label labelWidth-medium">Mov</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph3.movement" value="{{data.data.bodies.morph3.movement}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph3.movetype" data-type="String">
-                                        {{#select data.data.bodies.morph3.movetype}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph3.movement"
+                                    value="{{actor.system.bodies.morph3.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph3.movetype" data-type="String">
+                                        {{#select actor.system.bodies.morph3.movetype}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -399,9 +498,14 @@
                                 </div>
                                 <div class="flexrow flex-between">
                                     <label class="resource-label labelWidth-medium">Mov 2</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph3.movement2" value="{{data.data.bodies.morph3.movement2}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph3.movetype2" data-type="String">
-                                        {{#select data.data.bodies.morph3.movetype2}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph3.movement2"
+                                    value="{{actor.system.bodies.morph3.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph3.movetype2" data-type="String">
+                                        {{#select actor.system.bodies.morph3.movetype2}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -414,42 +518,66 @@
                             <div class="flexrow flex-group-left">
                                 <div>
                                     <label class="resource-label labelWidth-medium">insight</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.insight" value="{{data.data.bodies.morph3.insight}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph3.insight"
+                                    value="{{actor.system.bodies.morph3.insight}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">moxie</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.moxie" value="{{data.data.bodies.morph3.moxie}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph3.moxie"
+                                    value="{{actor.system.bodies.morph3.moxie}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">vigor</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.vigor" value="{{data.data.bodies.morph3.vigor}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph3.vigor"
+                                    value="{{actor.system.bodies.morph3.vigor}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">flex</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph3.flex" value="{{data.data.bodies.morph3.flex}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number" name="system.bodies.morph3.flex"
+                                    value="{{actor.system.bodies.morph3.flex}}" placeholder="0"/>
                                 </div>
                             </div>
                         </div>
                         {{/if}}
-                        {{#if (eq data.data.bodies.activeMorph "morph4")}}
+                        {{#if (eq actor.system.bodies.activeMorph "morph4")}}
                         <div class="itemBackground">
                             <div class="flexrow flex-between">
-                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph4.name" value="{{data.data.bodies.morph4.name}}" placeholder="Morph name"/>
-                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph4.type" data-type="String">
-                                    {{#select data.data.bodies.morph4.type}}
+                                <input style="margin-right: 30px; max-width:
+                                240px;" type="text"
+                                name="system.bodies.morph4.name"
+                                value="{{actor.system.bodies.morph4.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;"
+                                        class="selectSpecApt
+                                               item-standard-margin-medium"
+                                        name="system.bodies.morph4.type" data-type="String">
+                                    {{#select actor.system.bodies.morph4.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small" type="number" name="data.bodies.morph4.dur" value="{{data.data.bodies.morph4.dur}}" placeholder="0" style="text-align: center"/>
+                                <input class="input-small" type="number"
+                                name="system.bodies.morph4.dur"
+                                value="{{actor.system.bodies.morph4.dur}}" placeholder="0" style="text-align: center"/>
                             </div>
                             <div class="flexrow flex-between">
                                 <div class="flexrow flex-between" style="margin-right: 40px;">
                                     <label class="resource-label labelWidth-medium">Mov</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph4.movement" value="{{data.data.bodies.morph4.movement}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph4.movetype" data-type="String">
-                                        {{#select data.data.bodies.morph4.movetype}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph4.movement"
+                                    value="{{actor.system.bodies.morph4.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph4.movetype" data-type="String">
+                                        {{#select actor.system.bodies.morph4.movetype}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -458,9 +586,14 @@
                                 </div>
                                 <div class="flexrow flex-between">
                                     <label class="resource-label labelWidth-medium">Mov 2</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph4.movement2" value="{{data.data.bodies.morph4.movement2}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph4.movetype2" data-type="String">
-                                        {{#select data.data.bodies.morph4.movetype2}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph4.movement2"
+                                    value="{{actor.system.bodies.morph4.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph4.movetype2" data-type="String">
+                                        {{#select actor.system.bodies.morph4.movetype2}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -473,42 +606,66 @@
                             <div class="flexrow flex-group-left">
                                 <div>
                                     <label class="resource-label labelWidth-medium">insight</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.insight" value="{{data.data.bodies.morph4.insight}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph4.insight"
+                                    value="{{actor.system.bodies.morph4.insight}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">moxie</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.moxie" value="{{data.data.bodies.morph4.moxie}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph4.moxie"
+                                    value="{{actor.system.bodies.morph4.moxie}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">vigor</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.vigor" value="{{data.data.bodies.morph4.vigor}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph4.vigor"
+                                    value="{{actor.system.bodies.morph4.vigor}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">flex</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph4.flex" value="{{data.data.bodies.morph4.flex}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number" name="system.bodies.morph4.flex"
+                                    value="{{actor.system.bodies.morph4.flex}}" placeholder="0"/>
                                 </div>
                             </div>
                         </div>
                         {{/if}}
-                        {{#if (eq data.data.bodies.activeMorph "morph5")}}
+                        {{#if (eq actor.system.bodies.activeMorph "morph5")}}
                         <div class="itemBackground">
                             <div class="flexrow flex-between">
-                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph5.name" value="{{data.data.bodies.morph5.name}}" placeholder="Morph name"/>
-                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph5.type" data-type="String">
-                                    {{#select data.data.bodies.morph5.type}}
+                                <input style="margin-right: 30px; max-width:
+                                240px;" type="text"
+                                name="system.bodies.morph5.name"
+                                value="{{actor.system.bodies.morph5.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;"
+                                        class="selectSpecApt
+                                               item-standard-margin-medium"
+                                        name="system.bodies.morph5.type" data-type="String">
+                                    {{#select actor.system.bodies.morph5.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small" type="number" name="data.bodies.morph5.dur" value="{{data.data.bodies.morph5.dur}}" placeholder="0" style="text-align: center"/>
+                                <input class="input-small" type="number"
+                                name="system.bodies.morph5.dur"
+                                value="{{actor.system.bodies.morph5.dur}}" placeholder="0" style="text-align: center"/>
                             </div>
                             <div class="flexrow flex-between">
                                 <div class="flexrow flex-between" style="margin-right: 40px;">
                                     <label class="resource-label labelWidth-medium">Mov</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph5.movement" value="{{data.data.bodies.morph5.movement}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph5.movetype" data-type="String">
-                                        {{#select data.data.bodies.morph5.movetype}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph5.movement"
+                                    value="{{actor.system.bodies.morph5.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph5.movetype" data-type="String">
+                                        {{#select actor.system.bodies.morph5.movetype}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -517,9 +674,14 @@
                                 </div>
                                 <div class="flexrow flex-between">
                                     <label class="resource-label labelWidth-medium">Mov 2</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph5.movement2" value="{{data.data.bodies.morph5.movement2}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph5.movetype2" data-type="String">
-                                        {{#select data.data.bodies.morph5.movetype2}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph5.movement2"
+                                    value="{{actor.system.bodies.morph5.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph5.movetype2" data-type="String">
+                                        {{#select actor.system.bodies.morph5.movetype2}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -532,42 +694,66 @@
                             <div class="flexrow flex-group-left">
                                 <div>
                                     <label class="resource-label labelWidth-medium">insight</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.insight" value="{{data.data.bodies.morph5.insight}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph5.insight"
+                                    value="{{actor.system.bodies.morph5.insight}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">moxie</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.moxie" value="{{data.data.bodies.morph5.moxie}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph5.moxie"
+                                    value="{{actor.system.bodies.morph5.moxie}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">vigor</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.vigor" value="{{data.data.bodies.morph5.vigor}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph5.vigor"
+                                    value="{{actor.system.bodies.morph5.vigor}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">flex</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph5.flex" value="{{data.data.bodies.morph5.flex}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number" name="system.bodies.morph5.flex"
+                                    value="{{actor.system.bodies.morph5.flex}}" placeholder="0"/>
                                 </div>
                             </div>
                         </div>
                         {{/if}}
-                        {{#if (eq data.data.bodies.activeMorph "morph6")}}
+                        {{#if (eq actor.system.bodies.activeMorph "morph6")}}
                         <div class="itemBackground">
                             <div class="flexrow flex-between">
-                                <input style="margin-right: 30px; max-width: 240px;" type="text" name="data.bodies.morph6.name" value="{{data.data.bodies.morph6.name}}" placeholder="Morph name"/>
-                                <select style="max-width: 125px;" class="selectSpecApt item-standard-margin-medium" name="data.bodies.morph6.type" data-type="String">
-                                    {{#select data.data.bodies.morph6.type}}
+                                <input style="margin-right: 30px; max-width:
+                                240px;" type="text"
+                                name="system.bodies.morph6.name"
+                                value="{{actor.system.bodies.morph6.name}}" placeholder="Morph name"/>
+                                <select style="max-width: 125px;"
+                                        class="selectSpecApt
+                                               item-standard-margin-medium"
+                                        name="system.bodies.morph6.type" data-type="String">
+                                    {{#select actor.system.bodies.morph6.type}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small" type="number" name="data.bodies.morph6.dur" value="{{data.data.bodies.morph6.dur}}" placeholder="0" style="text-align: center"/>
+                                <input class="input-small" type="number"
+                                name="system.bodies.morph6.dur"
+                                value="{{actor.system.bodies.morph6.dur}}" placeholder="0" style="text-align: center"/>
                             </div>
                             <div class="flexrow flex-between">
                                 <div class="flexrow flex-between" style="margin-right: 40px;">
                                     <label class="resource-label labelWidth-medium">Mov</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph6.movement" value="{{data.data.bodies.morph6.movement}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph6.movetype" data-type="String">
-                                        {{#select data.data.bodies.morph6.movetype}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph6.movement"
+                                    value="{{actor.system.bodies.morph6.movement}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph6.movetype" data-type="String">
+                                        {{#select actor.system.bodies.morph6.movetype}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -576,9 +762,14 @@
                                 </div>
                                 <div class="flexrow flex-between">
                                     <label class="resource-label labelWidth-medium">Mov 2</label>
-                                    <input class="input-medium item-standard-margin-small" type="text" name="data.bodies.morph6.movement2" value="{{data.data.bodies.morph6.movement2}}" placeholder="0/0" style="text-align: center"/>
-                                    <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph6.movetype2" data-type="String">
-                                        {{#select data.data.bodies.morph6.movetype2}}
+                                    <input class="input-medium
+                                    item-standard-margin-small" type="text"
+                                    name="system.bodies.morph6.movement2"
+                                    value="{{actor.system.bodies.morph6.movement2}}" placeholder="0/0" style="text-align: center"/>
+                                    <select class="selectSpecApt
+                                                   item-standard-margin
+                                                   input-large" name="system.bodies.morph6.movetype2" data-type="String">
+                                        {{#select actor.system.bodies.morph6.movetype2}}
                                         {{#each config.moveTypes as |moveType key|}}
                                             <option value="{{key}}">{{moveType}}</option>
                                         {{/each}}
@@ -591,26 +782,37 @@
                             <div class="flexrow flex-group-left">
                                 <div>
                                     <label class="resource-label labelWidth-medium">insight</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.insight" value="{{data.data.bodies.morph6.insight}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph6.insight"
+                                    value="{{actor.system.bodies.morph6.insight}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">moxie</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.moxie" value="{{data.data.bodies.morph6.moxie}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph6.moxie"
+                                    value="{{actor.system.bodies.morph6.moxie}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">vigor</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.vigor" value="{{data.data.bodies.morph6.vigor}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number"
+                                    name="system.bodies.morph6.vigor"
+                                    value="{{actor.system.bodies.morph6.vigor}}" placeholder="0"/>
                                 </div>
                                 <div>
                                     <label class="resource-label labelWidth-medium">flex</label>
-                                    <input class="input-small -medium" type="number" name="data.bodies.morph6.flex" value="{{data.data.bodies.morph6.flex}}" placeholder="0"/>
+                                    <input class="input-small -medium"
+                                    type="number" name="system.bodies.morph6.flex"
+                                    value="{{actor.system.bodies.morph6.flex}}" placeholder="0"/>
                                 </div>
                             </div>
                         </div>
                         {{/if}}
                     </div>
                     <div>
-                        {{#if (eq data.data.bodies.activeMorph "morph1")}}
+                        {{#if (eq actor.system.bodies.activeMorph "morph1")}}
                         <div class="grid grid-2col">
                             <div class="contentBox">
                                 <div class="flexrow">
@@ -710,7 +912,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{else if (eq data.data.bodies.activeMorph "morph2")}}
+                        {{else if (eq actor.system.bodies.activeMorph "morph2")}}
                         <div class="grid grid-2col">
                             <div class="contentBox">
                                 <div class="flexrow">
@@ -810,7 +1012,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{else if (eq data.data.bodies.activeMorph "morph3")}}
+                        {{else if (eq actor.system.bodies.activeMorph "morph3")}}
                         <div class="grid grid-2col">
                             <div class="contentBox">
                                 <div class="flexrow">
@@ -910,7 +1112,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{else if (eq data.data.bodies.activeMorph "morph4")}}
+                        {{else if (eq actor.system.bodies.activeMorph "morph4")}}
                         <div class="grid grid-2col">
                             <div class="contentBox">
                                 <div class="flexrow">
@@ -1010,7 +1212,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{else if (eq data.data.bodies.activeMorph "morph5")}}
+                        {{else if (eq actor.system.bodies.activeMorph "morph5")}}
                         <div class="grid grid-2col">
                             <div class="contentBox">
                                 <div class="flexrow">
@@ -1110,7 +1312,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{else if (eq data.data.bodies.activeMorph "morph6")}}
+                        {{else if (eq actor.system.bodies.activeMorph "morph6")}}
                         <div class="grid grid-2col">
                             <div class="contentBox">
                                 <div class="flexrow">
@@ -1215,18 +1417,36 @@
                 </div>
                 <div style="position: relative; flex: 0.3;">
                     <div class="morph-imgBorder" style="margin-right: 5px;">
-                        {{#if (eq data.data.bodies.activeMorph "morph1")}}
-                        <img class="morph-img" src="{{data.data.bodies.morph1.img}}" data-edit="data.bodies.morph1.img" title="{{data.name}}'s {{data.data.bodies.morph1.name}}"/>
-                        {{else if (eq data.data.bodies.activeMorph "morph2")}}
-                        <img class="morph-img" src="{{data.data.bodies.morph2.img}}" data-edit="data.bodies.morph2.img" title="{{data.name}}'s {{data.data.bodies.morph2.name}}"/>
-                        {{else if (eq data.data.bodies.activeMorph "morph3")}}
-                        <img class="morph-img" src="{{data.data.bodies.morph3.img}}" data-edit="data.bodies.morph3.img" title="{{data.name}}'s {{data.data.bodies.morph3.name}}"/>
-                        {{else if (eq data.data.bodies.activeMorph "morph4")}}
-                        <img class="morph-img" src="{{data.data.bodies.morph4.img}}" data-edit="data.bodies.morph4.img" title="{{data.name}}'s {{data.data.bodies.morph4.name}}"/>
-                        {{else if (eq data.data.bodies.activeMorph "morph5")}}
-                        <img class="morph-img" src="{{data.data.bodies.morph5.img}}" data-edit="data.bodies.morph5.img" title="{{data.name}}'s {{data.data.bodies.morph5.name}}"/>
-                        {{else if (eq data.data.bodies.activeMorph "morph6")}}
-                        <img class="morph-img" src="{{data.data.bodies.morph6.img}}" data-edit="data.bodies.morph6.img" title="{{data.name}}'s {{data.data.bodies.morph6.name}}"/>
+                        {{#if (eq actor.system.bodies.activeMorph "morph1")}}
+                        <img class="morph-img"
+                        src="{{actor.system.bodies.morph1.img}}"
+                        data-edit="data.bodies.morph1.img"
+                        title="{{data.name}}'s {{actor.system.bodies.morph1.name}}"/>
+                        {{else if (eq actor.system.bodies.activeMorph "morph2")}}
+                        <img class="morph-img"
+                        src="{{actor.system.bodies.morph2.img}}"
+                        data-edit="data.bodies.morph2.img"
+                        title="{{data.name}}'s {{actor.system.bodies.morph2.name}}"/>
+                        {{else if (eq actor.system.bodies.activeMorph "morph3")}}
+                        <img class="morph-img"
+                        src="{{actor.system.bodies.morph3.img}}"
+                        data-edit="data.bodies.morph3.img"
+                        title="{{data.name}}'s {{actor.system.bodies.morph3.name}}"/>
+                        {{else if (eq actor.system.bodies.activeMorph "morph4")}}
+                        <img class="morph-img"
+                        src="{{actor.system.bodies.morph4.img}}"
+                        data-edit="data.bodies.morph4.img"
+                        title="{{data.name}}'s {{actor.system.bodies.morph4.name}}"/>
+                        {{else if (eq actor.system.bodies.activeMorph "morph5")}}
+                        <img class="morph-img"
+                        src="{{actor.system.bodies.morph5.img}}"
+                        data-edit="data.bodies.morph5.img"
+                        title="{{data.name}}'s {{actor.system.bodies.morph5.name}}"/>
+                        {{else if (eq actor.system.bodies.activeMorph "morph6")}}
+                        <img class="morph-img"
+                        src="{{actor.system.bodies.morph6.img}}"
+                        data-edit="data.bodies.morph6.img"
+                        title="{{data.name}}'s {{actor.system.bodies.morph6.name}}"/>
                         {{/if}}
                     </div>
                 </div>
@@ -1297,48 +1517,54 @@
                     {{/if}}
                 </div>
             </div>
-            {{#if (eq data.data.bodies.activeMorph "morph1")}}
+            {{#if (eq actor.system.bodies.activeMorph "morph1")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph1.name}}{{data.data.bodies.morph1.name}}{{else}}Morph{{/if}}</h3>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                      actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=data.data.bodies.morph1.description target="data.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph2")}}
+                {{editor content=actor.system.bodies.morph1.description target="data.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq actor.system.bodies.activeMorph "morph2")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph2.name}}{{data.data.bodies.morph2.name}}{{else}}Morph{{/if}}</h3>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                      actor.system.bodies.morph2.name}}{{actor.system.bodies.morph2.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=data.data.bodies.morph2.description target="data.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph3")}}
+                {{editor content=actor.system.bodies.morph2.description target="data.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq actor.system.bodies.activeMorph "morph3")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph3.name}}{{data.data.bodies.morph3.name}}{{else}}Morph{{/if}}</h3>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                      actor.system.bodies.morph3.name}}{{actor.system.bodies.morph3.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=data.data.bodies.morph3.description target="data.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph4")}}
+                {{editor content=actor.system.bodies.morph3.description target="data.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq actor.system.bodies.activeMorph "morph4")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph4.name}}{{data.data.bodies.morph4.name}}{{else}}Morph{{/if}}</h3>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                      actor.system.bodies.morph4.name}}{{actor.system.bodies.morph4.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=data.data.bodies.morph4.description target="data.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph5")}}
+                {{editor content=actor.system.bodies.morph4.description target="data.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq actor.system.bodies.activeMorph "morph5")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph5.name}}{{data.data.bodies.morph5.name}}{{else}}Morph{{/if}}</h3>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                      actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=data.data.bodies.morph5.description target="data.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq data.data.bodies.activeMorph "morph6")}}
+                {{editor content=actor.system.bodies.morph5.description target="data.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
+            {{else if (eq actor.system.bodies.activeMorph "morph6")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if data.data.bodies.morph6.name}}{{data.data.bodies.morph6.name}}{{else}}Morph{{/if}}</h3>
+                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                      actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=data.data.bodies.morph6.description target="data.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.bodies.morph6.description target="data.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
             {{/if}}
         </div>
         
@@ -1405,7 +1631,10 @@
                                         <label class="flex-group-center noMargin noBG"><strong>{{item.data.pass}}</strong></label>
                                     </td>
                                     <td>
-                                        <input class="input-small sheet-inline-edit" data-field="data.armor" type="text" name="data.armor" value="{{data.armor}}" placeholder="2/2"/>
+                                        <input class="input-small
+                                        sheet-inline-edit"
+                                        data-field="data.armor" type="text"
+                                        name="system.armor" value="{{data.armor}}" placeholder="2/2"/>
                                     </td>
                                     <td>
                                         <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
@@ -1493,7 +1722,9 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input class="input-small sheet-inline-edit" data-field="data.armor" type="text" name="data.armor" value="{{data.armor}}" placeholder="2/2"/>
+                                    <input class="input-small sheet-inline-edit"
+                                    data-field="data.armor" type="text"
+                                    name="system.armor" value="{{data.armor}}" placeholder="2/2"/>
                                 </td>
                                 <td>
                                     <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
@@ -1529,17 +1760,23 @@
         </div>
         {{!-- Gear Tab --}}
         <div class="tab gear" data-group="primary" data-tab="weapons">
-            {{#if data.data.hasGear}}
+            {{#if actor.system.hasGear}}
             {{#if data.rangedWeapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Ranged Weapons</h3>
                     <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
                         <label class="resource-label labelWidth-large">Roll Guns</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{#if data.data.skillsVig.guns.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.guns.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label
+                          input-small" data-type="skill" data-name="Guns"
+                          data-rollvalue="{{actor.system.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        {{#if actor.system.skillsVig.guns.specname}}
+                        <label class="resource-label labelWidth-XL
+                          item-standard-margin-both-large">Roll {{actor.system.skillsVig.guns.specname}}</label>
+                        <label class="resource-label roll-label task-check
+                          input-small" data-type="skill" data-name="Guns"
+                          data-specname="{{actor.system.skillsVig.guns.specname}}"
+                          data-rollvalue="{{actor.system.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
@@ -1614,10 +1851,16 @@
                     <h3 class="subheader">Close Combat Weapons</h3>
                     <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
                         <label class="resource-label labelWidth-large">Roll Melee</label>
-                        <label class="resource-label task-check roll-label input-small" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                        {{#if data.data.skillsVig.melee.specname}}
-                        <label class="resource-label labelWidth-XL item-standard-margin-both-large">Roll {{data.data.skillsVig.melee.specname}}</label>
-                        <label class="resource-label roll-label task-check input-small" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        <label class="resource-label task-check roll-label
+                          input-small" data-type="skill" data-name="Melee"
+                          data-rollvalue="{{actor.system.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        {{#if actor.system.skillsVig.melee.specname}}
+                        <label class="resource-label labelWidth-XL
+                          item-standard-margin-both-large">Roll {{actor.system.skillsVig.melee.specname}}</label>
+                        <label class="resource-label roll-label task-check
+                          input-small" data-type="skill" data-name="Melee"
+                          data-specname="{{actor.system.skillsVig.melee.specname}}"
+                          data-rollvalue="{{actor.system.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                         {{/if}}
                     </div>
                 </div>
@@ -1776,7 +2019,7 @@
                 </div>
                 <div class="itemBackground shape5" style="height: 100px; margin-top: -75px;">
                 </div>
-                {{#if data.data.homebrew}}<i style="font-size: 12px; margin-bottom: 10px;">Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i><p/>{{/if}}
+                {{#if actor.system.homebrew}}<i style="font-size: 12px; margin-bottom: 10px;">Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i><p/>{{/if}}
             </div>
             {{/if}}
             {{else}}
@@ -1799,17 +2042,27 @@
                 <h3 class="subheader">Infection Type</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                     <span class="resource-label  input-large"><strong>Infection Rating</strong></span>
-                    <input class="input-small" type="text" style="text-align: center; margin-bottom: 10px;" name="data.psiStrain.infection" value="{{data.data.psiStrain.infection}}" placeholder="0"/>
+                    <input class="input-small" type="text" style="text-align:
+                    center; margin-bottom: 10px;"
+                    name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
                 </div>
             </div>
             <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
                 <ol>
-                    <li class="skills"><input type="text" name="data.psiStrain.name" value="{{data.data.psiStrain.name}}" placeholder="Sub-strain name"/></li>
-                    <li><textarea class="description" name="data.psiStrain.description" rows="27" cols="60" placeholder="Describe your inner monster">{{data.data.psiStrain.description}}</textarea></li>
+                    <li class="skills"><input type="text"
+                      name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="Sub-strain name"/></li>
+                    <li><textarea class="description"
+                                  name="system.psiStrain.description" rows="27"
+                                                                    cols="60"
+                                                                    placeholder="Describe
+                                                                                 your
+                                                                                 inner
+                                                                                 monster">{{actor.system.psiStrain.description}}</textarea></li>
                 </ol>
                 <ol>
-                    {{#each data.data.strainInfluence as |influence key|}}
-                    <li><div class="textAreaDescription"><textarea class="description" name="data.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
+                    {{#each actor.systeactor.system as |influence key|}}
+                    <li><div class="textAreaDescription"><textarea
+                          class="description" name="system.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
                     {{/each}}
                 </ol>
             </div>
