@@ -29,8 +29,12 @@ export class EclipsePhaseFlawSheet extends ItemSheet {
 
   /** @override */
   getData() {
-    const data = super.getData();
-    data.config = CONFIG.eclipsephase;
+    const sheetData = super.getData();
+
+    console.log("**** flaw-sheet")
+    console.log(sheetData)
+
+    sheetData.config = CONFIG.eclipsephase;
     data.data.showEffectsTab=true;
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
       data.data.showEffectsTab=true;  

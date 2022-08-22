@@ -327,13 +327,18 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
+    let actor = this.actor
+
+    console.log("**** in activeateListeners")
+    console.log(this)
+
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
 
 
-    registerEffectHandlers(html,this.actor);
-    registerCommonHandlers(html,this.actor);
+    registerEffectHandlers(html, actor);
+    registerCommonHandlers(html, actor);
    /* registerItemHandlers(html,this.actor,this);*/
 
    // Add Inventory Item
@@ -342,14 +347,14 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     // Update Inventory Item
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
+      const item = actor.items.get(li.data("itemId"));
       item.sheet.render(true);
     });
 
         // Delete Inventory Item
   html.find('.item-delete').click(ev => {
     const li = $(ev.currentTarget).parents(".item");
-    this.actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
+    actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
     li.slideUp(200, () => this.render(false));
   });
 
@@ -359,7 +364,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.isOwner) {
+    if (actor.isOwner) {
         let handler = ev => this._onDragItemStart(ev);
         html.find('li.item').each((i, li) => {
             if (li.classList.contains("inventory-header")) return;
@@ -376,10 +381,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
           const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
-          const item = this.actor.items.get(itemId);
+          const item = actor.items.get(itemId);
           let toggle = !item.active;
           const updateData = {
-              "data.active": toggle
+              "system.active": toggle
           };
           const updated = item.update(updateData);
           
@@ -392,7 +397,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
                 disabled: !toggle
               });
           }
-          this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+          actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       });
 
       //show on hover
@@ -502,10 +507,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     const element = event.currentTarget;
     const dataset = element.dataset;
-    const actorData = this.actor.data.data;
+    const actorModel = this.actor.system
 
     if(dataset.type === 'rep') {
-      this._onRepRoll(dataset, actorData)
+      this._onRepRoll(dataset, actorModel)
       return
     }
 
@@ -514,7 +519,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         specName : dataset.specname,
         rollType : dataset.type,
         skillValue : dataset.rollvalue,
-        actorData : actorData,
+        actorData : actorModel,
         askForOptions : event.shiftKey,
         optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
         brewStatus: game.settings.get("eclipsephase", "superBrew")
@@ -545,24 +550,22 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let field = element.dataset.field;
 
     return item.update({ [field]: element.value });
-    }
+  }
 
-    _onToggleReveal(event) {
-      const reveals = event.currentTarget.getElementsByClassName("info");
-      $.each(reveals, function (index, value){
-        $(value).toggleClass("hidden");
-      })
-      const revealer = event.currentTarget.getElementsByClassName("toggle");
-      $.each(revealer, function (index, value){
-        $(value).toggleClass("noShow");
-      })
-    }
+  _onToggleReveal(event) {
+    const reveals = event.currentTarget.getElementsByClassName("info");
+    $.each(reveals, function (index, value){
+      $(value).toggleClass("hidden");
+    })
+    const revealer = event.currentTarget.getElementsByClassName("toggle");
+    $.each(revealer, function (index, value){
+      $(value).toggleClass("noShow");
+    })
+  }
 
-
-    _onRepRoll(dataset, actorData) {
-      Dice.ReputationRoll(dataset, actorData)
-    }
-
+  _onRepRoll(dataset, actorModel) {
+    Dice.ReputationRoll(dataset, actorModel)
+  }
 }
 
 
