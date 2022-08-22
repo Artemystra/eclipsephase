@@ -23,15 +23,16 @@
                 </tr>
                 <tr>
                     <td>
-                        <select name="data.psiType" data-type="String">
-                            {{#select data.data.psiType}}
+                        <select name="system.psiType" data-type="String">
+                            {{#select item.system.psiType}}
                             {{#each config.psiTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        <input class="input-large" type="number" name="data.infection" value="{{data.data.infection}}" placeholder="e.g. 3"/>
+                        <input class="input-large" type="number"
+                        name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
                     </td>
                 </tr>
             </table>
@@ -41,7 +42,7 @@
                     <td>
                         <label class="resource-label">Psi Type</label>
                     </td>
-                    {{#if (eq data.data.psiType "Chi")}}
+                    {{#if (eq item.system.psiType "Chi")}}
                     {{else}}
                     <td>
                         <label class="resource-label">Action</label>
@@ -56,26 +57,26 @@
                 </tr>
                 <tr>
                     <td>
-                        <select name="data.psiType" data-type="String">
-                            {{#select data.data.psiType}}
+                        <select name="system.psiType" data-type="String">
+                            {{#select item.system.psiType}}
                             {{#each config.psiTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
-                    {{#if (eq data.data.psiType "Chi")}}
+                    {{#if (eq item.system.psiType "Chi")}}
                     {{else}}
                     <td>
-                        <select name="data.actionType" data-type="String">
-                            {{#select data.data.actionType}}
+                        <select name="system.actionType" data-type="String">
+                            {{#select item.system.actionType}}
                             {{#each config.actionTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        <select name="data.duration" data-type="String">
-                            {{#select data.data.duration}}
+                        <select name="system.duration" data-type="String">
+                            {{#select item.system.duration}}
                             {{#each config.duration as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -83,10 +84,11 @@
                     </td>
                     {{/if}}
                     <td>
-                        {{#if (eq data.data.psiType "Chi")}}
+                        {{#if (eq item.system.psiType "Chi")}}
                         -
                         {{else}}
-                        <input class="input-large" type="number" name="data.infection" value="{{data.data.infection}}" placeholder="e.g. 3"/>
+                        <input class="input-large" type="number"
+                        name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
                         {{/if}}
                     </td>
                 </tr>
@@ -95,6 +97,9 @@
         </div>
         <p></p>
         <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60">{{data.data.description}}</textarea></div>
+        <div class="textAreaDescription"><textarea class="description"
+                                                   name="system.description"
+                                                   rows="10"
+                                                   cols="60">{{item.system.description}}</textarea></div>
     </section>
 </form>

@@ -7,7 +7,7 @@
                 <tr>
                     <td><label class="resource-label">Name</label></td>
                     <td><label class="resource-label">Value</label></td>
-                    {{#if data.isThreat}}
+                    {{#if item.system.isThreat}}
                     {{else}}
                     <td><label class="resource-label">Aptitude</label></td>
                     {{/if}}
@@ -15,17 +15,19 @@
                 </tr>
                 <tr>
                     <td><input type="text" name="name" value="{{item.name}}" placeholder="Skill name"/></td>
-                    <td><input class="input-small" type="number" name="data.value" value="{{data.data.value}}" data-dtype="Number" placeholder="0"/></td>
-                    {{#if data.isThreat}}
+                    <td><input class="input-small" type="number"
+                      name="system.value" value="{{item.system.value}}" data-dtype="Number" placeholder="0"/></td>
+                    {{#if item.system.isThreat}}
                     {{else}}
-                    <td><select class="input-XL" name="data.aptitude" data-type="String">
-                        {{#select data.data.aptitude}}
+                    <td><select class="input-XL" name="system.aptitude" data-type="String">
+                        {{#select item.system.aptitude}}
                         {{#each config.aptitudes as |name type|}}
                         <option value="{{name}}">{{name}}</option>
                         {{/each}} {{/select}}
                     </select></td>
                     {{/if}}
-                    <td><input class="input-large" type="text" name="data.specname" value="{{data.data.specname}}" placeholder="Spec name"/></td>
+                    <td><input class="input-large" type="text"
+                      name="system.specname" value="{{item.system.specname}}" placeholder="Spec name"/></td>
                 </tr>
             </table>
         </div>

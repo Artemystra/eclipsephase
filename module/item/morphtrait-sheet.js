@@ -24,21 +24,23 @@ export class EclipsePhaseMorphTraitSheet extends ItemSheet {
 
     // Alternatively, you could use the following return statement to do a
     // unique item sheet by type, like `weapon-sheet.html`.
-    return `${path}/item-${this.item.data.type}-sheet.html`;
+    return `${path}/item-${this.item.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
 
   /** @override */
   getData() {
-    const data = super.getData();
-    data.config = CONFIG.eclipsephase;
-    data.data.showEffectsTab=true;
-    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-      data.data.showEffectsTab=true;  
+    const sheetData = super.getData()
+    const item = sheetData.item
+
+    sheetData.config = CONFIG.eclipsephase
+    item.showEffectsTab = true
+    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM) {
+      item.showEffectsTab=true
     }
-    return data;
-    
+
+    return sheetData
   }
 
   /* -------------------------------------------- */
