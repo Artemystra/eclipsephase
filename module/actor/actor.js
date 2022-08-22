@@ -6,35 +6,25 @@ import { eclipsephase } from "../config.js"
  */
 export class EclipsePhaseActor extends Actor {
 
-  static skillkey=[
-    {skill:"athletics",aptitude:"som",multiplier:1,category:"vigor"},
-    {skill:"deceive",aptitude:"sav",multiplier:1,category:"moxie"},
-    {skill:"fray",aptitude:"ref",multiplier:2,category:"vigor"},
-    {skill:"free fall",aptitude:"som",multiplier:1,category:"vigor"},
-    {skill:"guns",aptitude:"ref",multiplier:1,category:"vigor"},
-    {skill:"infiltrate",aptitude:"ref",multiplier:1,category:"vigor"},
-    {skill:"infosec",aptitude:"cog",multiplier:1,category:"insight"},
-    {skill:"interface",aptitude:"cog",multiplier:1,category:"insight"},
-    {skill:"kinesics",aptitude:"sav",multiplier:1,category:"moxie"},
-    {skill:"melee",aptitude:"som",multiplier:1,category:"vigor"},
-    {skill:"perceive",aptitude:"int",multiplier:2,category:"insight"},
-    {skill:"persuade",aptitude:"sav",multiplier:1,category:"moxie"},
-    {skill:"program",aptitude:"cog",multiplier:1,category:"insight"},
-    {skill:"provoke",aptitude:"sav",multiplier:1,category:"moxie"},
-    {skill:"psi",aptitude:"wil",multiplier:1,category:"moxie"},
-    {skill:"research",aptitude:"int",multiplier:1,category:"insight"},
-    {skill:"survival",aptitude:"int",multiplier:1,category:"insight"},
-  ];
-
-  calculateSkillvalue(key,skill,data,actorType){
-    var skilldata=EclipsePhaseActor.skillkey.find(element => element.skill==key);
-    skill.derived = skill.value + eval('data.aptitudes.'+skilldata.aptitude+'.value') * skilldata.multiplier + eval(skill.mod);
-    if(actorType=="goon")
-      skill.derived = (skill.value?skill.value:eval('data.aptitudes.'+skilldata.aptitude+'.value')); //goons roll their value, not a calculated amount
-    skill.roll = skill.derived - data.mods.wounds - data.mods.trauma;
-    skill.specialized = skill.roll+10;
-
-  }
+  static SKILL_DATA = [
+    { skill: "athletics", aptitude: "som", multiplier: 1, category: "vigor" },
+    { skill: "deceive", aptitude: "sav", multiplier: 1, category: "moxie" },
+    { skill: "fray", aptitude: "ref", multiplier: 2, category: "vigor" },
+    { skill: "free fall", aptitude: "som", multiplier: 1, category: "vigor" },
+    { skill: "guns", aptitude: "ref", multiplier: 1, category: "vigor" },
+    { skill: "infiltrate", aptitude: "ref", multiplier: 1, category: "vigor" },
+    { skill: "infosec", aptitude: "cog", multiplier: 1, category: "insight" },
+    { skill: "interface", aptitude: "cog", multiplier: 1, category: "insight" },
+    { skill: "kinesics", aptitude: "sav", multiplier: 1, category: "moxie" },
+    { skill: "melee", aptitude: "som", multiplier: 1, category: "vigor" },
+    { skill: "perceive", aptitude: "int", multiplier: 2, category: "insight" },
+    { skill: "persuade", aptitude: "sav", multiplier: 1, category: "moxie" },
+    { skill: "program", aptitude: "cog", multiplier: 1, category: "insight" },
+    { skill: "provoke", aptitude: "sav", multiplier: 1, category: "moxie" },
+    { skill: "psi", aptitude: "wil", multiplier: 1, category: "moxie" },
+    { skill: "research", aptitude: "int", multiplier: 1, category: "insight" },
+    { skill: "survival", aptitude: "int", multiplier: 1, category: "insight" },
+  ]
 
   /**
    * Augment the basic actor data with additional dynamic data.
@@ -42,7 +32,6 @@ export class EclipsePhaseActor extends Actor {
   prepareData() {
     super.prepareData();
 
-    console.log("top of function")
     const actorData = this.system
     const flags = actorData.flags;
     const items = this.items;
@@ -224,17 +213,17 @@ export class EclipsePhaseActor extends Actor {
 
     // Insight Skills
     for (let [key, skill] of Object.entries(actorData.skillsIns)) {
-      this.calculateSkillvalue(key,skill,actorData,this.type);
+      this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
     // Moxie skills
     for (let [key, skill] of Object.entries(actorData.skillsMox)) {
-      this.calculateSkillvalue(key,skill,actorData,this.type);
+      this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
     // Vigor skills
     for (let [key, skill] of Object.entries(actorData.skillsVig)) {
-      this.calculateSkillvalue(key,skill,actorData,this.type);
+      this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
     //Showing skill calculations for know/spec skills
@@ -276,7 +265,8 @@ export class EclipsePhaseActor extends Actor {
   }
 
   _calculateInitiative(actorData) {
-    actorData.initiative.value = Math.round((actorData.aptitudes.ref.value + actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
+    actorData.initiative.value = Math.round((actorData.aptitudes.ref.value +
+      actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
     actorData.initiative.display = "1d6 + " + actorData.initiative.value
   }
 
@@ -290,10 +280,15 @@ export class EclipsePhaseActor extends Actor {
   }
 
   _calculatePools(actorData, morph) {
-    actorData.pools.flex.totalFlex = Number(morph.flex) + Number(actorData.ego.egoFlex) + eval(actorData.pools.flex.mod);
-    actorData.pools.insight.totalInsight = Number(morph.insight) + eval(actorData.pools.insight.mod);
-    actorData.pools.moxie.totalMoxie = Number(morph.moxie) + eval(actorData.pools.moxie.mod)
-    actorData.pools.vigor.totalVigor = Number(morph.vigor) + eval(actorData.pools.vigor.mod)
+    actorData.pools.flex.totalFlex = Number(morph.flex) +
+      Number(actorData.ego.egoFlex) +
+      Number(actorData.pools.flex.mod)
+    actorData.pools.insight.totalInsight = Number(morph.insight) +
+      Number(actorData.pools.insight.mod)
+    actorData.pools.moxie.totalMoxie = Number(morph.moxie) +
+      Number(actorData.pools.moxie.mod)
+    actorData.pools.vigor.totalVigor = Number(morph.vigor) +
+      Number(actorData.pools.vigor.mod)
   }
 
   _calculateArmor(actorData) {
@@ -314,13 +309,16 @@ export class EclipsePhaseActor extends Actor {
         }
       }
     }
-    actorData.physical.energyArmorTotal = energyTotal + eval(actorData.mods.energyMod);
-    actorData.physical.kineticArmorTotal = kineticTotal + eval(actorData.mods.kineticMod);
+    actorData.physical.energyArmorTotal = energyTotal +
+      Number(actorData.mods.energyMod)
+    actorData.physical.kineticArmorTotal = kineticTotal +
+      Number(actorData.mods.kineticMod);
     actorData.physical.mainArmorTotal = mainArmorAmount
     actorData.physical.additionalArmorTotal = additionalArmorAmount
     actorData.physical.mainArmorMalus = 0
     actorData.physical.additionalArmorMalus = 0
     actorData.physical.armorMalusTotal = 0
+
     if (mainArmorAmount > 1){
       actorData.physical.mainArmorMalus = (mainArmorAmount - 1)*20
     }
@@ -330,5 +328,18 @@ export class EclipsePhaseActor extends Actor {
     if (actorData.physical.mainArmorMalus || actorData.physical.additionalArmorMalus) {
       actorData.physical.armorMalusTotal = actorData.physical.mainArmorMalus+data.physical.additionalArmorMalus
     }
+  }
+
+  _calculateSkillValue(key, skill, data, actorType) {
+    let skillData = EclipsePhaseActor.SKILL_DATA.find(element => element.skill == key)
+    let skillValue = data.aptitudes[skillData.aptitude].value
+
+    if(actorType === 'character' || actorType === 'npc')
+      skill.derived = skill.value + skillValue * skillData.multiplier + Number(skill.mod)
+    else
+      skill.derived = skill.value
+
+    skill.roll = skill.derived - data.mods.wounds - data.mods.trauma
+    skill.specialized = skill.roll + 10
   }
 }

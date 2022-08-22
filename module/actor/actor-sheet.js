@@ -306,6 +306,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     actor.actorType = "PC";
     
 
+   console.log(actor)
 
     //console.log("What is actorData? ", actorData)
     //console.log("Normal Traits: ", actorData.trait)

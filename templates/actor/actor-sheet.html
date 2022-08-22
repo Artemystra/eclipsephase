@@ -1457,24 +1457,24 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#if data.armor}}
-                    {{#each data.armor as |item id|}}
+                    {{#if actor.armor}}
+                    {{#each actor.armor as |item id|}}
                     {{#if data.active}}
                     <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
-                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.energy}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.kinetic}}</strong></label>
+                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.slotType}}</strong></label>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                            {{#if item.data.description}}
+                            {{#if item.description}}
                             <div class="itemDescription shape3">
-                                {{item.data.description}}
+                                {{item.description}}
                             </div>
                             {{/if}}
                             <div class="flexrow flex-between item-controls">
@@ -1488,17 +1488,17 @@
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
-                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.energy}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.kinetic}}</strong></label>
+                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.slotType}}</strong></label>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                            {{#if item.data.description}}
+                            {{#if item.description}}
                             <div class="itemDescription shape3">
-                                {{item.data.description}}
+                                {{item.description}}
                             </div>
                             {{/if}}
                             <div class="flexrow flex-between item-controls">
@@ -1757,10 +1757,14 @@
             </div>
             {{/each}}
         </div>
+
+
         {{!-- Gear Tab --}}
         <div class="tab gear" data-group="primary" data-tab="weapons">
-            {{#if actor.system.hasGear}}
-            {{#if data.rangedWeapon}}
+          {{#if true}}
+
+          <!-- actor.system.hasGear}} -->
+            {{#if actor.rangedWeapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Ranged Weapons</h3>
@@ -1780,29 +1784,44 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each data.rangedWeapon as |item id|}}
-                    {{#if this.data.active}}
+                    {{#each actor.rangedWeapon as |item id|}}
+                    {{#if true}}
                     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                                      icon-small damage-roll roll-label
+                                      input-small noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
-                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.system.firingMode}}</strong></label>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.system.range}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
                         <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
-                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
-                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
-                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+
+
+                        <input class="input-small sheet-inline-edit"
+                               data-field="system.ammoMin"
+                               type="number"
+                               name="system.ammoMin"
+                               value="{{item.system.ammoMin}}"
+                               placeholder="0"/>
+                        /
+                        <h4 class="item-image flex-group-left input-small noMargin">
+                          <strong>{{item.system.ammoMax}}</strong>
+                        </h4>
+
+                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit"
+                                data-field="system.description" type="text"
+                                name="system.description" value="{{item.system.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1815,23 +1834,28 @@
                         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                            icon-small damage-roll roll-label input-small
+                            noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
-                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.firingMode}}</strong></label>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.range}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.slotType}}</strong></label>
                         <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
-                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
-                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
-                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+                        <input class="input-small sheet-inline-edit"
+                        data-field="system.ammoMin" type="number"
+                        name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.ammoMax}}</strong></h4>
+                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.dv}}</strong></h4>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit"
+                                data-field="system.description" type="text" name="item.description" value="{{item.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1844,7 +1868,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if data.ccweapon}}
+            {{#if actor.ccweapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Close Combat Weapons</h3>
@@ -1864,24 +1888,31 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each data.ccweapon as |item id|}}
-                    {{#if this.data.active}}
+                    {{#each actor.ccweapon as |item id|}}
+                    {{#if true}}
                     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked system.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                            icon-small flex-group-left resource-label
+                            damage-roll roll-label input-small noShow"
+                            data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
-                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.slotType}}</strong></label>
+                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.dv}}</strong></h4>
                         <div class="flex-group-right slideShow" style="max-width: 115px;">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit"
+                                data-field="system.description" type="text"
+                                name="item.description" value="{{item.system.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1891,21 +1922,26 @@
                     </div>
                     {{else}}
                     <div class="item flexrow flex-group-center offHand reveal weaponItem" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked system.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                            icon-small flex-group-left resource-label
+                            damage-roll roll-label input-small noShow"
+                            data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
-                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.slotType}}</strong></label>
+                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.dv}}</strong></h4>
                         <div class="flex-group-right slideShow" style="max-width: 115px;">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit" data-field="description" type="text" name="item.description" value="{{item.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1918,7 +1954,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if data.gear}}
+            {{#if actor.gear}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Gear</h3>
@@ -1927,23 +1963,30 @@
                 </div>
                 <div class="itemBackground">
                     <div class="grid grid-2col">
-                        {{#each data.gear as |item id|}}
+                        {{#each actor.gear as |item id|}}
                         <div>
-                            {{#if this.data.active}}
+                            {{#if true}}
                             <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                                <input class="sheet equipped checkBox"
+                                data-dtype="Boolean" data-item-id="{{item._id}}"
+                                type="checkbox" {{checked system.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                 <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                                <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
-                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <label class="flex-group-center alignCenter"
+                                  style="background: none; font-size: 12px;
+                                  flex: 0.4; margin-left:
+                                  10px;"><i>{{item.system.slotType}}</i></label>
+                                <input class="input-small sheet-inline-edit"
+                                data-field="system.quantity" type="number"
+                                name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
                                 <div class="flex-group-right slideShow">
                                     <a><i class="fas fa-plus icon-small"></i></a>
                                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                 </div>
                                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                    {{#if item.data.description}}
+                                    {{#if item.system.description}}
                                     <div class="itemDescription shape3">
-                                        {{item.data.description}}
+                                        {{item.system.description}}
                                     </div>
                                     {{/if}}
                                     <div class="flexrow flex-between item-controls">
@@ -1954,19 +1997,26 @@
                             </div>
                             {{else}}
                             <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}">
-                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                                <input class="sheet equipped checkBox"
+                                data-dtype="Boolean" data-item-id="{{item._id}}"
+                                type="checkbox" {{checked system.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                 <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                                <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
-                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <label class="flex-group-center alignCenter"
+                                  style="background: none; font-size: 12px;
+                                  flex: 0.4; margin-left:
+                                  10px;"><i>{{item.system.slotType}}</i></label>
+                                <input class="input-small sheet-inline-edit"
+                                data-field="system.quantity" type="number"
+                                name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
                                 <div class="flex-group-right slideShow">
                                     <a><i class="fas fa-plus icon-small"></i></a>
                                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                 </div>
                                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                    {{#if item.data.description}}
+                                    {{#if item.system.description}}
                                     <div class="itemDescription shape3">
-                                        {{item.data.description}}
+                                        {{item.system.description}}
                                     </div>
                                     {{/if}}
                                     <div class="flexrow flex-between item-controls">
@@ -1982,7 +2032,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if data.program}}
+            {{#if system.program}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Programs Loaded</h3>
@@ -1991,19 +2041,23 @@
                 </div>
                 <div class="itemBackground" style="position: relative; z-index: 2;">
                     <div class="grid grid-2col">
-                        {{#each data.program as |item id|}}
+                        {{#each system.program as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                                 <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
-                                <label class="input-small"><strong>Uses</strong></label><input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <label
+                                  class="input-small"><strong>Uses</strong></label><input
+                                class="input-small sheet-inline-edit"
+                                data-field="system.quantity" type="number"
+                                name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
                                 <div class="flex-group-right slideShow" style="max-width: 45px;">
                                     <a><i class="fas fa-plus icon-small"></i></a>
                                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                 </div>
                                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                    {{#if item.data.description}}
+                                    {{#if item.system.description}}
                                     <div class="itemDescription shape3">
-                                        {{item.data.description}}
+                                        {{item.system.description}}
                                     </div>
                                     {{/if}}
                                     <div class="flexrow flex-between item-controls">
