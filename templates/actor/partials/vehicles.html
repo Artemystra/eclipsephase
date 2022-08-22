@@ -1,29 +1,33 @@
 <div class="tab vehicle" data-group="primary" data-tab="vehicles">
-{{#each data.vehicle as |item id|}}
+{{#each actor.vehicle as |item id|}}
             {{log "My little Pwny:" this}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
                     <div class="alignRight flexGrowThreeQuarter">
-                        {{#if item.data.ins}}
+                        {{#if item.system.ins}}
                         <label class="resource-label">Ins</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curIns" type="number" name="item.data.curIns" value="{{item.data.curIns}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.ins}}</strong></label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curIns" type="number" name="item.system.curIns" value="{{item.system.curIns}}" placeholder="0"/>
+                        <label class="flex-group-center
+                          item-standard-margin-medium"><strong>/ {{item.system.ins}}</strong></label>
                         {{/if}}
-                        {{#if item.data.mox}}
+                        {{#if item.system.mox}}
                         <label class="resource-label">Mox</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMOx" value="{{item.data.curMox}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.mox}}</strong></label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.system.curMOx" value="{{item.system.curMox}}" placeholder="0"/>
+                        <label class="flex-group-center
+                                      item-standard-margin-medium"><strong>/
+                                        {{item.system.mox}}</strong></label>
                         {{/if}}
-                        {{#if item.data.vig}}
+                        {{#if item.system.vig}}
                         <label class="resource-label">Vig</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curVig" type="number" name="item.data.curVig" value="{{item.data.curVig}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.vig}}</strong></label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curVig" type="number" name="item.system.curVig" value="{{item.system.curVig}}" placeholder="0"/>
+                        <label class="flex-group-center
+                          item-standard-margin-medium"><strong>/ {{item.system.vig}}</strong></label>
                         {{/if}}
-                        {{#if item.data.flex}}
+                        {{#if item.system.flex}}
                         <label class="resource-label">Flex</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curFlex" type="number" name="item.data.curFlex" value="{{item.data.curFlex}}" placeholder="0"/>
-                        <label class="flex-group-center"><strong>/ {{item.data.flex}}</strong></label>
+                        <input class="input-xs sheet-inline-edit" data-field="data.curFlex" type="number" name="item.system.curFlex" value="{{item.system.curFlex}}" placeholder="0"/>
+                        <label class="flex-group-center"><strong>/ {{item.system.flex}}</strong></label>
                         {{/if}}
                     </div>
                 </div>
@@ -58,26 +62,29 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label class="flex-group-center noMargin noBG"><strong>{{item.data.type}}</strong></label>
+                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.type}}</strong></label>
                                 </td>
                                 <td>
-                                    <input class="input-small sheet-inline-edit" data-field="data.armor" type="text" name="data.armor" value="{{data.armor}}" placeholder="2/2"/>
+                                    <input class="input-small sheet-inline-edit"
+                                    data-field="system.armor" type="text"
+                                    name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
                                 </td>
                                 <td>
                                     <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
                                 </td>
                                 <td>
-                                    <input class="input-small sheet-inline-edit noMargin" data-field="data.curDur" type="number" name="item.data.curDur" value="{{item.data.curDur}}" placeholder="0"/>
-                                    <label class="flex-group-center noMargin noBG"><strong>/ {{item.data.dur}}</strong></label>
+                                    <input class="input-small sheet-inline-edit
+                                    noMargin" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/>
+                                    <label class="flex-group-center noMargin noBG"><strong>/ {{item.system.dur}}</strong></label>
                                 </td>
                                 <td>
                                     <label class="flex-group-center noMargin noBG"><strong>{{item.dr}}</strong></label>
                                 </td>
                                 <td>
-                                    <label class="flex-group-center noMargin noBG"><strong>{{item.data.mov}}</strong></label>
+                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.mov}}</strong></label>
                                 </td>
                                 <td>
-                                    <label class="flex-group-center noMargin noBG"><strong>{{item.data.slotType}}</strong></label>
+                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.slotType}}</strong></label>
                                 </td>
                                 <td>
                                 </td>
@@ -86,7 +93,8 @@
                         <table class="noMargin alignCenter">
                             <tr>
                                 <td>
-                                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                    <input class="sheet-inline-edit"
+                                    data-field="system.description" type="text" name="item.system.description" value="{{item.system.description}}" placeholder="No modifications"/>
                                 </td>
                             </tr>
                         </table>
