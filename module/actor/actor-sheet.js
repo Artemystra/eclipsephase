@@ -54,7 +54,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
   }
 
-  getData() {
+  async getData() {
     const sheetData = super.getData();
     const actor = sheetData.actor
 
@@ -73,6 +73,9 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     if (actor.type === 'character') {
       this._prepareCharacterItems(sheetData);
     }
+
+    await this._prepareRenderedHTMLContent(sheetData)
+
 
     //Prepare dropdowns
     sheetData.config = CONFIG.eclipsephase;
@@ -323,6 +326,27 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     //console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
+  async _prepareRenderedHTMLContent(sheetData) {
+
+    let model = sheetData.actor.system
+    let morphs = ["morph1", "morph2", "morph3", "morph4", "morph5"]
+
+    for(let m of morphs) {
+      let sheetKey = m + "_html_description"
+      let source = model.bodies[m].description
+      let html = await TextEditor.enrichHTML(source, { async: true } )
+      sheetData[sheetKey] = html
+    }
+
+    let bio = await TextEditor.enrichHTML(model.biography, { async: true })
+    sheetData["html_biography"] = bio
+
+    let muse = await TextEditor.enrichHTML(model.muse.description, { async: true })
+    sheetData["html_muse_description"] = muse
+  }
+
+
+
   /* -------------------------------------------- */
 
   _onDrop
@@ -441,7 +465,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         mtToggle = false
       }
     let effUpdateData=[];
-    for(let eff of this.object.data.effects.filter(e =>
+    for(let eff of actor.effects.filter(e =>
       (e.data.disabled === mtToggle && e.data.origin.indexOf(trait.data._id)>=0))){
         console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
         effUpdateData.push({
@@ -449,7 +473,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           disabled: !mtToggle
         });
     }
-    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    actor.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
     }
 
     for (let flaw of mFlaws){
@@ -460,7 +484,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         mfToggle = false
       }
     let effUpdateData=[];
-    for(let eff of this.object.data.effects.filter(e => 
+    for(let eff of actor.effects.filter(e => 
       (e.data.disabled === mfToggle && e.data.origin.indexOf(flaw.data._id)>=0))){
         console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
         effUpdateData.push({
@@ -468,7 +492,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           disabled: !mfToggle
         });
     }
-    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    actor.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
     }
     for (let ware of mWare){
       if (ware.system.boundTo === currentMorph){
@@ -478,7 +502,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         mwToggle = false
       }
     let effUpdateData=[];
-    for(let eff of this.object.data.effects.filter(e => 
+    for(let eff of actor.effects.filter(e => 
       (e.data.disabled === mwToggle && e.data.origin.indexOf(ware.data._id)>=0))){
         console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
         effUpdateData.push({
@@ -486,7 +510,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           disabled: !mwToggle
         });
     }
-    this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
+    actor.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
     }
   }
 

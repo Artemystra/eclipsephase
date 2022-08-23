@@ -200,7 +200,13 @@
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
-            {{editor content=actor.system.biography target="system.biography" button=true owner=owner editable=this.options.editable}}
+            {{editor
+              html_biography
+              target="system.biography"
+              button=true
+              owner=owner
+              editable=this.options.editable
+            }}
         </div>
         {{!--Skills Tab--}}
         {{> systems/eclipsephase/templates/actor/partials/skills.html }}
@@ -250,7 +256,13 @@
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
-            {{editor content=actor.system.muse.description target="system.muse.description" button=true owner=owner editable=this.options.editable}}
+            {{editor
+              html_muse_description
+              target="system.muse.description"
+              button=true
+              owner=owner
+              editable=this.options.editable
+            }}
         
         </div>
         {{!-- Body Tab --}}
@@ -1535,8 +1547,13 @@
                     <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph1.description
-                target="system.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
+                {{editor
+                  morph1_html_description
+                  target="system.bodies.morph1.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
             {{else if (eq actor.system.bodies.activeMorph "morph2")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
@@ -1544,8 +1561,13 @@
                     <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph2.name}}{{actor.system.bodies.morph2.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph2.description
-                target="system.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
+                {{editor
+                  morph2_html_description
+                  target="system.bodies.morph2.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
             {{else if (eq actor.system.bodies.activeMorph "morph3")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
@@ -1553,8 +1575,13 @@
                     <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph3.name}}{{actor.system.bodies.morph3.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph3.description
-                target="system.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
+                {{editor
+                  morph3_html_description
+                  target="system.bodies.morph3.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
             {{else if (eq actor.system.bodies.activeMorph "morph4")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
@@ -1562,8 +1589,13 @@
                     <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph4.name}}{{actor.system.bodies.morph4.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph4.description
-                target="system.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
+                {{editor
+                  morph4_html_description
+                  target="system.bodies.morph4.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
             {{else if (eq actor.system.bodies.activeMorph "morph5")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
@@ -1571,8 +1603,13 @@
                     <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph5.description
-                target="system.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
+                {{editor
+                  morph5_html_description
+                  target="system.bodies.morph5.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
             {{else if (eq actor.system.bodies.activeMorph "morph6")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
@@ -1580,8 +1617,13 @@
                     <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph6.description
-                target="system.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
+                {{editor
+                  morph6_html_description
+                  target="system.bodies.morph6.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
             {{/if}}
         </div>
         

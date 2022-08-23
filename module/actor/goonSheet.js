@@ -48,7 +48,7 @@ export class GoonSheet extends ActorSheet {
       }
     }
 
-    getData() {
+    async getData() {
         const sheetData = super.getData();
         let actor = sheetData.actor
 
@@ -63,6 +63,10 @@ export class GoonSheet extends ActorSheet {
         //Prepare dropdowns
         sheetData.config = CONFIG.eclipsephase;
 
+        // Rich text editor now requires preformatted text
+        sheetData.enrichedDescription = await TextEditor.enrichHTML(sheetData.actor.system.description, {async: true})
+
+
         console.log("******* goon sheet")
         console.log(sheetData)
         return sheetData
@@ -72,14 +76,6 @@ export class GoonSheet extends ActorSheet {
 
         let actor = sheetData.actor
         let actorModel = actor.system
-
-        console.log("**** in _prepareCharacterItems")
-      console.log(sheetData)
-      console.log(actor)
-      console.log(actorModel)
-
-        const actorData = sheetData.data;   // actor
-        const data = actorData.data;        // actorModel
 
         // Initialize containers.
         const gear = [];
