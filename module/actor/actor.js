@@ -151,41 +151,6 @@ export class EclipsePhaseActor extends Actor {
     }
 
     this._calculateArmor(actorData)
-    ////Calculating armor
-    //let energyTotal = null;
-    //let kineticTotal = null;
-    //let mainArmorAmount = null;
-    //let additionalArmorAmount = null;
-    //for (let armor of items ) {
-    //  let key = armor.type;
-    //  if(key === 'armor' && armor.active){
-    //    energyTotal += parseInt(armor.energy);
-    //    kineticTotal += parseInt(armor.kinetic);
-    //    if (armor.slotType === "Main Armor") {
-    //      mainArmorAmount++
-    //    }
-    //    if (armor.slotType === "Additional Armor") {
-    //      additionalArmorAmount++
-    //    }
-    //  }
-    //}
-    //actorData.physical.energyArmorTotal = energyTotal + eval(actorData.mods.energyMod);
-    //actorData.physical.kineticArmorTotal = kineticTotal + eval(actorData.mods.kineticMod);
-    //actorData.physical.mainArmorTotal = mainArmorAmount
-    //actorData.physical.additionalArmorTotal = additionalArmorAmount
-    //actorData.physical.mainArmorMalus = 0
-    //actorData.physical.additionalArmorMalus = 0
-    //actorData.physical.armorMalusTotal = 0
-    //if (mainArmorAmount > 1){
-    //  actorData.physical.mainArmorMalus = (mainArmorAmount - 1)*20
-    //}
-    //if (additionalArmorAmount > 1){
-    //  actorData.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
-    //}
-    //if (actorData.physical.mainArmorMalus || actorData.physical.additionalArmorMalus) {
-    //  actorData.physical.armorMalusTotal = actorData.physical.mainArmorMalus+data.physical.additionalArmorMalus
-    //}
-
     this._calculateInitiative(actorData)
 
     /*Modificators
@@ -291,42 +256,44 @@ export class EclipsePhaseActor extends Actor {
       Number(actorData.pools.vigor.mod)
   }
 
-  _calculateArmor(actorData) {
-    let energyTotal = null;
-    let kineticTotal = null;
-    let mainArmorAmount = null;
-    let additionalArmorAmount = null;
-    for (let armor of this.items) {
-      let key = armor.type;
-      if(key === 'armor' && armor.active){
-        energyTotal += parseInt(armor.energy);
-        kineticTotal += parseInt(armor.kinetic);
-        if (armor.slotType === "Main Armor") {
+  _calculateArmor(actorModel) {
+    let energyTotal = 0
+    let kineticTotal = 0
+    let mainArmorAmount = 0
+    let additionalArmorAmount = 0
+
+    let armorItems = this.items.filter(i => i.type === "armor")
+
+    for (let armor of armorItems) {
+      let key = armor.type
+      if(armor.system.active){
+        energyTotal += Number(armor.system.energy)
+        kineticTotal += Number(armor.system.kinetic)
+        if (armor.system.slotType === "Main Armor") {
           mainArmorAmount++
         }
-        if (armor.slotType === "Additional Armor") {
+        if (armor.system.slotType === "Additional Armor") {
           additionalArmorAmount++
         }
       }
     }
-    actorData.physical.energyArmorTotal = energyTotal +
-      Number(actorData.mods.energyMod)
-    actorData.physical.kineticArmorTotal = kineticTotal +
-      Number(actorData.mods.kineticMod);
-    actorData.physical.mainArmorTotal = mainArmorAmount
-    actorData.physical.additionalArmorTotal = additionalArmorAmount
-    actorData.physical.mainArmorMalus = 0
-    actorData.physical.additionalArmorMalus = 0
-    actorData.physical.armorMalusTotal = 0
 
-    if (mainArmorAmount > 1){
-      actorData.physical.mainArmorMalus = (mainArmorAmount - 1)*20
+    actorModel.physical.energyArmorTotal = energyTotal + Number(actorModel.mods.energyMod)
+    actorModel.physical.kineticArmorTotal = kineticTotal + Number(actorModel.mods.kineticMod);
+    actorModel.physical.mainArmorTotal = mainArmorAmount
+    actorModel.physical.additionalArmorTotal = additionalArmorAmount
+    actorModel.physical.mainArmorMalus = 0
+    actorModel.physical.additionalArmorMalus = 0
+    actorModel.physical.armorMalusTotal = 0
+
+    if (mainArmorAmount > 1) {
+      actorModel.physical.mainArmorMalus = (mainArmorAmount - 1)*20
     }
-    if (additionalArmorAmount > 1){
-      actorData.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
+    if (additionalArmorAmount > 1) {
+      actorModel.physical.additionalArmorMalus = (additionalArmorAmount - 1) * 20
     }
-    if (actorData.physical.mainArmorMalus || actorData.physical.additionalArmorMalus) {
-      actorData.physical.armorMalusTotal = actorData.physical.mainArmorMalus+data.physical.additionalArmorMalus
+    if (actorModel.physical.mainArmorMalus || actorModel.physical.additionalArmorMalus) {
+      actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+data.physical.additionalArmorMalus
     }
   }
 
