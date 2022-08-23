@@ -55,48 +55,54 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   }
 
   getData() {
-    const data = super.getData();
+    const sheetData = super.getData();
+    const actor = sheetData.actor
 
-    data.dtypes = ["String", "Number", "Boolean"];
+    sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
-    if(data.data.img === "icons/svg/mystery-man.svg"){
-      data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+    if(actor.img === "icons/svg/mystery-man.svg"){
+      actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
 
     eclipsephase.morphNames.forEach(name => {
-      if(data.data.system.bodies[name].img === ""){
-        data.data.system.bodies[name].img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+      if(actor.system.bodies[name].img === ""){
+        actor.system.bodies[name].img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
       }
     })
 
-    if (data.data.type === 'character') {
-      this._prepareCharacterItems(data);
+    if (actor.type === 'character') {
+      this._prepareCharacterItems(sheetData);
     }
 
     //Prepare dropdowns
-    data.config = CONFIG.eclipsephase;
+    sheetData.config = CONFIG.eclipsephase;
 
 
-    console.log("*******")
-    console.log(data)
+    console.log("******* actor-sheet")
+    console.log(sheetData)
 
-    return data;
+    return sheetData
   }
 
   //Binds morphFlaws/Traits/Gear to a singular morph
-  async _onDropItemCreate(itemData) {
+  async _onDropItemCreate(item) {
+
+    console.log("***** _onDropItemCreate")
+    console.log(item)
 
     // Create a Consumable spell scroll on the Inventory tab
-    if (itemData.type === "morphFlaw" || itemData.type === "morphTrait" || itemData.type === "ware") {
-      let actor = this.actor;
-      let actorData = actor.data.data;
-      let currentMorph = actorData.bodies.activeMorph
-      let data = itemData.data;
-      data.boundTo = currentMorph;
+    if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware") {
+      let actor = this.actor
+      let actorModel = actor.system
+      let currentMorph = actorModel.bodies.activeMorph
+      let itemModel = item.system
+
+      itemModel.boundTo = currentMorph
     }
 
+
     // Create the owned item as normal
-    return super._onDropItemCreate(itemData);
+    return super._onDropItemCreate(item)
   }
 
   /**
@@ -155,7 +161,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           Vehicle: [],
           Morph: []
       };
-    const item = [];
+    // const item = [];
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
@@ -229,10 +235,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           i.dr = Math.round(item.dur * 2);
           vehicle[item.type].push(i)
         }
-      }
-
-    for (let i of sheetData.items) {
-        if (i.type === 'ware' && item.boundTo) {
+      else if (i.type === 'ware' && item.boundTo) {
             ware[item.boundTo].push(i);
         }
         else if (i.type === 'morphFlaw' && item.boundTo) {
@@ -278,6 +281,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
             morphtrait[item.boundTo].push(i);
         }
     }
+
     actor.showEffectsTab=false
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
       var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
@@ -328,9 +332,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     super.activateListeners(html);
 
     let actor = this.actor
-
-    console.log("**** in activeateListeners")
-    console.log(this)
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -389,7 +390,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           const updated = item.update(updateData);
           
           let effUpdateData=[];
-          for(let eff of this.object.data.effects.filter(e => 
+          for(let eff of this.object.effects.filter(e => 
             (e.disabled === toggle && e.origin.indexOf(itemId)>=0))){
 
               effUpdateData.push({
@@ -413,23 +414,34 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
   _onMorphSwitch(event) {
     event.preventDefault();
-    let itemTypes = this.actor.itemTypes;
-    let mTraits = itemTypes.morphTrait;
-    let mFlaws = itemTypes.morphFlaw;
-    let mWare = itemTypes.ware;
+    
+    let actor = this.actor
+
+    console.log("**** _onMorphSwitch")
+    console.log(this)
+
+    let itemTypes = this.actor.itemTypes
+
+    console.log(itemTypes)
+
+    let mTraits = itemTypes.morphTrait
+    let mFlaws = itemTypes.morphFlaw
+    let mWare = itemTypes.ware
     let mtToggle = null;
     let mfToggle = null;
     let mwToggle = null;
     let currentMorph = event.currentTarget.value;
+
+
     for (let trait of mTraits){
-      if (trait.data.data.boundTo === currentMorph){
+      if (trait.system.boundTo === currentMorph){
         mtToggle = true
       }
       else {
         mtToggle = false
       }
     let effUpdateData=[];
-    for(let eff of this.object.data.effects.filter(e => 
+    for(let eff of this.object.data.effects.filter(e =>
       (e.data.disabled === mtToggle && e.data.origin.indexOf(trait.data._id)>=0))){
         console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
         effUpdateData.push({
@@ -439,8 +451,9 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
     this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
     }
+
     for (let flaw of mFlaws){
-      if (flaw.data.data.boundTo === currentMorph){
+      if (flaw.system.boundTo === currentMorph){
         mfToggle = true
       }
       else {
@@ -458,7 +471,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     this.object.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
     }
     for (let ware of mWare){
-      if (ware.data.data.boundTo === currentMorph){
+      if (ware.system.boundTo === currentMorph){
         mwToggle = true
       }
       else {

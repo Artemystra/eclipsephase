@@ -37,19 +37,20 @@
                         name="system.energy" value="{{item.energy}}" placeholder="e.g. 10"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="data.kinetic" value="{{data.data.kinetic}}" placeholder="e.g. 10"/>
+                        <input class="input-large" type="text"
+                        name="system.kinetic" value="{{item.system.kinetic}}" placeholder="e.g. 10"/>
                     </td>
                     <td>
-                        <select name="data.slotType" data-type="String">
-                            {{#select data.data.slotType}}
+                        <select name="system.slotType" data-type="String">
+                            {{#select item.system.slotType}}
                             {{#each config.armorTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        <select name="data.cost" data-type="String">
-                            {{#select data.data.cost}}
+                        <select name="system.cost" data-type="String">
+                            {{#select item.system.cost}}
                             {{#each config.costTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -60,7 +61,10 @@
         </div>
         <p></p>
         <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60">{{data.data.description}}</textarea></div>
+        <div class="textAreaDescription"><textarea class="description"
+                                                   name="system.description"
+                                                   rows="10"
+                                                   cols="60">{{item.system.description}}</textarea></div>
     </div>
     {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
 

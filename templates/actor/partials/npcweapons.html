@@ -1,21 +1,29 @@
 <div class="flexrow" style="margin-bottom: 20px; justify-content: flex-end;">
-    <div class="button-roll task-check" data-type="skill" data-name="Guns" data-rollvalue="{{data.data.skillsVig.guns.roll}}">
+    <div class="button-roll task-check" data-type="skill" data-name="Guns"
+      data-rollvalue="{{actor.system.skillsVig.guns.roll}}">
         <label class="resource-label rollable labelWidth-large">Roll Guns</label>
         <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>
-    {{#if data.data.skillsVig.guns.specname}}
-    <div class="button-roll task-check" data-type="skill" data-name="Guns" data-specname="{{data.data.skillsVig.guns.specname}}" data-rollvalue="{{data.data.skillsVig.guns.specialized}}">
-        <label class="resource-label rollable labelWidth-XL">Roll {{data.data.skillsVig.guns.specname}}</label>
+    {{#if actor.system.skillsVig.guns.specname}}
+    <div class="button-roll task-check" data-type="skill" data-name="Guns"
+      data-specname="{{actor.system.skillsVig.guns.specname}}"
+      data-rollvalue="{{actor.system.skillsVig.guns.specialized}}">
+        <label class="resource-label rollable labelWidth-XL">Roll
+          {{actor.system.skillsVig.guns.specname}}</label>
         <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>
     {{/if}}
-    <div class="button-roll task-check" data-type="skill" data-name="Melee" data-rollvalue="{{data.data.skillsVig.melee.roll}}">
+    <div class="button-roll task-check" data-type="skill" data-name="Melee"
+      data-rollvalue="{{actor.system.skillsVig.melee.roll}}">
         <label class="resource-label rollable labelWidth-large">Roll Melee</label>
         <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>
-    {{#if data.data.skillsVig.melee.specname}}
-    <div class="button-roll task-check" data-type="skill" data-name="Melee" data-specname="{{data.data.skillsVig.melee.specname}}" data-rollvalue="{{data.data.skillsVig.melee.specialized}}">
-        <label class="resource-label rollable labelWidth-XL">Roll {{data.data.skillsVig.melee.specname}}</label>
+    {{#if actor.system.skillsVig.melee.specname}}
+    <div class="button-roll task-check" data-type="skill" data-name="Melee"
+      data-specname="{{actor.system.skillsVig.melee.specname}}"
+      data-rollvalue="{{actor.system.skillsVig.melee.specialized}}">
+        <label class="resource-label rollable labelWidth-XL">Roll
+          {{actor.system.skillsVig.melee.specname}}</label>
         <label class="resource-label rollable roll-label task-check input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
     </div>
     {{/if}}
@@ -35,7 +43,9 @@
         <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
             <div class="flexrow flex-group-center input-small">
                 <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-                <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                <img src="icons/svg/d10-grey.svg" class="toggle icon-small
+                damage-roll roll-label input-small noShow" data-type="ranged"
+                data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
             </div>
             <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
             <label class="labelWidth-large flex-group-center
@@ -80,7 +90,7 @@
     </div>
 </div>
 {{/if}}
-{{#if data.ccweapon}}
+{{#if actor.ccweapon}}
 <div class="contentBox gear">
     <div class="flexrow">
         <h3 class="subheader">Close Combat Weapons</h3>
@@ -91,22 +101,29 @@
         </div>
     </div>
     <div class="itemBackground">
-        {{#each data.ccweapon as |item id|}}
+        {{#each actor.ccweapon as |item id|}}
         <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
             <div class="flexrow flex-group-center input-small">
                 <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-                <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                <img src="icons/svg/d10-grey.svg" class="toggle icon-small
+                flex-group-left resource-label damage-roll roll-label
+                input-small noShow" data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
             </div>
             <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-            <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
-            <h4 class="item-image flex-group-center noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+            <label class="flex-group-center noMargin
+              flex-group-center"><strong>{{item.system.slotType}}</strong></label>
+            <h4 class="item-image flex-group-center noMargin" style="max-width:
+              145px;"><strong>{{item.system.dv}}</strong></h4>
             <div class="flex-group-right slideShow" style="max-width: 115px;">
                 <a><i class="fas fa-plus icon-small"></i></a>
                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
             </div>
             <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                 <div class="itemDescription shape3">
-                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                    <input class="sheet-inline-edit"
+                           data-field="system.description" type="text"
+                                                           name="item.system.description"
+                                                           value="{{item.system.description}}" placeholder="No modifications"/>
                 </div>
                 <div class="flexrow flex-between item-controls">
                     <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>

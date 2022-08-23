@@ -22,7 +22,7 @@ export class EclipsePhaseFlawSheet extends ItemSheet {
 
     // Alternatively, you could use the following return statement to do a
     // unique item sheet by type, like `weapon-sheet.html`.
-    return `${path}/item-${this.item.data.type}-sheet.html`;
+    return `${path}/item-${this.item.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
@@ -35,12 +35,12 @@ export class EclipsePhaseFlawSheet extends ItemSheet {
     console.log(sheetData)
 
     sheetData.config = CONFIG.eclipsephase;
-    data.data.showEffectsTab=true;
+    actor.showEffectsTab=true;
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-      data.data.showEffectsTab=true;  
+      actor.showEffectsTab=true;  
     }
     
-    return data;
+    return sheetData
   }
 
   /* -------------------------------------------- */
