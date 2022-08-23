@@ -32,7 +32,13 @@
                     <div class="alignRight flexGrowHalf">
                     </div>
                 </div>
-                {{editor content=description target="description" button=true owner=owner editable=this.options.editable}}
+                {{editor
+                    enrichedDescription
+                    target="system.description"
+                    button=true
+                    owner=owner
+                    editable=this.options.editable
+                 }}
             </div>
         </div>
         {{!--Skills Tab--}}

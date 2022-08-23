@@ -48,7 +48,7 @@ export class NpcSheet extends ActorSheet {
       }
     }
 
-    getData() {
+    async getData() {
         const sheetData = super.getData();
         sheetData.dtypes = ["String", "Number", "Boolean"];
         if(sheetData.actor.img === "icons/svg/mystery-man.svg"){
@@ -60,6 +60,9 @@ export class NpcSheet extends ActorSheet {
 
         //Prepare dropdowns
         sheetData.config = CONFIG.eclipsephase;
+
+        // Rich text editor now requires preformatted text
+        sheetData.htmlDescription = await TextEditor.enrichHTML(sheetData.actor.system.description, {async: true})
 
         console.log("******* npc sheet")
         console.log(sheetData)
