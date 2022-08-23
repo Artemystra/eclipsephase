@@ -332,17 +332,17 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let morphs = ["morph1", "morph2", "morph3", "morph4", "morph5"]
 
     for(let m of morphs) {
-      let sheetKey = m + "_html_description"
+      let sheetKey = m + "HtmlDescription"
       let source = model.bodies[m].description
       let html = await TextEditor.enrichHTML(source, { async: true } )
       sheetData[sheetKey] = html
     }
 
     let bio = await TextEditor.enrichHTML(model.biography, { async: true })
-    sheetData["html_biography"] = bio
+    sheetData["htmlBiography"] = bio
 
     let muse = await TextEditor.enrichHTML(model.muse.description, { async: true })
-    sheetData["html_muse_description"] = muse
+    sheetData["htmlMuseDescription"] = muse
   }
 
 

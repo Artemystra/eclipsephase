@@ -62,7 +62,7 @@ export class NpcSheet extends ActorSheet {
         sheetData.config = CONFIG.eclipsephase;
 
         // Rich text editor now requires preformatted text
-        sheetData.enrichedDescription = await TextEditor.enrichHTML(sheetData.actor.system.description, {async: true})
+        sheetData.htmlDescription = await TextEditor.enrichHTML(sheetData.actor.system.description, {async: true})
 
         console.log("******* npc sheet")
         console.log(sheetData)

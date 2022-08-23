@@ -24,11 +24,23 @@
                 </div>
                 {{#if (eq actor.type "character")}}
                 <div class="limited-editor">
-                    {{editor content=actor.system.biography target="system.biography" button=true owner=owner editable=this.options.editable}}
+                  {{editor
+                    htmlBiography
+                    target="system.biography"
+                    button=true
+                    owner=owner
+                    editable=this.options.editable
+                  }}
                 </div>
                 {{else}}
                 <div class="limited-editor">
-                    {{editor content=actor.system.description target="system.description" button=true owner=owner editable=this.options.editable}}
+                  {{editor
+                    htmlDescription
+                    target="system.description"
+                    button=true
+                    owner=owner
+                    editable=this.options.editable
+                  }}
                 </div>
                 {{/if}}
             </div>
@@ -47,23 +59,53 @@
             </div>
             <div class="limited-editor">
                 {{#if (eq actor.system.bodies.activeMorph "morph1")}}
-                    {{editor content=actor.system.bodies.morph1.description
-                    target="system.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
+                    {{editor
+                      morph1HtmlDescription
+                      target="system.bodies.morph1.description"
+                      button=true
+                      owner=owner
+                      editable=this.options.editable
+                    }}
                 {{else if (eq actor.system.bodies.activeMorph "morph2")}}
-                    {{editor content=actor.system.bodies.morph2.description
-                    target="system.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
+                    {{editor
+                      morph2HtmlDescription
+                      target="system.bodies.morph2.description"
+                      button=true
+                      owner=owner
+                      editable=this.options.editable
+                    }}
                 {{else if (eq actor.system.bodies.activeMorph "morph3")}}
-                    {{editor content=actor.system.bodies.morph3.description
-                    target="system.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
+                    {{editor
+                      morph3HtmlDescription
+                      target="system.bodies.morph3.description"
+                      button=true
+                      owner=owner
+                      editable=this.options.editable
+                    }}
                 {{else if (eq actor.system.bodies.activeMorph "morph4")}}
-                    {{editor content=actor.system.bodies.morph4.description
-                    target="system.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
+                    {{editor
+                      morph4HtmlDescription
+                      target="system.bodies.morph4.description"
+                      button=true
+                      owner=owner
+                      editable=this.options.editable
+                    }}
                 {{else if (eq actor.system.bodies.activeMorph "morph5")}}
-                    {{editor content=actor.system.bodies.morph5.description
-                    target="system.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
+                    {{editor
+                      morph5HtmlDescription
+                      target="system.bodies.morph5.description"
+                      button=true
+                      owner=owner
+                      editable=this.options.editable
+                    }}
                 {{else if (eq actor.system.bodies.activeMorph "morph6")}}
-                    {{editor content=actor.system.bodies.morph6.description
-                    target="system.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
+                    {{editor
+                      morph6HtmlDescription
+                      target="system.bodies.morph6.description"
+                      button=true
+                      owner=owner
+                      editable=this.options.editable
+                    }}
                 {{/if}}
             </div>
         </div>
