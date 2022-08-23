@@ -9,15 +9,15 @@
         <a class="item" data-tab="description">Description</a>
         <a class="item" data-tab="skills">Mental</a>
         <a class="item" data-tab="weapons">Physical</a>
-        {{#if data.showEffectsTab}}
+        {{#if actor.showEffectsTab}}
         <a class="item" data-tab="effects">Effects</a>
         {{/if}}
-    {{#if data.vehicle}}
+    {{#if actor.vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
     {{/if}}
-    {{#if data.aspect.Chi}}
+    {{#if actor.aspect.Chi}}
         <a class="item" data-tab="psi">Psi</a>
-    {{else if data.aspect.Gamma}}
+    {{else if actor.aspect.Gamma}}
         <a class="item" data-tab="psi">Psi</a>
     {{/if}}
     </nav>
@@ -28,11 +28,11 @@
         <div class="tab" data-group="primary" data-tab="description">
             <div class="contentBox" style="margin-bottom: 10px;">
                 <div class="flexrow">
-                    <h3 class="subheader">Description of {{data.name}}</h3>
+                    <h3 class="subheader">Description of {{actor.name}}</h3>
                     <div class="alignRight flexGrowHalf">
                     </div>
                 </div>
-                {{editor content=data.data.description target="data.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.description target="actor.system.description" button=true owner=owner editable=this.options.editable}}
             </div>
         </div>
         {{!--Skills Tab--}}
@@ -50,11 +50,14 @@
                     <div class="listBackground noMargin">
                         <div class="flexrow flex-between headspace">
                             <div>
-                                <input class="input-large" type="text" name="data.bodies.morph1.name" value="{{data.data.bodies.morph1.name}}" placeholder="Morph name"/>
+                                <input class="input-large" type="text"
+                                name="system.bodies.morph1.name"
+                                value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
                             </div>
                             <div>
-                                <select class="selectSpecApt item-standard-margin-medium" name="data.bodyType.value" data-type="String">
-                                    {{#select data.data.bodyType.value}}
+                                <select class="selectSpecApt
+                                  item-standard-margin-medium" name="system.bodyType.value" data-type="String">
+                                    {{#select actor.system.bodyType.value}}
                                     {{#each config.bodyTypes as |bodyType key|}}
                                     <option value="{{key}}">{{bodyType}}</option>
                                     {{/each}} {{/select}}
@@ -64,15 +67,25 @@
                         <div class="flexrow flex-between headSpace">
                             <div>
                                 <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small item-standard-margin-medium" style="text-align: center" type="number" name="data.bodies.morph1.dur" value="{{data.data.bodies.morph1.dur}}" placeholder="0"/>
+                                <input class="input-small
+                                              item-standard-margin-medium"
+                                       style="text-align: center" type="number"
+                                                                  name="system.bodies.morph1.dur"
+                                                                  value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
                             </div>
                             <div>
                                 <label class="resource-label labelWidth-small">Mov</label>
-                                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement" value="{{data.data.bodies.morph1.movement}}" placeholder="0/0"/>                          
+                                <input class="input-medium
+                                item-standard-margin-medium" style="text-align:
+                                center" type="text"
+                                name="system.bodies.morph1.movement"
+                                value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>                          
                             </div>
                             <div>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype" data-type="String">
-                                    {{#select data.data.bodies.morph1.movetype}}
+                                <select class="selectSpecApt
+                                               item-standard-margin input-large"
+                                        name="system.bodies.morph1.movetype" data-type="String">
+                                    {{#select actor.system.bodies.morph1.movetype}}
                                     {{#each config.moveTypes as |moveType key|}}
                                         <option value="{{key}}">{{moveType}}</option>
                                     {{/each}}
@@ -83,11 +96,17 @@
                         <div class="flexrow flex-between headSpace">
                             <div>
                                 <label class="resource-label labelWidth-small">Mov 2</label>
-                                <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="data.bodies.morph1.movement2" value="{{data.data.bodies.morph1.movement2}}" placeholder="0/0"/>                          
+                                <input class="input-medium
+                                item-standard-margin-medium" style="text-align:
+                                center" type="text"
+                                name="system.bodies.morph1.movement2"
+                                value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0"/>                          
                             </div>
                             <div>
-                                <select class="selectSpecApt item-standard-margin input-large" name="data.bodies.morph1.movetype2" data-type="String">
-                                    {{#select data.data.bodies.morph1.movetype2}}
+                                <select class="selectSpecApt
+                                               item-standard-margin input-large"
+                                        name="system.bodies.morph1.movetype2" data-type="String">
+                                    {{#select actor.system.bodies.morph1.movetype2}}
                                     {{#each config.moveTypes as |moveType key|}}
                                         <option value="{{key}}">{{moveType}}</option>
                                     {{/each}}
@@ -101,8 +120,8 @@
                                 <label class="resource-label">Traits:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if data.morphTrait}}
-                                {{#each data.morphTrait as |item id|}}
+                                {{#if actor.morphTrait}}
+                                {{#each actor.morphTrait as |item id|}}
                                 <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                                     <div class="item-controls flex-group-right" style="flex: 0.2;">
@@ -119,8 +138,8 @@
                                 <label class="resource-label">Flaws:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if data.morphFlaw}}
-                                {{#each data.morphFlaw as |item id|}}
+                                {{#if actor.morphFlaw}}
+                                {{#each actor.morphFlaw as |item id|}}
                                 <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                                     <div class="item-controls flex-group-right" style="flex: 0.2;">
@@ -137,8 +156,8 @@
                                 <label class="resource-label">Ware:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if data.ware}}
-                                {{#each data.ware as |item id|}}
+                                {{#if actor.ware}}
+                                {{#each actor.ware as |item id|}}
                                 <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                                     <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
@@ -162,17 +181,21 @@
                     </div>
                     <div class="listBackground noMargin">
                         <div class="headSpace">
-                            {{#if data.armor}}
-                            {{#each data.armor as |item id|}}
+                            {{#if actor.armor}}
+                            {{#each actor.armor as |item id|}}
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <div class="flexrow">
                                     <input class="sheet-inline-edit item-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
                                 </div>
                                 <div class="flexrow flex-group-right">
-                                    <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
+                                    <label class="labelWidth-large
+                                      flex-group-center noMargin">Energy:
+                                      <strong>{{item.actor.energy}}</strong></label>
                                 </div>
                                 <div class="flexrow flex-group-right">
-                                    <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
+                                    <label class="labelWidth-large
+                                      flex-group-center noMargin">Kinetic:
+                                      <strong>{{item.actor.kinetic}}</strong></label>
                                 </div>
                                 <div class="flex-group-right input-small">
                                     <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
@@ -191,11 +214,14 @@
                                 <label class="resource-label">Gear:</label>
                             </div>
                             <div class="flexrow headSpace">
-                                {{#if data.gear}}
-                                {{#each data.gear as |item id|}}
+                                {{#if actor.gear}}
+                                {{#each actor.gear as |item id|}}
                                 <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center;">
                                     <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                    <label class="flex-group-center noMargin alignCenter" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.data.slotType}}</i></label>
+                                    <label class="flex-group-center noMargin
+                                      alignCenter" style="background: none;
+                                      font-size: 12px; flex:
+                                      0.4"><i>{{item.actor.slotType}}</i></label>
                                     <div class="flex-group-right" style="flex: 0.2;">
                                         <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                     </div>

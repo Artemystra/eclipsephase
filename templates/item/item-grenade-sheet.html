@@ -7,7 +7,7 @@
     </header>
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
         <a class="item" data-tab="details">Item Details</a>
-        {{#if data.showEffectsTab}}
+        {{#if item.showEffectsTab}}
         <a class="item" data-tab="effects">Effects</a>
         {{/if}}
     </nav>
@@ -34,22 +34,24 @@
                 </tr>
                 <tr>
                     <td>
-                        <input class="input-large" type="text" name="data.areaeffect" value="{{data.data.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
+                        <input class="input-large" type="text"
+                        name="system.areaeffect" value="{{item.system.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="data.dv" value="{{data.data.dv}}" placeholder="e.g. 1d10+1"/>
+                        <input class="input-large" type="text" name="system.dv"
+                        value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
                     </td>
                     <td>
-                        <select name="data.armorused" data-type="String">
-                            {{#select data.data.armorused}}
+                        <select name="system.armorused" data-type="String">
+                            {{#select item.system.armorused}}
                             <option value="na">NA</option>
                             <option value="k">K</option>
                             <option value="e">E</option> {{/select}}
                         </select>
                     </td>
                     <td>
-                        <select name="data.cost" data-type="String">
-                            {{#select data.data.cost}}
+                        <select name="system.cost" data-type="String">
+                            {{#select item.system.cost}}
                             {{#each config.costTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -60,7 +62,10 @@
         </div>
         <p></p>
         <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60">{{data.data.description}}</textarea></div>
+        <div class="textAreaDescription"><textarea class="description"
+                                                   name="system.description"
+                                                   rows="10"
+                                                   cols="60">{{item.system.description}}</textarea></div>
     </div>
     {{> systems/eclipsephase/templates/actor/partials/effectsTab.html }}
 </section>

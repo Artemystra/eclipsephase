@@ -6,10 +6,11 @@
             <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
         </div>
         <div>
-            <img class="profile-img" src="{{data.img}}" data-edit="img" title="{{data.name}}"/>
+            <img class="profile-img" src="{{actor.img}}" data-edit="img"
+            title="{{actor.name}}"/>
         </div>
         <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 22px; padding-bottom: 0">
-            <input name="name" type="text" value="{{data.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
+            <input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
         </div>
     </div>
 
@@ -26,7 +27,7 @@
                     </div>
                     <div class="armorValue">
                         <h3 class="inline">Armor</h3>
-                        {{#if data.armor}}
+                        {{#if actor.armor}}
                             <label class="resource-value">Cumulated Armor </label>
                             <p/>
                             <div class="flexrow flex-group-center">
@@ -165,7 +166,7 @@
                 <div class="flexGrowHalf"></div>
                 <h3 class="subheaderMirror">Other</h3>
             </div>
-            {{#if (eq data.type "character")}}
+            {{#if (eq actor.type "character")}}
             <div class="listBackground flexrow flex-group-center shape1">
                 <div class="flexrow flex-group-center">
                     <span class="resource-value flex-group-left">Ini Mod:</span>
@@ -231,7 +232,7 @@
 </header>
 
 {{!-- NPC Motivations --}}
-    {{#if (eq data.type "npc")}}
+    {{#if (eq actor.type "npc")}}
     <div class="contentBox" style="height: 70px; max-height: 70px;">
         <div class="flexrow">
             <h3 class="subheader">Motivations</h3>

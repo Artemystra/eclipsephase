@@ -24,21 +24,26 @@ export class EclipsePhaseGearSheet extends ItemSheet {
 
     // Alternatively, you could use the following return statement to do a
     // unique item sheet by type, like `weapon-sheet.html`.
-    return `${path}/item-${this.item.data.type}-sheet.html`;
+    return `${path}/item-${this.item.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
 
   /** @override */
   getData() {
-    const data = super.getData();
-    data.config = CONFIG.eclipsephase;
-    data.data.showEffectsTab=true;
+    const sheetData = super.getData()
+    const item = sheetData.item
+
+    sheetData.config = CONFIG.eclipsephase
+    item.showEffectsTab = true
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-      data.data.showEffectsTab=true;  
+      item.showEffectsTab = true
     }
-    
-    return data;
+
+    console.log("***** gear-sheet")
+    console.log(sheetData)
+
+    return sheetData
   }
 
   /** @override */
@@ -48,8 +53,8 @@ export class EclipsePhaseGearSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
-    registerEffectHandlers(html,this.item);
-    registerCommonHandlers(html,this.item);
+    registerEffectHandlers(html, this.item);
+    registerCommonHandlers(html, this.item);
   }
 
   /* -------------------------------------------- */

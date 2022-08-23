@@ -1,5 +1,5 @@
 
-    {{#if data.aspect.Gamma}}
+    {{#if actor.aspect.Gamma}}
         <div class="contentBox">
             <div class="flexrow">
                 <h3 class="subheader">Gamma Sleights</h3>
@@ -8,23 +8,29 @@
             </div>
             <div class="itemBackground">
                 <div class="grid grid-2col">
-                    {{#each data.aspect.Gamma as |item id|}}
+                    {{#each actor.aspect.Gamma as |item id|}}
                     <div>
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                             
                             
                             <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.actionType}}</i></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.duration}}</i></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.infection}}</i></label>
+                            <label class="flex-group-center alignCenter"
+                              style="background: none; font-size: 12px; flex:
+                              0.4; margin-left: 10px;"><i>{{item.system.actionType}}</i></label>
+                            <label class="flex-group-center alignCenter"
+                              style="background: none; font-size: 12px; flex:
+                              0.4; margin-left: 10px;"><i>{{item.system.duration}}</i></label>
+                            <label class="flex-group-center alignCenter"
+                              style="background: none; font-size: 12px; flex:
+                              0.4; margin-left: 10px;"><i>{{item.system.infection}}</i></label>
                             <div class="flex-group-right slideShow">
                                 <a><i class="fas fa-plus icon-small"></i></a>
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
                             <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
+                                {{#if item.system.description}}
                                 <div class="itemDescription shape3">
-                                    {{item.data.description}}
+                                    {{item.system.description}}
                                 </div>
                                 {{/if}}
                                 <div class="flexrow flex-between item-controls">
@@ -40,7 +46,7 @@
             </div>
         </div>
         {{/if}}
-        {{#if data.aspect.Chi}}
+        {{#if actor.aspect.Chi}}
         <div class="contentBox">
             <div class="flexrow">
                 <h3 class="subheader">Chi Sleights</h3>
@@ -49,7 +55,7 @@
             </div>
             <div class="itemBackground">
                 <div class="grid grid-2col">
-                    {{#each data.aspect.Chi as |item id|}}
+                    {{#each actor.aspect.Chi as |item id|}}
                     <div>
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                             
@@ -60,9 +66,9 @@
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
                             <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.data.description}}
+                                {{#if item.system.description}}
                                 <div class="itemDescription shape3">
-                                    {{item.data.description}}
+                                    {{item.system.description}}
                                 </div>
                                 {{/if}}
                                 <div class="flexrow flex-between item-controls">

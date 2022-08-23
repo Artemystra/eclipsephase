@@ -249,9 +249,9 @@ export class TaskRollModifier {
  * FIXME - Most of this function can be abstracted when(/if) other task
  * types are converted.
  */
-export async function ReputationRoll(dataset, actorData) {
-  let id = actorData.ego.idSelected
-  let rep = actorData.ego.ids[id].rep[dataset.name]
+export async function ReputationRoll(dataset, actorModel) {
+  let id = actorModel.ego.idSelected
+  let rep = actorModel.ego.ids[id].rep[dataset.name]
   let repName = dataset.name
   let repValue = parseInt(rep.value || 0)
   let names = ['favorMod', 'globalMod']
@@ -273,7 +273,7 @@ export async function ReputationRoll(dataset, actorData) {
   if(favor_mod !== 0)
     task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
 
-  applyHealthModifiers(actorData, task)
+  applyHealthModifiers(actorModel, task)
 
   await task.performRoll()
 

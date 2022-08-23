@@ -250,7 +250,7 @@
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
-            {{editor content=actor.system.muse.description target="data.muse.description" button=true owner=owner editable=this.options.editable}}
+            {{editor content=actor.system.muse.description target="system.muse.description" button=true owner=owner editable=this.options.editable}}
         
         </div>
         {{!-- Body Tab --}}
@@ -820,8 +820,8 @@
                                     </div>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if system.ware.morph1}}
-                                    {{#each system.ware.morph1 as |item id|}}
+                                    {{#if actor.ware.morph1}}
+                                    {{#each actor.ware.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -830,9 +830,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -858,8 +858,8 @@
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.morphTrait.present1}}
-                                    {{#each data.morphTrait.morph1 as |item id|}}
+                                    {{#if actor.morphTrait.present1}}
+                                    {{#each actor.morphTrait.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -868,9 +868,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -880,7 +880,7 @@
                                         </div>
                                     </div>
                                     {{/each}}
-                                    {{#each data.morphFlaw.morph1 as |item id|}}
+                                    {{#each actor.morphFlaw.morph1 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -889,9 +889,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -920,8 +920,8 @@
                                     </div>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.ware.morph2}}
-                                    {{#each data.ware.morph2 as |item id|}}
+                                    {{#if actor.ware.morph2}}
+                                    {{#each actor.ware.morph2 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -930,9 +930,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -958,8 +958,8 @@
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.morphTrait.present2}}
-                                    {{#each data.morphTrait.morph2 as |item id|}}
+                                    {{#if actor.morphTrait.present2}}
+                                    {{#each actor.morphTrait.morph2 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -968,9 +968,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -980,7 +980,7 @@
                                         </div>
                                     </div>
                                     {{/each}}
-                                    {{#each data.morphFlaw.morph2 as |item id|}}
+                                    {{#each actor.morphFlaw.morph2 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -989,9 +989,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1020,8 +1020,8 @@
                                     </div>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.ware.morph3}}
-                                    {{#each data.ware.morph3 as |item id|}}
+                                    {{#if actor.ware.morph3}}
+                                    {{#each actor.ware.morph3 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1030,9 +1030,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1058,8 +1058,8 @@
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.morphTrait.present3}}
-                                    {{#each data.morphTrait.morph3 as |item id|}}
+                                    {{#if actor.morphTrait.present3}}
+                                    {{#each actor.morphTrait.morph3 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1068,9 +1068,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1080,7 +1080,7 @@
                                         </div>
                                     </div>
                                     {{/each}}
-                                    {{#each data.morphFlaw.morph3 as |item id|}}
+                                    {{#each actor.morphFlaw.morph3 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1089,9 +1089,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1120,8 +1120,8 @@
                                     </div>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.ware.morph4}}
-                                    {{#each data.ware.morph4 as |item id|}}
+                                    {{#if actor.ware.morph4}}
+                                    {{#each actor.ware.morph4 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1130,9 +1130,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1158,8 +1158,8 @@
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.morphTrait.present4}}
-                                    {{#each data.morphTrait.morph4 as |item id|}}
+                                    {{#if actor.morphTrait.present4}}
+                                    {{#each actor.morphTrait.morph4 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1168,9 +1168,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1180,7 +1180,7 @@
                                         </div>
                                     </div>
                                     {{/each}}
-                                    {{#each data.morphFlaw.morph4 as |item id|}}
+                                    {{#each actor.morphFlaw.morph4 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1189,9 +1189,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1220,8 +1220,8 @@
                                     </div>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.ware.morph5}}
-                                    {{#each data.ware.morph5 as |item id|}}
+                                    {{#if actor.ware.morph5}}
+                                    {{#each actor.ware.morph5 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1230,9 +1230,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1258,8 +1258,8 @@
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.morphTrait.present5}}
-                                    {{#each data.morphTrait.morph5 as |item id|}}
+                                    {{#if actor.morphTrait.present5}}
+                                    {{#each actor.morphTrait.morph5 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1268,9 +1268,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1280,7 +1280,7 @@
                                         </div>
                                     </div>
                                     {{/each}}
-                                    {{#each data.morphFlaw.morph5 as |item id|}}
+                                    {{#each actor.morphFlaw.morph5 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1289,9 +1289,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1320,8 +1320,8 @@
                                     </div>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.ware.morph6}}
-                                    {{#each data.ware.morph6 as |item id|}}
+                                    {{#if actor.ware.morph6}}
+                                    {{#each actor.ware.morph6 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1330,9 +1330,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1358,8 +1358,8 @@
                                     <h3 class="subheaderMirror">Morph Traits</h3>
                                 </div>
                                 <div class="itemBackground noPadBot" style="position: relative; z-index: 2;">
-                                    {{#if data.morphTrait.present6}}
-                                    {{#each data.morphTrait.morph6 as |item id|}}
+                                    {{#if actor.morphTrait.present6}}
+                                    {{#each actor.morphTrait.morph6 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1368,9 +1368,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1380,7 +1380,7 @@
                                         </div>
                                     </div>
                                     {{/each}}
-                                    {{#each data.morphFlaw.morph6 as |item id|}}
+                                    {{#each actor.morphFlaw.morph6 as |item id|}}
                                     <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                         <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
                                         <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
@@ -1389,9 +1389,9 @@
                                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                         </div>
                                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                            {{#if item.data.description}}
+                                            {{#if item.system.description}}
                                             <div class="itemDescription shape3">
-                                                {{item.data.description}}
+                                                {{item.system.description}}
                                             </div>
                                             {{/if}}
                                             <div class="flexrow flex-between item-controls">
@@ -1419,33 +1419,33 @@
                         {{#if (eq actor.system.bodies.activeMorph "morph1")}}
                         <img class="morph-img"
                         src="{{actor.system.bodies.morph1.img}}"
-                        data-edit="data.bodies.morph1.img"
-                        title="{{data.name}}'s {{actor.system.bodies.morph1.name}}"/>
+                        data-edit="system.bodies.morph1.img"
+                        title="{{actor.name}}'s {{actor.system.bodies.morph1.name}}"/>
                         {{else if (eq actor.system.bodies.activeMorph "morph2")}}
                         <img class="morph-img"
                         src="{{actor.system.bodies.morph2.img}}"
-                        data-edit="data.bodies.morph2.img"
-                        title="{{data.name}}'s {{actor.system.bodies.morph2.name}}"/>
+                        data-edit="syste.bodies.morph2.img"
+                        title="{{actor.name}}'s {{actor.system.bodies.morph2.name}}"/>
                         {{else if (eq actor.system.bodies.activeMorph "morph3")}}
                         <img class="morph-img"
                         src="{{actor.system.bodies.morph3.img}}"
-                        data-edit="data.bodies.morph3.img"
-                        title="{{data.name}}'s {{actor.system.bodies.morph3.name}}"/>
+                        data-edit="system.bodies.morph3.img"
+                        title="{{actor.name}}'s {{actor.system.bodies.morph3.name}}"/>
                         {{else if (eq actor.system.bodies.activeMorph "morph4")}}
                         <img class="morph-img"
                         src="{{actor.system.bodies.morph4.img}}"
-                        data-edit="data.bodies.morph4.img"
-                        title="{{data.name}}'s {{actor.system.bodies.morph4.name}}"/>
+                        data-edit="system.bodies.morph4.img"
+                        title="{{actor.name}}'s {{actor.system.bodies.morph4.name}}"/>
                         {{else if (eq actor.system.bodies.activeMorph "morph5")}}
                         <img class="morph-img"
                         src="{{actor.system.bodies.morph5.img}}"
-                        data-edit="data.bodies.morph5.img"
-                        title="{{data.name}}'s {{actor.system.bodies.morph5.name}}"/>
+                        data-edit="system.bodies.morph5.img"
+                        title="{{actor.name}}'s {{actor.system.bodies.morph5.name}}"/>
                         {{else if (eq actor.system.bodies.activeMorph "morph6")}}
                         <img class="morph-img"
                         src="{{actor.system.bodies.morph6.img}}"
-                        data-edit="data.bodies.morph6.img"
-                        title="{{data.name}}'s {{actor.system.bodies.morph6.name}}"/>
+                        data-edit="system.bodies.morph6.img"
+                        title="{{actor.name}}'s {{actor.system.bodies.morph6.name}}"/>
                         {{/if}}
                     </div>
                 </div>
@@ -1457,24 +1457,34 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#if data.armor}}
-                    {{#each data.armor as |item id|}}
-                    {{#if data.active}}
+                    {{#if actor.armor}}
+                    {{#each actor.armor as |item id|}}
+                    {{#if item.system.active}}
+
                     <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked item.system.active}}>
+
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
-                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+
+                        <input class="sheet-inline-edit" data-field="name"
+                        type="text" name="system.name" value="{{item.system.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
+
+                        <label class="labelWidth-large flex-group-center
+                          noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
+
+                        <label class="labelWidth-large flex-group-center
+                          noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
+                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.slotType}}</strong></label>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                            {{#if item.data.description}}
+                            {{#if item.description}}
                             <div class="itemDescription shape3">
-                                {{item.data.description}}
+                                {{item.description}}
                             </div>
                             {{/if}}
                             <div class="flexrow flex-between item-controls">
@@ -1485,20 +1495,22 @@
                     </div>
                     {{else}}
                     <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked system.active}}>
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.data.energy}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.data.kinetic}}</strong></label>
-                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.energy}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.kinetic}}</strong></label>
+                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.slotType}}</strong></label>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                            {{#if item.data.description}}
+                            {{#if item.description}}
                             <div class="itemDescription shape3">
-                                {{item.data.description}}
+                                {{item.description}}
                             </div>
                             {{/if}}
                             <div class="flexrow flex-between item-controls">
@@ -1520,79 +1532,102 @@
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                    <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph1.description target="data.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.bodies.morph1.description
+                target="system.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
             {{else if (eq actor.system.bodies.activeMorph "morph2")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                    <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph2.name}}{{actor.system.bodies.morph2.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph2.description target="data.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.bodies.morph2.description
+                target="system.bodies.morph2.description" button=true owner=owner editable=this.options.editable}}
             {{else if (eq actor.system.bodies.activeMorph "morph3")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                    <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph3.name}}{{actor.system.bodies.morph3.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph3.description target="data.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.bodies.morph3.description
+                target="system.bodies.morph3.description" button=true owner=owner editable=this.options.editable}}
             {{else if (eq actor.system.bodies.activeMorph "morph4")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                    <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph4.name}}{{actor.system.bodies.morph4.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph4.description target="data.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.bodies.morph4.description
+                target="system.bodies.morph4.description" button=true owner=owner editable=this.options.editable}}
             {{else if (eq actor.system.bodies.activeMorph "morph5")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                    <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph5.description target="data.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.bodies.morph5.description
+                target="system.bodies.morph5.description" button=true owner=owner editable=this.options.editable}}
             {{else if (eq actor.system.bodies.activeMorph "morph6")}}
                 <div class="flexrow">
                     <div class="alignRight flexGrowHalf">
                     </div>
-                    <h3 class="subheaderMirror">{{data.name}}'s {{#if
+                    <h3 class="subheaderMirror">{{actor.name}}'s {{#if
                       actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}Morph{{/if}}</h3>
                 </div>
-                {{editor content=actor.system.bodies.morph6.description target="data.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
+                {{editor content=actor.system.bodies.morph6.description
+                target="system.bodies.morph6.description" button=true owner=owner editable=this.options.editable}}
             {{/if}}
         </div>
         
         {{!-- Vehicles Tab --}}
         <div class="tab vehicle" data-group="primary" data-tab="vehicles">
-            {{#each data.vehicle.Vehicle as |item id|}}
+            {{#each actor.vehicle.Vehicle as |item id|}}
             <div class="item contentBox" data-item-id="{{item._id}}">
                 <div class="flexrow">
                     <h3 class="subheader">{{item.name}}</h3>
                     <div class="alignRight flexGrowThreeQuarter">
-                        {{#if item.data.ins}}
+                        {{#if item.system.ins}}
                         <label class="resource-label">Ins</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curIns" type="number" name="item.data.curIns" value="{{item.data.curIns}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.ins}}</strong></label>
+                        <input class="input-xs sheet-inline-edit"
+                        data-field="system.curIns" type="number"
+                        name="item.system.curIns" value="{{item.system.curIns}}" placeholder="0"/>
+                        <label class="flex-group-center
+                          item-standard-margin-medium"><strong>/ {{item.system.ins}}</strong></label>
                         {{/if}}
-                        {{#if item.data.mox}}
+                        {{#if item.system.mox}}
                         <label class="resource-label">Mox</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMox" value="{{item.data.curMox}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.mox}}</strong></label>
+                        <input class="input-xs sheet-inline-edit"
+                               data-field="system.curMox" type="number"
+                                                          name="item.system.curMox"
+                                                          value="{{item.system.curMox}}" placeholder="0"/>
+                        <label class="flex-group-center
+                                      item-standard-margin-medium"><strong>/
+                                        {{item.system.mox}}</strong></label>
                         {{/if}}
-                        {{#if item.data.vig}}
+                        {{#if item.system.vig}}
                             <label class="resource-label">Vig</label>
-                            <input class="input-xs sheet-inline-edit" data-field="data.curVig" type="number" name="item.data.curVig" value="{{item.data.curVig}}" placeholder="0"/>
-                            <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.vig}}</strong></label>
+                            <input class="input-xs sheet-inline-edit"
+                                   data-field="system.curVig" type="number"
+                                                              name="item.system.curVig"
+                                                              value="{{item.system.curVig}}" placeholder="0"/>
+                            <label class="flex-group-center
+                                          item-standard-margin-medium"><strong>/
+                                            {{item.system.vig}}</strong></label>
                         {{/if}}
-                        {{#if item.data.flex}}
+                        {{#if item.system.flex}}
                             <label class="resource-label">Flex</label>
-                            <input class="input-xs sheet-inline-edit" data-field="data.curFlex" type="number" name="item.data.curFlex" value="{{item.data.curFlex}}" placeholder="0"/>
-                            <label class="flex-group-center"><strong>/ {{item.data.flex}}</strong></label>
+                            <input class="input-xs sheet-inline-edit"
+                                   data-field="system.curFlex" type="number"
+                                                               name="item.system.curFlex"
+                                                               value="{{item.system.curFlex}}" placeholder="0"/>
+                            <label class="flex-group-center"><strong>/
+                                {{item.system.flex}}</strong></label>
                         {{/if}}
                     </div>
                 </div>
@@ -1627,29 +1662,38 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label class="flex-group-center noMargin noBG"><strong>{{item.data.pass}}</strong></label>
+                                        <label class="flex-group-center noMargin
+                                          noBG"><strong>{{item.system.pass}}</strong></label>
                                     </td>
                                     <td>
                                         <input class="input-small
                                         sheet-inline-edit"
-                                        data-field="data.armor" type="text"
-                                        name="system.armor" value="{{data.armor}}" placeholder="2/2"/>
+                                        data-field="system.armor" type="text"
+                                        name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
                                     </td>
                                     <td>
                                         <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
                                     </td>
                                     <td>
-                                        <input class="input-small sheet-inline-edit noMargin" data-field="data.curDur" type="number" name="item.data.curDur" value="{{item.data.curDur}}" placeholder="0"/>
-                                        <label class="flex-group-center noMargin noBG"><strong>/ {{item.data.dur}}</strong></label>
+                                        <input class="input-small
+                                        sheet-inline-edit noMargin"
+                                        data-field="system.curDur" type="number"
+                                        name="item.system.curDur"
+                                        value="{{item.system.curDur}}" placeholder="0"/>
+                                        <label class="flex-group-center noMargin
+                                          noBG"><strong>/ {{item.system.dur}}</strong></label>
                                     </td>
                                     <td>
-                                        <label class="flex-group-center noMargin noBG"><strong>{{item.dr}}</strong></label>
+                                        <label class="flex-group-center noMargin
+                                          noBG"><strong>{{item.system.dr}}</strong></label>
                                     </td>
                                     <td>
-                                        <label class="flex-group-center noMargin noBG"><strong>{{item.data.mov}}</strong></label>
+                                        <label class="flex-group-center noMargin
+                                          noBG"><strong>{{item.system.mov}}</strong></label>
                                     </td>
                                     <td>
-                                        <label class="flex-group-center noMargin noBG"><strong>{{item.data.slotType}}</strong></label>
+                                        <label class="flex-group-center noMargin
+                                          noBG"><strong>{{item.system.slotType}}</strong></label>
                                     </td>
                                     <td>
                                     </td>
@@ -1658,7 +1702,11 @@
                             <table class="noMargin alignCenter">
                                 <tr>
                                     <td>
-                                        <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                        <input class="sheet-inline-edit"
+                                        data-field="system.description"
+                                        type="text"
+                                        name="item.system.description"
+                                        value="{{item.system.description}}" placeholder="No modifications"/>
                                     </td>
                                 </tr>
                             </table>
@@ -1666,30 +1714,41 @@
                 </div>
             </div>
             {{/each}}
-            {{#each data.vehicle.Robot as |item id|}}
+            {{#each actor.vehicle.Robot as |item id|}}
             <div class="item contentBox" data-item-id="{{item._id}}">
                 <div class="flexrow" style="justify-content: flex-end;">
                     <h3 class="subheader">{{item.name}}</h3>
                     <div class="alignRight flexGrowThreeQuarter">
-                        {{#if item.data.ins}}
+                        {{#if item.system.ins}}
                         <label class="resource-label">Ins</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curIns" type="number" name="item.data.curIns" value="{{item.data.curIns}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.ins}}</strong></label>
+                        <input class="input-xs sheet-inline-edit"
+                        data-field="system.curIns" type="number"
+                        name="item.system.curIns" value="{{item.system.curIns}}" placeholder="0"/>
+                        <label class="flex-group-center
+                          item-standard-margin-medium"><strong>/ {{item.system.ins}}</strong></label>
                         {{/if}}
-                        {{#if item.data.mox}}
+                        {{#if item.system.mox}}
                         <label class="resource-label">Mox</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curMox" type="number" name="item.data.curMox" value="{{item.data.curMox}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.mox}}</strong></label>
+                        <input class="input-xs sheet-inline-edit"
+                        data-field="system.curMox" type="number"
+                        name="item.system.curMox" value="{{item.system.curMox}}" placeholder="0"/>
+                        <label class="flex-group-center
+                          item-standard-margin-medium"><strong>/ {{item.system.mox}}</strong></label>
                         {{/if}}
-                        {{#if item.data.vig}}
+                        {{#if item.system.vig}}
                         <label class="resource-label">Vig</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curVig" type="number" name="item.data.curVig" value="{{item.data.curVig}}" placeholder="0"/>
-                        <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.data.vig}}</strong></label>
+                        <input class="input-xs sheet-inline-edit"
+                        data-field="system.curVig" type="number"
+                        name="item.system.curVig" value="{{item.system.curVig}}" placeholder="0"/>
+                        <label class="flex-group-center
+                          item-standard-margin-medium"><strong>/ {{item.system.vig}}</strong></label>
                         {{/if}}
-                        {{#if item.data.flex}}
+                        {{#if item.system.flex}}
                         <label class="resource-label">Flex</label>
-                        <input class="input-xs sheet-inline-edit" data-field="data.curFlex" type="number" name="item.data.curFlex" value="{{item.data.curFlex}}" placeholder="0"/>
-                        <label class="flex-group-center"><strong>/ {{item.data.flex}}</strong></label>
+                        <input class="input-xs sheet-inline-edit"
+                        data-field="system.curFlex" type="number"
+                        name="item.system.curFlex" value="{{item.system.curFlex}}" placeholder="0"/>
+                        <label class="flex-group-center"><strong>/ {{item.system.flex}}</strong></label>
                         {{/if}}
                     </div>
                 </div>
@@ -1722,24 +1781,30 @@
                             <tr>
                                 <td>
                                     <input class="input-small sheet-inline-edit"
-                                    data-field="data.armor" type="text"
-                                    name="system.armor" value="{{data.armor}}" placeholder="2/2"/>
+                                    data-field="system.armor" type="text"
+                                    name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
                                 </td>
                                 <td>
                                     <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
                                 </td>
                                 <td>
-                                    <input class="input-small sheet-inline-edit noMargin" data-field="data.curDur" type="number" name="item.data.curDur" value="{{item.data.curDur}}" placeholder="0"/>
-                                    <label class="flex-group-center noMargin noBG"><strong>/ {{item.data.dur}}</strong></label>
+                                    <input class="input-small sheet-inline-edit
+                                    noMargin" data-field="system.curDur"
+                                    type="number" name="item.system.curDur"
+                                    value="{{item.system.curDur}}" placeholder="0"/>
+                                    <label class="flex-group-center noMargin
+                                      noBG"><strong>/ {{item.system.dur}}</strong></label>
                                 </td>
                                 <td>
                                     <label class="flex-group-center noMargin noBG"><strong>{{item.dr}}</strong></label>
                                 </td>
                                 <td>
-                                    <label class="flex-group-center noMargin noBG"><strong>{{item.data.mov}}</strong></label>
+                                    <label class="flex-group-center noMargin
+                                      noBG"><strong>{{item.system.mov}}</strong></label>
                                 </td>
                                 <td>
-                                    <label class="flex-group-center noMargin noBG"><strong>{{item.data.slotType}}</strong></label>
+                                    <label class="flex-group-center noMargin
+                                      noBG"><strong>{{item.system.slotType}}</strong></label>
                                 </td>
                                 <td>
                                 </td>
@@ -1748,7 +1813,10 @@
                         <table class="noMargin alignCenter">
                             <tr>
                                 <td>
-                                    <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                    <input class="sheet-inline-edit"
+                                    data-field="system.description" type="text"
+                                    name="item.system.description"
+                                    value="{{item.system.description}}" placeholder="No modifications"/>
                                 </td>
                             </tr>
                         </table>
@@ -1757,10 +1825,14 @@
             </div>
             {{/each}}
         </div>
+
+
         {{!-- Gear Tab --}}
         <div class="tab gear" data-group="primary" data-tab="weapons">
-            {{#if actor.system.hasGear}}
-            {{#if data.rangedWeapon}}
+          {{#if true}}
+
+          <!-- actor.system.hasGear}} -->
+            {{#if actor.rangedWeapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Ranged Weapons</h3>
@@ -1780,29 +1852,46 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each data.rangedWeapon as |item id|}}
-                    {{#if this.data.active}}
+                    {{#each actor.rangedWeapon as |item id|}}
+                    {{#if true}}
                     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked item.system.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                                      icon-small damage-roll roll-label
+                                      input-small noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
-                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.system.firingMode}}</strong></label>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.system.range}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
                         <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
-                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
-                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
-                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+
+
+                        <input class="input-small sheet-inline-edit"
+                               data-field="system.ammoMin"
+                               type="number"
+                               name="system.ammoMin"
+                               value="{{item.system.ammoMin}}"
+                               placeholder="0"/>
+                        /
+                        <h4 class="item-image flex-group-left input-small noMargin">
+                          <strong>{{item.system.ammoMax}}</strong>
+                        </h4>
+
+                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit"
+                                data-field="system.description" type="text"
+                                name="system.description" value="{{item.system.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1812,26 +1901,33 @@
                     </div>
                     {{else}}
                     <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked item.system.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                            icon-small damage-roll roll-label input-small
+                            noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.firingMode}}</strong></label>
-                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.data.range}}</strong></label>
-                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.data.slotType}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.firingMode}}</strong></label>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.range}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.slotType}}</strong></label>
                         <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
-                        <input class="input-small sheet-inline-edit" data-field="data.ammoMin" type="number" name="item.data.ammoMin" value="{{item.data.ammoMin}}" placeholder="0"/>/
-                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.data.ammoMax}}</strong></h4>
-                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.data.dv}}</strong></h4>
+                        <input class="input-small sheet-inline-edit"
+                        data-field="system.ammoMin" type="number"
+                        name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                        <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.ammoMax}}</strong></h4>
+                        <h4 class="item-image flex-group-center input-medium noMargin"><strong>{{item.dv}}</strong></h4>
                         <div class="flex-group-right slideShow">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit"
+                                data-field="system.description" type="text" name="item.description" value="{{item.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1844,7 +1940,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if data.ccweapon}}
+            {{#if actor.ccweapon}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Close Combat Weapons</h3>
@@ -1864,24 +1960,31 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                    {{#each data.ccweapon as |item id|}}
-                    {{#if this.data.active}}
+                    {{#each actor.ccweapon as |item id|}}
+                    {{#if true}}
                     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked system.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                            icon-small flex-group-left resource-label
+                            damage-roll roll-label input-small noShow"
+                            data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
-                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.slotType}}</strong></label>
+                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.dv}}</strong></h4>
                         <div class="flex-group-right slideShow" style="max-width: 115px;">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit"
+                                data-field="system.description" type="text"
+                                name="item.description" value="{{item.system.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1891,21 +1994,26 @@
                     </div>
                     {{else}}
                     <div class="item flexrow flex-group-center offHand reveal weaponItem" data-item-id="{{item._id}}">
-                        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked system.active}}>
                         <div class="flexrow flex-group-center input-small">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small flex-group-left resource-label damage-roll roll-label input-small noShow" data-type="melee" data-roll="{{item.data.dv}}" data-weaponname="{{item.name}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle
+                            icon-small flex-group-left resource-label
+                            damage-roll roll-label input-small noShow"
+                            data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
                         </div>
                         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.data.slotType}}</strong></label>
-                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.data.dv}}</strong></h4>
+                        <label class="flex-group-center noMargin flex-group-center"><strong>{{item.slotType}}</strong></label>
+                        <h4 class="item-image flex-group-right noMargin" style="max-width: 145px;"><strong>{{item.dv}}</strong></h4>
                         <div class="flex-group-right slideShow" style="max-width: 115px;">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                             <div class="itemDescription shape3">
-                                <input class="sheet-inline-edit" data-field="data.description" type="text" name="item.data.description" value="{{item.data.description}}" placeholder="No modifications"/>
+                                <input class="sheet-inline-edit" data-field="description" type="text" name="item.description" value="{{item.description}}" placeholder="No modifications"/>
                             </div>
                             <div class="flexrow flex-between item-controls">
                                 <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
@@ -1918,7 +2026,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if data.gear}}
+            {{#if actor.gear}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Gear</h3>
@@ -1927,23 +2035,30 @@
                 </div>
                 <div class="itemBackground">
                     <div class="grid grid-2col">
-                        {{#each data.gear as |item id|}}
+                        {{#each actor.gear as |item id|}}
                         <div>
-                            {{#if this.data.active}}
+                            {{#if true}}
                             <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                                <input class="sheet equipped checkBox"
+                                data-dtype="Boolean" data-item-id="{{item._id}}"
+                                type="checkbox" {{checked system.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                 <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                                <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
-                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <label class="flex-group-center alignCenter"
+                                  style="background: none; font-size: 12px;
+                                  flex: 0.4; margin-left:
+                                  10px;"><i>{{item.system.slotType}}</i></label>
+                                <input class="input-small sheet-inline-edit"
+                                data-field="system.quantity" type="number"
+                                name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
                                 <div class="flex-group-right slideShow">
                                     <a><i class="fas fa-plus icon-small"></i></a>
                                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                 </div>
                                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                    {{#if item.data.description}}
+                                    {{#if item.system.description}}
                                     <div class="itemDescription shape3">
-                                        {{item.data.description}}
+                                        {{item.system.description}}
                                     </div>
                                     {{/if}}
                                     <div class="flexrow flex-between item-controls">
@@ -1954,19 +2069,26 @@
                             </div>
                             {{else}}
                             <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}">
-                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked data.active}}>
+                                <input class="sheet equipped checkBox"
+                                data-dtype="Boolean" data-item-id="{{item._id}}"
+                                type="checkbox" {{checked system.active}}>
                                 <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                                 <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                                <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.data.slotType}}</i></label>
-                                <input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <label class="flex-group-center alignCenter"
+                                  style="background: none; font-size: 12px;
+                                  flex: 0.4; margin-left:
+                                  10px;"><i>{{item.system.slotType}}</i></label>
+                                <input class="input-small sheet-inline-edit"
+                                data-field="system.quantity" type="number"
+                                name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
                                 <div class="flex-group-right slideShow">
                                     <a><i class="fas fa-plus icon-small"></i></a>
                                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                 </div>
                                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                    {{#if item.data.description}}
+                                    {{#if item.system.description}}
                                     <div class="itemDescription shape3">
-                                        {{item.data.description}}
+                                        {{item.system.description}}
                                     </div>
                                     {{/if}}
                                     <div class="flexrow flex-between item-controls">
@@ -1982,7 +2104,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if data.program}}
+            {{#if system.program}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Programs Loaded</h3>
@@ -1991,19 +2113,23 @@
                 </div>
                 <div class="itemBackground" style="position: relative; z-index: 2;">
                     <div class="grid grid-2col">
-                        {{#each data.program as |item id|}}
+                        {{#each system.program as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                                 <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
-                                <label class="input-small"><strong>Uses</strong></label><input class="input-small sheet-inline-edit" data-field="data.quantity" type="number" name="item.data.quantity" value="{{item.data.quantity}}" placeholder="0"/>
+                                <label
+                                  class="input-small"><strong>Uses</strong></label><input
+                                class="input-small sheet-inline-edit"
+                                data-field="system.quantity" type="number"
+                                name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
                                 <div class="flex-group-right slideShow" style="max-width: 45px;">
                                     <a><i class="fas fa-plus icon-small"></i></a>
                                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                                 </div>
                                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                    {{#if item.data.description}}
+                                    {{#if item.system.description}}
                                     <div class="itemDescription shape3">
-                                        {{item.data.description}}
+                                        {{item.system.description}}
                                     </div>
                                     {{/if}}
                                     <div class="flexrow flex-between item-controls">

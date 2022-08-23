@@ -49,24 +49,37 @@ export class GoonSheet extends ActorSheet {
     }
 
     getData() {
-        const data = super.getData();
-        data.dtypes = ["String", "Number", "Boolean"];
-        if(data.data.img === "icons/svg/mystery-man.svg"){
-            data.data.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
+        const sheetData = super.getData();
+        let actor = sheetData.actor
+
+        sheetData.dtypes = ["String", "Number", "Boolean"];
+        if(actor.img === "icons/svg/mystery-man.svg"){
+            actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
           }
-        if (data.data.type == 'goon') {
-            this._prepareCharacterItems(data);
+        if (actor.type == 'goon') {
+            this._prepareCharacterItems(sheetData);
         }
 
         //Prepare dropdowns
-        data.config = CONFIG.eclipsephase;
+        sheetData.config = CONFIG.eclipsephase;
 
-        return data;
+        console.log("******* goon sheet")
+        console.log(sheetData)
+        return sheetData
 }
 
     _prepareCharacterItems(sheetData) {
-        const actorData = sheetData.data;
-        const data = actorData.data;
+
+        let actor = sheetData.actor
+        let actorModel = actor.system
+
+        console.log("**** in _prepareCharacterItems")
+      console.log(sheetData)
+      console.log(actor)
+      console.log(actorModel)
+
+        const actorData = sheetData.data;   // actor
+        const data = actorData.data;        // actorModel
 
         // Initialize containers.
         const gear = [];
@@ -86,95 +99,95 @@ export class GoonSheet extends ActorSheet {
 
         // Iterate through items, allocating to containers
         // let totalWeight = 0;
-        for (let i of sheetData.items) {
-            let item = i.data;
-            i.img = i.img || DEFAULT_TOKEN;
+        for (let item of sheetData.items) {
+            let itemModel = item.system
+
+            item.img = item.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (i.data.displayCategory === 'gear') {
-                gear.push(i);
+            if (itemModel.displayCategory === 'gear') {
+                gear.push(item);
               }
             // Append to features.
-            else if (i.type === 'feature') {
-                features.push(i);
+            else if (item.type === 'feature') {
+                features.push(item);
             }
-            else if (i.data.displayCategory === 'ranged') {
-                rangedweapon.push(i)
+            else if (itemModel.displayCategory === 'ranged') {
+                rangedweapon.push(item)
             }
-            else if (i.data.displayCategory === 'ccweapon') {
-                ccweapon.push(i)
+            else if (itemModel.displayCategory === 'ccweapon') {
+                ccweapon.push(item)
             }
-            else if (i.data.displayCategory === 'armor') {
-                armor.push(i)
+            else if (itemModel.displayCategory === 'armor') {
+                armor.push(item)
             }
-            else if (i.type === 'ware') {
-                ware.push(i)
+            else if (item.type === 'ware') {
+                ware.push(item)
             }
-            else if (i.type === 'morphTrait' || i.type === 'morphFlaw'){
-                morphTrait.push(i);
+            else if (item.type === 'morphTrait' || item.type === 'morphFlaw'){
+                morphTrait.push(item);
             }
                 
-            else if (i.type === 'aspect') {
-                aspect[i.data.psiType].push(i);
+            else if (item.type === 'aspect') {
+                aspect[itemModel.psiType].push(item);
             }
-            else if (i.type === 'vehicle') {
-                i.wt = Math.round(i.data.dur / 5);
-                i.dr = Math.round(i.data.dur * 2);
-                vehicle.push(i)
+            else if (item.type === 'vehicle') {
+                item.wt = Math.round(itemModel.dur / 5);
+                item.dr = Math.round(itemModel.dur * 2);
+                vehicle.push(item)
             }
-            if (i.type === 'specialSkill') {
+            if (item.type === 'specialSkill') {
                 let aptSelect = 0;
-                if (i.data.aptitude === "Intuition") {
-                  aptSelect = data.aptitudes.int.value;
+                if (itemModel.aptitude === "Intuition") {
+                  aptSelect = actorModel.aptitudes.int.value;
                 }
-                else if (i.data.aptitude === "Cognition") {
-                  aptSelect = data.aptitudes.cog.value;
+                else if (itemModel.aptitude === "Cognition") {
+                  aptSelect = actorModel.aptitudes.cog.value;
                 }
-                else if (i.data.aptitude === "Reflexes") {
-                  aptSelect = data.aptitudes.ref.value;
+                else if (itemModel.aptitude === "Reflexes") {
+                  aptSelect = actorModel.aptitudes.ref.value;
                 }
-                else if (i.data.aptitude === "Somatics") {
-                  aptSelect = data.aptitudes.som.value;
+                else if (itemModel.aptitude === "Somatics") {
+                  aptSelect = actorModel.aptitudes.som.value;
                 }
-                else if (i.data.aptitude === "Willpower") {
-                  aptSelect = data.aptitudes.wil.value;
+                else if (itemModel.aptitude === "Willpower") {
+                  aptSelect = actorModel.aptitudes.wil.value;
                 }
-                else if (i.data.aptitude === "Savvy") {
-                  aptSelect = data.aptitudes.sav.value;
+                else if (itemModel.aptitude === "Savvy") {
+                  aptSelect = actorModel.aptitudes.sav.value;
                 }
                 
-                i.roll = Number(i.data.value) + aptSelect;
-                i.specroll = Number(i.data.value) + aptSelect + 10;
-                if(!i.data.value)
-                  i.roll=aptSelect;
+                item.roll = Number(itemModel.value) + aptSelect;
+                item.specroll = Number(itemModel.value) + aptSelect + 10;
+                if(!itemModel.value)
+                  item.roll=aptSelect;
                 else
-                  i.roll = Number(i.data.value);
-                i.specroll = i.roll + 10;
-                special.push(i);
+                  item.roll = Number(itemModel.value);
+                item.specroll = item.roll + 10;
+                special.push(item);
             }
         }
 
-        actorData.showEffectsTab=false
+        actor.showEffectsTab=false
         if(game.settings.get("eclipsephase", "effectPanel")  && game.user.isGM){
           var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
           for(let i of effectList){
             effects.push(i.data);
           }
-          actorData.showEffectsTab=true;
+          actor.showEffectsTab=true;
         }
 
         // Assign and return
-        actorData.rangedWeapon = rangedweapon;
-        actorData.ccweapon = ccweapon;
-        actorData.armor = armor;
-        actorData.ware = ware;
-        actorData.aspect = aspect;
-        actorData.gear = gear;
-        actorData.features = features;
-        actorData.vehicle = vehicle;
-        actorData.specialSkill = special;
-        actorData.morphTrait = morphTrait;
-        actorData.activeEffects = effects;
-        
+        actor.rangedWeapon = rangedweapon;
+        actor.ccweapon = ccweapon;
+        actor.armor = armor;
+        actor.ware = ware;
+        actor.aspect = aspect;
+        actor.gear = gear;
+        actor.features = features;
+        actor.vehicle = vehicle;
+        actor.specialSkill = special;
+        actor.morphTrait = morphTrait;
+        actor.activeEffects = effects;
     }
 
     activateListeners(html) {

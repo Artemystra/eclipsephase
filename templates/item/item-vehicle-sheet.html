@@ -14,7 +14,7 @@
                     <td>
                         <label class="resource-label">Type</label>
                     </td>
-                    {{#if (eq data.data.type "Morph")}}
+                    {{#if (eq item.system.type "Morph")}}
                     <td>
                         <label class="resource-label">Insight</label>
                     </td>
@@ -22,7 +22,7 @@
                         <label class="resource-label">Moxie</label>
                     </td>
                     {{/if}}
-                    {{#if (eq data.data.type "Vehicle")}}
+                    {{#if (eq item.system.type "Vehicle")}}
                     <td>
                         <label class="resource-label">Passengers</label>
                     </td>
@@ -51,52 +51,62 @@
                 </tr>
                 <tr>
                     <td>
-                        <select name="data.type" data-type="String">
-                            {{#select data.data.type}}
+                        <select name="system.type" data-type="String">
+                            {{#select item.system.type}}
                             {{#each config.vehicleType as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
-                    {{#if (eq data.data.type "Morph")}}
+                    {{#if (eq item.system.type "Morph")}}
                     <td>
-                        <input class="input-medium"type="number" name="data.ins" value="{{data.ins}}" placeholder="0"/>
+                        <input class="input-medium"type="number"
+                        name="system.ins" value="{{item.system.ins}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="data.ins" value="{{data.data.ins}}" placeholder="0"/>
-                    </td>
-                    {{/if}}
-                    {{#if (eq data.data.type "Vehicle")}}
-                    <td>
-                        <input class="input-medium"type="number" name="data.mox" value="{{data.data.mox}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="system.ins"
+                        value="{{item.system.ins}}" placeholder="0"/>
                     </td>
                     {{/if}}
+                    {{#if (eq item.system.type "Vehicle")}}
                     <td>
-                        <input class="input-medium"type="number" name="data.vig" value="{{data.data.vig}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="system.mox"
+                                                                 value="{{item.system.mox}}" placeholder="0"/>
+                    </td>
+                    {{/if}}
+                    <td>
+                        <input class="input-medium"type="number" name="system.vig"
+                                                                 value="{{item.system.vig}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="data.flex" value="{{data.data.flex}}" placeholder="0"/>
+                        <input class="input-medium"type="number"
+                               name="system.flex" value="{{item.system.flex}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium" type="text" name="data.armor" value="{{data.data.armor}}" placeholder="e.g. 2/2"/>
+                        <input class="input-medium" type="text"
+                                                    name="system.armor"
+                                                    value="{{item.system.armor}}" placeholder="e.g. 2/2"/>
                     </td>
                     <td>
-                        <input class="input-medium" type="number" name="data.dur" value="{{data.data.dur}}" placeholder="e.g. 20"/>
+                        <input class="input-medium" type="number"
+                                                    name="system.dur"
+                                                    value="{{item.system.dur}}" placeholder="e.g. 20"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="data.mov" value="{{data.data.mov}}" placeholder="e.g. 8/32 Rotor"/>
+                        <input class="input-large" type="text" name="system.mov"
+                                                               value="{{item.system.mov}}" placeholder="e.g. 8/32 Rotor"/>
                     </td>
                     <td>
-                        <select name="data.slotType" data-type="String">
-                            {{#select data.data.slotType}}
+                        <select name="system.slotType" data-type="String">
+                            {{#select item.system.slotType}}
                             {{#each config.vehicleSize as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        <select name="data.cost" data-type="String">
-                            {{#select data.data.cost}}
+                        <select name="system.cost" data-type="String">
+                            {{#select item.system.cost}}
                             {{#each config.costTypes as |name type|}}
                             <option value="{{name}}">{{name}}</option>
                             {{/each}} {{/select}}
@@ -108,6 +118,9 @@
         <p></p>
 
         <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description" name="data.description" rows="10" cols="60">{{data.data.description}}</textarea></div>
+        <div class="textAreaDescription"><textarea class="description"
+                                                   name="system.description"
+                                                   rows="10"
+                                                   cols="60">{{item.system.description}}</textarea></div>
     </section>
 </form>
