@@ -127,7 +127,9 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/psi.html",
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/effectsTab.html",
-    "systems/eclipsephase/templates/actor/partials/id.html"
+    "systems/eclipsephase/templates/actor/partials/id.html",
+    "systems/eclipsephase/templates/actor/partials/morph-details.html",
+    "systems/eclipsephase/templates/actor/partials/morph-traits.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {

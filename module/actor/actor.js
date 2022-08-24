@@ -126,7 +126,8 @@ export class EclipsePhaseActor extends Actor {
     if(this.type === 'npc' || this.type === 'goon') {
 
       //Calculating WT & DR
-      actorData.health.physical.max = (actorData.bodies.morph1.dur) + eval(actorData.mods.durmod) // only one morph for npcs
+      actorData.health.physical.max = (actorData.bodies.morph1.dur) + 
+        Number(actorData.mods.durmod) // only one morph for npcs
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * 
         eclipsephase.damageRatingMultiplier[actorData.bodyType.value])
@@ -139,7 +140,7 @@ export class EclipsePhaseActor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorData.bodies[actorData.bodies.activeMorph]
-      actorData.health.physical.max = morph.dur + eval(actorData.mods.durmod)
+      actorData.health.physical.max = morph.dur + Number(actorData.mods.durmod)
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * 
         eclipsephase.damageRatingMultiplier[morph.type])
@@ -172,7 +173,7 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(actorData.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
+      aptitude.calc = aptitude.value * 3 + Number(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
@@ -231,14 +232,14 @@ export class EclipsePhaseActor extends Actor {
 
   _calculateInitiative(actorData) {
     actorData.initiative.value = Math.round((actorData.aptitudes.ref.value +
-      actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
+      actorData.aptitudes.int.value) / 5) + Number(actorData.mods.iniMod)
     actorData.initiative.display = "1d6 + " + actorData.initiative.value
   }
 
   _calculateMentalHealth(actorData) {
-    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + eval(actorData.mods.lucmod);
+    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + Number(actorData.mods.lucmod);
     actorData.mental.ir = actorData.health.mental.max * 2;
-    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + eval(actorData.mods.ttMod);
+    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + Number(actorData.mods.ttMod);
     if(actorData.health.mental.value === null){
       actorData.health.mental.value = actorData.health.mental.max;
     }

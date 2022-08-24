@@ -1,4 +1,3 @@
-import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js"
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers } from "../common/common-sheet-functions.js";
 
@@ -76,9 +75,26 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     await this._prepareRenderedHTMLContent(sheetData)
 
-
     //Prepare dropdowns
     sheetData.config = CONFIG.eclipsephase;
+
+    // Why jump through hoops in the template when we can set the active morph
+    // here?!
+    let morphKey = actor.system.bodies.activeMorph
+    let description = await TextEditor.enrichHTML(actor.system.bodies[morphKey].description,
+      { async: true })
+
+    sheetData.activeMorph = {
+      key: morphKey,
+      name: actor.system.bodies[morphKey].name || "Morph",
+      morph: actor.system.bodies[morphKey],
+      wares: actor.ware[morphKey],
+      traits: actor.morphTrait[morphKey],
+      presentTraits: actor.morphTrait[morphKey].length > 0,
+      flaws: actor.morphFlaw[morphKey],
+      presentFlaws: actor.morphFlaw[morphKey].length > 0,
+      description: description
+    }
 
 
     console.log("******* actor-sheet")
@@ -327,16 +343,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   }
 
   async _prepareRenderedHTMLContent(sheetData) {
-
     let model = sheetData.actor.system
-    let morphs = ["morph1", "morph2", "morph3", "morph4", "morph5"]
-
-    for(let m of morphs) {
-      let sheetKey = m + "HtmlDescription"
-      let source = model.bodies[m].description
-      let html = await TextEditor.enrichHTML(source, { async: true } )
-      sheetData[sheetKey] = html
-    }
 
     let bio = await TextEditor.enrichHTML(model.biography, { async: true })
     sheetData["htmlBiography"] = bio
