@@ -126,7 +126,8 @@ export class EclipsePhaseActor extends Actor {
     if(this.type === 'npc' || this.type === 'goon') {
 
       //Calculating WT & DR
-      actorData.health.physical.max = (actorData.bodies.morph1.dur) + eval(actorData.mods.durmod) // only one morph for npcs
+      actorData.health.physical.max = (actorData.bodies.morph1.dur) + 
+        Number(actorData.mods.durmod) // only one morph for npcs
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * 
         eclipsephase.damageRatingMultiplier[actorData.bodyType.value])
@@ -139,7 +140,7 @@ export class EclipsePhaseActor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorData.bodies[actorData.bodies.activeMorph]
-      actorData.health.physical.max = morph.dur + eval(actorData.mods.durmod)
+      actorData.health.physical.max = morph.dur + Number(actorData.mods.durmod)
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * 
         eclipsephase.damageRatingMultiplier[morph.type])
@@ -151,41 +152,6 @@ export class EclipsePhaseActor extends Actor {
     }
 
     this._calculateArmor(actorData)
-    ////Calculating armor
-    //let energyTotal = null;
-    //let kineticTotal = null;
-    //let mainArmorAmount = null;
-    //let additionalArmorAmount = null;
-    //for (let armor of items ) {
-    //  let key = armor.type;
-    //  if(key === 'armor' && armor.active){
-    //    energyTotal += parseInt(armor.energy);
-    //    kineticTotal += parseInt(armor.kinetic);
-    //    if (armor.slotType === "Main Armor") {
-    //      mainArmorAmount++
-    //    }
-    //    if (armor.slotType === "Additional Armor") {
-    //      additionalArmorAmount++
-    //    }
-    //  }
-    //}
-    //actorData.physical.energyArmorTotal = energyTotal + eval(actorData.mods.energyMod);
-    //actorData.physical.kineticArmorTotal = kineticTotal + eval(actorData.mods.kineticMod);
-    //actorData.physical.mainArmorTotal = mainArmorAmount
-    //actorData.physical.additionalArmorTotal = additionalArmorAmount
-    //actorData.physical.mainArmorMalus = 0
-    //actorData.physical.additionalArmorMalus = 0
-    //actorData.physical.armorMalusTotal = 0
-    //if (mainArmorAmount > 1){
-    //  actorData.physical.mainArmorMalus = (mainArmorAmount - 1)*20
-    //}
-    //if (additionalArmorAmount > 1){
-    //  actorData.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
-    //}
-    //if (actorData.physical.mainArmorMalus || actorData.physical.additionalArmorMalus) {
-    //  actorData.physical.armorMalusTotal = actorData.physical.mainArmorMalus+data.physical.additionalArmorMalus
-    //}
-
     this._calculateInitiative(actorData)
 
     /*Modificators
@@ -207,7 +173,7 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(actorData.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
+      aptitude.calc = aptitude.value * 3 + Number(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
@@ -266,14 +232,14 @@ export class EclipsePhaseActor extends Actor {
 
   _calculateInitiative(actorData) {
     actorData.initiative.value = Math.round((actorData.aptitudes.ref.value +
-      actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
+      actorData.aptitudes.int.value) / 5) + Number(actorData.mods.iniMod)
     actorData.initiative.display = "1d6 + " + actorData.initiative.value
   }
 
   _calculateMentalHealth(actorData) {
-    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + eval(actorData.mods.lucmod);
+    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + Number(actorData.mods.lucmod);
     actorData.mental.ir = actorData.health.mental.max * 2;
-    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + eval(actorData.mods.ttMod);
+    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + Number(actorData.mods.ttMod);
     if(actorData.health.mental.value === null){
       actorData.health.mental.value = actorData.health.mental.max;
     }
@@ -291,42 +257,44 @@ export class EclipsePhaseActor extends Actor {
       Number(actorData.pools.vigor.mod)
   }
 
-  _calculateArmor(actorData) {
-    let energyTotal = null;
-    let kineticTotal = null;
-    let mainArmorAmount = null;
-    let additionalArmorAmount = null;
-    for (let armor of this.items) {
-      let key = armor.type;
-      if(key === 'armor' && armor.active){
-        energyTotal += parseInt(armor.energy);
-        kineticTotal += parseInt(armor.kinetic);
-        if (armor.slotType === "Main Armor") {
+  _calculateArmor(actorModel) {
+    let energyTotal = 0
+    let kineticTotal = 0
+    let mainArmorAmount = 0
+    let additionalArmorAmount = 0
+
+    let armorItems = this.items.filter(i => i.type === "armor")
+
+    for (let armor of armorItems) {
+      let key = armor.type
+      if(armor.system.active){
+        energyTotal += Number(armor.system.energy)
+        kineticTotal += Number(armor.system.kinetic)
+        if (armor.system.slotType === "Main Armor") {
           mainArmorAmount++
         }
-        if (armor.slotType === "Additional Armor") {
+        if (armor.system.slotType === "Additional Armor") {
           additionalArmorAmount++
         }
       }
     }
-    actorData.physical.energyArmorTotal = energyTotal +
-      Number(actorData.mods.energyMod)
-    actorData.physical.kineticArmorTotal = kineticTotal +
-      Number(actorData.mods.kineticMod);
-    actorData.physical.mainArmorTotal = mainArmorAmount
-    actorData.physical.additionalArmorTotal = additionalArmorAmount
-    actorData.physical.mainArmorMalus = 0
-    actorData.physical.additionalArmorMalus = 0
-    actorData.physical.armorMalusTotal = 0
 
-    if (mainArmorAmount > 1){
-      actorData.physical.mainArmorMalus = (mainArmorAmount - 1)*20
+    actorModel.physical.energyArmorTotal = energyTotal + Number(actorModel.mods.energyMod)
+    actorModel.physical.kineticArmorTotal = kineticTotal + Number(actorModel.mods.kineticMod);
+    actorModel.physical.mainArmorTotal = mainArmorAmount
+    actorModel.physical.additionalArmorTotal = additionalArmorAmount
+    actorModel.physical.mainArmorMalus = 0
+    actorModel.physical.additionalArmorMalus = 0
+    actorModel.physical.armorMalusTotal = 0
+
+    if (mainArmorAmount > 1) {
+      actorModel.physical.mainArmorMalus = (mainArmorAmount - 1)*20
     }
-    if (additionalArmorAmount > 1){
-      actorData.physical.additionalArmorMalus = (additionalArmorAmount - 1)*20
+    if (additionalArmorAmount > 1) {
+      actorModel.physical.additionalArmorMalus = (additionalArmorAmount - 1) * 20
     }
-    if (actorData.physical.mainArmorMalus || actorData.physical.additionalArmorMalus) {
-      actorData.physical.armorMalusTotal = actorData.physical.mainArmorMalus+data.physical.additionalArmorMalus
+    if (actorModel.physical.mainArmorMalus || actorModel.physical.additionalArmorMalus) {
+      actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+data.physical.additionalArmorMalus
     }
   }
 
