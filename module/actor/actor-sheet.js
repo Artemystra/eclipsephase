@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js"
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers } from "../common/common-sheet-functions.js";
+import * as Dice from "../dice.js"
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
