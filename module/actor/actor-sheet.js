@@ -10,7 +10,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     constructor(...args) {
       super(...args);
-      
+
       const showEverything = game.settings.get("eclipsephase", "showEverything");
       console.log(this);
       if(showEverything){
@@ -185,127 +185,127 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
-    for (let i of sheetData.items) {
-      let item = i.system;
+    for (let item of sheetData.items) {
+      let itemModel = item.system;
 
-      i.img = i.img || DEFAULT_TOKEN;
+      item.img = item.img || DEFAULT_TOKEN;
       // Append to features.
-      if (i.type === 'specialSkill') {
+      if (item.type === 'specialSkill') {
         let aptSelect = 0;
-        if (item.aptitude === "Intuition") {
+        if (itemModel.aptitude === "Intuition") {
           aptSelect = model.aptitudes.int.value;
         }
-        else if (item.aptitude === "Cognition") {
+        else if (itemModel.aptitude === "Cognition") {
           aptSelect = model.aptitudes.cog.value;
         }
-        else if (item.aptitude === "Reflexes") {
+        else if (itemModel.aptitude === "Reflexes") {
           aptSelect = model.aptitudes.ref.value;
         }
-        else if (item.aptitude === "Somatics") {
+        else if (itemModel.aptitude === "Somatics") {
           aptSelect = model.aptitudes.som.value;
         }
-        else if (item.aptitude === "Willpower") {
+        else if (itemModel.aptitude === "Willpower") {
           aptSelect = model.aptitudes.wil.value;
         }
-        else if (item.aptitude === "Savvy") {
+        else if (itemModel.aptitude === "Savvy") {
           aptSelect = model.aptitudes.sav.value;
         }
-        i.roll = Number(item.value) + aptSelect;
-        i.specroll = Number(item.value) + aptSelect + 10;
-        special.push(i);
+        item.roll = Number(itemModel.value) + aptSelect;
+        item.specroll = Number(itemModel.value) + aptSelect + 10;
+        special.push(item);
         }
-        else if (i.type === 'knowSkill') {
+        else if (item.type === 'knowSkill') {
           let aptSelect = 0;
-          if (item.aptitude === "Intuition") {
+          if (itemModel.aptitude === "Intuition") {
             aptSelect = model.aptitudes.int.value;
           }
-          else if (item.aptitude === "Cognition") {
+          else if (itemModel.aptitude === "Cognition") {
             aptSelect = model.aptitudes.cog.value;
           }
-          i.roll = Number(item.value) + aptSelect;
-          i.specroll = Number(item.value) + aptSelect + 10;
-          know.push(i);
+          item.roll = Number(itemModel.value) + aptSelect;
+          item.specroll = Number(itemModel.value) + aptSelect + 10;
+          know.push(item);
         }
-        else if (i.type === 'trait') {
-          trait.push(i);
+        else if (item.type === 'trait') {
+          trait.push(item);
         }
-        else if (i.type === 'flaw') {
-          flaw.push(i);
+        else if (item.type === 'flaw') {
+          flaw.push(item);
         }
-        else if (item.displayCategory === 'ranged') {
-          rangedweapon.push(i);
+        else if (itemModel.displayCategory === 'ranged') {
+          rangedweapon.push(item);
         }
-        else if (item.displayCategory === 'ccweapon') {
-          ccweapon.push(i);
+        else if (itemModel.displayCategory === 'ccweapon') {
+          ccweapon.push(item);
         }
-        else if (item.displayCategory === 'armor') {
-          armor.push(i);
+        else if (itemModel.displayCategory === 'armor') {
+          armor.push(item);
         }
-        else if (i.type === 'aspect') {
-          aspect[item.psiType].push(i);
+        else if (item.type === 'aspect') {
+          aspect[itemModel.psiType].push(item);
         }
-        else if (i.type === 'program') {
-          program.push(i);
+        else if (item.type === 'program') {
+          program.push(item);
         }
-        else if (item.displayCategory === 'gear') {
-          gear.push(i);
+        else if (itemModel.displayCategory === 'gear') {
+          gear.push(item);
         }
-        else if (i.type === 'vehicle') {
-          i.wt = Math.round(item.dur / 5);
-          i.dr = Math.round(item.dur * 2);
-          vehicle[item.type].push(i)
+        else if (item.type === 'vehicle') {
+          item.wt = Math.round(itemModel.dur / 5);
+          item.dr = Math.round(itemModel.dur * 2);
+          vehicle[itemModel.type].push(item)
         }
-      else if (i.type === 'ware' && item.boundTo) {
-            ware[item.boundTo].push(i);
+      else if (item.type === 'ware' && itemModel.boundTo) {
+            ware[itemModel.boundTo].push(item);
         }
-        else if (i.type === 'morphFlaw' && item.boundTo) {
-            if (item.boundTo === "morph1"){
+        else if (item.type === 'morphFlaw' && itemModel.boundTo) {
+            if (itemModel.boundTo === "morph1"){
                 morphtrait.present1 = true;
             }
-            else if (item.boundTo === "morph2"){
+            else if (itemModel.boundTo === "morph2"){
                 morphtrait.present2 = true;
             }
-            else if (item.boundTo === "morph3"){
+            else if (itemModel.boundTo === "morph3"){
                 morphtrait.present3 = true;
             }
-            else if (item.boundTo === "morph4"){
+            else if (itemModel.boundTo === "morph4"){
                 morphtrait.present4 = true;
             }
-            else if (item.boundTo === "morph5"){
+            else if (itemModel.boundTo === "morph5"){
                 morphtrait.present5 = true;
             }
-            else if (item.boundTo === "morph6"){
+            else if (itemModel.boundTo === "morph6"){
                 morphtrait.present6 = true;
             }
-            morphflaw[item.boundTo].push(i);
+            morphflaw[itemModel.boundTo].push(item);
         }
-        else if (i.type === 'morphTrait' && item.boundTo) {
-            if (item.boundTo === "morph1"){
+        else if (item.type === 'morphTrait' && itemModel.boundTo) {
+            if (itemModel.boundTo === "morph1"){
                 morphtrait.present1 = true;
             }
-            else if (item.boundTo === "morph2"){
+            else if (itemModel.boundTo === "morph2"){
                 morphtrait.present2 = true;
             }
-            else if (item.boundTo === "morph3"){
+            else if (itemModel.boundTo === "morph3"){
                 morphtrait.present3 = true;
             }
-            else if (item.boundTo === "morph4"){
+            else if (itemModel.boundTo === "morph4"){
                 morphtrait.present4 = true;
             }
-            else if (item.boundTo === "morph5"){
+            else if (itemModel.boundTo === "morph5"){
                 morphtrait.present5 = true;
             }
-            else if (item.boundTo === "morph6"){
+            else if (itemModel.boundTo === "morph6"){
                 morphtrait.present6 = true;
             }
-            morphtrait[item.boundTo].push(i);
+            morphtrait[itemModel.boundTo].push(item);
         }
     }
 
     actor.showEffectsTab=false
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
       var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
-      for(let i of effectList){
+      for(let item of effectList){
         effects.push(item);
       }
       actor.showEffectsTab=true;
