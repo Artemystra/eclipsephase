@@ -18,6 +18,9 @@
   --highlightBackground: #414141;
   --accentBackground: #24485d;
   --color-bg-option: #1f1f1f;
+  --color-shadow-primary: #36aee9;
+  --color-border-highlight: #36aee9;
+  --color-underline-header: #36aee9;
 }
 
 .grid,
@@ -240,6 +243,10 @@
   padding: 0 8px;
 }
 
+.token-sheet {
+  width: 600px!important;
+}
+
 .eclipsephase .resource-label {
   text-transform: uppercase;
   text-align: left;
@@ -394,6 +401,34 @@ input[class="check-inline-edit"]{
   margin: 0 5px;
 }
 
+input[type="text"]::placeholder, 
+input[type="number"]::placeholder, 
+input[type="password"]::placeholder, 
+input[type="date"]::placeholder, 
+input[type="time"]::placeholder, 
+input[type="search"]::placeholder {
+  color: var(--inactive);
+}
+
+input[type="text"]::-ms-input-placeholder, 
+input[type="number"]::-ms-input-placeholder, 
+input[type="password"]::-ms-input-placeholder, 
+input[type="date"]::-ms-input-placeholder, 
+input[type="time"]::-ms-input-placeholder, 
+input[type="search"]::-ms-input-placeholder {
+  color: var(--inactive);
+}
+
+input[type="text"], 
+input[type="number"], 
+input[type="password"], 
+input[type="date"], 
+input[type="time"], 
+input[type="search"] {
+  color: var(--mainText);
+
+}
+
 input[type="text"]{
   text-align: left;
 }
@@ -478,9 +513,38 @@ h2 {
   border-bottom: 1px solid var(--accentBackground);
 }
 
+button,
 form button,
 .dialog .dialog-buttons button.default,
 .dialog .dialog-buttons button{
+  color: var(--mainText);
+  background: var(--highlightBackground);
+}
+
+button:disabled {
+  color: var(--inactive);
+}
+
+a.content-link, a.inline-roll {
+  background: var(--highlightBackground);
+}
+
+.prosemirror menu button:hover {
+  background: var(--highlightBackground);
+  color: var(--mainText);
+}
+
+.prosemirror menu .pm-dropdown ul {
+  background: var(--highlightBackground);
+  border: none;
+}
+
+.prosemirror menu .pm-dropdown{
+  background: var(--mainBackground);
+}
+
+.prosemirror menu .pm-dropdown:hover {
+  background: var(--highlightBackground);
   color: var(--mainText);
 }
 
@@ -616,6 +680,13 @@ form .notes, form .hint {
   box-shadow: 0 0 10px var(--highlight);
 }
 
+#controls ol.control-tools > li.active, #controls ol.control-tools > li:hover {
+  color: #FFF;
+  border: 1px solid var(--highlight);
+  border-bottom: 1px solid var(--highlight);
+  box-shadow: 0 0 10px var(--highlight);
+}
+
 #hotbar .macro:hover {
   box-shadow: 0 0 10px var(--highlight) inset;
 }
@@ -666,6 +737,10 @@ optgroup .Default .Roll .Mode,
 
 .journal-sheet form h1 {
   border-bottom: var(--highlight);
+}
+
+.sheet.journal-entry .journal-entry-content {
+  background: none!important;
 }
 
 .dark button {
@@ -1000,8 +1075,7 @@ h3.subheaderBlank {
   margin-right: 5px;
 }
 
-.icon-small,
-.icon-hidden{
+.icon-small{
   max-height: 24px!important;
   max-width: 24px!important;
   border: none;
@@ -1009,6 +1083,7 @@ h3.subheaderBlank {
 
 .icon-hidden{
   opacity: 0%;
+  border: none;
 }
 
 .noShow {
