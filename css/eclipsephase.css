@@ -1363,3 +1363,45 @@ h3.inline {
   background: none;
   margin: 10px 3px;
 }
+
+/* Module Styling Support */
+
+/*Monk's Enhanced Journal*/
+
+.monks-enhanced-journal .mainbar > div {
+  border-bottom: 1px solid var(--highlightBackground)!important;
+}
+
+.monks-enhanced-journal .tab-bar .journal-tab {
+  background: var(--mainBackground)!important;
+  border: none !important;
+}
+
+.monks-enhanced-journal .tab-bar .journal-tab.active {
+  background: var(--highlightBackground)!important;
+  border: none !important;
+}
+
+.monks-enhanced-journal .mainbar .navigation .nav-button, 
+.monks-enhanced-journal footer.navigation .nav-button {
+  background: var(--highlightBackground)!important;
+  border: none !important;
+}
+
+.monks-enhanced-journal .directory-sidebar {
+  background: none!important;
+}
+
+#journal-directory li.folder.collapsed > .folder-header:not(.customcolor), 
+#journal-directory li.folder.collapsed > .folder-header .create-folder, 
+#journal-directory li.folder.collapsed > .folder-header .create-document {
+  color: var(--mainText)!important;
+}
+
+.monks-enhanced-journal .mainbar .navigation {
+  background: none!important;
+}
+
+.monks-enhanced-journal .mainbar .navigation .nav-input:focus {
+  background: var(--highlightBackground)!important;
+}
