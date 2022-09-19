@@ -243,7 +243,8 @@
   padding: 0 8px;
 }
 
-.token-sheet {
+.token-sheet,
+.ambient-light-config {
   width: 600px!important;
 }
 
