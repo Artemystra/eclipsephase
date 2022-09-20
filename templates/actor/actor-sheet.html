@@ -683,7 +683,7 @@
                 </div>
                 <div class="itemBackground">
                     {{#each actor.rangedWeapon as |item id|}}
-                    {{#if true}}
+                    {{#if this.system.active}}
                     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox"
                         data-dtype="Boolean" data-item-id="{{item._id}}"
@@ -791,7 +791,7 @@
                 </div>
                 <div class="itemBackground">
                     {{#each actor.ccweapon as |item id|}}
-                    {{#if true}}
+                    {{#if this.system.active}}
                     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox"
                         data-dtype="Boolean" data-item-id="{{item._id}}"
@@ -867,7 +867,7 @@
                     <div class="grid grid-2col">
                         {{#each actor.gear as |item id|}}
                         <div>
-                            {{#if item.system.active}}
+                            {{#if this.system.active}}
                             <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                                 <input class="sheet equipped checkBox"
                                 data-dtype="Boolean" data-item-id="{{item._id}}"
@@ -934,7 +934,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if system.program}}
+            {{#if actor.program}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Programs Loaded</h3>
@@ -943,7 +943,7 @@
                 </div>
                 <div class="itemBackground" style="position: relative; z-index: 2;">
                     <div class="grid grid-2col">
-                        {{#each system.program as |item id|}}
+                        {{#each actor.program as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                                 <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
