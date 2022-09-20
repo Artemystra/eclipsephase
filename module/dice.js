@@ -634,6 +634,8 @@ export async function TaskCheck({
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
     let rollMod = Number(globalMod) - Number(woundsTotal);
     console.log("this is the rollMod", rollMod)
+    console.log("this is the woundsTotal", woundsTotal)
+    console.log("this is the globalMod", globalMod)
     let modSkillValue = Number(skillValue) + Number(globalMod) + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
     console.log("this is the modSkillValue" + modSkillValue + " this is the skillValue " + skillValue)
 
