@@ -415,7 +415,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       html.find('.equipped.checkBox').click(ev => {
           const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
           const item = actor.items.get(itemId);
-          let toggle = !item.active;
+          let toggle = !item.system.active;
           const updateData = {
               "system.active": toggle
           };
