@@ -934,7 +934,7 @@
                 </div>
             </div>
             {{/if}}
-            {{#if system.program}}
+            {{#if actor.program}}
             <div class="contentBox">
                 <div class="flexrow">
                     <h3 class="subheader">Programs Loaded</h3>
@@ -943,7 +943,7 @@
                 </div>
                 <div class="itemBackground" style="position: relative; z-index: 2;">
                     <div class="grid grid-2col">
-                        {{#each system.program as |item id|}}
+                        {{#each actor.program as |item id|}}
                         <div>
                             <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                                 <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
