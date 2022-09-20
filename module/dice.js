@@ -297,8 +297,8 @@ function applyHealthModifiers(actorData, taskRoll) {
 
     let woundsMod = parseInt(actorData.mods.woundMod*10)
     let traumasMod = parseInt(actorData.mods.traumaMod*10)
-    let wounds = parseInt(actorData.mods.wounds)+woundsMod
-    let trauma = parseInt(actorData.mods.trauma)+traumasMod
+    let wounds = parseInt(actorData.physical.wounds*10)+woundsMod
+    let trauma = parseInt(actorData.mental.trauma*10)+traumasMod
 
   if(wounds > 0)
     taskRoll.addModifier(new TaskRollModifier('Wound modifier', -wounds))
@@ -379,6 +379,7 @@ export async function TaskCheck({
     activeRollTarget = "",
     globalMod = null,
     rollFormula = "1d100",
+    woundsMod = Number(actorData.physical.wounds + actorData.mental.trauma)*10,
     //Psi
     infectionMod = null,
     aspectPushes = null,
@@ -627,14 +628,16 @@ export async function TaskCheck({
 
 
     //General roll modifications
-    let woundsTotal = Number(actorData.mods.wounds) + Number(actorData.mods.trauma)
+    let woundsTotal = woundsMod
     console.log("This is actorData.mods.wounds: " + actorData.mods.wounds + " calculated from actorData.physical.wounds * 10: " + actorData.physical.wounds * 10 + " plust actorData.mods.woundMod * 10: " + actorData.mods.woundMod * 10);
     console.log(actorData.mods);
     console.log("this is actorData.mods.wounds" + actorData.mods.wounds + " this is actorData.mods.trauma " + actorData.mods.trauma)
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
     let rollMod = Number(globalMod) - Number(woundsTotal);
     console.log("this is the rollMod", rollMod)
-    let modSkillValue = Number(skillValue) + Number(globalMod) + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
+    console.log("this is the woundsTotal", woundsTotal)
+    console.log("this is the globalMod", globalMod)
+    let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
     console.log("this is the modSkillValue" + modSkillValue + " this is the skillValue " + skillValue)
 
     //Chat message variables

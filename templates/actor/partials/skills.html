@@ -465,14 +465,14 @@
                                 <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
                                 <input class="input-small sheet-inline-edit"
                                 data-field="system.value" type="number"
-                                name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                name="item.system.value" value="{{item.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
                                 <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 <img src="icons/svg/d10-grey.svg" class="toggle
                                 input-small roll-label icon-small task-check
                                 noShow" data-type="skill"
                                 data-name="{{item.name}}"
-                                data-rollvalue="{{item.system.roll}}" style="max-width: 34.5px!important;"/>
+                                data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
                                 {{#if item.system.specname}}
                                 <label class="resource-label item-control
                                   item-edit hoverable truncate
@@ -517,14 +517,14 @@
                                 <label class="resource-label item-control item-edit hoverable" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
                                 <input class="input-small sheet-inline-edit "
                                 data-field="system.value" type="number"
-                                name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                name="item.system.value" value="{{item.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
                                 <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 <img src="icons/svg/d10-grey.svg" class="toggle
                                 input-small roll-label icon-small task-check
                                 noShow" data-type="skill"
                                 data-name="{{item.name}}"
-                                data-rollvalue="{{item.system.roll}}" style="max-width: 34.5px!important;"/>
+                                data-rollvalue="{{item.roll}}" style="max-width: 34.5px!important;"/>
                                 {{#if item.system.specname}}
                                 <label class="resource-label item-control
                                   item-edit hoverable truncate

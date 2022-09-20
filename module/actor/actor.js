@@ -48,62 +48,6 @@ export class EclipsePhaseActor extends Actor {
 
     // if(actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon')
     //   this._prepareCharacterData(actorData)
-
-    //HOMEBREW - Encumbrance through weapons & gear
-    if(actorData.homebrew === true && this.type === "character"){
-      //Weapon Variables
-      let weaponScore = 0
-      let bulkyWeaponCount = 0
-      let weaponMalus = 0;
-      //Weapon loop
-      for(let weaponCheck of items){
-        if(weaponCheck.type === "ccWeapon" || weaponCheck.type === "rangedWeapon") {
-          if(weaponCheck.active === true && weaponCheck.slotType === "Sidearm"){
-            weaponScore++;
-          } 
-          else if(weaponCheck.active === true && weaponCheck.slotType === "One Handed"){
-            weaponScore += 2;
-          }
-          else if(weaponCheck.active === true && weaponCheck.slotType === "Two Handed"){
-            weaponScore += 5;
-          }
-          else if(weaponCheck.active === true && weaponCheck.slotType === "Bulky"){
-            bulkyWeaponCount++;
-          }
-        }
-      }
-      if(weaponScore > 6){
-        
-        weaponMalus = Math.ceil((weaponScore-5)/5)*10;
-      }
-      actorData.physical.totalWeaponMalus = weaponMalus;
-      //Gear Variables
-      let accessoryCount = 0;
-      let bulkyCount = bulkyWeaponCount;
-      let accessoryMalus = 0;
-      let bulkyMalus = 0;
-      //Gear loop
-      for(let gearCheck of items){
-        if(gearCheck.type === "gear" && gearCheck.active === true && gearCheck.slotType === "Accessory"){
-          accessoryCount++;
-        }
-        if(gearCheck.type === "gear" && gearCheck.active === true && gearCheck.slotType === "Bulky"){
-          bulkyCount++;
-        }    
-      }
-      if(accessoryCount > 4){
-        accessoryMalus = Math.ceil((accessoryCount-4)/4)*10;
-      }
-      if(bulkyCount >= 1){
-        bulkyMalus = (bulkyCount)*20;
-      }
-      actorData.physical.totalGearMalus = bulkyMalus + accessoryMalus;
-    }
-    //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
-    else {
-      actorData.physical.totalWeaponMalus = 0;
-      actorData.physical.totalGearMalus = 0;
-    }
     
     //Determin whether any gear is present
     actorData.hasGear=false;
@@ -112,11 +56,6 @@ export class EclipsePhaseActor extends Actor {
         actorData.hasGear = true;
         break;
       }
-    }
-
-    //Checks if morph & ego picture are the same
-    if (actorData.img === actorData.bodies.morph1.img){
-      console.log("Check if the same picture is used for Ego & Body. Source: actor.js");
     }
 
     this._calculateMentalHealth(actorData)
@@ -153,6 +92,7 @@ export class EclipsePhaseActor extends Actor {
 
     this._calculateArmor(actorData)
     this._calculateInitiative(actorData)
+    this._calculateHomebrewEncumberance(actorData)
 
     /*Modificators
     data.mods.wounds = (data.physical.wounds * 10)+(eval(data.mods.woundMod) * 10);
@@ -257,6 +197,68 @@ export class EclipsePhaseActor extends Actor {
       Number(actorData.pools.vigor.mod)
   }
 
+  _calculateHomebrewEncumberance(actorData) {
+   //HOMEBREW - Encumbrance through weapons & gear
+   if(actorData.homebrew === true && this.type === "character"){
+    //Weapon Variables
+    let weaponScore = 0
+    let bulkyWeaponCount = 0
+    let weaponMalus = 0;
+    let weaponItems = this.items.filter(i => i.type === "rangedWeapon" || i.type === "ccWeapon")
+    //Gear Variables
+    let gearItems = this.items.filter(i => i.type === "gear")
+    let accessoryCount = 0;
+    let accessoryMalus = 0;
+    let bulkyCount = 0;
+    let bulkyMalus = 0;
+    //Weapon loop
+    for(let weaponCheck of weaponItems){
+      console.log("My little weapon log", weaponCheck.name+ ", " + weaponCheck.system.slotType + ", " + weaponCheck.system.active);
+        if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Sidearm"){
+          weaponScore++;
+        } 
+        else if(weaponCheck.system.active === true && weaponCheck.system.slotType === "One Handed"){
+          weaponScore += 2;
+        }
+        else if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Two Handed"){
+          weaponScore += 5;
+        }
+        else if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Bulky"){
+          bulkyWeaponCount++;
+        }
+    }
+    //Gear loop
+    for(let gearCheck of gearItems){
+console.log("My little gear log", gearCheck.name + ", " + gearCheck.system.slotType + ", " + gearCheck.system.active);
+      if(gearCheck.system.active === true && gearCheck.system.slotType === "Accessory"){
+        accessoryCount++;
+      }
+      else if(gearCheck.system.active === true && gearCheck.system.slotType === "Bulky"){
+        bulkyCount++;
+      }
+    }
+    //Bulky loop
+    if(accessoryCount > 4){
+      accessoryMalus = Math.ceil((accessoryCount-4)/4)*10;
+    }
+    if(weaponScore > 6){
+      
+      weaponMalus = Math.ceil((weaponScore-5)/5)*10;
+    }
+    
+    if(bulkyCount >= 1){
+      bulkyMalus = (bulkyCount+bulkyWeaponCount)*20;
+    }
+    actorData.physical.totalWeaponMalus = weaponMalus;
+    actorData.physical.totalGearMalus = bulkyMalus + accessoryMalus;
+  }
+  //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
+  else {
+    actorData.physical.totalWeaponMalus = 0;
+    actorData.physical.totalGearMalus = 0;
+  }
+  }
+
   _calculateArmor(actorModel) {
     let energyTotal = 0
     let kineticTotal = 0
@@ -294,7 +296,7 @@ export class EclipsePhaseActor extends Actor {
       actorModel.physical.additionalArmorMalus = (additionalArmorAmount - 1) * 20
     }
     if (actorModel.physical.mainArmorMalus || actorModel.physical.additionalArmorMalus) {
-      actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+data.physical.additionalArmorMalus
+      actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+actorModel.physical.additionalArmorMalus
     }
   }
 
