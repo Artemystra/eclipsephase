@@ -444,7 +444,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @private
    */
 
-  _onMorphSwitch(event) {
+  /* _onMorphSwitch(event) {
     event.preventDefault();
     
     let actor = this.actor
@@ -540,6 +540,89 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
     return this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
+
+  ------------------------------------------- New Version? --------------------------------------
+  _onMorphSwitch(event) {
+    event.preventDefault();
+    
+    let actor = this.actorData
+
+    console.log("**** _onMorphSwitch")
+    console.log(this.actor.activeEffects)
+
+    let itemTypes = this.actor.itemTypes
+
+    console.log(itemTypes)
+
+    let mTraits = itemTypes.morphTrait
+    let mFlaws = itemTypes.morphFlaw
+    let mWare = itemTypes.ware
+    let mtToggle = null;
+    let mfToggle = null;
+    let mwToggle = null;
+    let currentMorph = event.currentTarget.value;
+
+
+    for (let trait of mTraits){
+      if (trait.system.boundTo === currentMorph){
+        mtToggle = true
+      }
+      else {
+        mtToggle = false
+      }
+      let effUpdateData=[];
+      console.log("**** eff of actor.activeEffects")
+      console.log(this.actor.activeEffects)
+      for(let eff of actor.activeEffects.filter(e => 
+        (e.disabled === mtToggle && e.origin.indexOf(mTraits._id)>=0))){
+
+          effUpdateData.push({
+            "_id" : eff._id,
+            disabled: !mtToggle
+          });
+      }
+      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+    }
+
+    for (let flaw of mFlaws){
+      if (flaw.system.boundTo === currentMorph){
+        mfToggle = true
+      }
+      else {
+        mfToggle = false
+      }
+      let effUpdateData=[];
+      for(let eff of actor.activeEffects.filter(e => 
+        (e.disabled === mfToggle && e.origin.indexOf(mFlaws._id)>=0))){
+
+          effUpdateData.push({
+            "_id" : eff._id,
+            disabled: !mfToggle
+          });
+      }
+      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+    }
+    for (let ware of mWare){
+      if (ware.system.boundTo === currentMorph){
+        mwToggle = true
+      }
+      else {
+        mwToggle = false
+      }
+      let effUpdateData=[];
+      for(let eff of actor.activeEffects.filter(e => 
+        (e.disabled === mwToggle && e.origin.indexOf(mWare._id)>=0))){
+
+          effUpdateData.push({
+            "_id" : eff._id,
+            disabled: !mwToggle
+          });
+      }
+      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+    }
+  }
+
+  */
 
   /**
    * Handle clickable rolls.
