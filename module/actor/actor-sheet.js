@@ -408,8 +408,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
-      //Change active/passive state of morph/body bound flaws
-      html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
+      /*Change active/passive state of morph/body bound flaws
+      html.find(".bodySelect").change(this._onMorphSwitch.bind(this)); */
 
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
@@ -522,25 +522,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
   }
 
-  _onItemCreate(event) {
-    event.preventDefault();
-    const header = event.currentTarget;
-    const type = header.dataset.type;
-    const data = duplicate(header.dataset);
-    const name = `New ${type.capitalize()}`;
-    const itemData = {
-      name: name,
-      type: type,
-      data: data
-    };
-    
-    delete itemData.data["type"];
-    if (itemData.type === "specialSkill") {
-      itemData.name = "New Skill";
-    }
-    return this.actor.createEmbeddedDocuments("Item", [itemData]);
-  }
-
   ------------------------------------------- New Version? --------------------------------------
   _onMorphSwitch(event) {
     event.preventDefault();
@@ -623,6 +604,27 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   }
 
   */
+
+  _onItemCreate(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+    const type = header.dataset.type;
+    const data = duplicate(header.dataset);
+    const name = `New ${type.capitalize()}`;
+    const itemData = {
+      name: name,
+      type: type,
+      data: data
+    };
+    
+    delete itemData.data["type"];
+    if (itemData.type === "specialSkill") {
+      itemData.name = "New Skill";
+    }
+    return this.actor.createEmbeddedDocuments("Item", [itemData]);
+  }
+
+  
 
   /**
    * Handle clickable rolls.
