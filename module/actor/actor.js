@@ -309,7 +309,7 @@ console.log("My little gear log", gearCheck.name + ", " + gearCheck.system.slotT
     else
       skill.derived = skill.value
 
-    skill.roll = skill.derived - data.mods.wounds - data.mods.trauma
+    skill.roll = Number(skill.derived)
     skill.specialized = skill.roll + 10
   }
 }
