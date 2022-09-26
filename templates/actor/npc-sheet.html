@@ -9,15 +9,15 @@
         <a class="item" data-tab="description">Description</a>
         <a class="item" data-tab="skills">Mental</a>
         <a class="item" data-tab="weapons">Physical</a>
-        {{#if system.showEffectsTab}}
+        {{#if actor.showEffectsTab}}
         <a class="item" data-tab="effects">Effects</a>
         {{/if}}
-        {{#if system.vehicle}}
+        {{#if actor.vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
         {{/if}}
-        {{#if system.aspect.Chi}}
+        {{#if actor.aspect.Chi}}
         <a class="item" data-tab="psi">Psi</a>
-        {{else if system.aspect.Gamma}}
+        {{else if actor.aspect.Gamma}}
         <a class="item" data-tab="psi">Psi</a>
         {{/if}}
     </nav>
