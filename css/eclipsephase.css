@@ -478,6 +478,10 @@ textarea:focus{
   outline: none;
 }
 
+textarea:read-only{
+  color: var(--inactive);
+}
+
 input[class="sheet"]:checked,
 input[class="sheet equipped checkBox"]:checked{
   background-color: var(--highlight);
