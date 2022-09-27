@@ -181,7 +181,8 @@
                 <div class="contentBox flexGrowHalf">
                     <div class="flexrow">
                         <h3 class="subheader">Armor & Gear</h3>
-                        <div class="alignRight flexGrowThreeQuarter">
+                        <div class="alignRight reveal">
+                            <a class="item-control item-create" title="Create item" data-type="armor" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Armor</a>
                         </div>
                     </div>
                     <div class="listBackground noMargin">
@@ -190,13 +191,13 @@
                             {{#each actor.armor as |item id|}}
                             <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
                                 <div class="flexrow">
-                                    <input class="sheet-inline-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
+                                    <input class="sheet-inline-edit item-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
                                 </div>
                                 <div class="flexrow flex-group-right">
-                                    <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.energy}}</strong></label>
+                                    <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
                                 </div>
                                 <div class="flexrow flex-group-right">
-                                    <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.kinetic}}</strong></label>
+                                    <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
                                 </div>
                                 <div class="flex-group-right input-small">
                                     <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
