@@ -117,7 +117,7 @@ export class NpcSheet extends ActorSheet {
             else if (itemModel.displayCategory === 'ranged') {
                 rangedweapon.push(item)
             }
-            else if (item.data.displayCategory === 'ccweapon') {
+            else if (item.displayCategory === 'ccweapon') {
                 ccweapon.push(item)
             }
             else if (itemModel.displayCategory === 'armor') {

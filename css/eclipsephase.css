@@ -628,8 +628,12 @@ a:hover{
 
 .eclipsephase .tabs .item {
   font-weight: bold;
-  padding: 0 20px;
   min-width: 15%;
+  width: auto;
+}
+
+.eclipsephase .tabs .item {
+  padding: 0!important;
 }
 
 .eclipsephase .tabs .item:first-child {
@@ -1084,6 +1088,12 @@ h3.subheaderBlank {
 .icon-small{
   max-height: 24px!important;
   max-width: 24px!important;
+  border: none;
+}
+
+.icon-dice{
+  max-height: 24px!important;
+  width: 40px!important;
   border: none;
 }
 
