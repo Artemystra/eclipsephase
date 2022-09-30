@@ -168,8 +168,8 @@ export class NpcSheet extends ActorSheet {
                 else if (itemModel.aptitude === "Savvy") {
                   aptSelect = actorModel.aptitudes.sav.value;
                 }
-                item.roll = Number(item.data.value) + aptSelect;
-                item.specroll = Number(item.data.value) + aptSelect + 10;
+                item.roll = Number(item.system.value) + aptSelect;
+                item.specroll = Number(item.system.value) + aptSelect + 10;
                 special.push(item);
             }
         }
@@ -177,8 +177,8 @@ export class NpcSheet extends ActorSheet {
         actor.showEffectsTab=false
         if(game.settings.get("eclipsephase", "effectPanel")  && game.user.isGM){
           var effectList=actor.getEmbeddedCollection('ActiveEffect');
-          for(let i of effectList){
-            effects.push(i.data);
+          for(let item of effectList){
+            effects.push(item);
           }
           actor.showEffectsTab=true;
         }
@@ -338,7 +338,7 @@ export class NpcSheet extends ActorSheet {
     _onToggleReveal(event) {
         const reveals = event.currentTarget.getElementsByClassName("info");
         $.each(reveals, function (index, value){
-          $(value).toggleClass("hidden");
+          $(value).toggleClass("icon-hidden");
         })
         const revealer = event.currentTarget.getElementsByClassName("toggle");
         $.each(revealer, function (index, value){
