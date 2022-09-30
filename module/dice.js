@@ -634,11 +634,19 @@ export async function TaskCheck({
     if (curratedTrauma > 0) {
         woundsMod += curratedTrauma
     }
-    let woundsTotal = woundsMod;
+    let woundsTotal = null;
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
-    let rollMod = Number(globalMod) - Number(woundsTotal);
+    let rollMod = null;
+        //Prevents wounds from being added to aptitudes
+        if (rollType === "aptitude"){
+            rollMod = Number(globalMod);
+        }
+        else {
+            woundsTotal = woundsMod;
+            rollMod = Number(globalMod) - Number(woundsTotal);
+        }
     let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
-
+    
     //Chat message variables
     spec = specName ? "(" + specName + ")" : "";
     let situationalPlus = globalMod>0 ? "+" : "";

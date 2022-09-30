@@ -50,10 +50,10 @@ export class EclipsePhaseActor extends Actor {
     //   this._prepareCharacterData(actorData)
     
     //Determin whether any gear is present
-    actorData.hasGear=false;
+    this.hasGear=false;
     for(let gearCheck of items){
-      if(gearCheck.displayCategory === "ranged" || gearCheck.displayCategory === "ccweapon" || gearCheck.displayCategory === "gear"){
-        actorData.hasGear = true;
+      if(gearCheck.system.displayCategory === "ranged" || gearCheck.system.displayCategory === "ccweapon" || gearCheck.system.displayCategory === "gear"){
+        this.hasGear = true;
         break;
       }
     }
