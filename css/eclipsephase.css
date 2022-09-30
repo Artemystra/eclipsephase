@@ -622,6 +622,10 @@ a:hover{
   border-bottom: 3px solid var(--pitchBorder);
 }
 
+.sheet nav.sheet-tabs.itemnav .item{
+  min-width: 50%;
+}
+
 .eclipsephase .tabs {
   justify-content: space-between;
 }
