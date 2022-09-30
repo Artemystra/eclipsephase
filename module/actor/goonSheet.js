@@ -333,7 +333,7 @@ export class GoonSheet extends ActorSheet {
     _onToggleReveal(event) {
         const reveals = event.currentTarget.getElementsByClassName("info");
         $.each(reveals, function (index, value){
-          $(value).toggleClass("hidden");
+          $(value).toggleClass("icon-hidden");
         })
         const revealer = event.currentTarget.getElementsByClassName("toggle");
         $.each(revealer, function (index, value){

@@ -637,16 +637,14 @@ export async function TaskCheck({
     let woundsTotal = null;
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
     let rollMod = null;
-    console.log ("Here goes my rollType for this roll: ", rollType);
-    if (rollType === "aptitude"){
-        rollMod = Number(globalMod);
-        console.log ("Here goes my rollMod for aptitudes: ", rollMod);
-    }
-    else {
-        woundsTotal = woundsMod;
-        rollMod = Number(globalMod) - Number(woundsTotal);
-        console.log ("Here goes my rollMod for none-aptitudes: ", rollMod);
-    }
+        //Prevents wounds from being added to aptitudes
+        if (rollType === "aptitude"){
+            rollMod = Number(globalMod);
+        }
+        else {
+            woundsTotal = woundsMod;
+            rollMod = Number(globalMod) - Number(woundsTotal);
+        }
     let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
     
     //Chat message variables

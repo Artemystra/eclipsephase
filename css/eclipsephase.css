@@ -478,6 +478,10 @@ textarea:focus{
   outline: none;
 }
 
+textarea:read-only{
+  color: var(--inactive);
+}
+
 input[class="sheet"]:checked,
 input[class="sheet equipped checkBox"]:checked{
   background-color: var(--highlight);
@@ -618,14 +622,22 @@ a:hover{
   border-bottom: 3px solid var(--pitchBorder);
 }
 
+.sheet nav.sheet-tabs.itemnav .item{
+  min-width: 50%;
+}
+
 .eclipsephase .tabs {
   justify-content: space-between;
 }
 
 .eclipsephase .tabs .item {
   font-weight: bold;
-  padding: 0 20px;
   min-width: 15%;
+  width: auto;
+}
+
+.eclipsephase .tabs .item {
+  padding: 0!important;
 }
 
 .eclipsephase .tabs .item:first-child {
@@ -1080,6 +1092,12 @@ h3.subheaderBlank {
 .icon-small{
   max-height: 24px!important;
   max-width: 24px!important;
+  border: none;
+}
+
+.icon-dice{
+  max-height: 24px!important;
+  width: 40px!important;
   border: none;
 }
 
