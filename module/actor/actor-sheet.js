@@ -87,7 +87,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     sheetData.activeMorph = {
       key: morphKey,
-      name: actor.system.bodies[morphKey].name || "Morph",
+      name: actor.system.bodies[morphKey].name || "New Morph",
       morph: actor.system.bodies[morphKey],
       wares: actor.ware[morphKey],
       traits: actor.morphTrait[morphKey],
