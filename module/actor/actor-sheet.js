@@ -408,8 +408,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
-      /*Change active/passive state of morph/body bound flaws
-      html.find(".bodySelect").change(this._onMorphSwitch.bind(this)); */
+      ///Change active/passive state of morph/body bound flaws
+      html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
 
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
@@ -522,88 +522,135 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
   }
 
-  ------------------------------------------- New Version? --------------------------------------
+  ------------------------------------------- New Version? -------------------------------------- */
   _onMorphSwitch(event) {
     event.preventDefault();
-    
-    let actor = this.actorData
 
     console.log("**** _onMorphSwitch")
     console.log(this.actor.activeEffects)
+
+    let actor = this.actor
+
+   // const itemID = actor.items.get(itemId);
 
     let itemTypes = this.actor.itemTypes
 
     console.log(itemTypes)
 
+    //I'm sure this part can be streamlined later. I might have a look into it, but now I need to get this code done. Too impatient.
     let mTraits = itemTypes.morphTrait
+    console.log("*** Morph traits present")
+    console.log(mTraits)
     let mFlaws = itemTypes.morphFlaw
     let mWare = itemTypes.ware
-    let mtToggle = null;
-    let mfToggle = null;
-    let mwToggle = null;
+    //let sumOfRelevantItems = itemTypes.morphTrait + itemTypes.morphFlaw + itemTypes.ware
     let currentMorph = event.currentTarget.value;
+
+    /*for (let listAll of sumOfRelevantItems) {
+      console.log("This item is part of the relevant list")
+      console.log("The item ", listAll)
+    }*/
 
 
     for (let trait of mTraits){
-      if (trait.system.boundTo === currentMorph){
-        mtToggle = true
-      }
-      else {
-        mtToggle = false
-      }
+      let morphTraitNumber = 1
+      console.log("*** Singular Bound Traits of Morph", morphTraitNumber)
+      morphTraitNumber ++
+      console.log("Morph Trait " + trait.name + " is bound to " + trait.system.boundTo + " and has the item ID " + trait._id)
+      let boundEffects = this.object.effects
       let effUpdateData=[];
-      console.log("**** eff of actor.activeEffects")
-      console.log(this.actor.activeEffects)
-      for(let eff of actor.activeEffects.filter(e => 
-        (e.disabled === mtToggle && e.origin.indexOf(mTraits._id)>=0))){
+      //I have no idea why, but toggle only works if I use !boundEffects.disabled... probably will investigate in the future.
+      let toggle = !boundEffects.disabled;
+      if (trait.system.boundTo === currentMorph) {
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
+          console.log ("This is the effect in whole", effect._id + " " +effect.disabled)
 
           effUpdateData.push({
-            "_id" : eff._id,
-            disabled: !mtToggle
+            "_id" : effect._id,
+            disabled: !toggle
           });
+
+          console.log("This effect got ENABLED")
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       }
-      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+      else {
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
+          console.log ("This is the effect in whole", effect._id + " " +effect.disabled)
+
+          effUpdateData.push({
+            "_id" : effect._id,
+            disabled: toggle
+          });
+
+          console.log("This effect got DISABLED")
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+      }
     }
 
-    for (let flaw of mFlaws){
-      if (flaw.system.boundTo === currentMorph){
-        mfToggle = true
-      }
-      else {
-        mfToggle = false
-      }
+    for (let trait of mFlaws){
+      let boundEffects = this.object.effects
       let effUpdateData=[];
-      for(let eff of actor.activeEffects.filter(e => 
-        (e.disabled === mfToggle && e.origin.indexOf(mFlaws._id)>=0))){
+      let toggle = !boundEffects.disabled;
+      if (trait.system.boundTo === currentMorph) {
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
 
           effUpdateData.push({
-            "_id" : eff._id,
-            disabled: !mfToggle
+            "_id" : effect._id,
+            disabled: !toggle
           });
+
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       }
-      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+      else {
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
+
+          effUpdateData.push({
+            "_id" : effect._id,
+            disabled: toggle
+          });
+
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+      }
     }
-    for (let ware of mWare){
-      if (ware.system.boundTo === currentMorph){
-        mwToggle = true
-      }
-      else {
-        mwToggle = false
-      }
+
+    for (let trait of mWare){
+      let boundEffects = this.object.effects
       let effUpdateData=[];
-      for(let eff of actor.activeEffects.filter(e => 
-        (e.disabled === mwToggle && e.origin.indexOf(mWare._id)>=0))){
+      let toggle = !boundEffects.disabled;
+      if (trait.system.boundTo === currentMorph) {
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
 
           effUpdateData.push({
-            "_id" : eff._id,
-            disabled: !mwToggle
+            "_id" : effect._id,
+            disabled: !toggle
           });
+
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       }
-      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+      else {
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
+
+          effUpdateData.push({
+            "_id" : effect._id,
+            disabled: toggle
+          });
+
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+      }
     }
   }
-
-  */
 
   _onItemCreate(event) {
     event.preventDefault();

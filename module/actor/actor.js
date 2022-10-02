@@ -79,10 +79,13 @@ export class EclipsePhaseActor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorData.bodies[actorData.bodies.activeMorph]
-      actorData.health.physical.max = morph.dur + Number(actorData.mods.durmod)
+      console.log("This is my morph", morph)
+      actorData.health.physical.max = Number(morph.dur) + Number(actorData.mods.durmod)
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
-      actorData.physical.dr = Math.round(actorData.health.physical.max * 
-        eclipsephase.damageRatingMultiplier[morph.type])
+      actorData.physical.dr = Math.round(actorData.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]))
+      console.log("This is my actorData.health.physical.max", actorData.health.physical.max)
+      console.log("This is my eclipsephase.damageRatingMultiplier[morph.type]", eclipsephase.damageRatingMultiplier[morph.type])
+      console.log("This is my death rating", actorData.physical.dr)
       if(actorData.health.physical.value === null) {
         actorData.health.physical.value = actorData.health.physical.max
       }
@@ -213,7 +216,6 @@ export class EclipsePhaseActor extends Actor {
     let bulkyMalus = 0;
     //Weapon loop
     for(let weaponCheck of weaponItems){
-      console.log("My little weapon log", weaponCheck.name+ ", " + weaponCheck.system.slotType + ", " + weaponCheck.system.active);
         if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Sidearm"){
           weaponScore++;
         } 
@@ -229,7 +231,6 @@ export class EclipsePhaseActor extends Actor {
     }
     //Gear loop
     for(let gearCheck of gearItems){
-console.log("My little gear log", gearCheck.name + ", " + gearCheck.system.slotType + ", " + gearCheck.system.active);
       if(gearCheck.system.active === true && gearCheck.system.slotType === "Accessory"){
         accessoryCount++;
       }

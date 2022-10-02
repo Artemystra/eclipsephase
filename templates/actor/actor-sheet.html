@@ -1014,7 +1014,7 @@
                                                                                  monster">{{actor.system.psiStrain.description}}</textarea></li>
                 </ol>
                 <ol>
-                    {{#each actor.systeactor.system as |influence key|}}
+                    {{#each actor.system.strainInfluence as |influence key|}}
                     <li><div class="textAreaDescription"><textarea
                           class="description" name="system.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
                     {{/each}}
