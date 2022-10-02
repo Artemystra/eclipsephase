@@ -12,7 +12,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       super(...args);
 
       const showEverything = game.settings.get("eclipsephase", "showEverything");
-      console.log(this);
       if(showEverything){
         this.position.height = 900;
         this.position.width = 800;
@@ -98,8 +97,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
 
 
-    console.log("******* actor-sheet")
-    console.log(sheetData)
+
 
     return sheetData
   }
@@ -107,8 +105,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   //Binds morphFlaws/Traits/Gear to a singular morph
   async _onDropItemCreate(item) {
 
-    console.log("***** _onDropItemCreate")
-    console.log(item)
+  
 
     // Create a Consumable spell scroll on the Inventory tab
     if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware") {
@@ -332,15 +329,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
    console.log(actor)
 
-    //console.log("What is actorData? ", actorData)
-    //console.log("Normal Traits: ", actorData.trait)
-    //console.log("Normal Flaws: ", actorData.flaw)
-
-    //console.log("Morph Flaw Array", actorData.morphFlaw)
-    // console.log("Morph Trait Array", actorData.morphTrait)
-    //console.log("Ware Array", actorData.ware)
-
-    //console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
   async _prepareRenderedHTMLContent(sheetData) {
@@ -447,13 +435,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   _onMorphSwitch(event) {
     event.preventDefault();
 
-    console.log("**** _onMorphSwitch")
-    console.log(this.actor.activeEffects)
-
     let actor = this.actor
     let itemTypes = this.actor.itemTypes
-
-    console.log(itemTypes)
 
     let sumOfRelevantItems = [itemTypes.morphTrait,itemTypes.morphFlaw,itemTypes.ware];
     let itemList = [];
