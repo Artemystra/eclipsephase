@@ -45,9 +45,6 @@ export class EclipsePhaseActor extends Actor {
     else {
       actorData.homebrew = false;
     }
-
-    // if(actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon')
-    //   this._prepareCharacterData(actorData)
     
     //Determin whether any gear is present
     this.hasGear=false;
@@ -93,16 +90,6 @@ export class EclipsePhaseActor extends Actor {
     this._calculateInitiative(actorData)
     this._calculateHomebrewEncumberance(actorData)
 
-    /*Modificators
-    data.mods.wounds = (data.physical.wounds * 10)+(eval(data.mods.woundMod) * 10);
-    data.mods.trauma = (data.mental.trauma * 10)+(eval(data.mods.traumaMod) * 10);
-    console.log("This is data.mods.wounds: " + data.mods.wounds + " calculated from data.physical.wounds * 10: " + data.physical.wounds * 10 + " plust data.mods.woundMod * 10: " + data.mods.woundMod * 10);
-    if (data.mods.trauma < 0){
-      data.mods.trauma = 0
-    }
-    if (data.mods.wounds < 0){
-      data.mods.wounds = 0
-    }*/
     //Psi-Calculator - Not Working yet
     if (this.type === "npc" || this.type === "character") {
       actorData.psiStrain.new = 0;
