@@ -58,54 +58,54 @@
                 </div>
             </div>
             <div class="limited-editor">
-                {{#if (eq actor.system.bodies.activeMorph "morph1")}}
-                    {{editor
-                      morph1HtmlDescription
-                      target="system.bodies.morph1.description"
-                      button=true
-                      owner=owner
-                      editable=this.options.editable
-                    }}
-                {{else if (eq actor.system.bodies.activeMorph "morph2")}}
-                    {{editor
-                      morph2HtmlDescription
-                      target="system.bodies.morph2.description"
-                      button=true
-                      owner=owner
-                      editable=this.options.editable
-                    }}
-                {{else if (eq actor.system.bodies.activeMorph "morph3")}}
-                    {{editor
-                      morph3HtmlDescription
-                      target="system.bodies.morph3.description"
-                      button=true
-                      owner=owner
-                      editable=this.options.editable
-                    }}
-                {{else if (eq actor.system.bodies.activeMorph "morph4")}}
-                    {{editor
-                      morph4HtmlDescription
-                      target="system.bodies.morph4.description"
-                      button=true
-                      owner=owner
-                      editable=this.options.editable
-                    }}
-                {{else if (eq actor.system.bodies.activeMorph "morph5")}}
-                    {{editor
-                      morph5HtmlDescription
-                      target="system.bodies.morph5.description"
-                      button=true
-                      owner=owner
-                      editable=this.options.editable
-                    }}
-                {{else if (eq actor.system.bodies.activeMorph "morph6")}}
-                    {{editor
-                      morph6HtmlDescription
-                      target="system.bodies.morph6.description"
-                      button=true
-                      owner=owner
-                      editable=this.options.editable
-                    }}
+                {{#if (eq activeMorph.key "morph1")}}
+                {{editor
+                  activeMorph.description
+                  target="system.bodies.morph1.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
+                {{else if (eq activeMorph.key "morph2")}}
+                {{editor
+                  activeMorph.description
+                  target="system.bodies.morph2.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
+                {{else if (eq activeMorph.key "morph3")}}
+                {{editor
+                  activeMorph.description
+                  target="system.bodies.morph3.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
+                {{else if (eq activeMorph.key "morph4")}}
+                {{editor
+                  activeMorph.description
+                  target="system.bodies.morph4.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
+                {{else if (eq activeMorph.key "morph5")}}
+                {{editor
+                  activeMorph.description
+                  target="system.bodies.morph5.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
+                {{else if (eq activeMorph.key "morph6")}}
+                {{editor
+                  activeMorph.description
+                  target="system.bodies.morph6.description"
+                  button=true
+                  owner=owner
+                  editable=this.options.editable
+                }}
                 {{/if}}
             </div>
         </div>
