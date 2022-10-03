@@ -441,7 +441,9 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     let sumOfRelevantItems = [itemTypes.morphTrait,itemTypes.morphFlaw,itemTypes.ware];
     let itemList = [];
     let currentMorph = event.currentTarget.value;
-
+    let allEffects = this.object.effects
+    let boundEffects = []
+    //creates a complete list of all items bound to a morph
     for (var i = 0; sumOfRelevantItems.length !== 0; i++) {
       var j = 0;
       while (j < sumOfRelevantItems.length) {
@@ -453,9 +455,14 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           }
         }
       }
-
+    //browses through ALL effects and identifies, whether they are bound to an item or not
+    for (let effectScan of allEffects){
+      if (effectScan.origin){
+        boundEffects.push(effectScan);
+      }
+    }
+    //this goes through all items bound to a morph. Based on whether they have effects to them, they're getting activated if the morph is selected or deactivated if the item is bound to any morph NOT selected
     for (let trait of itemList){
-      let boundEffects = this.object.effects
       let effUpdateData=[];
       //I have no idea why, but toggle only works if I use !boundEffects.disabled... probably will investigate in the future.
       let toggle = !boundEffects.disabled;
