@@ -12,7 +12,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       super(...args);
 
       const showEverything = game.settings.get("eclipsephase", "showEverything");
-      console.log(this);
       if(showEverything){
         this.position.height = 900;
         this.position.width = 800;
@@ -87,7 +86,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
     sheetData.activeMorph = {
       key: morphKey,
-      name: actor.system.bodies[morphKey].name || "Morph",
+      name: actor.system.bodies[morphKey].name || "New Morph",
       morph: actor.system.bodies[morphKey],
       wares: actor.ware[morphKey],
       traits: actor.morphTrait[morphKey],
@@ -98,8 +97,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     }
 
 
-    console.log("******* actor-sheet")
-    console.log(sheetData)
+
 
     return sheetData
   }
@@ -107,8 +105,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   //Binds morphFlaws/Traits/Gear to a singular morph
   async _onDropItemCreate(item) {
 
-    console.log("***** _onDropItemCreate")
-    console.log(item)
+  
 
     // Create a Consumable spell scroll on the Inventory tab
     if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware") {
@@ -332,15 +329,6 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
    console.log(actor)
 
-    //console.log("What is actorData? ", actorData)
-    //console.log("Normal Traits: ", actorData.trait)
-    //console.log("Normal Flaws: ", actorData.flaw)
-
-    //console.log("Morph Flaw Array", actorData.morphFlaw)
-    // console.log("Morph Trait Array", actorData.morphTrait)
-    //console.log("Ware Array", actorData.ware)
-
-    //console.log("Morph Flaw Array 1 ", actorData.morphFlaw.morph1)
   }
 
   async _prepareRenderedHTMLContent(sheetData) {
@@ -408,8 +396,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
-      /*Change active/passive state of morph/body bound flaws
-      html.find(".bodySelect").change(this._onMorphSwitch.bind(this)); */
+      ///(De)Activate morph/body bound traits/flaws/ware
+      html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
 
       //Edit Item Checkboxes
       html.find('.equipped.checkBox').click(ev => {
@@ -444,166 +432,65 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @private
    */
 
-  /* _onMorphSwitch(event) {
-    event.preventDefault();
-    
-    let actor = this.actor
-
-    console.log("**** _onMorphSwitch")
-    console.log(this)
-
-    let itemTypes = this.actor.itemTypes
-
-    console.log(itemTypes)
-
-    let mTraits = itemTypes.morphTrait
-    let mFlaws = itemTypes.morphFlaw
-    let mWare = itemTypes.ware
-    let mtToggle = null;
-    let mfToggle = null;
-    let mwToggle = null;
-    let currentMorph = event.currentTarget.value;
-
-
-    for (let trait of mTraits){
-      if (trait.system.boundTo === currentMorph){
-        mtToggle = true
-      }
-      else {
-        mtToggle = false
-      }
-    let effUpdateData=[];
-    for(let eff of actor.effects.filter(e =>
-      (e.data.disabled === mtToggle && e.data.origin.indexOf(trait.data._id)>=0))){
-        console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
-        effUpdateData.push({
-          "_id" : eff.data._id,
-          disabled: !mtToggle
-        });
-    }
-    actor.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
-    }
-
-    for (let flaw of mFlaws){
-      if (flaw.system.boundTo === currentMorph){
-        mfToggle = true
-      }
-      else {
-        mfToggle = false
-      }
-    let effUpdateData=[];
-    for(let eff of actor.effects.filter(e => 
-      (e.data.disabled === mfToggle && e.data.origin.indexOf(flaw.data._id)>=0))){
-        console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
-        effUpdateData.push({
-          "_id" : eff.data._id,
-          disabled: !mfToggle
-        });
-    }
-    actor.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
-    }
-    for (let ware of mWare){
-      if (ware.system.boundTo === currentMorph){
-        mwToggle = true
-      }
-      else {
-        mwToggle = false
-      }
-    let effUpdateData=[];
-    for(let eff of actor.effects.filter(e => 
-      (e.data.disabled === mwToggle && e.data.origin.indexOf(ware.data._id)>=0))){
-        console.log("This is e.data.origin.indexOf(ware.data._id): ", eff)
-        effUpdateData.push({
-          "_id" : eff.data._id,
-          disabled: !mwToggle
-        });
-    }
-    actor.updateEmbeddedDocuments("ActiveEffect",effUpdateData);
-    }
-  }
-
-  ------------------------------------------- New Version? --------------------------------------
   _onMorphSwitch(event) {
     event.preventDefault();
-    
-    let actor = this.actorData
 
-    console.log("**** _onMorphSwitch")
-    console.log(this.actor.activeEffects)
-
+    let actor = this.actor
     let itemTypes = this.actor.itemTypes
 
-    console.log(itemTypes)
-
-    let mTraits = itemTypes.morphTrait
-    let mFlaws = itemTypes.morphFlaw
-    let mWare = itemTypes.ware
-    let mtToggle = null;
-    let mfToggle = null;
-    let mwToggle = null;
+    let sumOfRelevantItems = [itemTypes.morphTrait,itemTypes.morphFlaw,itemTypes.ware];
+    let itemList = [];
     let currentMorph = event.currentTarget.value;
-
-
-    for (let trait of mTraits){
-      if (trait.system.boundTo === currentMorph){
-        mtToggle = true
+    let allEffects = this.object.effects
+    let boundEffects = []
+    //creates a complete list of all items bound to a morph
+    for (var i = 0; sumOfRelevantItems.length !== 0; i++) {
+      var j = 0;
+      while (j < sumOfRelevantItems.length) {
+          if (i >= sumOfRelevantItems[j].length) {
+              sumOfRelevantItems.splice(j, 1);
+          } else {
+              itemList.push(sumOfRelevantItems[j][i]);
+              j += 1;
+          }
+        }
       }
-      else {
-        mtToggle = false
+    //browses through ALL effects and identifies, whether they are bound to an item or not
+    for (let effectScan of allEffects){
+      if (effectScan.origin){
+        boundEffects.push(effectScan);
       }
-      let effUpdateData=[];
-      console.log("**** eff of actor.activeEffects")
-      console.log(this.actor.activeEffects)
-      for(let eff of actor.activeEffects.filter(e => 
-        (e.disabled === mtToggle && e.origin.indexOf(mTraits._id)>=0))){
-
-          effUpdateData.push({
-            "_id" : eff._id,
-            disabled: !mtToggle
-          });
-      }
-      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
     }
-
-    for (let flaw of mFlaws){
-      if (flaw.system.boundTo === currentMorph){
-        mfToggle = true
-      }
-      else {
-        mfToggle = false
-      }
+    //this goes through all items bound to a morph. Based on whether they have effects to them, they're getting activated if the morph is selected or deactivated if the item is bound to any morph NOT selected
+    for (let trait of itemList){
       let effUpdateData=[];
-      for(let eff of actor.activeEffects.filter(e => 
-        (e.disabled === mfToggle && e.origin.indexOf(mFlaws._id)>=0))){
+      //I have no idea why, but toggle only works if I use !boundEffects.disabled... probably will investigate in the future.
+      let toggle = !boundEffects.disabled;
+      if (trait.system.boundTo === currentMorph) {
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
 
           effUpdateData.push({
-            "_id" : eff._id,
-            disabled: !mfToggle
+            "_id" : effect._id,
+            disabled: !toggle
           });
-      }
-      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
-    }
-    for (let ware of mWare){
-      if (ware.system.boundTo === currentMorph){
-        mwToggle = true
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       }
       else {
-        mwToggle = false
-      }
-      let effUpdateData=[];
-      for(let eff of actor.activeEffects.filter(e => 
-        (e.disabled === mwToggle && e.origin.indexOf(mWare._id)>=0))){
+        for (let effect of boundEffects.filter(e => 
+          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
 
           effUpdateData.push({
-            "_id" : eff._id,
-            disabled: !mwToggle
+            "_id" : effect._id,
+            disabled: toggle
           });
+
+        }
+        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       }
-      actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
     }
   }
-
-  */
 
   _onItemCreate(event) {
     event.preventDefault();
