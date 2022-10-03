@@ -45,9 +45,6 @@ export class EclipsePhaseActor extends Actor {
     else {
       actorData.homebrew = false;
     }
-
-    // if(actorData.type === 'character' || actorData.type === 'npc' || actorData.type === 'goon')
-    //   this._prepareCharacterData(actorData)
     
     //Determin whether any gear is present
     this.hasGear=false;
@@ -79,10 +76,9 @@ export class EclipsePhaseActor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorData.bodies[actorData.bodies.activeMorph]
-      actorData.health.physical.max = morph.dur + Number(actorData.mods.durmod)
+      actorData.health.physical.max = Number(morph.dur) + Number(actorData.mods.durmod)
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
-      actorData.physical.dr = Math.round(actorData.health.physical.max * 
-        eclipsephase.damageRatingMultiplier[morph.type])
+      actorData.physical.dr = Math.round(actorData.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]))
       if(actorData.health.physical.value === null) {
         actorData.health.physical.value = actorData.health.physical.max
       }
@@ -94,16 +90,6 @@ export class EclipsePhaseActor extends Actor {
     this._calculateInitiative(actorData)
     this._calculateHomebrewEncumberance(actorData)
 
-    /*Modificators
-    data.mods.wounds = (data.physical.wounds * 10)+(eval(data.mods.woundMod) * 10);
-    data.mods.trauma = (data.mental.trauma * 10)+(eval(data.mods.traumaMod) * 10);
-    console.log("This is data.mods.wounds: " + data.mods.wounds + " calculated from data.physical.wounds * 10: " + data.physical.wounds * 10 + " plust data.mods.woundMod * 10: " + data.mods.woundMod * 10);
-    if (data.mods.trauma < 0){
-      data.mods.trauma = 0
-    }
-    if (data.mods.wounds < 0){
-      data.mods.wounds = 0
-    }*/
     //Psi-Calculator - Not Working yet
     if (this.type === "npc" || this.type === "character") {
       actorData.psiStrain.new = 0;
@@ -213,7 +199,6 @@ export class EclipsePhaseActor extends Actor {
     let bulkyMalus = 0;
     //Weapon loop
     for(let weaponCheck of weaponItems){
-      console.log("My little weapon log", weaponCheck.name+ ", " + weaponCheck.system.slotType + ", " + weaponCheck.system.active);
         if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Sidearm"){
           weaponScore++;
         } 
@@ -229,7 +214,6 @@ export class EclipsePhaseActor extends Actor {
     }
     //Gear loop
     for(let gearCheck of gearItems){
-console.log("My little gear log", gearCheck.name + ", " + gearCheck.system.slotType + ", " + gearCheck.system.active);
       if(gearCheck.system.active === true && gearCheck.system.slotType === "Accessory"){
         accessoryCount++;
       }

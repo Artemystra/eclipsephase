@@ -1,4 +1,4 @@
-<div class="itemBackground">
+ <div class="itemBackground">
     <div class="flexrow flex-between">
         <input type="text"
                style="margin-right: 30px; max-width: 240px;"
@@ -7,7 +7,7 @@
                placeholder="Morph name"/>
         <select style="max-width: 125px;"
                 class="selectSpecApt item-standard-margin-medium labelWidth-large"
-                name="system.bodies.morph1.type"
+                name="system.bodies.{{morph.key}}.type"
                 data-type="String">
             {{#select morph.morph.type}}
             {{#each config.bodyTypes as |bodyType key|}}
@@ -18,7 +18,7 @@
         <label class="resource-label labelWidth-small">Dur</label>
         <input class="input-small" type="number"
                                    name="system.bodies.{{morph.key}}.dur"
-        value="{{actor.system.bodies.morph1.dur}}" placeholder="0" style="text-align: center"/>
+        value="{{morph.morph.dur}}" placeholder="0" style="text-align: center"/>
     </div>
     <div class="flexrow flex-between">
         <div class="flexrow flex-between" style="margin-right: 40px;">
@@ -26,7 +26,7 @@
             <input class="input-medium
             item-standard-margin-small" type="text"
                                         name="system.bodies.{{morph.key}}.movement"
-            value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0" style="text-align: center"/>
+            value="{{morph.morph.movement}}" placeholder="0/0" style="text-align: center"/>
             <select class="selectSpecApt
                            item-standard-margin
                            input-large" name="system.bodies.{{morph.key}}.movetype" data-type="String">
@@ -42,7 +42,7 @@
             <input class="input-medium
             item-standard-margin-small" type="text"
                                         name="system.bodies.{{morph.key}}.movement2"
-            value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0" style="text-align: center"/>
+            value="{{morph.morph.movement2}}" placeholder="0/0" style="text-align: center"/>
             <select class="selectSpecApt
                            item-standard-margin
                            input-large" name="system.bodies.{{morph.key}}.movetype2" data-type="String">
@@ -86,6 +86,4 @@
                    value="{{morph.morph.flex}}" placeholder="0"/>
         </div>
     </div>
-</div>
-
-
+</div> 

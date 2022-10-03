@@ -37,7 +37,6 @@ export function registerEffectHandlers(html,callerobj){
       html.find('.effect-delete').click(ev => {
         const li = $(ev.currentTarget).parents(".effect");
         callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
-        li.slideUp(200, () => caller.render(false));
       });
   
 }
