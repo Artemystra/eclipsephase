@@ -456,36 +456,48 @@ export class EclipsePhaseActorSheet extends ActorSheet {
         }
       }
     //browses through ALL effects and identifies, whether they are bound to an item or not
+    console.log("***Let's go through the effects bound:")
     for (let effectScan of allEffects){
       if (effectScan.origin){
         boundEffects.push(effectScan);
+        let itemsFound = []
+        let itemFinder = fromUuid(effectScan.origin)
+        console.log("The iTemFinder " + itemFinder)
+        itemsFound.push (itemFinder)
+        console.log("The effect " + effectScan.label + " is bound to the item " + itemsFound)
+
       }
     }
+
+
+
+    
     //this goes through all items bound to a morph. Based on whether they have effects to them, they're getting activated if the morph is selected or deactivated if the item is bound to any morph NOT selected
     for (let trait of itemList){
       let effUpdateData=[];
       //I have no idea why, but toggle only works if I use !boundEffects.disabled... probably will investigate in the future.
       let toggle = !boundEffects.disabled;
       if (trait.system.boundTo === currentMorph) {
+        console.log("This is the index of (" + trait._id + ") " + trait.name + " it's bound to " + trait.system.boundTo + " and should get activated")
         for (let effect of boundEffects.filter(e => 
           (e.disabled === e.origin.indexOf(trait._id)>=0))) {
-
-          effUpdateData.push({
-            "_id" : effect._id,
-            disabled: !toggle
-          });
-        }
-        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
-      }
-      else {
-        for (let effect of boundEffects.filter(e => 
-          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
-
-          effUpdateData.push({
-            "_id" : effect._id,
-            disabled: toggle
-          });
-
+            console.log("The origin indexOf in the trait loop", effect.origin.indexOf(trait._id))
+            if (effect.origin.indexOf(trait._id) >= 0){
+              console.log("It has (" + effect._id + ") " + effect.label + " to it")
+              effUpdateData.push({
+                "_id" : effect._id,
+                disabled: false
+              });
+            }
+            else {
+              console.log("The effect '(" + effect._id + ") " + effect.label + "' was found but is not bound to this. Therefore it did get DEACTIVATED")
+              console.log("The origin indexOf in the trait loop", effect.origin.indexOf(trait._id))
+              console.log("It has (" + effect._id + ") " + effect.label + " to it")
+              effUpdateData.push({
+                "_id" : effect._id,
+                disabled: true
+              });
+            }
         }
         actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       }
