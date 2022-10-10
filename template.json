@@ -38,7 +38,7 @@
           "globalMod": null,
           "traumaMod": null,
           "woundMod": null,
-          "woundMultiplier": null,
+          "woundMultiplier": 1,
           "iniMod": null,
           "durmod": null,
           "lucmod": null,

@@ -295,8 +295,8 @@ export async function ReputationRoll(dataset, actorModel) {
  */
 function applyHealthModifiers(actorData, taskRoll) {
 
-    let wounds = parseInt(actorData.physical.wounds*10)+actorData.mods.woundMod
-    let trauma = parseInt(actorData.mental.trauma*10)+actorData.mods.traumaMod
+    let wounds = 10*(parseInt(actorData.physical.wounds)+actorData.mods.woundMod)*actorData.mods.woundMultiplier
+    let trauma = 10*parseInt(actorData.mental.trauma)+actorData.mods.traumaMod
 
   if(wounds > 0)
     taskRoll.addModifier(new TaskRollModifier('Wound modifier', -wounds))
@@ -626,14 +626,15 @@ export async function TaskCheck({
 
 
     //General roll modifications
-    let curratedWounds = Number(actorData.physical.wounds) * 10 + actorData.mods.woundMod;
-    let curratedTrauma = Number(actorData.mental.trauma) * 10 + actorData.mods.traumaMod;
+    let curratedWounds = 10 * (Number(actorData.physical.wounds) + actorData.mods.woundMod)*actorData.mods.woundMultiplier;
+    let curratedTrauma = 10 * (Number(actorData.mental.trauma) + actorData.mods.traumaMod);
     if (curratedWounds > 0) {
         woundsMod += curratedWounds
     }
     if (curratedTrauma > 0) {
         woundsMod += curratedTrauma
     }
+ 
     let woundsTotal = null;
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
     let rollMod = null;
