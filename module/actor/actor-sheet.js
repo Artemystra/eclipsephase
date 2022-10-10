@@ -431,75 +431,46 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @private
    */
 
-  _onMorphSwitch(event) {
+  async _onMorphSwitch(event) {
     event.preventDefault();
 
     let actor = this.actor
-    let itemTypes = this.actor.itemTypes
-
-    let sumOfRelevantItems = [itemTypes.morphTrait,itemTypes.morphFlaw,itemTypes.ware];
-    let itemList = [];
-    let currentMorph = event.currentTarget.value;
     let allEffects = this.object.effects
-    let boundEffects = []
-    //creates a complete list of all items bound to a morph
-    for (var i = 0; sumOfRelevantItems.length !== 0; i++) {
-      var j = 0;
-      while (j < sumOfRelevantItems.length) {
-          if (i >= sumOfRelevantItems[j].length) {
-              sumOfRelevantItems.splice(j, 1);
-          } else {
-              itemList.push(sumOfRelevantItems[j][i]);
-              j += 1;
-          }
-        }
-      }
+
+    let currentMorph = event.currentTarget.value;
+    
     //browses through ALL effects and identifies, whether they are bound to an item or not
-    console.log("***Let's go through the effects bound:")
     for (let effectScan of allEffects){
       if (effectScan.origin){
-        boundEffects.push(effectScan);
-        let itemsFound = []
-        let itemFinder = fromUuid(effectScan.origin)
-        console.log("The iTemFinder " + itemFinder)
-        itemsFound.push (itemFinder)
-        console.log("The effect " + effectScan.label + " is bound to the item " + itemsFound)
+        
+        let parentItem = await fromUuid(effectScan.origin)
+        if (parentItem.system.boundTo){
 
-      }
-    }
+          let effUpdateData=[];
 
-
-
-    
-    //this goes through all items bound to a morph. Based on whether they have effects to them, they're getting activated if the morph is selected or deactivated if the item is bound to any morph NOT selected
-    for (let trait of itemList){
-      let effUpdateData=[];
-      //I have no idea why, but toggle only works if I use !boundEffects.disabled... probably will investigate in the future.
-      let toggle = !boundEffects.disabled;
-      if (trait.system.boundTo === currentMorph) {
-        console.log("This is the index of (" + trait._id + ") " + trait.name + " it's bound to " + trait.system.boundTo + " and should get activated")
-        for (let effect of boundEffects.filter(e => 
-          (e.disabled === e.origin.indexOf(trait._id)>=0))) {
-            console.log("The origin indexOf in the trait loop", effect.origin.indexOf(trait._id))
-            if (effect.origin.indexOf(trait._id) >= 0){
-              console.log("It has (" + effect._id + ") " + effect.label + " to it")
-              effUpdateData.push({
-                "_id" : effect._id,
-                disabled: false
-              });
-            }
-            else {
-              console.log("The effect '(" + effect._id + ") " + effect.label + "' was found but is not bound to this. Therefore it did get DEACTIVATED")
-              console.log("The origin indexOf in the trait loop", effect.origin.indexOf(trait._id))
-              console.log("It has (" + effect._id + ") " + effect.label + " to it")
-              effUpdateData.push({
-                "_id" : effect._id,
-                disabled: true
-              });
-            }
+          //If a found item is bound to the currently active morph it gets prepared to be activated
+          if (parentItem.system.boundTo === currentMorph) {
+            effUpdateData.push({
+              "_id" : effectScan._id,
+              disabled: false
+            });
+          }
+          //If a found item is NOT bound to the currently active morph it gets prepared to be DEactivated
+          else {
+            effUpdateData.push({
+              "_id" : effectScan._id,
+              disabled: true
+            });
+          }
+          //This pushes the updated data into the effect
+          actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
         }
-        actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
-      }
+        //Just some code check below. Will be gone in a few iterations but I will keep it for a few weeks just to be sure.
+        else {
+          console.log("The effect " + effectScan.label + " is bound to NO MORPH because its part of the item:")
+          console.log(parentItem)
+        }
+      }   
     }
   }
 
