@@ -994,7 +994,8 @@
       ],
       "bonus": null,
       "malus": null,
-      "boundTo": null
+      "boundTo": null,
+      "wareType": null
     },
     "aspect": {
       "templates": [

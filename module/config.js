@@ -50,6 +50,24 @@ eclipsephase.armorTypes = {
     additional: "Additional Armor"
 }
 
+eclipsephase.wareTypes = {
+    b: "B",
+    bch: "BCH",
+    bh: "BH",
+    bhm: "BHM",
+    bm: "BM",
+    c: "C",
+    ch: "CH",
+    chn: "CHN",
+    chm: "CHM",
+    h: "H",
+    hn: "HN",
+    hmn: "HMN",
+    n: "N",
+    nh: "NH",
+    mn: "MN"
+}
+
 eclipsephase.costTypes = {
     minor: "Minor",
     moderate: "Moderate",
