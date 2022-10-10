@@ -90,9 +90,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       morph: actor.system.bodies[morphKey],
       wares: actor.ware[morphKey],
       traits: actor.morphTrait[morphKey],
-      presentTraits: actor.morphTrait[morphKey].length > 0,
+      presentTraits: actor.morphTrait[morphKey].length + actor.morphFlaw[morphKey].length > 0,
       flaws: actor.morphFlaw[morphKey],
-      presentFlaws: actor.morphFlaw[morphKey].length > 0,
       description: description
     }
 
