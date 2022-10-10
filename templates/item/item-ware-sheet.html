@@ -19,13 +19,21 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Slot</label>
+                        <label class="resource-label">Ware Type</label>
                     </td>
                     <td>
                         <label class="resource-label">Cost</label>
                     </td>
                 </tr>
                 <tr>
+                    <td>
+                        <select name="system.wareType" data-type="String">
+                            {{#select item.system.wareType}}
+                            {{#each config.wareTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
                     <td>
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}

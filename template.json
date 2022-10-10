@@ -38,7 +38,7 @@
           "globalMod": null,
           "traumaMod": null,
           "woundMod": null,
-          "woundMultiplier": null,
+          "woundMultiplier": 1,
           "iniMod": null,
           "durmod": null,
           "lucmod": null,
@@ -994,7 +994,8 @@
       ],
       "bonus": null,
       "malus": null,
-      "boundTo": null
+      "boundTo": null,
+      "wareType": null
     },
     "aspect": {
       "templates": [
