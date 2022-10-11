@@ -123,6 +123,11 @@ export class EclipsePhaseActor extends Actor {
       this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
+    //Pool Bonuses
+    for (let [key, pool] of Object.entries(actorData.pools)) {
+      pool.mod = eval(pool.mod);
+    }
+
     //Showing skill calculations for know/spec skills
     for (let value of items ) {
       let key = value.type;

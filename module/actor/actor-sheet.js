@@ -177,10 +177,10 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           Vehicle: [],
           Morph: []
       };
-    // const item = [];
+      //this will become more important once morphs are items themselves
+      const morph = [];
 
     // Iterate through items, allocating to containers
-    // let totalWeight = 0;
     for (let item of sheetData.items) {
       let itemModel = item.system;
 
@@ -529,13 +529,13 @@ export class EclipsePhaseActorSheet extends ActorSheet {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
-    const actorData = this.actor.data.data;
+    const actorModel = this.actor.system;
 
       Dice.DamageRoll ({
         weaponName : dataset.weaponname,
         weaponDamage : dataset.roll,
         weaponType : dataset.type,
-        actorData : actorData,
+        actorData : actorModel,
         askForOptions : event.shiftKey,
         optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
       });

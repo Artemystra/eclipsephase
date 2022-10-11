@@ -707,6 +707,7 @@
       },
       "bodies": {
         "activeMorph": "morph1",
+        "allMorphs": [],
         "morph1": {
           "templates": [
             "morph"
