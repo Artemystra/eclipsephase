@@ -268,6 +268,10 @@
   font-weight: bold;
 }
 
+.eclipsephase .footnote {
+  font-size: 12px;
+}
+
 .eclipsephase .items-list {
   list-style: none;
   margin: 7px 0;
