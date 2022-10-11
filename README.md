@@ -23,6 +23,19 @@ If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
 <li>Gun & Melee Checks</li>
 <li>Damage Rolls</li>
 </ul>
+<li>Included compendiums</li>
+<ul>
+<li>ammo, grenades, ranged- & cc weapons</li>
+<li>apps & mesh services</li>
+<li>armor</li>
+<li>bots & vehicles</li>
+<li>drugs & toxins</li>
+<li>ego- & morph traits/flaws</li>
+<li>gear</li>
+<li>psi sleights</li>
+<li>ware</li>
+<li>homebrew items</li>
+</ul>
 <li>Active Effects introduced to:</li>
 <ul>
 <li>Traits & Flaws</li>
@@ -40,7 +53,7 @@ I'm trying to improve this system on a steady basis, but it will remain a hobby 
 <i>I'm also happy for any support - either by saying "thanks" or buying me a kofi: https://ko-fi.com/diemen</i><p>
 
 <h2><strong>Active Effects</strong></h2>
-Active Effects is a built in Foundry feature which now has been introduced to this system. It helps players and game masters to add temporary effects which may be switched on and off based on several indicators like <strong>presence of an item</strong>, <strong>real life time</strong> or <strong>the items status (active inactive)</strong>. <p>
+Active Effects is a built in Foundry feature which works with this system. It helps players and game masters to add temporary effects which may be switched on and off based on several indicators like <strong>presence of an item</strong>, <strong>real life time</strong> or <strong>the items status (active inactive)</strong>. <p>
 
 Since there are several items (like traits, flaws and ware) that are morph specific we also included the automatic activation/deactivation of those items when the morph is switched, so you will never have to keep track of any situational modifiers you might only have during populating a specific morph. (<strong>Important:</strong> this only goes for any items which are <strong>always</strong> providing bonuses. Items that only provide bonuses in specific situations like "to all perceive tests <strong>if smell is included</strong>" do not work yet.)<p>
 
@@ -50,9 +63,14 @@ Creating your own active effect items is simpel, but as for now you need to now 
 system.mods.globalMod = affects all skill/aptitude tests.<br>
 system.mods.traumaMod = affects all skill/aptitude tests through trauma. (type "-10" to ignore one trauma)<br>
 system.mods.woundMod = affects all skill/aptitude tests through trauma. (type "-10" to ignore one wound)<br>
+system.mods.woundMultiplier = Sets a wound effect multiplier. This will not effect the number of wounds, but their effect (e.g. 1 wound -20 instead of -10)<br>
 system.mods.iniMod = affects initiative. Will be added to the calculated ini + the dice roll.<br>
 system.mods.durmod = affects durability. Will also be used to calculate derived stats.<br>
-system.mods.lucmod = affects lucidity. Will also be used to calculate derived stats.<p>
+system.mods.lucmod = affects lucidity. Will also be used to calculate derived stats.<br>
+system.mods.ttMod = affects trauma threshold. This gets added after the tt is calculated by the system.<br>
+system.mods.energyMod = affects energy armor. This is added on top of the energy armor without any effect on encumberance.<br>
+system.mods.kineticMod = affects kinetic armor. This is added on top of the kinetic armor without any effect on encumberance.<p>
+
 
 <strong><u>Pool Mods</strong></u>
 system.pools.insight.mod = affects the maximum insight pool.<br>
