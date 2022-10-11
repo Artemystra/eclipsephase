@@ -63,7 +63,7 @@ export class EclipsePhaseActor extends Actor {
 
       //Calculating WT & DR
       actorData.health.physical.max = (actorData.bodies.morph1.dur) + 
-        Number(actorData.mods.durmod) // only one morph for npcs
+        eval(actorData.mods.durmod) // only one morph for npcs
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * 
         eclipsephase.damageRatingMultiplier[actorData.bodyType.value])
@@ -173,9 +173,9 @@ export class EclipsePhaseActor extends Actor {
   }
 
   _calculateMentalHealth(actorData) {
-    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + Number(actorData.mods.lucmod);
+    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + eval(actorData.mods.lucmod);
     actorData.mental.ir = actorData.health.mental.max * 2;
-    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + Number(actorData.mods.ttMod);
+    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + eval(actorData.mods.ttMod);
     if(actorData.health.mental.value === null){
       actorData.health.mental.value = actorData.health.mental.max;
     }
