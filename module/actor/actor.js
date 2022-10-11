@@ -104,22 +104,25 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(actorData.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 + Number(aptitude.mod);
+      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
     // Insight Skills
     for (let [key, skill] of Object.entries(actorData.skillsIns)) {
+      skill.mod = eval(skill.mod);
       this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
     // Moxie skills
     for (let [key, skill] of Object.entries(actorData.skillsMox)) {
+      skill.mod = eval(skill.mod);
       this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
     // Vigor skills
     for (let [key, skill] of Object.entries(actorData.skillsVig)) {
+      skill.mod = eval(skill.mod);
       this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
@@ -275,8 +278,8 @@ export class EclipsePhaseActor extends Actor {
       }
     }
 
-    actorModel.physical.energyArmorTotal = energyTotal + Number(actorModel.mods.energyMod)
-    actorModel.physical.kineticArmorTotal = kineticTotal + Number(actorModel.mods.kineticMod);
+    actorModel.physical.energyArmorTotal = energyTotal + eval(actorModel.mods.energyMod)
+    actorModel.physical.kineticArmorTotal = kineticTotal + eval(actorModel.mods.kineticMod);
     actorModel.physical.mainArmorTotal = mainArmorAmount
     actorModel.physical.additionalArmorTotal = additionalArmorAmount
     actorModel.physical.mainArmorMalus = 0
