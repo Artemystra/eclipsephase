@@ -23,6 +23,19 @@ If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
 <li>Gun & Melee Checks</li>
 <li>Damage Rolls</li>
 </ul>
+<li>Included compendiums</li>
+<ul>
+<li>ammo, grenades, ranged- & cc weapons</li>
+<li>apps & mesh services</li>
+<li>armor</li>
+<li>bots & vehicles</li>
+<li>drugs & toxins</li>
+<li>ego- & morph traits/flaws</li>
+<li>gear</li>
+<li>psi sleights</li>
+<li>ware</li>
+<li>homebrew items</li>
+</ul>
 <li>Active Effects introduced to:</li>
 <ul>
 <li>Traits & Flaws</li>
@@ -39,59 +52,57 @@ I'm trying to improve this system on a steady basis, but it will remain a hobby 
 
 <i>I'm also happy for any support - either by saying "thanks" or buying me a kofi: https://ko-fi.com/diemen</i><p>
 
-<h2><strong>New: Active Effects</strong></h2>
-Active Effects is a built in Foundry feature which now has been introduced to this system. It helps players and game masters to add temporary effects which may be switched on and off based on several indicators like <strong>presence of an item</strong>, <strong>real life time</strong> or <strong>the items status (active inactive)</strong>. <p>
+<h2><strong>Active Effects</strong></h2>
+Active Effects is a built in Foundry feature which works with this system. It helps players and game masters to add temporary effects which may be switched on and off based on several indicators like <strong>presence of an item</strong>, <strong>real life time</strong> or <strong>the items status (active inactive)</strong>. <p>
 
 Since there are several items (like traits, flaws and ware) that are morph specific we also included the automatic activation/deactivation of those items when the morph is switched, so you will never have to keep track of any situational modifiers you might only have during populating a specific morph. (<strong>Important:</strong> this only goes for any items which are <strong>always</strong> providing bonuses. Items that only provide bonuses in specific situations like "to all perceive tests <strong>if smell is included</strong>" do not work yet.)<p>
 
 Creating your own active effect items is simpel, but as for now you need to now the exact data value path. To make this a bit easier for you we created a list with all modifiers that are present till date, so you don't have to guess on how to build your own active effect items.
 
-<strong><u>General Mods</u></strong><p>
-data.mods.globalMod = affects all skill/aptitude tests.<br>
-data.mods.traumaMod = affects all skill/aptitude tests through trauma.<br>
-data.mods.woundMod = affects all skill/aptitude tests through wounds.<br>
-data.mods.woundMultiplier = to multiply wound effects (e.g. through PSI or (morph)flaws)<br>
-data.mods.iniMod = affects initiative. Will be added to the calculated ini + the dice roll.<br>
-data.mods.durmod = affects durability. Will also be used to calculate derived stats.<br>
-data.mods.lucmod = affects lucidity. Will also be used to calculate derived stats.<br>
-data.mods.ttMod = affects ONLY the Trauma Treshold. Will not affect any other calculations<p>
+<strong><u>General Mods</strong></u><br>
+system.mods.globalMod = affects all skill/aptitude tests.<br>
+system.mods.traumaMod = affects all skill/aptitude tests through trauma. (type "-10" to ignore one trauma)<br>
+system.mods.woundMod = affects all skill/aptitude tests through trauma. (type "-10" to ignore one wound)<br>
+system.mods.woundMultiplier = Sets a wound effect multiplier. This will not effect the number of wounds, but their effect (e.g. 1 wound -20 instead of -10)<br>
+system.mods.iniMod = affects initiative. Will be added to the calculated ini + the dice roll.<br>
+system.mods.durmod = affects durability. Will also be used to calculate derived stats.<br>
+system.mods.lucmod = affects lucidity. Will also be used to calculate derived stats.<br>
+system.mods.ttMod = affects trauma threshold. This gets added after the tt is calculated by the system.<br>
+system.mods.energyMod = affects energy armor. This is added on top of the energy armor without any effect on encumberance.<br>
+system.mods.kineticMod = affects kinetic armor. This is added on top of the kinetic armor without any effect on encumberance.<p>
 
-<strong><u>Pool Mods</u></strong><p>
-data.pools.insight.mod = affects  the maximum insight pool.<br>
-data.pools.moxie.mod = affects the maximum moxie pool.<br>
-data.pools.vigor.mod = affects the maximum vigor pool.<br>
-data.pools.flex.mod = affects the maximum flex pool.<p>
 
-<strong><u>Aptitude Mods</u></strong><p>
-data.aptitudes.cog.mod = affects the cognition roll. It is not affecting the cognition itself.<br>
-data.aptitudes.int.mod = affects the intuition roll. It is not affecting the intuition itself.<br>
-data.aptitudes.ref.mod = affects the reflexes roll. It is not affecting the reflexes itself.<br>
-data.aptitudes.sav.mod = affects the savvy roll. It is not affecting the savvy itself.<br>
-data.aptitudes.som.mod = affects  the somatics roll. It is not affecting the somatics itself.<br>
-data.aptitudes.wil.mod = affects the willpower roll. It is not affecting the willpower  itself.<p>
+<strong><u>Pool Mods</strong></u>
+system.pools.insight.mod = affects the maximum insight pool.<br>
+system.pools.moxie.mod = affects the maximum moxie pool.<br>
+system.pools.vigor.mod = affects the maximum vigor pool.<br>
+system.pools.flex.mod = affects the maximum flex pool.<p>
 
-<strong><u>Armor Mods</u></strong><p>
-data.aptitudes.cog.mod = affects the cognition roll. It is not affecting the cognition itself.<br>
+<strong><u>Aptitude Mods</strong></u>
+system.aptitudes.cog.mod = affects the cognition roll. It is not affecting the cognition itself.<br>
+system.aptitudes.int.mod = affects the intuition roll. It is not affecting the intuition itself.<br>
+system.aptitudes.ref.mod = affects the reflexes roll. It is not affecting the reflexes itself.<br>
+system.aptitudes.sav.mod = affects the savvy roll. It is not affecting the savvy itself.<br>
+system.aptitudes.som.mod = affects the somatics roll. It is not affecting the somatics itself.<br>
+system.aptitudes.wil.mod = affects the willpower roll. It is not affecting the willpower itself.<p>
 
-<strong><u>Skill Mods</u></strong><p>
-data.skillsIns.infosec.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsIns.interface.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsIns.perceive.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsIns.program.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsIns.research.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsIns.survival.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<p>
+<strong><u>Skill Mods</strong></u>
+system.skillsIns.infosec.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsIns.interface.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsIns.perceive.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsIns.program.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsIns.research.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsIns.survival.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<p>
 
-data.skillsMox.deceive.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsMox.kinesics.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsMox.persuade.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsMox.provoke.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsMox.psi.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<p>
+system.skillsMox.deceive.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsMox.kinesics.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsMox.persuade.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsMox.provoke.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsMox.psi.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<p>
 
-data.skillsVig.athletics.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsVig.fray.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsVig.free fall.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsVig.guns.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsVig.infiltrate.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
-data.skillsVig.melee.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<p>
-
-<i>We will also look into a better UX for selecting modable values in the future, but this method will most likely stay at least till version 7.0</i>
+system.skillsVig.athletics.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsVig.fray.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsVig.free fall.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsVig.guns.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsVig.infiltrate.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
+system.skillsVig.melee.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<p>

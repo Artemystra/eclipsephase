@@ -72,6 +72,11 @@ export class EclipsePhaseActor extends Actor {
         actorData.health.physical.value = actorData.health.physical.max
       }
     }
+
+    if(!actorData.mods.woundMultiplier){
+      actorData.mods.woundMultiplier = 1;
+    }
+
     //Characters only
     //Durability
     if(this.type === "character") {
@@ -144,7 +149,7 @@ export class EclipsePhaseActor extends Actor {
         if(actorData.type=="goon")
           value.roll = value.value?Number(value.value):aptSelect;
         else
-          value.roll = Number(value.value) + aptSelect - actorData.mods.wounds - actorData.mods.trauma;
+          value.roll = Number(value.value) + aptSelect;
       }
     }
   }

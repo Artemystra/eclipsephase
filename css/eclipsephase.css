@@ -268,6 +268,10 @@
   font-weight: bold;
 }
 
+.eclipsephase .footnote {
+  font-size: 12px;
+}
+
 .eclipsephase .items-list {
   list-style: none;
   margin: 7px 0;
@@ -383,6 +387,7 @@ span.success {
 input[class="sheet"],
 input[class="sheet equipped checkBox"]{
   -webkit-appearance:none;
+  appearance: none;
   flex: 0 0 10px;
   height: 10px;
   background-color: #fff;
@@ -394,6 +399,7 @@ input[class="sheet equipped checkBox"]{
 
 input[class="check-inline-edit"]{
   -webkit-appearance:none;
+  appearance: none;
   flex: 0 0 10px;
   height: 10px;
   background-color: #fff;
