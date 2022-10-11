@@ -168,7 +168,7 @@ export class EclipsePhaseActor extends Actor {
 
   _calculateInitiative(actorData) {
     actorData.initiative.value = Math.round((actorData.aptitudes.ref.value +
-      actorData.aptitudes.int.value) / 5) + Number(actorData.mods.iniMod)
+      actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
     actorData.initiative.display = "1d6 + " + actorData.initiative.value
   }
 
