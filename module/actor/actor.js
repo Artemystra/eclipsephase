@@ -81,7 +81,7 @@ export class EclipsePhaseActor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorData.bodies[actorData.bodies.activeMorph]
-      actorData.health.physical.max = Number(morph.dur) + Number(actorData.mods.durmod)
+      actorData.health.physical.max = Number(morph.dur) + eval(actorData.mods.durmod)
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]))
       if(actorData.health.physical.value === null) {
