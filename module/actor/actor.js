@@ -187,13 +187,13 @@ export class EclipsePhaseActor extends Actor {
   _calculatePools(actorData, morph) {
     actorData.pools.flex.totalFlex = Number(morph.flex) +
       Number(actorData.ego.egoFlex) +
-      Number(actorData.pools.flex.mod)
+      eval(actorData.pools.flex.mod)
     actorData.pools.insight.totalInsight = Number(morph.insight) +
-      Number(actorData.pools.insight.mod)
+      eval(actorData.pools.insight.mod)
     actorData.pools.moxie.totalMoxie = Number(morph.moxie) +
-      Number(actorData.pools.moxie.mod)
+      eval(actorData.pools.moxie.mod)
     actorData.pools.vigor.totalVigor = Number(morph.vigor) +
-      Number(actorData.pools.vigor.mod)
+      eval(actorData.pools.vigor.mod)
   }
 
   _calculateHomebrewEncumberance(actorData) {
