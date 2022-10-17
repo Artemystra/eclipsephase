@@ -330,6 +330,8 @@ export class EclipsePhaseActorSheet extends ActorSheet {
 
   }
 
+  //Needed for a functioning HTML editor
+
   async _prepareRenderedHTMLContent(sheetData) {
     let model = sheetData.actor.system
 
