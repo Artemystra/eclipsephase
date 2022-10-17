@@ -254,7 +254,7 @@
           "current": null,
           "total": null
         },
-        "description":null
+        "biography":null
       },
       "muse": {
         "muse": {
@@ -707,6 +707,7 @@
       },
       "bodies": {
         "activeMorph": "morph1",
+        "allMorphs": [],
         "morph1": {
           "templates": [
             "morph"

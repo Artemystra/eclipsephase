@@ -63,7 +63,7 @@ export class EclipsePhaseActor extends Actor {
 
       //Calculating WT & DR
       actorData.health.physical.max = (actorData.bodies.morph1.dur) + 
-        Number(actorData.mods.durmod) // only one morph for npcs
+        eval(actorData.mods.durmod) // only one morph for npcs
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * 
         eclipsephase.damageRatingMultiplier[actorData.bodyType.value])
@@ -81,7 +81,7 @@ export class EclipsePhaseActor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorData.bodies[actorData.bodies.activeMorph]
-      actorData.health.physical.max = Number(morph.dur) + Number(actorData.mods.durmod)
+      actorData.health.physical.max = Number(morph.dur) + eval(actorData.mods.durmod)
       actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
       actorData.physical.dr = Math.round(actorData.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]))
       if(actorData.health.physical.value === null) {
@@ -104,23 +104,31 @@ export class EclipsePhaseActor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(actorData.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 + Number(aptitude.mod);
+      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
     // Insight Skills
     for (let [key, skill] of Object.entries(actorData.skillsIns)) {
+      skill.mod = eval(skill.mod);
       this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
     // Moxie skills
     for (let [key, skill] of Object.entries(actorData.skillsMox)) {
+      skill.mod = eval(skill.mod);
       this._calculateSkillValue(key,skill,actorData,this.type);
     }
 
     // Vigor skills
     for (let [key, skill] of Object.entries(actorData.skillsVig)) {
+      skill.mod = eval(skill.mod);
       this._calculateSkillValue(key,skill,actorData,this.type);
+    }
+
+    //Pool Bonuses
+    for (let [key, pool] of Object.entries(actorData.pools)) {
+      pool.mod = eval(pool.mod);
     }
 
     //Showing skill calculations for know/spec skills
@@ -163,14 +171,14 @@ export class EclipsePhaseActor extends Actor {
 
   _calculateInitiative(actorData) {
     actorData.initiative.value = Math.round((actorData.aptitudes.ref.value +
-      actorData.aptitudes.int.value) / 5) + Number(actorData.mods.iniMod)
+      actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
     actorData.initiative.display = "1d6 + " + actorData.initiative.value
   }
 
   _calculateMentalHealth(actorData) {
-    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + Number(actorData.mods.lucmod);
+    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + eval(actorData.mods.lucmod);
     actorData.mental.ir = actorData.health.mental.max * 2;
-    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + Number(actorData.mods.ttMod);
+    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + eval(actorData.mods.ttMod);
     if(actorData.health.mental.value === null){
       actorData.health.mental.value = actorData.health.mental.max;
     }
@@ -179,13 +187,13 @@ export class EclipsePhaseActor extends Actor {
   _calculatePools(actorData, morph) {
     actorData.pools.flex.totalFlex = Number(morph.flex) +
       Number(actorData.ego.egoFlex) +
-      Number(actorData.pools.flex.mod)
+      eval(actorData.pools.flex.mod)
     actorData.pools.insight.totalInsight = Number(morph.insight) +
-      Number(actorData.pools.insight.mod)
+      eval(actorData.pools.insight.mod)
     actorData.pools.moxie.totalMoxie = Number(morph.moxie) +
-      Number(actorData.pools.moxie.mod)
+      eval(actorData.pools.moxie.mod)
     actorData.pools.vigor.totalVigor = Number(morph.vigor) +
-      Number(actorData.pools.vigor.mod)
+      eval(actorData.pools.vigor.mod)
   }
 
   _calculateHomebrewEncumberance(actorData) {
@@ -270,8 +278,8 @@ export class EclipsePhaseActor extends Actor {
       }
     }
 
-    actorModel.physical.energyArmorTotal = energyTotal + Number(actorModel.mods.energyMod)
-    actorModel.physical.kineticArmorTotal = kineticTotal + Number(actorModel.mods.kineticMod);
+    actorModel.physical.energyArmorTotal = energyTotal + eval(actorModel.mods.energyMod)
+    actorModel.physical.kineticArmorTotal = kineticTotal + eval(actorModel.mods.kineticMod);
     actorModel.physical.mainArmorTotal = mainArmorAmount
     actorModel.physical.additionalArmorTotal = additionalArmorAmount
     actorModel.physical.mainArmorMalus = 0
