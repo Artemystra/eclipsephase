@@ -328,7 +328,8 @@ export default class EPactorSheet extends ActorSheet {
     actor.actorType = "PC";
     
 
-   console.log(actor)
+   /* In case ACTOR DATA is needed
+   console.log(actor) */
 
   }
 
@@ -419,7 +420,6 @@ export default class EPactorSheet extends ActorSheet {
 
             if (effectScan.origin){
               let parentItem = await fromUuid(effectScan.origin);
-              console.log("Item active? ", item.system.active);
 
               if (itemId === parentItem._id){
 
@@ -494,11 +494,6 @@ export default class EPactorSheet extends ActorSheet {
           }
           //This pushes the updated data into the effect
           actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
-        }
-        //Just some code check below. Will be gone in a few iterations but I will keep it for a few weeks just to be sure.
-        else {
-          console.log("The effect " + effectScan.label + " is bound to NO MORPH because its part of the item:")
-          console.log(parentItem)
         }
       }   
     }
