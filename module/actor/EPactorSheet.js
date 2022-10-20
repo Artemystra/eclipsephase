@@ -132,7 +132,7 @@ export default class EPactorSheet extends ActorSheet {
    */
  async _prepareCharacterItems(sheetData) {
    const actor = sheetData.actor
-   const model = sheetData.actor.system
+   const actorModel = sheetData.actor.system
 
     // Initialize containers.
 
@@ -191,22 +191,22 @@ export default class EPactorSheet extends ActorSheet {
       if (item.type === 'specialSkill') {
         let aptSelect = 0;
         if (itemModel.aptitude === "Intuition") {
-          aptSelect = model.aptitudes.int.value;
+          aptSelect = actorModel.aptitudes.int.value;
         }
         else if (itemModel.aptitude === "Cognition") {
-          aptSelect = model.aptitudes.cog.value;
+          aptSelect = actorModel.aptitudes.cog.value;
         }
         else if (itemModel.aptitude === "Reflexes") {
-          aptSelect = model.aptitudes.ref.value;
+          aptSelect = actorModel.aptitudes.ref.value;
         }
         else if (itemModel.aptitude === "Somatics") {
-          aptSelect = model.aptitudes.som.value;
+          aptSelect = actorModel.aptitudes.som.value;
         }
         else if (itemModel.aptitude === "Willpower") {
-          aptSelect = model.aptitudes.wil.value;
+          aptSelect = actorModel.aptitudes.wil.value;
         }
         else if (itemModel.aptitude === "Savvy") {
-          aptSelect = model.aptitudes.sav.value;
+          aptSelect = actorModel.aptitudes.sav.value;
         }
         item.roll = Number(itemModel.value) + aptSelect;
         item.specroll = Number(itemModel.value) + aptSelect + 10;
@@ -215,10 +215,10 @@ export default class EPactorSheet extends ActorSheet {
         else if (item.type === 'knowSkill') {
           let aptSelect = 0;
           if (itemModel.aptitude === "Intuition") {
-            aptSelect = model.aptitudes.int.value;
+            aptSelect = actorModel.aptitudes.int.value;
           }
           else if (itemModel.aptitude === "Cognition") {
-            aptSelect = model.aptitudes.cog.value;
+            aptSelect = actorModel.aptitudes.cog.value;
           }
           item.roll = Number(itemModel.value) + aptSelect;
           item.specroll = Number(itemModel.value) + aptSelect + 10;
@@ -326,22 +326,30 @@ export default class EPactorSheet extends ActorSheet {
     actor.vehicle = vehicle;
     actor.activeEffects=effects;
     actor.actorType = "PC";
+
+    // Check if sleights are present and toggle Psi Tab based on this
+    if (actor.aspect.Chi.length>0){
+      actorModel.additionalSystems.hasPsi = 1;
+    }
+    else if (actor.aspect.Gamma.length>0){
+      actorModel.additionalSystems.hasPsi = 1;
+    }
     
 
-   /* In case ACTOR DATA is needed
-   console.log(actor) */
+   /* In case ACTOR DATA is needed */
+   console.log(actor) 
 
   }
 
   //Needed for a functioning HTML editor
 
   async _prepareRenderedHTMLContent(sheetData) {
-    let model = sheetData.actor.system
+    let actorModel = sheetData.actor.system
 
-    let bio = await TextEditor.enrichHTML(model.biography, { async: true })
+    let bio = await TextEditor.enrichHTML(actorModel.biography, { async: true })
     sheetData["htmlBiography"] = bio
 
-    let muse = await TextEditor.enrichHTML(model.muse.description, { async: true })
+    let muse = await TextEditor.enrichHTML(actorModel.muse.description, { async: true })
     sheetData["htmlMuseDescription"] = muse
   }
 

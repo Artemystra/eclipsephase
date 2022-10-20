@@ -15,9 +15,7 @@
     {{#if actor.vehicle}}
         <a class="item" data-tab="vehicles">Vehicles</a>
     {{/if}}
-    {{#if actor.aspect.Chi}}
-        <a class="item" data-tab="psi">Psi</a>
-    {{else if actor.aspect.Gamma}}
+    {{#if actor.system.additionalSystems.hasPsi}}
         <a class="item" data-tab="psi">Psi</a>
     {{/if}}
     </nav>

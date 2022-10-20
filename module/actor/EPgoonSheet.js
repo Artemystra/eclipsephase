@@ -184,7 +184,18 @@ export default class EPgoonSheet extends ActorSheet {
         actor.specialSkill = special;
         actor.morphTrait = morphTrait;
         actor.activeEffects = effects;
+
+        // Check if sleights are present and toggle Psi Tab based on this
+        if (actor.aspect.Chi.length>0){
+          actorModel.additionalSystems.hasPsi = 1;
+        }
+        else if (actor.aspect.Gamma.length>0){
+          actorModel.additionalSystems.hasPsi = 1;
+        }
+
     }
+
+    
 
     activateListeners(html) {
         super.activateListeners(html);

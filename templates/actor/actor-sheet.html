@@ -18,9 +18,7 @@
         <a class="item" data-tab="vehicles">Vehicles</a>
         {{/if}}
         <a class="item" data-tab="weapons">Inventory</a>
-        {{#if actor.aspect.Chi}}
-        <a class="item" data-tab="psi">Psi</a>
-        {{else if actor.aspect.Gamma}}
+        {{#if actor.system.additionalSystems.hasPsi}}
         <a class="item" data-tab="psi">Psi</a>
         {{/if}}
     </nav>
@@ -702,7 +700,7 @@
 
         {{!-- Gear Tab --}}
         <div class="tab gear" data-group="primary" data-tab="weapons">
-          {{#if actor.hasGear}}
+          {{#if actor.system.additionalSystems.hasGear}}
 
             {{#if actor.rangedWeapon}}
             <div class="contentBox">

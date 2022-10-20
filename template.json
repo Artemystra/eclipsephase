@@ -46,6 +46,10 @@
           "energyMod":null,
           "kineticMod":null
         },
+        "additionalSystems": {
+          "hasPsi": null,
+          "hasGear": null
+        },
         "initiative": {
           "value": null,
           "display": ""
