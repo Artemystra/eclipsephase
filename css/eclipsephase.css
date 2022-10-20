@@ -783,47 +783,6 @@ optgroup .Default .Roll .Mode,
   max-height: 18px!important;
   max-width: 18px!important;
 }
-/* Tiny MCE Styles */
-
-.tox.tox-tinymce .tox-edit-area__iframe {
-  background: var(--mainText);
-}
-
-.tox.tox-tinymce .tox-edit-area__iframe {
-  background: var(--mainText);
-}
-
-.mce-content-body p a[href]{
-  color: var(--highlight);
-}
-
-.mce-content-body {
-  color: var(--mainText)!important;
-  font-family: "Roboto", sans-serif!important;
-}
-
-.mce-content-body p {
-  font-size: 16px!important;
-  color: var(--mainText)!important;
-}
-
-.mce-content-body h1 {
-  border-bottom: var(--highlight)!important;
-}
-
-/* World Anvil Integration */
-
-.world-anvil header.section {
-  border-bottom: var(--highlight)!important;
-}
-
-.world-anvil a.article-link {
-  color: var(--mainText)!important;
-}
-
-.world-anvil .world-anvil-link {
-  color: var(--mainText)!important;
-}
 
 /* Own Styles */
 .editWithLabel {
@@ -1428,4 +1387,64 @@ h3.inline {
 
 .monks-enhanced-journal .mainbar .navigation .nav-input:focus {
   background: var(--highlightBackground)!important;
+}
+
+/* Tiny MCE Styles */
+
+.tox.tox-tinymce .tox-edit-area__iframe {
+  background: var(--mainText);
+}
+
+.tox.tox-tinymce .tox-edit-area__iframe {
+  background: var(--mainText);
+}
+
+.mce-content-body p a[href]{
+  color: var(--highlight);
+}
+
+.mce-content-body {
+  color: var(--mainText)!important;
+  font-family: "Roboto", sans-serif!important;
+}
+
+.mce-content-body p {
+  font-size: 16px!important;
+  color: var(--mainText)!important;
+}
+
+.mce-content-body h1 {
+  border-bottom: var(--highlight)!important;
+}
+
+/* World Anvil Integration */
+
+button#world-anvil img {
+  filter: invert(94%) sepia(0%) saturate(1085%) hue-rotate(141deg) brightness(91%) contrast(96%);
+}
+
+.world-anvil header.section {
+  border-bottom: var(--highlight)!important;
+}
+
+.world-anvil a.article-link {
+  color: var(--mainText)!important;
+}
+
+.world-anvil .world-anvil-link {
+  color: var(--mainText)!important;
+}
+
+.world-anvil svg {
+  color: var(--mainText)!important;
+}
+
+#world-anvil-browser #world-anvil-browser,
+#world-anvil-browser .category-header,
+#world-anvil-browser .category{
+  border-color: var(--color-underline-header)!important;
+}
+
+#world-anvil-browser .article-filters{
+  border: none!important;
 }
