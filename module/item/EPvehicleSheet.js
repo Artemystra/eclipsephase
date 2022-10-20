@@ -2,14 +2,14 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseAspectSheet extends ItemSheet {
+export default class EPvehicleSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
-      width: 520,
-      height: 445,
+      width: 920,
+      height: 260,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
@@ -30,9 +30,10 @@ export class EclipsePhaseAspectSheet extends ItemSheet {
   /** @override */
   getData() {
     const sheetData = super.getData()
+
     sheetData.config = CONFIG.eclipsephase
 
-    console.log("***** aspect-sheet")
+    console.log("*** vehicle-sheet")
     console.log(sheetData)
     return sheetData
   }

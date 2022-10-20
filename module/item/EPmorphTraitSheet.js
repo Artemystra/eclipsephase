@@ -1,8 +1,10 @@
+import { registerEffectHandlers,registerCommonHandlers } from "../common/common-sheet-functions.js";
+
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseTraitSheet extends ItemSheet {
+export default class EPmorphTraitSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
@@ -29,13 +31,13 @@ export class EclipsePhaseTraitSheet extends ItemSheet {
 
   /** @override */
   getData() {
-    const sheetData = super.getData();
-    const actor = sheetData.actor
+    const sheetData = super.getData()
+    const item = sheetData.item
 
-    sheetData.config = CONFIG.eclipsephase;
-    actor.showEffectsTab = true;
-    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-      actor.showEffectsTab = true
+    sheetData.config = CONFIG.eclipsephase
+    item.showEffectsTab = true
+    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM) {
+      item.showEffectsTab=true
     }
 
     return sheetData
@@ -63,7 +65,6 @@ export class EclipsePhaseTraitSheet extends ItemSheet {
 
     registerEffectHandlers(html,this.item);
     registerCommonHandlers(html,this.item);
-
     // Roll handlers, click handlers, etc. would go here.
   }
 }

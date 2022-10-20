@@ -1,17 +1,15 @@
-import { registerEffectHandlers,registerCommonHandlers } from "../common/common-sheet-functions.js";
-
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseGearSheet extends ItemSheet {
+export default class EPknowSkillSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
-      width: 520,
-      height: 445,
+      width: 600,
+      height: 130,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
@@ -32,29 +30,11 @@ export class EclipsePhaseGearSheet extends ItemSheet {
   /** @override */
   getData() {
     const sheetData = super.getData()
-    const item = sheetData.item
-
     sheetData.config = CONFIG.eclipsephase
-    item.showEffectsTab = true
-    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-      item.showEffectsTab = true
-    }
 
-    console.log("***** gear-sheet")
+    console.log("***** knowskill-sheet")
     console.log(sheetData)
-
     return sheetData
-  }
-
-  /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    // Everything below here is only needed if the sheet is editable
-    if (!this.options.editable) return;
-
-    registerEffectHandlers(html, this.item);
-    registerCommonHandlers(html, this.item);
   }
 
   /* -------------------------------------------- */
@@ -69,4 +49,14 @@ export class EclipsePhaseGearSheet extends ItemSheet {
   }
 
   /* -------------------------------------------- */
+
+  /** @override */
+  activateListeners(html) {
+    super.activateListeners(html);
+
+    // Everything below here is only needed if the sheet is editable
+    if (!this.options.editable) return;
+
+    // Roll handlers, click handlers, etc. would go here.
+  }
 }

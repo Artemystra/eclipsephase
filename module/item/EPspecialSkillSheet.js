@@ -2,7 +2,7 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseKnowSkillSheet extends ItemSheet {
+export default class EPspecialSkillSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
@@ -30,10 +30,9 @@ export class EclipsePhaseKnowSkillSheet extends ItemSheet {
   /** @override */
   getData() {
     const sheetData = super.getData()
+    if(this?.isThreat)
+      sheetData.item.isThreat=true
     sheetData.config = CONFIG.eclipsephase
-
-    console.log("***** knowskill-sheet")
-    console.log(sheetData)
     return sheetData
   }
 

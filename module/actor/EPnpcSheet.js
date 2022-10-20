@@ -1,6 +1,6 @@
 import * as Dice from "../dice.js"
 
-export class NpcSheet extends ActorSheet {
+export default class EPnpcSheet extends ActorSheet {
 
     constructor(...args) {
       super(...args);

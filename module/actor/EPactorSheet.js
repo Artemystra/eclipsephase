@@ -1,12 +1,14 @@
-import { eclipsephase } from "../config.js"
+import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers } from "../common/common-sheet-functions.js";
-import * as Dice from "../dice.js"
+import * as Dice from "../dice.js";
+import itemRoll from "../item/EPitem.js";
+
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-export class EclipsePhaseActorSheet extends ActorSheet {
+export default class EPactorSheet extends ActorSheet {
 
     constructor(...args) {
       super(...args);
@@ -352,7 +354,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
-    let actor = this.actor
+    let actor = this.actor;
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -401,7 +403,7 @@ export class EclipsePhaseActorSheet extends ActorSheet {
       html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
 
       //Edit Item Checkboxes
-      html.find('.equipped.checkBox').click(ev => {
+      html.find('.equipped.checkBox').click(async ev => {
           const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
           const item = actor.items.get(itemId);
           let toggle = !item.system.active;
@@ -410,20 +412,33 @@ export class EclipsePhaseActorSheet extends ActorSheet {
           };
           const updated = item.update(updateData);
           
+          //handles activation/deactivation of values provided by effects inherited from items
+          let allEffects = this.object.effects
           let effUpdateData=[];
-          for(let eff of this.object.effects.filter(e => 
-            (e.disabled === toggle && e.origin.indexOf(itemId)>=0))){
+          for(let effectScan of allEffects){
 
-              effUpdateData.push({
-                "_id" : eff._id,
-                disabled: !toggle
-              });
+            if (effectScan.origin){
+              let parentItem = await fromUuid(effectScan.origin);
+              console.log("Item active? ", item.system.active);
+
+              if (itemId === parentItem._id){
+
+                effUpdateData.push({
+                  "_id" : effectScan._id,
+                  disabled: !toggle
+                });
+
+              }
+            }
           }
           actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
       });
 
       //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
+
+      //post to chat WIP
+      html.find('.post-chat').click(this._postToChat.bind(this));
 
   }
 
@@ -432,6 +447,19 @@ export class EclipsePhaseActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
+
+  async _postToChat(event) {
+    const itemID = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemID);
+
+    console.log("this is item ", item);
+
+
+    await item.roll();
+
+  }
+
+  
 
   async _onMorphSwitch(event) {
     event.preventDefault();

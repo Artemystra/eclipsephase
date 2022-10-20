@@ -4,7 +4,7 @@ import { eclipsephase } from "../config.js"
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
-export class EclipsePhaseActor extends Actor {
+export default class EPactor extends Actor {
 
   static SKILL_DATA = [
     { skill: "athletics", aptitude: "som", multiplier: 1, category: "vigor" },
@@ -298,7 +298,7 @@ export class EclipsePhaseActor extends Actor {
   }
 
   _calculateSkillValue(key, skill, data, actorType) {
-    let skillData = EclipsePhaseActor.SKILL_DATA.find(element => element.skill == key)
+    let skillData = EPactor.SKILL_DATA.find(element => element.skill == key)
     let skillValue = data.aptitudes[skillData.aptitude].value
 
     if(actorType === 'character' || actorType === 'npc')

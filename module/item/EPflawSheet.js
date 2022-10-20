@@ -2,14 +2,14 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseVehicleSheet extends ItemSheet {
+export default class EPflawSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
-      width: 920,
-      height: 260,
+      width: 520,
+      height: 315,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
@@ -29,12 +29,17 @@ export class EclipsePhaseVehicleSheet extends ItemSheet {
 
   /** @override */
   getData() {
-    const sheetData = super.getData()
+    const sheetData = super.getData();
 
-    sheetData.config = CONFIG.eclipsephase
-
-    console.log("*** vehicle-sheet")
+    console.log("**** flaw-sheet")
     console.log(sheetData)
+
+    sheetData.config = CONFIG.eclipsephase;
+    actor.showEffectsTab=true;
+    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
+      actor.showEffectsTab=true;  
+    }
+    
     return sheetData
   }
 
@@ -57,6 +62,9 @@ export class EclipsePhaseVehicleSheet extends ItemSheet {
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
+
+    registerEffectHandlers(html,this.item);
+    registerCommonHandlers(html,this.item);
 
     // Roll handlers, click handlers, etc. would go here.
   }

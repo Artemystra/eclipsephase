@@ -1,6 +1,6 @@
 import * as Dice from "../dice.js"
 
-export class GoonSheet extends ActorSheet {
+export default class EPgoonSheet extends ActorSheet {
 
     constructor(...args) {
       super(...args);

@@ -4,14 +4,14 @@ import { registerEffectHandlers,registerCommonHandlers } from "../common/common-
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseMorphTraitSheet extends ItemSheet {
+export default class EPgearSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       width: 520,
-      height: 315,
+      height: 445,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
@@ -36,11 +36,25 @@ export class EclipsePhaseMorphTraitSheet extends ItemSheet {
 
     sheetData.config = CONFIG.eclipsephase
     item.showEffectsTab = true
-    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM) {
-      item.showEffectsTab=true
+    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
+      item.showEffectsTab = true
     }
 
+    console.log("***** gear-sheet")
+    console.log(sheetData)
+
     return sheetData
+  }
+
+  /** @override */
+  activateListeners(html) {
+    super.activateListeners(html);
+
+    // Everything below here is only needed if the sheet is editable
+    if (!this.options.editable) return;
+
+    registerEffectHandlers(html, this.item);
+    registerCommonHandlers(html, this.item);
   }
 
   /* -------------------------------------------- */
@@ -55,16 +69,4 @@ export class EclipsePhaseMorphTraitSheet extends ItemSheet {
   }
 
   /* -------------------------------------------- */
-
-  /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
-
-    // Everything below here is only needed if the sheet is editable
-    if (!this.options.editable) return;
-
-    registerEffectHandlers(html,this.item);
-    registerCommonHandlers(html,this.item);
-    // Roll handlers, click handlers, etc. would go here.
-  }
 }

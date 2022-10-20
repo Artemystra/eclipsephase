@@ -2,7 +2,7 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class EclipsePhaseFlawSheet extends ItemSheet {
+export default class EPtraitSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
@@ -30,16 +30,14 @@ export class EclipsePhaseFlawSheet extends ItemSheet {
   /** @override */
   getData() {
     const sheetData = super.getData();
-
-    console.log("**** flaw-sheet")
-    console.log(sheetData)
+    const actor = sheetData.actor
 
     sheetData.config = CONFIG.eclipsephase;
-    actor.showEffectsTab=true;
+    actor.showEffectsTab = true;
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-      actor.showEffectsTab=true;  
+      actor.showEffectsTab = true
     }
-    
+
     return sheetData
   }
 
