@@ -6,10 +6,9 @@
         <label class="input-medium resource-label" >Name</label>
         <input type="text" name="system.ego.ids.{{../id}}.name" value="{{name}}" placeholder="Fake Name" style="text-align: left"/>
     </div>
-    <div class="listBackground shape4">
-        <div class="skills grid grid-3col">
+    <div class="listBackground">
             {{#each rep as |reputation key|}}
-            <div class="flexrow flex-group-center noBorder reveal item">
+            <div class="flexrow flex-group-left noBorder reveal item" style="height: 28px;">
                 <span class="toggle input-medium resource-label" >{{key}}</span>
 
 
@@ -24,15 +23,14 @@
 
 
 
-
+                Min
                 <input type="checkbox" class="sheet" name="system.ego.ids.{{../../id}}.rep.{{key}}.small1" {{checked reputation.small1}}>
                 <input type="checkbox" class="sheet" name="system.ego.ids.{{../../id}}.rep.{{key}}.small2" {{checked reputation.small2}}>
-                <input type="checkbox" class="sheet" name="system.ego.ids.{{../../id}}.rep.{{key}}.small3" {{checked reputation.small3}}>/
-                <input type="checkbox" class="sheet" name="system.ego.ids.{{../../id}}.rep.{{key}}.med1" {{checked reputation.med1}}>/
+                <input type="checkbox" class="sheet" name="system.ego.ids.{{../../id}}.rep.{{key}}.small3" {{checked reputation.small3}}> Mod
+                <input type="checkbox" class="sheet" name="system.ego.ids.{{../../id}}.rep.{{key}}.med1" {{checked reputation.med1}}> Maj
                 <input type="checkbox" class="sheet" name="system.ego.ids.{{../../id}}.rep.{{key}}.large" {{checked reputation.large}}>
             </div>
             {{/each}}
-        </div>
     </div>
 </div>
 

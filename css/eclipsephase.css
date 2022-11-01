@@ -1,7 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Martel:wght@400;800&family=Roboto:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap");
 /* Global styles */
 .window-app {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
 }
 
 :root {
@@ -82,6 +84,38 @@
 .grid-12col {
   grid-column: span 12 / span 12;
   grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-areas: 
+    "left left left center center center center center center right right right";
+}
+
+/*Wrapper Test*/
+
+.wrapperleft {
+  grid-area: left;
+  background-color: var(--mainBackground);
+}
+
+.contentleft {
+  height: 298px;
+  overflow: auto;
+  padding: 0;
+}
+
+.wrappercenter {
+  grid-area: center;
+  background-color: var(--mainBackground);
+}
+
+.contentcenter {
+  height: 780px;
+  overflow: auto;
+}
+
+.wrapperright {
+  grid-area: right;
+  height: 820px;
+  overflow: auto;
+  background-color: var(--mainBackground);
 }
 
 .flex-group-center,
@@ -130,7 +164,7 @@
 
 /* Styles limited to eclipsephase sheets */
 .eclipsephase .item-form {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .eclipsephase .sheet-header {
@@ -151,14 +185,9 @@
   justify-content: flex-start;
 }
 
-.eclipsephase .sheet-header .profile-img {
-  height: 230px;
-  width: 230px;
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 100px;
-  flex: 0 0 100px;
-  margin-right: 10px;
+.eclipsephase .profile-img {
   border: solid var(--pitchBorder) 5px;
+  margin-top: 20px;
 }
 
 .morph-img{
@@ -234,6 +263,7 @@
 }
 
 .eclipsephase .sheet-body .tab,
+.eclipsephase .sheet-booty .tab,
 .eclipsephase .sheet-body .tab .editor {
   height: 100%;
   padding: 5px 0 0 0;
@@ -344,13 +374,17 @@ span.success {
 .window-app .window-content {
   color: var(--mainText);
   background: none;
-  overflow-y: scroll;
+  overflow-y: hidden;
+}
+
+.window-app.eclipsephase.sheet.actor .window-content{
+  background-color: var(--highlightBackground);
+  z-index: -1;
 }
 
 .window-app .window-content::after{
-  content: "";
   background-image: url(../resources/img/background2.jpg);
-  opacity: 0.7;
+  opacity: 0.8;
   top: 0;
   left: 0;
   bottom: 0;
@@ -358,6 +392,7 @@ span.success {
   position: absolute;
   z-index: -1;
 }
+
 
 #chat-log .message {
   background-image: url(../resources/img/background2.jpg);
@@ -610,13 +645,16 @@ a:hover{
   cursor: pointer;
 }
 
-.sheet nav.sheet-tabs {
-  height: 40px;
-  line-height: 40px;
+.sheet nav.sheet-tabs,
+.sheet nav.twotabs {
+  height: 50px;
+  line-height: 50px;
   flex: 0 0 43px;
   border-top: none;
-  border-bottom: 3px solid var(--pitchBorder);
+  border-bottom: 3px solid var(--mainBackground);
   padding: 0;
+  margin: 0;
+  background-color: var(--highlightBackground);
 }
 
 .sheet nav.sheet-tabs.itemnav {
@@ -625,7 +663,7 @@ a:hover{
   line-height: 37px;
   flex: 0 0 43px;
   border-top: none;
-  border-bottom: 3px solid var(--pitchBorder);
+  border-bottom: 3px solid var(--mainBackground);
 }
 
 .sheet nav.sheet-tabs.itemnav .item{
@@ -637,31 +675,35 @@ a:hover{
 }
 
 .eclipsephase .tabs .item {
-  font-weight: bold;
-  min-width: 15%;
-  width: auto;
-}
-
-.eclipsephase .tabs .item {
   padding: 0!important;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
 }
 
-.eclipsephase .tabs .item:first-child {
+/*.eclipsephase .tabs .item:first-child,
+.eclipsephase .tabs .item:last-child {
   font-weight: bold;
   text-align: center;
 }
 
 .eclipsephase .tabs .item.active:first-child {
   text-shadow: none;
-  background-color: var(--pitchBorder);
+  background-color: var(--mainBackground);
   text-align: center;
   clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
 }
 
+.eclipsephase .tabs .item.active:last-child {
+  text-shadow: none;
+  background-color: var(--mainBackground);
+  text-align: center;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%);
+}*/
+
 .eclipsephase .tabs .item.active {
   text-shadow: none;
-  background-color: var(--pitchBorder);
-  clip-path: polygon(0 0, 80% 0, 100% 100%, 20% 100%);
+  background-color: var(--mainBackground);
 }
 
 .eclipsephase .tox .tox-editor-container {
@@ -671,7 +713,6 @@ a:hover{
 .sheet .editor-content{
   background: var(--mainBackground);
   padding: 1em;
-  border-top: solid var(--accentBackground) 2px;
   overflow-x: hidden;
   min-height: 225px;
 }
@@ -827,40 +868,56 @@ h1, h2, h3, h4 {
 h3.subheader {
   background-color: var(--accentBackground);
   clip-path: polygon(0 0, 70% 0, 100% 100%, 0% 100%);
-  padding: 0.3em 1em 0.2em 1em;
+  padding: 0.3em 0.5em 0.2em 0.5em;
   font-weight: bold;
-  text-transform: uppercase;
   border: 0;
+  font-size: 16px;
+}
+
+h3.subheader.colorV1{
+  background-color: var(--pitchBorder);
 }
 
 h3.subheaderMirror {
   background-color: var(--accentBackground);
   clip-path: polygon(30% 0, 100% 0%, 100% 100%, 0% 100%);
-  padding: 0.3em 1em 0.2em 1em;
+  padding: 0.3em 0.5em 0.2em 0.5em;
   font-weight: bold;
-  text-transform: uppercase;
   text-align: end;
   border: 0;
+  font-size: 16px;
 }
 
 h3.subheaderBlank {
-  padding: 0.3em 1em 0.2em 1em;
+  padding: 0.3em 0.5em 0.2em 0.5em;
   font-weight: bold;
-  text-transform: uppercase;
   text-align: center;
   border: 0;
+  font-size: 16px;
 }
 
 .flexGrowThreeQuarter {
+  padding: 0px 0.5em 0px 0.5em;
   flex-grow: 1.25!important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .flexGrowHalf {
-  flex-grow: 0.49!important;
+  padding: 0px 0.5em 0px 0.5em;
+  flex-grow: 0.75!important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .flexGrowQuarter {
+  padding: 0px 0.5em 0px 0.5em;
   flex-grow: 0.35!important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .alignRight {
@@ -972,21 +1029,26 @@ h3.subheaderBlank {
 }
 
 .contentBox {
-  margin-bottom: 20px;
   position: relative;
 }
 
+.flexrow.subheader {
+  border-bottom: solid var(--accentBackground) 3px;
+  background-color: var(--focusBackground);
+}
+
+.flexrow.subheader.colorV1{
+  border-bottom: solid var(--pitchBorder) 3px;
+}
+
 .listBackground {
-  background: var(--mainBackground);
-  padding: 5px 1em 5px 1em;
-  border-top: solid var(--accentBackground) 2px;
+  padding: 5px 0.5em 5px 0.5em;
   min-height: 40px;
 }
 
 .itemBackground {
   background: var(--mainBackground);
-  padding: 10px 1em 10px 1em;
-  border-top: solid var(--accentBackground) 2px;
+  padding: 10px 0.5em 10px 0.5em;
 }
 
 .noPadBot {
@@ -996,7 +1058,7 @@ h3.subheaderBlank {
 .centerBackground {
   background: var(--pitchBorder);
   padding: 1em;
-  min-height: 40px;
+  min-height: 43px;
 }
 
 .edgeAbler {
@@ -1186,19 +1248,14 @@ img {
 }
 
 .logo-img {
-  margin: auto!important;
-  width: auto!important;
+  margin-top: 11px;
+  width: 90px;
   height: auto!important;
   display: block;
 }
 
 .bigIcon {
   font-size: 48px;
-}
-
-.sheet header.sheet-header > * {
-  flex: 0.15;
-  margin-top: 20px;
 }
 
 .textarea {
@@ -1252,19 +1309,19 @@ h3.inline {
 }
 
 .tooltip:hover div[role=tooltip] {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Orbitron', sans-serif;
   width: 350px;
   display: block;
   text-align: left;
   position: absolute;
   top: 1em;
-  left: -20em;
+  left: -25em;
   z-index: 100;
   color: var(--mainText);
 }
 
 .tooltip:hover div[role=tooltipNegative] {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Orbitron', sans-serif;
   width: 350px;
   display: block;
   text-align: left;
@@ -1305,6 +1362,38 @@ h3.inline {
   padding: 0 0.25em 0.25em 0.25em;
   margin-top: -15px;
   clip-path: polygon(0 0, 100% 0, 100% 30%, 95% 70%, 63% 70%, 60% 100%, 5% 100%, 0 46%);
+}
+
+.wantToKnowMore {
+  position: relative;
+  display: inline-block;
+}
+
+.wantToKnowMore .tooltipText {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--highlightBackground);
+    color: var(--mainText);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    top: -5px;
+    right: 105%;
+}
+
+.wantToKnowMore .tooltipText::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent var(--highlightBackground);
+}
+
+.wantToKnowMore:hover .tooltipText {
+  visibility: visible;
 }
 
 .insight,
@@ -1405,7 +1494,7 @@ h3.inline {
 
 .mce-content-body {
   color: var(--mainText)!important;
-  font-family: "Roboto", sans-serif!important;
+  font-family: 'Orbitron', sans-serif!important;
 }
 
 .mce-content-body p {
@@ -1448,3 +1537,4 @@ button#world-anvil img {
 #world-anvil-browser .article-filters{
   border: none!important;
 }
+

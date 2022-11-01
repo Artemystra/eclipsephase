@@ -1,0 +1,155 @@
+<div class="tab ego" data-group="secondary" data-tab="ego">
+    <div class="contentBox" style="margin-bottom: 10px;">
+        <div class="flexrow subheader colorV1">
+            <h3 class="subheader colorV1">General</h3>
+            <div class="alignRight flexGrowThreeQuarter">
+                <label class="resource-label">Ego Flex </label><input class="input-small" type="number" name="system.ego.egoFlex" value="{{actor.system.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
+            </div>
+        </div>
+        <div class="listBackground">
+            <div class="flexrow flex-group-left grid-2col">
+                <label class="input-large resource-value" >Origin</label>
+                <select class="selectSpecApt item-standard-margin-medium" 
+                name="system.ego.origin" data-type="String" >
+                    {{#select actor.system.ego.origin}}
+                    {{#each config.origins as |origin key|}}
+                    <option value="{{origin}}">{{origin}}</option>
+                    {{/each}} {{/select}}
+                </select>
+            </div>
+            <div class="flexrow flex-group-left grid-2col">
+                <label class="input-medium resource-value" >Sex</label>
+                <select class="selectSpecApt item-standard-margin-medium"
+                name="system.ego.sex" data-type="String">
+                    {{#select actor.system.ego.sex}}
+                    {{#each config.sexes as |sex key|}}
+                    <option value="{{sex}}">{{sex}}</option>
+                    {{/each}} {{/select}}
+                </select>
+            </div>
+            <div class="flexrow flex-group-left grid-2col">
+                <label class="input-large resource-value" >Gender</label>
+                <select class="selectSpecApt item-standard-margin-medium"
+                name="system.ego.gender" data-type="String">
+                    {{#select actor.system.ego.gender}}
+                    {{#each config.genders as |gender key|}}
+                    <option value="{{gender}}">{{gender}}</option>
+                    {{/each}} {{/select}}
+                </select>
+            </div>
+        </div>
+        <div class="itemBackground">
+            <div class="flexrow flex-group-center">
+                <label class="input-large resource-label alignLeft" >Motivations</label>
+                <div class="flexrow">
+                    <input class="alignCenter" type="text"
+                    name="system.ego.motivations.motivation1"
+                    value='{{actor.system.ego.motivations.motivation1}}'
+                    placeholder="e.g. Reach the horizon"/>
+                    <input class="alignCenter" type="text"
+                    name="system.ego.motivations.motivation2"
+                    value='{{actor.system.ego.motivations.motivation2}}'
+                    placeholder="e.g. Reach the horizon"/>
+                    <input class="alignCenter" type="text"
+                    name="system.ego.motivations.motivation3"
+                    value='{{actor.system.ego.motivations.motivation3}}'
+                    placeholder="e.g. Reach the horizon"/>
+
+                </div>
+            </div>
+        </div>
+        <div class="itemBackground flexrow flex-group-center skills">
+            <label class="input-large resource-label" >Languages</label>
+            <input type="text" name="system.ego.languages"
+            value="{{actor.system.ego.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
+        </div>
+    </div>
+    <div class="flexrow flex-between">
+        <div class="contentBox" style="flex: 0.4; margin-bottom: 10px;">
+            <div class="flexrow subheader">
+                <h3 class="subheader">Traits</h3>
+                <div class="alignRight flexGrowHalf">
+                </div>
+            </div>
+            <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
+                {{#if actor.trait}}
+                {{#each actor.trait as |item id|}}
+                <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
+                    <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
+                    <div class="flex-group-right slideShow" style="max-width: 16%;">
+                        <a><i class="fas fa-plus icon-small"></i></a>
+                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    </div>
+                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                        {{#if item.system.description}}
+                        <div class="itemDescription shape3">
+                            {{item.system.description}}
+                        </div>
+                        {{/if}}
+                        <div class="flexrow flex-between item-controls">
+                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{else}}
+                <div class="flex-group-center">
+                    <label class="resource-label">You are traitless</label>
+                </div>
+                {{/if}}
+            </div>
+            <div class="itemBackground shape2 edgeLord"></div>
+        </div>
+        <div class="contentBox" style="flex: 0.4; margin-bottom: 10px;">
+            <div class="flexrow subheader">
+                <div class="alignRight flexGrowHalf">
+                </div>
+                <h3 class="subheaderMirror">Flaws</h3>
+            </div>
+            <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
+                {{#if actor.flaw}}
+                {{#each actor.flaw as |item id|}}
+                <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                    <div class="item-image flex-group-left" style="flex: 0.2;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
+                    <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
+                    <div class="flex-group-right slideShow" style="max-width: 16%;">
+                        <a><i class="fas fa-plus icon-small"></i></a>
+                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    </div>
+                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                        {{#if item.system.description}}
+                        <div class="itemDescription shape3">
+                            {{item.system.description}}
+                        </div>
+                        {{/if}}
+                        <div class="flexrow flex-between item-controls">
+                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{else}}
+                <div class="flex-group-center">
+                    <label class="resource-label">You are flawless</label>
+                </div>
+                {{/if}}
+            </div>
+            <div class="itemBackground shape1 edgeLord"></div>
+        </div>
+    </div>
+    <div class="flexrow subheader">
+        <h3 class="subheader">About {{actor.name}}</h3>
+        <div class="alignRight flexGrowHalf">
+        </div>
+    </div>
+    {{editor
+    htmlBiography
+    target="system.biography"
+    button=true
+    owner=owner
+    editable=this.options.editable
+    }}
+</div>

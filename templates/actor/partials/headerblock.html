@@ -1,228 +1,34 @@
-<header class="sheet-header" style="align-items: normal;">
+<header>
 
     {{!-- Character Picture --}}
     <div class="headroom">
-        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 70%, 0% 70%); width: 110px; height: 55px; padding-left: 0.5em; top: -37px;">
+        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: -15px; z-index: 1; height: 68px;">
             <img class="logo-img" src="systems/eclipsephase/resources/img/logo.png" title="ep2e logo"/>
         </div>
         <div>
             <img class="profile-img" src="{{actor.img}}" data-edit="img"
             title="{{actor.name}}"/>
         </div>
-        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 20%, 90% 20%, 100% 100%, 0% 100%); bottom: 30px; padding-bottom: 0">
+        <div class="centerBackground" style="position: absolute; top: 0px; right: 0px; background-color: var(--highlightBackground); width: 240px; padding-left: 22px; border-bottom: 5px solid var(--pitchBorder); height: 54px;">
             <input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="width: auto; font-size: 18px; max-width: 190px; text-shadow: 0 0 5px #161616"/>
         </div>
     </div>
-
-    {{!-- Character Header Stats --}}
-    <div class="header-fields">
-    <div class="grid grid-2col noMargin">
-      <div class="contentBox">
-          <div class="flexrow">
-              <h3 class="subheader">Physical</h3>
-              <div class="flexGrowThreeQuarter flexrow flex-group-center tooltip">
-                <div role="tooltipNegative">
-                    <div class="tooltipTopBorder">
-                        <div class="tooltipTop"></div>
-                    </div>
-                    <div class="armorValue">
-                        <h3 class="inline">Armor</h3>
-                        {{#if actor.armor}}
-                            <label class="resource-value">Cumulated Armor </label>
-                            <p/>
-                            <div class="flexrow flex-group-center">
-                                <img
-                                src="systems/eclipsephase/resources/icons/power.png"
-                                class="icon-small"/><span class="toggle
-                                       resource-label alignLeft">Energy:
-                                </span><span class="toggle resource-value
-                                  alignLeft item-standard-margin-medium">
-                                  {{actor.system.physical.energyArmorTotal}}</span>
-                                <img
-                                src="systems/eclipsephase/resources/icons/shield.png"
-                                class="icon-small" style="max-width:
-                                20px!important; max-height:
-                                20px!important;"/><span class="toggle
-                                resource-label alignLeft">Kinetic: </span><span
-                              class="toggle resource-value alignLeft">
-                                {{actor.system.physical.kineticArmorTotal}}</span>
-                            </div>
-                            <p/>
-                            <label class="resource-value">Armor Pieces active on You</label>
-                            <div class="listBackground">
-                                <span class="toggle resource-label
-                                  alignLeft">Main Armor: </span><span
-                                  class="toggle resource-value
-                                  alignLeft">{{actor.system.physical.mainArmorTotal}}</span><br/>
-                                <p/>
-                                <span class="toggle resource-label
-                                  alignLeft">Additional Armor: </span><span
-                                  class="toggle resource-value
-                                  alignLeft">{{actor.system.physical.additionalArmorTotal}}</span><br/>
-                            </div>
-                            <p/>
-                            <label class="resource-value">Cumulative Malus
-                              -{{actor.system.physical.armorMalusTotal}}</label>
-                            <div class="listBackground">
-                                <span class="toggle resource-label
-                                  alignLeft">Main Armor Malus: </span><span
-                                  class="toggle resource-value
-                                  alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
-                                <p/>
-                                <i style="font-size: 12px; margin-bottom: 10px;">For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
-                                <p/>
-                                <span class="toggle resource-label
-                                             alignLeft">Additional Armor Malus:
-                                </span><span class="toggle resource-value
-                                  alignLeft">-{{actor.system.physical.additionalArmorMalus}}</span>
-                                <p/>
-                                <i style="font-size: 12px; margin-bottom: 10px;">Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
-                            </div>
-                            <p/>
-                            {{else}}
-                            <label class="resource-value">You are not wearing any armor</label>
-                            <p/>
-                            {{/if}}
-                            <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
-                    </div>
-                    <div class="tooltipBottomBorder">
-                        <div class="tooltipBottom"></div>
-                    </div>
-                </div>
-                <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>
-                <span class="toggle resource-value alignLeft">{{actor.system.physical.energyArmorTotal}}</span>
-                <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/>
-                <span class="toggle resource-value alignLeft">{{actor.system.physical.kineticArmorTotal}}</span>
-              </div>
-          </div>
-            <div class="flex-group-center listBackground shape2">
-                <div class="resource-content flexrow flex-center flex-between">
-                    <label class="alignCenter resource-label">Health</label>
-                    <span>  </span>
-                    <label class="alignCenter resource-label">Wounds</label>
-                </div>
-                <div class="flexrow flex-center flex-between">
-                    <input type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/>
-                    <span>  </span>
-                    <input type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/>
-                </div>
-                <div class="resource-content flexrow flex-center flex-between">
-                    <span class="resource-value">DUR {{actor.system.health.physical.max}}</span>
-                    <span class="resource-value">DR {{actor.system.physical.dr}}</span>
-                    <span class="resource-value">WT {{actor.system.physical.wt}}</span>
-                </div>
+    <div class="contentBox" style="background-color: var(--pitchBorder);">
+        <div class="flexrow">
+            <h3 class="subheader colorV1">Aptitudes</h3>
+            <div class="flexGrowHalf">
             </div>
         </div>
-        <div class="contentBox">
-            <div class="flexrow">
-                <div class="flexGrowHalf">
+        <div class="listBackground shape2 grid grid-3col noMargin">
+            {{#each actor.system.aptitudes as |aptitude key|}}
+            <div class="flexrow flex-group-center reveal standard-height">
+                <div class="flexrow flex-group-center input-small">
+                    <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
+                    <label class="toggle roll-label task-check noShow" data-type="aptitude" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
-                <h3 class="subheaderMirror">Mental</h3>
+                <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
             </div>
-            <div class="listBackground shape1 flex-group-center">
-                <div class="resource-content flexrow flex-center flex-between">
-                    <label class="resource-label alignCenter">Health</label>
-                    <span>  </span>
-                    <label class="resource-label alignCenter">Trauma</label>
-                </div>
-                <div class="resource-content flexrow flex-center flex-between">
-                    <input type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/>
-                    <span>  </span>
-                    <input type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/>
-                </div>
-                <div class="resource-content flexrow flex-center flex-between">
-                    <span class="resource-value">LUC {{actor.system.health.mental.max}}</span>
-                    <span class="resource-value">IR {{actor.system.mental.ir}}</span>
-                    <span class="resource-value">TT {{actor.system.mental.tt}}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="grid grid-2col">
-        <div class="contentBox">
-            <div class="flexrow">
-                <h3 class="subheader">Aptitudes</h3>
-                <div class="flexGrowHalf">
-                </div>
-            </div>
-            <div class="listBackground shape2 grid grid-3col noMargin">
-                {{#each actor.system.aptitudes as |aptitude key|}}
-                <div class="flexrow flex-group-center reveal standard-height">
-                    <div class="flexrow flex-group-center input-small">
-                        <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
-                        <label class="toggle roll-label task-check noShow" data-type="aptitude" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                    </div>
-                    <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-        <div class="contentBox">
-            <div class="flexrow">
-                <div class="flexGrowHalf"></div>
-                <h3 class="subheaderMirror">Other</h3>
-            </div>
-            {{#if (eq actor.type "character")}}
-            <div class="listBackground flexrow flex-group-center shape1">
-                <div class="flexrow flex-group-center">
-                    <span class="resource-value flex-group-left">Ini Mod:</span>
-                    <span class="resource-label
-                                 flex-group-right">{{actor.system.initiative.display}}</span>
-                </div>
-                <div class="flexrow flex-group-left" style="flex-basis: 100%; margin-top: 19.5px; margin-bottom: 5px;">
-                    <div class="flexrow flex-group-right">
-                        <span class="resource-value flex-group-left">Rest: </span>
-                        <span class="resource-label alignCenter">Short</span>
-                        <input type="checkbox" class="sheet"
-                                               name="system.rest.short1" {{checked
-                                               actor.system.rest.short1}}>
-                        <input type="checkbox" class="sheet"
-                                               name="system.rest.short2" {{checked
-                                               actor.system.rest.short2}}>
-                    </div>
-                    <div class="flexrow flex-group-right" style="flex: 0.5;">
-                        <span class="resource-label alignCenter input-small">Long</span>
-                        <input type="checkbox" class="sheet"
-                                               name="system.rest.long" {{checked
-                                               actor.system.rest.long}}>
-                    </div>
-                </div>
-            </div>
-            {{else}}
-            <div class="listBackground grid grid-3col shape1 noMargin">
-
-                <div class="flexrow flex-center standard-height">
-                    <label class="resource-value">Ini Mod</label>
-                </div>
-                <div class="flexrow flex-center standard-height">
-                    <label class="resource-value">Threat</label>
-                </div>
-                <div class="flexrow flex-center standard-heightr">
-                    <label class="resource-value">Stress</label>
-                </div>
-                <div class="flexrow flex-center standard-height">
-                    <input class="input-small flex-group-right"
-                           style="text-align: center" type="text"
-                                                      name="system.mods.iniMod"
-                                                      value="{{actor.system.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
-                </div>
-                <div class="flexrow flex-center standard-height">
-                    <input class="input-xs standard-height" style="text-align:
-                                  center" type="text"
-                                          name="system.threatLevel.current"
-                                          value="{{actor.system.threatLevel.current}}" placeholder="0"/>/
-                    <input class="input-xs standard-height" style="text-align:
-                                  center" type="text"
-                                          name="system.threatLevel.total"
-                                          value="{{actor.system.threatLevel.total}}" placeholder="0"/>     
-                </div>
-                <div class="flexrow flex-center standard-height">
-                    <input class="input-medium" style="text-align: center"
-                    type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
-                </div>
-                </div>
-            </div>
-            {{/if}}
+            {{/each}}
         </div>
     </div>
 </header>

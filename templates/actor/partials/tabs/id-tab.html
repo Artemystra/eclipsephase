@@ -1,0 +1,20 @@
+<div class="tab" data-group="secondary" data-tab="identification">
+    <div class="contentBox" style="margin-bottom: 10px;">
+        <div class="flexrow subheader colorV1">
+            <h3 class="subheader colorV1">Current ID</h3>
+            <div class="alignRight flexGrowHalf">
+                <select class="selectSpecApt input-XL" name="system.ego.idSelected" data-type="String">
+                    {{#select actor.system.ego.idSelected}}
+                    <option value="id1">ID1: {{actor.system.ego.ids.id1.name}}</option>
+                    <option value="id2">ID2: {{actor.system.ego.ids.id2.name}}</option>
+                    <option value="id3">ID3: {{actor.system.ego.ids.id3.name}}</option>
+                    <option value="id4">ID4: {{actor.system.ego.ids.id4.name}}</option>
+                    <option value="id5">ID5: {{actor.system.ego.ids.id5.name}}</option>
+                    {{/select}}
+                </select>
+            </div>
+        </div>
+        {{!-- ID and reputation --}}
+        {{> systems/eclipsephase/templates/actor/partials/tabs/id-details.html id=actor.system.ego.idSelected}}
+    </div>
+</div>

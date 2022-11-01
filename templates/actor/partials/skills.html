@@ -1,7 +1,7 @@
         <div class="tab" data-group="primary" data-tab="skills">
             <div class="skills grid grid-2col" style="margin-top: 0px;">
                 <div class="contentBox">
-                    <div class="flexrow">
+                    <div class="flexrow subheader">
                         <h3 class="subheader">Insight Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             {{#if (eq actor.type "character")}}
@@ -95,10 +95,9 @@
                             {{/each}}
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 <div class="contentBox">
-                    <div class="flexrow">
+                    <div class="flexrow subheader">
                         <h3 class="subheader">Vigor Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             {{#if (eq actor.type "character")}}
@@ -190,10 +189,9 @@
                             {{/each}}
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 <div class="contentBox">
-                    <div class="flexrow">
+                    <div class="flexrow subheader">
                         <h3 class="subheader">Moxie Skills</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             {{#if (eq actor.type "character")}}
@@ -294,7 +292,6 @@
                             {{/each}}
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2 edgeLord"></div>
                 </div>
                 {{#if (ne actor.type "character")}}
                 <div class="contentBox">
@@ -364,7 +361,6 @@
                             {{/each}}
                         {{/if}}
                     </div>
-                    <div class="itemBackground shape2 edgeLord"></div>
                     {{else}}
                     <div class="separator">
                         <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Additional Skill</a>
@@ -373,7 +369,7 @@
                 </div>
                 {{else}}
                 <div class="contentBox noMargin">
-                    <div class="flexrow">
+                    <div class="flexrow subheader">
                         <h3 class="subheader">Flex</h3>
                         <div class="alignRight flexGrowHalf reveal">
                             <label class="resource-label labelWidth-medium">pool </label>
@@ -382,7 +378,7 @@
                                     <div class="tooltipTopBorder">
                                         <div class="tooltipTop"></div>
                                     </div>
-                                    <div class="flex">
+                                    <div class="flex" style="width: 500px;">
                                         <h3 class="inline">Flex</h3>
                                         <ul>
                                             <li>
@@ -396,7 +392,7 @@
                                             </li>
                                             <p/>
                                             <li>
-                                                <label class="resource-value">Introduce and Item: </label>
+                                                <label class="resource-value">Introduce an Item: </label>
                                                 A previously unnoticed item is added to the
                                                 scene. Its presence must be plausible. The item cannot be offensive
                                                 (no weapons) and it must be of Minor (not Rare or Restricted)
@@ -445,71 +441,20 @@
                         <span class="resource-value">Long Rest</span><br/>
                         Completely restores pools over 4 hours (8 w/o biomods)<p/>
                     </div>
-                    <div class="itemBackground shape2 edgeLord"></div>
-                </div>
-                <div class="contentBox noMargin">
-                    {{#if actor.specialSkill}}
-                    <div class="flexrow">
-                        <h3 class="subheader">Exotic Skills</h3>
-                        <div class="alignRight flexGrowHalf">
-                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
-                        </div>
-                    </div>
-                    <div class="listBackground edgeAbler">
-                        {{#each actor.specialSkill as |item id|}}
-                            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
-                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
-                                <input class="input-small sheet-inline-edit"
-                                data-field="system.value" type="number"
-                                name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
-                                {{#if item.system.aptitude}}
-                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="toggle
-                                input-small roll-label icon-dice task-check
-                                noShow" data-type="skill"
-                                data-name="{{item.name}}"
-                                data-rollvalue="{{item.roll}}"/>
-                                {{#if item.system.specname}}
-                                <label class="resource-label item-control
-                                  item-edit hoverable truncate
-                                  item-standard-margin-both-large">{{item.system.specname}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="info
-                                roll-label task-check icon-dice icon-hidden"
-                                data-type="skill" data-name="{{item.name}}"
-                                data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
-                                {{else}}
-                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                {{/if}}
-                                {{else}}
-                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                {{/if}}
-                            </div>
-                        {{/each}}
-                    </div>
-                    <div class="itemBackground shape2 edgeLord"></div>
-                    {{else}}
-                    <div class="separator">
-                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Exotic Skill</a>
-                    </div>
-                    {{/if}}
                 </div>
                 <div class="contentBox noMargin">
                     {{#if actor.knowSkill}}
-                    <div class="flexrow">
+                    <div class="flexrow subheader">
                         <h3 class="subheader">Know Skills</h3>
                         <div class="alignRight flexGrowHalf">
-                            <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
+                            <div><a class="item-control item-create" title="Create item" data-type="knowSkill"><i class="fas fa-plus"></i> Add Skill</a></div>
                         </div>
                     </div>
                     <div class="listBackground" style="position: relative; z-index: 2;">
                         {{#each actor.knowSkill as |item id|}}
                             <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                <label class="resource-label item-control item-edit hoverable truncate" style="width: 120px; white-space: nowrap; overflow: icon-hidden; text-overflow: ellipsis;">{{item.name}}</label>
+                                <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="width: 120px; white-space: nowrap; overflow: icon-hidden; text-overflow: ellipsis;">{{item.name}}<span class="tooltipText">{{item.name}}</span></label>
                                 <input class="input-small sheet-inline-edit "
                                 data-field="system.value" type="number"
                                 name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
@@ -540,10 +485,58 @@
                             </div>
                         {{/each}}
                     </div>
-                    <div class="itemBackground shape2 edgeLord"></div>
                     {{else}}
                     <div class="separator">
                         <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Know Skill</a>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="contentBox noMargin">
+                    {{#if actor.specialSkill}}
+                    <div class="flexrow subheader">
+                        <h3 class="subheader">Exotic Skills</h3>
+                        <div class="alignRight flexGrowHalf">
+                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
+                        </div>
+                    </div>
+                    <div class="listBackground edgeAbler">
+                        {{#each actor.specialSkill as |item id|}}
+                            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore">{{item.name}}</label>
+                                <input class="input-small sheet-inline-edit"
+                                data-field="system.value" type="number"
+                                name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                {{#if item.system.aptitude}}
+                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="toggle
+                                input-small roll-label icon-dice task-check
+                                noShow" data-type="skill"
+                                data-name="{{item.name}}"
+                                data-rollvalue="{{item.roll}}"/>
+                                {{#if item.system.specname}}
+                                <label class="resource-label item-control
+                                  item-edit hoverable truncate
+                                  item-standard-margin-both-large">{{item.system.specname}}</label>
+                                <img src="icons/svg/d10-grey.svg" class="info
+                                roll-label task-check icon-dice icon-hidden"
+                                data-type="skill" data-name="{{item.name}}"
+                                data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                {{else}}
+                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                                {{else}}
+                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                {{/if}}
+                            </div>
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <div class="separator">
+                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Exotic Skill</a>
                     </div>
                     {{/if}}
                 </div>
