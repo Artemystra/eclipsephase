@@ -8,18 +8,21 @@
     </div>
     <div class="listBackground">
             {{#each rep as |reputation key|}}
-            <div class="flexrow flex-group-left noBorder reveal item" style="height: 28px;">
-                <span class="toggle input-medium resource-label" >{{key}}</span>
+            <div class="flexrow flex-group-right noBorder reveal item" style="height: 28px;">
 
-
-                <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
-                  <img data-type="rep" data-name="{{key}}" data-rollvalue="{{reputation.value}}"
-                       src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
+                <div class="flex-group-left">
+                    <span class="toggle input-medium resource-label" >{{key}}</span>
+                    <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
+                        <img data-type="rep" data-name="{{key}}" data-rollvalue="{{reputation.value}}"
+                             src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
+                      </div>
                 </div>
 
-
-                <input class="input-small" type="text" name="system.ego.ids.{{../../id}}.rep.{{key}}.value" 
-                    value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
+                <div class="flex-group-center">      
+                      <input class="input-small" type="text" name="system.ego.ids.{{../../id}}.rep.{{key}}.value" 
+                          value="{{reputation.value}}" placeholder="0" style="text-align: center"/>
+                </div>
+                
 
 
 

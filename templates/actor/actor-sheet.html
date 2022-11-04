@@ -20,60 +20,7 @@
                     {{!-- ID Tab --}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/id-tab.html }}
                     {{!-- Muse Tab --}}
-                        <div class="tab" data-group="secondary" data-tab="muse">
-                            <div class="contentBox" style="margin-bottom: 10px;">
-                                <div class="flexrow">
-                                    <h3 class="subheader">Muse Info</h3>
-                                    <div class="alignRight flexGrowThreeQuarter">
-                                    </div>
-                                </div>
-                                <div class="itemBackground flexrow flex-group-left">
-                                    <label class="input-large resource-label" >Name</label>
-                                    <input class="input-XL" name="system.muse.name" type="text"
-                                                                                value="{{actor.system.muse.name}}" data-dtype="String" placeholder="e.g. Amusing"/>
-                                </div>
-                            </div>        
-                            <div class="flexrow contentBox">
-                                <div style="flex: 0.7; min-width: 73%; margin-top: 10px;">
-                                    <div class="flexrow">
-                                        <h3 class="subheader">Muse Skills</h3>
-                                        <div class="alignRight flexGrowThreeQuarter"></div>
-                                    </div>
-                                    <div class="listBackground edgeAbler">
-                                        <div class="grid grid-2col noMargin" style="gap: 0;">
-                                            {{#each actor.system.muse.skills as |skill key|}}
-                                        <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
-                                            <input class="input-XL" name="system.muse.skills.{{key}}.skillname" type="text" value="{{skill.skillname}}" placeholder="Skill Name" style="text-transform: uppercase;"/>
-                                            <input class="input-small" type="number"
-                                                                    name="system.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                                            <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                                <img data-type="skill" data-name="{{skill.skillname}}" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
-                                            </div>
-                                        </div>
-                                        {{/each}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div style="position: relative; flex: 0.3;">
-                                    <img class="muse-img" src="{{actor.system.muse.img}}"
-                                                        data-edit="system.muse.img"
-                                                        title="{{actor.system.muse.name}}"/>
-                                </div>
-                            </div>
-                            <div class="flexrow">
-                                <h3 class="subheader">About {{actor.system.muse.name}}</h3>
-                                <div class="alignRight flexGrowHalf">
-                                </div>
-                            </div>
-                            {{editor
-                            htmlMuseDescription
-                            target="system.muse.description"
-                            button=true
-                            owner=owner
-                            editable=this.options.editable
-                            }}
-                        
-                        </div>
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html }}
                 </section>
             </div>
         </div>
@@ -101,7 +48,7 @@
                 <section class="sheet-body">
                     
                     {{!--Skills Tab--}}
-                    {{> systems/eclipsephase/templates/actor/partials/skills.html }}
+                    {{> systems/eclipsephase/templates/actor/partials/tabs/skills.html }}
                     {{!-- Body Tab --}}
                     <div class="tab body" data-group="primary" data-tab="body">
                         <div class="flexrow contentBox noMargin">
@@ -688,7 +635,7 @@
                             </ol>
                         </div>
                     </div>
-                    {{> systems/eclipsephase/templates/actor/partials/psi.html }}
+                    {{> systems/eclipsephase/templates/actor/partials/tabs/psi.html }}
                     </div>
                     {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
                 </section>

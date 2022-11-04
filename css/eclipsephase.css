@@ -1306,23 +1306,27 @@ h3.inline {
 .tooltip div[role=tooltip],
 .tooltip div[role=tooltipNegative]{
   display: none;
+  opacity: 0;
+  transition: opacity 1s;
 }
 
 .tooltip:hover div[role=tooltip] {
+  opacity: 1;
   font-family: 'Orbitron', sans-serif;
-  width: 350px;
+  width: 330px;
   display: block;
   text-align: left;
   position: absolute;
   top: 1em;
-  left: -25em;
+  left: -268px;
   z-index: 100;
   color: var(--mainText);
 }
 
 .tooltip:hover div[role=tooltipNegative] {
+  opacity: 1;
   font-family: 'Orbitron', sans-serif;
-  width: 350px;
+  width: 330px;
   display: block;
   text-align: left;
   position: absolute;
@@ -1366,30 +1370,36 @@ h3.inline {
 
 .wantToKnowMore {
   position: relative;
-  display: inline-block;
 }
 
 .wantToKnowMore .tooltipText {
+    opacity: 0;
+    transition: opacity 1s;
     visibility: hidden;
+    position: absolute;
     width: 120px;
     background-color: var(--highlightBackground);
     color: var(--mainText);
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;
-    top: -5px;
-    right: 105%;
+    top: -30px;
+    left: 0px;
+}
+
+.wantToKnowMore:hover .tooltipText {
+  opacity: 1;
 }
 
 .wantToKnowMore .tooltipText::after {
   content: " ";
   position: absolute;
-  top: 50%;
-  left: 100%;
+  top: 119%;
+  left: 43%;
   margin-top: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: transparent transparent transparent var(--highlightBackground);
+  border-color: var(--highlightBackground) transparent transparent transparent;
 }
 
 .wantToKnowMore:hover .tooltipText {
@@ -1402,6 +1412,8 @@ h3.inline {
 .flex,
 .information,
 .armorValue{
+  max-height: 465px;
+  overflow: auto;
   background-repeat: no-repeat;
   background-size: 100px 100px;
   background-color: var(--focusBackground);

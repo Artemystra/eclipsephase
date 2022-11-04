@@ -6,10 +6,10 @@
                 <label class="resource-label">Ego Flex </label><input class="input-small" type="number" name="system.ego.egoFlex" value="{{actor.system.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
             </div>
         </div>
-        <div class="listBackground">
-            <div class="flexrow flex-group-left grid-2col">
-                <label class="input-large resource-value" >Origin</label>
-                <select class="selectSpecApt item-standard-margin-medium" 
+        <div class="listBackground" style="background-color: var(--pitchBorder);">
+            <div class="flexrow grid-2col">
+                <label class="input-large resource-value flex-group-left" >Origin</label>
+                <select class="selectSpecApt item-standard-margin-medium flex-group-left" 
                 name="system.ego.origin" data-type="String" >
                     {{#select actor.system.ego.origin}}
                     {{#each config.origins as |origin key|}}
@@ -17,9 +17,9 @@
                     {{/each}} {{/select}}
                 </select>
             </div>
-            <div class="flexrow flex-group-left grid-2col">
-                <label class="input-medium resource-value" >Sex</label>
-                <select class="selectSpecApt item-standard-margin-medium"
+            <div class="flexrow grid-2col">
+                <label class="input-medium resource-value flex-group-left" >Sex</label>
+                <select class="selectSpecApt item-standard-margin-medium flex-group-left"
                 name="system.ego.sex" data-type="String">
                     {{#select actor.system.ego.sex}}
                     {{#each config.sexes as |sex key|}}
@@ -27,9 +27,9 @@
                     {{/each}} {{/select}}
                 </select>
             </div>
-            <div class="flexrow flex-group-left grid-2col">
-                <label class="input-large resource-value" >Gender</label>
-                <select class="selectSpecApt item-standard-margin-medium"
+            <div class="flexrow grid-2col">
+                <label class="input-large resource-value flex-group-left" >Gender</label>
+                <select class="selectSpecApt item-standard-margin-medium flex-group-left"
                 name="system.ego.gender" data-type="String">
                     {{#select actor.system.ego.gender}}
                     {{#each config.genders as |gender key|}}
@@ -39,35 +39,22 @@
             </div>
         </div>
         <div class="itemBackground">
-            <div class="flexrow flex-group-center">
-                <label class="input-large resource-label alignLeft" >Motivations</label>
-                <div class="flexrow">
-                    <input class="alignCenter" type="text"
-                    name="system.ego.motivations.motivation1"
-                    value='{{actor.system.ego.motivations.motivation1}}'
-                    placeholder="e.g. Reach the horizon"/>
-                    <input class="alignCenter" type="text"
-                    name="system.ego.motivations.motivation2"
-                    value='{{actor.system.ego.motivations.motivation2}}'
-                    placeholder="e.g. Reach the horizon"/>
-                    <input class="alignCenter" type="text"
-                    name="system.ego.motivations.motivation3"
-                    value='{{actor.system.ego.motivations.motivation3}}'
-                    placeholder="e.g. Reach the horizon"/>
-
-                </div>
-            </div>
+            <label class="input-large resource-value alignLeft" >Motivations</label>
+            <ol style="list-style-type: decimal-leading-zero; padding: 0 0 0 2.5em; margin-top: 10px;">
+                <li><input type="text" name="system.ego.motivations.motivation1" value='{{actor.system.ego.motivations.motivation1}}' placeholder="e.g. Reach the horizon"/></li>
+                <li><input type="text" name="system.ego.motivations.motivation2" value='{{actor.system.ego.motivations.motivation2}}' placeholder="e.g. Reach the horizon"/></li>
+                <li><input type="text" name="system.ego.motivations.motivation3" value='{{actor.system.ego.motivations.motivation3}}' placeholder="e.g. Reach the horizon"/></li>
+            </ol>
         </div>
-        <div class="itemBackground flexrow flex-group-center skills">
-            <label class="input-large resource-label" >Languages</label>
-            <input type="text" name="system.ego.languages"
-            value="{{actor.system.ego.languages}}" placeholder="e.g. Hindi, Chinese, English"/>
+        <div class="itemBackground skills">
+            <label class="input-large resource-value" >Languages</label>
+            <input type="text" name="system.ego.languages" value="{{actor.system.ego.languages}}" placeholder="e.g. Hindi, Chinese, English" style="margin-top: 10px;"/>
         </div>
     </div>
     <div class="flexrow flex-between">
-        <div class="contentBox" style="flex: 0.4; margin-bottom: 10px;">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Traits</h3>
+        <div class="contentBox" style="margin-bottom: 10px;">
+            <div class="flexrow subheader colorV1">
+                <h3 class="subheader colorV1">Traits</h3>
                 <div class="alignRight flexGrowHalf">
                 </div>
             </div>
@@ -102,11 +89,11 @@
             </div>
             <div class="itemBackground shape2 edgeLord"></div>
         </div>
-        <div class="contentBox" style="flex: 0.4; margin-bottom: 10px;">
-            <div class="flexrow subheader">
+        <div class="contentBox" style="margin-bottom: 10px;">
+            <div class="flexrow subheader colorV1">
+                <h3 class="subheader colorV1">Flaws</h3>
                 <div class="alignRight flexGrowHalf">
                 </div>
-                <h3 class="subheaderMirror">Flaws</h3>
             </div>
             <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
                 {{#if actor.flaw}}
@@ -140,9 +127,9 @@
             <div class="itemBackground shape1 edgeLord"></div>
         </div>
     </div>
-    <div class="flexrow subheader">
-        <h3 class="subheader">About {{actor.name}}</h3>
-        <div class="alignRight flexGrowHalf">
+    <div class="flexrow subheader colorV1">
+        <h3 class="subheader colorV1">Personality</h3>
+        <div class="alignRight flexGrowQuarter">
         </div>
     </div>
     {{editor
