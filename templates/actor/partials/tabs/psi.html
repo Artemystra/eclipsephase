@@ -1,4 +1,35 @@
-
+<div class="tab psi" data-group="primary" data-tab="psi">    
+    {{#if (ne actor.type "goon")}}
+        <div class="contentBox">
+            <div class="flexrow subheader">
+                <h3 class="subheader">Infection Type</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                    <span class="resource-label  input-XL"><strong>Infection Rating</strong></span>
+                    <input class="input-small" type="text" style="text-align: center;"
+                    name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
+                </div>
+            </div>
+            <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
+                <ol>
+                    <li class="skills"><input type="text"
+                    name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="Sub-strain name"/></li>
+                    <li><textarea class="description"
+                                name="system.psiStrain.description" rows="27"
+                                                                    cols="60"
+                                                                    placeholder="Describe
+                                                                                your
+                                                                                inner
+                                                                                monster">{{actor.system.psiStrain.description}}</textarea></li>
+                </ol>
+                <ol>
+                    {{#each actor.system.strainInfluence as |influence key|}}
+                    <li><div class="textAreaDescription"><textarea
+                        class="description" name="system.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
+                    {{/each}}
+                </ol>
+            </div>
+        </div>
+    {{/if}}
     {{#if actor.aspect.Gamma}}
         <div class="contentBox">
             <div class="flexrow subheader">
@@ -15,14 +46,14 @@
                             
                             <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                             <label class="flex-group-center alignCenter"
-                              style="background: none; font-size: 12px; flex:
-                              0.4; margin-left: 10px;"><i>{{item.system.actionType}}</i></label>
+                            style="background: none; font-size: 12px; flex:
+                            0.4; margin-left: 10px;"><i>{{item.system.actionType}}</i></label>
                             <label class="flex-group-center alignCenter"
-                              style="background: none; font-size: 12px; flex:
-                              0.4; margin-left: 10px;"><i>{{item.system.duration}}</i></label>
+                            style="background: none; font-size: 12px; flex:
+                            0.4; margin-left: 10px;"><i>{{item.system.duration}}</i></label>
                             <label class="flex-group-center alignCenter"
-                              style="background: none; font-size: 12px; flex:
-                              0.4; margin-left: 10px;"><i>{{item.system.infection}}</i></label>
+                            style="background: none; font-size: 12px; flex:
+                            0.4; margin-left: 10px;"><i>{{item.system.infection}}</i></label>
                             <div class="flex-group-right slideShow">
                                 <a><i class="fas fa-plus icon-small"></i></a>
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
@@ -84,3 +115,4 @@
             </div>
         </div>
         {{/if}}
+</div>

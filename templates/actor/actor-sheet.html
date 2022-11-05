@@ -3,8 +3,8 @@
         <div class="wrapperleft">
             {{!-- Sheet Header --}}
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
-            {{!-- Sheet Tab Navigation --}}
-                <nav class="twotabs tabs" data-group="secondary">
+            {{!-- Secondary Tab Navigation --}}
+                <nav class="secondary-tabs tabs" data-group="secondary">
                     <a class="item" data-tab="health">Health</a>
                     <a class="item" data-tab="ego">Ego</a>
                     <a class="item" data-tab="identification">ID</a>
@@ -12,9 +12,10 @@
                 </nav>
             <div class="contentleft">
                 {{!-- Left Body --}}
-                <section class="sheet-booty">
+                <section class="secondary-body">
                     {{!-- Health Tab --}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/health-tab.html }}
+                </div>
                     {{!-- Ego Tab --}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
                     {{!-- ID Tab --}}
@@ -25,27 +26,27 @@
             </div>
         </div>
         <div class="wrappercenter">
-            {{!-- Sheet Tab Navigation --}}
-                <nav class="sheet-tabs tabs" data-group="primary">
+            {{!-- Primary Tab Navigation --}}
+                <nav class="primary-tabs tabs" data-group="primary">
                     <a class="item" data-tab="skills">Skills</a>
-                    {{#if actor.showEffectsTab}}
-                    <a class="item" data-tab="effects">Effects</a>
-                    {{/if}}
                     <a class="item" data-tab="body">Morph</a>
+                    <a class="item" data-tab="weapons">Inventory</a>
                     {{#if actor.vehicle.Vehicle}}
                     <a class="item" data-tab="vehicles">Vehicles</a>
                     {{else if actor.vehicle.Robot}}
                     <a class="item" data-tab="vehicles">Vehicles</a>
                     {{/if}}
-                    <a class="item" data-tab="weapons">Inventory</a>
                     {{#if actor.system.additionalSystems.hasPsi}}
                     <a class="item" data-tab="psi">Psi</a>
+                    {{/if}}
+                    {{#if actor.showEffectsTab}}
+                    <a class="item" data-tab="effects">Effects</a>
                     {{/if}}
                 </nav>
 
             {{!-- Center Body --}}
             <div class="contentcenter">
-                <section class="sheet-body">
+                <section class="primary-body">
                     
                     {{!--Skills Tab--}}
                     {{> systems/eclipsephase/templates/actor/partials/tabs/skills.html }}
@@ -103,84 +104,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">Armor</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                </div>
-                            </div>
-                            <div class="itemBackground">
-                                {{#if actor.armor}}
-                                {{#each actor.armor as |item id|}}
-                                {{#if item.system.active}}
-
-                                <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                                    <input class="sheet equipped checkBox"
-                                    data-dtype="Boolean" data-item-id="{{item._id}}"
-                                    type="checkbox" {{checked item.system.active}}>
-
-                                    <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-
-                                    <input class="sheet-inline-edit" data-field="name"
-                                    type="text" name="item.system.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-
-                                    <label class="labelWidth-large flex-group-center
-                                    noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
-
-                                    <label class="labelWidth-large flex-group-center
-                                    noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
-                                    <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
-                                    <div class="flex-group-right slideShow">
-                                        <a><i class="fas fa-plus icon-small"></i></a>
-                                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                                    </div>
-                                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                        {{#if item.description}}
-                                        <div class="itemDescription shape3">
-                                            {{item.description}}
-                                        </div>
-                                        {{/if}}
-                                        <div class="flexrow flex-between item-controls">
-                                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{else}}
-                                <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
-                                    <input class="sheet equipped checkBox"
-                                    data-dtype="Boolean" data-item-id="{{item._id}}"
-                                    type="checkbox" {{checked system.active}}>
-                                    <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                                    <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                                    <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
-                                    <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
-                                    <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
-                                    <div class="flex-group-right slideShow">
-                                        <a><i class="fas fa-plus icon-small"></i></a>
-                                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                                    </div>
-                                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                        {{#if item.description}}
-                                        <div class="itemDescription shape3">
-                                            {{item.description}}
-                                        </div>
-                                        {{/if}}
-                                        <div class="flexrow flex-between item-controls">
-                                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{/if}}
-                                {{/each}}
-                                {{else}}
-                                <div class="flex-group-center">
-                                    <label class="resource-label">You are not wearing armor</label>
-                                </div>
-                                {{/if}}
-                            </div>
-                        </div>
+                        
 
 
                         <div class="flexrow subheader">
@@ -485,159 +409,11 @@
 
 
                     {{!-- Gear Tab --}}
-                    <div class="tab gear" data-group="primary" data-tab="weapons">
-                    {{#if actor.system.additionalSystems.hasGear}}
-
-                        {{#if actor.rangedWeapon}}
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">Ranged Weapons</h3>
-                                <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
-                                    <label class="resource-label labelWidth-large">Roll Guns</label>
-                                    <label class="resource-label task-check roll-label
-                                        input-small" data-type="skill" data-name="Guns"
-                                        data-rollvalue="{{actor.system.skillsVig.guns.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                                    {{#if actor.system.skillsVig.guns.specname}}
-                                    <label class="resource-label labelWidth-XL
-                                        item-standard-margin-both-large">Roll {{actor.system.skillsVig.guns.specname}}</label>
-                                    <label class="resource-label roll-label task-check
-                                        input-small" data-type="skill" data-name="Guns"
-                                        data-specname="{{actor.system.skillsVig.guns.specname}}"
-                                        data-rollvalue="{{actor.system.skillsVig.guns.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                                    {{/if}}
-                                </div>
-                            </div>
-
-                            {{> systems/eclipsephase/templates/actor/partials/item-partials/ranged-weapons.html }}   
-
-                        </div>
-                        {{/if}}
-                        {{#if actor.ccweapon}}
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">Close Combat Weapons</h3>
-                                <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
-                                    <label class="resource-label labelWidth-large">Roll Melee</label>
-                                    <label class="resource-label task-check roll-label
-                                    input-small" data-type="skill" data-name="Melee"
-                                    data-rollvalue="{{actor.system.skillsVig.melee.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                                    {{#if actor.system.skillsVig.melee.specname}}
-                                    <label class="resource-label labelWidth-XL
-                                    item-standard-margin-both-large">Roll {{actor.system.skillsVig.melee.specname}}</label>
-                                    <label class="resource-label roll-label task-check
-                                    input-small" data-type="skill" data-name="Melee"
-                                    data-specname="{{actor.system.skillsVig.melee.specname}}"
-                                    data-rollvalue="{{actor.system.skillsVig.melee.specialized}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                                    {{/if}}
-                                </div>
-                            </div>
-
-                            {{> systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html }}
-
-                        </div>   
-                        {{/if}}
-                        {{#if actor.gear}}
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">Gear</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                </div>
-                            </div>
-
-                            {{> systems/eclipsephase/templates/actor/partials/item-partials/gear.html }}    
-
-                        </div>
-                        {{/if}}
-                        {{#if actor.program}}
-                        <div class="contentBox">
-                            <div class="flexrow subheader">
-                                <h3 class="subheader">Programs Loaded</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                </div>
-                            </div>
-                            <div class="itemBackground" style="position: relative; z-index: 2;">
-                                <div class="grid grid-2col">
-                                    {{#each actor.program as |item id|}}
-                                    <div>
-                                        <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
-                                            <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
-                                            <label
-                                            class="input-small"><strong>Uses</strong></label><input
-                                            class="input-small sheet-inline-edit"
-                                            data-field="system.quantity" type="number"
-                                            name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
-                                            <div class="flex-group-right slideShow" style="max-width: 45px;">
-                                                <a><i class="fas fa-plus icon-small"></i></a>
-                                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                                            </div>
-                                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                                {{#if item.system.description}}
-                                                <div class="itemDescription shape3">
-                                                    {{item.system.description}}
-                                                </div>
-                                                {{/if}}
-                                                <div class="flexrow flex-between item-controls">
-                                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{/each}}
-                                </div>
-                            </div>
-                            <div class="itemBackground shape5" style="height: 100px; margin-top: -75px;">
-                            </div>
-                            {{#if actor.system.homebrew}}<i style="font-size: 12px; margin-bottom: 10px;">Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i><p/>{{/if}}
-                        </div>
-                        {{/if}}
-                        {{else}}
-                        <div class="contentBox" style="max-width: 30%; margin: auto; top: 25%">
-                            <div class="flexrow">
-                                <h3 class="subheaderBlank">No Gear Present</h3>
-                            </div>
-                            <div class="listBackground shape3">
-                                <i style="font-size: 12px; margin-bottom: 10px;">You do not have any gear yet.<br></i><p>
-                                To add gear to your inventory, use the <label class="resource-value">COMPENDIUM <i class="fas fa-atlas"></i></label> or create new <label class="resource-value">ITEMS <i class="fas fa-suitcase"></i></label> yourself<p>
-                                <i style="font-size: 12px; margin-bottom: 10px;">Find these options in the upper right of Foundry or ask your GM to provide items to you.</i>
-                            </div>
-                        </div>
-                        {{/if}}
-                    </div>
-                    {{!-- Psi Tab --}}
-                    <div class="tab psi" data-group="primary" data-tab="psi">
-                    <div class="contentBox">
-                        <div class="flexrow subheader">
-                            <h3 class="subheader">Infection Type</h3>
-                            <div class="alignRight flexGrowThreeQuarter">
-                                <span class="resource-label  input-XL"><strong>Infection Rating</strong></span>
-                                <input class="input-small" type="text" style="text-align: center;"
-                                name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
-                            </div>
-                        </div>
-                        <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
-                            <ol>
-                                <li class="skills"><input type="text"
-                                name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="Sub-strain name"/></li>
-                                <li><textarea class="description"
-                                            name="system.psiStrain.description" rows="27"
-                                                                                cols="60"
-                                                                                placeholder="Describe
-                                                                                            your
-                                                                                            inner
-                                                                                            monster">{{actor.system.psiStrain.description}}</textarea></li>
-                            </ol>
-                            <ol>
-                                {{#each actor.system.strainInfluence as |influence key|}}
-                                <li><div class="textAreaDescription"><textarea
-                                    class="description" name="system.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
-                                {{/each}}
-                            </ol>
-                        </div>
-                    </div>
-                    {{> systems/eclipsephase/templates/actor/partials/tabs/psi.html }}
-                    </div>
-                    {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html }}
+                    {{!-- Psi Tab --}}                    
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/psi.html }}
+                    {{!-- Effects Tab --}}    
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
                 </section>
             </div>
         </div>

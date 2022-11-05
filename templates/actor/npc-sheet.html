@@ -1,271 +1,51 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
-
-    {{!-- Sheet Header --}}
-    
-    {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
-
-    {{!-- Sheet Tab Navigation --}}
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">Description</a>
-        <a class="item" data-tab="skills">Mental</a>
-        <a class="item" data-tab="weapons">Physical</a>
-        {{#if actor.showEffectsTab}}
-        <a class="item" data-tab="effects">Effects</a>
-        {{/if}}
-        {{#if actor.vehicle}}
-        <a class="item" data-tab="vehicles">Vehicles</a>
-        {{/if}}
-        {{#if actor.system.additionalSystems.hasPsi}}
-        <a class="item" data-tab="psi">Psi</a>
-        {{/if}}
-    </nav>
-
-    {{!-- Sheet Body --}}
-    <section class="sheet-body">
-        {{!--Description Tab--}}
-        <div class="tab" data-group="primary" data-tab="description">
-            <div class="contentBox" style="margin-bottom: 10px;">
-                <div class="flexrow">
-                    <h3 class="subheader">Description of {{actor.name}}</h3>
-                    <div class="alignRight flexGrowHalf">
-                    </div>
-                </div>
-                {{editor
-                    actor.system.biography
-                    target="system.biography"
-                    button=true
-                    owner=owner
-                    editable=this.options.editable
-                 }}
+    <div class="grid grid-9col">
+        <div class="wrapperleft">
+            {{!-- Sheet Header --}}
+                {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
+            {{!-- Secondary Tab Navigation --}}
+                <nav class="secondary-tabs tabs" data-group="secondary">
+                    <a class="item" data-tab="ego">Biography</a>
+                </nav>
+            <div class="contentleft">
+                {{!-- Left Body --}}
+                <section class="secondary-body">
+                    {{!-- Ego Tab --}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
+                </section>
             </div>
         </div>
-        {{!--Skills Tab--}}
-        {{> systems/eclipsephase/templates/actor/partials/tabs/skills.html }}
-        {{!-- Weapons Tab --}}
-        <div class="tab" data-group="primary" data-tab="weapons">
-            {{> systems/eclipsephase/templates/actor/partials/npcweapons.html }}
-            <div class="flexrow flex-between">
-                <div class="contentBox flexGrowHalf">
-                    <div class="flexrow">
-                        <h3 class="subheader">Morph</h3>
-                        <div class="alignRight flexGrowThreeQuarter">
-                        </div>
-                    </div>
-                    <div class="listBackground noMargin">
-                        <div class="flexrow flex-between headspace">
-                            <div>
-                                <input class="input-large" type="text"
-                                name="system.bodies.morph1.name"
-                                value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
-                            </div>
-                            <div>
-                                <select class="selectSpecApt
-                                  item-standard-margin-medium" name="system.bodyType.value" data-type="String">
-                                    {{#select actor.system.bodyType.value}}
-                                    {{#each config.bodyTypes as |bodyType key|}}
-                                    <option value="{{key}}">{{bodyType}}</option>
-                                    {{/each}} {{/select}}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-between headSpace">
-                            <div>
-                                <label class="resource-label labelWidth-small">Dur</label>
-                                <input class="input-small
-                                              item-standard-margin-medium"
-                                       style="text-align: center" type="number"
-                                                                  name="system.bodies.morph1.dur"
-                                                                  value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
-                            </div>
-                            <div>
-                                <label class="resource-label labelWidth-small">Mov</label>
-                                <input class="input-medium
-                                              item-standard-margin-medium"
-                                       style="text-align: center" type="text"
-                                                                  name="system.bodies.morph1.movement"
-                                                                  value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>
-                            </div>
-                            <div>
-                                <select class="selectSpecApt
-                                               item-standard-margin input-large"
-                                        name="system.bodies.morph1.movetype" data-type="String">
-                                    {{#select actor.system.bodies.morph1.movetype}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flexrow flex-between headSpace">
-                            <div>
-                                <label class="resource-label labelWidth-small">Mov 2</label>
-                                <input class="input-medium
-                                              item-standard-margin-medium"
-                                       style="text-align: center" type="text"
-                                                                  name="system.bodies.morph1.movement2"
-                                                                  value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>
-                            </div>
-                            <div>
-                                <select class="selectSpecApt
-                                               item-standard-margin input-large"
-                                        name="system.bodies.morph1.movetype2" data-type="String">
-                                    {{#select actor.system.bodies.morph1.movetype2}}
-                                    {{#each config.moveTypes as |moveType key|}}
-                                        <option value="{{key}}">{{moveType}}</option>
-                                    {{/each}}
-                                    {{/select}}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="headSpace">
-                            <div class="flexrow" style="align-items: center">
-                                <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
-                                <label class="resource-label">Traits:</label>
-                            </div>
-                            <div class="flexrow headSpace">
-                                {{#if actor.morphTrait}}
-                                {{#each actor.morphTrait as |item id|}}
-                                <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
-                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                    <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
-                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                    </div>
-                                </div>
-                                {{/each}}
-                                {{else}}
-                                <label class="resource-value" style="height: 30px;">No Morph Traits Present</label>
-                                {{/if}}
-                            </div>
-                            <div class="flexrow" style="align-items: center">
-                                <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
-                                <label class="resource-label">Flaws:</label>
-                            </div>
-                            <div class="flexrow headSpace">
-                                {{#if actor.morphFlaw}}
-                                {{#each actor.morphFlaw as |item id|}}
-                                <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
-                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                    <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
-                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                    </div>
-                                </div>
-                                {{/each}}
-                                {{else}}
-                                <label class="resource-value" style="height: 30px;">No Morph Flaws Present</label>
-                                {{/if}}
-                            </div>
-                            <div class="flexrow" style="align-items: center">
-                                <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
-                                <label class="resource-label">Ware:</label>
-                            </div>
-                            <div class="flexrow headSpace">
-                                {{#if actor.ware}}
-                                {{#each actor.ware as |item id|}}
-                                <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
-                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                    <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
-                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                    </div>
-                                </div>
-                                {{/each}}
-                                {{else}}
-                                <label class="resource-value" style="height: 30px;">No Ware Installed</label>
-                                {{/if}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="contentBox flexGrowHalf">
-                    <div class="flexrow">
-                        <h3 class="subheader">Armor & Gear</h3>
-                        <div class="alignRight reveal">
-                            <a class="item-control item-create" title="Create item" data-type="armor" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Armor</a>
-                        </div>
-                    </div>
-                    <div class="listBackground noMargin">
-                        <div class="headSpace">
-                            {{#if actor.armor}}
-                            {{#each actor.armor as |item id|}}
-                            <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-                                <div class="flexrow">
-                                    <input class="sheet-inline-edit item-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                                </div>
-                                <div class="flexrow flex-group-right">
-                                    <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
-                                </div>
-                                <div class="flexrow flex-group-right">
-                                    <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
-                                </div>
-                                <div class="flex-group-right input-small">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                </div>
-                            </div>
-                            {{/each}}
-                            {{else}}
-                            <div class=" flexrow" style="height: 30px;">
-                                <label class="resource-value">Has no armor</label>
-                            </div>
-                            {{/if}}
-                        </div>
-                        <div class="headSpace">
-                            <div class="flexrow" style="align-items: center">
-                                <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
-                                <label class="resource-label">Gear:</label>
-                            </div>
-                            <div class="flexrow headSpace">
-                                {{#if actor.gear}}
-                                {{#each actor.gear as |item id|}}
-                                <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center;">
-                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                    <label class="flex-group-center noMargin alignCenter" style="background: none; font-size: 12px; flex: 0.4"><i>{{item.slotType}}</i></label>
-                                    <div class="flex-group-right" style="flex: 0.2;">
-                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                    </div>
-                                </div>
-                                {{/each}}
-                                {{else}}
-                                <label class="resource-value" style="height: 30px;">No Special Gear</label>
-                                {{/if}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="wrappercenter">
+            {{!-- Primary Tab Navigation --}}
+                <nav class="primary-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="skills">Skills</a>
+                    <a class="item" data-tab="weapons">Inventory</a>
+                    {{#if actor.vehicle}}
+                    <a class="item" data-tab="vehicles">Vehicles</a>
+                    {{/if}}
+                    {{#if actor.system.additionalSystems.hasPsi}}
+                    <a class="item" data-tab="psi">Psi</a>
+                    {{/if}}
+                    {{#if actor.showEffectsTab}}
+                    <a class="item" data-tab="effects">Effects</a>
+                    {{/if}}
+                </nav>
+            {{!-- Health Overview --}}
+                {{> systems/eclipsephase/templates/actor/partials/npchealth.html }}
+            <div class="contentcenter">
+                {{!-- Center Body --}}
+                <section class="primary-body"> 
+                    {{!--Skills Tab--}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/skills.html }}
+                    {{!-- Weapons Tab --}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/npcgear.html }}
+                    {{!-- Vehicles Tab --}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/vehicles.html }} 
+                    {{!-- Psi Tab --}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/psi.html }}
+                    {{!-- Effects Tab --}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+                </section>
+            </form>
             </div>
         </div>
-        {{!-- Vehicles Tab --}}
-            {{> systems/eclipsephase/templates/actor/partials/vehicles.html }} 
-        {{!-- Psi Tab --}}
-        <div class="tab psi" data-group="primary" data-tab="psi">
-        <div class="contentBox">
-            <div class="flexrow">
-                <h3 class="subheader">Infection Type</h3>
-                <div class="alignRight flexGrowThreeQuarter">
-                    <span class="resource-label  input-large"><strong>Infection Rating</strong></span>
-                    <input class="input-small" type="text" style="text-align:
-                    center; margin-bottom: 10px;"
-                    name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
-                </div>
-            </div>
-            <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
-                <ol>
-                    <li class="skills"><input type="text"
-                      name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="Sub-strain name"/></li>
-                    <li><textarea class="description"
-                        name="system.psiStrain.description" rows="27" cols="60"
-                        placeholder="Describe your inner
-                        monster">{{actor.system.psiStrain.description}}</textarea></li>
-                </ol>
-                <ol>
-                    {{#each actor.system.strainInfluence as |influence key|}}
-                    <li><div class="textAreaDescription"><textarea
-                          class="description" name="system.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
-                    {{/each}}
-                </ol>
-            </div>
-        </div>
-        {{> systems/eclipsephase/templates/actor/partials/tabs/psi.html }}
-        </div>
-        {{> systems/eclipsephase/templates/actor/partials/tabs/effectsTab.html }}
-    </section>
-</form>

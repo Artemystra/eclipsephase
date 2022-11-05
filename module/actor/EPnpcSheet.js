@@ -17,8 +17,8 @@ export default class EPnpcSheet extends ActorSheet {
           this.position.width = 800;
         }
         else{
-          this.position.height = 600;
-          this.position.width = 800;
+          this.position.height = 850;
+          this.position.width = 1058;
         }
       }
     }
@@ -27,7 +27,7 @@ export default class EPnpcSheet extends ActorSheet {
         return mergeObject(super.defaultOptions, {
             classes: ["eclipsephase", "sheet", "actor"],
             resizable: false,
-            tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
+            tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "health" }]
         });
     }
 

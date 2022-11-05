@@ -1,4 +1,5 @@
 <div class="tab ego" data-group="secondary" data-tab="ego">
+    {{#if (eq actor.type "character")}}
     <div class="contentBox" style="margin-bottom: 10px;">
         <div class="flexrow subheader colorV1">
             <h3 class="subheader colorV1">General</h3>
@@ -132,11 +133,30 @@
         <div class="alignRight flexGrowQuarter">
         </div>
     </div>
-    {{editor
-    htmlBiography
-    target="system.biography"
-    button=true
-    owner=owner
-    editable=this.options.editable
-    }}
+        {{editor
+        htmlBiography
+        target="system.biography"
+        button=true
+        owner=owner
+        editable=this.options.editable
+        }}
+    {{else}}
+        {{#if (eq actor.type "npc")}}
+        <div class="itemBackground">
+            <label class="input-large resource-value alignLeft" >Motivations</label>
+            <ol style="list-style-type: decimal-leading-zero; padding: 0 0 0 2.5em; margin-top: 10px;">
+                <li><input type="text" name="system.ego.motivations.motivation1" value='{{actor.system.ego.motivations.motivation1}}' placeholder="e.g. Reach the horizon"/></li>
+                <li><input type="text" name="system.ego.motivations.motivation2" value='{{actor.system.ego.motivations.motivation2}}' placeholder="e.g. Reach the horizon"/></li>
+                <li><input type="text" name="system.ego.motivations.motivation3" value='{{actor.system.ego.motivations.motivation3}}' placeholder="e.g. Reach the horizon"/></li>
+            </ol>
+        </div>
+        {{/if}}
+        {{editor
+            actor.system.biography
+            target="system.biography"
+            button=true
+            owner=owner
+            editable=this.options.editable
+        }}
+    {{/if}}
 </div>

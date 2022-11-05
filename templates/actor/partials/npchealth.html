@@ -1,0 +1,35 @@
+
+<div class="flexrow flex-group-left listBackground grid grid-5col" style="background-color: var(--pitchBorder);">
+    <div>
+        <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Dur/DR</span></i>
+        <input class="input-xs" type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.physical.max}}/{{actor.system.physical.dr}}</span>
+
+    </div>
+    <div>
+        <i class="fa-regular fa-bandage wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Wounds/(WT)</span></i>
+        <input class="input-xs" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
+    </div>
+<!-- 
+    <div>
+        <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Stress/Luc</span></i>
+        <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
+    </div>
+    <div>
+        <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Trauma/(TT)</span></i>
+        <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
+    </div>
+-->
+    <div>
+        <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Ini Mod</span></i>
+        <input class="input-small" style="text-align: center" type="text" name="system.mods.iniMod" value="{{actor.system.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+    </div>
+    <div>
+        <i class="fa-solid fa-land-mine-on wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Threat</span></i>
+        <input class="input-xs standard-height" style="text-align: center" type="text" name="system.threatLevel.current" value="{{actor.system.threatLevel.current}}" placeholder="0"/>/
+        <input class="input-xs standard-height" style="text-align: center" type="text" name="system.threatLevel.total" value="{{actor.system.threatLevel.total}}" placeholder="0"/>  
+    </div>
+    <div>
+        <i class="fa-sharp fa-solid fa-face-scream wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px; left: -20px;">Stress Test</span></i>
+        <input class="input-medium" style="text-align: center" type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
+    </div>
+</div>

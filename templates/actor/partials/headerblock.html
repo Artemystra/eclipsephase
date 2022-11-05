@@ -32,30 +32,3 @@
         </div>
     </div>
 </header>
-
-{{!-- NPC Motivations --}}
-    {{#if (eq actor.type "npc")}}
-    <div class="contentBox" style="height: 70px; max-height: 70px;">
-        <div class="flexrow">
-            <h3 class="subheader">Motivations</h3>
-            <div class="alignRight flexGrowThreeQuarter">
-            </div>
-        </div>
-        <div class="itemBackground">
-            <div class="flexrow">
-                <input class="alignCenter" type="text"
-                                           name="system.ego.motivations.motivation1"
-                                           value='{{#if
-                                           actor.system.ego.motivations.motivation1}}{{actor.system.ego.motivations.motivation1}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text"
-                                           name="system.ego.motivations.motivation2"
-                                           value='{{#if
-                                           actor.system.ego.motivations.motivation2}}{{actor.system.ego.motivations.motivation2}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-                <input class="alignCenter" type="text"
-                                           name="system.ego.motivations.motivation3"
-                                           value='{{#if
-                                           actor.system.ego.motivations.motivation3}}{{actor.system.ego.motivations.motivation3}} {{else}}{{/if}}' placeholder="e.g. Reach the horizon"/>
-            </div>
-        </div>
-    </div>
-    {{/if}}

@@ -69,6 +69,8 @@
 .grid-9col {
   grid-column: span 9 / span 9;
   grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-areas: 
+    "left left left center center center center center center";
 }
 
 .grid-10col {
@@ -88,7 +90,7 @@
     "left left left center center center center center center right right right";
 }
 
-/*Wrapper Test*/
+/*Content Wrapper*/
 
 .wrapperleft {
   grid-area: left;
@@ -256,7 +258,7 @@
   margin: 0;
 }
 
-.eclipsephase .sheet-tabs {
+.eclipsephase .primary-tabs {
   -webkit-box-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -645,8 +647,8 @@ a:hover{
   cursor: pointer;
 }
 
-.sheet nav.sheet-tabs,
-.sheet nav.twotabs {
+.sheet nav.primary-tabs,
+.sheet nav.secondary-tabs {
   height: 50px;
   line-height: 50px;
   flex: 0 0 43px;
@@ -657,7 +659,7 @@ a:hover{
   background-color: var(--highlightBackground);
 }
 
-.sheet nav.sheet-tabs.itemnav {
+.sheet nav.primary-tabs.itemnav {
   margin-top: 10px;
   height: 40px;
   line-height: 37px;
@@ -666,7 +668,7 @@ a:hover{
   border-bottom: 3px solid var(--mainBackground);
 }
 
-.sheet nav.sheet-tabs.itemnav .item{
+.sheet nav.primary-tabs.itemnav .item{
   min-width: 50%;
 }
 

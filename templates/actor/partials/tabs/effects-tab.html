@@ -10,7 +10,7 @@
             </div>
             <div class="itemBackground">
                 {{#each item.effects as |item id|}}
-                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}">
+                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="margin-bottom: 10px;">
                 
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.label}}</strong></label>
                     <div class="flex-group-right slideShow">
@@ -29,7 +29,7 @@
             <!-- needed since actor effects and item effects are saved in two separate spaces. If we just use one, the respective other will not show active effects in the list at all. -->
 
             {{#each actor.effects as |item id|}}
-                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}">
+                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="margin-bottom: 10px;">
                 
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.label}}</strong></label>
                     <div class="flex-group-right slideShow">

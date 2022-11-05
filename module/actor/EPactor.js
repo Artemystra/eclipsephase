@@ -48,7 +48,7 @@ export default class EPactor extends Actor {
     
     //Determin whether any gear is present
     for(let gearCheck of items){
-      if(gearCheck.system.displayCategory === "ranged" || gearCheck.system.displayCategory === "ccweapon" || gearCheck.system.displayCategory === "gear"){
+      if(gearCheck.system.displayCategory === "ranged" || gearCheck.system.displayCategory === "ccweapon" || gearCheck.system.displayCategory === "gear" || gearCheck.system.displayCategory === "armor"){
         actorData.additionalSystems.hasGear = true;
         break;
       }

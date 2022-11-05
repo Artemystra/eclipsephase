@@ -1,7 +1,7 @@
 <div class="tab" data-group="secondary" data-tab="muse">
-    <div class="contentBox" style="margin-bottom: 10px;">
-        <div class="flexrow">
-            <h3 class="subheader">Muse Info</h3>
+    <div class="contentBox">
+        <div class="flexrow subheader colorV1">
+            <h3 class="subheader colorV1">Muse Info</h3>
             <div class="alignRight flexGrowThreeQuarter">
             </div>
         </div>
@@ -11,12 +11,6 @@
                                                         value="{{actor.system.muse.name}}" data-dtype="String" placeholder="e.g. Amusing"/>
         </div>
     </div>        
-    <div class="flexrow contentBox">
-        <div style="flex: 0.7; min-width: 73%; margin-top: 10px;">
-            <div class="flexrow">
-                <h3 class="subheader">Muse Skills</h3>
-                <div class="alignRight flexGrowThreeQuarter"></div>
-            </div>
             <div class="listBackground edgeAbler">
                 <div class="grid grid-2col noMargin" style="gap: 0;">
                     {{#each actor.system.muse.skills as |skill key|}}
@@ -31,15 +25,8 @@
                 {{/each}}
                 </div>
             </div>
-        </div>
-        <div style="position: relative; flex: 0.3;">
-            <img class="muse-img" src="{{actor.system.muse.img}}"
-                                data-edit="system.muse.img"
-                                title="{{actor.system.muse.name}}"/>
-        </div>
-    </div>
-    <div class="flexrow">
-        <h3 class="subheader">About {{actor.system.muse.name}}</h3>
+    <div class="flexrow subheader colorV1">
+        <h3 class="subheader colorV1">About {{actor.system.muse.name}}</h3>
         <div class="alignRight flexGrowHalf">
         </div>
     </div>

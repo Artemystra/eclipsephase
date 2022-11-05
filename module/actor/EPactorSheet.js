@@ -15,8 +15,8 @@ export default class EPactorSheet extends ActorSheet {
 
       const showEverything = game.settings.get("eclipsephase", "showEverything");
       if(showEverything){
-        this.position.height = 1400;
-        this.position.width = 842;
+        this.position.height = 850;
+        this.position.width = 1400;
       }
       else {
         if (!game.user.isGM && !this.actor.isOwner){
@@ -34,7 +34,7 @@ export default class EPactorSheet extends ActorSheet {
       return mergeObject(super.defaultOptions, {
         classes: ["eclipsephase", "sheet", "actor"],
         resizable: false,
-        tabs: [{ navSelector: ".twotabs", contentSelector: ".sheet-booty", initial: "skullz" },{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
+        tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "health" }]
       });
     }
 

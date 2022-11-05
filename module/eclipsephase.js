@@ -122,11 +122,12 @@ Hooks.once('init', async function() {
   });
   var templates = [
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
+    "systems/eclipsephase/templates/actor/partials/npchealth.html",
     "systems/eclipsephase/templates/actor/partials/morph-details.html",
     "systems/eclipsephase/templates/actor/partials/morph-traits.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles.html",
     "systems/eclipsephase/templates/actor/partials/tabs/skills.html",
-    "systems/eclipsephase/templates/actor/partials/tabs/npcweapons.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/npcgear.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi.html",
     "systems/eclipsephase/templates/actor/partials/tabs/health-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/id-tab.html",
@@ -134,6 +135,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/currentStatusSection.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gear.html",
