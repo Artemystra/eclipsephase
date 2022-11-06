@@ -341,7 +341,7 @@
 }
 
 .item-controls {
-  margin-top: 10px;
+  margin-top: none;
 }
 
 /* Colors */
@@ -356,6 +356,7 @@ a.entity-link {
   background: var(--pitchBackground);
   padding-left: 5px;
   padding-right: 5px;
+  min-height: 36px;
 }
 
 .offHand {
@@ -829,7 +830,7 @@ optgroup .Default .Roll .Mode,
   max-width: 200px;
   margin: 0 0 0 5px;
   padding: 5px 0 5px 0;
-  background: var(--mainBackground);
+  background: var(--pitchBorder);
 }
 
 .button .icon-small {
@@ -967,6 +968,7 @@ h3.subheaderBlank {
 .separator {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 30px;
   background-color: var(--focusBackground);
   border-bottom: solid var(--accentBackground) 3px;
@@ -1195,7 +1197,7 @@ ol {
 }
 
 .item-create {
-  margin-left: auto;
+  margin-left: none;
 }
 
 .eclipsephase .sheet-header .profile-img-goon {
@@ -1298,8 +1300,10 @@ img {
 
 .pill {
   max-width: 110px;
-  background-color: #2f2f2f;
+  background-color: var(--pitchBorder);
   margin-right: 5px;
+  min-height: 36px;
+  padding-right: 10px;
 }
 
 .trunContainer {

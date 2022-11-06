@@ -39,7 +39,7 @@
         </div>
         <div class="itemBackground">
             {{#each actor.rangedWeapon as |item id|}}
-            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
+            <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
                     <img src="icons/svg/d10-grey.svg" class="toggle icon-small
@@ -83,7 +83,7 @@
     {{else}}
     <div class="contentBox gear">
         <div class="flexrow">
-            <div class="separator">
+            <div class="separator" style=" margin-bottom: 10px; border-bottom: none;">
                 <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a ranged weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
             </div>
         </div>
@@ -97,9 +97,9 @@
                 <a class="item-control item-create" title="Create item" data-type="ccWeapon"><i class="fas fa-plus"></i> Quick Add Melee</a>
             </div>
         </div>
-        <div class="itemBackground">
+        <div class="itemBackground" style="margin-bottom: 10px;">
             {{#each actor.ccWeapon as |item id|}}
-            <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
+            <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
                     <img src="icons/svg/d10-grey.svg" class="toggle icon-small
@@ -134,27 +134,27 @@
     {{else}}
     <div class="contentBox gear weaponslist">
         <div class="flexrow">
-            <div class="separator">
+            <div class="separator" style=" border-bottom: none;">
                 <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a melee weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
             </div>
         </div>
     </div>
     {{/if}}
-    <div class="grid grid-2col">
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">Morph</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
-            <div class="listBackground noMargin">
-                <div class="flexrow flex-between headspace">
+            <div class="listBackground" style="background-color: var(--accentBackground);">
+                <div class="grid grid-3col">
                     <div>
-                        <input class="input-large" type="text"
+                        <input class="input-xl" type="text"
                         name="system.bodies.morph1.name"
                         value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
                     </div>
                     <div>
+                        <label class="resource-value">Morph Type:</label>
                         <select class="selectSpecApt
                         item-standard-margin-medium" name="system.bodyType.value" data-type="String">
                             {{#select actor.system.bodyType.value}}
@@ -163,28 +163,33 @@
                             {{/each}} {{/select}}
                         </select>
                     </div>
-                </div>
-                <div class="flexrow flex-between headSpace">
                     <div>
-                        <label class="resource-label labelWidth-small">Dur</label>
+                        <label class="resource-value">Dur:</label>
                         <input class="input-small
                                     item-standard-margin-medium"
                             style="text-align: center" type="number"
                                                         name="system.bodies.morph1.dur"
                                                         value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
                     </div>
+                </div>
+                <div class="grid grid-3col">
+                    
                     <div>
-                        <label class="resource-label labelWidth-small">Mov</label>
+                        <label class="resource-value">Movement 1</label>                          
+                    </div>
+                    <div>
+                        <label class="resource-value">Speed:</label>  
                         <input class="input-medium
                         item-standard-margin-medium" style="text-align:
                         center" type="text"
                         name="system.bodies.morph1.movement"
-                        value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>                          
+                        value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>
                     </div>
                     <div>
+                        <label class="resource-value">Type:</label>  
                         <select class="selectSpecApt
                                     item-standard-margin input-large"
-                                name="system.bodies.morph1.movetype" data-type="String">
+                                name="system.bodies.morph1.movetype" data-type="String" selected="Walker">
                             {{#select actor.system.bodies.morph1.movetype}}
                             {{#each config.moveTypes as |moveType key|}}
                                 <option value="{{key}}">{{moveType}}</option>
@@ -193,16 +198,20 @@
                         </select>
                     </div>
                 </div>
-                <div class="flexrow flex-between headSpace">
+                <div class="grid grid-3col">
                     <div>
-                        <label class="resource-label labelWidth-small">Mov 2</label>
+                        <label class="resource-value">Movement 2</label>                      
+                    </div>
+                    <div>
+                        <label class="resource-value">Speed:</label> 
                         <input class="input-medium
                         item-standard-margin-medium" style="text-align:
                         center" type="text"
                         name="system.bodies.morph1.movement2"
-                        value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0"/>                          
+                        value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0"/>  
                     </div>
                     <div>
+                        <label class="resource-value">Type:</label>  
                         <select class="selectSpecApt
                                     item-standard-margin input-large"
                                 name="system.bodies.morph1.movetype2" data-type="String">
@@ -214,6 +223,15 @@
                         </select>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="grid grid-2col">
+            <div class="listBackground noMargin">
+                <div class="flexrow subheader flex-group-center">
+                    <h3 class="subheader flex-group-left" style="flex-grow: 1.5;">Traits & Ware</h3>
+                    <div class="alignRight reveal">
+                    </div>
+                </div>  
                 <div class="headSpace">
                     <div class="flexrow" style="align-items: center">
                         <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
@@ -233,7 +251,7 @@
                         <label class="resource-value" style="height: 30px;">No Morph Traits Present</label>
                         {{/if}}
                     </div>
-                    {{!-- <div class="flexrow" style="align-items: center">
+                    <div class="flexrow" style="align-items: center">
                         <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
                         <label class="resource-label">Flaws:</label>
                     </div>
@@ -250,7 +268,7 @@
                         {{else}}
                         <label class="resource-value" style="height: 30px;">No Morph Flaws Present</label>
                         {{/if}}
-                    </div> --}}
+                    </div>
                     <div class="flexrow" style="align-items: center">
                         <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
                         <label class="resource-label">Ware:</label>
@@ -260,7 +278,7 @@
                         {{#each actor.ware as |item id|}}
                         <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                            <div class="flex-group-right" style="flex: 0.2; margin-right: 5px;">
+                            <div class="flex-group-right" style="flex: 0.2;">
                                 <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
                             </div>
                         </div>
@@ -271,7 +289,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         <div class="contentBox">
             <div class="flexrow subheader flex-group-center">
                 <h3 class="subheader flex-group-left">Armor & Gear</h3>
@@ -316,7 +333,7 @@
                     <div class="flexrow headSpace">
                         {{#if actor.gear}}
                         {{#each actor.gear as |item id|}}
-                        <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center;">
+                        <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px; background-color: var(--pitchBorder); padding: 0 10px 0 10px;">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <label class="flex-group-center noMargin
                             alignCenter" style="background: none;
