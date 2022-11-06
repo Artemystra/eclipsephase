@@ -1,23 +1,13 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
     <div class="grid grid-9col">
-        <div class="wrapperleft">
+        <div class="wrapperleft npcVariant1">
             {{!-- Sheet Header --}}
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
-            {{!-- Secondary Tab Navigation --}}
-                <nav class="secondary-tabs tabs" data-group="secondary">
-                    <a class="item" data-tab="ego">Biography</a>
-                </nav>
-            <div class="contentleft">
-                {{!-- Left Body --}}
-                <section class="secondary-body">
-                    {{!-- Ego Tab --}}
-                        {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
-                </section>
-            </div>
         </div>
-        <div class="wrappercenter">
+        <div class="wrappercenter npcVariant1">
             {{!-- Primary Tab Navigation --}}
                 <nav class="primary-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="ego">Bio</a>
                     <a class="item" data-tab="skills">Skills</a>
                     <a class="item" data-tab="weapons">Inventory</a>
                     {{#if actor.vehicle}}
@@ -31,10 +21,12 @@
                     {{/if}}
                 </nav>
             {{!-- Health Overview --}}
-                {{> systems/eclipsephase/templates/actor/partials/npchealth.html }}
-            <div class="contentcenter">
+                {{> systems/eclipsephase/templates/actor/partials/health-bar.html }}
+            <div class="contentcenter npcVariant2">
                 {{!-- Center Body --}}
                 <section class="primary-body"> 
+                    {{!-- Ego Tab --}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
                     {{!--Skills Tab--}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/skills.html }}
                     {{!-- Weapons Tab --}}

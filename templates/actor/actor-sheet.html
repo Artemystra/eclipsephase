@@ -5,7 +5,6 @@
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
             {{!-- Secondary Tab Navigation --}}
                 <nav class="secondary-tabs tabs" data-group="secondary">
-                    <a class="item" data-tab="health">Health</a>
                     <a class="item" data-tab="ego">Ego</a>
                     <a class="item" data-tab="identification">ID</a>
                     <a class="item" data-tab="muse">Muse</a>
@@ -13,9 +12,6 @@
             <div class="contentleft">
                 {{!-- Left Body --}}
                 <section class="secondary-body">
-                    {{!-- Health Tab --}}
-                        {{> systems/eclipsephase/templates/actor/partials/tabs/health-tab.html }}
-                </div>
                     {{!-- Ego Tab --}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
                     {{!-- ID Tab --}}
@@ -43,7 +39,8 @@
                     <a class="item" data-tab="effects">Effects</a>
                     {{/if}}
                 </nav>
-
+                {{!-- Health Overview --}}
+                    {{> systems/eclipsephase/templates/actor/partials/health-bar.html }}
             {{!-- Center Body --}}
             <div class="contentcenter">
                 <section class="primary-body">
@@ -54,7 +51,6 @@
                     <div class="tab body" data-group="primary" data-tab="body">
                         <div class="flexrow contentBox noMargin">
                             <div style="flex: 0.7; min-width: 72%;">
-
                             
                                 <div class="contentBox">
                                     <div class="flexrow subheader">
@@ -80,12 +76,10 @@
                                         </div>
                                     </div>
 
-
                                     {{> systems/eclipsephase/templates/actor/partials/morph-details.html 
                                         name=actor.system.bodies.activeMorph
                                         morph=activeMorph }}
                                 </div>
-
 
                                 <div>
                                 {{> systems/eclipsephase/templates/actor/partials/morph-traits.html

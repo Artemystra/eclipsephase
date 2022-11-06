@@ -122,7 +122,7 @@ Hooks.once('init', async function() {
   });
   var templates = [
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
-    "systems/eclipsephase/templates/actor/partials/npchealth.html",
+    "systems/eclipsephase/templates/actor/partials/health-bar.html",
     "systems/eclipsephase/templates/actor/partials/morph-details.html",
     "systems/eclipsephase/templates/actor/partials/morph-traits.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles.html",

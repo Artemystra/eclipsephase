@@ -17,7 +17,7 @@ export default class EPgoonSheet extends ActorSheet {
           this.position.width = 800;
         }
         else{
-          this.position.height = 850;
+          this.position.height = 550;
           this.position.width = 1058;
         }
       }
@@ -27,7 +27,7 @@ export default class EPgoonSheet extends ActorSheet {
         return mergeObject(super.defaultOptions, {
             classes: ["eclipsephase", "sheet", "actor"],
             resizable: false,
-            tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "health" }]
+            tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" }]
         });
     }
 
@@ -110,7 +110,7 @@ export default class EPgoonSheet extends ActorSheet {
             else if (itemModel.displayCategory === 'ranged') {
                 rangedweapon.push(item)
             }
-            else if (itemModel.displayCategory === 'ccweapon') {
+            else if (item.type === 'ccWeapon') {
                 ccweapon.push(item)
             }
             else if (itemModel.displayCategory === 'armor') {
@@ -174,7 +174,7 @@ export default class EPgoonSheet extends ActorSheet {
 
         // Assign and return
         actor.rangedWeapon = rangedweapon;
-        actor.ccweapon = ccweapon;
+        actor.ccWeapon = ccweapon;
         actor.armor = armor;
         actor.ware = ware;
         actor.aspect = aspect;

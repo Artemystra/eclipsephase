@@ -93,29 +93,39 @@
 /*Content Wrapper*/
 
 .wrapperleft {
+  height: 795px;
   grid-area: left;
   background-color: var(--mainBackground);
 }
 
 .contentleft {
-  height: 298px;
+  height: 286px;
   overflow: auto;
   padding: 0;
 }
 
 .wrappercenter {
+  height: 795px;
   grid-area: center;
   background-color: var(--mainBackground);
 }
 
 .contentcenter {
-  height: 780px;
+  height: 685px;
   overflow: auto;
+}
+
+.npcVariant1 {
+  height: 496px;
+}
+
+.npcVariant2 {
+  height: 386px;
 }
 
 .wrapperright {
   grid-area: right;
-  height: 820px;
+  height: 795px;
   overflow: auto;
   background-color: var(--mainBackground);
 }
@@ -713,10 +723,10 @@ a:hover{
 }
 
 .sheet .editor-content{
-  background: var(--mainBackground);
+  background: var(--pitchBorder);
   padding: 1em;
   overflow-x: hidden;
-  min-height: 225px;
+  min-height: 273px;
 }
 
 .eclipsephase .sheet-body .tab .editor {
@@ -957,16 +967,17 @@ h3.subheaderBlank {
 .separator {
   display: flex;
   align-items: center;
-  text-align: center;
-  margin-top: 17px;
+  height: 30px;
+  background-color: var(--focusBackground);
+  border-bottom: solid var(--accentBackground) 3px;
 }
 
-.separator::before,
+/*.separator::before,
 .separator::after {
   content: '';
   flex: 1;
   border-bottom: 1px solid var(--accentBackground);
-}
+}*/
 
 .separator:not(:empty)::before {
   margin-right: 2em;

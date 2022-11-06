@@ -31,12 +31,10 @@
     </div>
     {{#if actor.rangedWeapon}}
     <div class="contentBox gear">
-        <div class="flexrow">
-            <h3 class="subheader">Ranged Weapons</h3>
-            <div class="alignRight flexGrowHalf reveal">
-            </div>
-            <div class="alignRight flexGrowThreeQuarter">
-                <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Ranged</a>
+        <div class="flexrow subheader flex-group-center">
+            <h3 class="subheader flex-group-left">Ranged Weapons</h3>
+            <div class="alignRight">
+                <a class="item-control item-create" title="Create item" data-type="rangedWeapon"><i class="fas fa-plus"></i> Quick Add Ranged</a>
             </div>
         </div>
         <div class="itemBackground">
@@ -91,18 +89,16 @@
         </div>
     </div>
     {{/if}}
-    {{#if actor.ccweapon}}
+    {{#if actor.ccWeapon}}
     <div class="contentBox gear">
-        <div class="flexrow">
-            <h3 class="subheader">Close Combat Weapons</h3>
-            <div class="alignRight flexGrowHalf reveal">
-            </div>
-            <div class="alignRight flexGrowThreeQuarter">
-                <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Melee</a>
+        <div class="flexrow subheader flex-group-center">
+            <h3 class="subheader flex-group-left">Close Combat Weapons</h3>
+            <div class="alignRight">
+                <a class="item-control item-create" title="Create item" data-type="ccWeapon"><i class="fas fa-plus"></i> Quick Add Melee</a>
             </div>
         </div>
         <div class="itemBackground">
-            {{#each actor.ccweapon as |item id|}}
+            {{#each actor.ccWeapon as |item id|}}
             <div class="item flexrow flex-group-center reveal" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
@@ -144,9 +140,9 @@
         </div>
     </div>
     {{/if}}
-    <div class="flexrow flex-between">
-        <div class="contentBox flexGrowHalf">
-            <div class="flexrow">
+    <div class="grid grid-2col">
+        <div class="contentBox">
+            <div class="flexrow subheader">
                 <h3 class="subheader">Morph</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
@@ -276,11 +272,11 @@
                 </div>
             </div>
         </div>
-        <div class="contentBox flexGrowHalf">
-            <div class="flexrow">
-                <h3 class="subheader">Armor & Gear</h3>
+        <div class="contentBox">
+            <div class="flexrow subheader flex-group-center">
+                <h3 class="subheader flex-group-left">Armor & Gear</h3>
                 <div class="alignRight reveal">
-                    <a class="item-control item-create" title="Create item" data-type="armor" style="max-height: 24px;"><i class="fas fa-plus"></i> Quick Add Armor</a>
+                    <a class="item-control item-create flex-group-right" title="Create item" data-type="armor"><i class="fas fa-plus"></i> Quick Add Armor</a>
                 </div>
             </div>
             <div class="listBackground noMargin">
