@@ -9,7 +9,7 @@
             </div>
             <div class="armorValue">
                 <h3 class="inline">Armor</h3>
-                {{#if actor.armor}}
+                {{#if actor.system.additionalSystems.armorEquipped}}
                     <label class="resource-value">Cumulated Armor </label>
                     <p/>
                     <div class="flexrow flex-group-center">
@@ -71,7 +71,7 @@
                 <div class="tooltipBottom"></div>
             </div>
         </div>
-        {{#if actor.armor}}
+        {{#if actor.system.additionalSystems.armorEquipped}}
         <div class="grid grid-2col">
             <div class="flexrow flex-group-right">
                 <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-medium"/>
@@ -83,7 +83,7 @@
             </div>
         </div>
         {{else}}
-        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">No Armor Present</span></div>
+        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">No Armor Equipped</span></div>
         {{/if}}
     </div>
 </div>

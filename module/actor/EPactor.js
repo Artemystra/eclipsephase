@@ -93,6 +93,7 @@ export default class EPactor extends Actor {
     this._calculateArmor(actorData)
     this._calculateInitiative(actorData)
     this._calculateHomebrewEncumberance(actorData)
+    this._calculateSideCart(actorData, items)
 
     //Psi-Calculator - Not Working yet
     if (this.type === "npc" || this.type === "character") {
@@ -199,8 +200,8 @@ export default class EPactor extends Actor {
    //HOMEBREW - Encumbrance through weapons & gear
    if(actorData.homebrew === true && this.type === "character"){
     //Weapon Variables
-    let weaponScore = 0
-    let bulkyWeaponCount = 0
+    let weaponScore = 0;
+    let bulkyWeaponCount = 0;
     let weaponMalus = 0;
     let weaponItems = this.items.filter(i => i.type === "rangedWeapon" || i.type === "ccWeapon")
     //Gear Variables
@@ -253,6 +254,52 @@ export default class EPactor extends Actor {
     actorData.physical.totalWeaponMalus = 0;
     actorData.physical.totalGearMalus = 0;
   }
+  }
+
+  _calculateSideCart(actorData, items) {
+    //Checks for certain item types to be equipped to dynamically change the side cart content
+    let rangedCount = 0;
+    let ccCount = 0;
+    let armorCount = 0;
+    let gearCount = 0;
+    for(let gearCheck of items){
+      if(gearCheck.system.displayCategory === "ranged" && gearCheck.system.active){
+        rangedCount++
+      }
+      else if(gearCheck.system.displayCategory === "ccweapon" && gearCheck.system.active){
+        ccCount++
+      }
+      else if(gearCheck.system.displayCategory === "armor" && gearCheck.system.active){
+        armorCount++
+      }
+      else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active){
+        gearCount++
+      }
+    }
+    if(rangedCount>0){
+      actorData.additionalSystems.rangedEquipped = true;
+    }
+    else{
+      actorData.additionalSystems.rangedEquipped = false;
+    }
+    if(ccCount>0){
+      actorData.additionalSystems.ccEquipped = true;
+    }
+    else{
+      actorData.additionalSystems.ccEquipped = false;
+    }
+    if(armorCount>0){
+      actorData.additionalSystems.armorEquipped = true;
+    }
+    else{
+      actorData.additionalSystems.armorEquipped = false;
+    }
+    if(gearCount>0){
+      actorData.additionalSystems.gearEquipped = true;
+    }
+    else{
+      actorData.additionalSystems.gearEquipped = false;
+    }
   }
 
   _calculateArmor(actorModel) {

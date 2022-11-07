@@ -1,0 +1,21 @@
+<div class="sideCarBox rangedSideCar">
+    <div>
+        <label class="resource-value" style="font-size: 20px;">Ranged Weapons</label>
+    </div>
+    <div>
+        {{#if actor.system.additionalSystems.armorEquipped}}
+        <div class="grid grid-2col">
+            <div class="flexrow flex-group-right">
+                <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-medium"/>
+                <span class="resource-value input-small alignLeft">{{actor.system.physical.energyArmorTotal}}</span>
+            </div>
+            <div class="flexrow flex-group-left">
+                <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-medium" style="margin-right: 10px;"/>
+                <span class="resource-value input-small">{{actor.system.physical.kineticArmorTotal}}</span>
+            </div>
+        </div>
+        {{else}}
+        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">No Armor Equipped</span></div>
+        {{/if}}
+    </div>
+</div>
