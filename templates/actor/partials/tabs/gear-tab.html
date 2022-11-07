@@ -33,9 +33,9 @@
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                            {{#if item.description}}
+                            {{#if item.system.description}}
                             <div class="itemDescription shape3">
-                                {{item.description}}
+                                {{item.system.description}}
                             </div>
                             {{/if}}
                             <div class="flexrow flex-between item-controls">
@@ -44,7 +44,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
                 {{else}}
                 <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                     <input class="sheet equipped checkBox"
@@ -60,9 +59,9 @@
                         <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                     </div>
                     <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                        {{#if item.description}}
+                        {{#if item.system.description}}
                         <div class="itemDescription shape3">
-                            {{item.description}}
+                            {{item.system.description}}
                         </div>
                         {{/if}}
                         <div class="flexrow flex-between item-controls">
@@ -71,11 +70,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            </div>
-            {{/if}}
+                </div>
+                {{/if}}
                 {{/each}}
-            {{/if}}
+            </div>
+        {{/if}}
 
         {{#if actor.rangedWeapon}}
         <div class="contentBox">
@@ -192,4 +191,4 @@
             </div>
         </div>
         {{/if}}
-    </div>
+</div>

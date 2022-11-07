@@ -50,9 +50,9 @@
                     {{!-- Body Tab --}}
                     <div class="tab body" data-group="primary" data-tab="body">
                         <div class="flexrow contentBox noMargin">
-                            <div style="flex: 0.7; min-width: 72%;">
+                            <div style="flex: 0.7;">
                             
-                                <div class="contentBox">
+                                <div class="contentBox" style="background-color: var(--focusBackground);">
                                     <div class="flexrow subheader">
                                         <h3 class="subheader">Current Morph</h3>
                                         <div class="alignRight flexGrowThreeQuarter">
@@ -80,23 +80,15 @@
                                         name=actor.system.bodies.activeMorph
                                         morph=activeMorph }}
                                 </div>
-
-                                <div>
-                                {{> systems/eclipsephase/templates/actor/partials/morph-traits.html
-                                    name=actor.system.bodies.activeMorph
-                                    morph=activeMorph }}
-                                </div>
                             </div>
-                            <div style="position: relative; flex: 0.3;">
-                                <div class="morph-imgBorder" style="margin-right: 5px;">
 
 
-                                    <img class="morph-img"
-                                        src="{{activeMorph.morph.img}}"
-                                        data-edit="system.bodies.{{activeMorph.key}}.img"
-                                        title="{{actor.name}}'s {{activeMorph.name}}"/>
-                                </div>
-                            </div>
+                                    <img class="morph-img" src="{{activeMorph.morph.img}}" data-edit="system.bodies.{{activeMorph.key}}.img" title="{{actor.name}}'s {{activeMorph.name}}"/>
+                        </div>
+                        <div>
+                            {{> systems/eclipsephase/templates/actor/partials/morph-traits.html
+                                name=actor.system.bodies.activeMorph
+                                morph=activeMorph }}
                         </div>
                         
 
@@ -404,6 +396,7 @@
 
                     {{!-- Gear Tab --}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html }}
+                    </div>
                     {{!-- Psi Tab --}}                    
                         {{> systems/eclipsephase/templates/actor/partials/tabs/psi.html }}
                     {{!-- Effects Tab --}}    

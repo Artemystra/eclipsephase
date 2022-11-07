@@ -29,6 +29,7 @@ eclipsephase.gearTypes = {
 }
 
 eclipsephase.moveTypes = {
+    none: "-Select-",
     boat: "Boat",
     hopper: "Hopper",
     hover: "Hover",

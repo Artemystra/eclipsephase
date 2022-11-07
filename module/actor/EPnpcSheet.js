@@ -117,6 +117,9 @@ export default class EPnpcSheet extends ActorSheet {
             else if (itemModel.displayCategory === 'ranged') {
                 rangedweapon.push(item)
             }
+            //IMPORTANT: I reverted the ccWeapon-registration back to this state, since the item model did not work for them ON NPC&GOON Sheets.
+            //I did not fully understand the issue, but please make sure that your changes work before updating this section, as otherwise items 
+            //(ccWeapons) will not be usable anymore for goons & NPCs
             else if (item.type === 'ccWeapon') {
                 ccweapon.push(item)
             }

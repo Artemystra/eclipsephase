@@ -203,11 +203,8 @@
 }
 
 .morph-img{
-  min-height: 240px;
-  min-width: 240px;
-  max-height: 240px;
-  max-width: 240px;
-  border: solid var(--pitchBorder) 5px;
+  margin: -10px 0 10px 10px;
+  max-width: 210px;
   clip-path: polygon(89% 25%, 89% 75%, 50% 99%, 11% 75%, 11% 25%, 50% 5px)
 }
 
@@ -363,6 +360,7 @@ a.entity-link {
   background: var(--pitchBackground);
   padding-left: 5px;
   padding-right: 5px;
+  min-height: 36px;
 }
 
 span.fail {
