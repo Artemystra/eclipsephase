@@ -1045,6 +1045,18 @@ h3.subheaderBlank {
   position: relative;
 }
 
+.sideCarBox {
+  padding: 10px;
+  min-height: 100px;
+  background-color: var(--pitchBorder);
+}
+
+.armorSideCar {
+  background-image: url(../resources/img/armorSideCar.webp);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
 .flexrow.subheader {
   border-bottom: solid var(--accentBackground) 3px;
   background-color: var(--focusBackground);
@@ -1057,6 +1069,12 @@ h3.subheaderBlank {
 .listBackground {
   padding: 5px 0.5em 5px 0.5em;
   min-height: 40px;
+}
+
+.listBackgroundMain {
+  padding: 5px 0.5em 5px 0.5em;
+  min-height: 40px;
+  background-color: var(--mainBackground);
 }
 
 .itemBackground {
@@ -1132,6 +1150,12 @@ h3.subheaderBlank {
 .icon-small{
   max-height: 24px!important;
   max-width: 24px!important;
+  border: none;
+}
+
+.icon-medium{
+  max-height: 40px!important;
+  max-width: 40px!important;
   border: none;
 }
 
@@ -1261,8 +1285,8 @@ img {
 }
 
 .logo-img {
-  margin-top: 11px;
-  width: 90px;
+  margin: 9px;
+  width: 75px;
   height: auto!important;
   display: block;
 }
@@ -1328,7 +1352,8 @@ h3.inline {
 .tooltip:hover div[role=tooltip] {
   opacity: 1;
   font-family: 'Orbitron', sans-serif;
-  width: 330px;
+  max-width: 320px;
+  min-width: 320px;
   display: block;
   text-align: left;
   position: absolute;
@@ -1341,7 +1366,6 @@ h3.inline {
 .tooltip:hover div[role=tooltipNegative] {
   opacity: 1;
   font-family: 'Orbitron', sans-serif;
-  width: 330px;
   display: block;
   text-align: left;
   position: absolute;
@@ -1427,7 +1451,7 @@ h3.inline {
 .flex,
 .information,
 .armorValue{
-  max-height: 465px;
+  max-height: 400px;
   overflow: auto;
   background-repeat: no-repeat;
   background-size: 100px 100px;

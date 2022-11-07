@@ -9,8 +9,8 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                {{#each actor.armor as |item id|}}
-                {{#if item.system.active}}
+                    {{#each actor.armor as |item id|}}
+                    {{#if item.system.active}}
 
                     <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                         <input class="sheet equipped checkBox"
@@ -44,34 +44,34 @@
                             </div>
                         </div>
                     </div>
-                {{else}}
-                <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
-                    <input class="sheet equipped checkBox"
-                    data-dtype="Boolean" data-item-id="{{item._id}}"
-                    type="checkbox" {{checked system.active}}>
-                    <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                    <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
-                    <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
-                    <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
-                    <div class="flex-group-right slideShow">
-                        <a><i class="fas fa-plus icon-small"></i></a>
-                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                    </div>
-                    <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                        {{#if item.system.description}}
-                        <div class="itemDescription shape3">
-                            {{item.system.description}}
+                    {{else}}
+                    <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
+                        <input class="sheet equipped checkBox"
+                        data-dtype="Boolean" data-item-id="{{item._id}}"
+                        type="checkbox" {{checked system.active}}>
+                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
+                        <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
+                        <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
+                        <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
+                        <div class="flex-group-right slideShow">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
-                        {{/if}}
-                        <div class="flexrow flex-between item-controls">
-                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            {{#if item.system.description}}
+                            <div class="itemDescription shape3">
+                                {{item.system.description}}
+                            </div>
+                            {{/if}}
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                            </div>
                         </div>
                     </div>
+                    {{/if}}
                 </div>
-                </div>
-                {{/if}}
                 {{/each}}
             </div>
         {{/if}}

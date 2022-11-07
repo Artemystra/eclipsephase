@@ -1,74 +1,89 @@
-<div class="flexGrowHalf flexrow flex-group-center tooltip">
-    <div role="tooltipNegative">
-        <div class="tooltipTopBorder">
-            <div class="tooltipTop"></div>
-        </div>
-        <div class="armorValue">
-            <h3 class="inline">Armor</h3>
-            {{#if actor.armor}}
-                <label class="resource-value">Cumulated Armor </label>
-                <p/>
-                <div class="flexrow flex-group-center">
-                    <img
-                    src="systems/eclipsephase/resources/icons/power.png"
-                    class="icon-small"/><span class="toggle
-                            resource-label alignLeft">Energy:
-                    </span><span class="toggle resource-value
-                        alignLeft item-standard-margin-medium">
-                        {{actor.system.physical.energyArmorTotal}}</span>
-                    <img
-                    src="systems/eclipsephase/resources/icons/shield.png"
-                    class="icon-small" style="max-width:
-                    20px!important; max-height:
-                    20px!important;"/><span class="toggle
-                    resource-label alignLeft">Kinetic: </span><span
-                    class="toggle resource-value alignLeft">
-                    {{actor.system.physical.kineticArmorTotal}}</span>
-                </div>
-                <p/>
-                <label class="resource-value">Armor Pieces active on You</label>
-                <div class="listBackground">
-                    <span class="toggle resource-label
-                        alignLeft">Main Armor: </span><span
-                        class="toggle resource-value
-                        alignLeft">{{actor.system.physical.mainArmorTotal}}</span><br/>
-                    <p/>
-                    <span class="toggle resource-label
-                        alignLeft">Additional Armor: </span><span
-                        class="toggle resource-value
-                        alignLeft">{{actor.system.physical.additionalArmorTotal}}</span><br/>
-                </div>
-                <p/>
-                <label class="resource-value">Cumulative Malus
-                    -{{actor.system.physical.armorMalusTotal}}</label>
-                <div class="listBackground">
-                    <span class="toggle resource-label
-                        alignLeft">Main Armor Malus: </span><span
-                        class="toggle resource-value
-                        alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
-                    <p/>
-                    <i style="font-size: 12px; margin-bottom: 10px;">For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
-                    <p/>
-                    <span class="toggle resource-label
-                                    alignLeft">Additional Armor Malus:
-                    </span><span class="toggle resource-value
-                        alignLeft">-{{actor.system.physical.additionalArmorMalus}}</span>
-                    <p/>
-                    <i style="font-size: 12px; margin-bottom: 10px;">Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
-                </div>
-                <p/>
-                {{else}}
-                <label class="resource-value">You are not wearing any armor</label>
-                <p/>
-                {{/if}}
-                <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
-        </div>
-        <div class="tooltipBottomBorder">
-            <div class="tooltipBottom"></div>
-        </div>
+<div class="sideCarBox armorSideCar">
+    <div>
+        <label class="resource-value" style="font-size: 20px;">Armor</label>
     </div>
-    <img src="systems/eclipsephase/resources/icons/power.png" class="icon-small"/>
-    <span class="toggle resource-value alignLeft">{{actor.system.physical.energyArmorTotal}}</span>
-    <img src="systems/eclipsephase/resources/icons/shield.png" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/>
-    <span class="toggle resource-value alignLeft">{{actor.system.physical.kineticArmorTotal}}</span>
+    <div class="tooltip">
+        <div role="tooltipNegative">
+            <div class="tooltipTopBorder">
+                <div class="tooltipTop"></div>
+            </div>
+            <div class="armorValue">
+                <h3 class="inline">Armor</h3>
+                {{#if actor.armor}}
+                    <label class="resource-value">Cumulated Armor </label>
+                    <p/>
+                    <div class="flexrow flex-group-center">
+                        <img
+                        src="systems/eclipsephase/resources/icons/power.webp"
+                        class="icon-small"/><span class="toggle
+                                resource-label alignLeft">Energy:
+                        </span><span class="toggle resource-value
+                            alignLeft item-standard-margin-medium">
+                            {{actor.system.physical.energyArmorTotal}}</span>
+                        <img
+                        src="systems/eclipsephase/resources/icons/shield.webp"
+                        class="icon-small" style="max-width:
+                        20px!important; max-height:
+                        20px!important; margin-right: 5px;"/><span class="toggle
+                        resource-label alignLeft"> Kinetic: </span><span
+                        class="toggle resource-value alignLeft">
+                        {{actor.system.physical.kineticArmorTotal}}</span>
+                    </div>
+                    <p/>
+                    <label class="resource-value">Armor Pieces active on You</label>
+                    <div class="listBackgroundMain">
+                        <span class="toggle resource-label
+                            alignLeft">Main Armor: </span><span
+                            class="toggle resource-value
+                            alignLeft">{{actor.system.physical.mainArmorTotal}}</span><br/>
+                        <p/>
+                        <span class="toggle resource-label
+                            alignLeft">Additional Armor: </span><span
+                            class="toggle resource-value
+                            alignLeft">{{actor.system.physical.additionalArmorTotal}}</span><br/>
+                    </div>
+                    <p/>
+                    <label class="resource-value">Cumulative Malus
+                        -{{actor.system.physical.armorMalusTotal}}</label>
+                    <div class="listBackgroundMain">
+                        <span class="toggle resource-label
+                            alignLeft">Main Armor: </span><span
+                            class="toggle resource-value
+                            alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
+                        <p/>
+                        <i style="font-size: 12px; margin-bottom: 10px;">For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
+                        <p/>
+                        <span class="toggle resource-label
+                                        alignLeft">Additional Armor:
+                        </span><span class="toggle resource-value
+                            alignLeft">-{{actor.system.physical.additionalArmorMalus}}</span>
+                        <p/>
+                        <i style="font-size: 12px; margin-bottom: 10px;">Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
+                    </div>
+                    <p/>
+                    {{else}}
+                    <label class="resource-value">You are not wearing any armor</label>
+                    <p/>
+                    {{/if}}
+                    <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
+            </div>
+            <div class="tooltipBottomBorder">
+                <div class="tooltipBottom"></div>
+            </div>
+        </div>
+        {{#if actor.armor}}
+        <div class="grid grid-2col">
+            <div class="flexrow flex-group-right">
+                <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-medium"/>
+                <span class="resource-value input-small alignLeft">{{actor.system.physical.energyArmorTotal}}</span>
+            </div>
+            <div class="flexrow flex-group-left">
+                <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-medium" style="margin-right: 10px;"/>
+                <span class="resource-value input-small">{{actor.system.physical.kineticArmorTotal}}</span>
+            </div>
+        </div>
+        {{else}}
+        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">No Armor Present</span></div>
+        {{/if}}
     </div>
+</div>
