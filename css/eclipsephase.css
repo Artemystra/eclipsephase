@@ -1051,6 +1051,7 @@ h3.subheaderBlank {
   padding: 10px;
   min-height: 100px;
   background-color: var(--pitchBorder);
+  margin-bottom: 10px;
 }
 
 .armorSideCar {

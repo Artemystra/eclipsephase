@@ -1,0 +1,39 @@
+<div class="sideCarBox rangedSideCar">
+    <div style=" margin-bottom: 20px;">
+        <label class="resource-value" style="font-size: 20px;">Close Combat</label>
+    </div>
+    {{#if actor.system.additionalSystems.ccEquipped}}
+        {{#each actor.ccweapon as |item id|}}
+            {{#if this.system.active}}
+            <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
+                <div class="flexrow subheader">
+                    <div class="flexrow flex-group-left reveal">
+                        <h3 class="subheader truncate">
+                            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small" style="margin-right: 5px;"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" style="margin-right: 5px;" data-type="ccWeapon" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
+                            <span style="max-width: 200px; padding-right: 34px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</span>
+                        </h3>
+                    </div>
+                    <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
+                    </div>
+                </div>
+                <div class="grid" data-item-id="{{item._id}}">
+                    <div class="flexrow flex-group-left">
+                        <i class="fa-solid fa-explosion icon-small"></i>
+                        <h4 class="item-image input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
+                    </div>
+                </div>
+                {{#if item.system.description}}
+                <div class="item" data-item-id="{{item._id}}">
+                    <div class="itemDescription">
+                        {{item.system.description}}
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            {{/if}}
+        {{/each}}
+    {{else}}
+    <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">No Weapon Equipped</span></div>
+    {{/if}}
+</div>
