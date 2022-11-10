@@ -690,6 +690,10 @@ a:hover{
   font-size: 16px;
   font-weight: bold;
   width: 100%;
+  border-top: solid 4px var(--highlightBackground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /*.eclipsephase .tabs .item:first-child,
@@ -715,6 +719,7 @@ a:hover{
 .eclipsephase .tabs .item.active {
   text-shadow: none;
   background-color: var(--mainBackground);
+  border-top: solid 4px var(--highlight);
 }
 
 .eclipsephase .tox .tox-editor-container {
@@ -1043,6 +1048,10 @@ h3.subheaderBlank {
   margin: 0 1em!important;
 }
 
+.standard-margin-bottom {
+  margin-bottom: 10px;
+}
+
 .contentBox {
   position: relative;
 }
@@ -1078,6 +1087,12 @@ h3.subheaderBlank {
   padding: 5px 0.5em 5px 0.5em;
   min-height: 40px;
   background-color: var(--mainBackground);
+}
+
+.listBackgroundPitch {
+  padding: 5px 0.5em 5px 0.5em;
+  min-height: 40px;
+  background-color: var(--pitchBorder);
 }
 
 .itemBackground {

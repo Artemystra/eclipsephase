@@ -615,7 +615,7 @@ export default class EPactorSheet extends ActorSheet {
 
       ChatMessage.create({
         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-        flavor: "I reloaded my " + weaponName + " with a total of " + difference + " bullets. <p/><strong>It's at it's full capacity again!</strong>"
+        flavor: "I reloaded my<p/><strong>" + weaponName + "<p/></strong>with a total of " + difference + " bullets. <p/><strong>It's at it's full capacity again!</strong>"
     })
     }
     else {

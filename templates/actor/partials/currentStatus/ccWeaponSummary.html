@@ -10,7 +10,7 @@
                     <div class="flexrow flex-group-left reveal">
                         <h3 class="subheader truncate">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small" style="margin-right: 5px;"/>
-                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" style="margin-right: 5px;" data-type="ccWeapon" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" style="margin-right: 5px;" data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
                             <span style="max-width: 200px; padding-right: 34px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</span>
                         </h3>
                     </div>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="grid" data-item-id="{{item._id}}">
                     <div class="flexrow flex-group-left">
-                        <i class="fa-solid fa-explosion icon-small"></i>
+                        <i class="fa-solid fa-explosion icon-small alignCenter"></i>
                         <h4 class="item-image input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
                     </div>
                 </div>

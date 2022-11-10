@@ -995,6 +995,7 @@ export async function DamageRoll({
     }
 
     if (mode === "single") {
+        mode = ""
         updateAmmo = currentAmmo - 1;
     }
     else if (mode === "burst") {
