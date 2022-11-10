@@ -883,6 +883,8 @@ h3.subheader {
   font-weight: bold;
   border: 0;
   font-size: 16px;
+  display: flex;
+  align-items: center;
 }
 
 h3.subheader.colorV1{
@@ -1414,14 +1416,18 @@ h3.inline {
 .wantToKnowMore .tooltipText {
     opacity: 0;
     transition: opacity 1s;
+    transition-delay: 1s;
     visibility: hidden;
     position: absolute;
     width: 120px;
-    background-color: var(--highlightBackground);
+    background-color: var(--focusBackground);
     color: var(--mainText);
     text-align: center;
     padding: 5px 0;
+    border-style: solid;
+    border-width: 3px;
     border-radius: 6px;
+    border-color: var(--highlightBackground);
     top: -30px;
     left: 0px;
 }
@@ -1435,7 +1441,7 @@ h3.inline {
   position: absolute;
   top: 119%;
   left: 43%;
-  margin-top: -5px;
+  margin-top: -2px;
   border-width: 5px;
   border-style: solid;
   border-color: var(--highlightBackground) transparent transparent transparent;

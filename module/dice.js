@@ -953,9 +953,15 @@ export async function TaskCheck({
 //Weapon damage rolls
 export async function DamageRoll({
         //General
+        actorWhole = "",
         weaponName = "",
+        weaponID = "",
         weaponDamage = "",
         weaponType = "",
+        maxAmmo = "",
+        currentAmmo = "",
+        updateAmmo = "",
+        ammoUpdate = [],
         successType = "normal",
         critical = false,
         mode="",
@@ -988,11 +994,16 @@ export async function DamageRoll({
         critical = checkOptions.critical;
     }
 
-    if (mode === "burst") {
+    if (mode === "single") {
+        updateAmmo = currentAmmo - 1;
+    }
+    else if (mode === "burst") {
         mode = "+ 1d10";
+        updateAmmo = currentAmmo - 3;
     }
     else if (mode === "fullAuto"){
         mode = "+ 2d10";
+        updateAmmo = currentAmmo - 10;
     }
     else if (mode === "charge") {
         mode = "+ 1d6";
@@ -1015,15 +1026,36 @@ export async function DamageRoll({
         successModifier = "+ 2d6)"
     }
 
-    let intermediateRollFormula = weaponDamage + mode + successModifier;
-    let rollFormula = criticalModifier + (intermediateRollFormula);
-    let roll = await new Roll(rollFormula).evaluate({async: true});
+    if (updateAmmo>=0) {
+        let intermediateRollFormula = weaponDamage + mode + successModifier;
+        let rollFormula = criticalModifier + (intermediateRollFormula);
+        let roll = await new Roll(rollFormula).evaluate({async: true});
+    
+            let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
+            roll.toMessage({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                flavor: label
+            });
+    
+            ammoUpdate.push({
+                "_id" : weaponID,
+                "system.ammoMin": updateAmmo
+              });
+    
+            //This updates the items ammunition
+            actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
+    }
+    else {
+        let rollModeSelection = CONST.DICE_ROLL_MODES.SELF
 
-        let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
-        roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: label
-        });
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>"
+        },{
+            rollMode: "selfroll"
+        })
+    }
+    
 
     async function GetDamageRangedOptions(weaponName, weaponDamage) {
         const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";

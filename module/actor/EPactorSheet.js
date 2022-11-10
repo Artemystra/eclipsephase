@@ -408,6 +408,9 @@ export default class EPactorSheet extends ActorSheet {
       //Edit Item Input Fields
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
+      //Reload Ranged Weapon Functionality
+      html.find(".reload").click(this._onReloadWeapon.bind(this));
+
       ///(De)Activate morph/body bound traits/flaws/ware
       html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
 
@@ -562,13 +565,19 @@ export default class EPactorSheet extends ActorSheet {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
+    const actorWhole = this.actor;
     const actorModel = this.actor.system;
 
       Dice.DamageRoll ({
+        actorWhole : actorWhole,
+        actorData : actorModel,
+        weaponID : dataset.weaponid,
         weaponName : dataset.weaponname,
         weaponDamage : dataset.roll,
         weaponType : dataset.type,
-        actorData : actorModel,
+        currentAmmo : dataset.currentammo,
+        maxAmmo : dataset.maxammo,
+        
         askForOptions : event.shiftKey,
         optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
       });
@@ -582,6 +591,44 @@ export default class EPactorSheet extends ActorSheet {
     let field = element.dataset.field;
 
     return item.update({ [field]: element.value });
+  }
+
+  _onReloadWeapon(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    let currentAmmo = dataset.currentammo;
+    let maxAmmo = dataset.maxammo;
+    let weaponName = dataset.weaponname;
+    let weaponID = dataset.weaponid;
+    let difference = maxAmmo - currentAmmo;
+    let ammoUpdate = [];
+
+    if (difference>0){
+      currentAmmo = maxAmmo;
+      ammoUpdate.push({
+        "_id" : weaponID,
+        "system.ammoMin": currentAmmo
+      });
+
+      this.actor.updateEmbeddedDocuments("Item", ammoUpdate);
+
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+        flavor: "You reloaded your " + weaponName + " with a total of " + difference + " bullets. <p/><strong>Your weapon is at it's full capacity!</strong>"
+    },{
+        rollMode: "selfroll"
+    })
+    }
+    else {
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+        flavor: "Your " + weaponName + " is still fully loaded.<p/><strong>No reload needed</strong>"
+    },{
+        rollMode: "selfroll"
+    })
+    }
+
   }
 
   _onToggleReveal(event) {
