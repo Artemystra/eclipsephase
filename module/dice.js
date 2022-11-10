@@ -1046,14 +1046,11 @@ export async function DamageRoll({
             actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
     }
     else {
-        let rollModeSelection = CONST.DICE_ROLL_MODES.SELF
-
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>"
-        },{
-            rollMode: "selfroll"
-        })
+            content: "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
+            whisper: [game.user._id]
+          })
     }
     
 

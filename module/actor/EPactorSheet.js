@@ -615,17 +615,14 @@ export default class EPactorSheet extends ActorSheet {
 
       ChatMessage.create({
         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-        flavor: "You reloaded your " + weaponName + " with a total of " + difference + " bullets. <p/><strong>Your weapon is at it's full capacity!</strong>"
-    },{
-        rollMode: "selfroll"
+        flavor: "I reloaded my " + weaponName + " with a total of " + difference + " bullets. <p/><strong>It's at it's full capacity again!</strong>"
     })
     }
     else {
-      ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-        flavor: "Your " + weaponName + " is still fully loaded.<p/><strong>No reload needed</strong>"
-    },{
-        rollMode: "selfroll"
+    ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({actor: this.actor}),
+      content: "<center>Your " + weaponName + " is still fully loaded.<p/><strong>No reload needed</strong></center>",
+      whisper: [game.user._id]
     })
     }
 
