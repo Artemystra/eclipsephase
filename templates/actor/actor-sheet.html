@@ -81,76 +81,70 @@
                                         morph=activeMorph }}
                                 </div>
                             </div>
-
-
-                                    <img class="morph-img" src="{{activeMorph.morph.img}}" data-edit="system.bodies.{{activeMorph.key}}.img" title="{{actor.name}}'s {{activeMorph.name}}"/>
-                        </div>
-                        <div>
-                            {{> systems/eclipsephase/templates/actor/partials/morph-traits.html
-                                name=actor.system.bodies.activeMorph
-                                morph=activeMorph }}
-                        </div>
-                        
-
-
-                        <div class="flexrow subheader">
-                            <h3 class="subheader">
-                                {{actor.name}}'s {{activeMorph.name}}
-                            </h3>
-                            <div class="alignRight flexGrowHalf">
+                                <img class="morph-img" src="{{activeMorph.morph.img}}" data-edit="system.bodies.{{activeMorph.key}}.img" title="{{actor.name}}'s {{activeMorph.name}}"/>
                             </div>
+                            <div>
+                                {{> systems/eclipsephase/templates/actor/partials/morph-traits.html
+                                    name=actor.system.bodies.activeMorph
+                                    morph=activeMorph }}
+                            </div>
+                            <div class="flexrow subheader">
+                                <h3 class="subheader">
+                                    {{actor.name}}'s {{activeMorph.name}}
+                                </h3>
+                                <div class="alignRight flexGrowHalf">
+                                </div>
+                            </div>
+                            {{#if (eq activeMorph.key "morph1")}}
+                            {{editor
+                            activeMorph.description
+                            target="system.bodies.morph1.description"
+                            button=true
+                            owner=owner
+                            editable=this.options.editable
+                            }}
+                            {{else if (eq activeMorph.key "morph2")}}
+                            {{editor
+                            activeMorph.description
+                            target="system.bodies.morph2.description"
+                            button=true
+                            owner=owner
+                            editable=this.options.editable
+                            }}
+                            {{else if (eq activeMorph.key "morph3")}}
+                            {{editor
+                            activeMorph.description
+                            target="system.bodies.morph3.description"
+                            button=true
+                            owner=owner
+                            editable=this.options.editable
+                            }}
+                            {{else if (eq activeMorph.key "morph4")}}
+                            {{editor
+                            activeMorph.description
+                            target="system.bodies.morph4.description"
+                            button=true
+                            owner=owner
+                            editable=this.options.editable
+                            }}
+                            {{else if (eq activeMorph.key "morph5")}}
+                            {{editor
+                            activeMorph.description
+                            target="system.bodies.morph5.description"
+                            button=true
+                            owner=owner
+                            editable=this.options.editable
+                            }}
+                            {{else if (eq activeMorph.key "morph6")}}
+                            {{editor
+                            activeMorph.description
+                            target="system.bodies.morph6.description"
+                            button=true
+                            owner=owner
+                            editable=this.options.editable
+                            }}
+                            {{/if}}
                         </div>
-                        {{#if (eq activeMorph.key "morph1")}}
-                        {{editor
-                        activeMorph.description
-                        target="system.bodies.morph1.description"
-                        button=true
-                        owner=owner
-                        editable=this.options.editable
-                        }}
-                        {{else if (eq activeMorph.key "morph2")}}
-                        {{editor
-                        activeMorph.description
-                        target="system.bodies.morph2.description"
-                        button=true
-                        owner=owner
-                        editable=this.options.editable
-                        }}
-                        {{else if (eq activeMorph.key "morph3")}}
-                        {{editor
-                        activeMorph.description
-                        target="system.bodies.morph3.description"
-                        button=true
-                        owner=owner
-                        editable=this.options.editable
-                        }}
-                        {{else if (eq activeMorph.key "morph4")}}
-                        {{editor
-                        activeMorph.description
-                        target="system.bodies.morph4.description"
-                        button=true
-                        owner=owner
-                        editable=this.options.editable
-                        }}
-                        {{else if (eq activeMorph.key "morph5")}}
-                        {{editor
-                        activeMorph.description
-                        target="system.bodies.morph5.description"
-                        button=true
-                        owner=owner
-                        editable=this.options.editable
-                        }}
-                        {{else if (eq activeMorph.key "morph6")}}
-                        {{editor
-                        activeMorph.description
-                        target="system.bodies.morph6.description"
-                        button=true
-                        owner=owner
-                        editable=this.options.editable
-                        }}
-                        {{/if}}
-
-                    </div>
                     
                     {{!-- Vehicles Tab --}}
                     <div class="tab vehicle" data-group="primary" data-tab="vehicles">

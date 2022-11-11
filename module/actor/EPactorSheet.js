@@ -20,7 +20,7 @@ export default class EPactorSheet extends ActorSheet {
       }
       else {
         if (!game.user.isGM && !this.actor.isOwner){
-          this.position.height = 575;
+          this.position.height = 610;
           this.position.width = 800;
         }
         else{
@@ -615,7 +615,7 @@ export default class EPactorSheet extends ActorSheet {
 
       ChatMessage.create({
         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-        flavor: "I reloaded my<p/><strong>" + weaponName + "<p/></strong>with a total of " + difference + " bullets. <p/><strong>It's at it's full capacity again!</strong>"
+        flavor: "I reloaded my<p/><strong>" + weaponName + "<p/></strong>with a total of " + difference + " bullets. <p/>"
     })
     }
     else {

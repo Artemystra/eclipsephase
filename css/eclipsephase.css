@@ -41,6 +41,20 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.grid-3col-limited1 {
+  grid-column: span 3 / span 3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas: 
+    "left center center";
+}
+
+.grid-3col-limited2 {
+  grid-column: span 3 / span 3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas: 
+    "left left center";
+}
+
 .grid-4col {
   grid-column: span 4 / span 4;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -205,6 +219,12 @@
 .morph-img{
   margin: -10px 0 10px 10px;
   max-width: 210px;
+  clip-path: polygon(89% 25%, 89% 75%, 50% 99%, 11% 75%, 11% 25%, 50% 5px)
+}
+
+.limited-sheet .morph-img{
+  margin: 10px 0 0 -6px;
+  max-width: 260px;
   clip-path: polygon(89% 25%, 89% 75%, 50% 99%, 11% 75%, 11% 25%, 50% 5px)
 }
 
@@ -1226,7 +1246,7 @@ ol {
 }
 
 .limited-editor .editor {
-  max-height: 225px;
+  max-height: 231px;
   overflow-x: hidden;
 }
 
