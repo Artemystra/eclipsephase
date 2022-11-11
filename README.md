@@ -10,11 +10,11 @@ If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
 
 <h2><strong>Current state of sheets</strong></h2>
 <h2>Character Sheet</h2>
-<img src="../eclipsephase/resources/img/characterSheet.jpg"><p/>
+<img src="../resources/img/characterSheet.jpg"><p/>
 <h2>NPC Sheet</h2>
-<img src="../eclipsephase/resources/img/npcSheet.jpg"><p/>
+<img src="../resources/img/npcSheet.jpg"><p/>
 <h2>Threat Sheet</h2>
-<img src="../eclipsephase/resources/img/threatSheet.jpg"><p/>
+<img src="../resources/img/threatSheet.jpg"><p/>
 
 <h2><strong>Features are included to date</strong></h2>
 
