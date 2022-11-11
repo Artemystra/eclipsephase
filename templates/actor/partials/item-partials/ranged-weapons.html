@@ -8,9 +8,7 @@
         type="checkbox" {{checked item.system.active}}>
         <div class="flexrow flex-group-center input-small">
             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-            <img src="icons/svg/d10-grey.svg" class="toggle
-                        icon-small damage-roll roll-label
-                        input-small noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
         </div>
         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name"   data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}" style="text-align: left; font-weight: bold"/>
         <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.system.firingMode}}</strong></label>
