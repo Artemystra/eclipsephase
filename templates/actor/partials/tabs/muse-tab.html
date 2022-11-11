@@ -1,0 +1,41 @@
+<div class="tab" data-group="secondary" data-tab="muse">
+    <div class="contentBox">
+        <div class="flexrow subheader colorV1">
+            <h3 class="subheader colorV1">Muse Info</h3>
+            <div class="alignRight flexGrowThreeQuarter">
+            </div>
+        </div>
+        <div class="itemBackground flexrow flex-group-left">
+            <label class="input-large resource-label" >Name</label>
+            <input class="input-XL" name="system.muse.name" type="text"
+                                                        value="{{actor.system.muse.name}}" data-dtype="String" placeholder="e.g. Amusing"/>
+        </div>
+    </div>        
+            <div class="listBackground edgeAbler">
+                <div class="grid grid-2col noMargin" style="gap: 0;">
+                    {{#each actor.system.muse.skills as |skill key|}}
+                <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
+                    <input class="input-XL" name="system.muse.skills.{{key}}.skillname" type="text" value="{{skill.skillname}}" placeholder="Skill Name" style="text-transform: uppercase;"/>
+                    <input class="input-small" type="number"
+                                            name="system.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                    <div class="flexrow flex-group-center" style="max-width: 40px;">
+                        <img data-type="skill" data-name="{{skill.skillname}}" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                    </div>
+                </div>
+                {{/each}}
+                </div>
+            </div>
+    <div class="flexrow subheader colorV1">
+        <h3 class="subheader colorV1">About {{actor.system.muse.name}}</h3>
+        <div class="alignRight flexGrowHalf">
+        </div>
+    </div>
+    {{editor
+    htmlMuseDescription
+    target="system.muse.description"
+    button=true
+    owner=owner
+    editable=this.options.editable
+    }}
+
+</div>

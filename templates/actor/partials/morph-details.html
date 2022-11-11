@@ -1,35 +1,34 @@
- <div class="itemBackground">
-    <div class="flexrow flex-between">
-        <input type="text"
-               style="margin-right: 30px; max-width: 240px;"
-               name="system.bodies.{{morph.key}}.name"
-               value="{{morph.name}}"
-               placeholder="Morph name"/>
-        <select style="max-width: 125px;"
-                class="selectSpecApt item-standard-margin-medium labelWidth-large"
-                name="system.bodies.{{morph.key}}.type"
-                data-type="String">
-            {{#select morph.morph.type}}
-            {{#each config.bodyTypes as |bodyType key|}}
-            <option value="{{key}}">{{bodyType}}</option>
-            {{/each}} {{/select}}
-        </select>
-
-        <label class="resource-label labelWidth-small">Dur</label>
-        <input class="input-small" type="number"
-                                   name="system.bodies.{{morph.key}}.dur"
-        value="{{morph.morph.dur}}" placeholder="0" style="text-align: center"/>
+<div>
+    <div class="grid grid-3col" style="padding: 0 8px 0 8px;">
+        <div>
+            <input type="text" style="max-width: 240px;" name="system.bodies.{{morph.key}}.name" value="{{morph.name}}" placeholder="Morph name"/>
+        </div>
+        <div>
+            <label class="resource-value">Type:</label>
+            <select style="max-width: 125px;" class="selectSpecApt" name="system.bodies.{{morph.key}}.type" data-type="String">
+                {{#select morph.morph.type}}
+                {{#each config.bodyTypes as |bodyType key|}}
+                <option value="{{key}}">{{bodyType}}</option>
+                {{/each}} {{/select}}
+            </select>
+        </div>
+        <div>
+            <label class="resource-value">Durability:</label>
+            <input class="input-small" type="number" name="system.bodies.{{morph.key}}.dur" value="{{morph.morph.dur}}" placeholder="0" style="text-align: center"/>
+        </div>
     </div>
-    <div class="flexrow flex-between">
-        <div class="flexrow flex-between" style="margin-right: 40px;">
-            <label class="resource-label labelWidth-medium">Mov</label>
-            <input class="input-medium
-            item-standard-margin-small" type="text"
-                                        name="system.bodies.{{morph.key}}.movement"
-            value="{{morph.morph.movement}}" placeholder="0/0" style="text-align: center"/>
-            <select class="selectSpecApt
-                           item-standard-margin
-                           input-large" name="system.bodies.{{morph.key}}.movetype" data-type="String">
+    <div class="grid grid-3col" style="padding: 5px 8px 5px 8px; background-color: var(--mainBackground);">
+        <div>
+            <label class="resource-value">Movement 1</label>
+        </div>
+        <div>
+            <label class="resource-value">Speed:</label>
+            <input class="input-medium item-standard-margin-small" type="text" name="system.bodies.{{morph.key}}.movement" value="{{morph.morph.movement}}" placeholder="0/0" style="text-align: center"/>
+        </select>
+        </div>
+        <div>
+            <label class="resource-value">Type:</label>
+            <select class="selectSpecApt" style="max-width: 85px;" name="system.bodies.{{morph.key}}.movetype" data-type="String">
                 {{#select morph.morph.movetype}}
                 {{#each config.moveTypes as |moveType key|}}
                     <option value="{{key}}">{{moveType}}</option>
@@ -37,15 +36,16 @@
                 {{/select}}
             </select>
         </div>
-        <div class="flexrow flex-between">
-            <label class="resource-label labelWidth-medium">Mov 2</label>
-            <input class="input-medium
-            item-standard-margin-small" type="text"
-                                        name="system.bodies.{{morph.key}}.movement2"
-            value="{{morph.morph.movement2}}" placeholder="0/0" style="text-align: center"/>
-            <select class="selectSpecApt
-                           item-standard-margin
-                           input-large" name="system.bodies.{{morph.key}}.movetype2" data-type="String">
+        <div>
+            <label class="resource-value">Movement 2</label>
+        </div>
+        <div>
+            <label class="resource-value">Speed:</label>
+            <input class="input-medium item-standard-margin-small" type="text" name="system.bodies.{{morph.key}}.movement2" value="{{morph.morph.movement2}}" placeholder="0/0" style="text-align: center"/>
+        </div>
+        <div>
+            <label class="resource-value">Type:</label>
+            <select class="selectSpecApt" style="max-width: 85px;" name="system.bodies.{{morph.key}}.movetype2" data-type="String">
                 {{#select morph.morph.movetype2}}
                 {{#each config.moveTypes as |moveType key|}}
                     <option value="{{key}}">{{moveType}}</option>
@@ -54,48 +54,34 @@
             </select>
         </div>
     </div>
+    <div class=" grid grid-4col" style="padding: 0 8px 5px 8px;">
+            <div>
+                <label class="resource-value">insight</label>
+                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.insight" value="{{morph.morph.insight}}" placeholder="0"/>
+                {{#if actor.system.pools.insight.mod}}
+                    <label class="resource-label footnote">+{{actor.system.pools.insight.mod}}</label>
+                {{/if}}
+            </div>
+            <div>
+                <label class="resource-value">moxie</label>
+                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.moxie" value="{{morph.morph.moxie}}" placeholder="0"/>
+                {{#if actor.system.pools.moxie.mod}}
+                    <label class="resource-label footnote">+{{actor.system.pools.moxie.mod}}</label>
+                {{/if}}
+            </div>
+            <div>
+                <label class="resource-value">vigor</label>
+                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.vigor" value="{{morph.morph.vigor}}" placeholder="0"/>
+                {{#if actor.system.pools.vigor.mod}}
+                    <label class="resource-label footnote">+{{actor.system.pools.vigor.mod}}</label>
+                {{/if}}
+            </div>
+            <div>
+                <label class="resource-value">flex</label>
+                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.flex" value="{{morph.morph.flex}}" placeholder="0"/>
+                {{#if actor.system.pools.flex.mod}}
+                    <label class="resource-label footnote">+{{actor.system.pools.flex.mod}}</label>
+                {{/if}}
+            </div>
+    </div> 
 </div>
-<div class="grid-4col itemBackground">
-    <div class="flexrow flex-group-left">
-        <div>
-            <label class="resource-label labelWidth-medium">insight</label>
-            <input class="input-small -medium"
-                   type="number"
-                   name="system.bodies.{{morph.key}}.insight"
-                   value="{{morph.morph.insight}}" placeholder="0"/>
-            {{#if actor.system.pools.insight.mod}}
-                <label class="resource-value footnote labelWidth-medium">+{{actor.system.pools.insight.mod}}</label>
-            {{/if}}
-        </div>
-        <div>
-            <label class="resource-label labelWidth-medium">moxie</label>
-            <input class="input-small -medium"
-                   type="number"
-                   name="system.bodies.{{morph.key}}.moxie"
-                   value="{{morph.morph.moxie}}" placeholder="0"/>
-            {{#if actor.system.pools.moxie.mod}}
-                <label class="resource-value footnote labelWidth-medium">+{{actor.system.pools.moxie.mod}}</label>
-            {{/if}}
-        </div>
-        <div>
-            <label class="resource-label labelWidth-medium">vigor</label>
-            <input class="input-small -medium"
-                   type="number"
-                   name="system.bodies.{{morph.key}}.vigor"
-                   value="{{morph.morph.vigor}}" placeholder="0"/>
-            {{#if actor.system.pools.vigor.mod}}
-                <label class="resource-value footnote labelWidth-medium">+{{actor.system.pools.vigor.mod}}</label>
-            {{/if}}
-        </div>
-        <div>
-            <label class="resource-label labelWidth-medium">flex</label>
-            <input class="input-small -medium"
-                   type="number"
-                   name="system.bodies.{{morph.key}}.flex"
-                   value="{{morph.morph.flex}}" placeholder="0"/>
-            {{#if actor.system.pools.flex.mod}}
-                <label class="resource-value footnote labelWidth-medium">+{{actor.system.pools.flex.mod}}</label>
-            {{/if}}
-        </div>
-    </div>
-</div> 

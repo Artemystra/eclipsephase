@@ -1,21 +1,21 @@
 // Import Modules
 // const util = require('util');
-import { EclipsePhaseActor } from "./actor/actor.js";
-import { EclipsePhaseActorSheet } from "./actor/actor-sheet.js";
-import { NpcSheet } from "./actor/npcSheet.js";
-import { GoonSheet } from "./actor/goonSheet.js";
-import { EclipsePhaseItem } from "./item/item.js";
-import { EclipsePhaseGearSheet } from "./item/gear-sheet.js";
-import { EclipsePhaseTraitSheet } from "./item/trait-sheet.js";
-import { EclipsePhaseFlawSheet } from "./item/flaw-sheet.js";
-import { EclipsePhaseAspectSheet } from "./item/aspect-sheet.js";
-import { EclipsePhaseProgramSheet } from "./item/program-sheet.js";
-import { EclipsePhaseSpecialSkillSheet } from "./item/specialskill-sheet.js";
-import { EclipsePhaseKnowSkillSheet } from "./item/knowskill-sheet.js";
-import { EclipsePhaseMorphTraitSheet } from "./item/morphtrait-sheet.js";
-import { EclipsePhaseMorphFlawSheet } from "./item/morphflaw-sheet.js";
-import { EclipsePhaseVehicleSheet } from "./item/vehicle-sheet.js";
-import { eclipsephase } from "./config.js";
+import  EPactor from "./actor/EPactor.js";
+import  EPitem  from "./item/EPitem.js";
+import  EPactorSheet from "./actor/EPactorSheet.js";
+import  EPnpcSheet from "./actor/EPnpcSheet.js";
+import  EPgoonSheet from "./actor/EPgoonSheet.js";
+import  EPgearSheet from "./item/EPgearSheet.js";
+import  EPtraitSheet  from "./item/EPtraitSheet.js";
+import  EPflawSheet from "./item/EPflawSheet.js";
+import  EPaspectSheet  from "./item/EPaspectSheet.js";
+import  EPprogramSheet  from "./item/EPprogramSheet.js";
+import  EPspecialSkillSheet  from "./item/EPspecialSkillSheet.js";
+import  EPknowSkillSheet  from "./item/EPknowSkillSheet.js";
+import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
+import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
+import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
+import  { eclipsephase } from "./config.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -76,8 +76,8 @@ function registerSystemSettings() {
 Hooks.once('init', async function() {
 
   game.eclipsephase = {
-    EclipsePhaseActor,
-    EclipsePhaseItem,
+    EPactor,
+    EPitem,
     rollItemMacro
   };
 
@@ -91,23 +91,23 @@ Hooks.once('init', async function() {
   };
 
   // Define custom Entity classes
-  CONFIG.Actor.documentClass = EclipsePhaseActor;
-  CONFIG.Item.documentClass = EclipsePhaseItem;
+  CONFIG.Actor.documentClass = EPactor;
   CONFIG.eclipsephase = eclipsephase;
+  CONFIG.Item.documentClass = EPitem;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("eclipsephase", EclipsePhaseActorSheet, {types: ["character"], makeDefault: true });
-  Actors.registerSheet("eclipsephase", NpcSheet, {types: ["npc"], makeDefault: true });
-  Actors.registerSheet("eclipsephase", GoonSheet, {types: ["goon"], makeDefault: true });
+  Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character"], makeDefault: true });
+  Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
+  Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EclipsePhaseGearSheet, {types: ["gear","rangedWeapon","ccWeapon","grenade","armor","ware","drug"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseMorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseAspectSheet, {types: ["aspect"], makeDefault: true});
-  Items.registerSheet("eclipsephase", EclipsePhaseProgramSheet, {types: ["program"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseKnowSkillSheet, {types: ["knowSkill"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseSpecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EclipsePhaseVehicleSheet, {types: ["vehicle"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","rangedWeapon","ccWeapon","grenade","armor","ware","drug"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
+  Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPknowSkillSheet, {types: ["knowSkill"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPspecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPvehicleSheet, {types: ["vehicle"], makeDefault: true });
 
   //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
   // If you need to add Handlebars helpers, here are a few useful examples:
@@ -121,15 +121,29 @@ Hooks.once('init', async function() {
     return outStr;
   });
   var templates = [
-    "systems/eclipsephase/templates/actor/partials/vehicles.html",
-    "systems/eclipsephase/templates/actor/partials/skills.html",
-    "systems/eclipsephase/templates/actor/partials/npcweapons.html",
-    "systems/eclipsephase/templates/actor/partials/psi.html",
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
-    "systems/eclipsephase/templates/actor/partials/effectsTab.html",
-    "systems/eclipsephase/templates/actor/partials/id.html",
+    "systems/eclipsephase/templates/actor/partials/health-bar.html",
     "systems/eclipsephase/templates/actor/partials/morph-details.html",
-    "systems/eclipsephase/templates/actor/partials/morph-traits.html"
+    "systems/eclipsephase/templates/actor/partials/morph-traits.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/vehicles.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/skills.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/npcgear.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/psi.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/health-tab.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/id-tab.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/id-details.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html",
+    "systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html",
+    "systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html",
+    "systems/eclipsephase/templates/actor/partials/currentStatus/rangedWeaponSummary.html",
+    "systems/eclipsephase/templates/actor/partials/currentStatus/ccWeaponSummary.html",
+    "systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/gear.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/ranged-weapons.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {

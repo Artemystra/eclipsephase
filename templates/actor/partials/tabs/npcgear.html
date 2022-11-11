@@ -1,0 +1,355 @@
+<div class="tab" data-group="primary" data-tab="weapons">
+    <div class="flexrow" style="margin-bottom: 20px; justify-content: flex-end;">
+        <div class="button-roll task-check" data-type="skill" data-name="Guns"
+        data-rollvalue="{{actor.system.skillsVig.guns.roll}}">
+            <label class="resource-label rollable labelWidth-large">Roll Guns</label>
+            <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+        </div>
+        {{#if actor.system.skillsVig.guns.specname}}
+        <div class="button-roll task-check" data-type="skill" data-name="Guns"
+        data-specname="{{actor.system.skillsVig.guns.specname}}"
+        data-rollvalue="{{actor.system.skillsVig.guns.specialized}}">
+            <label class="resource-label rollable labelWidth-XL">Roll
+            {{actor.system.skillsVig.guns.specname}}</label>
+            <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+        </div>
+        {{/if}}
+        <div class="button-roll task-check" data-type="skill" data-name="Melee"
+        data-rollvalue="{{actor.system.skillsVig.melee.roll}}">
+            <label class="resource-label rollable labelWidth-large">Roll Melee</label>
+            <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+        </div>
+        {{#if actor.system.skillsVig.melee.specname}}
+        <div class="button-roll task-check" data-type="skill" data-name="Melee"
+        data-specname="{{actor.system.skillsVig.melee.specname}}"
+        data-rollvalue="{{actor.system.skillsVig.melee.specialized}}">
+            <label class="resource-label rollable labelWidth-XL">Roll
+            {{actor.system.skillsVig.melee.specname}}</label>
+            <label class="resource-label rollable roll-label task-check input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+        </div>
+        {{/if}}
+    </div>
+    {{#if actor.rangedWeapon}}
+    <div class="contentBox gear">
+        <div class="flexrow subheader flex-group-center">
+            <h3 class="subheader flex-group-left">Ranged Weapons</h3>
+            <div class="alignRight">
+                <a class="item-control item-create" title="Create item" data-type="rangedWeapon"><i class="fas fa-plus"></i> Quick Add Ranged</a>
+            </div>
+        </div>
+        <div class="itemBackground">
+            {{#each actor.rangedWeapon as |item id|}}
+            <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
+                <div class="flexrow flex-group-center input-small">
+                    <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
+                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small
+                    damage-roll roll-label input-small noShow" data-type="ranged"
+                    data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+                </div>
+                <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                <label class="labelWidth-large flex-group-center
+                noMargin"><strong>{{item.system.firingMode}}</strong></label>
+                <label class="labelWidth-medium flex-group-center
+                noMargin"><strong>{{item.system.range}}</strong></label>
+                <label class="labelWidth-large flex-group-center
+                noMargin"><strong>{{item.system.slotType}}</strong></label>
+                <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
+                <input class="input-small sheet-inline-edit"
+                data-field="system.ammoMin" type="number" name="item.system.ammoMin"
+                value="{{item.system.ammoMin}}" placeholder="0"/>/
+                <h4 class="item-image flex-group-left input-small
+                noMargin"><strong>{{item.system.ammoMax}}</strong></h4>
+                <h4 class="item-image flex-group-right input-medium
+                noMargin"><strong>{{item.system.dv}}</strong></h4>
+                <div class="flex-group-right slideShow">
+                    <a><i class="fas fa-plus icon-small"></i></a>
+                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                </div>
+                <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                    <div class="itemDescription shape3">
+                        <input class="sheet-inline-edit"
+                        data-field="system.description" type="text"
+                        name="system.description" value="{{item.system.description}}" placeholder="No modifications"/>
+                    </div>
+                    <div class="flexrow flex-between item-controls">
+                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{else}}
+    <div class="contentBox gear">
+        <div class="flexrow">
+            <div class="separator" style=" margin-bottom: 10px; border-bottom: none;">
+                <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a ranged weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    {{#if actor.ccWeapon}}
+    <div class="contentBox gear">
+        <div class="flexrow subheader flex-group-center">
+            <h3 class="subheader flex-group-left">Close Combat Weapons</h3>
+            <div class="alignRight">
+                <a class="item-control item-create" title="Create item" data-type="ccWeapon"><i class="fas fa-plus"></i> Quick Add Melee</a>
+            </div>
+        </div>
+        <div class="itemBackground" style="margin-bottom: 10px;">
+            {{#each actor.ccWeapon as |item id|}}
+            <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
+                <div class="flexrow flex-group-center input-small">
+                    <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
+                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small
+                    flex-group-left resource-label damage-roll roll-label
+                    input-small noShow" data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+                </div>
+                <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
+                <label class="flex-group-center noMargin
+                flex-group-center"><strong>{{item.system.slotType}}</strong></label>
+                <h4 class="item-image flex-group-center noMargin" style="max-width:
+                145px;"><strong>{{item.system.dv}}</strong></h4>
+                <div class="flex-group-right slideShow" style="max-width: 115px;">
+                    <a><i class="fas fa-plus icon-small"></i></a>
+                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                </div>
+                <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                    <div class="itemDescription shape3">
+                        <input class="sheet-inline-edit"
+                            data-field="system.description" type="text"
+                                                            name="item.system.description"
+                                                            value="{{item.system.description}}" placeholder="No modifications"/>
+                    </div>
+                    <div class="flexrow flex-between item-controls">
+                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
+                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{else}}
+    <div class="contentBox gear weaponslist">
+        <div class="flexrow">
+            <div class="separator" style=" border-bottom: none;">
+                <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a melee weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+        <div class="contentBox">
+            <div class="flexrow subheader">
+                <h3 class="subheader">Morph</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                </div>
+            </div>
+            <div class="listBackground" style="background-color: var(--accentBackground);">
+                <div class="grid grid-3col">
+                    <div>
+                        <input class="input-xl" type="text"
+                        name="system.bodies.morph1.name"
+                        value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
+                    </div>
+                    <div>
+                        <label class="resource-value">Morph Type:</label>
+                        <select class="selectSpecApt
+                        item-standard-margin-medium" name="system.bodyType.value" data-type="String">
+                            {{#select actor.system.bodyType.value}}
+                            {{#each config.bodyTypes as |bodyType key|}}
+                            <option value="{{key}}">{{bodyType}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="resource-value">Dur:</label>
+                        <input class="input-small
+                                    item-standard-margin-medium"
+                            style="text-align: center" type="number"
+                                                        name="system.bodies.morph1.dur"
+                                                        value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
+                    </div>
+                </div>
+                <div class="grid grid-3col">
+                    
+                    <div>
+                        <label class="resource-value">Movement 1</label>                          
+                    </div>
+                    <div>
+                        <label class="resource-value">Speed:</label>  
+                        <input class="input-medium
+                        item-standard-margin-medium" style="text-align:
+                        center" type="text"
+                        name="system.bodies.morph1.movement"
+                        value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>
+                    </div>
+                    <div>
+                        <label class="resource-value">Type:</label>  
+                        <select class="selectSpecApt
+                                    item-standard-margin input-large"
+                                name="system.bodies.morph1.movetype" data-type="String" selected="Walker">
+                            {{#select actor.system.bodies.morph1.movetype}}
+                            {{#each config.moveTypes as |moveType key|}}
+                                <option value="{{key}}">{{moveType}}</option>
+                            {{/each}}
+                            {{/select}}
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-3col">
+                    <div>
+                        <label class="resource-value">Movement 2</label>                      
+                    </div>
+                    <div>
+                        <label class="resource-value">Speed:</label> 
+                        <input class="input-medium
+                        item-standard-margin-medium" style="text-align:
+                        center" type="text"
+                        name="system.bodies.morph1.movement2"
+                        value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0"/>  
+                    </div>
+                    <div>
+                        <label class="resource-value">Type:</label>  
+                        <select class="selectSpecApt
+                                    item-standard-margin input-large"
+                                name="system.bodies.morph1.movetype2" data-type="String">
+                            {{#select actor.system.bodies.morph1.movetype2}}
+                            {{#each config.moveTypes as |moveType key|}}
+                                <option value="{{key}}">{{moveType}}</option>
+                            {{/each}}
+                            {{/select}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-2col">
+            <div class="listBackground noMargin">
+                <div class="flexrow subheader flex-group-center">
+                    <h3 class="subheader flex-group-left" style="flex-grow: 1.5;">Traits & Ware</h3>
+                    <div class="alignRight reveal">
+                    </div>
+                </div>  
+                <div class="headSpace">
+                    <div class="flexrow" style="align-items: center">
+                        <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
+                        <label class="resource-label">Traits:</label>
+                    </div>
+                    <div class="flexrow headSpace">
+                        {{#if actor.morphTrait}}
+                        {{#each actor.morphTrait as |item id|}}
+                        <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                            <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <div class="item-controls flex-group-right" style="flex: 0.2;">
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <label class="resource-value" style="height: 30px;">No Morph Traits Present</label>
+                        {{/if}}
+                    </div>
+                    <div class="flexrow" style="align-items: center">
+                        <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
+                        <label class="resource-label">Flaws:</label>
+                    </div>
+                    <div class="flexrow headSpace">
+                        {{#if actor.morphFlaw}}
+                        {{#each actor.morphFlaw as |item id|}}
+                        <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                            <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <div class="item-controls flex-group-right" style="flex: 0.2;">
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <label class="resource-value" style="height: 30px;">No Morph Flaws Present</label>
+                        {{/if}}
+                    </div>
+                    <div class="flexrow" style="align-items: center">
+                        <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
+                        <label class="resource-label">Ware:</label>
+                    </div>
+                    <div class="flexrow headSpace">
+                        {{#if actor.ware}}
+                        {{#each actor.ware as |item id|}}
+                        <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
+                            <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <div class="flex-group-right" style="flex: 0.2;">
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <label class="resource-value" style="height: 30px;">No Ware Installed</label>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        <div class="contentBox">
+            <div class="flexrow subheader flex-group-center">
+                <h3 class="subheader flex-group-left">Armor & Gear</h3>
+                <div class="alignRight reveal">
+                    <a class="item-control item-create flex-group-right" title="Create item" data-type="armor"><i class="fas fa-plus"></i> Quick Add Armor</a>
+                </div>
+            </div>
+            <div class="listBackground noMargin">
+                <div class="headSpace">
+                    {{#if actor.armor}}
+                    {{#each actor.armor as |item id|}}
+                    <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
+                        <div class="flexrow">
+                            <input class="sheet-inline-edit item-edit item-standard-margin-medium" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
+                        </div>
+                        <div class="flexrow flex-group-right">
+                            <label class="labelWidth-large
+                            flex-group-center noMargin">Energy:
+                            <strong>{{item.system.energy}}</strong></label>
+                        </div>
+                        <div class="flexrow flex-group-right">
+                            <label class="labelWidth-large
+                            flex-group-center noMargin">Kinetic:
+                            <strong>{{item.system.kinetic}}</strong></label>
+                        </div>
+                        <div class="flex-group-right input-small">
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{else}}
+                    <div class=" flexrow" style="height: 30px;">
+                        <label class="resource-value">Has no armor</label>
+                    </div>
+                    {{/if}}
+                </div>
+                <div class="headSpace">
+                    <div class="flexrow" style="align-items: center">
+                        <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
+                        <label class="resource-label">Gear:</label>
+                    </div>
+                    <div class="flexrow headSpace">
+                        {{#if actor.gear}}
+                        {{#each actor.gear as |item id|}}
+                        <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px; background-color: var(--pitchBorder); padding: 0 10px 0 10px;">
+                            <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <label class="flex-group-center noMargin
+                            alignCenter" style="background: none;
+                            font-size: 12px; flex:
+                            0.4"><i>{{item.actor.slotType}}</i></label>
+                            <div class="flex-group-right" style="flex: 0.2;">
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <label class="resource-value" style="height: 30px;">No Special Gear</label>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

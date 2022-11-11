@@ -8,6 +8,14 @@ It's build by a total newbie so do not expect much, but if I did not write it ot
 
 If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
 
+<h2><strong>Current state of sheets</strong></h2>
+<h2>Character Sheet</h2>
+<img src="https://war-klar.de/PicShare/GitHub/characterSheet.jpg"><p/>
+<h2>NPC Sheet</h2>
+<img src="https://war-klar.de/PicShare/GitHub/npcSheet.jpg"><p/>
+<h2>Threat Sheet</h2>
+<img src="https://war-klar.de/PicShare/GitHub/threatSheet.jpg"><p/>
+
 <h2><strong>Features are included to date</strong></h2>
 
 <ul>
@@ -17,6 +25,7 @@ If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
 <li>Drag & droppable (morph)traits, armor, ware, weapons & vehicles</li>
 <li>Simple system to show which items are carried "at hand"</li>
 <li>Initiative Tracker + Ini Modifier (on all sheets)</li>
+<li>Ammunition count & reload functionality</li>
 <li>Roll modification dialogs for all skills. Special dialogs for:</li>
 <ul>
 <li>Fray Checks</li>
