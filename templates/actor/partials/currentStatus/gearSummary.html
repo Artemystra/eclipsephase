@@ -1,0 +1,32 @@
+<div class="sideCarBox gearSideCar">
+    <div style=" margin-bottom: 20px;">
+        <label class="resource-value" style="font-size: 20px;">Special Gear</label>
+    </div>
+    {{#if actor.system.additionalSystems.gearEquipped}}
+        {{#each actor.gear as |item id|}}
+            {{#if this.system.active}}
+            <div class="item flexrow" data-item-id="{{item._id}}">
+                <div class=" flexrow flex-group-center offHand">
+                    <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                    <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+                    <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.slotType}}</i></label>
+                    <input class="input-small sheet-inline-edit" data-field="system.quantity" type="number" name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
+                </div>
+                <div class="flex-group-right slideShow input-small">
+                    <a><i class="fas fa-plus icon-small"></i></a>
+                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                </div>
+                <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                    {{#if item.system.description}}
+                    <div class="itemDescription shape3">
+                        {{item.system.description}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{/if}}
+        {{/each}}
+    {{else}}
+    <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">None Equipped</span></div>
+    {{/if}}
+</div>

@@ -1,4 +1,4 @@
-<div class="sideCarBox rangedSideCar">
+<div class="sideCarBox ccSideCar">
     <div style=" margin-bottom: 20px;">
         <label class="resource-value" style="font-size: 20px;">Close Combat</label>
     </div>
@@ -17,19 +17,25 @@
                     <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
                     </div>
                 </div>
-                <div class="grid" data-item-id="{{item._id}}">
-                    <div class="flexrow flex-group-left">
-                        <i class="fa-solid fa-explosion icon-small alignCenter"></i>
-                        <h4 class="item-image input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
-                    </div>
+                <div class="flexrow flex-group-center slideShow" style="height: 26px; background-color: var(--accentBackground);">
+                    <a><i class="fa-solid fa-chevron-down"></i><label class="resource-label" style="margin: 0 113px 0 113px">More</label><i class="fa-solid fa-chevron-down"></i></a>
+                    <a class="noShow"><i class="fa-solid fa-chevron-up"></i><label class="resource-label" style="margin: 0 113px 0 113px">Less</label><i class="fa-solid fa-chevron-up"></i></a>
                 </div>
-                {{#if item.system.description}}
-                <div class="item" data-item-id="{{item._id}}">
-                    <div class="itemDescription">
-                        {{item.system.description}}
+                <div class="item showMore noShow" data-item-id="{{item._id}}">
+                    <div class="grid" data-item-id="{{item._id}}">
+                        <div class="flexrow flex-group-left">
+                            <i class="fa-solid fa-explosion icon-small alignCenter"></i>
+                            <h4 class="item-image input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
+                        </div>
                     </div>
+                    {{#if item.system.description}}
+                    <div class="item" data-item-id="{{item._id}}">
+                        <div class="itemDescription">
+                            {{item.system.description}}
+                        </div>
+                    </div>
+                    {{/if}}
                 </div>
-                {{/if}}
             </div>
             {{/if}}
         {{/each}}

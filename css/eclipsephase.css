@@ -144,6 +144,11 @@
   background-color: var(--mainBackground);
 }
 
+.contentright {
+  height: 680px;
+  overflow: auto;
+}
+
 .flex-group-center,
 .flex-group-left,
 .flex-group-right {
@@ -358,7 +363,7 @@
 }
 
 .item-controls {
-  margin-top: none;
+  margin: 5px 0 5px 0!important;
 }
 
 /* Colors */
@@ -1087,6 +1092,24 @@ h3.subheaderBlank {
   background-image: url(../resources/img/armorSideCar.webp);
   background-repeat: no-repeat;
   background-size: 100% 100%;
+}
+
+.rangedSideCar {
+  background-image: url(../resources/img/rangedSideCar.webp);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.ccSideCar {
+  background-image: url(../resources/img/ccSideCar.webp);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.gearSideCar {
+  background-image: url(../resources/img/gearSideCar.webp);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 }
 
 .flexrow.subheader {

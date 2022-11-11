@@ -7,6 +7,7 @@
             {{#if this.system.active}}
             <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
                 <div class="flexrow subheader">
+                    <!--Name & Dice Roller-->
                     <div class="flexrow flex-group-left reveal">
                         <h3 class="subheader truncate">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small" style="margin-right: 5px;"/>
@@ -14,7 +15,7 @@
                             <span style="max-width: 200px; padding-right: 34px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</span>
                         </h3>
                     </div>
-                    
+                    <!--Ammunition Counter & Reload-->
                     <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
                         <img src="systems/eclipsephase/resources/icons/ammo.png" class="toggle icon-small"/>
                         <img src="systems/eclipsephase/resources/icons/reload.webp" class="toggle noShow reload icon-small rollable" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
@@ -24,27 +25,37 @@
                         </h4>
                     </div>
                 </div>
-                <div class="grid grid-3col" data-item-id="{{item._id}}">
-                    <div class="flexrow flex-group-left">
-                        <i class="fa-regular fa-crosshairs icon-small alignCenter"></i>
-                        <label class="labelWidth-large noMargin"><strong>{{item.system.firingMode}}</strong></label>
-                    </div>
-                    <div class="flexrow flex-group-left">
-                        <i class="fa-regular fa-arrows-left-right icon-small alignCenter"></i>
-                        <label class="labelWidth-medium noMargin"><strong>{{item.system.range}}</strong></label>
-                    </div>
-                    <div class="flexrow flex-group-left">
-                        <i class="fa-solid fa-explosion icon-small alignCenter"></i>
-                        <h4 class="item-image input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
-                    </div>
+                <!--Weapon Details-->
+                <div class="flexrow flex-group-center slideShow" style="height: 26px; background-color: var(--accentBackground);">
+                    <a><i class="fa-solid fa-chevron-down"></i><label class="resource-label" style="margin: 0 113px 0 113px">More</label><i class="fa-solid fa-chevron-down"></i></a>
+                    <a class="noShow"><i class="fa-solid fa-chevron-up"></i><label class="resource-label" style="margin: 0 113px 0 113px">Less</label><i class="fa-solid fa-chevron-up"></i></a>
                 </div>
-                {{#if item.system.description}}
-                <div class="item" data-item-id="{{item._id}}">
-                    <div class="itemDescription">
-                        {{item.system.description}}
+                <div class="item showMore noShow" data-item-id="{{item._id}}">
+                    <div class="grid grid-3col">
+                        <div class="flexrow flex-group-left">
+                            <i class="fa-regular fa-crosshairs icon-small alignCenter"></i>
+                            <label class="labelWidth-large noMargin"><strong>{{item.system.firingMode}}</strong></label>
+                        </div>
+                        <div class="flexrow flex-group-left">
+                            <i class="fa-regular fa-arrows-left-right icon-small alignCenter"></i>
+                            <label class="labelWidth-medium noMargin"><strong>{{item.system.range}}</strong></label>
+                        </div>
+                        <div class="flexrow flex-group-left">
+                            <i class="fa-solid fa-explosion icon-small alignCenter"></i>
+                            <h4 class="item-image input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
+                        </div>
                     </div>
+                    {{#if item.system.description}}
+                    <div class="item" data-item-id="{{item._id}}">
+                        <div class="itemDescription">
+                            {{item.system.description}}
+                        </div>
+                    </div>
+                    {{/if}}
                 </div>
-                {{/if}}
+                
+                <!--Show/Hide Details-->
+                
             </div>
             {{/if}}
         {{/each}}
