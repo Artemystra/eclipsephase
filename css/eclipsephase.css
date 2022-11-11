@@ -333,7 +333,7 @@
 }
 
 .eclipsephase .footnote {
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .eclipsephase .items-list {
@@ -867,6 +867,10 @@ optgroup .Default .Roll .Mode,
 }
 
 /* Own Styles */
+#context-menu.expand-down {
+  top: calc(0% - 70px);
+}
+
 .editWithLabel {
   max-width: 150px;
 }
