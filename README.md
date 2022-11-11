@@ -10,11 +10,11 @@ If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
 
 <h2><strong>Current state of sheets</strong></h2>
 <h2>Character Sheet</h2>
-<img src="../resources/img/characterSheet.jpg"><p/>
+<img src="https://war-klar.de/PicShare/GitHub/characterSheet.jpg"><p/>
 <h2>NPC Sheet</h2>
-<img src="../resources/img/npcSheet.jpg"><p/>
+<img src="https://war-klar.de/PicShare/GitHub/npcSheet.jpg"><p/>
 <h2>Threat Sheet</h2>
-<img src="../resources/img/threatSheet.jpg"><p/>
+<img src="https://war-klar.de/PicShare/GitHub/threatSheet.jpg"><p/>
 
 <h2><strong>Features are included to date</strong></h2>
 
