@@ -410,12 +410,12 @@ span.success {
 .window-app .window-content {
   color: var(--mainText);
   background: none;
-  overflow-y: hidden;
 }
 
 .window-app.eclipsephase.sheet.actor .window-content{
   background-color: var(--highlightBackground);
   z-index: -1;
+  overflow-y: hidden;
 }
 
 .window-app .window-content::after{
