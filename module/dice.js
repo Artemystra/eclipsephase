@@ -1006,6 +1006,14 @@ export async function DamageRoll({
         mode = "+ 2d10";
         updateAmmo = currentAmmo - 10;
     }
+    else if (mode === "wBurst") {
+        mode = "";
+        updateAmmo = currentAmmo - 3;
+    }
+    else if (mode === "wFullAuto") {
+        mode = "";
+        updateAmmo = currentAmmo - 10;
+    }
     else if (mode === "charge") {
         mode = "+ 1d6";
     }
