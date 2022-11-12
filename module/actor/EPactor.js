@@ -32,7 +32,7 @@ export default class EPactor extends Actor {
   prepareData() {
     super.prepareData();
 
-    const actorData = this.system
+    const actorData = this.system;
     const flags = actorData.flags;
     const items = this.items;
     const psiMod = 0;

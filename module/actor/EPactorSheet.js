@@ -118,6 +118,11 @@ export default class EPactorSheet extends ActorSheet {
       itemModel.boundTo = currentMorph
     }
 
+    if (item.type === "rangedWeapon"){
+      let ammoUp = item.system.ammoMax;
+      item.system.ammoMin = ammoUp;
+    }
+
 
     // Create the owned item as normal
     return super._onDropItemCreate(item)
@@ -526,7 +531,8 @@ export default class EPactorSheet extends ActorSheet {
     if (itemData.type === "specialSkill") {
       itemData.name = "New Skill";
     }
-    return this.actor.createEmbeddedDocuments("Item", [itemData]);
+
+    this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 
   
