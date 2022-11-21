@@ -60,6 +60,14 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.grid-4col-dialogue {
+  grid-column: span 4 / span 4;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas: 
+    "left center center right";
+    margin-bottom: 0;
+}
+
 .grid-5col {
   grid-column: span 5 / span 5;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -109,24 +117,24 @@
 .wrapperleft {
   height: 795px;
   grid-area: left;
-  background-color: var(--mainBackground);
 }
 
 .contentleft {
   height: 286px;
   overflow: auto;
   padding: 0;
+  background-color: var(--mainBackground);
 }
 
 .wrappercenter {
   height: 795px;
   grid-area: center;
-  background-color: var(--mainBackground);
 }
 
 .contentcenter {
   height: 685px;
   overflow: auto;
+  background-color: var(--mainBackground);
 }
 
 .npcVariant1 {
@@ -147,6 +155,18 @@
 .contentright {
   height: 680px;
   overflow: auto;
+}
+
+.dialogWrapperLeft {
+  grid-area: left;
+}
+
+.dialogWrapperCenter {
+  grid-area: center;
+}
+
+.dialogWrapperRight {
+  grid-area: right;
 }
 
 .flex-group-center,
@@ -318,6 +338,12 @@
   text-align: left;
 }
 
+.dialog .resource-labelDialog {
+  text-transform: uppercase;
+  text-align: left;
+  padding-left: 7px;
+}
+
 .eclipsephase .resource-section-label {
   text-transform: uppercase;
   text-align: center;
@@ -330,6 +356,10 @@
 .eclipsephase .resource-value {
   text-transform: uppercase;
   font-weight: bold;
+}
+
+.epInactive {
+  color: var(--inactive);
 }
 
 .eclipsephase .footnote {
@@ -410,25 +440,28 @@ span.success {
 .window-app .window-content {
   color: var(--mainText);
   background: none;
+  background-color: rgba(0,0,0,0.4)!important;
+  backdrop-filter: blur(4px);
 }
 
 .window-app.eclipsephase.sheet.actor .window-content{
-  background-color: var(--highlightBackground);
+  background-color: rgba(65,65,65,0.4)!important;
   z-index: -1;
   overflow-y: hidden;
+  backdrop-filter: blur(5px);
 }
 
-.window-app .window-content::after{
-  background-image: url(../resources/img/background2.jpg);
-  opacity: 0.8;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  z-index: -1;
+.app.window-app.dialog .window-content{
+  display: flex;
+  align-items: center;
+  background-color: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
 }
 
+#sidebar {
+  background-color: rgba(0,0,0,0.5)!important;
+  backdrop-filter: blur(6px);
+}
 
 #chat-log .message {
   background-image: url(../resources/img/background2.jpg);
@@ -604,6 +637,15 @@ form button,
   background: var(--highlightBackground);
 }
 
+.dialog .dialog-content {
+  width: 100%;
+}
+
+.dialog-buttons {
+  max-width: 250px;
+  min-width: 250px;
+}
+
 button:disabled {
   color: var(--inactive);
 }
@@ -690,7 +732,7 @@ a:hover{
   border-bottom: 3px solid var(--mainBackground);
   padding: 0;
   margin: 0;
-  background-color: var(--highlightBackground);
+  background-color: rgba(65,65,65,0);
 }
 
 .sheet nav.primary-tabs.itemnav {
@@ -715,7 +757,7 @@ a:hover{
   font-size: 16px;
   font-weight: bold;
   width: 100%;
-  border-top: solid 4px var(--highlightBackground);
+  border-top: solid 4px rgba(65,65,65,0);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -867,7 +909,7 @@ optgroup .Default .Roll .Mode,
 }
 
 /* Own Styles */
-#context-menu.expand-down {
+.chat-message #context-menu.expand-down {
   top: calc(0% - 70px);
 }
 
@@ -923,6 +965,13 @@ h3.subheader {
 
 h3.subheader.colorV1{
   background-color: var(--pitchBorder);
+}
+
+h3.subheader.dialog {
+  height: 30px;
+  border: none;
+  align-items: center;
+  background-color: var(--focusBackground);
 }
 
 h3.subheaderMirror {
@@ -1047,6 +1096,10 @@ h3.subheaderBlank {
   max-width: 100px!important;
 }
 
+.input-largePlus {
+  max-width: 140px!important;
+}
+
 .input-XL {
   max-width: 180px!important;
 }
@@ -1083,6 +1136,11 @@ h3.subheaderBlank {
 
 .contentBox {
   position: relative;
+}
+
+.contentBoxMargin {
+  position: relative;
+  margin-bottom: 8px;
 }
 
 .sideCarBox {

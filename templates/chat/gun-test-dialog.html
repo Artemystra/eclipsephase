@@ -1,59 +1,110 @@
 <form>
-    <div class="grid">
-        <div class="contentBox">
+    <div class="grid grid-4col-dialogue">
+        <div class="dialogWrapperLeft">
             <div class="flexrow subheader">
-                <h3 class="subheader">Modifier</h3><div class="flexGrowHalf"></div>
-            </div>
-            <div class="form-group listBackgroundMain">
-                <input type="number" name="GlobalMod" placeholder="0" />
+                <h3 class="subheader dialog">General Modifier</h3>
             </div>
         </div>
-        <div class="contentBox">
+        <div class="dialogWrapperCenter">
             <div class="flexrow subheader">
-                <div class="flexGrowHalf"></div><h3 class="subheaderMirror">Mode</h3>
+                <h3 class="subheader dialog">Attacker Modifier</h3>
             </div>
-            <div class="form-group listBackgroundMain">
-                <select name="RollMode">
-                    <option value="public">Public Roll</option>
-                    <option value="private">Private GM Roll</option>
-                    <option value="blind">Blind GM Roll</option>
-                </select>
+        </div>
+        <div class="dialogWrapperRight">
+            <div class="flexrow subheader">
+                <h3 class="subheader dialog">Defender Modifier</h3>
             </div>
         </div>
     </div>
-    <div class="grid grid-3col">
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Aim</h3><div class="flexGrowHalf"></div>
+    <div class="grid grid-4col" style="margin-top: 0;">
+        <div>
+            <div class="contentBoxMargin">
+                <div class="form-group listBackgroundMain">
+                    <label class="resource-value">Global Mod</label>
+                    <input type="number" name="GlobalMod" placeholder="e.g. -20" />
+                </div>
+                {{#if specName}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useSpec">
+                    <label class="resource-label">Use "{{specName}}" (+10)</label>
+                </div>
+                {{else}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useSpec" disabled>
+                    <label class="resource-label epInactive">No Specialization</label>
+                </div>
+                {{/if}}
+                {{#if (eq actorType "character")}}
+                    {{#if poolValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="usePool">
+                        <label class="resource-label">Use {{poolType}} (+20)</label>
+                    </div>
+                    {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="usePool" disabled>
+                        <label class="resource-label epInactive">No {{poolType}} left</label>
+                    </div>
+                    {{/if}}
+                {{else}}
+                    {{#if threatLevel}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useThreat">
+                        <label class="resource-label">Use Threat (+20)</label>
+                    </div>
+                    {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useThreat" disabled>
+                        <label class="resource-label epInactive">No threat left</label>
+                    </div>
+                    {{/if}}
+                {{/if}}
+            </div>
+            <div class="contentBoxMargin">
+                <div class="flexrow subheader">
+                    <h3 class="subheader dialog">Mode</h3>
+                </div>
+                <div class="form-group listBackgroundMain">
+                    <select name="RollMode">
+                        <option value="public">Public Roll</option>
+                        <option value="private">Private GM Roll</option>
+                        <option value="blind">Blind GM Roll</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" checked name="Smartlink">
+                <label class="resource-label input-large">Smartlink</label>
             </div>
             <div class="form-group listBackgroundMain">
-                <select class="input-large" name="Aim">
+                <input type="checkbox" name="SupPosition">
+                <label class="resource-label">Superior Position</label>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">Fire Mode:</label>
+                <select name="FiringMode"  style="max-width: 140px;">
+                    <option value="single">Standard Shot</option>
+                    <option value="burst">Narrow Burst (+1d10)</option>
+                    <option value="fullAuto">Narrow Full Auto (+2d10)</option>
+                    <option value="wBurst">Wide Burst (+10 Hit)</option>
+                    <option value="wFullAuto">Wide Full Auto (+30 Hit)</option>
+                    <option value="indirect">Indirect (-20)</option>
+                    <option value="indirect">Suppressive (uses 20 rounds)</option>
+                </select>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">Aim:</label>
+                <select class="input-largePlus" name="Aim">
                     <option value="none">Standard</option>
                     <option value="quick">Quick Aim (+10)</option>
                     <option value="long">Long Aim (+30)</option>
                 </select>
             </div>
-        </div>
-        <div class="contentBox">
-            <div class="flexrow subheader">
-               <h3 class="subheaderBlank">Size</h3>
-            </div>
             <div class="form-group listBackgroundMain">
-                <select class="input-large" name="Size">
-                    <option value="xs">Very Small (-30)</option>
-                    <option value="s">Small (-10)</option>
-                    <option selected="none" value="none">Normal</option>
-                    <option value="l">Large (+10)</option>
-                    <option value="xl">Very Large (+30)</option>
-                </select>
-            </div>
-        </div>
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <div class="flexGrowQuarter"></div><h3 class="subheaderMirror">Range</h3>
-            </div>
-            <div class="form-group listBackgroundMain">
-                <select class="input-large" name="Range">
+                <label class="resource-labelDialog">Distance:</label>
+                <select class="input-largePlus" name="Range">
                     <option value="pointBlank">Point Blank (+10)</option>
                     <option selected="none" value="none">Standard</option>
                     <option value="range">Range (-10)</option>
@@ -62,85 +113,61 @@
                 </select>
             </div>
         </div>
-    </div>
-    <div class="contentBox standard-margin-bottom">
-        <div class="flexrow subheader">
-            <h3 class="subheader">Cover</h3><div class="flexGrowHalf"></div>
-        </div>
-        <div class="flexrow subheader">
-            <div class="form-group listBackgroundMain" style="justify-content: space-between;">
-                <label class="resource-label input-small">Defender</label>
-                <select class="input-large" name="TargetCover">
-                    <option value="none">None</option>
-                    <option value="minor">Minor (-10)</option>
-                    <option value="moderate">Moderate (-20)</option>
-                    <option value="major">Major (-30)</option>
-                </select>
-                <div class="form-group flexGrowQuarter">
-                    <label class="resource-label input-large">Attacker</label>
-                    <input type="checkbox" name="AttackerCover">
-                </div>
+        <div>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="CalledShot">
+                <label class="resource-label">Called Shot</label>
             </div>
-        </div>
-    </div>
-    <div class="contentBox standard-margin-bottom">
-        <div class="flexrow subheader">
-            <div class="flexGrowHalf"></div><h3 class="subheaderMirror">Visual Impairment</h3>
-        </div>
-        <div class="flexrow subheader">
-            <div class="form-group listBackgroundMain" style="justify-content: space-between;">
-                <label class="resource-label input-small">Attacker</label>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="AttackerCover">
+                <label class="resource-label">In Cover</label>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="Running">
+                <label class="resource-label">Is Running</label>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="Melee">
+                <label class="resource-label">In Melee</label>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">Visual Malus:</label>
                 <select class="input-large" name="VisualImpair">
                     <option value="none">None</option>
                     <option value="minor">Minor (-10)</option>
                     <option value="major">Major (-30)</option>
                     <option value="blind">Blind (-30+)</option>
                 </select>
-                <div class="form-group flexGrowQuarter">
-                    <label class="resource-label input-large">Def. Prone</label>
-                    <input type="checkbox" name="DefenderProne">
-                </div>
             </div>
         </div>
-    </div>
-    <div class="contentBox standard-margin-bottom">
-        <div class="flexrow subheader">
-            <h3 class="subheader">Firing Mode</h3><div class="flexGrowHalf"></div>
-        </div>
-        <div class="flexrow subheader">
-            <div class="form-group listBackgroundMain" style="justify-content: space-between;">
-                <select class="input-XL" name="FiringMode">
-                    <option value="none">Standard Shot</option>
-                    <option value="burst">Wide Burst (+10)</option>
-                    <option value="fullAuto">Wide Full Auto (+30)</option>
-                    <option value="indirect">Indirect (-20)</option>
+        <div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">Size:</label>
+                <select class="input-largePlus" name="Size">
+                    <option value="xs">Very Small (-30)</option>
+                    <option value="s">Small (-10)</option>
+                    <option selected="none" value="none">Normal</option>
+                    <option value="l">Large (+10)</option>
+                    <option value="xl">Very Large (+30)</option>
                 </select>
-                <div class="form-group flexGrowQuarter">
-                    <label class="resource-label input-large">Smartlink</label>
-                    <input type="checkbox" checked name="Smartlink">
-                </div>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">Cover:</label>
+                <select class="input-largePlus" name="TargetCover">
+                    <option value="none">None</option>
+                    <option value="minor">Minor (-10)</option>
+                    <option value="moderate">Moderate (-20)</option>
+                    <option value="major">Major (-30)</option>
+                </select>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="DefenderProne">
+                <label class="resource-label">Is Prone</label>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="DefenderHidden">
+                <label class="resource-label">Is Hidden</label>
             </div>
         </div>
     </div>
-    <div class="contentBox standard-margin-bottom">
-        <div class="flexrow subheader">
-            <div class="flexGrowHalf"></div><h3 class="subheaderMirror">Other</h3>
-        </div>
-        <div class="flexrow subheader listBackgroundMain">
-            <div class="form-group">
-                <label class="resource-label">Running</label>
-                <input class="item-standard-margin-both-large" type="checkbox" name="Running">
-                <label class="resource-label">Superior Position</label>
-                <input type="checkbox" name="SupPosition">
-            </div>
-        </div>
-        <div class="flexrow subheader listBackgroundMain" style="border: none;">
-            <div class="form-group">
-                <label class="resource-label">Called Shot</label>
-                <input class="item-standard-margin-both-large" type="checkbox" name="CalledShot">
-                <label class="resource-label">In Melee</label>
-                <input type="checkbox" name="Melee">
-            </div>
-        </div>
-        </div>
 </form>

@@ -304,14 +304,19 @@ export default class EPgoonSheet extends ActorSheet {
         event.preventDefault();
         const element = event.currentTarget;
         const dataset = element.dataset;
-        const actorData = this.actor.data.data;
+        const actorModel = this.actor.system;
+        const actorWhole = this.actor;
+        const threatLevel = actorModel.threatLevel.current;
+
 
         Dice.TaskCheck ({
             skillName : dataset.name.toLowerCase(),
             specName : dataset.specname,
             rollType : dataset.type,
             skillValue : dataset.rollvalue,
-            actorData : actorData,
+            actorData : actorModel,
+            actorWhole : actorWhole,
+            threatLevel: threatLevel,
             askForOptions : event.shiftKey,
             optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
             brewStatus: game.settings.get("eclipsephase", "superBrew")

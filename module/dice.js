@@ -364,13 +364,28 @@ async function showOptionsDialog(template, title, names) {
 export async function TaskCheck({
     //General
     actorData = "",
+    actorWhole = "",
+    actorType = actorWhole.type,
     skillName = "",
     specName = "",
-    spec = false,
+    useSpecialization = null,
     skillValue = null,
     askForOptions = false,
     optionsSettings = null,
     brewStatus = false,
+    rolledFrom = "",
+    //Pools
+    poolType = "",
+    poolValue = 0,
+    threatLevel = 0,
+    flexValue = 0,
+    usePool = null,
+    useThreat = null,
+    usedFlex = null,
+    poolUpdate = 0,
+    usedSwipSwap = null,
+    usedMitigate = false,
+    usedFlexMitigate = false,
     //Roll
     rollType = "",
     rollModeSelection = null,
@@ -390,19 +405,32 @@ export async function TaskCheck({
     coverAttacker = false,
     visualImpairment = "",
     prone = false,
-    firingMode = "",
     smartlink = true,
     running = false,
     superiorPosition = false,
     calledShot = false,
     inMelee = false,
+    usedRaise = null,
     //Melee
     hitType = "",
-    numberOfTargets = 1
+    numberOfTargets = 1,
+    //Weapon Data
+    weaponName = null,
+    weaponID = "",
+    weaponDamage = "",
+    weaponType = "",
+    currentAmmo = "",
+    updateAmmo = "",
+    ammoUpdate = [],
+    successType = false,
+    attackMode=""
     } = {}) {
     //Guns check dialog
+
+    console.log("My Actor Type: ", actorType)
+
     if (askForOptions != optionsSettings && skillName === "guns") {
-        let checkOptions = await GetGunsTaskOptions(rollType);
+        let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -417,17 +445,20 @@ export async function TaskCheck({
         coverAttacker = checkOptions.coverAttacker;
         visualImpairment = checkOptions.visualImpairment;
         prone = checkOptions.prone;
-        firingMode = checkOptions.firingMode;
+        attackMode = checkOptions.attackMode;
         smartlink = checkOptions.smartlink;
         running = checkOptions.running
         superiorPosition = checkOptions.superiorPosition;
         calledShot = checkOptions.calledShot;
         inMelee = checkOptions.inMelee;
+        useSpecialization = checkOptions.useSpecialization;
+        usePool = checkOptions.usePool;
+        useThreat = checkOptions.useThreat;
     }
 
     //Psi check dialog
     else if (askForOptions != optionsSettings && skillName === "psi" && brewStatus === true) {
-        let checkOptions = await GetPsiTaskOptions(rollType);
+        let checkOptions = await GetPsiTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -437,11 +468,14 @@ export async function TaskCheck({
         activeRollTarget = checkOptions.activeRollMode;
         aspectPushes = checkOptions.pushes
         aspectBase = checkOptions.aspects
+        useSpecialization = checkOptions.useSpecialization;
+        usePool = checkOptions.usePool;
+        useThreat = checkOptions.useThreat;
     }
 
     //Fray skill check dialog
     else if (askForOptions != optionsSettings && skillName === "fray") {
-        let checkOptions = await GetFrayTaskOptions(rollType);
+        let checkOptions = await GetFrayTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -449,11 +483,14 @@ export async function TaskCheck({
         skillValue = checkOptions.ranged ? Math.floor(Number(skillValue)/2): skillValue;
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
+        useSpecialization = checkOptions.useSpecialization;
+        usePool = checkOptions.usePool;
+        useThreat = checkOptions.useThreat;
     }
 
     //Fray skill check dialog
     else if (askForOptions != optionsSettings && skillName === "melee") {
-        let checkOptions = await GetMeleeTaskOptions(rollType);
+        let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -462,11 +499,14 @@ export async function TaskCheck({
         numberOfTargets = checkOptions.numberOfTargets;
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
+        useSpecialization = checkOptions.useSpecialization;
+        usePool = checkOptions.usePool;
+        useThreat = checkOptions.useThreat;
     }
 
     //Default skill check dialog
     else if (askForOptions != optionsSettings) {
-        let checkOptions = await GetTaskOptions(rollType);
+        let checkOptions = await GetTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -474,6 +514,9 @@ export async function TaskCheck({
 
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
+        useSpecialization = checkOptions.useSpecialization;
+        usePool = checkOptions.usePool;
+        useThreat = checkOptions.useThreat;
     }
 
     //Melee Combat
@@ -608,15 +651,15 @@ export async function TaskCheck({
             gunAnnounce += "<br>Blind (<strong>-30</strong>)";
         }
 
-        if (firingMode === "burst") {
+        if (attackMode === "wBurst") {
             gunsMod += 10;
             gunAnnounce += "<br>Wide Burst (<strong>+10</strong>)";
         }
-        else if (firingMode === "fullAuto") {
+        else if (attackMode === "wFullAuto") {
             gunsMod += 30;
             gunAnnounce += "<br>Wide Full Auto (<strong>+30</strong>)";
         }
-        else if (firingMode === "indirect") {
+        else if (attackMode === "indirect") {
             gunsMod -= 20;
             gunAnnounce += "<br>Indirect (<strong>-20</strong>)";
         }
@@ -638,6 +681,9 @@ export async function TaskCheck({
     let woundsTotal = null;
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
     let rollMod = null;
+    let specMod = 0;
+    let poolMod = 0;
+    let spec = false;
         //Prevents wounds from being added to aptitudes
         if (rollType === "aptitude"){
             rollMod = Number(globalMod);
@@ -646,12 +692,33 @@ export async function TaskCheck({
             woundsTotal = woundsMod;
             rollMod = Number(globalMod) - Number(woundsTotal);
         }
-    let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) - totalEncumberance;
+        //Checks if spec used
+        if (useSpecialization){
+            specMod = 10;
+        }
+        //Checks if pool used
+        if (usePool){
+            poolMod = 20;
+            poolValue--;
+            poolUpdate = poolValue;
+            //Determine pool to be updated
+            await poolUpdater(poolUpdate,poolType);
+        }
+        else if (useThreat) {
+            poolMod = 20;
+            threatLevel--;
+            poolUpdate = threatLevel;
+            await poolUpdater(poolUpdate,"threat");
+        }
+    let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
     
     //Chat message variables
-    spec = specName ? "(" + specName + ")" : "";
+    
+    spec = useSpecialization ? "(" + specName + ")" : "";
+    let poolAnnounce = usePool ? poolType + ": <strong>+ 20</strong><br>" : "";
+    let threatAnnounce = useThreat ? "threat: <strong>+ 20</strong><br>" : "";
     let situationalPlus = globalMod>0 ? "+" : "";
-    let modAnnounce = rollMod ? "<u>Applied Mods:</u> <br>" : "";
+    let modAnnounce = rollMod||poolMod||totalEncumberance ? "<u>Applied General Mods:</u> <br>" : "";
     let encumberanceModAnnounce = totalEncumberance ? "Encumberance:<strong> -" + totalEncumberance + "</strong><br>" : "";
     let woundAnnounce = woundsTotal ? "Wound/Trauma:<strong> -" + woundsTotal + "</strong><br>" : "";
     let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong>" : "";
@@ -669,37 +736,60 @@ export async function TaskCheck({
         let doubleSuperior = rollCheck >= 66;
         let superior = rollCheck >= 33;
         let successMessage = "";
+        let successName = null;
 
         //Success messages
         if (autofail) {
             successMessage = "<span class='fail'>Supreme Fail!</span> <p>";
+            successName = "Supreme Fail";
         } else if (autoSuccess) {
             successMessage = "<span class='success'>Supreme Success!</span> <p>";
+            successType = true;
+            successName = "Supreme Success";
         } else if (success && critical && doubleSuperior) {
             successMessage = "<span class='success'>Superior Critical Success!</span> <p>";
+            successType = true;
+            successName = "Superior Critical Success";
         } else if (!success && critical && rollCheck <= 33) {
             successMessage = "<span class='fail'>Superior Critical Fail!</span> <p>";
+            successName = "Superior Critical Fail";
         } else if (success && critical && superior) {
             successMessage = "<span class='success'>Greater Critical Success!</span> <p>";
+            successType = true;
+            successName = "Greater Critical Success";
         } else if (!success && critical && rollCheck <= 66) {
             successMessage = "<span class='fail'> Greater Critical Fail!</span> <p>";
+            successName = "Greater Critical Fail";
         } else if (success && critical) {
             successMessage = "<span class='success'>Critical Success!</span> <p>";
+            successType = true;
+            successName = "Critical Success";
         } else if (!success && critical) {
             successMessage = "<span class='fail'>Critical Fail!</span> <p>";
+            successName = "Critical Fail";
         } else if (success && doubleSuperior) {
             successMessage = "<span class='success'>Superior Success!</span> <p>";
+            successType = true;
+            successName = "Superior Success";
         } else if (!success && !superior) {
             successMessage = "<span class='fail'>Superior Fail!</span> <p>";
+            successName = "Superior Fail";
         } else if (success && superior) {
             successMessage = "<span class='success'>Greater Success!</span> <p>";
+            successType = true;
+            successName = "Greater Success";
         } else if (!success && !doubleSuperior) {
             successMessage = "<span class='fail'>Greater Fail!</span> <p>";
+            successName = "Greater Fail";
         } else if (success) {
             successMessage = "<span class='success'>Success!</span> <p>";
+            successType = true;
+            successName = "Success";
         } else if (!success) {
             successMessage = "<span class='fail'>Fail!</span> <p>";
+            successName = "Fail";
         }
+
 
         //Visibility toggler
         let rollVisibility = "";
@@ -728,33 +818,405 @@ export async function TaskCheck({
         }
 
         //Chat message constructor
-        if(modSkillValue>0){
-            let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-            roll.toMessage({
-                speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                flavor: label
-            },{
-                rollMode: rollModeSelection
-            });
+
+        //For default skill roll
+        if (rolledFrom != "rangedWeapon") {
+            if(modSkillValue>0){
+                let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
+                roll.toMessage({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    flavor: label
+                },{
+                    rollMode: rollModeSelection
+                });
+            }
+            else{
+                let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
+                roll.toMessage({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    flavor: label
+                },{
+                    rollMode: rollModeSelection
+                });
+            }
         }
-        else{
-            let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-            roll.toMessage({
-                speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                flavor: label
-            },{
-                rollMode: rollModeSelection
-            });
-        }
+
+        //For roll from ranged weapon
+        else if (rolledFrom === "rangedWeapon") {
+            let modeDamage = "";
+            if (attackMode === "single") {
+                updateAmmo = currentAmmo - 1;
+            }
+            else if (attackMode === "burst") {
+                modeDamage = "+ 1d10";
+                updateAmmo = currentAmmo - 3;
+            }
+            else if (attackMode === "fullAuto"){
+                modeDamage = "+ 2d10";
+                updateAmmo = currentAmmo - 10;
+            }
+            else if (attackMode === "wBurst") {
+                modeDamage = "";
+                updateAmmo = currentAmmo - 3;
+            }
+            else if (attackMode === "wFullAuto") {
+                modeDamage = "";
+                updateAmmo = currentAmmo - 10;
+            }
+            else if (attackMode === "charge") {
+                modeDamage = "+ 1d6";
+            }
+            else if (attackMode === "aggressive") {
+                modeDamage = "+ 1d10";
+            }
+            else if (attackMode === "aggressiveCharge") {
+                modeDamage = "+ 1d6 + 1d10";
+            }
+            else {
+                modeDamage = "";
+            }
+
+            //Rolls only if the weapon has enough amunition & updates the ammo accordingly
+            let msg = null;
+            if (updateAmmo>=0){
+                if(modSkillValue>0){
+                    let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
+                    msg = await roll.toMessage({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        flavor: label
+                    },{
+                        rollMode: rollModeSelection
+                    });
+
+                    ammoUpdate.push({
+                        "_id" : weaponID,
+                        "system.ammoMin": updateAmmo
+                    });
+            
+                    //This updates the items ammunition
+                    actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
+                }
+                else{
+                    let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
+                    msg = await roll.toMessage({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        flavor: label
+                    },{
+                        rollMode: rollModeSelection
+                    });
+
+                    ammoUpdate.push({
+                        "_id" : weaponID,
+                        "system.ammoMin": updateAmmo
+                    });
+            
+                    //This updates the items ammunition
+                    actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
+                }
+
+                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+
+                let evaluatedRoll = msg.content;
+                let swipSwap = 0;
+                let swapPossible = false;
+                let severeConsequences = false;
+                let severityLevel = null;
+                let severityFlavor = null;
+
+                if (evaluatedRoll < 99) {
+                    swipSwap = await swapDice(evaluatedRoll);
+                    if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll) {
+                        swapPossible = true;
+                    }
+                    if (swipSwap <= modSkillValue && !successType) {
+                        swapPossible = true;
+                    }
+                    if (swipSwap > modSkillValue && !successType) {
+                        severeConsequences = true;
+                        switch (successName){
+                            case 'Fail':
+                                severityLevel = 0;
+                                break;
+                            case 'Greater Fail':
+                                severityLevel = 1;
+                                severityFlavor = "huge";
+                                break;
+                            case 'Superior Fail':
+                                severityLevel = 2;
+                                severityFlavor = "severe";
+                                break;
+                            default:
+                                severityLevel = 3;
+                                severityFlavor = "dire";
+                                break;
+                        }
+                    }
+                }
+
+                let criticalModifier = null;
+                let successModifier = null;
+                let potentialRaise = false;
+                let combinedPools = poolValue+flexValue+threatLevel;
+
+                if (!successType && swapPossible && combinedPools > 0){
+                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+    
+                    if (checkOptions.cancelled) {
+                        return;
+                    }
+                    
+                    usedSwipSwap = checkOptions.swap;
+                    usedFlex = checkOptions.flex;
+
+                    if (usedSwipSwap || usedFlex){
+                        successType = true;
+                        swapPossible = false;
+                        if (swipSwap < 33){
+                            successName = "Success";
+                        }
+                        if (swipSwap > 33 && swipSwap < 66){
+                            successName = "Greater Success";
+                        }
+                        if (swipSwap > 66){
+                            successName = "Superior Success";
+                        }
+
+                        poolValue--;
+                        poolUpdate = poolValue;
+                        if (actorType != "character"){
+                            poolType = "Threat";
+                            poolValue++;
+                            threatLevel--;
+                            poolUpdate = threatLevel;
+                        }
+                        if (usedFlex){
+                            poolType = "Flex";
+                            poolValue++;
+                            flexValue--;
+                            poolUpdate = flexValue;
+                        }
+
+                        ChatMessage.create({
+                            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                            flavor: "Used<p/><strong>" + poolType + "<p/></strong>to swap the result to <p/><strong>" + swipSwap + " (" + successName + ")</strong>"
+                        })
+
+                        poolUpdater(poolUpdate, poolType)
+                    } 
+                }
+
+                if (severeConsequences && severityLevel > 0 && combinedPools > 0){
+                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+    
+                    if (checkOptions.cancelled) {
+                        return;
+                    }
+                    
+                    usedMitigate = checkOptions.mitigate;
+                    usedFlexMitigate = checkOptions.flexMitigate;
+
+                    if (usedMitigate || usedFlexMitigate){
+                        let flavorText = null;
+
+                        poolValue--;
+                        poolUpdate = poolValue;
+                        if (actorType != "character"){
+                            poolType = "Threat";
+                            poolValue++;
+                            threatLevel--;
+                            poolUpdate = threatLevel;
+                        }
+                        if (usedFlexMitigate){
+                            poolType = "Flex";
+                            poolValue++;
+                            flexValue--;
+                            poolUpdate = flexValue;
+                        }
+
+                        if (severityLevel === 1){
+                            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their greater failure to a <p/><strong><span class='fail'>Fail</span></strong>";
+                        }
+                        if (severityLevel === 2){
+                            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their superior failure to a <p/><strong><span class='fail'>Greater Fail</span></strong>";
+                        }
+                        if (severityLevel === 3){
+                            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their Critical failure to a <p/><strong><span class='fail'>Superior Fail</span></strong>";
+                        }
+
+                        ChatMessage.create({
+                            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                            flavor: flavorText
+                        })
+
+                        poolUpdater(poolUpdate, poolType)
+                    } 
+                }
+
+                if(successType){
+                    switch (successName) {
+                        case 'Greater Success':
+                            successModifier = "+ 1d6";
+                            potentialRaise = true;
+                            break;
+                        case 'Superior Success':
+                            successModifier = "+ 2d6";
+                            break;
+                        case 'Critical Success':
+                            criticalModifier = "2 * (";
+                            successModifier = ")";
+                            potentialRaise = true;
+                            break;
+                        case 'Greater Critical Success':
+                            criticalModifier = "2 * (";
+                            successModifier = "+ 1d6)";
+                            potentialRaise = true;
+                            break;
+                        case 'Superior Critical Success':
+                            criticalModifier = "2 * (";
+                            successModifier = "+ 2d6)";
+                            break;
+                        case 'Supreme Success':
+                            criticalModifier = "2 * (";
+                            successModifier = "+ 2d6)";
+                            break;
+                        default:
+                            successModifier = "";
+                            potentialRaise = true;
+                            break;
+                    }
+                    let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
+    
+                    if (checkOptions.cancelled) {
+                        return;
+                    }
+                    usedRaise = checkOptions.raise;
+                    usedSwipSwap = checkOptions.swap;
+                    usedFlex = checkOptions.flex;
+                }
+                
+                if (usedRaise){
+                    successModifier += "+ 1d6";
+                    switch (successName) {
+                        case 'Critical Success':
+                            successModifier = "+ 1d6)";
+                            break;
+                        case 'Greater Critical Success':
+                            successModifier = "+ 2d6)";
+                            break;
+                        default:
+                            break;
+                    }
+                    console.log("New Pool Value? ",poolValue)
+                    poolValue--
+                    poolUpdate = poolValue;
+                    if (actorType != "character"){
+                        poolType = "Threat";
+                        poolValue++;
+                        threatLevel--;
+                        poolUpdate = threatLevel;
+                    }
+
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        flavor: "Used<p/><strong>" + poolType + "<p/></strong>to raise the damage done!"
+                    })
+
+                    poolUpdater(poolUpdate, poolType)
+                }
+
+                if (usedSwipSwap || usedFlex) {
+                    if (swipSwap > 33){
+                        successModifier = "+ 1d6";
+                    }
+                    if (swipSwap > 66){
+                        successModifier = "+ 2d6";
+                    }
+                    poolValue--;
+                    poolUpdate = poolValue;
+                    if (actorType != "character"){
+                        poolType = "Threat";
+                        poolValue++;
+                        threatLevel--;
+                        poolUpdate = threatLevel;
+                    }
+                    if (usedFlex){
+                        poolType = "Flex";
+                        poolValue++;
+                        flexValue--;
+                        poolUpdate = flexValue;
+                    }
+
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        flavor: "Used<p/><strong>" + poolType + "<p/></strong>to swap the result to <p/><strong>" + swipSwap + "</strong>"
+                    })
+
+                    poolUpdater(poolUpdate, poolType)
+                }
+
+                if(weaponDamage && successType){
+                    
+                    let intermediateRollFormula = weaponDamage + modeDamage + successModifier;
+                    let rollFormula = null
+                    if (criticalModifier) {
+                        rollFormula = criticalModifier + (intermediateRollFormula);
+                    }
+                    else {
+                        rollFormula = intermediateRollFormula;
+                    }
+                    let roll = await new Roll(rollFormula).evaluate({async: true});
+                
+                        let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
+                        roll.toMessage({
+                            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                            flavor: label
+                        });
+                }
+                    
+            }
+            else {
+                ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    content: "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
+                    whisper: [game.user._id]
+                })
+            }
+        } 
     }
 
 
+    //SwipSwap Dice
+    async function swapDice(str){
+        if (str<10){
+            return str + "0"
+        }
+        let first = str[0];
+        let last = str[1];
+        return last+first;
+    }
 
+    //Update Pools
+    async function poolUpdater(poolUpdate, poolType){
+        switch (poolType) {
+            case 'Insight':
+                return actorWhole.update({"system.pools.insight.value" : poolUpdate});
+            case 'Vigor':
+                return actorWhole.update({"system.pools.vigor.value" : poolUpdate});
+            case 'Moxie':
+                return actorWhole.update({"system.pools.moxie.value" : poolUpdate});
+            case 'Threat':
+                return actorWhole.update({"system.threatLevel.current" : poolUpdate});
+            case 'Flex':
+                return actorWhole.update({"system.pools.flex.value" : poolUpdate});
+            default:
+                break;
+            }
+    }
 
     //Skill check dialog constructor
-    async function GetTaskOptions(rollType) {
+    async function GetTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType) {
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
-        const html = await renderTemplate(template, {});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -773,8 +1235,8 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-
-            new Dialog(data, null).render(true);
+            let options = {width:266}
+            new Dialog(data, options).render(true);
         });
     }
 
@@ -782,19 +1244,21 @@ export async function TaskCheck({
     function _proTaskCheckOptions(form) {
         return {
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
-            activeRollMode: form.RollMode.value
+            activeRollMode: form.RollMode.value,
+            useSpecialization: form.useSpec ? form.useSpec.checked : false,
+            usePool: form.usePool ? form.usePool.checked : false,
+            useThreat: form.useThreat ? form.useThreat.checked : false
         }
-
     }
 
     //Skill check dialog constructor
-    async function GetFrayTaskOptions(rollType) {
+    async function GetFrayTaskOptions(specName, poolType, poolValue) {
         const template = "systems/eclipsephase/templates/chat/fray-test-dialog.html";
-        const html = await renderTemplate(template, {});
+        const html = await renderTemplate(template, {specName, poolType, poolValue});
 
         return new Promise(resolve => {
             const data = {
-                title: rollType[0].toUpperCase() + rollType.slice(1) + " Check",
+                title: "Fray Check",
                 content: html,
                 buttons: {
                     cancel: {
@@ -825,9 +1289,9 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetMeleeTaskOptions(rollType) {
+    async function GetMeleeTaskOptions(rollType, specName, poolType, poolValue) {
         const template = "systems/eclipsephase/templates/chat/melee-test-dialog.html";
-        const html = await renderTemplate(template, {});
+        const html = await renderTemplate(template, {specName, poolType, poolValue});
 
         return new Promise(resolve => {
             const data = {
@@ -863,9 +1327,9 @@ export async function TaskCheck({
     }
 
     //Psi check dialog constructor
-    async function GetPsiTaskOptions(rollType) {
+    async function GetPsiTaskOptions(rollType, specName, poolType, poolValue) {
         const template = "systems/eclipsephase/templates/chat/psi-test-dialog.html";
-        const html = await renderTemplate(template, {});
+        const html = await renderTemplate(template, {specName, poolType, poolValue});
 
         return new Promise(resolve => {
             const data = {
@@ -901,9 +1365,9 @@ export async function TaskCheck({
     }
 
     //Guns check dialog constructor
-    async function GetGunsTaskOptions(rollType) {
+    async function GetGunsTaskOptions(specName, poolType, poolValue, threatLevel, actorType) {
         const template = "systems/eclipsephase/templates/chat/gun-test-dialog.html";
-        const html = await renderTemplate(template, {});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -922,8 +1386,8 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-
-            new Dialog(data, null).render(true);
+            let options = {width:1046}
+            new Dialog(data, options).render(true);
         });
     }
 
@@ -939,14 +1403,86 @@ export async function TaskCheck({
             coverAttacker: form.AttackerCover.checked,
             visualImpairment: form.VisualImpair.value,
             prone: form.DefenderProne.checked,
-            firingMode: form.FiringMode.value,
+            attackMode: form.FiringMode.value,
             smartlink: form.Smartlink.checked,
             running: form.Running.checked,
             superiorPosition: form.SupPosition.checked,
             calledShot: form.CalledShot.checked,
-            inMelee: form.Melee.checked
+            inMelee: form.Melee.checked,
+            useSpecialization: form.useSpec ? form.useSpec.checked : false,
+            usePool: form.usePool ? form.usePool.checked : false,
+            useThreat: form.useThreat ? form.useThreat.checked : false
         }
 
+    }
+
+    async function GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+        const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue});
+        return new Promise(resolve => {
+            const data = {
+                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
+                content: html,
+                dv: weaponDamage,
+                buttons: {
+                    cancel: {
+                        label: "Cancel",
+                        callback: html => resolve ({cancelled: true})
+                    },
+                    normal: {
+                        label: "Roll!",
+                        callback: html => resolve(_proRangedRollOptions(html[0].querySelector("form")))
+                    }
+                },
+                default: "normal",
+                close: () => resolve ({cancelled: true})
+            };
+            let options = {width:266}
+            new Dialog(data, options).render(true);
+        });
+    }
+    function _proRangedRollOptions(form) {
+        return {
+            swap: form.useSwap ? form.useSwap.checked : false,
+            flex: form.useFlex ? form.useFlex.checked : false,
+            raise: form.useRaise ? form.useRaise.checked : false
+        }
+    }
+
+    async function GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor) {
+        console.log("My severityFlavor: ", severityFlavor);
+        const template = "systems/eclipsephase/templates/chat/swap-dialog.html";
+        const html = await renderTemplate(template, {swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor});
+        return new Promise(resolve => {
+            const data = {
+                title: "Swap Roll",
+                content: html,
+                dv: weaponDamage,
+                buttons: {
+                    cancel: {
+                        label: "Cancel",
+                        callback: html => resolve ({cancelled: true})
+                    },
+                    normal: {
+                        label: "Roll!",
+                        callback: html => resolve(_proSwipSwapOptions(html[0].querySelector("form")))
+                    }
+                },
+                default: "normal",
+                close: () => resolve ({cancelled: true})
+            };
+            let options = {width:266}
+            new Dialog(data, options).render(true);
+        });
+    }
+
+    function _proSwipSwapOptions(form) {
+        return {
+            swap: form.useSwap ? form.useSwap.checked : false,
+            flex: form.useFlex ? form.useFlex.checked : false,
+            mitigate: form.useMitigate ? form.useMitigate.checked : false,
+            flexMitigate: form.useFlexMitigate ? form.useFlexMitigate.checked : false
+        }
     }
 }
 
@@ -958,14 +1494,12 @@ export async function DamageRoll({
         weaponID = "",
         weaponDamage = "",
         weaponType = "",
-        maxAmmo = "",
         currentAmmo = "",
         updateAmmo = "",
         ammoUpdate = [],
         successType = "normal",
         critical = false,
         mode="",
-        actorData ="",
         askForOptions = false,
         optionsSettings = null
     } = {}) {
@@ -1090,7 +1624,7 @@ export async function DamageRoll({
 
     function _proRangedRollOptions(form) {
         return {
-            mode: form.FiringMode.value,
+            attackMode: form.FiringMode.value,
             changeddamage: form.currentDV.value,
             successType: form.successType.value,
             critical: form.critical.checked

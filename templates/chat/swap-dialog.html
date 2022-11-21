@@ -1,0 +1,87 @@
+<form>
+    {{#if severityFlavor}}
+        <div class="contentBoxMargin listBackgroundMain alignCenter">
+            <label class="resource-labelDialog">You missed your goal with a</label><p/>
+            <span class="fail">{{successName}}</span><p/>
+            <label class="resource-labelDialog">There might be {{severityFlavor}} consequences if you don't use your pools...</label>
+        </div>
+        <div class="contentBoxMargin">
+            <div class="flexrow subheader">
+                <h3 class="subheader dialog">Use Pools</h3>
+            </div>
+            {{#if (eq actorType "character")}}
+                {{#if poolValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useMitigate">
+                        <label class="resource-label">Use {{poolType}} to mitigate</label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useMitigate" disabled>
+                        <label class="resource-label epInactive">No {{poolType}} available</label>
+                    </div>
+                {{/if}}
+
+                {{#if flexValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useFlexMitigate">
+                        <label class="resource-label">Use flex to mitigate</label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useFlexMitigate" disabled>
+                        <label class="resource-label epInactive">No flex available</label>
+                    </div>
+                {{/if}}
+
+            {{else}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useMitigate">
+                    <label class="resource-label">Use threat to mitigate</label>
+                </div>
+            {{/if}}
+        </div>
+    {{else}}
+        <div class="contentBoxMargin listBackgroundMain alignCenter">
+            <label class="resource-labelDialog">You miss your goal with a</label><p/>
+            <span class="fail">{{successName}}</span><p/>
+            <label class="resource-labelDialog">if you don't use your pools...</label>
+        </div>
+        <div class="contentBoxMargin">
+            <div class="flexrow subheader">
+                <h3 class="subheader dialog">Use Pools</h3>
+            </div>
+            {{#if (eq actorType "character")}}
+                {{#if poolValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useSwap">
+                        <label class="resource-label">Use {{poolType}} to swap to <strong>{{swipSwap}}</strong></label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useSwap" disabled>
+                        <label class="resource-label epInactive">No {{poolType}} available</label>
+                    </div>
+                {{/if}}
+
+                {{#if flexValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useFlex">
+                        <label class="resource-label">Use flex to swap to <strong>{{swipSwap}}</strong></label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useFlex" disabled>
+                        <label class="resource-label epInactive">No flex available</label>
+                    </div>
+                {{/if}}
+
+            {{else}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useSwap">
+                    <label class="resource-label">Use threat to swap to <strong>{{swipSwap}}</strong></label>
+                </div>
+            {{/if}}
+        </div>
+    {{/if}}
+</form>

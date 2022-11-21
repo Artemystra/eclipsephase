@@ -1,44 +1,95 @@
 <form>
-    <div class="grid">
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Base DV</h3><div class="flexGrowHalf"></div>
-            </div>
-            <div class="form-group listBackgroundMain">
-                <input class="alignCenter" type="text" name="currentDV" value="{{weaponDamage}}" placeholder="0" />
-            </div>
+
+    <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">Damage</h3>
         </div>
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheaderBlank">Firing Mode</h3>
+        {{#if criticalModifier}}
+            <div class="form-group listBackgroundMain alignCenter">
+                <label>2 x [ {{weaponDamage}} {{modeDamage}} {{successModifier}} ]</label>
             </div>
-            <div class="form-group listBackgroundMain">
-                <select class="input-XL" name="FiringMode">
-                    <option value="single">Standard Shot</option>
-                    <option value="burst">Narrow Burst (+1d10)</option>
-                    <option value="fullAuto">Concentrated Full Auto (+2d10)</option>
-                    <option value="wBurst">Wide Burst (+10 Hit)</option>
-                    <option value="wFullAuto">Wide Full Auto (+30 Hit)</option>
-                </select>
+        {{else}}
+            <div class="form-group listBackgroundMain alignCenter">
+                <label>{{weaponDamage}} {{modeDamage}} {{successModifier}}</label>
             </div>
-        </div>
+        {{/if}}
     </div>
     <div class="contentBox">
         <div class="flexrow subheader">
-            <h3 class="subheader">Success Type</h3><div class="flexGrowHalf"></div>
+            <h3 class="subheader dialog">Use Pools</h3>
         </div>
-        <div class="flexrow subheader">
-            <div class="form-group listBackgroundMain" style="justify-content: space-between;">
-                <select class="input-large" name="successType">
-                    <option value="normal">Normal</option>
-                    <option value="greater">Greater</option>
-                    <option value="superior">Superior</option>
-                </select>
-                <div class="form-group flexGrowHalf">
-                    <label class="resource-label input-small">Crit</label>
-                    <input type="checkbox" name="critical">
+        {{#if (eq actorType "character")}}
+            {{#if poolValue}}
+                {{#if swapPossible}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="usePool">
+                        <label class="resource-label">Use {{poolType}} to swap to <strong>{{swipSwap}}</strong></label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="usePool" disabled>
+                        <label class="resource-label epInactive">No swap available</label>
+                    </div>
+                {{/if}}
+
+                {{#if potentialRaise}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useRaise">
+                        <label class="resource-label">Use {{poolType}} for <strong>+1d6 damage</strong></label>
+                    </div>
+                {{/if}}
+            {{else}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="usePool" disabled>
+                    <label class="resource-label epInactive">No {{poolType}} available</label>
                 </div>
-            </div>
-        </div>
+            {{/if}}
+            
+            {{#if swapPossible}}
+                {{#if flexValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useFlex">
+                        <label class="resource-label">Use flex to swap to <strong>{{swipSwap}}</strong></label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useFlex" disabled>
+                        <label class="resource-label epInactive">No Flex available</label>
+                    </div>
+                {{/if}}
+            {{/if}}
+
+        {{else}}
+            {{#if threatLevel}}
+                {{#if swapPossible}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useSwap">
+                        <label class="resource-label">Use threat to swap to <strong>{{swipSwap}}</strong></label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useSwap" disabled>
+                        <label class="resource-label epInactive">No swap available</label>
+                    </div>
+                {{/if}}
+                {{#if potentialRaise}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useRaise">
+                        <label class="resource-label">Use threat for <strong>+1d6 damage</strong></label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useRaise" disabled>
+                        <label class="resource-label epInactive">No success raise available</label>
+                    </div>
+                {{/if}}
+            {{else}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useSwap" disabled>
+                    <label class="resource-label epInactive">No threat available</label>
+                </div>
+            {{/if}}
+
+        {{/if}}
     </div>
 </form>
