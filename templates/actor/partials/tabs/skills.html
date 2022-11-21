@@ -70,7 +70,7 @@
                             {{/each}}
                         {{else}}
                             {{#each actor.system.skillsIns as |skill key|}}
-                            <div class="flexrow flex-group-center reveal">
+                            <div class="flexrow flex-group-center reveal" style="max-height: 26px; min-height: 26px;">
                                 <span class="resource-label input-large">{{key}}</span>
                                 <input class=" input-small" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
@@ -150,7 +150,7 @@
                             {{/each}}
                         {{else}}
                             {{#each actor.system.skillsVig as |skill key|}}
-                            <div class="flexrow flex-group-center reveal">
+                            <div class="flexrow flex-group-center reveal" style="max-height: 26px; min-height: 26px;">
                                 <span class="resource-label input-large">{{key}}</span>
                                 <input class=" input-small" type="number"
                                 name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
@@ -240,7 +240,7 @@
                             {{/each}}
                         {{else}}
                             {{#each actor.system.skillsMox as |skill key|}}
-                            <div class="flexrow flex-group-center reveal">
+                            <div class="flexrow flex-group-center reveal" style="max-height: 26px; min-height: 26px;">
                                 <span class="resource-label input-large">{{key}}</span>
                                 <input class=" input-small" type="number"
                                 name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
