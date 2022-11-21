@@ -1,34 +1,4 @@
 <div class="tab" data-group="primary" data-tab="weapons">
-    <div class="flexrow" style="margin-bottom: 20px; justify-content: flex-end;">
-        <div class="button-roll task-check" data-type="skill" data-name="Guns"
-        data-rollvalue="{{actor.system.skillsVig.guns.roll}}">
-            <label class="resource-label rollable labelWidth-large">Roll Guns</label>
-            <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-        </div>
-        {{#if actor.system.skillsVig.guns.specname}}
-        <div class="button-roll task-check" data-type="skill" data-name="Guns"
-        data-specname="{{actor.system.skillsVig.guns.specname}}"
-        data-rollvalue="{{actor.system.skillsVig.guns.specialized}}">
-            <label class="resource-label rollable labelWidth-XL">Roll
-            {{actor.system.skillsVig.guns.specname}}</label>
-            <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-        </div>
-        {{/if}}
-        <div class="button-roll task-check" data-type="skill" data-name="Melee"
-        data-rollvalue="{{actor.system.skillsVig.melee.roll}}">
-            <label class="resource-label rollable labelWidth-large">Roll Melee</label>
-            <label class="resource-label rollable roll-label input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-        </div>
-        {{#if actor.system.skillsVig.melee.specname}}
-        <div class="button-roll task-check" data-type="skill" data-name="Melee"
-        data-specname="{{actor.system.skillsVig.melee.specname}}"
-        data-rollvalue="{{actor.system.skillsVig.melee.specialized}}">
-            <label class="resource-label rollable labelWidth-XL">Roll
-            {{actor.system.skillsVig.melee.specname}}</label>
-            <label class="resource-label rollable roll-label task-check input-small"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-        </div>
-        {{/if}}
-    </div>
     {{#if actor.rangedWeapon}}
     <div class="contentBox gear">
         <div class="flexrow subheader flex-group-center">
@@ -42,9 +12,7 @@
             <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small
-                    damage-roll roll-label input-small noShow" data-type="ranged"
-                    data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-name="guns" data-rolledfrom="rangedWeapon" data-weapontype="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
                 </div>
                 <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                 <label class="labelWidth-large flex-group-center
@@ -102,9 +70,7 @@
             <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small
-                    flex-group-left resource-label damage-roll roll-label
-                    input-small noShow" data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-name="melee" data-rolledfrom="ccWeapon" data-weapontype="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}" data-weaponid="{{item._id}}"/>
                 </div>
                 <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
                 <label class="flex-group-center noMargin

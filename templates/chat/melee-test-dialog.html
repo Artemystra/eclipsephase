@@ -1,46 +1,85 @@
 <form>
-    <div class="grid">
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Modifier</h3><div class="flexGrowHalf"></div>
-            </div>
-            <div class="form-group listBackgroundMain">
-                <input type="number" name="GlobalMod" placeholder="0" />
-            </div>
+    <div class="grid" style="margin-bottom: 0;">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">General Modifier</h3>
         </div>
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <div class="flexGrowHalf"></div><h3 class="subheaderMirror">Mode</h3>
-            </div>
-            <div class="form-group listBackgroundMain">
-                <select name="RollMode">
-                    <option value="public">Public Roll</option>
-                    <option value="private">Private GM Roll</option>
-                    <option value="blind">Blind GM Roll</option>
-                </select>
-            </div>
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">Attacker Modifier</h3>
         </div>
     </div>
-    <div class="grid">
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Targets</h3><div class="flexGrowHalf"></div>
+    <div class="grid" style="margin-top: 0;">
+        <div>
+            <div class="contentBoxMargin">
+                <div class="form-group listBackgroundMain">
+                    <label class="resource-labelDialog" style="min-width: 140px;">Global Mod</label>
+                    <input type="number" name="GlobalMod" placeholder="e.g. -20" />
+                </div>
+                {{#if specName}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useSpec">
+                    <label class="resource-label">Use "{{specName}}" (+10)</label>
+                </div>
+                {{else}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useSpec" disabled>
+                    <label class="resource-label epInactive">No Specialization</label>
+                </div>
+                {{/if}}
+                {{#if (eq actorType "character")}}
+                    {{#if poolValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="usePool">
+                        <label class="resource-label">Use {{poolType}} (+20)</label>
+                    </div>
+                    {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="usePool" disabled>
+                        <label class="resource-label epInactive">No {{poolType}} left</label>
+                    </div>
+                    {{/if}}
+                {{else}}
+                    {{#if threatLevel}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useThreat">
+                        <label class="resource-label">Use Threat (+20)</label>
+                    </div>
+                    {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useThreat" disabled>
+                        <label class="resource-label epInactive">No threat left</label>
+                    </div>
+                    {{/if}}
+                {{/if}}
             </div>
-            <div class="form-group listBackgroundMain">
-                <label class="resource-value">Number of targets</label>
-                <input class="alignCenter input-small" type="number" name="NumberTargets" placeholder="1" />
+            <div class="contentBoxMargin">
+                <div class="flexrow subheader">
+                    <h3 class="subheader dialog">Mode</h3>
+                </div>
+                <div class="form-group listBackgroundMain">
+                    <select name="RollMode">
+                        <option value="public">Public Roll</option>
+                        <option value="private">Private GM Roll</option>
+                        <option value="blind">Blind GM Roll</option>
+                    </select>
+                </div>
             </div>
         </div>
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheaderBlank">Attack Type</h3>
+        <div>
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="CalledShot">
+                <label class="resource-label">Called Shot</label>
             </div>
             <div class="form-group listBackgroundMain">
-                <select name="HitType" style="max-width: 160px">
+                <label class="resource-labelDialog" style="min-width: 180px;">Number of targets</label>
+                <input type="number" name="NumberTargets" placeholder="1" />
+            </div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">Attack Type:</label>
+                <select class="input-large" name="HitType" style="max-width: 160px">
                     <option value="none">Standard Attack</option>
-                    <option value="charge">Charge Attack (-10 +1d6 DV)</option>
-                    <option value="aggressive">Aggressive Hit (+10)</option>
-                    <option value="aggressiveCharge">Aggressive Charge(+1d6 DV)</option>
+                    <option value="charge">Charge Attack (-10 Hit, +1d6 DV)</option>
+                    <option value="aggressive">Aggressive Hit (+10 Hit, -10 Fray)</option>
+                    <option value="aggressiveCharge">Ruthless Attack(+1d10 DV, - 10 Fray)</option>
                 </select>
             </div>
         </div>

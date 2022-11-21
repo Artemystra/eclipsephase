@@ -13,12 +13,12 @@
             {{#if poolValue}}
                 {{#if swapPossible}}
                     <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="usePool">
+                        <input type="checkbox" name="useSwap">
                         <label class="resource-label">Use {{poolType}} to swap to <strong>{{swipSwap}}</strong></label>
                     </div>
                 {{else}}
                     <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="usePool" disabled>
+                        <input type="checkbox" name="useSwap" disabled>
                         <label class="resource-label epInactive">No swap available</label>
                     </div>
                 {{/if}}
@@ -31,7 +31,7 @@
                 {{/if}}
             {{else}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="usePool" disabled>
+                    <input type="checkbox" name="useSwap" disabled>
                     <label class="resource-label epInactive">No {{poolType}} available</label>
                 </div>
             {{/if}}

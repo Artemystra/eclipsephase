@@ -559,6 +559,7 @@ export default class EPactorSheet extends ActorSheet {
     let specNameValue = dataset.specname;
     let skillRollValue = dataset.rollvalue;
     let poolType = dataset.pooltype;
+    let aptType = dataset.apttype;
     const flexPool = actorModel.pools.flex.value;
     let skillPoolValue = null
 
@@ -566,6 +567,37 @@ export default class EPactorSheet extends ActorSheet {
       specNameValue = actorModel.skillsVig.guns.specname;
       skillRollValue = actorModel.skillsVig.guns.roll;
       poolType = "Vigor"
+    }
+
+    if (dataset.rolledfrom === "ccWeapon") {
+      specNameValue = actorModel.skillsVig.melee.specname;
+      skillRollValue = actorModel.skillsVig.melee.roll;
+      poolType = "Vigor"
+    }
+
+    console.log("My aptType: ", aptType)
+
+    switch (aptType) {
+      case 'Intuition':
+        poolType = "Insight"
+        break;
+      case 'Cognition':
+        poolType = "Insight"
+        break;
+      case 'Reflexes':
+        poolType = "Vigor"
+        break;
+      case 'Somatics':
+        poolType = "Vigor"
+        break;
+      case 'Willpower':
+        poolType = "Moxie"
+        break;
+      case 'Savvy':
+        poolType = "Moxie"
+        break;
+      default:
+        break;
     }
 
     switch (poolType) {
@@ -579,7 +611,7 @@ export default class EPactorSheet extends ActorSheet {
         skillPoolValue = actorModel.pools.moxie.value;
         break;
       default:
-        skillPoolValue = false;
+        break;
     }
 
       Dice.TaskCheck ({

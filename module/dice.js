@@ -413,7 +413,6 @@ export async function TaskCheck({
     inMelee = false,
     usedRaise = null,
     //Melee
-    hitType = "",
     numberOfTargets = 1,
     //Weapon Data
     weaponName = null,
@@ -459,7 +458,7 @@ export async function TaskCheck({
 
     //Psi check dialog
     else if (askForOptions != optionsSettings && skillName === "psi" && brewStatus === true) {
-        let checkOptions = await GetPsiTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType);
+        let checkOptions = await GetPsiTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -476,7 +475,7 @@ export async function TaskCheck({
 
     //Fray skill check dialog
     else if (askForOptions != optionsSettings && skillName === "fray") {
-        let checkOptions = await GetFrayTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
+        let checkOptions = await GetFrayTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -496,10 +495,11 @@ export async function TaskCheck({
         if (checkOptions.cancelled) {
             return;
         }
-        hitType = checkOptions.hitType;
+        attackMode = checkOptions.attackMode;
         numberOfTargets = checkOptions.numberOfTargets;
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
+        calledShot = checkOptions.calledShot;
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
         useThreat = checkOptions.useThreat;
@@ -526,16 +526,21 @@ export async function TaskCheck({
     let meleeModTitle = "";
 
     if (skillName === "melee"){
-        if (hitType === "charge"){
+        if (attackMode === "charge"){
             meleeMod -=10;
-            meleeAnnounce += "<br>Charging (<strong>-10 +1d6DV</strong>)";
+            meleeAnnounce += "<br>Charging (<strong>-10 Hit +1d6DV</strong>)";
         }
-        else if (hitType === "aggressive"){
+        else if (attackMode === "aggressive"){
             meleeMod +=10;
-            meleeAnnounce += "<br>Agressive Hit (<strong>+10</strong>)";
+            meleeAnnounce += "<br>Agressive Hit (<strong>+10</strong>)<br/>Fray <strong>-10</strong>";
         }
-        else if (hitType === "aggressiveCharge"){
-            meleeAnnounce += "<br>Agressive Charge (<strong>+1d6DV</strong>)";
+        else if (attackMode === "aggressiveCharge"){
+            meleeAnnounce += "<br>Agressive Charge (<strong>+1d10DV</strong>)<br/>Fray <strong>-10</strong>";
+        }
+
+        if (calledShot) {
+            meleeMod -= 10;
+            meleeAnnounce += "<br>Called Shot (<strong>-10</strong>)";
         }
 
         meleeModTitle = meleeAnnounce? "<p/><u>Melee Modifiers</u>" : "";
@@ -709,7 +714,7 @@ export async function TaskCheck({
             poolMod = 20;
             threatLevel--;
             poolUpdate = threatLevel;
-            await poolUpdater(poolUpdate,"threat");
+            await poolUpdater(poolUpdate,"Threat");
         }
     let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
     
@@ -821,7 +826,7 @@ export async function TaskCheck({
         //Chat message constructor
 
         //For default skill roll
-        if (rolledFrom != "rangedWeapon") {
+        if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon") {
             if(modSkillValue>0){
                 let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
                 msg = await roll.toMessage({
@@ -937,7 +942,10 @@ export async function TaskCheck({
                     break;
             }
 
-            if(successType && potentialRaise || successType && swapPossible){
+            usedSwipSwap = false;
+            usedFlex = false;
+
+            if(successType && potentialRaise && poolValue > 0 || successType && swapPossible && combinedPools > 0){
                 
                 let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
 
@@ -1016,8 +1024,8 @@ export async function TaskCheck({
             }
         }
 
-        //For roll from ranged weapon
-        else if (rolledFrom === "rangedWeapon") {
+        //For roll from Weapon
+        else if (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon") {
             let modeDamage = "";
             if (attackMode === "single") {
                 updateAmmo = currentAmmo - 1;
@@ -1045,7 +1053,7 @@ export async function TaskCheck({
                 modeDamage = "+ 1d10";
             }
             else if (attackMode === "aggressiveCharge") {
-                modeDamage = "+ 1d6 + 1d10";
+                modeDamage = "+ 1d10";
             }
             else {
                 modeDamage = "";
@@ -1114,6 +1122,7 @@ export async function TaskCheck({
                 let potentialRaise = false;
                 let combinedPools = poolValue+flexValue+threatLevel;
 
+                //SwipSwap Failed Rolls
                 if (!successType && swapPossible && combinedPools > 0){
                     let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
     
@@ -1139,6 +1148,7 @@ export async function TaskCheck({
                     } 
                 }
 
+                //Mitigate Failed Rolls
                 if (severeConsequences && severityLevel > 0 && combinedPools > 0){
                     let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
     
@@ -1152,6 +1162,7 @@ export async function TaskCheck({
                     
                 }
 
+                //Show Mitigation Results
                 if (usedMitigate || usedFlexMitigate){
 
                     let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, usedFlexMitigate, severityLevel, actorType);
@@ -1194,14 +1205,31 @@ export async function TaskCheck({
                             potentialRaise = true;
                             break;
                     }
-                    let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
+
+                    usedSwipSwap = false;
+                    usedFlex = false;
+
+                    if (weaponType === "ranged"){
+                        let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
     
-                    if (checkOptions.cancelled) {
-                        return;
+                        if (checkOptions.cancelled) {
+                            return;
+                        }
+                        usedRaise = checkOptions.raise;
+                        usedSwipSwap = checkOptions.swap;
+                        usedFlex = checkOptions.flex;
                     }
-                    usedRaise = checkOptions.raise;
-                    usedSwipSwap = checkOptions.swap;
-                    usedFlex = checkOptions.flex;
+
+                    if (weaponType === "melee"){
+                        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
+    
+                        if (checkOptions.cancelled) {
+                            return;
+                        }
+                        usedRaise = checkOptions.raise;
+                        usedSwipSwap = checkOptions.swap;
+                        usedFlex = checkOptions.flex;
+                    }
                 }
                 
                 if (usedRaise){
@@ -1228,18 +1256,20 @@ export async function TaskCheck({
 
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: "Used<p/><strong>" + poolType + "<p/></strong>to raise the damage done!"
+                        flavor: "Used <strong>" + poolType + "<p/></strong>to raise the damage done"
                     })
 
                     poolUpdater(poolUpdate, poolType)
                 }
 
                 if (usedSwipSwap || usedFlex) {
-                    if (swipSwap > 33){
+                    if (swipSwap > 33 && swipSwap < 66){
                         successModifier = "+ 1d6";
+                        successName = "Greater Success";
                     }
                     if (swipSwap > 66){
                         successModifier = "+ 2d6";
+                        successName = "Superior Success"
                     }
                     poolValue--;
                     poolUpdate = poolValue;
@@ -1318,6 +1348,8 @@ export async function TaskCheck({
                 return actorWhole.update({"system.threatLevel.current" : poolUpdate});
             case 'Flex':
                 return actorWhole.update({"system.pools.flex.value" : poolUpdate});
+            case 'Threat':
+                return actorWhole.update({"system.threatLevel.current" : poolUpdate});
             default:
                 break;
             }
@@ -1472,9 +1504,9 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetFrayTaskOptions(specName, poolType, poolValue) {
+    async function GetFrayTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType) {
         const template = "systems/eclipsephase/templates/chat/fray-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue});
+        const html = await renderTemplate(template, {rollType, specName, poolType, poolValue, threatLevel, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -1493,7 +1525,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:550}
+            let options = {width:266}
             new Dialog(data, options).render(true);
         });
     }
@@ -1503,19 +1535,22 @@ export async function TaskCheck({
         return {
             ranged: form.RangedFray.checked,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
-            activeRollMode: form.RollMode.value
+            activeRollMode: form.RollMode.value,
+            useSpecialization: form.useSpec ? form.useSpec.checked : false,
+            usePool: form.usePool ? form.usePool.checked : false,
+            useThreat: form.useThreat ? form.useThreat.checked : false
         }
 
     }
 
     //Skill check dialog constructor
-    async function GetMeleeTaskOptions(rollType, specName, poolType, poolValue) {
+    async function GetMeleeTaskOptions(specName, poolType, poolValue, threatLevel, actorType) {
         const template = "systems/eclipsephase/templates/chat/melee-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
 
         return new Promise(resolve => {
             const data = {
-                title: rollType[0].toUpperCase() + rollType.slice(1) + " Check",
+                title: "Melee Check",
                 content: html,
                 buttons: {
                     cancel: {
@@ -1530,7 +1565,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:430}
+            let options = {width:516}
             new Dialog(data, options).render(true);
         });
     }
@@ -1539,17 +1574,21 @@ export async function TaskCheck({
     function _proMeleeCheckOptions(form) {
         return {
             numberOfTargets: parseInt(form.NumberTargets.value)>0 ? parseInt(form.NumberTargets.value) : 1,
-            hitType: form.HitType.value,
+            attackMode: form.HitType.value,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
-            activeRollMode: form.RollMode.value
+            activeRollMode: form.RollMode.value,
+            useSpecialization: form.useSpec ? form.useSpec.checked : false,
+            usePool: form.usePool ? form.usePool.checked : false,
+            useThreat: form.useThreat ? form.useThreat.checked : false,
+            calledShot: form.CalledShot.checked
         }
 
     }
 
     //Psi check dialog constructor
-    async function GetPsiTaskOptions(rollType, specName, poolType, poolValue) {
+    async function GetPsiTaskOptions(specName, poolType, poolValue, threatLevel, actorType) {
         const template = "systems/eclipsephase/templates/chat/psi-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -1568,8 +1607,8 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-
-            new Dialog(data, null).render(true);
+            let options = {width:266}
+            new Dialog(data, options).render(true);
         });
     }
 
@@ -1579,7 +1618,10 @@ export async function TaskCheck({
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             aspects: parseInt(form.AspectNumber.value),
             pushes: parseInt(form.PushesNumber.value)*2,
-            activeRollMode: form.RollMode.value
+            activeRollMode: form.RollMode.value,
+            useSpecialization: form.useSpec ? form.useSpec.checked : false,
+            usePool: form.usePool ? form.usePool.checked : false,
+            useThreat: form.useThreat ? form.useThreat.checked : false
         }
 
     }
@@ -1643,7 +1685,6 @@ export async function TaskCheck({
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
                 content: html,
-                dv: weaponDamage,
                 buttons: {
                     cancel: {
                         label: "Cancel",
@@ -1667,6 +1708,40 @@ export async function TaskCheck({
             flex: form.useFlex ? form.useFlex.checked : false,
             raise: form.useRaise ? form.useRaise.checked : false
         }
+    }
+
+    async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+        const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue});
+        return new Promise(resolve => {
+            const data = {
+                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
+                content: html,
+                buttons: {
+                    cancel: {
+                        label: "Cancel",
+                        callback: html => resolve ({cancelled: true})
+                    },
+                    normal: {
+                        label: "Roll!",
+                        callback: html => resolve(_proMeleeRollOptions(html[0].querySelector("form")))
+                    }
+                },
+                default: "normal",
+                close: () => resolve ({cancelled: true})
+            };
+            let options = {width:266}
+            new Dialog(data, options).render(true);
+        });
+    }
+
+    function _proMeleeRollOptions(form) {
+        return {
+            swap: form.useSwap ? form.useSwap.checked : false,
+            flex: form.useFlex ? form.useFlex.checked : false,
+            raise: form.useRaise ? form.useRaise.checked : false
+        }
+
     }
 
     async function GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor) {
@@ -1763,7 +1838,7 @@ export async function DamageRoll({
         if (checkOptions.cancelled) {
             return;
         }
-        mode = checkOptions.mode;
+        attackMode = checkOptions.mode;
         weaponDamage = checkOptions.changeddamage;
         successType = checkOptions.successType;
         critical = checkOptions.critical;
@@ -1775,43 +1850,43 @@ export async function DamageRoll({
         if (checkOptions.cancelled) {
             return;
         }
-        mode = checkOptions.type;
+        attackMode = checkOptions.type;
         weaponDamage = checkOptions.changeddamage;
         successType = checkOptions.successType;
         critical = checkOptions.critical;
     }
 
-    if (mode === "single") {
-        mode = ""
+    if (attackMode === "single") {
+        modeDamage = ""
         updateAmmo = currentAmmo - 1;
     }
-    else if (mode === "burst") {
-        mode = "+ 1d10";
+    else if (attackMode === "burst") {
+        modeDamage = "+ 1d10";
         updateAmmo = currentAmmo - 3;
     }
-    else if (mode === "fullAuto"){
-        mode = "+ 2d10";
+    else if (attackMode === "fullAuto"){
+        modeDamage = "+ 2d10";
         updateAmmo = currentAmmo - 10;
     }
-    else if (mode === "wBurst") {
-        mode = "";
+    else if (attackMode === "wBurst") {
+        modeDamage = "";
         updateAmmo = currentAmmo - 3;
     }
-    else if (mode === "wFullAuto") {
-        mode = "";
+    else if (attackMode === "wFullAuto") {
+        modeDamage = "";
         updateAmmo = currentAmmo - 10;
     }
-    else if (mode === "charge") {
-        mode = "+ 1d6";
+    else if (attackMode === "charge") {
+        modeDamage = "+ 1d6";
     }
-    else if (mode === "aggressive") {
-        mode = "+ 1d10";
+    else if (attackMode === "aggressive") {
+        modeDamage = "+ 1d10";
     }
-    else if (mode === "aggressiveCharge") {
-        mode = "+ 1d6 + 1d10";
+    else if (attackMode === "aggressiveCharge") {
+        modeDamage = "+ 1d10";
     }
     else {
-        mode = "";
+        modeDamage = "";
     }
     let criticalModifier = critical ? "2 *(" : "(";
     let successModifier = ")";
@@ -1823,7 +1898,7 @@ export async function DamageRoll({
     }
 
     if (updateAmmo>=0) {
-        let intermediateRollFormula = weaponDamage + mode + successModifier;
+        let intermediateRollFormula = weaponDamage + modeDamage + successModifier;
         let rollFormula = criticalModifier + (intermediateRollFormula);
         let roll = await new Roll(rollFormula).evaluate({async: true});
     
@@ -1912,7 +1987,7 @@ export async function DamageRoll({
 
     function _proMeleeRollOptions(form) {
         return {
-            type: form.AttackType.value,
+            attackMode: form.AttackType.value,
             changeddamage: form.currentDV.value,
             successType: form.successType.value,
             critical: form.critical.checked

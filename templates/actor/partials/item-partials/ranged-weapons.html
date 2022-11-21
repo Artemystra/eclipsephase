@@ -1,14 +1,10 @@
-
 <div class="itemBackground">
     {{#each actor.rangedWeapon as |item id|}}
     {{#if this.system.active}}
     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}">
-        <input class="sheet equipped checkBox"
-        data-dtype="Boolean" data-item-id="{{item._id}}"
-        type="checkbox" {{checked item.system.active}}>
+        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked item.system.active}}>
         <div class="flexrow flex-group-center input-small">
-            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-            <img src="icons/svg/d10-grey.svg" class="toggle icon-small damage-roll roll-label input-small noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+            <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
         </div>
         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name"   data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}" style="text-align: left; font-weight: bold"/>
         <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.system.firingMode}}</strong></label>
@@ -39,14 +35,9 @@
     </div>
     {{else}}
     <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}">
-        <input class="sheet equipped checkBox"
-        data-dtype="Boolean" data-item-id="{{item._id}}"
-        type="checkbox" {{checked item.system.active}}>
+        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked item.system.active}}>
         <div class="flexrow flex-group-center input-small">
-            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-            <img src="icons/svg/d10-grey.svg" class="toggle
-            icon-small damage-roll roll-label input-small
-            noShow" data-type="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"    data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
+            <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
         </div>
         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
         <label class="labelWidth-large flex-group-center noMargin"><strong>{{item.system.firingMode}}</strong></label>
