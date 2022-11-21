@@ -1206,9 +1206,6 @@ export async function TaskCheck({
                             break;
                     }
 
-                    usedSwipSwap = false;
-                    usedFlex = false;
-
                     if (weaponType === "ranged"){
                         let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
     
@@ -1293,7 +1290,7 @@ export async function TaskCheck({
 
                     poolUpdater(poolUpdate, poolType)
                 }
-
+                console.log("This is my Success Type: ", successType)
                 if(weaponDamage && successType){
                     
                     let intermediateRollFormula = weaponDamage + modeDamage + successModifier;
