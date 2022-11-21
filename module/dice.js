@@ -363,6 +363,7 @@ async function showOptionsDialog(template, title, names) {
 //General & Special Task Checks
 export async function TaskCheck({
     //General
+    msg = null,
     actorData = "",
     actorWhole = "",
     actorType = actorWhole.type,
@@ -823,7 +824,7 @@ export async function TaskCheck({
         if (rolledFrom != "rangedWeapon") {
             if(modSkillValue>0){
                 let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-                roll.toMessage({
+                msg = await roll.toMessage({
                     speaker: ChatMessage.getSpeaker({actor: this.actor}),
                     flavor: label
                 },{
@@ -832,12 +833,84 @@ export async function TaskCheck({
             }
             else{
                 let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-                roll.toMessage({
+                msg = await roll.toMessage({
                     speaker: ChatMessage.getSpeaker({actor: this.actor}),
                     flavor: label
                 },{
                     rollMode: rollModeSelection
                 });
+            }
+
+            await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+
+            let evaluatedRoll = msg.content;
+            let swipSwap = 0;
+            let swapPossible = false;
+            let severeConsequences = false;
+            let severityLevel = null;
+            let severityFlavor = null;
+
+            if (evaluatedRoll < 100) {
+                
+                let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName);
+                console.log("My swapPreparationData: ", swapPreparationData)
+
+                swapPossible = swapPreparationData["swapPossible"]
+                severeConsequences = swapPreparationData["severeConsequences"]
+                severityLevel = swapPreparationData["severityLevel"]
+                severityFlavor = swapPreparationData["severityFlavor"]
+                swipSwap = swapPreparationData["swipSwap"]
+
+            }
+
+            let combinedPools = poolValue+flexValue+threatLevel;
+
+            if (!successType && swapPossible && combinedPools > 0){
+                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+
+                if (checkOptions.cancelled) {
+                    return;
+                }
+                
+                usedSwipSwap = checkOptions.swap;
+                usedFlex = checkOptions.flex;
+
+                if (usedSwipSwap || usedFlex){
+
+                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType);
+
+                    successType = swapCheckData["successName"];
+                    swapPossible = swapCheckData["swapPossible"];
+                    successName = swapCheckData["successName"];
+                    threatLevel = swapCheckData["threatLevel"];
+                    flexValue = swapCheckData["flexValue"];
+                    poolValue = swapCheckData["poolValue"];
+                    usedSwipSwap = swapCheckData["usedSwipSwap"];
+
+                } 
+            }
+
+            if (severeConsequences && severityLevel > 0 && combinedPools > 0){
+                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+
+                if (checkOptions.cancelled) {
+                    return;
+                }
+                
+                usedMitigate = checkOptions.mitigate;
+                usedFlexMitigate = checkOptions.flexMitigate;
+
+                
+            }
+
+            if (usedMitigate || usedFlexMitigate){
+
+                let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, usedFlexMitigate, severityLevel, actorType);
+
+                threatLevel = mitigationCheckData["threatLevel"];
+                flexValue = mitigationCheckData["flexValue"];
+                poolValue = mitigationCheckData["poolValue"];
+
             }
         }
 
@@ -877,7 +950,6 @@ export async function TaskCheck({
             }
 
             //Rolls only if the weapon has enough amunition & updates the ammo accordingly
-            let msg = null;
             if (updateAmmo>=0){
                 if(modSkillValue>0){
                     let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
@@ -923,34 +995,16 @@ export async function TaskCheck({
                 let severityLevel = null;
                 let severityFlavor = null;
 
-                if (evaluatedRoll < 99) {
-                    swipSwap = await swapDice(evaluatedRoll);
-                    if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll) {
-                        swapPossible = true;
-                    }
-                    if (swipSwap <= modSkillValue && !successType) {
-                        swapPossible = true;
-                    }
-                    if (swipSwap > modSkillValue && !successType) {
-                        severeConsequences = true;
-                        switch (successName){
-                            case 'Fail':
-                                severityLevel = 0;
-                                break;
-                            case 'Greater Fail':
-                                severityLevel = 1;
-                                severityFlavor = "huge";
-                                break;
-                            case 'Superior Fail':
-                                severityLevel = 2;
-                                severityFlavor = "severe";
-                                break;
-                            default:
-                                severityLevel = 3;
-                                severityFlavor = "dire";
-                                break;
-                        }
-                    }
+                if (evaluatedRoll < 100) {
+                    
+                    let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName);
+
+                    swapPossible = swapPreparationData["swapPossible"]
+                    severeConsequences = swapPreparationData["severeConsequences"]
+                    severityLevel = swapPreparationData["severityLevel"]
+                    severityFlavor = swapPreparationData["severityFlavor"]
+                    swipSwap = swapPreparationData["swipSwap"]
+
                 }
 
                 let criticalModifier = null;
@@ -969,39 +1023,17 @@ export async function TaskCheck({
                     usedFlex = checkOptions.flex;
 
                     if (usedSwipSwap || usedFlex){
-                        successType = true;
-                        swapPossible = false;
-                        if (swipSwap < 33){
-                            successName = "Success";
-                        }
-                        if (swipSwap > 33 && swipSwap < 66){
-                            successName = "Greater Success";
-                        }
-                        if (swipSwap > 66){
-                            successName = "Superior Success";
-                        }
 
-                        poolValue--;
-                        poolUpdate = poolValue;
-                        if (actorType != "character"){
-                            poolType = "Threat";
-                            poolValue++;
-                            threatLevel--;
-                            poolUpdate = threatLevel;
-                        }
-                        if (usedFlex){
-                            poolType = "Flex";
-                            poolValue++;
-                            flexValue--;
-                            poolUpdate = flexValue;
-                        }
+                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType);
 
-                        ChatMessage.create({
-                            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                            flavor: "Used<p/><strong>" + poolType + "<p/></strong>to swap the result to <p/><strong>" + swipSwap + " (" + successName + ")</strong>"
-                        })
+                        successType = swapCheckData["successName"];
+                        swapPossible = swapCheckData["swapPossible"];
+                        successName = swapCheckData["successName"];
+                        threatLevel = swapCheckData["threatLevel"];
+                        flexValue = swapCheckData["flexValue"];
+                        poolValue = swapCheckData["poolValue"];
+                        usedSwipSwap = swapCheckData["usedSwipSwap"];
 
-                        poolUpdater(poolUpdate, poolType)
                     } 
                 }
 
@@ -1015,41 +1047,17 @@ export async function TaskCheck({
                     usedMitigate = checkOptions.mitigate;
                     usedFlexMitigate = checkOptions.flexMitigate;
 
-                    if (usedMitigate || usedFlexMitigate){
-                        let flavorText = null;
+                    
+                }
 
-                        poolValue--;
-                        poolUpdate = poolValue;
-                        if (actorType != "character"){
-                            poolType = "Threat";
-                            poolValue++;
-                            threatLevel--;
-                            poolUpdate = threatLevel;
-                        }
-                        if (usedFlexMitigate){
-                            poolType = "Flex";
-                            poolValue++;
-                            flexValue--;
-                            poolUpdate = flexValue;
-                        }
+                if (usedMitigate || usedFlexMitigate){
 
-                        if (severityLevel === 1){
-                            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their greater failure to a <p/><strong><span class='fail'>Fail</span></strong>";
-                        }
-                        if (severityLevel === 2){
-                            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their superior failure to a <p/><strong><span class='fail'>Greater Fail</span></strong>";
-                        }
-                        if (severityLevel === 3){
-                            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their Critical failure to a <p/><strong><span class='fail'>Superior Fail</span></strong>";
-                        }
+                    let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, usedFlexMitigate, severityLevel, actorType);
 
-                        ChatMessage.create({
-                            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                            flavor: flavorText
-                        })
+                    threatLevel = mitigationCheckData["threatLevel"];
+                    flexValue = mitigationCheckData["flexValue"];
+                    poolValue = mitigationCheckData["poolValue"];
 
-                        poolUpdater(poolUpdate, poolType)
-                    } 
                 }
 
                 if(successType){
@@ -1211,6 +1219,116 @@ export async function TaskCheck({
             default:
                 break;
             }
+    }
+
+    //Swap Preparation
+    async function swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName){
+        swipSwap = await swapDice(evaluatedRoll);
+        if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll) {
+            swapPossible = true;
+        }
+        if (swipSwap <= modSkillValue && !successType) {
+            swapPossible = true;
+        }
+        if (swipSwap > modSkillValue && !successType) {
+            severeConsequences = true;
+            switch (successName){
+                case 'Fail':
+                    severityLevel = 0;
+                    break;
+                case 'Greater Fail':
+                    severityLevel = 1;
+                    severityFlavor = "huge";
+                    break;
+                case 'Superior Fail':
+                    severityLevel = 2;
+                    severityFlavor = "severe";
+                    break;
+                default:
+                    severityLevel = 3;
+                    severityFlavor = "dire";
+                    break;
+            }
+        }
+        return {swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap}
+    }
+
+    //Roll Increase Check
+    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType){
+        successType = true;
+        swapPossible = false;
+        let usedSwipSwap = false
+        if (swipSwap < 33){
+            successName = "Success";
+        }
+        if (swipSwap > 33 && swipSwap < 66){
+            successName = "Greater Success";
+        }
+        if (swipSwap > 66){
+            successName = "Superior Success";
+        }
+
+        poolValue--;
+        poolUpdate = poolValue;
+        if (actorType != "character"){
+            poolType = "Threat";
+            poolValue++;
+            threatLevel--;
+            poolUpdate = threatLevel;
+        }
+        if (usedFlex){
+            poolType = "Flex";
+            poolValue++;
+            flexValue--;
+            poolUpdate = flexValue;
+        }
+
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker(),
+            flavor: "Used<p/><strong>" + poolType + "<p/></strong>to swap the result to <p/><strong>" + swipSwap + " (" + successName + ")</strong>"
+        })
+
+        poolUpdater(poolUpdate, poolType);
+
+        return {successType, swapPossible, successName, threatLevel, flexValue, poolValue, usedSwipSwap};
+    }
+
+    //Failure Mitigation Check
+    async function mitigationChecker(poolType, threatLevel, flexValue, usedFlexMitigate, severityLevel, actorType){
+        let flavorText = null;
+        poolValue--;
+        poolUpdate = poolValue;
+        if (actorType != "character"){
+            poolType = "Threat";
+            poolValue++;
+            threatLevel--;
+            poolUpdate = threatLevel;
+        }
+        if (usedFlexMitigate){
+            poolType = "Flex";
+            poolValue++;
+            flexValue--;
+            poolUpdate = flexValue;
+        }
+
+        if (severityLevel === 1){
+            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their greater failure to a <p/><strong><span class='fail'>Fail</span></strong>";
+        }
+        if (severityLevel === 2){
+            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their superior failure to a <p/><strong><span class='fail'>Greater Fail</span></strong>";
+        }
+        if (severityLevel === 3){
+            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their Critical failure to a <p/><strong><span class='fail'>Superior Fail</span></strong>";
+        }
+
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker(),
+            flavor: flavorText
+        })
+
+        poolUpdater(poolUpdate, poolType)
+
+        return [threatLevel, flexValue, poolValue];
     }
 
     //Skill check dialog constructor
