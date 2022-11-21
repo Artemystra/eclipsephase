@@ -865,6 +865,8 @@ export async function TaskCheck({
 
             let combinedPools = poolValue+flexValue+threatLevel;
 
+            console.log("My NPC values for successType: ", successType, "for swapPossible: ", swapPossible, "for combinedPools: ", combinedPools)
+
             if (!successType && swapPossible && combinedPools > 0){
                 let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
 
@@ -910,6 +912,106 @@ export async function TaskCheck({
                 threatLevel = mitigationCheckData["threatLevel"];
                 flexValue = mitigationCheckData["flexValue"];
                 poolValue = mitigationCheckData["poolValue"];
+
+            }
+
+            let potentialRaise = false;
+            switch (successName) {
+                case 'Greater Success':
+                    potentialRaise = true;
+                    break;
+                case 'Superior Success':
+                    break;
+                case 'Critical Success':
+                    potentialRaise = true;
+                    break;
+                case 'Greater Critical Success':
+                    potentialRaise = true;
+                    break;
+                case 'Superior Critical Success':
+                    break;
+                case 'Supreme Success':
+                    break;
+                default:
+                    potentialRaise = true;
+                    break;
+            }
+
+            if(successType && potentialRaise || successType && swapPossible){
+                
+                let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
+
+                if (checkOptions.cancelled) {
+                    return;
+                }
+                usedRaise = checkOptions.raise;
+                usedSwipSwap = checkOptions.swap;
+                usedFlex = checkOptions.flex;
+            }
+
+            if(usedRaise){
+
+                switch (successName){
+                    case 'Success':
+                        successName = "Greater Success";
+                        break;
+                    case 'Greater Success':
+                        successName = "Superior Success";
+                        break;
+                    case 'Critical Success':
+                        successName = "Greater Critical Success";
+                        break;
+                    case 'Greater Critical Success':
+                        successName = "Superior Critical Success";
+                        break;
+                }
+
+                poolValue--;
+                poolUpdate = poolValue;
+                if (actorType != "character"){
+                    poolType = "Threat";
+                    poolValue++;
+                    threatLevel--;
+                    poolUpdate = threatLevel;
+                }
+
+                ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    flavor: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>"
+                })
+
+                poolUpdater(poolUpdate, poolType)
+            }
+
+            if(usedSwipSwap || usedFlex){
+
+                if (swipSwap > 33){
+                    successName = "Greater Success";
+                }
+                if (swipSwap > 66){
+                    successName = "Superior Success";
+                }
+                poolValue--;
+                poolUpdate = poolValue;
+                if (actorType != "character"){
+                    poolType = "Threat";
+                    poolValue++;
+                    threatLevel--;
+                    poolUpdate = threatLevel;
+                }
+                if (usedFlex){
+                    poolType = "Flex";
+                    poolValue++;
+                    flexValue--;
+                    poolUpdate = flexValue;
+                }
+
+                ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                })
+
+                poolUpdater(poolUpdate, poolType)
 
             }
         }
@@ -1114,7 +1216,7 @@ export async function TaskCheck({
                         default:
                             break;
                     }
-                    console.log("New Pool Value? ",poolValue)
+
                     poolValue--
                     poolUpdate = poolValue;
                     if (actorType != "character"){
@@ -1156,7 +1258,7 @@ export async function TaskCheck({
 
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: "Used<p/><strong>" + poolType + "<p/></strong>to swap the result to <p/><strong>" + swipSwap + "</strong>"
+                        flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
                     })
 
                     poolUpdater(poolUpdate, poolType)
@@ -1285,7 +1387,7 @@ export async function TaskCheck({
 
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker(),
-            flavor: "Used<p/><strong>" + poolType + "<p/></strong>to swap the result to <p/><strong>" + swipSwap + " (" + successName + ")</strong>"
+            flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
         })
 
         poolUpdater(poolUpdate, poolType);
@@ -1578,11 +1680,11 @@ export async function TaskCheck({
                 dv: weaponDamage,
                 buttons: {
                     cancel: {
-                        label: "Cancel",
+                        label: "Decline",
                         callback: html => resolve ({cancelled: true})
                     },
                     normal: {
-                        label: "Roll!",
+                        label: "Use Pool",
                         callback: html => resolve(_proSwipSwapOptions(html[0].querySelector("form")))
                     }
                 },
@@ -1600,6 +1702,39 @@ export async function TaskCheck({
             flex: form.useFlex ? form.useFlex.checked : false,
             mitigate: form.useMitigate ? form.useMitigate.checked : false,
             flexMitigate: form.useFlexMitigate ? form.useFlexMitigate.checked : false
+        }
+    }
+
+    async function GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+        const template = "systems/eclipsephase/templates/chat/raise-dialog.html";
+        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue});
+        return new Promise(resolve => {
+            const data = {
+                title: "Raise Roll",
+                content: html,
+                buttons: {
+                    cancel: {
+                        label: "Decline",
+                        callback: html => resolve ({cancelled: true})
+                    },
+                    normal: {
+                        label: "Use Pool",
+                        callback: html => resolve(_proRaiseOptions(html[0].querySelector("form")))
+                    }
+                },
+                default: "normal",
+                close: () => resolve ({cancelled: true})
+            };
+            let options = {width:266}
+            new Dialog(data, options).render(true);
+        });
+    }
+
+    function _proRaiseOptions(form) {
+        return {
+            swap: form.useSwap ? form.useSwap.checked : false,
+            flex: form.useFlex ? form.useFlex.checked : false,
+            raise: form.useRaise ? form.useRaise.checked : false
         }
     }
 }
