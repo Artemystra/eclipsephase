@@ -909,7 +909,7 @@
         "buyable"
       ],
       "range": null,
-      "ammoMin": null,
+      "ammoMin": 0,
       "ammoMax": null,
       "dv": null,
       "firingMode": "",

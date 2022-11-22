@@ -7,11 +7,7 @@
         data-dtype="Boolean" data-item-id="{{item._id}}"
         type="checkbox" {{checked system.active}}>
         <div class="flexrow flex-group-center input-small">
-            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-            <img src="icons/svg/d10-grey.svg" class="toggle
-            icon-small flex-group-left resource-label
-            damage-roll roll-label input-small noShow"
-            data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+            <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
         </div>
         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
         <label class="flex-group-center noMargin flex-group-center"><strong>{{item.system.slotType}}</strong></label>
@@ -38,11 +34,7 @@
         data-dtype="Boolean" data-item-id="{{item._id}}"
         type="checkbox" {{checked system.active}}>
         <div class="flexrow flex-group-center input-small">
-            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-            <img src="icons/svg/d10-grey.svg" class="toggle
-            icon-small flex-group-left resource-label
-            damage-roll roll-label input-small noShow"
-            data-type="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"/>
+            <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
         </div>
         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
         <label class="flex-group-center noMargin flex-group-center"><strong>{{item.system.slotType}}</strong></label>

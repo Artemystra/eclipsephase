@@ -61,36 +61,23 @@
                                 <input class=" input-small" type="number"
                                 name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                    <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
-                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <span class=" resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                    <!-- <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Insight" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
                                 </div>
-                                <input type="text" class="input-large
-                                item-standard-margin-both-large" name="system.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                                {{#if this.specname}}
-                                    <img class="info roll-label task-check icon-hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}" src="icons/svg/d10-grey.svg"/>
-                                {{else}}
-                                    <label class="roll-label icon-hidden"><img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{/if}}
+                                <input type="text" class="input-large item-standard-margin-both-large" name="system.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Insight" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
                             </div>
                             {{/each}}
                         {{else}}
                             {{#each actor.system.skillsIns as |skill key|}}
-                            <div class="flexrow flex-group-center reveal">
+                            <div class="flexrow flex-group-center reveal" style="max-height: 26px; min-height: 26px;">
                                 <span class="resource-label input-large">{{key}}</span>
-                                <input class=" input-small" type="number"
-                                                            name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <input class=" input-small" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"  data-specname="{{specname}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
                                 </div>
-                                <input type="text" class="input-large
-                                             item-standard-margin-both-large"
-                                                   name="system.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                                {{#if this.specname}}
-                                    <img class="info roll-label task-check icon-hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}" src="icons/svg/d10-grey.svg"/>
-                                {{else}}
-                                    <label class="roll-label icon-hidden"><img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{/if}}
+                                <input type="text" class="input-large item-standard-margin-both-large" name="system.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             </div>
                             {{/each}}
                         {{/if}}
@@ -153,38 +140,25 @@
                                 <input class=" input-small" type="number"
                                 name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                    <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
-                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <span class="resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                    <!-- <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Vigor" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
                                 </div>
                                 <input type="text" class="input-large
                                 item-standard-margin-both-large" name="system.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                                {{#if this.specname}}
-                                    <label class="info roll-label task-check icon-hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}">
-                                    <img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{else}}
-                                    <label class="roll-label icon-hidden"><img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{/if}}
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Vigor" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
                             </div>
                             {{/each}}
                         {{else}}
                             {{#each actor.system.skillsVig as |skill key|}}
-                            <div class="flexrow flex-group-center reveal">
+                            <div class="flexrow flex-group-center reveal" style="max-height: 26px; min-height: 26px;">
                                 <span class="resource-label input-large">{{key}}</span>
                                 <input class=" input-small" type="number"
                                 name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <img data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
                                 </div>
-                                <input type="text" class="input-large
-                                             item-standard-margin-both-large"
-                                                   name="system.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                                {{#if this.specname}}
-                                    <label class="info roll-label task-check icon-hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}">
-                                    <img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{else}}
-                                    <label class="roll-label icon-hidden"><img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{/if}}
+                                <input type="text" class="input-large item-standard-margin-both-large" name="system.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             </div>
                             {{/each}}
                         {{/if}}
@@ -256,38 +230,25 @@
                                 <input class=" input-small" type="number"
                                 name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
-                                    <span class="toggle resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
-                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <span class="resource-value input-small">{{numberFormat skill.derived decimals=0}}</span>
+                                    <!-- <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Moxie" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
                                 </div>
                                 <input type="text" class="input-large
                                 item-standard-margin-both-large" name="system.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                                {{#if this.specname}}
-                                    <label class="info roll-label task-check icon-hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}">
-                                    <img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{else}}
-                                    <label class="roll-label icon-hidden"><img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{/if}}
+                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Moxie" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
                             </div>
                             {{/each}}
                         {{else}}
                             {{#each actor.system.skillsMox as |skill key|}}
-                            <div class="flexrow flex-group-center reveal">
+                            <div class="flexrow flex-group-center reveal" style="max-height: 26px; min-height: 26px;">
                                 <span class="resource-label input-large">{{key}}</span>
                                 <input class=" input-small" type="number"
                                 name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <img data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
                                 </div>
-                                <input type="text" class="input-large
-                                             item-standard-margin-both-large"
-                                                   name="system.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
-                                {{#if this.specname}}
-                                    <label class="info roll-label task-check icon-hidden" data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.specialized}}">
-                                    <img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{else}}
-                                    <label class="roll-label icon-hidden"><img src="icons/svg/d10-grey.svg" class="icon-dice"/></label>
-                                {{/if}}
+                                <input type="text" class="input-large item-standard-margin-both-large" name="system.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="Specialization"/>
                             </div>
                             {{/each}}
                         {{/if}}
@@ -456,32 +417,19 @@
                                 <span class="tooltipText">{{item.name}}</span>
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate" style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
-                                <input class="input-small sheet-inline-edit"
-                                data-field="system.value" type="number"
-                                name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                <input class="input-small sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
-                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="toggle
-                                input-small roll-label icon-dice task-check
-                                noShow" data-type="skill"
-                                data-name="{{item.name}}"
-                                data-rollvalue="{{item.roll}}"/>
+                                    <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 {{#if item.system.specname}}
-                                <label class="resource-label item-control
-                                  item-edit hoverable truncate
-                                  item-standard-margin-both-large">{{item.system.specname}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="info
-                                roll-label task-check icon-dice icon-hidden"
-                                data-type="skill" data-name="{{item.name}}"
-                                data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.system.specname}}</label>
                                 {{else}}
-                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 {{/if}}
+                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-pooltype="Insight" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                 {{else}}
-                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                    <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                    <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                             </div>
                         {{/each}}
@@ -506,32 +454,19 @@
                                 <span class="tooltipText">{{item.name}}</span>
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore">{{item.name}}</label>
-                                <input class="input-small sheet-inline-edit"
-                                data-field="system.value" type="number"
-                                name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                <input class="input-small sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
-                                <label class="toggle resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="toggle
-                                input-small roll-label icon-dice task-check
-                                noShow" data-type="skill"
-                                data-name="{{item.name}}"
-                                data-rollvalue="{{item.roll}}"/>
+                                    <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                 {{#if item.system.specname}}
-                                <label class="resource-label item-control
-                                  item-edit hoverable truncate
-                                  item-standard-margin-both-large">{{item.system.specname}}</label>
-                                <img src="icons/svg/d10-grey.svg" class="info
-                                roll-label task-check icon-dice icon-hidden"
-                                data-type="skill" data-name="{{item.name}}"
-                                data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.system.specname}}</label>
                                 {{else}}
-                                <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">No Spec</label>
                                 {{/if}}
+                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-apttype="{{item.system.aptitude}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                 {{else}}
-                                <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
-                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                    <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                    <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                    <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                             </div>
                         {{/each}}

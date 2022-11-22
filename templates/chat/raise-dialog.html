@@ -1,18 +1,9 @@
 <form>
 
-    <div class="contentBoxMargin">
-        <div class="flexrow subheader">
-            <h3 class="subheader dialog">Damage</h3>
-        </div>
-        {{#if criticalModifier}}
-            <div class="form-group listBackgroundMain alignCenter">
-                <label>2 x [ {{weaponDamage}} {{modeDamage}} {{successModifier}}</label>
-            </div>
-        {{else}}
-            <div class="form-group listBackgroundMain alignCenter">
-                <label>{{weaponDamage}} {{modeDamage}} {{successModifier}}</label>
-            </div>
-        {{/if}}
+    <div class="contentBoxMargin listBackgroundMain alignCenter">
+        <label class="resource-labelDialog">You met your goal with a</label><p/>
+        <span class="success">{{successName}}</span><p/>
+        <label class="resource-labelDialog">You can even increase it <br/>by using your pools...</label>
     </div>
     <div class="contentBox">
         <div class="flexrow subheader">
@@ -35,7 +26,7 @@
                 {{#if potentialRaise}}
                     <div class="form-group listBackgroundMain">
                         <input type="checkbox" name="useRaise">
-                        <label class="resource-label">Use {{poolType}} for <strong>+1d6 damage</strong></label>
+                        <label class="resource-label">Use {{poolType}} to raise <strong>Success Level</strong></label>
                     </div>
                 {{/if}}
             {{else}}
@@ -75,7 +66,7 @@
                 {{#if potentialRaise}}
                     <div class="form-group listBackgroundMain">
                         <input type="checkbox" name="useRaise">
-                        <label class="resource-label">Use threat for <strong>+1d6 damage</strong></label>
+                        <label class="resource-label">Use threat raise <strong>Success Level</strong></label>
                     </div>
                 {{else}}
                     <div class="form-group listBackgroundMain">

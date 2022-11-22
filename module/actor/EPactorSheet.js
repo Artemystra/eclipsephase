@@ -118,6 +118,11 @@ export default class EPactorSheet extends ActorSheet {
       itemModel.boundTo = currentMorph
     }
 
+    if (item.type === "rangedWeapon"){
+      let ammoUp = item.system.ammoMax;
+      item.system.ammoMin = ammoUp;
+    }
+
 
     // Create the owned item as normal
     return super._onDropItemCreate(item)
@@ -526,7 +531,8 @@ export default class EPactorSheet extends ActorSheet {
     if (itemData.type === "specialSkill") {
       itemData.name = "New Skill";
     }
-    return this.actor.createEmbeddedDocuments("Item", [itemData]);
+
+    this.actor.createEmbeddedDocuments("Item", [itemData]);
   }
 
   
@@ -542,19 +548,94 @@ export default class EPactorSheet extends ActorSheet {
 
     const element = event.currentTarget;
     const dataset = element.dataset;
-    const actorModel = this.actor.system
+    const actorWhole = this.actor;
+    const actorModel = this.actor.system;
 
     if(dataset.type === 'rep') {
       this._onRepRoll(dataset, actorModel)
       return
     }
 
+    let specNameValue = dataset.specname;
+    let skillRollValue = dataset.rollvalue;
+    let poolType = dataset.pooltype;
+    let aptType = dataset.apttype;
+    const flexPool = actorModel.pools.flex.value;
+    let skillPoolValue = null
+
+    if (dataset.rolledfrom === "rangedWeapon") {
+      specNameValue = actorModel.skillsVig.guns.specname;
+      skillRollValue = actorModel.skillsVig.guns.roll;
+      poolType = "Vigor"
+    }
+
+    if (dataset.rolledfrom === "ccWeapon") {
+      specNameValue = actorModel.skillsVig.melee.specname;
+      skillRollValue = actorModel.skillsVig.melee.roll;
+      poolType = "Vigor"
+    }
+
+    console.log("My aptType: ", aptType)
+
+    switch (aptType) {
+      case 'Intuition':
+        poolType = "Insight"
+        break;
+      case 'Cognition':
+        poolType = "Insight"
+        break;
+      case 'Reflexes':
+        poolType = "Vigor"
+        break;
+      case 'Somatics':
+        poolType = "Vigor"
+        break;
+      case 'Willpower':
+        poolType = "Moxie"
+        break;
+      case 'Savvy':
+        poolType = "Moxie"
+        break;
+      default:
+        break;
+    }
+
+    switch (poolType) {
+      case 'Insight':
+        skillPoolValue = actorModel.pools.insight.value;
+        break;
+      case 'Vigor':
+        skillPoolValue = actorModel.pools.vigor.value;
+        break;
+      case 'Moxie':
+        skillPoolValue = actorModel.pools.moxie.value;
+        break;
+      default:
+        break;
+    }
+
       Dice.TaskCheck ({
-        skillName : dataset.name.toLowerCase(),
-        specName : dataset.specname,
-        rollType : dataset.type,
-        skillValue : dataset.rollvalue,
+        //Actor data
+        actorWhole : actorWhole,
         actorData : actorModel,
+        //Skill data
+        skillName : dataset.name.toLowerCase(),
+        specName : specNameValue,
+        rollType : dataset.type,
+        skillValue : skillRollValue,
+        rolledFrom : dataset.rolledfrom,
+        //Pools
+        poolType: poolType,
+        poolValue: skillPoolValue,
+        flexValue: flexPool,
+        //Weapon data
+        weaponID : dataset.weaponid,
+        weaponName : dataset.weaponname,
+        weaponDamage : dataset.roll,
+        weaponType : dataset.weapontype,
+        currentAmmo : dataset.currentammo,
+        maxAmmo : dataset.maxammo,
+        //System Options
         askForOptions : event.shiftKey,
         optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
         brewStatus: game.settings.get("eclipsephase", "superBrew")
@@ -574,7 +655,7 @@ export default class EPactorSheet extends ActorSheet {
         weaponID : dataset.weaponid,
         weaponName : dataset.weaponname,
         weaponDamage : dataset.roll,
-        weaponType : dataset.type,
+        weaponType : dataset.weapontype,
         currentAmmo : dataset.currentammo,
         maxAmmo : dataset.maxammo,
         

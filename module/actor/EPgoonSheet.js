@@ -304,14 +304,46 @@ export default class EPgoonSheet extends ActorSheet {
         event.preventDefault();
         const element = event.currentTarget;
         const dataset = element.dataset;
-        const actorData = this.actor.data.data;
+        const actorModel = this.actor.system;
+        const actorWhole = this.actor;
+        const threatLevel = actorModel.threatLevel.current;
+
+        let specNameValue = dataset.specname;
+        let skillRollValue = dataset.rollvalue;
+        let poolType = "Threat";
+
+        if (dataset.rolledfrom === "rangedWeapon") {
+          specNameValue = actorModel.skillsVig.guns.specname;
+          skillRollValue = actorModel.skillsVig.guns.roll;
+        }
+    
+        if (dataset.rolledfrom === "ccWeapon") {
+          specNameValue = actorModel.skillsVig.melee.specname;
+          skillRollValue = actorModel.skillsVig.melee.roll;
+        }
+
 
         Dice.TaskCheck ({
+            //Actor data
+            actorData : actorModel,
+            actorWhole : actorWhole,
+            //Skill data
             skillName : dataset.name.toLowerCase(),
-            specName : dataset.specname,
+            specName : specNameValue,
             rollType : dataset.type,
-            skillValue : dataset.rollvalue,
-            actorData : actorData,
+            skillValue : skillRollValue,
+            rolledFrom : dataset.rolledfrom,
+            //Pools
+            threatLevel: threatLevel,
+            poolType: poolType,
+            //Weapon data
+            weaponID : dataset.weaponid,
+            weaponName : dataset.weaponname,
+            weaponDamage : dataset.roll,
+            weaponType : dataset.weapontype,
+            currentAmmo : dataset.currentammo,
+            maxAmmo : dataset.maxammo,
+            //System Options
             askForOptions : event.shiftKey,
             optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
             brewStatus: game.settings.get("eclipsephase", "superBrew")

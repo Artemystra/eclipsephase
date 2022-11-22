@@ -1,24 +1,59 @@
 <form>
-    <div class="grid">
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Modifier</h3><div class="flexGrowHalf"></div>
-            </div>
-            <div class="form-group listBackgroundMain">
-                <input type="number" name="GlobalMod" placeholder="0" />
-            </div>
+    <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">General Modifier</h3>
         </div>
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <div class="flexGrowHalf"></div><h3 class="subheaderMirror">Mode</h3>
-            </div>
+        <div class="form-group listBackgroundMain">
+            <label class="resource-labelDialog" style="min-width: 140px;">Global Mod</label>
+            <input type="number" name="GlobalMod" placeholder="e.g. -20" />
+        </div>
+        {{#if specName}}
+        <div class="form-group listBackgroundMain">
+            <input type="checkbox" name="useSpec">
+            <label class="resource-label">Use "{{specName}}" (+10)</label>
+        </div>
+        {{else}}
+        <div class="form-group listBackgroundMain">
+            <input type="checkbox" name="useSpec" disabled>
+            <label class="resource-label epInactive">No Specialization</label>
+        </div>
+        {{/if}}
+        {{#if (eq actorType "character")}}
+            {{#if poolValue}}
             <div class="form-group listBackgroundMain">
-                <select name="RollMode">
-                    <option value="public">Public Roll</option>
-                    <option value="private">Private GM Roll</option>
-                    <option value="blind">Blind GM Roll</option>
-                </select>
+                <input type="checkbox" name="usePool">
+                <label class="resource-label">Use {{poolType}} (+20)</label>
             </div>
+            {{else}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="usePool" disabled>
+                <label class="resource-label epInactive">No {{poolType}} left</label>
+            </div>
+            {{/if}}
+        {{else}}
+            {{#if threatLevel}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="useThreat">
+                <label class="resource-label">Use Threat (+20)</label>
+            </div>
+            {{else}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="useThreat" disabled>
+                <label class="resource-label epInactive">No threat left</label>
+            </div>
+            {{/if}}
+        {{/if}}
+    </div>
+    <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">Mode</h3>
+        </div>
+        <div class="form-group listBackgroundMain">
+            <select name="RollMode">
+                <option value="public">Public Roll</option>
+                <option value="private">Private GM Roll</option>
+                <option value="blind">Blind GM Roll</option>
+            </select>
         </div>
     </div>
 </form>
