@@ -944,9 +944,13 @@ export async function TaskCheck({
             usedSwipSwap = false;
             usedFlex = false;
 
-            if (successType &&  combinedPools > 0 && potentialRaise || successType &&  combinedPools > 0 && swapPossible){
+            if (actorType != "character"){
+                poolValue = threatLevel;
+                poolType = "Threat";
+            }
 
-                console.log("This is my successType: ", successType, " This is my poolValue: ", poolValue, " These are my combinePools: ", combinedPools, " This is my potentialRaise: ", potentialRaise);
+            if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible){
+                
                 let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
 
                 if (checkOptions.cancelled) {
