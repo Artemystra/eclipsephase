@@ -930,17 +930,11 @@ export async function TaskCheck({
                     case 'Greater Success':
                         potentialRaise = true;
                         break;
-                    case 'Superior Success':
-                        break;
                     case 'Critical Success':
                         potentialRaise = true;
                         break;
                     case 'Greater Critical Success':
                         potentialRaise = true;
-                        break;
-                    case 'Superior Critical Success':
-                        break;
-                    case 'Supreme Success':
                         break;
                     default:
                         break;
