@@ -921,32 +921,38 @@ export async function TaskCheck({
             }
 
             let potentialRaise = false;
-            switch (successName) {
-                case 'Greater Success':
-                    potentialRaise = true;
-                    break;
-                case 'Superior Success':
-                    break;
-                case 'Critical Success':
-                    potentialRaise = true;
-                    break;
-                case 'Greater Critical Success':
-                    potentialRaise = true;
-                    break;
-                case 'Superior Critical Success':
-                    break;
-                case 'Supreme Success':
-                    break;
-                default:
-                    potentialRaise = true;
-                    break;
+
+            if (successType){
+                switch (successName) {
+                    case 'Success':
+                        potentialRaise = true;
+                        break;
+                    case 'Greater Success':
+                        potentialRaise = true;
+                        break;
+                    case 'Superior Success':
+                        break;
+                    case 'Critical Success':
+                        potentialRaise = true;
+                        break;
+                    case 'Greater Critical Success':
+                        potentialRaise = true;
+                        break;
+                    case 'Superior Critical Success':
+                        break;
+                    case 'Supreme Success':
+                        break;
+                    default:
+                        break;
+                }
             }
 
             usedSwipSwap = false;
             usedFlex = false;
 
-            if(successType && potentialRaise && poolValue > 0 || successType && swapPossible && combinedPools > 0){
-                
+            if (successType &&  combinedPools > 0 && potentialRaise || successType &&  combinedPools > 0 && swapPossible){
+
+                console.log("This is my successType: ", successType, " This is my poolValue: ", poolValue, " These are my combinePools: ", combinedPools, " This is my potentialRaise: ", potentialRaise);
                 let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
 
                 if (checkOptions.cancelled) {
