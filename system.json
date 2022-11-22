@@ -1,139 +1,178 @@
 {
-  "name": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
   "version": "0.7.7",
   "compatibility": {
-    "mimimum": 10,
-    "verified": "10"
+    "verified": "10",
+    "minimum": "10"
   },
-  "templateVersion": 2,
   "authors": [
     {
-      "name": "Diemen Kobalscheck"
+      "name": "Diemen Kobalscheck",
+      "flags": {}
     }
   ],
-  "esmodules": ["module/eclipsephase.js"],
-  "styles": ["css/eclipsephase.css"],
-  "scripts": ["module/effects.js"],
+  "esmodules": [
+    "module/eclipsephase.js"
+  ],
+  "styles": [
+    "css/eclipsephase.css"
+  ],
+  "scripts": [
+    "module/effects.js"
+  ],
   "packs": [
     {
       "name": "ware",
       "label": "Ware",
       "system": "eclipsephase",
-      "path": "./packs/ware.db",
-      "entity": "Item"
+      "path": "packs/ware.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "ego-traits",
       "label": "Ego Traits",
       "system": "eclipsephase",
-      "path": "./packs/ego-traits.db",
-      "entity": "Item"
+      "path": "packs/ego-traits.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "morph-traits",
       "label": "Morph Traits",
       "system": "eclipsephase",
-      "path": "./packs/morph-traits.db",
-      "entity": "Item"
+      "path": "packs/morph-traits.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "armor",
       "label": "Armor",
       "system": "eclipsephase",
-      "path": "./packs/armor.db",
-      "entity": "Item"
+      "path": "packs/armor.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "weapons",
       "label": "Weapons",
       "system": "eclipsephase",
-      "path": "./packs/weapons.db",
-      "entity": "Item"
+      "path": "packs/weapons.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "psi-sleights",
       "label": "Psi Sleights",
       "system": "eclipsephase",
-      "path": "./packs/psi-sleights.db",
-      "entity": "Item"
+      "path": "packs/psi-sleights.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "gear",
       "label": "Gear",
       "system": "eclipsephase",
-      "path": "./packs/gear.db",
-      "entity": "Item"
+      "path": "packs/gear.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "vehicles",
       "label": "Vehicles",
       "system": "eclipsephase",
-      "path": "./packs/vehicles.db",
-      "entity": "Item"
+      "path": "packs/vehicles.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "ammo",
       "label": "Ammo",
       "system": "eclipsephase",
-      "path": "./packs/ammo.db",
-      "entity": "Item"
+      "path": "packs/ammo.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "apps",
       "label": "Apps",
       "system": "eclipsephase",
-      "path": "./packs/apps.db",
-      "entity": "Item"
+      "path": "packs/apps.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "drugs-and-toxins",
       "label": "Drugs and Toxins",
       "system": "eclipsephase",
-      "path": "./packs/drugs-and-toxins.db",
-      "entity": "Item"
+      "path": "packs/drugs-and-toxins.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "grenades",
       "label": "Grenades",
       "system": "eclipsephase",
-      "path": "./packs/grenades.db",
-      "entity": "Item"
+      "path": "packs/grenades.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "meshservices",
       "label": "Mesh Services",
       "system": "eclipsephase",
-      "path": "./packs/meshservices.db",
-      "entity": "Item"
+      "path": "packs/meshservices.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "diemens-homebrew-items",
       "label": "Diemen's Homebrew Items",
       "system": "eclipsephase",
-      "path": "./packs/diemens-homebrew-items.db",
-      "entity": "Item"
+      "path": "packs/diemens-homebrew-items.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "samplecharacters",
       "label": "Sample Characters",
       "system": "eclipsephase",
-      "path": "./packs/samplecharacters.db",
-      "entity": "Actor"
+      "path": "packs/samplecharacters.db",
+      "type": "Actor",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "bots",
       "label": "Bots",
       "system": "eclipsephase",
-      "path": "./packs/bots.db",
-      "entity": "Actor"
-    }],
+      "path": "packs/bots.db",
+      "type": "Actor",
+      "private": false,
+      "flags": {}
+    }
+  ],
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     }
   ],
   "gridDistance": 2,
@@ -143,5 +182,6 @@
   "url": "https://github.com/DerDiemen/eclipsephase",
   "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/master/system.json",
   "download": "https://github.com/DerDiemen/eclipsephase/archive/master/eclipsephase-master.zip",
-  "license": "LICENSE.txt"
+  "license": "LICENSE.txt",
+  "id": "eclipsephase"
 }
