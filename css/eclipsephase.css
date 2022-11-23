@@ -913,6 +913,12 @@ optgroup .Default .Roll .Mode,
   font-family: 'Orbitron', sans-serif;
 }
 
+#keybindings .binding .key.uneditable{
+  background: none;
+  color: var(--inactive);
+  border: 1px solid var(--inactive);
+}
+
 #pause img {
   content: url(../resources/img/eclipse.webp);
 }
