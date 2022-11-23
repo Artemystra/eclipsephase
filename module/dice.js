@@ -629,6 +629,10 @@ export async function TaskCheck({
             gunsMod -= 30;
             gunAnnounce += "<br>Far Beyond Range (<strong>-30</strong>)";
         }
+        else if (range === "pointBlank" || range === "pointBlank" && prone){
+            gunsMod += 10;
+            gunAnnounce += "<br>Point Blank (<strong>+10</strong>)";
+        }
 
 
         if (coverDefender === "minor") {
