@@ -909,6 +909,14 @@ optgroup .Default .Roll .Mode,
 }
 
 /* Own Styles */
+#pause figcaption {
+  font-family: 'Orbitron', sans-serif;
+}
+
+#pause img {
+  content: url(../resources/img/eclipse.webp);
+}
+
 .chat-message #context-menu.expand-down {
   top: calc(0% - 70px);
 }
