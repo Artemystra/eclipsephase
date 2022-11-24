@@ -234,7 +234,6 @@ export default class EPnpcSheet extends ActorSheet {
 
         // Rollable abilities.
         html.find('.task-check').click(this._onTaskCheck.bind(this));
-        html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
         html.find('.effect-create').click(ev => {
             this.actor.createEmbeddedDocuments('ActiveEffect', [{
@@ -348,24 +347,6 @@ export default class EPnpcSheet extends ActorSheet {
             brewStatus: game.settings.get("eclipsephase", "superBrew")
         });
     }
-
-    _onDamageRoll(event) {
-        event.preventDefault();
-        const element = event.currentTarget;
-        const dataset = element.dataset;
-        const actorData = this.actor.system
-
-        Dice.DamageRoll ({
-            weaponName : dataset.weaponname,
-            weaponDamage : dataset.roll,
-            weaponType : dataset.type,
-            actorData : actorData,
-            askForOptions : event.shiftKey,
-            optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
-        });
-    }
-
-
 
     _onSkillEdit(event) {
         event.preventDefault();

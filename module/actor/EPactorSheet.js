@@ -399,7 +399,6 @@ export default class EPactorSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find('.task-check').click(this._onTaskCheck.bind(this));
-    html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
     // Drag events for macros.
     if (actor.isOwner) {
@@ -641,28 +640,6 @@ export default class EPactorSheet extends ActorSheet {
         brewStatus: game.settings.get("eclipsephase", "superBrew")
       });
     }
-
-  _onDamageRoll(event) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
-    const actorWhole = this.actor;
-    const actorModel = this.actor.system;
-
-      Dice.DamageRoll ({
-        actorWhole : actorWhole,
-        actorData : actorModel,
-        weaponID : dataset.weaponid,
-        weaponName : dataset.weaponname,
-        weaponDamage : dataset.roll,
-        weaponType : dataset.weapontype,
-        currentAmmo : dataset.currentammo,
-        maxAmmo : dataset.maxammo,
-        
-        askForOptions : event.shiftKey,
-        optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
-      });
-  }
 
   _onSkillEdit(event) {
     event.preventDefault();

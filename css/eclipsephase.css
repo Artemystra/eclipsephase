@@ -344,6 +344,11 @@
   padding-left: 7px;
 }
 
+.dialog .checkbox {
+  font-size: 13px;
+  margin-top: 8px;
+}
+
 .eclipsephase .resource-section-label {
   text-transform: uppercase;
   text-align: center;
@@ -621,6 +626,11 @@ input [class="rightField"],
 input [class="rightField"]:focus,
 input [class="rightField"]::placeholder{
   text-align: right!important;
+}
+
+input[name="useSwap"],
+input[name="useMitigate"]{
+  margin: 0px 6px 5px 8px!important;
 }
 
 h2 {

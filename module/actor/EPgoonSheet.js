@@ -227,7 +227,6 @@ export default class EPgoonSheet extends ActorSheet {
 
         // Rollable abilities.
         html.find('.task-check').click(this._onTaskCheck.bind(this));
-        html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
         // Drag events for macros.
         if (this.actor.isOwner) {
@@ -347,22 +346,6 @@ export default class EPgoonSheet extends ActorSheet {
             askForOptions : event.shiftKey,
             optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
             brewStatus: game.settings.get("eclipsephase", "superBrew")
-        });
-    }
-
-    _onDamageRoll(event) {
-        event.preventDefault();
-        const element = event.currentTarget;
-        const dataset = element.dataset;
-        const actorData = this.actor.data.data;
-
-        Dice.DamageRoll ({
-            weaponName : dataset.weaponname,
-            weaponDamage : dataset.roll,
-            weaponType : dataset.type,
-            actorData : actorData,
-            askForOptions : event.shiftKey,
-            optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
         });
     }
 
