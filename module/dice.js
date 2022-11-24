@@ -953,6 +953,8 @@ export async function TaskCheck({
                 poolType = "Threat";
             }
 
+            let poolRAM = poolType;
+
             if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible){
                 
                 let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
@@ -965,7 +967,35 @@ export async function TaskCheck({
                 usedFlex = checkOptions.flex;
             }
 
-            if(usedRaise){
+            if(usedSwipSwap || usedFlex){
+
+                if (swipSwap > 33){
+                    successName = "Greater Success";
+                }
+                if (swipSwap > 66){
+                    successName = "Superior Success";
+                }
+
+                poolValue--;
+                poolUpdate = poolValue;
+                
+                if (usedFlex){
+                    poolType = "Flex";
+                    poolValue++;
+                    flexValue--;
+                    poolUpdate = flexValue;
+                }
+
+                ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                })
+
+                poolUpdater(poolUpdate, poolType)
+
+            }
+
+            if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
 
                 switch (successName){
                     case 'Success':
@@ -982,14 +1012,9 @@ export async function TaskCheck({
                         break;
                 }
 
+                poolType = poolRAM;
                 poolValue--;
                 poolUpdate = poolValue;
-                if (actorType != "character"){
-                    poolType = "Threat";
-                    poolValue++;
-                    threatLevel--;
-                    poolUpdate = threatLevel;
-                }
 
                 ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({actor: this.actor}),
@@ -999,37 +1024,22 @@ export async function TaskCheck({
                 poolUpdater(poolUpdate, poolType)
             }
 
-            if(usedSwipSwap || usedFlex){
-
-                if (swipSwap > 33){
-                    successName = "Greater Success";
-                }
-                if (swipSwap > 66){
-                    successName = "Superior Success";
-                }
-                poolValue--;
-                poolUpdate = poolValue;
-                if (actorType != "character"){
-                    poolType = "Threat";
-                    poolValue++;
-                    threatLevel--;
-                    poolUpdate = threatLevel;
-                }
-                if (usedFlex){
-                    poolType = "Flex";
-                    poolValue++;
-                    flexValue--;
-                    poolUpdate = flexValue;
-                }
-
+            else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
                 ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                    content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                    whisper: [game.user._id]
                 })
-
-                poolUpdater(poolUpdate, poolType)
-
             }
+
+            else if (usedRaise && !poolValue){
+                ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                    whisper: [game.user._id]
+                })
+            }
+
         }
 
         //For roll from Weapon
