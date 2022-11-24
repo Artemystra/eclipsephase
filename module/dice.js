@@ -1011,9 +1011,6 @@ export async function TaskCheck({
 
                 if (actorType != "character"){
                     poolType = "Threat";
-                    poolValue++;
-                    threatLevel--;
-                    poolUpdate = threatLevel;
                 }
 
                 ChatMessage.create({
