@@ -129,7 +129,8 @@ eclipsephase.vehicleSize = {
 eclipsephase.vehicleType = {
     robot: "Robot",
     vehicle: "Vehicle",
-    morph: "Morph"
+    morph: "Morph",
+    animal: "Smart-Animal"
 }
 
 eclipsephase.bodyTypes = {

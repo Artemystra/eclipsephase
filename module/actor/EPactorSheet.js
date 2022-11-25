@@ -182,7 +182,8 @@ export default class EPactorSheet extends ActorSheet {
       const vehicle = {
           Robot: [],
           Vehicle: [],
-          Morph: []
+          Morph: [],
+          'Smart-Animal': []
       };
       //this will become more important once morphs are items themselves
       const morph = [];
@@ -254,8 +255,16 @@ export default class EPactorSheet extends ActorSheet {
           gear.push(item);
         }
         else if (item.type === 'vehicle') {
-          item.wt = Math.round(itemModel.dur / 5);
-          item.dr = Math.round(itemModel.dur * 2);
+          itemModel.wt = Math.round(itemModel.dur / 5);
+          if (itemModel.type != "Smart-Animal"){
+            itemModel.dr = Math.round(itemModel.dur * 2);
+          }
+          else {
+            itemModel.dr = Math.round(itemModel.dur * 1.5);
+          }
+          itemModel.luc = Math.round(itemModel.wil * 2)
+          itemModel.tt = Math.round(itemModel.luc / 5);
+          itemModel.ir = Math.round(itemModel.luc * 2);
           vehicle[itemModel.type].push(item)
         }
       else if (item.type === 'ware' && itemModel.boundTo) {

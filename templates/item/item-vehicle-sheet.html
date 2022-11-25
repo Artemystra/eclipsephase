@@ -27,24 +27,54 @@
                         <label class="resource-label">Passengers</label>
                     </td>
                     {{/if}}
+                    {{#if (eq item.system.type "Smart-Animal")}}
+                    <td>
+                        <label class="resource-label">Cog</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Int</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Ref</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Sav</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Som</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Wil</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">Init</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">TV</label>
+                    </td>
+                    {{/if}}
+                    {{#if (ne item.system.type "Smart-Animal")}}
                     <td>
                         <label class="resource-label">Vigor</label>
                     </td>
                     <td>
                         <label class="resource-label">Flex</label>
                     </td>
+                    {{/if}}
                     <td>
-                        <label class="resource-label">Armor</label>
+                        <label class="resource-label">AV</label>
                     </td>
                     <td>
                         <label class="resource-label">DUR</label>
                     </td>
                     <td>
-                        <label class="resource-label">Movement</label>
+                        <label class="resource-label">Mov</label>
                     </td>
+                    {{#if (ne item.system.type "Smart-Animal")}}
                     <td>
                         <label class="resource-label">Size</label>
                     </td>
+                    {{/if}}
                     <td>
                         <label class="resource-label">Cost</label>
                     </td>
@@ -60,42 +90,61 @@
                     </td>
                     {{#if (eq item.system.type "Morph")}}
                     <td>
-                        <input class="input-medium"type="number"
-                        name="system.ins" value="{{item.system.ins}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="system.ins" value="{{item.system.ins}}" placeholder="0"/>
                     </td>
                     <td>
-                        <input class="input-medium"type="number" name="system.ins"
-                        value="{{item.system.ins}}" placeholder="0"/>
+                        <input class="input-medium" type="number" name="system.mox" value="{{item.system.mox}}" placeholder="0"/>
                     </td>
                     {{/if}}
                     {{#if (eq item.system.type "Vehicle")}}
                     <td>
-                        <input class="input-medium"type="number" name="system.mox"
-                                                                 value="{{item.system.mox}}" placeholder="0"/>
+                        <input class="input-medium"type="number" name="system.mox" value="{{item.system.mox}}" placeholder="0"/>
+                    </td>
+                    {{/if}}
+                    {{#if (eq item.system.type "Smart-Animal")}}
+                    <td>
+                        <input class="input-medium"type="number" name="system.cog" value="{{item.system.cog}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.int" value="{{item.system.int}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.ref" value="{{item.system.ref}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.sav" value="{{item.system.sav}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.som" value="{{item.system.som}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.wil" value="{{item.system.wil}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.init" value="{{item.system.init}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.threat" value="{{item.system.threat}}" placeholder="0"/>
+                    </td>
+                    {{/if}}
+                    {{#if (ne item.system.type "Smart-Animal")}}
+                    <td>
+                        <input class="input-medium"type="number" name="system.vig" value="{{item.system.vig}}" placeholder="0"/>
+                    </td>
+                    <td>
+                        <input class="input-medium"type="number" name="system.flex" value="{{item.system.flex}}" placeholder="0"/>
                     </td>
                     {{/if}}
                     <td>
-                        <input class="input-medium"type="number" name="system.vig"
-                                                                 value="{{item.system.vig}}" placeholder="0"/>
+                        <input class="input-medium" type="text" name="system.armor" value="{{item.system.armor}}" placeholder="e.g. 2/2"/>
                     </td>
                     <td>
-                        <input class="input-medium"type="number"
-                               name="system.flex" value="{{item.system.flex}}" placeholder="0"/>
+                        <input class="input-medium" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="e.g. 20"/>
                     </td>
                     <td>
-                        <input class="input-medium" type="text"
-                                                    name="system.armor"
-                                                    value="{{item.system.armor}}" placeholder="e.g. 2/2"/>
+                        <input class="input-large" type="text" name="system.mov" value="{{item.system.mov}}" placeholder="e.g. 8/32 Rotor"/>
                     </td>
-                    <td>
-                        <input class="input-medium" type="number"
-                                                    name="system.dur"
-                                                    value="{{item.system.dur}}" placeholder="e.g. 20"/>
-                    </td>
-                    <td>
-                        <input class="input-large" type="text" name="system.mov"
-                                                               value="{{item.system.mov}}" placeholder="e.g. 8/32 Rotor"/>
-                    </td>
+                    {{#if (ne item.system.type "Smart-Animal")}}
                     <td>
                         <select name="system.slotType" data-type="String">
                             {{#select item.system.slotType}}
@@ -104,6 +153,7 @@
                             {{/each}} {{/select}}
                         </select>
                     </td>
+                    {{/if}}
                     <td>
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}
