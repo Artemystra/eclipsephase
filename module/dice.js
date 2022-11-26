@@ -1061,6 +1061,10 @@ export async function TaskCheck({
                 modeDamage = "";
                 updateAmmo = currentAmmo - 10;
             }
+            else if (attackMode === "suppressive") {
+                modeDamage = "";
+                updateAmmo = currentAmmo - 20;
+            }
             else if (attackMode === "charge") {
                 modeDamage = "+ 1d6";
             }
