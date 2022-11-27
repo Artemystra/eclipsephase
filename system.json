@@ -165,6 +165,15 @@
       "type": "Actor",
       "private": false,
       "flags": {}
+    },
+    {
+      "name": "animals",
+      "label": "Animals",
+      "system": "eclipsephase",
+      "path": "packs/animals.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     }
   ],
   "languages": [
