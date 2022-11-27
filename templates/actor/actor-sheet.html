@@ -485,6 +485,21 @@
                                                 </td>
                                             </tr>
                                         </table>
+                                        {{#if item.system.skills.1.name}}
+                                        <h3 style="margin-top: 10px;">Skills</h3>
+                                        <div class="grid grid-3col">
+                                            {{#each item.system.skills as |skill key|}}
+                                                {{#if skill.name}}
+                                                <div class="flexrow flex-group-center reveal">
+                                                    <label class="input-xs resource-value">{{key}}.</label>
+                                                    <label>{{skill.name}}</label>
+                                                    <label class="input-xs resource-value">{{skill.value}}</label>
+                                                    <label class="input-large">{{skill.specname}}</label>
+                                                </div>
+                                                {{/if}}
+                                            {{/each}}
+                                        </div>
+                                        {{/if}}
                                     </div>
                             </div>
                         </div>

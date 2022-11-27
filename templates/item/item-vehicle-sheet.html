@@ -136,7 +136,7 @@
                     </td>
                     {{/if}}
                     <td>
-                        <input class="input-medium" type="text" name="system.armor" value="{{item.system.armor}}" placeholder="e.g. 2/2"/>
+                        <input class="input-medium alignCenter" type="text" name="system.armor" value="{{item.system.armor}}" placeholder="e.g. 2/2"/>
                     </td>
                     <td>
                         <input class="input-medium" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="e.g. 20"/>
@@ -165,6 +165,19 @@
                 </tr>
             </table>
         </div>
+        {{#if (eq item.system.type "Smart-Animal")}}
+        <h3 style="margin-top: 10px;">Skills</h3>
+        <div class="grid grid-3col">
+            {{#each item.system.skills as |skill key|}}
+                <div class="flexrow flex-group-center reveal">
+                    <label class="input-xs resource-value">{{key}}.</label>
+                    <input type="text" name="system.skills.{{key}}.name" value="{{skill.name}}" placeholder="Skill Name"/>
+                    <input class=" input-xs" type="number" name="system.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                    <input type="text" class="input-largeSpec" name="system.skills.{{key}}.specname" value="{{skill.specname}}" placeholder="Spec"/>
+                </div>
+            {{/each}}
+        </div>
+        {{/if}}
         <p></p>
 
         <h2>Description</h2>
