@@ -20,7 +20,7 @@ export default class EPactorSheet extends ActorSheet {
       }
       else {
         if (!game.user.isGM && !this.actor.isOwner){
-          this.position.height = 610;
+          this.position.height = 650;
           this.position.width = 800;
         }
         else{
