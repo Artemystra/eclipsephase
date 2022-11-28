@@ -1520,7 +1520,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }
@@ -1558,7 +1558,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }
@@ -1598,7 +1598,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:516}
+            let options = {width:536}
             new Dialog(data, options).render(true);
         });
     }
@@ -1640,7 +1640,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }
@@ -1681,7 +1681,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:1046}
+            let options = {width:1086}
             new Dialog(data, options).render(true);
         });
     }
@@ -1751,7 +1751,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }
@@ -1802,7 +1802,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }
@@ -1913,7 +1913,7 @@ export async function TaskCheck({
                 },
                 default: "normal"
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }
