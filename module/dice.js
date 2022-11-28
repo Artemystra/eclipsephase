@@ -1006,12 +1006,13 @@ export async function TaskCheck({
                 }
 
                 poolType = poolRAM;
-                poolValue--;
-                poolUpdate = poolValue;
 
                 if (actorType != "character"){
                     poolType = "Threat";
                 }
+
+                poolValue--;
+                poolUpdate = poolValue;
 
                 ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({actor: this.actor}),
