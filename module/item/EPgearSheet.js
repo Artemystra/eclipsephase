@@ -10,6 +10,7 @@ export default class EPgearSheet extends ItemSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
+      resizable: false,
       width: 520,
       height: 445,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]

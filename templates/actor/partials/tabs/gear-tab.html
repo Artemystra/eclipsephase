@@ -14,9 +14,11 @@
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                             <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked item.system.active}}>
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <input class="sheet-inline-edit" data-field="name" type="text" name="item.system.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                            <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
-                            <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
+                            <input class="sheet-inline-edit" data-field="name" type="text" name="item.system.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold; min-width: 240px;"/>
+                            <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
+                            <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
+                            <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
+                            <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.kinetic}}</strong></label>
                             <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
                             <div class="flex-group-right slideShow">
                                 <a><i class="fas fa-plus icon-small"></i></a>
@@ -38,9 +40,11 @@
                         <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
                             <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked system.active}}>
                             <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                            <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold"/>
-                            <label class="labelWidth-large flex-group-center noMargin">Energy: <strong>{{item.system.energy}}</strong></label>
-                            <label class="labelWidth-large flex-group-center noMargin">Kinetic: <strong>{{item.system.kinetic}}</strong></label>
+                            <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Armor Name" style="text-align: left; font-weight: bold; min-width: 240px;"/>
+                            <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
+                            <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
+                            <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
+                            <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.kinetic}}</strong></label>
                             <label class="labelWidth-XL flex-group-center noMargin"><strong>{{item.system.slotType}}</strong></label>
                             <div class="flex-group-right slideShow">
                                 <a><i class="fas fa-plus icon-small"></i></a>

@@ -20,7 +20,7 @@ export default class EPactorSheet extends ActorSheet {
       }
       else {
         if (!game.user.isGM && !this.actor.isOwner){
-          this.position.height = 610;
+          this.position.height = 650;
           this.position.width = 800;
         }
         else{
@@ -182,7 +182,8 @@ export default class EPactorSheet extends ActorSheet {
       const vehicle = {
           Robot: [],
           Vehicle: [],
-          Morph: []
+          Morph: [],
+          'Smart-Animal': []
       };
       //this will become more important once morphs are items themselves
       const morph = [];
@@ -254,8 +255,16 @@ export default class EPactorSheet extends ActorSheet {
           gear.push(item);
         }
         else if (item.type === 'vehicle') {
-          item.wt = Math.round(itemModel.dur / 5);
-          item.dr = Math.round(itemModel.dur * 2);
+          itemModel.wt = Math.round(itemModel.dur / 5);
+          if (itemModel.type != "Smart-Animal"){
+            itemModel.dr = Math.round(itemModel.dur * 2);
+          }
+          else {
+            itemModel.dr = Math.round(itemModel.dur * 1.5);
+          }
+          itemModel.luc = Math.round(itemModel.wil * 2)
+          itemModel.tt = Math.round(itemModel.luc / 5);
+          itemModel.ir = Math.round(itemModel.luc * 2);
           vehicle[itemModel.type].push(item)
         }
       else if (item.type === 'ware' && itemModel.boundTo) {
@@ -399,7 +408,6 @@ export default class EPactorSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find('.task-check').click(this._onTaskCheck.bind(this));
-    html.find('.damage-roll').click(this._onDamageRoll.bind(this));
 
     // Drag events for macros.
     if (actor.isOwner) {
@@ -641,28 +649,6 @@ export default class EPactorSheet extends ActorSheet {
         brewStatus: game.settings.get("eclipsephase", "superBrew")
       });
     }
-
-  _onDamageRoll(event) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
-    const actorWhole = this.actor;
-    const actorModel = this.actor.system;
-
-      Dice.DamageRoll ({
-        actorWhole : actorWhole,
-        actorData : actorModel,
-        weaponID : dataset.weaponid,
-        weaponName : dataset.weaponname,
-        weaponDamage : dataset.roll,
-        weaponType : dataset.weapontype,
-        currentAmmo : dataset.currentammo,
-        maxAmmo : dataset.maxammo,
-        
-        askForOptions : event.shiftKey,
-        optionsSettings: game.settings.get("eclipsephase", "showDamageOptions")
-      });
-  }
 
   _onSkillEdit(event) {
     event.preventDefault();

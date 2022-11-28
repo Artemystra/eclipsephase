@@ -8,8 +8,9 @@ export default class EPvehicleSheet extends ItemSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
-      width: 920,
-      height: 260,
+      resizable: false,
+      width: 1010,
+      height: 400,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }

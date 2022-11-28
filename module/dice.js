@@ -629,6 +629,10 @@ export async function TaskCheck({
             gunsMod -= 30;
             gunAnnounce += "<br>Far Beyond Range (<strong>-30</strong>)";
         }
+        else if (range === "pointBlank" || range === "pointBlank" && prone){
+            gunsMod += 10;
+            gunAnnounce += "<br>Point Blank (<strong>+10</strong>)";
+        }
 
 
         if (coverDefender === "minor") {
@@ -855,6 +859,11 @@ export async function TaskCheck({
             let severityLevel = null;
             let severityFlavor = null;
 
+            if (actorType != "character"){
+                poolValue = threatLevel;
+                poolType = "Threat";
+            }
+
             if (evaluatedRoll < 100) {
                 
                 let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName);
@@ -870,8 +879,6 @@ export async function TaskCheck({
 
             let combinedPools = poolValue+flexValue+threatLevel;
 
-            console.log("My NPC values for successType: ", successType, "for swapPossible: ", swapPossible, "for combinedPools: ", combinedPools)
-
             if (!successType && swapPossible && combinedPools > 0){
                 let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
 
@@ -880,11 +887,10 @@ export async function TaskCheck({
                 }
                 
                 usedSwipSwap = checkOptions.swap;
-                usedFlex = checkOptions.flex;
 
-                if (usedSwipSwap || usedFlex){
+                if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType);
+                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap);
 
                     successType = swapCheckData["successName"];
                     swapPossible = swapCheckData["swapPossible"];
@@ -905,14 +911,12 @@ export async function TaskCheck({
                 }
                 
                 usedMitigate = checkOptions.mitigate;
-                usedFlexMitigate = checkOptions.flexMitigate;
 
-                
             }
 
-            if (usedMitigate || usedFlexMitigate){
+            if (usedMitigate === "pool" || usedMitigate === "flex"){
 
-                let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, usedFlexMitigate, severityLevel, actorType);
+                let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, severityLevel, actorType, usedMitigate);
 
                 threatLevel = mitigationCheckData["threatLevel"];
                 flexValue = mitigationCheckData["flexValue"];
@@ -942,26 +946,49 @@ export async function TaskCheck({
             }
 
             usedSwipSwap = false;
-            usedFlex = false;
 
-            if (actorType != "character"){
-                poolValue = threatLevel;
-                poolType = "Threat";
-            }
+            let poolRAM = poolType;
 
             if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible){
                 
-                let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
+                let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType);
 
                 if (checkOptions.cancelled) {
                     return;
                 }
                 usedRaise = checkOptions.raise;
                 usedSwipSwap = checkOptions.swap;
-                usedFlex = checkOptions.flex;
             }
 
-            if(usedRaise){
+            if(usedSwipSwap === "pool" || usedSwipSwap === "flex"){
+
+                if (swipSwap > 33){
+                    successName = "Greater Success";
+                }
+                if (swipSwap > 66){
+                    successName = "Superior Success";
+                }
+
+                poolValue--;
+                poolUpdate = poolValue;
+                
+                if (usedSwipSwap === "flex"){
+                    poolType = "Flex";
+                    poolValue++;
+                    flexValue--;
+                    poolUpdate = flexValue;
+                }
+
+                ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                })
+
+                poolUpdater(poolUpdate, poolType)
+
+            }
+
+            if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
 
                 switch (successName){
                     case 'Success':
@@ -978,13 +1005,12 @@ export async function TaskCheck({
                         break;
                 }
 
+                poolType = poolRAM;
                 poolValue--;
                 poolUpdate = poolValue;
+
                 if (actorType != "character"){
                     poolType = "Threat";
-                    poolValue++;
-                    threatLevel--;
-                    poolUpdate = threatLevel;
                 }
 
                 ChatMessage.create({
@@ -995,37 +1021,22 @@ export async function TaskCheck({
                 poolUpdater(poolUpdate, poolType)
             }
 
-            if(usedSwipSwap || usedFlex){
-
-                if (swipSwap > 33){
-                    successName = "Greater Success";
-                }
-                if (swipSwap > 66){
-                    successName = "Superior Success";
-                }
-                poolValue--;
-                poolUpdate = poolValue;
-                if (actorType != "character"){
-                    poolType = "Threat";
-                    poolValue++;
-                    threatLevel--;
-                    poolUpdate = threatLevel;
-                }
-                if (usedFlex){
-                    poolType = "Flex";
-                    poolValue++;
-                    flexValue--;
-                    poolUpdate = flexValue;
-                }
-
+            else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
                 ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                    content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                    whisper: [game.user._id]
                 })
-
-                poolUpdater(poolUpdate, poolType)
-
             }
+
+            else if (usedRaise && !poolValue){
+                ChatMessage.create({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                    whisper: [game.user._id]
+                })
+            }
+
         }
 
         //For roll from Weapon
@@ -1049,6 +1060,10 @@ export async function TaskCheck({
             else if (attackMode === "wFullAuto") {
                 modeDamage = "";
                 updateAmmo = currentAmmo - 10;
+            }
+            else if (attackMode === "suppressive") {
+                modeDamage = "";
+                updateAmmo = currentAmmo - 20;
             }
             else if (attackMode === "charge") {
                 modeDamage = "+ 1d6";
@@ -1109,6 +1124,11 @@ export async function TaskCheck({
                 let severityLevel = null;
                 let severityFlavor = null;
 
+                if (actorType != "character"){
+                    poolValue = threatLevel;
+                    poolType = "Threat";
+                }
+
                 if (evaluatedRoll < 100) {
                     
                     let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName);
@@ -1137,9 +1157,9 @@ export async function TaskCheck({
                     usedSwipSwap = checkOptions.swap;
                     usedFlex = checkOptions.flex;
 
-                    if (usedSwipSwap || usedFlex){
+                    if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType);
+                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap);
 
                         successType = swapCheckData["successName"];
                         swapPossible = swapCheckData["swapPossible"];
@@ -1161,15 +1181,13 @@ export async function TaskCheck({
                     }
                     
                     usedMitigate = checkOptions.mitigate;
-                    usedFlexMitigate = checkOptions.flexMitigate;
-
                     
                 }
 
                 //Show Mitigation Results
-                if (usedMitigate || usedFlexMitigate){
+                if (usedMitigate === "pool" || usedMitigate === "flex"){
 
-                    let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, usedFlexMitigate, severityLevel, actorType);
+                    let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, severityLevel, actorType, usedMitigate);
 
                     threatLevel = mitigationCheckData["threatLevel"];
                     flexValue = mitigationCheckData["flexValue"];
@@ -1210,7 +1228,7 @@ export async function TaskCheck({
                             break;
                     }
 
-                    if (weaponType === "ranged"){
+                    if (weaponType === "ranged" && swapPossible || weaponType === "ranged" && potentialRaise){
                         let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
     
                         if (checkOptions.cancelled) {
@@ -1218,10 +1236,9 @@ export async function TaskCheck({
                         }
                         usedRaise = checkOptions.raise;
                         usedSwipSwap = checkOptions.swap;
-                        usedFlex = checkOptions.flex;
                     }
 
-                    if (weaponType === "melee"){
+                    if (weaponType === "melee" && swapPossible || weaponType === "melee" && potentialRaise){
                         let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
     
                         if (checkOptions.cancelled) {
@@ -1229,11 +1246,43 @@ export async function TaskCheck({
                         }
                         usedRaise = checkOptions.raise;
                         usedSwipSwap = checkOptions.swap;
-                        usedFlex = checkOptions.flex;
                     }
                 }
-                
-                if (usedRaise){
+
+                let poolRAM = poolType;
+
+                if (usedSwipSwap === "pool" || usedSwipSwap === "flex") {
+                    if (swipSwap > 33 && swipSwap < 66){
+                        successModifier = "+ 1d6";
+                        successName = "Greater Success";
+                    }
+                    if (swipSwap > 66){
+                        successModifier = "+ 2d6";
+                        successName = "Superior Success"
+                    }
+                    poolValue--;
+                    poolUpdate = poolValue;
+                    if (actorType != "character"){
+                        poolType = "Threat";
+                    }
+                    if (usedSwipSwap === "flex"){
+                        poolType = "Flex";
+                        poolValue++;
+                        flexValue--;
+                        poolUpdate = flexValue;
+                    }
+
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                    })
+
+                    poolUpdater(poolUpdate, poolType)
+                }
+
+                poolType = poolRAM;
+
+                if (usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
                     successModifier += "+ 1d6";
                     switch (successName) {
                         case 'Critical Success':
@@ -1250,9 +1299,6 @@ export async function TaskCheck({
                     poolUpdate = poolValue;
                     if (actorType != "character"){
                         poolType = "Threat";
-                        poolValue++;
-                        threatLevel--;
-                        poolUpdate = threatLevel;
                     }
 
                     ChatMessage.create({
@@ -1263,38 +1309,22 @@ export async function TaskCheck({
                     poolUpdater(poolUpdate, poolType)
                 }
 
-                if (usedSwipSwap || usedFlex) {
-                    if (swipSwap > 33 && swipSwap < 66){
-                        successModifier = "+ 1d6";
-                        successName = "Greater Success";
-                    }
-                    if (swipSwap > 66){
-                        successModifier = "+ 2d6";
-                        successName = "Superior Success"
-                    }
-                    poolValue--;
-                    poolUpdate = poolValue;
-                    if (actorType != "character"){
-                        poolType = "Threat";
-                        poolValue++;
-                        threatLevel--;
-                        poolUpdate = threatLevel;
-                    }
-                    if (usedFlex){
-                        poolType = "Flex";
-                        poolValue++;
-                        flexValue--;
-                        poolUpdate = flexValue;
-                    }
-
+                else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                        content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                        whisper: [game.user._id]
                     })
-
-                    poolUpdater(poolUpdate, poolType)
                 }
-                console.log("This is my Success Type: ", successType)
+    
+                else if (usedRaise && !poolValue){
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                        whisper: [game.user._id]
+                    })
+                }
+
                 if(weaponDamage && successType){
                     
                     let intermediateRollFormula = weaponDamage + modeDamage + successModifier;
@@ -1389,10 +1419,9 @@ export async function TaskCheck({
     }
 
     //Roll Increase Check
-    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType){
+    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap){
         successType = true;
         swapPossible = false;
-        let usedSwipSwap = false
         if (swipSwap < 33){
             successName = "Success";
         }
@@ -1411,12 +1440,14 @@ export async function TaskCheck({
             threatLevel--;
             poolUpdate = threatLevel;
         }
-        if (usedFlex){
+        if (usedSwipSwap === "flex"){
             poolType = "Flex";
             poolValue++;
             flexValue--;
             poolUpdate = flexValue;
         }
+
+        usedSwipSwap = null
 
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker(),
@@ -1429,7 +1460,7 @@ export async function TaskCheck({
     }
 
     //Failure Mitigation Check
-    async function mitigationChecker(poolType, threatLevel, flexValue, usedFlexMitigate, severityLevel, actorType){
+    async function mitigationChecker(poolType, threatLevel, flexValue, severityLevel, actorType, usedMitigate){
         let flavorText = null;
         poolValue--;
         poolUpdate = poolValue;
@@ -1439,7 +1470,7 @@ export async function TaskCheck({
             threatLevel--;
             poolUpdate = threatLevel;
         }
-        if (usedFlexMitigate){
+        if (usedMitigate === "flex"){
             poolType = "Flex";
             poolValue++;
             flexValue--;
@@ -1680,8 +1711,28 @@ export async function TaskCheck({
     }
 
     async function GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+        let groupName = "useSwap";
+        let choices = {};
+        let radioStatus = true
+        if (poolValue && flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (!poolValue && flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (poolValue && !flexValue && actorType === "character" && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (threatLevel && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else {
+            radioStatus = false
+        }
+        
+        let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
@@ -1705,15 +1756,34 @@ export async function TaskCheck({
     }
     function _proRangedRollOptions(form) {
         return {
-            swap: form.useSwap ? form.useSwap.checked : false,
-            flex: form.useFlex ? form.useFlex.checked : false,
+            swap: form.useSwap ? form.useSwap.value : null,
             raise: form.useRaise ? form.useRaise.checked : false
         }
     }
 
     async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+        let groupName = "useSwap";
+        let choices = {};
+        let radioStatus = true
+        if (poolValue && flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (!poolValue && flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (poolValue && !flexValue && actorType === "character" && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (threatLevel && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else {
+            radioStatus = false
+        }
+        
+        let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
@@ -1738,34 +1808,62 @@ export async function TaskCheck({
 
     function _proMeleeRollOptions(form) {
         return {
-            swap: form.useSwap ? form.useSwap.checked : false,
-            flex: form.useFlex ? form.useFlex.checked : false,
+            swap: form.useSwap ? form.useSwap.value : false,
             raise: form.useRaise ? form.useRaise.checked : false
         }
 
     }
-
+    
     async function GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor) {
-        console.log("My severityFlavor: ", severityFlavor);
+        let groupName = "useSwap";
+        if (severityFlavor){
+            groupName = "useMitigate";
+        }
+        let choices = {};
+        let radioStatus = true
+        if (severityFlavor && poolValue && flexValue){
+            choices = {none: "Don't Mitigate Failure",pool: "Use 1 <strong>" + poolType  + "</strong> to mitigate",flex: "Use 1 <strong>Flex</strong> to mitigate"};
+        }
+        else if (severityFlavor && !poolValue && flexValue){
+            choices = {none: "Don't Mitigate Failure",flex: "Use 1 <strong>Flex</strong> to mitigate"};
+        }
+        else if (severityFlavor && poolValue && !flexValue && actorType === "character"){
+            choices = {none: "Don't Mitigate Failure",pool: "Use 1 <strong>" + poolType + "</strong> to mitigate"};
+        }
+        else if (severityFlavor && threatLevel){
+            choices = {none: "Don't Mitigate Failure",pool: "Use 1 <strong>" + poolType + "</strong> to mitigate"};
+        }
+        else if (poolValue && flexValue){
+            choices = {none: "Don't Swap Dice",pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>",flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (!poolValue && flexValue){
+            choices = {none: "Don't Swap Dice",flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (poolValue && !flexValue && actorType === "character"){
+            choices = {none: "Don't Swap Dice",pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (threatLevel){
+            choices = {none: "Don't Swap Dice",pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else {
+            radioStatus = false
+        }
+        
+        let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/swap-dialog.html";
-        const html = await renderTemplate(template, {swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor});
+        const html = await renderTemplate(template, {swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
                 title: "Swap Roll",
                 content: html,
                 dv: weaponDamage,
                 buttons: {
-                    cancel: {
-                        label: "Decline",
-                        callback: html => resolve ({cancelled: true})
-                    },
                     normal: {
-                        label: "Use Pool",
+                        label: "Use this Selection",
                         callback: html => resolve(_proSwipSwapOptions(html[0].querySelector("form")))
                     }
                 },
-                default: "normal",
-                close: () => resolve ({cancelled: true})
+                default: "normal"
             };
             let options = {width:266}
             new Dialog(data, options).render(true);
@@ -1774,32 +1872,45 @@ export async function TaskCheck({
 
     function _proSwipSwapOptions(form) {
         return {
-            swap: form.useSwap ? form.useSwap.checked : false,
-            flex: form.useFlex ? form.useFlex.checked : false,
-            mitigate: form.useMitigate ? form.useMitigate.checked : false,
-            flexMitigate: form.useFlexMitigate ? form.useFlexMitigate.checked : false
+            swap: form.useSwap ? form.useSwap.value : null,
+            mitigate: form.useMitigate ? form.useMitigate.value : null
         }
     }
 
-    async function GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+    async function GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType) {
+        let groupName = "useSwap";
+        let choices = {};
+        let radioStatus = true
+        if (poolValue && flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (!poolValue && flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (poolValue && !flexValue && actorType === "character" && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else if (threatLevel && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        }
+        else {
+            radioStatus = false
+        }
+        
+        let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/raise-dialog.html";
-        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue});
+        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
                 title: "Raise Roll",
                 content: html,
                 buttons: {
-                    cancel: {
-                        label: "Decline",
-                        callback: html => resolve ({cancelled: true})
-                    },
                     normal: {
-                        label: "Use Pool",
+                        label: "Use this Selection",
                         callback: html => resolve(_proRaiseOptions(html[0].querySelector("form")))
                     }
                 },
-                default: "normal",
-                close: () => resolve ({cancelled: true})
+                default: "normal"
             };
             let options = {width:266}
             new Dialog(data, options).render(true);
@@ -1808,192 +1919,8 @@ export async function TaskCheck({
 
     function _proRaiseOptions(form) {
         return {
-            swap: form.useSwap ? form.useSwap.checked : false,
-            flex: form.useFlex ? form.useFlex.checked : false,
+            swap: form.useSwap ? form.useSwap.value : false,
             raise: form.useRaise ? form.useRaise.checked : false
         }
     }
 }
-
-//Weapon damage rolls
-export async function DamageRoll({
-        //General
-        actorWhole = "",
-        weaponName = "",
-        weaponID = "",
-        weaponDamage = "",
-        weaponType = "",
-        currentAmmo = "",
-        updateAmmo = "",
-        ammoUpdate = [],
-        successType = "normal",
-        critical = false,
-        mode="",
-        askForOptions = false,
-        optionsSettings = null
-    } = {}) {
-
-    if (askForOptions != optionsSettings && weaponType === "ranged") {
-        let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage);
-
-        if (checkOptions.cancelled) {
-            return;
-        }
-        attackMode = checkOptions.mode;
-        weaponDamage = checkOptions.changeddamage;
-        successType = checkOptions.successType;
-        critical = checkOptions.critical;
-    }
-
-    else if (askForOptions != optionsSettings && weaponType === "melee") {
-        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage);
-
-        if (checkOptions.cancelled) {
-            return;
-        }
-        attackMode = checkOptions.type;
-        weaponDamage = checkOptions.changeddamage;
-        successType = checkOptions.successType;
-        critical = checkOptions.critical;
-    }
-
-    if (attackMode === "single") {
-        modeDamage = ""
-        updateAmmo = currentAmmo - 1;
-    }
-    else if (attackMode === "burst") {
-        modeDamage = "+ 1d10";
-        updateAmmo = currentAmmo - 3;
-    }
-    else if (attackMode === "fullAuto"){
-        modeDamage = "+ 2d10";
-        updateAmmo = currentAmmo - 10;
-    }
-    else if (attackMode === "wBurst") {
-        modeDamage = "";
-        updateAmmo = currentAmmo - 3;
-    }
-    else if (attackMode === "wFullAuto") {
-        modeDamage = "";
-        updateAmmo = currentAmmo - 10;
-    }
-    else if (attackMode === "charge") {
-        modeDamage = "+ 1d6";
-    }
-    else if (attackMode === "aggressive") {
-        modeDamage = "+ 1d10";
-    }
-    else if (attackMode === "aggressiveCharge") {
-        modeDamage = "+ 1d10";
-    }
-    else {
-        modeDamage = "";
-    }
-    let criticalModifier = critical ? "2 *(" : "(";
-    let successModifier = ")";
-    if (successType === "greater") {
-        successModifier = "+ 1d6)"
-    }
-    else if (successType === "superior") {
-        successModifier = "+ 2d6)"
-    }
-
-    if (updateAmmo>=0) {
-        let intermediateRollFormula = weaponDamage + modeDamage + successModifier;
-        let rollFormula = criticalModifier + (intermediateRollFormula);
-        let roll = await new Roll(rollFormula).evaluate({async: true});
-    
-            let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
-            roll.toMessage({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                flavor: label
-            });
-    
-            ammoUpdate.push({
-                "_id" : weaponID,
-                "system.ammoMin": updateAmmo
-              });
-    
-            //This updates the items ammunition
-            actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
-    }
-    else {
-        ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            content: "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
-            whisper: [game.user._id]
-          })
-    }
-    
-
-    async function GetDamageRangedOptions(weaponName, weaponDamage) {
-        const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
-        const html = await renderTemplate(template, {weaponDamage});
-        return new Promise(resolve => {
-            const data = {
-                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
-                content: html,
-                dv: weaponDamage,
-                buttons: {
-                    cancel: {
-                        label: "Cancel",
-                        callback: html => resolve ({cancelled: true})
-                    },
-                    normal: {
-                        label: "Roll!",
-                        callback: html => resolve(_proRangedRollOptions(html[0].querySelector("form")))
-                    }
-                },
-                default: "normal",
-                close: () => resolve ({cancelled: true})
-            };
-            new Dialog(data, null).render(true);
-        });
-    }
-
-    function _proRangedRollOptions(form) {
-        return {
-            attackMode: form.FiringMode.value,
-            changeddamage: form.currentDV.value,
-            successType: form.successType.value,
-            critical: form.critical.checked
-        }
-
-    }
-
-    async function GetDamageMeleeOptions(weaponName, weaponDamage) {
-        const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
-        const html = await renderTemplate(template, {weaponDamage});
-        return new Promise(resolve => {
-            const data = {
-                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
-                content: html,
-                dv: weaponDamage,
-                buttons: {
-                    cancel: {
-                        label: "Cancel",
-                        callback: html => resolve ({cancelled: true})
-                    },
-                    normal: {
-                        label: "Roll!",
-                        callback: html => resolve(_proMeleeRollOptions(html[0].querySelector("form")))
-                    }
-                },
-                default: "normal",
-                close: () => resolve ({cancelled: true})
-            };
-            new Dialog(data, null).render(true);
-        });
-    }
-
-    function _proMeleeRollOptions(form) {
-        return {
-            attackMode: form.AttackType.value,
-            changeddamage: form.currentDV.value,
-            successType: form.successType.value,
-            critical: form.critical.checked
-        }
-
-    }
-}
-

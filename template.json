@@ -1039,21 +1039,98 @@
         "base",
         "buyable"
       ],
+      "cog": null,
+      "int": null,
+      "ref": null,
+      "sav": null,
+      "som": null,
+      "wil": null,
+      "init": null,
       "vig": null,
       "mox": null,
       "ins": null,
       "flex": null,
+      "threat": null,
       "type": null,
       "armor": null,
+      "luc": null,
       "dur": null,
       "wounds": null,
+      "trauma": null,
       "curIns": null,
       "curMox": null,
       "curVig": null,
       "curFlex": null,
+      "curThreat": null,
       "curDur": null,
+      "curLuc": null,
       "mov": null,
-      "pass": null
+      "pass": null,
+      "skills": {
+        "1": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "2": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "3": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "4": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "5": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "6": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "7": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "8": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        },
+        "9": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
+        }
+      }
     }
   }
 }

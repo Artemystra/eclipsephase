@@ -9,78 +9,25 @@
         <div class="flexrow subheader">
             <h3 class="subheader dialog">Use Pools</h3>
         </div>
-        {{#if (eq actorType "character")}}
+        {{#if swapPossible}}
+        <div class="form-group listBackgroundMain">
+            <div style="display: grid;">
+                {{radioBoxes groupName choices checked=chosen localize=true}}
+            </div>
+        </div>
+        {{/if}}
+        {{#if potentialRaise}}
             {{#if poolValue}}
-                {{#if swapPossible}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useSwap">
-                        <label class="resource-label">Use {{poolType}} to swap to <strong>{{swipSwap}}</strong></label>
-                    </div>
-                {{else}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useSwap" disabled>
-                        <label class="resource-label epInactive">No swap available</label>
-                    </div>
-                {{/if}}
-
-                {{#if potentialRaise}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useRaise">
-                        <label class="resource-label">Use {{poolType}} to raise <strong>Success Level</strong></label>
-                    </div>
-                {{/if}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="useRaise">
+                    <label class="resource-label">Use {{poolType}} to raise <strong>Success Level</strong></label>
+                </div>
             {{else}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="useSwap" disabled>
+                    <input type="checkbox" name="useRaise" disabled>
                     <label class="resource-label epInactive">No {{poolType}} available</label>
                 </div>
             {{/if}}
-            
-            {{#if swapPossible}}
-                {{#if flexValue}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useFlex">
-                        <label class="resource-label">Use flex to swap to <strong>{{swipSwap}}</strong></label>
-                    </div>
-                {{else}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useFlex" disabled>
-                        <label class="resource-label epInactive">No Flex available</label>
-                    </div>
-                {{/if}}
-            {{/if}}
-
-        {{else}}
-            {{#if threatLevel}}
-                {{#if swapPossible}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useSwap">
-                        <label class="resource-label">Use threat to swap to <strong>{{swipSwap}}</strong></label>
-                    </div>
-                {{else}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useSwap" disabled>
-                        <label class="resource-label epInactive">No swap available</label>
-                    </div>
-                {{/if}}
-                {{#if potentialRaise}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useRaise">
-                        <label class="resource-label">Use threat raise <strong>Success Level</strong></label>
-                    </div>
-                {{else}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useRaise" disabled>
-                        <label class="resource-label epInactive">No success raise available</label>
-                    </div>
-                {{/if}}
-            {{else}}
-                <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="useSwap" disabled>
-                    <label class="resource-label epInactive">No threat available</label>
-                </div>
-            {{/if}}
-
         {{/if}}
     </div>
 </form>

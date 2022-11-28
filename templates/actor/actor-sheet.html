@@ -28,9 +28,11 @@
                     <a class="item" data-tab="body">Morph</a>
                     <a class="item" data-tab="weapons">Inventory</a>
                     {{#if actor.vehicle.Vehicle}}
-                    <a class="item" data-tab="vehicles">Vehicles</a>
+                    <a class="item" data-tab="vehicles">Peripherals</a>
                     {{else if actor.vehicle.Robot}}
-                    <a class="item" data-tab="vehicles">Vehicles</a>
+                    <a class="item" data-tab="vehicles">Peripherals</a>
+                    {{else if actor.vehicle.Smart-Animal}}
+                    <a class="item" data-tab="vehicles">Peripherals</a>
                     {{/if}}
                     {{#if actor.system.additionalSystems.hasPsi}}
                     <a class="item" data-tab="psi">Psi</a>
@@ -246,7 +248,7 @@
                                                 </td>
                                                 <td>
                                                     <label class="flex-group-center noMargin
-                                                    noBG"><strong>{{item.system.dr}}</strong></label>
+                                                    noBG"><strong>{{item.dr}}</strong></label>
                                                 </td>
                                                 <td>
                                                     <label class="flex-group-center noMargin
@@ -349,12 +351,8 @@
                                                 <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
                                             </td>
                                             <td>
-                                                <input class="input-small sheet-inline-edit
-                                                noMargin" data-field="system.curDur"
-                                                type="number" name="item.system.curDur"
-                                                value="{{item.system.curDur}}" placeholder="0"/>
-                                                <label class="flex-group-center noMargin
-                                                noBG"><strong>/ {{item.system.dur}}</strong></label>
+                                                <input class="input-small sheet-inline-edit noMargin" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/>
+                                                <label class="flex-group-center noMargin noBG"><strong>/ {{item.system.dur}}</strong></label>
                                             </td>
                                             <td>
                                                 <label class="flex-group-center noMargin noBG"><strong>{{item.dr}}</strong></label>
@@ -382,6 +380,127 @@
                                         </tr>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                        {{#each actor.vehicle.Smart-Animal as |item id|}}
+                        <div class="item contentBox" data-item-id="{{item._id}}">
+                            <div class="flexrow">
+                                <h3 class="subheader">{{item.name}}</h3>
+                                <div class="alignRight flexGrowThreeQuarter">
+                                    <label class="resource-label">Threat</label>
+                                    <input class="input-xs sheet-inline-edit" data-field="system.curThreat" type="number" name="item.system.curThreat" value="{{item.system.curThreat}}" placeholder="0"/>
+                                    <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.threat}}</strong></label>
+                                </div>
+                            </div>
+                            <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+                                <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
+                                    <div>
+                                        <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Dur/DR</span></i>
+                                        <input class="input-xs sheet-inline-edit" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.dur}}/{{item.system.dr}}</span>                                
+                                    </div>
+                                    <div>
+                                        <i class="fa-regular fa-bandage wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Wounds/(WT)</span></i>
+                                        <input class="input-xs" type="number" name="system.wounds" value="{{item.system.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.wt}})</span>
+                                    </div>
+                                    <div>
+                                        <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Stress/Luc</span></i>
+                                        <input class="input-xs sheet-inline-edit" data-field="system.curLuc" type="number" name="item.system.curLuc" value="{{item.system.curLuc}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.luc}}/{{item.system.ir}}</span>
+                                    </div>
+                                    <div>
+                                        <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Trauma/(TT)</span></i>
+                                        <input class="input-xs" type="number" name="system.trauma" value="{{item.system.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.tt}})</span>
+                                    </div>
+                                    <div>
+                                        <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Ini Mod</span></i>
+                                        <strong>{{item.system.init}}</strong> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="topLine">
+                                    <div class="item" data-item-id="{{item._id}}" style="padding: 0">
+                                        <table class="noMargin alignCenter">
+                                            <tr>
+                                                <td>
+                                                    <label class="resource-label">Cog</label>
+                                                </td>
+                                                <td>
+                                                    <label class="resource-label">Int</label>
+                                                </td>
+                                                <td>
+                                                    <label class="resource-label">Ref</label>
+                                                </td>
+                                                <td>
+                                                    <label class="resource-label">Sav</label>
+                                                </td>
+                                                <td>
+                                                    <label class="resource-label">Som</label>
+                                                </td>
+                                                <td>
+                                                    <label class="resource-label">Wil</label>
+                                                </td>
+                                                <td>
+                                                    <label class="resource-label">Armor</label>
+                                                </td>
+                                                <td>
+                                                    <label class="resource-label">Movement</label>
+                                                </td>
+                                                <td>
+                                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.cog}}</strong></label>
+                                                </td>
+                                                <td>
+                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.int}}</strong></label>
+                                                </td>
+                                                <td>
+                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.ref}}</strong></label>
+                                                </td>
+                                                <td>
+                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.sav}}</strong></label>
+                                                </td>
+                                                <td>
+                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.som}}</strong></label>
+                                                </td>
+                                                <td>
+                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.wil}}</strong></label>
+                                                </td>
+                                                <td>
+                                                    <input class="input-small sheet-inline-edit" data-field="system.armor" type="text" name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
+                                                </td>
+                                                <td>
+                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.mov}}</strong></label>
+                                                </td>
+                                                <td>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table class="noMargin alignCenter">
+                                            <tr>
+                                                <td>
+                                                    <input class="sheet-inline-edit" data-field="system.description" type="text" name="item.system.description" value="{{item.system.description}}" placeholder="No modifications"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        {{#if item.system.skills.1.name}}
+                                        <h3 style="margin-top: 10px;">Skills</h3>
+                                        <div class="grid grid-3col">
+                                            {{#each item.system.skills as |skill key|}}
+                                                {{#if skill.name}}
+                                                <div class="flexrow flex-group-center reveal">
+                                                    <label class="input-xs resource-value">{{key}}.</label>
+                                                    <label>{{skill.name}}</label>
+                                                    <label class="input-xs resource-value">{{skill.value}}</label>
+                                                    <label class="input-large">{{skill.specname}}</label>
+                                                </div>
+                                                {{/if}}
+                                            {{/each}}
+                                        </div>
+                                        {{/if}}
+                                    </div>
                             </div>
                         </div>
                         {{/each}}

@@ -8,6 +8,7 @@ export default class EPknowSkillSheet extends ItemSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
+      resizable: false,
       width: 600,
       height: 130,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]

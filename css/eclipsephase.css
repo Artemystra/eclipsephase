@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Martel:wght@400;800&family=Roboto:wght@300;400;500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 /* Global styles */
 .window-app {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Cousine', monospace;
   font-size: 13px;
 }
 
@@ -120,7 +121,7 @@
 }
 
 .contentleft {
-  height: 286px;
+  height: 291px;
   overflow: auto;
   padding: 0;
   background-color: var(--mainBackground);
@@ -133,7 +134,8 @@
 
 .contentcenter {
   height: 685px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: var(--mainBackground);
 }
 
@@ -215,7 +217,7 @@
 
 /* Styles limited to eclipsephase sheets */
 .eclipsephase .item-form {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Cousine', monospace;
 }
 
 .eclipsephase .sheet-header {
@@ -324,6 +326,12 @@
   min-height: 225px;
 }
 
+@media only screen and (max-height: 850px) {
+  .idtab {
+    min-height: 320px;
+  }
+}
+
 .eclipsephase .tox .tox-edit-area {
   padding: 0 8px;
 }
@@ -342,6 +350,11 @@
   text-transform: uppercase;
   text-align: left;
   padding-left: 7px;
+}
+
+.dialog .checkbox {
+  font-size: 13px;
+  margin-top: 8px;
 }
 
 .eclipsephase .resource-section-label {
@@ -364,6 +377,7 @@
 
 .eclipsephase .footnote {
   font-size: 10px;
+  margin-left: -7px;
 }
 
 .eclipsephase .items-list {
@@ -621,6 +635,11 @@ input [class="rightField"],
 input [class="rightField"]:focus,
 input [class="rightField"]::placeholder{
   text-align: right!important;
+}
+
+input[name="useSwap"],
+input[name="useMitigate"]{
+  margin: 0px 6px 5px 8px!important;
 }
 
 h2 {
@@ -909,6 +928,20 @@ optgroup .Default .Roll .Mode,
 }
 
 /* Own Styles */
+#pause figcaption {
+  font-family: 'Cousine', monospace;
+}
+
+#keybindings .binding .key.uneditable{
+  background: none;
+  color: var(--inactive);
+  border: 1px solid var(--inactive);
+}
+
+#pause img {
+  content: url(../resources/img/eclipse.webp);
+}
+
 .chat-message #context-menu.expand-down {
   top: calc(0% - 70px);
 }
@@ -1094,6 +1127,11 @@ h3.subheaderBlank {
 
 .input-large {
   max-width: 100px!important;
+}
+
+.input-largeSpec {
+  max-width: 115px!important;
+  margin-right: 10px!important;
 }
 
 .input-largePlus {
@@ -1297,6 +1335,10 @@ h3.subheaderBlank {
   display: none;
 }
 
+.contentcenter .slideShow {
+  max-width: 50px;
+}
+
 .noBorder {
   border: none;
 }
@@ -1319,7 +1361,8 @@ ol {
   flex-grow: 0.5;
 }
 
-.flavor-text {
+.flavor-text,
+.message-content {
   font-size: 16px!important;
   text-align: center;
   margin: 20px 0;
@@ -1474,7 +1517,7 @@ h3.inline {
 
 .tooltip:hover div[role=tooltip] {
   opacity: 1;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Cousine', monospace;
   max-width: 320px;
   min-width: 320px;
   display: block;
@@ -1488,7 +1531,7 @@ h3.inline {
 
 .tooltip:hover div[role=tooltipNegative] {
   opacity: 1;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Cousine', monospace;
   display: block;
   text-align: left;
   position: absolute;
@@ -1549,15 +1592,15 @@ h3.inline {
     border-width: 3px;
     border-radius: 6px;
     border-color: var(--highlightBackground);
-    top: -30px;
-    left: 0px;
+    top: -35px;
+    left: 22px;
 }
 
 .wantToKnowMore:hover .tooltipText {
   opacity: 1;
 }
 
-.wantToKnowMore .tooltipText::after {
+/*.wantToKnowMore .tooltipText::after {
   content: " ";
   position: absolute;
   top: 119%;
@@ -1566,7 +1609,7 @@ h3.inline {
   border-width: 5px;
   border-style: solid;
   border-color: var(--highlightBackground) transparent transparent transparent;
-}
+}*/
 
 .wantToKnowMore:hover .tooltipText {
   visibility: visible;
@@ -1672,7 +1715,7 @@ h3.inline {
 
 .mce-content-body {
   color: var(--mainText)!important;
-  font-family: 'Orbitron', sans-serif!important;
+  font-family: 'Cousine', monospace!important;
 }
 
 .mce-content-body p {
