@@ -1,6 +1,8 @@
-<header>
+
 
     {{!-- Character Picture --}}
+    {{#if (eq actor.type "character")}}
+<header>
     <div class="headroom">
         <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: -15px; z-index: 1; height: 68px;">
             <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
@@ -32,3 +34,38 @@
         </div>
     </div>
 </header>
+    {{else}}
+<header style="margin-top: 27px">
+    <div class="headroom">
+        <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: -43px; z-index: 1; height: 68px;">
+            <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+        </div>
+        <div style="max-height: 358px;">
+            <img class="profile-img" src="{{actor.img}}" data-edit="img"
+            title="{{actor.name}}"/>
+        </div>
+        <div class="centerBackground" style="position: absolute; top: -28px; right: 0px; background-color: var(--highlightBackground); width: 240px; padding: 16px 0px 0px 22px; box-shadow: 0 5px var(--pitchBorder); height: 48px;">
+            <input name="name" type="text" value="{{actor.name}}" placeholder="Name" style="width: auto; font-size: 17px; text-shadow: 0 0 5px #161616"/>
+        </div>
+    </div>
+    <div class="contentBox" style="background-color: var(--pitchBorder); min-height: 111px;">
+        <div class="flexrow">
+            <h3 class="subheader colorV1">Aptitudes</h3>
+            <div class="flexGrowHalf">
+            </div>
+        </div>
+        <div class="listBackground shape2 grid grid-3col noMargin">
+            {{#each actor.system.aptitudes as |aptitude key|}}
+            <div class="flexrow flex-group-center reveal standard-height">
+                <div class="flexrow flex-group-center input-small">
+                    <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{key}}</span>
+                    <label class="toggle roll-label task-check noShow" data-type="aptitude" data-name="{{aptitude.label}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                </div>
+                <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</header>
+    {{/if}}
+
