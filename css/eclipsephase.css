@@ -155,7 +155,7 @@
 }
 
 .contentright {
-  height: 680px;
+  height: 621px;
   overflow: auto;
 }
 
@@ -503,7 +503,8 @@ span.success {
 }
 
 input[class="sheet"],
-input[class="sheet equipped checkBox"]{
+input[class="sheet equipped checkBox"],
+input[class="rest"]{
   -webkit-appearance:none;
   appearance: none;
   flex: 0 0 10px;
@@ -525,6 +526,12 @@ input[class="check-inline-edit"]{
   display:block;
   border-radius: 100px;
   margin: 0 5px;
+}
+
+input[class="rest"] {
+  border-radius: 0px;
+  min-height: 13px;
+  min-width: 13px;
 }
 
 input[type="text"]::placeholder, 
@@ -607,7 +614,8 @@ textarea:read-only{
 }
 
 input[class="sheet"]:checked,
-input[class="sheet equipped checkBox"]:checked{
+input[class="sheet equipped checkBox"]:checked,
+input[class="rest"]:checked{
   background-color: var(--highlight);
   padding:4px;
   border: var(--focusBackground) 1px solid;
@@ -928,6 +936,11 @@ optgroup .Default .Roll .Mode,
 }
 
 /* Own Styles */
+.skill {
+  min-height: 26px;
+  max-height: 26px;
+}
+
 #pause figcaption {
   font-family: 'Cousine', monospace;
 }
@@ -1212,6 +1225,11 @@ h3.subheaderBlank {
   background-size: 100% auto;
 }
 
+.statusSideCar {
+  max-height: 50px;
+  min-height: 50px;
+}
+
 .flexrow.subheader {
   border-bottom: solid var(--accentBackground) 3px;
   background-color: var(--focusBackground);
@@ -1335,8 +1353,10 @@ h3.subheaderBlank {
   display: none;
 }
 
-.contentcenter .slideShow {
+.contentcenter .slideShow, 
+.contentleft .slideShow {
   max-width: 50px;
+  min-height: 36px;
 }
 
 .noBorder {
@@ -1487,7 +1507,7 @@ img {
 }
 
 .pill {
-  max-width: 110px;
+  max-width: 103px;
   background-color: var(--pitchBorder);
   margin-right: 5px;
   min-height: 36px;
