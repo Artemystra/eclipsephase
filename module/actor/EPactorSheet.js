@@ -411,6 +411,8 @@ export default class EPactorSheet extends ActorSheet {
 
     // Recover Pools
     html.find('.rest').click(async func => {
+      const element = event.currentTarget;
+      const dataset = element.dataset;
       const brewStatus = game.settings.get("eclipsephase", "superBrew");
       const actorWhole = this.actor;
       const actorModel = this.actor.system;
@@ -425,18 +427,28 @@ export default class EPactorSheet extends ActorSheet {
       const poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
 
       let roll = await new Roll("1d6").evaluate({async: true});
-  
-      let label = "Rolls to recover pools";
-      let recover = await roll.toMessage({
-          speaker: ChatMessage.getSpeaker({actor: this.actor}),
-          flavor: label
-      });
+      let recover = null;
+      let restValue = null;
+      if (dataset.resttype === "short"){
+    
+        let label = "Rolls to recover pools";
+        recover = await roll.toMessage({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: label
+        });
 
-      let restValue = recover.content
+        restValue = recover.content
 
-      await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
+        await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
+      }
 
-      if (restValue >= poolSpend && !brewStatus){
+      if (dataset.resttype === "long" && !brewStatus){
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
+      }
+      else if (dataset.resttype === "long" && brewStatus){
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null});
+      }
+      else if (restValue >= poolSpend && !brewStatus){
         return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
       }
       else if (restValue >= poolSpend && brewStatus){
