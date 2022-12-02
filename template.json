@@ -70,6 +70,12 @@
           "flex": {
             "value": null,
             "mod": null
+          },
+          "update": {
+            "insight": null,
+            "vigor": null,
+            "moxie": null,
+            "flex": null
           }
         },
         "aptitudes": {
@@ -707,7 +713,8 @@
       "rest": {
         "short1": false,
         "short2": false,
-        "long": false
+        "long": false,
+        "restValue": null
       },
       "bodies": {
         "activeMorph": "morph1",

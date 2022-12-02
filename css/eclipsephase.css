@@ -675,6 +675,9 @@ form button,
 
 button:disabled {
   color: var(--inactive);
+  border: 2px solid var(--focusBackground);
+  background: var(--focusBackground);
+  cursor: default;
 }
 
 a.content-link, a.inline-roll {
@@ -939,6 +942,12 @@ optgroup .Default .Roll .Mode,
 .skill {
   min-height: 26px;
   max-height: 26px;
+}
+
+.playerSkill {
+  min-height: 26px;
+  max-height: 26px;
+  margin-bottom: 5px;
 }
 
 #pause figcaption {
@@ -1639,6 +1648,7 @@ h3.inline {
 .moxie,
 .vigor,
 .flex,
+.restInfo,
 .information,
 .armorValue{
   max-height: 400px;
@@ -1649,6 +1659,10 @@ h3.inline {
   padding: 3em 2em 2em 3.5em;
   border-left: solid 0.25em var(--mainBackground);
   border-right: solid 0.25em var(--mainBackground);
+}
+
+.restInfo {
+  max-height: 300px;
 }
 
 .insight {
@@ -1670,6 +1684,31 @@ h3.inline {
 
 .armorValue {
   background-image: url(../resources/img/armor.jpg);
+}
+
+.insightPoolRecovery,
+.vigorPoolRecovery,
+.moxiePoolRecovery,
+.flexPoolRecovery {
+  min-height: 45px;
+  max-width: 50px;
+}
+
+.insightPoolRecovery {
+  background-image: url(../resources/icons/insight.webp);
+  background-size: 100%;
+}
+.vigorPoolRecovery {
+  background-image: url(../resources/icons/vigor.webp);
+  background-size: 100%;
+}
+.moxiePoolRecovery {
+  background-image: url(../resources/icons/moxie.webp);
+  background-size: 100%;
+}
+.flexPoolRecovery {
+  background-image: url(../resources/icons/flex.webp);
+  background-size: 100%;
 }
 
 .directory .directory-header .header-search input {
