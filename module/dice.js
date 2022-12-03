@@ -878,7 +878,7 @@ export async function TaskCheck({
             }
 
             let combinedPools = poolValue+flexValue+threatLevel;
-
+            console.log("my combined pool")
             if (!successType && swapPossible && combinedPools > 0){
                 let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
 
@@ -948,8 +948,8 @@ export async function TaskCheck({
             usedSwipSwap = false;
 
             let poolRAM = poolType;
-
-            if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible){
+            
+            if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible || successType &&  flexValue > 0 && potentialRaise || successType &&  flexValue > 0 && swapPossible){
                 
                 let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType);
 
