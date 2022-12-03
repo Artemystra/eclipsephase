@@ -57,7 +57,8 @@ export default class EPactorSheet extends ActorSheet {
 
   async getData() {
     const sheetData = super.getData();
-    const actor = sheetData.actor
+    const actor = sheetData.actor;
+
 
     sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
@@ -100,9 +101,10 @@ export default class EPactorSheet extends ActorSheet {
 
 
 
-    return sheetData
+    return mergeObject(sheetData, {
+      isGM: game.user.isGM
+    });
   }
-
   //Binds morphFlaws/Traits/Gear to a singular morph
   async _onDropItemCreate(item) {
 
@@ -431,7 +433,7 @@ export default class EPactorSheet extends ActorSheet {
       let restValue = null;
       if (dataset.resttype === "short"){
     
-        let label = "Rolls to recover pools";
+        let label = "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>";
         recover = await roll.toMessage({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
             flavor: label
@@ -443,9 +445,17 @@ export default class EPactorSheet extends ActorSheet {
       }
 
       if (dataset.resttype === "long" && !brewStatus){
+        ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+          flavor: "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+      })
         return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
       }
       else if (dataset.resttype === "long" && brewStatus){
+          ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: "I used my<p/><strong>Long Rest<p/></strong>to recover all pools but Flex<p/>"
+        })
         return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null});
       }
       else if (restValue >= poolSpend && !brewStatus){

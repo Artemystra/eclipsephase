@@ -45,6 +45,10 @@ export default class EPactor extends Actor {
     else {
       actorModel.homebrew = false;
     }
+
+    if (game.user.isGM){
+
+    }
     
     //Determin whether any gear is present
     for(let gearCheck of items){

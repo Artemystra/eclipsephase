@@ -1663,6 +1663,7 @@ h3.inline {
 
 .restInfo {
   max-height: 300px;
+  background-image: url(../resources/img/recharge.webp);
 }
 
 .insight {

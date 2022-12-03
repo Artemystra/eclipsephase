@@ -45,12 +45,12 @@
                                         </div>
                                     </div>
                                 </i>
-                            <input class="input-xs -small" type="number"
-                            name="system.pools.insight.value"
-                            value="{{actor.system.pools.insight.value}}" placeholder="0"/>
-                            <span class="resource-value">/ {{#if
-                              actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>
+                            {{#if isGM}}
+                                <input class="input-xs" type="number" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
+                            {{else}}
+                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.insight.value}}{{actor.system.pools.insight.value}}{{else}}0{{/if}}</label>
                             {{/if}}
+                            <span class="resource-value">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>{{/if}}
                         </div>
                     </div>
                     <div class="listBackground edgeAbler">
@@ -124,10 +124,12 @@
                                     </div>
                                 </div>
                             </i>
-                            <input class="input-xs -small" type="number"
-                            name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/>
-                            <span class="resource-value">/ {{#if
-                              actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
+                            {{#if isGM}}
+                                <input class="input-xs -small" type="number"  name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/> 
+                            {{else}}
+                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.vigor.value}}{{actor.system.pools.vigor.value}}{{else}}0{{/if}}</label>
+                            {{/if}}
+                            <span class="resource-value">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
                             {{/if}}
                         </div>
                     </div>
@@ -211,10 +213,12 @@
                                     </div>
                                 </div>
                             </i>
-                            <input class="input-xs -small" type="number"
-                            name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
-                            <span class="resource-value">/ {{#if
-                              actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
+                            {{#if isGM}}
+                                <input class="input-xs -small" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
+                            {{else}}
+                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.moxie.value}}{{actor.system.pools.moxie.value}}{{else}}0{{/if}}</label>
+                            {{/if}}
+                            <span class="resource-value">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
                             {{/if}}
                         </div>
                     </div>
@@ -375,16 +379,18 @@
                                     </div>
                                 </div>
                             </i>
-                            <input class="input-xs -small" type="number"
-                            name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
-                            <span class="resource-value">/ {{#if
-                              actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
+                            {{#if isGM}}
+                                <input class="input-xs -small" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
+                            {{else}}
+                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.flex.value}}{{actor.system.pools.flex.value}}{{else}}0{{/if}}</label>
+                            {{/if}}
+                            <span class="resource-value">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
                         </div>
                     </div>
                     <div class="listBackground" style="padding: 5px 0 5px 0; min-height: 137px;">
                         {{#if (eq actor.system.rest.restValue null)}}
                             <div class="reveal" style="padding: 5px 0px 5px 10px;">
-                                <label class="resource-value input-large" style ="font-size: 16px;">Rest</label>
+                                <label class="resource-value input-large" style ="font-size: 16px;">Recover Pools</label>
                                 <i class="far fa-question-circle icon-hidden info tooltip">
                                     <div role="tooltip">
                                         <div class="tooltipTopBorder">
@@ -395,6 +401,7 @@
                                             <ul>
                                                 <li>
                                                     <label class="resource-value">General: </label>
+                                                    You need to use a "rest" action in order to recover pools.
                                                     Choose the type of rest you want to use by clicking
                                                     the checkbox next to it. You have 1 long and 2 short
                                                     rest during the cycle of 24 in-game hours.
@@ -409,7 +416,7 @@
                                                 </li>
                                                 <p/>
                                                 <li>
-                                                    <label class="resource-value">Short Rest: </label>
+                                                    <label class="resource-value">Long Rest: </label>
                                                     A person with biomods takes about 4 hours for a long rest. This requires
                                                      them to do nothing else than rest, talk and just come down. Flats need 
                                                      8 hours to achieve the same.<p/>
@@ -424,18 +431,18 @@
                                 </i>
                             </div>
                             <div class="flexrow" style="align-items: baseline; background-color: var(--pitchBorder); padding: 18px 0 20px 10px;">
-                                <label class="resource-value input-medium" style ="font-size: 16px;">Short:</label>
+                                <label class="resource-value" style ="font-size: 16px; max-width: 106px;">Short Rest:</label>
                                 {{#if actor.system.rest.short1}}
                                 <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1" disabled {{checked actor.system.rest.short1}}>
                                 {{else}}
                                 <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1"{{checked actor.system.rest.short1}}>
                                 {{/if}}
                                 {{#if actor.system.rest.short2}}
-                                <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
+                                <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
                                 {{else}}
-                                <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
+                                <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
                                 {{/if}}
-                                <label class="resource-value input-medium" style ="font-size: 16px; text-align: right;">Long:</label>
+                                <label class="resource-value input-large" style ="font-size: 16px; text-align: right;">Long Rest:</label>
                                 {{#if actor.system.rest.long}}
                                 <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" disabled {{checked actor.system.rest.long}}>
                                 {{else}}
@@ -458,7 +465,35 @@
                                     <label class="resource-value" style="min-width: 100%; font-size: 16px;">Ready to Go! No pool points left</label>
                                 {{/if}}
                             </div>
-                            <div class="grid grid-4col">
+                            {{#if (eq actor.system.homebrew false)}}
+                                <div class="grid grid-4col">
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-center insightPoolRecovery">
+                                            <input class=" input-xs" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
+                                            <label class="resource-value" style="min-width: 100%;">Insight</label>
+                                        </div>
+                                    </div>
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-center vigorPoolRecovery">
+                                            <input class=" input-xs" type="number" name="system.pools.update.vigor" value="{{actor.system.pools.update.vigor}}" data-dtype="Number" placeholder="0"/>
+                                            <label class="resource-value" style="min-width: 100%;">Vigor</label>
+                                        </div>
+                                    </div>
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-center moxiePoolRecovery">
+                                            <input class=" input-xs" type="number" name="system.pools.update.moxie" value="{{actor.system.pools.update.moxie}}" data-dtype="Number" placeholder="0"/>
+                                            <label class="resource-value" style="min-width: 100%;">Moxie</label>
+                                        </div>
+                                    </div>
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-center flexPoolRecovery">
+                                            <input class=" input-xs" type="number" name="system.pools.update.flex" value="{{actor.system.pools.update.flex}}" data-dtype="Number" placeholder="0"/>
+                                            <label class="resource-value" style="min-width: 100%;">Flex</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{else}}
+                            <div class="grid grid-3col">
                                 <div class="flexrow flex-group-center">
                                     <div class="flexrow flex-group-center insightPoolRecovery">
                                         <input class=" input-xs" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
@@ -477,13 +512,8 @@
                                         <label class="resource-value" style="min-width: 100%;">Moxie</label>
                                     </div>
                                 </div>
-                                <div class="flexrow flex-group-center">
-                                    <div class="flexrow flex-group-center flexPoolRecovery">
-                                        <input class=" input-xs" type="number" name="system.pools.update.flex" value="{{actor.system.pools.update.flex}}" data-dtype="Number" placeholder="0"/>
-                                        <label class="resource-value" style="min-width: 100%;">Flex</label>
-                                    </div>
-                                </div>
                             </div>
+                            {{/if}}
                             <div class="grid grid-3col" style="margin-bottom: 0px;">
                                 <div></div>
                                 {{#if (eq actor.system.pools.update.possible 0)}}
