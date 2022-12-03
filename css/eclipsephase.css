@@ -1650,7 +1650,8 @@ h3.inline {
 .flex,
 .restInfo,
 .information,
-.armorValue{
+.armorValue,
+.currentStatus{
   max-height: 400px;
   overflow: auto;
   background-repeat: no-repeat;
