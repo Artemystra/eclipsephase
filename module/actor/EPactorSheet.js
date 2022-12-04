@@ -57,7 +57,8 @@ export default class EPactorSheet extends ActorSheet {
 
   async getData() {
     const sheetData = super.getData();
-    const actor = sheetData.actor
+    const actor = sheetData.actor;
+
 
     sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
@@ -100,9 +101,10 @@ export default class EPactorSheet extends ActorSheet {
 
 
 
-    return sheetData
+    return mergeObject(sheetData, {
+      isGM: game.user.isGM
+    });
   }
-
   //Binds morphFlaws/Traits/Gear to a singular morph
   async _onDropItemCreate(item) {
 
@@ -408,6 +410,91 @@ export default class EPactorSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find('.task-check').click(this._onTaskCheck.bind(this));
+
+    // Recover Pools
+    html.find('.rest').click(async func => {
+      const element = event.currentTarget;
+      const dataset = element.dataset;
+      const brewStatus = game.settings.get("eclipsephase", "superBrew");
+      const actorWhole = this.actor;
+      const actorModel = this.actor.system;
+      const curInsight = actorModel.pools.insight.value;
+      const curVigor = actorModel.pools.vigor.value;
+      const curMoxie = actorModel.pools.moxie.value;
+      const curFlex = actorModel.pools.flex.value;
+      const maxInsight = actorModel.pools.insight.totalInsight;
+      const maxVigor = actorModel.pools.vigor.totalVigor;
+      const maxMoxie = actorModel.pools.moxie.totalMoxie;
+      const maxFlex = actorModel.pools.flex.totalFlex;
+      let poolSpend = null
+
+      if (!brewStatus){
+        poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
+      }
+      else {
+        poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie);
+      }
+
+      let roll = await new Roll("1d6").evaluate({async: true});
+      let recover = null;
+      let restValue = null;
+      if (dataset.resttype === "short"){
+    
+        let label = "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>";
+        recover = await roll.toMessage({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: label
+        });
+
+        restValue = recover.content
+
+        await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
+      }
+
+      if (dataset.resttype === "long" && !brewStatus){
+        ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+          flavor: "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+      })
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
+      }
+      else if (dataset.resttype === "long" && brewStatus){
+          ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: "I used my<p/><strong>Long Rest<p/></strong>to recover all pools but Flex<p/>"
+        })
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null});
+      }
+      else if (restValue >= poolSpend && !brewStatus){
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
+      }
+      else if (restValue >= poolSpend && brewStatus){
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null});
+      }
+      else {
+        return actorWhole.update({"system.rest.restValue" : restValue});
+      }
+  });
+
+  html.find('.restReset').click(async func => {
+        const actorWhole = this.actor
+        return actorWhole.update({"system.rest.short1" : false, "system.rest.short2" : false, "system.rest.long" : false});
+  });
+
+  html.find('.distribute').click(async func => {
+    const actorWhole = this.actor;
+    const actorModel = this.actor.system;
+    const curInsight = actorModel.pools.insight.value;
+    const curVigor = actorModel.pools.vigor.value;
+    const curMoxie = actorModel.pools.moxie.value;
+    const curFlex = actorModel.pools.flex.value;
+    const insightUpdate = actorModel.pools.update.insight + curInsight;
+    const vigorUpdate = actorModel.pools.update.vigor + curVigor;
+    const moxieUpdate = actorModel.pools.update.moxie + curMoxie;
+    const flexUpdate = actorModel.pools.update.flex + curFlex;
+
+    return actorWhole.update({"system.pools.insight.value" : insightUpdate, "system.pools.vigor.value" : vigorUpdate, "system.pools.moxie.value" : moxieUpdate, "system.pools.flex.value" : flexUpdate, "system.rest.restValue" : null, "system.pools.update.insight" : null, "system.pools.update.vigor" : null, "system.pools.update.moxie" : null, "system.pools.update.flex" : null});
+  });
 
     // Drag events for macros.
     if (actor.isOwner) {

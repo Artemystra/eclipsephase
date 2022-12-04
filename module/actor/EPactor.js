@@ -32,102 +32,109 @@ export default class EPactor extends Actor {
   prepareData() {
     super.prepareData();
 
-    const actorData = this.system;
-    const flags = actorData.flags;
+    const actorModel = this.system;
+    const flags = actorModel.flags;
     const items = this.items;
     const psiMod = 0;
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
 
     // Homebrew Switch
     if (brewStatus) {
-      actorData.homebrew = true;
+      actorModel.homebrew = true;
     }
     else {
-      actorData.homebrew = false;
+      actorModel.homebrew = false;
+    }
+
+    if (game.user.isGM){
+
     }
     
     //Determin whether any gear is present
     for(let gearCheck of items){
       if(gearCheck.system.displayCategory === "ranged" || gearCheck.system.displayCategory === "ccweapon" || gearCheck.system.displayCategory === "gear" || gearCheck.system.displayCategory === "armor"){
-        actorData.additionalSystems.hasGear = true;
+        actorModel.additionalSystems.hasGear = true;
         break;
       }
     }
 
-    this._calculateMentalHealth(actorData)
+    this._calculateMentalHealth(actorModel)
 
     //Physical Health
     //NPCs & Goons only
     if(this.type === 'npc' || this.type === 'goon') {
 
       //Calculating WT & DR
-      actorData.health.physical.max = (actorData.bodies.morph1.dur) + 
-        eval(actorData.mods.durmod) // only one morph for npcs
-      actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
-      actorData.physical.dr = Math.round(actorData.health.physical.max * 
-        eclipsephase.damageRatingMultiplier[actorData.bodyType.value])
+      actorModel.health.physical.max = (actorModel.bodies.morph1.dur) + 
+        eval(actorModel.mods.durmod) // only one morph for npcs
+      actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5)
+      actorModel.physical.dr = Math.round(actorModel.health.physical.max * 
+        eclipsephase.damageRatingMultiplier[actorModel.bodyType.value])
 
-      if(actorData.health.physical.value === null) {
-        actorData.health.physical.value = actorData.health.physical.max
+      if(actorModel.health.physical.value === null) {
+        actorModel.health.physical.value = actorModel.health.physical.max
       }
     }
 
-    if(!actorData.mods.woundMultiplier){
-      actorData.mods.woundMultiplier = 1;
+    if(!actorModel.mods.woundMultiplier){
+      actorModel.mods.woundMultiplier = 1;
     }
 
     //Characters only
     //Durability
     if(this.type === "character") {
-      let morph = actorData.bodies[actorData.bodies.activeMorph]
-      actorData.health.physical.max = Number(morph.dur) + eval(actorData.mods.durmod)
-      actorData.physical.wt = Math.round(actorData.health.physical.max / 5)
-      actorData.physical.dr = Math.round(actorData.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]))
-      if(actorData.health.physical.value === null) {
-        actorData.health.physical.value = actorData.health.physical.max
+      let morph = actorModel.bodies[actorModel.bodies.activeMorph]
+      actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod)
+      actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5)
+      actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]))
+      if(actorModel.health.physical.value === null) {
+        actorModel.health.physical.value = actorModel.health.physical.max
       }
 
-      this._calculatePools(actorData, morph)
+      this._calculatePools(actorModel, morph)
     }
 
-    this._calculateArmor(actorData)
-    this._calculateInitiative(actorData)
-    this._calculateHomebrewEncumberance(actorData)
-    this._calculateSideCart(actorData, items)
+    this._calculateArmor(actorModel)
+    this._calculateInitiative(actorModel)
+    this._calculateHomebrewEncumberance(actorModel)
+    this._calculateSideCart(actorModel, items)
+    if (this.type === "character"){
+      this._poolUpdate(actorModel)
+    }
 
     //Psi-Calculator - Not Working yet
     if (this.type === "npc" || this.type === "character") {
-      actorData.psiStrain.new = 0;
-      actorData.psiStrain.current = Number(actorData.psiStrain.infection) + actorData.psiStrain.new;
+      actorModel.psiStrain.new = 0;
+      actorModel.psiStrain.current = Number(actorModel.psiStrain.infection) + actorModel.psiStrain.new;
     }
 
 
     // Aptitudes
-    for (let [key, aptitude] of Object.entries(actorData.aptitudes)) {
+    for (let [key, aptitude] of Object.entries(actorModel.aptitudes)) {
       aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
       aptitude.roll = aptitude.calc;
     }
 
     // Insight Skills
-    for (let [key, skill] of Object.entries(actorData.skillsIns)) {
+    for (let [key, skill] of Object.entries(actorModel.skillsIns)) {
       skill.mod = eval(skill.mod);
-      this._calculateSkillValue(key,skill,actorData,this.type);
+      this._calculateSkillValue(key,skill,actorModel,this.type);
     }
 
     // Moxie skills
-    for (let [key, skill] of Object.entries(actorData.skillsMox)) {
+    for (let [key, skill] of Object.entries(actorModel.skillsMox)) {
       skill.mod = eval(skill.mod);
-      this._calculateSkillValue(key,skill,actorData,this.type);
+      this._calculateSkillValue(key,skill,actorModel,this.type);
     }
 
     // Vigor skills
-    for (let [key, skill] of Object.entries(actorData.skillsVig)) {
+    for (let [key, skill] of Object.entries(actorModel.skillsVig)) {
       skill.mod = eval(skill.mod);
-      this._calculateSkillValue(key,skill,actorData,this.type);
+      this._calculateSkillValue(key,skill,actorModel,this.type);
     }
 
     //Pool Bonuses
-    for (let [key, pool] of Object.entries(actorData.pools)) {
+    for (let [key, pool] of Object.entries(actorModel.pools)) {
       pool.mod = eval(pool.mod);
     }
 
@@ -136,25 +143,25 @@ export default class EPactor extends Actor {
       let key = value.type;
       let aptSelect = 0;
       if (value.aptitude === "Intuition") {
-        aptSelect = actorData.aptitudes.int.value;
+        aptSelect = actorModel.aptitudes.int.value;
       }
       else if (value.aptitude === "Cognition") {
-        aptSelect = actorData.aptitudes.cog.value;
+        aptSelect = actorModel.aptitudes.cog.value;
       }
       else if (value.aptitude === "Reflexes") {
-        aptSelect = actorData.aptitudes.ref.value;
+        aptSelect = actorModel.aptitudes.ref.value;
       }
       else if (value.aptitude === "Somatics") {
-        aptSelect = actorData.aptitudes.som.value;
+        aptSelect = actorModel.aptitudes.som.value;
       }
       else if (value.aptitude === "Willpower") {
-        aptSelect = actorData.aptitudes.wil.value;
+        aptSelect = actorModel.aptitudes.wil.value;
       }
       else if (value.aptitude === "Savvy") {
-        aptSelect = actorData.aptitudes.sav.value;
+        aptSelect = actorModel.aptitudes.sav.value;
       }
       if(key === 'specialSkill' || key === 'knowSkill'){
-        if(actorData.type=="goon")
+        if(actorModel.type=="goon")
           value.roll = value.value?Number(value.value):aptSelect;
         else
           value.roll = Number(value.value) + aptSelect;
@@ -165,40 +172,40 @@ export default class EPactor extends Actor {
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) {
-    // const data = actorData.data;
+  _prepareCharacterData(actorModel) {
+    // const data = actorModel.data;
   }
 
-  _calculateInitiative(actorData) {
-    actorData.initiative.value = Math.round((actorData.aptitudes.ref.value +
-      actorData.aptitudes.int.value) / 5) + eval(actorData.mods.iniMod)
-    actorData.initiative.display = "1d6 + " + actorData.initiative.value
+  _calculateInitiative(actorModel) {
+    actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value +
+      actorModel.aptitudes.int.value) / 5) + eval(actorModel.mods.iniMod)
+    actorModel.initiative.display = "1d6 + " + actorModel.initiative.value
   }
 
-  _calculateMentalHealth(actorData) {
-    actorData.health.mental.max = (actorData.aptitudes.wil.value * 2) + eval(actorData.mods.lucmod);
-    actorData.mental.ir = actorData.health.mental.max * 2;
-    actorData.mental.tt = Math.round(actorData.health.mental.max / 5) + eval(actorData.mods.ttMod);
-    if(actorData.health.mental.value === null){
-      actorData.health.mental.value = actorData.health.mental.max;
+  _calculateMentalHealth(actorModel) {
+    actorModel.health.mental.max = (actorModel.aptitudes.wil.value * 2) + eval(actorModel.mods.lucmod);
+    actorModel.mental.ir = actorModel.health.mental.max * 2;
+    actorModel.mental.tt = Math.round(actorModel.health.mental.max / 5) + eval(actorModel.mods.ttMod);
+    if(actorModel.health.mental.value === null){
+      actorModel.health.mental.value = actorModel.health.mental.max;
     }
   }
 
-  _calculatePools(actorData, morph) {
-    actorData.pools.flex.totalFlex = Number(morph.flex) +
-      Number(actorData.ego.egoFlex) +
-      eval(actorData.pools.flex.mod)
-    actorData.pools.insight.totalInsight = Number(morph.insight) +
-      eval(actorData.pools.insight.mod)
-    actorData.pools.moxie.totalMoxie = Number(morph.moxie) +
-      eval(actorData.pools.moxie.mod)
-    actorData.pools.vigor.totalVigor = Number(morph.vigor) +
-      eval(actorData.pools.vigor.mod)
+  _calculatePools(actorModel, morph) {
+    actorModel.pools.flex.totalFlex = Number(morph.flex) +
+      Number(actorModel.ego.egoFlex) +
+      eval(actorModel.pools.flex.mod)
+    actorModel.pools.insight.totalInsight = Number(morph.insight) +
+      eval(actorModel.pools.insight.mod)
+    actorModel.pools.moxie.totalMoxie = Number(morph.moxie) +
+      eval(actorModel.pools.moxie.mod)
+    actorModel.pools.vigor.totalVigor = Number(morph.vigor) +
+      eval(actorModel.pools.vigor.mod)
   }
 
-  _calculateHomebrewEncumberance(actorData) {
+  _calculateHomebrewEncumberance(actorModel) {
    //HOMEBREW - Encumbrance through weapons & gear
-   if(actorData.homebrew === true && this.type === "character"){
+   if(actorModel.homebrew === true && this.type === "character"){
     //Weapon Variables
     let weaponScore = 0;
     let bulkyWeaponCount = 0;
@@ -246,17 +253,17 @@ export default class EPactor extends Actor {
     if(bulkyCount >= 1){
       bulkyMalus = (bulkyCount+bulkyWeaponCount)*20;
     }
-    actorData.physical.totalWeaponMalus = weaponMalus;
-    actorData.physical.totalGearMalus = bulkyMalus + accessoryMalus;
+    actorModel.physical.totalWeaponMalus = weaponMalus;
+    actorModel.physical.totalGearMalus = bulkyMalus + accessoryMalus;
   }
   //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
   else {
-    actorData.physical.totalWeaponMalus = 0;
-    actorData.physical.totalGearMalus = 0;
+    actorModel.physical.totalWeaponMalus = 0;
+    actorModel.physical.totalGearMalus = 0;
   }
   }
 
-  _calculateSideCart(actorData, items) {
+  _calculateSideCart(actorModel, items) {
     //Checks for certain item types to be equipped to dynamically change the side cart content
     let rangedCount = 0;
     let ccCount = 0;
@@ -277,28 +284,76 @@ export default class EPactor extends Actor {
       }
     }
     if(rangedCount>0){
-      actorData.additionalSystems.rangedEquipped = true;
+      actorModel.additionalSystems.rangedEquipped = true;
     }
     else{
-      actorData.additionalSystems.rangedEquipped = false;
+      actorModel.additionalSystems.rangedEquipped = false;
     }
     if(ccCount>0){
-      actorData.additionalSystems.ccEquipped = true;
+      actorModel.additionalSystems.ccEquipped = true;
     }
     else{
-      actorData.additionalSystems.ccEquipped = false;
+      actorModel.additionalSystems.ccEquipped = false;
     }
     if(armorCount>0){
-      actorData.additionalSystems.armorEquipped = true;
+      actorModel.additionalSystems.armorEquipped = true;
     }
     else{
-      actorData.additionalSystems.armorEquipped = false;
+      actorModel.additionalSystems.armorEquipped = false;
     }
     if(gearCount>0){
-      actorData.additionalSystems.gearEquipped = true;
+      actorModel.additionalSystems.gearEquipped = true;
     }
     else{
-      actorData.additionalSystems.gearEquipped = false;
+      actorModel.additionalSystems.gearEquipped = false;
+    }
+  }
+
+  _poolUpdate(actorModel) {
+    actorModel.pools.update.possible = true;
+    let insightUpdate = actorModel.pools.update.insight;
+    let vigorUpdate = actorModel.pools.update.vigor;
+    let moxieUpdate = actorModel.pools.update.moxie;
+    let flexUpdate = actorModel.pools.update.flex;
+    const curInsight = actorModel.pools.insight.value;
+    const curVigor = actorModel.pools.vigor.value;
+    const curMoxie = actorModel.pools.moxie.value;
+    const curFlex = actorModel.pools.flex.value;
+    const maxInsight = actorModel.pools.insight.totalInsight;
+    const maxVigor = actorModel.pools.vigor.totalVigor;
+    const maxMoxie = actorModel.pools.moxie.totalMoxie;
+    const maxFlex = actorModel.pools.flex.totalFlex;
+    console.log("This is my restValue: ", actorModel.rest.restValue)
+    const restValue = actorModel.rest.restValue;
+    const updateTotal = insightUpdate + vigorUpdate + moxieUpdate + flexUpdate;
+    restValue ? actorModel.rest.restValueUpdate = restValue - updateTotal : 0;
+    const restValueUpdate = actorModel.rest.restValueUpdate;
+
+    if (insightUpdate + curInsight > maxInsight){
+      insightUpdate = maxInsight - curInsight;
+      return this.update({"system.pools.update.insight" : insightUpdate});
+    }
+    if (vigorUpdate + curVigor > maxVigor){
+      vigorUpdate = maxVigor - curVigor;
+      return this.update({"system.pools.update.vigor" : vigorUpdate});
+    }
+    if (moxieUpdate + curMoxie > maxMoxie){
+      moxieUpdate = maxMoxie - curMoxie;
+      return this.update({"system.pools.update.moxie" : moxieUpdate});
+    }
+    if (flexUpdate + curFlex > maxFlex){
+      flexUpdate = maxFlex - curFlex;
+      return this.update({"system.pools.update.flex" : flexUpdate});
+    }
+
+    if (restValueUpdate === 0){
+      actorModel.pools.update.possible = 0;
+    }
+    if (restValueUpdate < 0){
+      actorModel.pools.update.possible = 2;
+    }
+    if (restValueUpdate > 0){
+      actorModel.pools.update.possible = 1;
     }
   }
 
