@@ -449,7 +449,7 @@
                                 <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" {{checked actor.system.rest.long}}>
                                 {{/if}}
                             </div>
-                            {{#if (eq actor.system.homebrew false)}}
+                            {{#if isGM}}
                                 <div class="grid grid-3col" style="margin-bottom: 0px;">
                                     <div></div>
                                     <button class="restReset">Reset Rest</button>

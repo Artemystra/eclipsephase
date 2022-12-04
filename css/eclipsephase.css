@@ -451,6 +451,10 @@ span.success {
   opacity: 1;
 }
 
+.ep-menu {
+  background-color: rgba(64, 152, 214, 0.4)!important;
+}
+
 .window-app .window-content {
   color: var(--mainText);
   background: none;
