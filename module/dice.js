@@ -828,7 +828,7 @@ export async function TaskCheck({
         }
 
         //Chat message constructor
-
+        console.log("my rollModeSelection: ",rollModeSelection)
         //For default skill roll
         if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon") {
             if(modSkillValue>0){
@@ -890,7 +890,7 @@ export async function TaskCheck({
 
                 if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap);
+                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
 
                     successType = swapCheckData["successName"];
                     swapPossible = swapCheckData["swapPossible"];
@@ -979,63 +979,126 @@ export async function TaskCheck({
                     poolUpdate = flexValue;
                 }
 
-                ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
-                })
+                if (rollModeSelection === "gmroll"){
+                    ChatMessage.create({
+                        content: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>",
+                        whisper: ChatMessage.getWhisperRecipients("GM")
+                      });
+                }
+                else {
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                    })
+                }
 
                 poolUpdater(poolUpdate, poolType)
 
             }
 
-            if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+            if (rollModeSelection === "gmroll"){
 
-                switch (successName){
-                    case 'Success':
-                        successName = "Greater Success";
-                        break;
-                    case 'Greater Success':
-                        successName = "Superior Success";
-                        break;
-                    case 'Critical Success':
-                        successName = "Greater Critical Success";
-                        break;
-                    case 'Greater Critical Success':
-                        successName = "Superior Critical Success";
-                        break;
+                  if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+
+                    switch (successName){
+                        case 'Success':
+                            successName = "Greater Success";
+                            break;
+                        case 'Greater Success':
+                            successName = "Superior Success";
+                            break;
+                        case 'Critical Success':
+                            successName = "Greater Critical Success";
+                            break;
+                        case 'Greater Critical Success':
+                            successName = "Superior Critical Success";
+                            break;
+                    }
+    
+                    poolType = poolRAM;
+    
+                    if (actorType != "character"){
+                        poolType = "Threat";
+                    }
+    
+                    poolValue--;
+                    poolUpdate = poolValue;
+
+                    
+                    ChatMessage.create({
+                        content: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>",
+                        whisper: ChatMessage.getWhisperRecipients("GM")
+                    });
+    
+                    poolUpdater(poolUpdate, poolType)
                 }
-
-                poolType = poolRAM;
-
-                if (actorType != "character"){
-                    poolType = "Threat";
+    
+                else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                        whisper: [game.user._id]
+                    })
                 }
-
-                poolValue--;
-                poolUpdate = poolValue;
-
-                ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    flavor: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>"
-                })
-
-                poolUpdater(poolUpdate, poolType)
+    
+                else if (usedRaise && !poolValue){
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                        whisper: [game.user._id]
+                    })
+                }
             }
+            else {
+                if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
 
-            else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
-                ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
-                    whisper: [game.user._id]
-                })
-            }
-
-            else if (usedRaise && !poolValue){
-                ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
-                    whisper: [game.user._id]
-                })
+                    switch (successName){
+                        case 'Success':
+                            successName = "Greater Success";
+                            break;
+                        case 'Greater Success':
+                            successName = "Superior Success";
+                            break;
+                        case 'Critical Success':
+                            successName = "Greater Critical Success";
+                            break;
+                        case 'Greater Critical Success':
+                            successName = "Superior Critical Success";
+                            break;
+                    }
+    
+                    poolType = poolRAM;
+    
+                    if (actorType != "character"){
+                        poolType = "Threat";
+                    }
+    
+                    poolValue--;
+                    poolUpdate = poolValue;
+    
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        flavor: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>"
+                    })
+    
+                    poolUpdater(poolUpdate, poolType)
+                }
+    
+                else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                        whisper: [game.user._id]
+                    })
+                }
+    
+                else if (usedRaise && !poolValue){
+                    ChatMessage.create({
+                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                        content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                        whisper: [game.user._id]
+                    })
+                }
             }
 
         }
@@ -1160,7 +1223,7 @@ export async function TaskCheck({
 
                     if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap);
+                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
 
                         successType = swapCheckData["successName"];
                         swapPossible = swapCheckData["swapPossible"];
@@ -1283,7 +1346,57 @@ export async function TaskCheck({
 
                 poolType = poolRAM;
 
-                if (usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+                if (rollModeSelection === "gmroll"){
+
+                    if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+                        successModifier += "+ 1d6";
+                        switch (successName) {
+                            case 'Critical Success':
+                                successModifier = "+ 1d6)";
+                                break;
+                            case 'Greater Critical Success':
+                                successModifier = "+ 2d6)";
+                                break;
+                            default:
+                                break;
+                        }
+      
+                      poolType = poolRAM;
+      
+                      if (actorType != "character"){
+                          poolType = "Threat";
+                      }
+      
+                      poolValue--;
+                      poolUpdate = poolValue;
+  
+                      
+                      ChatMessage.create({
+                          content: "Used <strong>" + poolType + "<p/></strong>to raise the damage done",
+                          whisper: ChatMessage.getWhisperRecipients("GM")
+                      });
+      
+                      poolUpdater(poolUpdate, poolType)
+                  }
+      
+                  else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+                      ChatMessage.create({
+                          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                          content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                          whisper: [game.user._id]
+                      })
+                  }
+      
+                  else if (usedRaise && !poolValue){
+                      ChatMessage.create({
+                          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                          content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                          whisper: [game.user._id]
+                      })
+                  }
+              }
+              else {
+                  if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
                     successModifier += "+ 1d6";
                     switch (successName) {
                         case 'Critical Success':
@@ -1295,36 +1408,40 @@ export async function TaskCheck({
                         default:
                             break;
                     }
-
-                    poolValue--
-                    poolUpdate = poolValue;
-                    if (actorType != "character"){
-                        poolType = "Threat";
-                    }
-
-                    ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: "Used <strong>" + poolType + "<p/></strong>to raise the damage done"
-                    })
-
-                    poolUpdater(poolUpdate, poolType)
-                }
-
-                else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
-                    ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
-                        whisper: [game.user._id]
-                    })
-                }
-    
-                else if (usedRaise && !poolValue){
-                    ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
-                        whisper: [game.user._id]
-                    })
-                }
+      
+                      poolType = poolRAM;
+      
+                      if (actorType != "character"){
+                          poolType = "Threat";
+                      }
+      
+                      poolValue--;
+                      poolUpdate = poolValue;
+      
+                      ChatMessage.create({
+                          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                          flavor: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>"
+                      })
+      
+                      poolUpdater(poolUpdate, poolType)
+                  }
+      
+                  else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+                      ChatMessage.create({
+                          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                          content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                          whisper: [game.user._id]
+                      })
+                  }
+      
+                  else if (usedRaise && !poolValue){
+                      ChatMessage.create({
+                          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                          content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                          whisper: [game.user._id]
+                      })
+                  }
+              }
 
                 if(weaponDamage && successType){
                     
@@ -1420,7 +1537,7 @@ export async function TaskCheck({
     }
 
     //Roll Increase Check
-    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap){
+    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection){
         successType = true;
         swapPossible = false;
         if (swipSwap < 33){
@@ -1450,10 +1567,18 @@ export async function TaskCheck({
 
         usedSwipSwap = null
 
-        ChatMessage.create({
-            speaker: ChatMessage.getSpeaker(),
-            flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
-        })
+        if (rollModeSelection === "gmroll"){
+            ChatMessage.create({
+                content: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>",
+                whisper: ChatMessage.getWhisperRecipients("GM")
+              });
+        }
+        else {
+            ChatMessage.create({
+                speaker: ChatMessage.getSpeaker(),
+                flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+            })
+        }
 
         poolUpdater(poolUpdate, poolType);
 
@@ -1488,10 +1613,18 @@ export async function TaskCheck({
             flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their Critical failure to a <p/><strong><span class='fail'>Superior Fail</span></strong>";
         }
 
-        ChatMessage.create({
-            speaker: ChatMessage.getSpeaker(),
-            flavor: flavorText
-        })
+        if (rollModeSelection === "gmroll"){
+            ChatMessage.create({
+                content: flavorText,
+                whisper: ChatMessage.getWhisperRecipients("GM")
+              });
+        }
+        else {
+            ChatMessage.create({
+                speaker: ChatMessage.getSpeaker(),
+                flavor: flavorText
+            })
+        }
 
         poolUpdater(poolUpdate, poolType)
 
