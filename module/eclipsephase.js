@@ -2,6 +2,7 @@
 // const util = require('util');
 import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
+import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
 import  EPnpcSheet from "./actor/EPnpcSheet.js";
 import  EPgoonSheet from "./actor/EPgoonSheet.js";
@@ -61,6 +62,15 @@ function registerSystemSettings() {
     hint: 'Enable the Effect Panel on Actors',
     type: Boolean,
     default: false
+  });
+
+  game.settings.register("eclipsephase", "GMmenu", {
+    config: true,
+    scope: "world",
+    name: "Enable GM Menu",
+    hint: 'Shows special GM menu on the lefthand side of the game canvas (marked in blue)',
+    type: Boolean,
+    default: true
   });
 
   game.settings.register("eclipsephase", "superBrew", {
@@ -163,6 +173,9 @@ Hooks.once("ready", async function() {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => createEclipsePhaseMacro(data, slot));
 });
+
+Hooks.on('getSceneControlButtons', EPmenu.getButtons)
+Hooks.on('renderSceneControls', EPmenu.renderControls)
 
 /**
  Async function to open a dialog
