@@ -1454,12 +1454,21 @@ export async function TaskCheck({
                         rollFormula = intermediateRollFormula;
                     }
                     let roll = await new Roll(rollFormula).evaluate({async: true});
-                
-                        let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
+                    let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
+
+                    if (rollModeSelection === "gmroll"){
+                        ChatMessage.create({
+                            content: label,
+                            whisper: ChatMessage.getWhisperRecipients("GM")
+                        });
+                    }
+                    else {
                         roll.toMessage({
                             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                             flavor: label
                         });
+                    }
+
                 }
                     
             }
