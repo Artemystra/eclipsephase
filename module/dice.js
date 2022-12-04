@@ -828,7 +828,7 @@ export async function TaskCheck({
         }
 
         //Chat message constructor
-        console.log("my rollModeSelection: ",rollModeSelection)
+
         //For default skill roll
         if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon") {
             if(modSkillValue>0){
@@ -867,7 +867,6 @@ export async function TaskCheck({
             if (evaluatedRoll < 100) {
                 
                 let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName);
-                console.log("My swapPreparationData: ", swapPreparationData)
 
                 swapPossible = swapPreparationData["swapPossible"]
                 severeConsequences = swapPreparationData["severeConsequences"]
@@ -878,7 +877,7 @@ export async function TaskCheck({
             }
 
             let combinedPools = poolValue+flexValue+threatLevel;
-            console.log("my combined pool")
+            
             if (!successType && swapPossible && combinedPools > 0){
                 let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
 

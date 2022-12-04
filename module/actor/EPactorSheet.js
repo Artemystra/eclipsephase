@@ -426,7 +426,14 @@ export default class EPactorSheet extends ActorSheet {
       const maxVigor = actorModel.pools.vigor.totalVigor;
       const maxMoxie = actorModel.pools.moxie.totalMoxie;
       const maxFlex = actorModel.pools.flex.totalFlex;
-      const poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
+      let poolSpend = null
+
+      if (!brewStatus){
+        poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
+      }
+      else {
+        poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie);
+      }
 
       let roll = await new Roll("1d6").evaluate({async: true});
       let recover = null;
