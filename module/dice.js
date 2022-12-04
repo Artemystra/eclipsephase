@@ -731,7 +731,7 @@ export async function TaskCheck({
     let modAnnounce = rollMod||poolMod||totalEncumberance ? "<u>Applied General Mods:</u> <br>" : "";
     let encumberanceModAnnounce = totalEncumberance ? "Encumberance:<strong> -" + totalEncumberance + "</strong><br>" : "";
     let woundAnnounce = woundsTotal ? "Wound/Trauma:<strong> -" + woundsTotal + "</strong><br>" : "";
-    let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong>" : "";
+    let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong><br>" : "";
 
     //The dice roll
     for (i = numberOfTargets; i > 0; i--) {
