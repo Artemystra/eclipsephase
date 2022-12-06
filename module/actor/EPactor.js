@@ -382,8 +382,15 @@ export default class EPactor extends Actor {
     actorModel.currentStatus.armorLayerSum = 0;
     actorModel.currentStatus.encumberanceModifier = false;
     actorModel.currentStatus.encumberanceModifierSum = 0;
+    actorModel.currentStatus.statusPresent = false
 
-    if(wounds >= 0 || trauma){
+    if(wounds > 0 || trauma){
+      actorModel.currentStatus.generalModifier = true;
+      actorModel.currentStatus.generalModifierSum = wounds + trauma;
+      actorModel.currentStatus.woundModifierSum = wounds;
+      actorModel.currentStatus.traumaModifierSum = trauma;
+    }
+    else if(wounds >= 0 && actorModel.currentStatus.ignoreWound > 0){
       actorModel.currentStatus.generalModifier = true;
       actorModel.currentStatus.generalModifierSum = wounds + trauma;
       actorModel.currentStatus.woundModifierSum = wounds;
@@ -400,6 +407,10 @@ export default class EPactor extends Actor {
       actorModel.currentStatus.encumberanceModifier = true;
       actorModel.currentStatus.bulkySum = bulky/20;
       actorModel.currentStatus.encumberanceModifierSum = bulky + weapon + gear;
+    }
+
+    if(actorModel.currentStatus.generalModifier || actorModel.currentStatus.generalModifier || actorModel.currentStatus.armorModifier || actorModel.currentStatus.encumberanceModifier){
+      actorModel.currentStatus.statusPresent = true
     }
 
     if (wounds>0){
