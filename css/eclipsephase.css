@@ -12,6 +12,7 @@
   --pitchBackground: #1616166b ;
   --negative: #db2a2a;
   --positive: #2bb42b;
+  --warning: #ce8532;
   --iconBlue: #346d8e;
   --highlight: #4098d6;
   --mainText: #d8d8d8;
@@ -67,6 +68,14 @@
   grid-template-areas: 
     "left center center right";
     margin-bottom: 0;
+}
+
+.grid-4col-status {
+  grid-column: span 4 / span 4;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas: 
+    "left left left center";
+  margin-top: 0px;
 }
 
 .grid-5col {

@@ -33,10 +33,12 @@ export default class EPactor extends Actor {
     super.prepareData();
 
     const actorModel = this.system;
+    const actorWhole = this;
     const flags = actorModel.flags;
     const items = this.items;
     const psiMod = 0;
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
+    actorModel.currentStatus = [];
 
     // Homebrew Switch
     if (brewStatus) {
@@ -94,12 +96,13 @@ export default class EPactor extends Actor {
       this._calculatePools(actorModel, morph)
     }
 
-    this._calculateArmor(actorModel)
-    this._calculateInitiative(actorModel)
-    this._calculateHomebrewEncumberance(actorModel)
-    this._calculateSideCart(actorModel, items)
+    this._calculateArmor(actorModel, actorWhole);
+    this._calculateInitiative(actorModel);
+    this._calculateHomebrewEncumberance(actorModel);
+    this._calculateSideCart(actorModel, items);
     if (this.type === "character"){
-      this._poolUpdate(actorModel)
+      this._poolUpdate(actorModel);
+      this._modificationListCreator(actorModel, actorWhole);
     }
 
     //Psi-Calculator - Not Working yet
@@ -118,7 +121,7 @@ export default class EPactor extends Actor {
     // Insight Skills
     for (let [key, skill] of Object.entries(actorModel.skillsIns)) {
       skill.mod = eval(skill.mod);
-      this._calculateSkillValue(key,skill,actorModel,this.type);
+      this._calculateSkillValue(key,skill,actorModel,actorWhole.type);
     }
 
     // Moxie skills
@@ -255,6 +258,8 @@ export default class EPactor extends Actor {
     }
     actorModel.physical.totalWeaponMalus = weaponMalus;
     actorModel.physical.totalGearMalus = bulkyMalus + accessoryMalus;
+    actorModel.currentStatus.bulkyModifier = bulkyMalus;
+    actorModel.currentStatus.gearModifier = accessoryMalus;
   }
   //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
   else {
@@ -323,7 +328,6 @@ export default class EPactor extends Actor {
     const maxVigor = actorModel.pools.vigor.totalVigor;
     const maxMoxie = actorModel.pools.moxie.totalMoxie;
     const maxFlex = actorModel.pools.flex.totalFlex;
-    console.log("This is my restValue: ", actorModel.rest.restValue)
     const restValue = actorModel.rest.restValue;
     const updateTotal = insightUpdate + vigorUpdate + moxieUpdate + flexUpdate;
     restValue ? actorModel.rest.restValueUpdate = restValue - updateTotal : 0;
@@ -357,11 +361,62 @@ export default class EPactor extends Actor {
     }
   }
 
-  _calculateArmor(actorModel) {
-    let energyTotal = 0
-    let kineticTotal = 0
-    let mainArmorAmount = 0
-    let additionalArmorAmount = 0
+  _modificationListCreator(actorModel, actorWhole){
+    let wounds = (actorModel.physical.wounds + actorModel.mods.woundMod) * 10 * actorModel.mods.woundMultiplier;
+    let ignoreWounds = actorModel.mods.woundMod
+    let trauma = actorModel.mental.trauma * 10;
+    let armorEncumberance = actorModel.physical.mainArmorMalus;
+    let numberOfLayers = armorEncumberance/20+1;
+    let armorSomCumberance = actorModel.physical.armorSomMalus;
+    let bulky = actorModel.currentStatus.bulkyModifier;
+    let weapon = actorModel.physical.totalWeaponMalus;
+    let gear = actorModel.currentStatus.gearModifier;
+
+    actorModel.currentStatus.generalModifier = false;
+    actorModel.currentStatus.generalModifierSum = 0;
+    actorModel.currentStatus.woundModifierSum = 0;
+    actorModel.currentStatus.ignoreWound = ignoreWounds*(-1);
+    actorModel.currentStatus.traumaModifierSum = 0;
+    actorModel.currentStatus.armorModifier = false;
+    actorModel.currentStatus.armorModifierSum = 0;
+    actorModel.currentStatus.armorLayerSum = 0;
+    actorModel.currentStatus.encumberanceModifier = false;
+    actorModel.currentStatus.encumberanceModifierSum = 0;
+
+    if(wounds >= 0 || trauma){
+      actorModel.currentStatus.generalModifier = true;
+      actorModel.currentStatus.generalModifierSum = wounds + trauma;
+      actorModel.currentStatus.woundModifierSum = wounds;
+      actorModel.currentStatus.traumaModifierSum = trauma;
+    }
+
+    if(armorEncumberance || armorSomCumberance){
+      actorModel.currentStatus.armorModifier = true;
+      actorModel.currentStatus.armorLayerSum = numberOfLayers
+      actorModel.currentStatus.armorModifierSum = armorEncumberance + armorSomCumberance;
+    }
+
+    if(bulky || weapon || gear && actorModel.homebrew){
+      actorModel.currentStatus.encumberanceModifier = true;
+      actorModel.currentStatus.bulkySum = bulky/20;
+      actorModel.currentStatus.encumberanceModifierSum = bulky + weapon + gear;
+    }
+
+    if (wounds>0){
+      actorModel.currentStatus.currentModifiersSum = wounds + trauma + armorEncumberance + armorSomCumberance + actorModel.currentStatus.encumberanceModifierSum;
+    }
+    else {
+      actorModel.currentStatus.currentModifiersSum = trauma + armorEncumberance + armorSomCumberance + actorModel.currentStatus.encumberanceModifierSum;
+    }
+  }
+
+  _calculateArmor(actorModel, actorWhole) {
+    let energyTotal = 0;
+    let kineticTotal = 0;
+    let mainArmorAmount = 0;
+    let additionalArmorAmount = 0;
+    let armorSomCheck = null;
+    let actorSom = actorModel.aptitudes.som.value;
 
     let armorItems = this.items.filter(i => i.type === "armor")
 
@@ -373,28 +428,42 @@ export default class EPactor extends Actor {
         if (armor.system.slotType === "Main Armor") {
           mainArmorAmount++
         }
-        if (armor.system.slotType === "Additional Armor") {
-          additionalArmorAmount++
-        }
       }
     }
 
-    actorModel.physical.energyArmorTotal = energyTotal + eval(actorModel.mods.energyMod)
+    actorModel.physical.energyArmorTotal = energyTotal + eval(actorModel.mods.energyMod);
     actorModel.physical.kineticArmorTotal = kineticTotal + eval(actorModel.mods.kineticMod);
-    actorModel.physical.mainArmorTotal = mainArmorAmount
-    actorModel.physical.additionalArmorTotal = additionalArmorAmount
-    actorModel.physical.mainArmorMalus = 0
-    actorModel.physical.additionalArmorMalus = 0
-    actorModel.physical.armorMalusTotal = 0
+    actorModel.physical.mainArmorTotal = mainArmorAmount;
+    actorModel.physical.additionalArmorTotal = additionalArmorAmount;
+    actorModel.physical.mainArmorMalus = 0;
+    actorModel.physical.additionalArmorMalus = 0;
+    actorModel.physical.armorMalusTotal = 0;
+    actorModel.physical.armorSomMalus = 0;
+    actorModel.physical.armorDurAnnounce = "";
 
     if (mainArmorAmount > 1) {
-      actorModel.physical.mainArmorMalus = (mainArmorAmount - 1)*20
+      actorModel.physical.mainArmorMalus = (mainArmorAmount - 1)*20;
     }
-    if (additionalArmorAmount > 1) {
-      actorModel.physical.additionalArmorMalus = (additionalArmorAmount - 1) * 20
+
+    if (actorModel.physical.energyArmorTotal > actorModel.physical.kineticArmorTotal){
+      armorSomCheck = actorModel.physical.energyArmorTotal;
     }
-    if (actorModel.physical.mainArmorMalus || actorModel.physical.additionalArmorMalus) {
-      actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+actorModel.physical.additionalArmorMalus
+    else {
+      armorSomCheck = actorModel.physical.kineticArmorTotal;
+    }
+
+    if (actorWhole.type === "character" && armorSomCheck > actorSom){
+      actorModel.physical.armorSomMalus = 20;
+    }
+
+    actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+actorModel.physical.armorSomMalus;
+
+    if (actorModel.health.physical.max < armorSomCheck){
+      actorModel.physical.armorDurAnnounce = "Unable to move";
+    }
+
+    if (armorSomCheck > 11){
+      actorModel.physical.armorVisibilityAnnounce = "Not concealable";
     }
   }
 

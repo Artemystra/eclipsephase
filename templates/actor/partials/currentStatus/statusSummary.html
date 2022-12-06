@@ -1,16 +1,128 @@
-<div class="sideCarBox statusSideCar">
+<div class="sideCarBox statusSideCar flexrow" style="align-content: center;">
 
         
         <div class="tooltip">
-            <label class="resource-value" style ="font-size: 16px">Current Mods:</label>
+            <label class="resource-value" style ="font-size: 16px;">Current Modifiers:</label>
+            {{#if actor.system.currentStatus.currentModifiersSum}}
+                <label class="resource-value" style ="font-size: 16px; color: var(--negative);">-{{actor.system.currentStatus.currentModifiersSum}}</label>
+            {{else}}
+                <label class="resource-value" style ="font-size: 16px;">0</label>
+            {{/if}}
             <div role="tooltipNegative" style="left: 0px; top: 14px;">
                 <div class="tooltipTopBorder">
                     <div class="tooltipTop"></div>
                 </div>
                 <div class="currentStatus">
-                    <h3 class="inline">Soon to come</h3>
-                        <label class="resource-value">in v0.8 </label>
-                        <p/>
+                    <h3 class="inline" style="margin-bottom: 20px;">Modifier Breakdown</h3>
+
+                    {{#if actor.system.currentStatus.generalModifier}}
+                        <label class="resource-value">General Modifiers</label>
+                        <div class="listBackgroundMain grid grid-4col-status" style="min-height: 0px;">
+                            <div style="grid-area: left;">
+                                <div>
+                                    {{#if actor.system.physical.wounds}}
+                                        <span class="resource-label alignLeft">{{actor.system.physical.wounds}} x Wound</span><br>
+                                        {{#if actor.system.currentStatus.ignoreWound}}
+                                            <span class="footnote alignLeft" style="margin: 0;">Ignore {{actor.system.currentStatus.ignoreWound}} Wound(s)</span>
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                                <div>
+                                    {{#if actor.system.mental.trauma}}
+                                        <span class="resource-label alignLeft">{{actor.system.mental.trauma}} x Trauma</span><br>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div style="grid-area: center">
+                                <div>
+                                    {{#if actor.system.physical.wounds}}
+                                        <div class="flexrow alignRight" style="padding-right: 10px;">
+                                            <span class="resource-value">-{{actor.system.currentStatus.woundModifierSum}}</span><br>
+                                        </div>
+                                        {{#if actor.system.currentStatus.ignoreWound}}
+                                            <div style="min-height: 15px"></div>
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                                <div>
+                                    {{#if actor.system.mental.trauma}}
+                                        <div class="flexrow alignRight" style="padding-right: 10px;">  
+                                            <span class="resource-value">-{{actor.system.currentStatus.traumaModifierSum}}</span><br>
+                                        </div>
+                                    {{/if}}
+                                </div>
+                                <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  
+                                    <span class="resource-value">-{{actor.system.currentStatus.generalModifierSum}}</span><br>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if actor.system.currentStatus.armorModifier}}
+                        <label class="resource-value">Armor Encumberance</label>
+                        <div class="listBackgroundMain grid grid-4col-status" style="min-height: 0px;">
+                            <div style="grid-area: left">
+                                {{#if actor.system.physical.mainArmorMalus}}
+                                    <span class="resource-label alignLeft">{{actor.system.currentStatus.armorLayerSum}} layers of Armor</span><br>
+                                {{/if}}
+                                {{#if actor.system.physical.armorSomMalus}}
+                                    <span class="resource-label alignLeft">AV exceeds SOM</span><br>
+                                {{/if}}
+                            </div>
+                            <div style="grid-area: center">
+                                {{#if actor.system.physical.mainArmorMalus}}
+                                    <div class="flexrow alignRight" style="padding-right: 10px;">
+                                        <span class="resource-value">-{{actor.system.physical.mainArmorMalus}}</span><br>
+                                    </div>
+                                {{/if}}
+                                {{#if actor.system.physical.armorSomMalus}}
+                                    <div class="flexrow alignRight" style="padding-right: 10px;">  
+                                        <span class="resource-value">-{{actor.system.physical.armorSomMalus}}</span><br>
+                                    </div>
+                                {{/if}}
+                                <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  
+                                    <span class="resource-value">-{{actor.system.currentStatus.armorModifierSum}}</span><br>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if actor.system.homebrew}}
+                        {{#if actor.system.currentStatus.encumberanceModifier}}
+                            <label class="resource-value">Gear Encumberance</label>
+                            <div class="listBackgroundMain grid grid-4col-status" style="min-height: 0px;">
+                                <div style="grid-area: left">
+                                    {{#if actor.system.physical.totalWeaponMalus}}
+                                        <span class="resource-label alignLeft">Too many Weapons</span><br>
+                                    {{/if}}
+                                    {{#if actor.system.currentStatus.gearModifier}}
+                                        <span class="resource-label alignLeft">Too much Gear</span><br>
+                                    {{/if}}
+                                    {{#if actor.system.currentStatus.bulkyModifier}}
+                                        <span class="resource-label alignLeft">{{actor.system.currentStatus.bulkySum}} x Bulky Item</span><br>
+                                    {{/if}}
+                                </div>
+                                <div style="grid-area: center">
+                                    {{#if actor.system.physical.totalWeaponMalus}}
+                                        <div class="flexrow alignRight" style="padding-right: 10px;">
+                                            <span class="resource-value">-{{actor.system.physical.totalWeaponMalus}}</span><br>
+                                        </div>
+                                    {{/if}}
+                                    {{#if actor.system.currentStatus.gearModifier}}
+                                        <div class="flexrow alignRight" style="padding-right: 10px;">  
+                                            <span class="resource-value">-{{actor.system.currentStatus.gearModifier}}</span><br>
+                                        </div>
+                                    {{/if}}
+                                    {{#if actor.system.currentStatus.bulkyModifier}}
+                                        <div class="flexrow alignRight" style="padding-right: 10px;">  
+                                            <span class="resource-value">-{{actor.system.currentStatus.bulkyModifier}}</span><br>
+                                        </div>
+                                    {{/if}}
+                                    <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  
+                                        <span class="resource-value">-{{actor.system.currentStatus.encumberanceModifierSum}}</span><br>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
+                    {{/if}}
                 </div>
                 <div class="tooltipBottomBorder">
                     <div class="tooltipBottom"></div>

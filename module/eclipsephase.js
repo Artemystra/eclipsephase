@@ -174,7 +174,7 @@ Hooks.once("ready", async function() {
   Hooks.on("hotbarDrop", (bar, data, slot) => createEclipsePhaseMacro(data, slot));
 });
 
-Hooks.on('getSceneControlButtons', EPmenu.getButtons)
+//Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)
 
 /**

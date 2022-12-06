@@ -59,6 +59,10 @@ export default class EPactorSheet extends ActorSheet {
     const sheetData = super.getData();
     const actor = sheetData.actor;
 
+    if(actor.system.mods.woundMultiplier < 1){
+      actor.update({"system.mods.woundMultiplier" : 1});
+    }
+
 
     sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.

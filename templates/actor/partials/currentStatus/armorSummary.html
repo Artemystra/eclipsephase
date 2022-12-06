@@ -1,6 +1,13 @@
 <div class="sideCarBox armorSideCar">
     <div>
         <label class="resource-value" style="font-size: 20px;">Armor</label>
+        {{#if actor.system.physical.armorDurAnnounce}} 
+            <label style='color: var(--negative);'>{{actor.system.physical.armorDurAnnounce}}</label><br/>
+        {{else}}
+            {{#if actor.system.physical.armorVisibilityAnnounce}}
+                    <label style='color: var(--warning);'>{{actor.system.physical.armorVisibilityAnnounce}}</label><br/>
+            {{/if}}
+        {{/if}}
     </div>
     <div class="tooltip">
         <div role="tooltipNegative">
@@ -8,11 +15,11 @@
                 <div class="tooltipTop"></div>
             </div>
             <div class="armorValue">
-                <h3 class="inline">Armor</h3>
+                <h3 class="inline" style="margin-bottom: 20px;">Armor</h3>
                 {{#if actor.system.additionalSystems.armorEquipped}}
-                    <label class="resource-value">Cumulated Armor </label>
                     <p/>
-                    <div class="flexrow flex-group-center">
+                    <label class="resource-value">Cumulated Armor </label>
+                    <div class="flexrow" style="align-items: center; margin-bottom: 15px;">
                         <img
                         src="systems/eclipsephase/resources/icons/power.webp"
                         class="icon-small"/><span class="toggle
@@ -28,8 +35,14 @@
                         resource-label alignLeft"> Kinetic: </span><span
                         class="toggle resource-value alignLeft">
                         {{actor.system.physical.kineticArmorTotal}}</span>
+                        {{#if actor.system.physical.armorDurAnnounce}}
+                            <p/><label style='color: var(--negative);'>{{actor.system.physical.armorDurAnnounce}} while > SOM</label><br/>
+                        {{else}}
+                            {{#if actor.system.physical.armorVisibilityAnnounce}}
+                                <p/><label style='color: var(--warning);'>{{actor.system.physical.armorVisibilityAnnounce}} while >11</label><br/>
+                            {{/if}}
+                        {{/if}}
                     </div>
-                    <p/>
                     <label class="resource-value">Armor Pieces active on You</label>
                     <div class="listBackgroundMain">
                         <span class="toggle resource-label
@@ -46,19 +59,21 @@
                     <label class="resource-value">Cumulative Malus
                         -{{actor.system.physical.armorMalusTotal}}</label>
                     <div class="listBackgroundMain">
-                        <span class="toggle resource-label
-                            alignLeft">Main Armor: </span><span
-                            class="toggle resource-value
-                            alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
+                        <span class="toggle resource-label alignLeft">Main Armor: </span><span class="toggle resource-value alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
                         <p/>
                         <i style="font-size: 12px; margin-bottom: 10px;">For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
                         <p/>
-                        <span class="toggle resource-label
-                                        alignLeft">Additional Armor:
-                        </span><span class="toggle resource-value
-                            alignLeft">-{{actor.system.physical.additionalArmorMalus}}</span>
+                        <span class="toggle resource-label alignLeft">Additional Armor:
+                        </span>
                         <p/>
-                        <i style="font-size: 12px; margin-bottom: 10px;">Since the core rules are sketchy around this topic it's not clearly defined how to handle multi-layered additional armor. For the sake of bravity this system will calculate a -20 modificator for each piece of additional armor layered after the first one.</i>
+                        <i style="font-size: 12px; margin-bottom: 10px;">Additional armor can be layered without any modifier. It still counts against other armor modifiers.</i>
+                        {{#if actor.system.physical.armorSomMalus}}
+                        <p/>
+                        <span class="toggle resource-label alignLeft">Exceeding Somatics:<span class="toggle resource-value alignLeft">-{{actor.system.physical.armorSomMalus}}</span>
+                        </span>
+                        <p/>
+                        <i style="font-size: 12px; margin-bottom: 10px;">If either singular AV (kinetic OR energy) exceeds your SOM, you receive another -20 to all rolls.</i>
+                        {{/if}}
                     </div>
                     <p/>
                     {{else}}
