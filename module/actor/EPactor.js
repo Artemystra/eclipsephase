@@ -98,9 +98,9 @@ export default class EPactor extends Actor {
 
     this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel);
-    this._calculateHomebrewEncumberance(actorModel);
-    this._calculateSideCart(actorModel, items);
     if (this.type === "character"){
+      this._calculateHomebrewEncumberance(actorModel);
+      this._calculateSideCart(actorModel, items);
       this._poolUpdate(actorModel);
       this._modificationListCreator(actorModel, actorWhole);
     }
@@ -213,38 +213,54 @@ export default class EPactor extends Actor {
     let weaponScore = 0;
     let bulkyWeaponCount = 0;
     let weaponMalus = 0;
-    let weaponItems = this.items.filter(i => i.type === "rangedWeapon" || i.type === "ccWeapon")
+    let weaponItems = this.items.filter(i => i.type === "rangedWeapon" || i.type === "ccWeapon");
     //Gear Variables
-    let gearItems = this.items.filter(i => i.type === "gear")
+    let gearItems = this.items.filter(i => i.type === "gear");
     let accessoryCount = 0;
     let accessoryMalus = 0;
     let bulkyCount = 0;
     let bulkyMalus = 0;
+    //Consumable Encumberance
+    let consumableItems = this.items.filter(i => i.system.slotType === "Consumable");
+    let consumableCount = 0;
+    let consumableMalus = 0;
     //Weapon loop
     for(let weaponCheck of weaponItems){
-        if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Sidearm"){
+        if(weaponCheck.system.active && weaponCheck.system.slotType === "Sidearm"){
           weaponScore++;
         } 
-        else if(weaponCheck.system.active === true && weaponCheck.system.slotType === "One Handed"){
+        else if(weaponCheck.system.active && weaponCheck.system.slotType === "One Handed"){
           weaponScore += 2;
         }
-        else if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Two Handed"){
+        else if(weaponCheck.system.active && weaponCheck.system.slotType === "Two Handed"){
           weaponScore += 5;
         }
-        else if(weaponCheck.system.active === true && weaponCheck.system.slotType === "Bulky"){
+        else if(weaponCheck.system.active && weaponCheck.system.slotType === "Bulky"){
           bulkyWeaponCount++;
         }
     }
     //Gear loop
     for(let gearCheck of gearItems){
-      if(gearCheck.system.active === true && gearCheck.system.slotType === "Accessory"){
-        accessoryCount++;
+      if(gearCheck.system.active && gearCheck.system.slotType === "Accessory"){
+        for(let i=0; i<gearCheck.system.quantity; i++){
+          accessoryCount++;
+        }
       }
-      else if(gearCheck.system.active === true && gearCheck.system.slotType === "Bulky"){
-        bulkyCount++;
+      else if(gearCheck.system.active && gearCheck.system.slotType === "Bulky"){
+        for(let i=0; i<gearCheck.system.quantity; i++){
+          bulkyCount++;
+        }
       }
     }
-    //Bulky loop
+    //Consumable loop
+    for(let consumCheck of consumableItems){
+      if (consumCheck.system.active){
+        for(let i=0; i<consumCheck.system.quantity; i++){
+          consumableCount++;
+        }
+      }
+    }
+    //Modification Calculator
     if(accessoryCount > 4){
       accessoryMalus = Math.ceil((accessoryCount-4)/4)*10;
     }
@@ -252,14 +268,18 @@ export default class EPactor extends Actor {
       
       weaponMalus = Math.ceil((weaponScore-5)/5)*10;
     }
-    
     if(bulkyCount >= 1){
       bulkyMalus = (bulkyCount+bulkyWeaponCount)*20;
     }
+    if(consumableCount > 3){
+      consumableMalus = Math.ceil((consumableCount-3)/3)*10;
+    }
+
     actorModel.physical.totalWeaponMalus = weaponMalus;
-    actorModel.physical.totalGearMalus = bulkyMalus + accessoryMalus;
+    actorModel.physical.totalGearMalus = bulkyMalus + accessoryMalus + consumableMalus;
     actorModel.currentStatus.bulkyModifier = bulkyMalus;
     actorModel.currentStatus.gearModifier = accessoryMalus;
+    actorModel.currentStatus.consumableModifier = consumableMalus;
   }
   //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
   else {
@@ -274,6 +294,14 @@ export default class EPactor extends Actor {
     let ccCount = 0;
     let armorCount = 0;
     let gearCount = 0;
+    let consumableCount = 0;
+
+    actorModel.additionalSystems.rangedEquipped = false;
+    actorModel.additionalSystems.ccEquipped = false;
+    actorModel.additionalSystems.armorEquipped = false;
+    actorModel.additionalSystems.gearEquipped = false;
+    actorModel.additionalSystems.consumableEquipped = false;
+
     for(let gearCheck of items){
       if(gearCheck.system.displayCategory === "ranged" && gearCheck.system.active){
         rangedCount++
@@ -284,33 +312,27 @@ export default class EPactor extends Actor {
       else if(gearCheck.system.displayCategory === "armor" && gearCheck.system.active){
         armorCount++
       }
-      else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active){
+      else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active && gearCheck.system.slotType != "Consumable"){
         gearCount++
+      }
+      else if(gearCheck.system.slotType === "Consumable" && gearCheck.system.active){
+        consumableCount++
       }
     }
     if(rangedCount>0){
       actorModel.additionalSystems.rangedEquipped = true;
     }
-    else{
-      actorModel.additionalSystems.rangedEquipped = false;
-    }
     if(ccCount>0){
       actorModel.additionalSystems.ccEquipped = true;
-    }
-    else{
-      actorModel.additionalSystems.ccEquipped = false;
     }
     if(armorCount>0){
       actorModel.additionalSystems.armorEquipped = true;
     }
-    else{
-      actorModel.additionalSystems.armorEquipped = false;
-    }
     if(gearCount>0){
       actorModel.additionalSystems.gearEquipped = true;
     }
-    else{
-      actorModel.additionalSystems.gearEquipped = false;
+    if(consumableCount>0){
+      actorModel.additionalSystems.consumableEquipped = true;
     }
   }
 
@@ -371,6 +393,7 @@ export default class EPactor extends Actor {
     let bulky = actorModel.currentStatus.bulkyModifier;
     let weapon = actorModel.physical.totalWeaponMalus;
     let gear = actorModel.currentStatus.gearModifier;
+    let consumable = actorModel.currentStatus.consumableModifier;
 
     actorModel.currentStatus.generalModifier = false;
     actorModel.currentStatus.generalModifierSum = 0;
@@ -403,10 +426,10 @@ export default class EPactor extends Actor {
       actorModel.currentStatus.armorModifierSum = armorEncumberance + armorSomCumberance;
     }
 
-    if(bulky || weapon || gear && actorModel.homebrew){
+    if(bulky || weapon || gear || consumable && actorModel.homebrew){
       actorModel.currentStatus.encumberanceModifier = true;
       actorModel.currentStatus.bulkySum = bulky/20;
-      actorModel.currentStatus.encumberanceModifierSum = bulky + weapon + gear;
+      actorModel.currentStatus.encumberanceModifierSum = bulky + weapon + gear + consumable;
     }
 
     if(actorModel.currentStatus.generalModifier || actorModel.currentStatus.generalModifier || actorModel.currentStatus.armorModifier || actorModel.currentStatus.encumberanceModifier){

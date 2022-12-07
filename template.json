@@ -931,8 +931,7 @@
       "dv": null,
       "armorused":null,
       "quantity": 1,
-      "slotType": "Accessory",
-      "displayCategory": "gear"
+      "displayCategory": "consumable"
     },
     "ccWeapon": {
       "templates": [
@@ -966,8 +965,7 @@
       "addictionMod": null,
       "addictionType": "",
       "quantity": 1,
-      "slotType": "Accessory",
-      "displayCategory": "gear"
+      "displayCategory": "consumable"
     },
     "trait": {
       "templates": [

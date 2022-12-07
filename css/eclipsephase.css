@@ -545,6 +545,8 @@ input[class="rest"] {
   border-radius: 0px;
   min-height: 13px;
   min-width: 13px;
+  max-height: 13px;
+  max-width: 13px;
 }
 
 input[type="text"]::placeholder, 
@@ -1247,6 +1249,12 @@ h3.subheaderBlank {
 
 .gearSideCar {
   background-image: url(../resources/img/gearSideCar.webp);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.consumableSideCar{
+  background-image: url(../resources/img/consumableSideCar.webp);
   background-repeat: no-repeat;
   background-size: 100% auto;
 }

@@ -93,6 +93,9 @@
                                         {{#if actor.system.physical.totalWeaponMalus}}
                                             <span class="resource-label alignLeft">Too many Weapons</span><br>
                                         {{/if}}
+                                        {{#if actor.system.currentStatus.consumableModifier}}
+                                            <span class="resource-label alignLeft">Too many Consumables</span><br>
+                                        {{/if}}
                                         {{#if actor.system.currentStatus.gearModifier}}
                                             <span class="resource-label alignLeft">Too much Gear</span><br>
                                         {{/if}}
@@ -104,6 +107,11 @@
                                         {{#if actor.system.physical.totalWeaponMalus}}
                                             <div class="flexrow alignRight" style="padding-right: 10px;">
                                                 <span class="resource-value">-{{actor.system.physical.totalWeaponMalus}}</span><br>
+                                            </div>
+                                        {{/if}}
+                                        {{#if actor.system.currentStatus.consumableModifier}}
+                                            <div class="flexrow alignRight" style="padding-right: 10px;">  
+                                                <span class="resource-value">-{{actor.system.currentStatus.consumableModifier}}</span><br>
                                             </div>
                                         {{/if}}
                                         {{#if actor.system.currentStatus.gearModifier}}

@@ -92,6 +92,18 @@
 
         </div>   
         {{/if}}
+        {{#if actor.consumable}}
+        <div class="contentBox">
+            <div class="flexrow subheader">
+                <h3 class="subheader">Consumables</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                </div>
+            </div>
+
+            {{> systems/eclipsephase/templates/actor/partials/item-partials/consumable.html }}    
+
+        </div>
+        {{/if}}
         {{#if actor.gear}}
         <div class="contentBox">
             <div class="flexrow subheader">

@@ -20,26 +20,13 @@
             <table>
                 <tr>
                     <td>
-                    </td>
-                    <td colspan="4">
-                        <label class="resource-section-label">Application</label>
-                    </td>                                  
-                </tr>
-                <tr>
-                    <td>
                         <label class="resource-label">Category</label>
                     </td>
                     <td>
-                        <label class="resource-sub-label">Dermal</label>
+                        <label class="resource-label">Drug Type</label>
                     </td>
                     <td>
-                        <label class="resource-sub-label">Inhalation</label>
-                    </td>
-                    <td>
-                        <label class="resource-sub-label">Injection</label>
-                    </td>
-                    <td>
-                        <label class="resource-sub-label">Oral</label>
+                        <label class="resource-label">Slot Type</label>
                     </td>
                 </tr>
                 <tr>
@@ -52,35 +39,25 @@
                         </select>   
                     </td>
                     <td>
-                        <input style="margin:auto; display:flex" type="checkbox"
-                        class="sheet" name="system.dermal" {{checked item.system.dermal}}/>
+                        <select name="system.drugType" data-type="String">
+                            {{#select item.system.drugType}}
+                            {{#each config.drugTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
                     </td>
                     <td>
-                        <input style="margin:auto; display:flex" type="checkbox"
-                                                                 class="sheet"
-                                                                 name="system.inhalation"
-                                                                 {{checked
-                                                                 item.system.inhalation}}/>
-                    </td>
-                    <td>
-                        <input style="margin:auto; display:flex" type="checkbox"
-                                                                 class="sheet"
-                                                                 name="system.injection"
-                                                                 {{checked
-                                                                 item.system.injection}}/>
-                    </td>
-                    <td>
-                        <input style="margin:auto; display:flex" type="checkbox"
-                                                                 class="sheet"
-                                                                 name="system.oral"
-                                                                 {{checked
-                                                                 item.system.oral}}/>
+                        <select name="system.slotType" data-type="String">
+                            {{#select item.system.slotType}}
+                            {{#each config.gearTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
                     </td>
                 </tr>
+            </table>
+            <table>
                 <tr>
-                    <td>
-                        <label class="resource-label">Type</label>
-                    </td>
                     <td>
                         <label class="resource-label">Duration</label>
                     </td>
@@ -96,22 +73,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <select name="system.drugType" data-type="String">
-                            {{#select item.system.drugType}}
-                            {{#each config.drugTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
+                        <input class="input-large alignCenter" type="text" name="system.duration" value="{{item.system.duration}}" placeholder="e.g. 1 hours"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text"
-                                                   name="system.duration"
-                                                   value="{{item.system.duration}}" placeholder="e.g. 1 hours"/>
-                    </td>
-                    <td>
-                        <input class="input-large" type="text"
-                                                   name="system.addictionMod"
-                                                   value="{{item.system.addictionMod}}" placeholder="-10"/>  
+                        <input class="input-large alignCenter" type="text" name="system.addictionMod" value="{{item.system.addictionMod}}" placeholder="-10"/>  
                     </td>
                     <td>
                         <select name="system.addictionType" data-type="String">
@@ -130,14 +95,45 @@
                         </select>
                     </td>
                 </tr>
-             </table>
+            </table>
+        </div>
+        <p></p>
+        <h2>Application Vectors</h2>
+        <div class="flexrow flex-group-center">
+            <table>
+               <tr>
+                   <td>
+                       <label class="resource-sub-label">Dermal</label>
+                   </td>
+                   <td>
+                       <label class="resource-sub-label">Inhalation</label>
+                   </td>
+                   <td>
+                       <label class="resource-sub-label">Injection</label>
+                   </td>
+                   <td>
+                       <label class="resource-sub-label">Oral</label>
+                   </td>
+               </tr>
+               <tr>
+                   <td>
+                       <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.dermal" {{checked item.system.dermal}}/>
+                   </td>
+                   <td>
+                       <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.inhalation" {{checked item.system.inhalation}}/>
+                   </td>
+                   <td>
+                       <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.injection" {{checked item.system.injection}}/>
+                   </td>
+                   <td>
+                       <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.oral" {{checked item.system.oral}}/>
+                   </td>
+               </tr>
+            </table>
         </div>
         <p></p>
         <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description"
-                                                   name="system.description"
-                                                   rows="10"
-                                                   cols="60">{{item.system.description}}</textarea></div>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60">{{item.system.description}}</textarea></div>
     </div>
     {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
 

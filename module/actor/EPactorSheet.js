@@ -148,6 +148,7 @@ export default class EPactorSheet extends ActorSheet {
     // Initialize containers.
 
     const gear = [];
+    const consumable = [];
     const know = [];
     const special = [];
     const trait = [];
@@ -257,8 +258,11 @@ export default class EPactorSheet extends ActorSheet {
         else if (item.type === 'program') {
           program.push(item);
         }
-        else if (itemModel.displayCategory === 'gear') {
+        else if (item.system.slotType === 'Accessory' || item.system.slotType === 'Bulky' || item.system.slotType === 'Digital' || item.system.slotType === 'Not Mobile') {
           gear.push(item);
+        }
+        else if (item.system.slotType === 'Consumable') {
+          consumable.push(item);
         }
         else if (item.type === 'vehicle') {
           itemModel.wt = Math.round(itemModel.dur / 5);
@@ -341,6 +345,7 @@ export default class EPactorSheet extends ActorSheet {
     actor.aspect = aspect;
     actor.program = program;
     actor.gear = gear;
+    actor.consumable = consumable;
     actor.knowSkill = know;
     actor.specialSkill = special;
     actor.vehicle = vehicle;

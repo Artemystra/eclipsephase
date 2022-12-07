@@ -20,7 +20,7 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Area Effect / Type</label>
+                        <label class="resource-label">Effect Area</label>
                     </td>
                     <td>
                         <label class="resource-label">DV</label>
@@ -29,24 +29,33 @@
                         <label class="resource-label">Armor Used</label>
                     </td>
                     <td>
+                        <label class="resource-label">Slot</label>
+                    </td>
+                    <td>
                         <label class="resource-label">Cost</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <input class="input-large" type="text"
-                        name="system.areaeffect" value="{{item.system.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
+                        <input class="input-large alignCenter" type="text" name="system.areaeffect" value="{{item.system.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="system.dv"
-                        value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
+                        <input class="input-large alignCenter" type="text" name="system.dv" value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
                     </td>
                     <td>
                         <select name="system.armorused" data-type="String">
                             {{#select item.system.armorused}}
-                            <option value="na">NA</option>
-                            <option value="k">K</option>
-                            <option value="e">E</option> {{/select}}
+                            {{#each config.grenadeArmorVector as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="system.slotType" data-type="String">
+                            {{#select item.system.slotType}}
+                            {{#each config.gearTypes as |name type|}}
+                            <option value="{{name}}">{{name}}</option>
+                            {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>

@@ -23,6 +23,7 @@ eclipsephase.weaponTypes = {
 
 eclipsephase.gearTypes = {
     digital: "Digital",
+    cunsumable: "Consumable",
     accessory: "Accessory",
     bulky: "Bulky",
     notMobile: "Not Mobile"
@@ -144,19 +145,17 @@ eclipsephase.drugTypes = {
     nano: "Nano",
     electronic: "Electronic"
 }
-/*
-eclipsephase.drugApplicationTypes = {
-    dermal: "Dermal",
-    inhalation: "Inhalation",
-    injection: "Injection",
-    oral: "Oral"
-}
-*/
 
 eclipsephase.drugAddicitonTypes = {
     none: "Select",
     physical: "Physical",
     mental: "Mental"
+}
+
+eclipsephase.grenadeArmorVector = {
+    none: "None",
+    kinetic: "Kinetic",
+    energy: "Energy"
 }
 
 eclipsephase.drugCategories = {
