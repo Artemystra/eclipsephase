@@ -1100,6 +1100,7 @@ h3.subheaderBlank {
 
 .alignCenter {
   text-align: center!important;
+  align-items: center;
 }
 
 .justifyEnd{

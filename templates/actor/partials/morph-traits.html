@@ -7,16 +7,20 @@
     <div class="itemBackground noPadBot grid grid-3col" style="position: relative; z-index: 2;">
         {{#if morph.presentTraits}}
         {{#each morph.traits as |item id|}}
-        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-            <div class="item-image flex-group-center input-small" style="flex: 0.2; font-size: 16px;"><i class="far fa-plus-square" style="color: var(--positive);"></i></div>
-            <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
-            <div class="flexrow flex-group-center slideShow" style="max-width: 16%;">
+        <div class="item flexrow" data-item-id="{{item._id}}"  style="align-items: start;">
+            <div class="item-image flexrow flex-group-center input-small" style="font-size: 24px; min-height: 36px; min-width: 40px;">
+                <i class="far fa-plus-square" style="color: var(--positive);"></i>
+            </div>
+            <div class="flexrow alignCenter" style="min-height: 36px; max-width: 140px;">
+                <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
+            </div>
+            <div class="flexrow flex-group-center slideShow">
                 <a><i class="fas fa-plus icon-small"></i></a>
                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
             </div>
-            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+            <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
                 {{#if item.system.description}}
-                <div class="itemDescription shape3">
+                <div class="itemDescription shape3" style="min-width: 100%;">
                     {{item.system.description}}
                 </div>
                 {{/if}}
@@ -28,16 +32,20 @@
         </div>
         {{/each}}
         {{#each morph.flaws as |item id|}}
-        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-            <div class="item-image flex-group-center input-small" style="flex: 0.2; font-size: 16px;"><i class="far fa-minus-square" style="color: var(--negative);"></i></div>
-            <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
-            <div class="flexrow flex-group-center slideShow" style="max-width: 16%;">
+        <div class="item flexrow" data-item-id="{{item._id}}" style="align-items: start;">
+            <div class="item-image flexrow flex-group-center input-small" style="font-size: 24px; min-height: 36px; min-width: 40px;">
+                <i class="far fa-minus-square" style="color: var(--negative);"></i>
+            </div>
+            <div class="flexrow alignCenter" style="min-height: 36px; max-width: 140px;">
+                <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
+            </div>
+            <div class="flexrow flex-group-center slideShow">
                 <a><i class="fas fa-plus icon-small"></i></a>
                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
             </div>
-            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+            <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
                 {{#if item.system.description}}
-                <div class="itemDescription shape3">
+                <div class="itemDescription shape3" style="min-width: 100%;">
                     {{item.system.description}}
                 </div>
                 {{/if}}
@@ -65,9 +73,13 @@
     <div class="itemBackground noPadBot grid grid-3col" style="position: relative; z-index: 2;">
         {{#if morph.wares}}
         {{#each morph.wares as |item id|}}
-        <div class="item flexrow flex-group-center" data-item-id="{{item._id}}">
-            <div class="item-image flex-group-center input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-            <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
+        <div class="item flexrow" data-item-id="{{item._id}}"  style="align-items: start;">
+            <div class="item-image flexrow flex-group-center input-small" style="min-height: 36px">
+                <img src="{{item.img}}" title="{{item.name}}" width="24" height="24" style="max-width: 24px;"/>
+            </div>
+            <div class="flexrow alignCenter" style="min-height: 36px; max-width: 140px;">
+                <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
+            </div>
             <div class="flexrow flex-group-center slideShow" style="max-width: 16%;">
                 <a><i class="fas fa-plus icon-small"></i></a>
                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
