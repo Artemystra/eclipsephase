@@ -739,6 +739,7 @@ export default class EPactorSheet extends ActorSheet {
         weaponType : dataset.weapontype,
         currentAmmo : dataset.currentammo,
         maxAmmo : dataset.maxammo,
+        meleeDamageMod: actorModel.mods.meleeDamageMod,
         //System Options
         askForOptions : event.shiftKey,
         optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),

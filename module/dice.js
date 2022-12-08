@@ -382,11 +382,9 @@ export async function TaskCheck({
     flexValue = 0,
     usePool = null,
     useThreat = null,
-    usedFlex = null,
     poolUpdate = 0,
     usedSwipSwap = null,
     usedMitigate = false,
-    usedFlexMitigate = false,
     //Roll
     rollType = "",
     rollModeSelection = null,
@@ -414,6 +412,7 @@ export async function TaskCheck({
     usedRaise = null,
     //Melee
     numberOfTargets = 1,
+    meleeDamageMod = null,
     //Weapon Data
     weaponName = null,
     weaponID = "",
@@ -1218,7 +1217,6 @@ export async function TaskCheck({
                     }
                     
                     usedSwipSwap = checkOptions.swap;
-                    usedFlex = checkOptions.flex;
 
                     if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
@@ -1302,7 +1300,7 @@ export async function TaskCheck({
                     }
 
                     if (weaponType === "melee" && swapPossible || weaponType === "melee" && potentialRaise){
-                        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
+                        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, meleeDamageMod);
     
                         if (checkOptions.cancelled) {
                             return;
@@ -1350,10 +1348,18 @@ export async function TaskCheck({
                     if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
                         successModifier += "+ 1d6";
                         switch (successName) {
+                            case 'Success':
+                                successName = "Greater Success";
+                                break;
+                            case 'Greater Success':
+                                successName = "Superior Success";
+                                break;
                             case 'Critical Success':
+                                successName = "Greater Critical Success";
                                 successModifier = "+ 1d6)";
                                 break;
                             case 'Greater Critical Success':
+                                successName = "Superior Critical Success";
                                 successModifier = "+ 2d6)";
                                 break;
                             default:
@@ -1398,10 +1404,18 @@ export async function TaskCheck({
                   if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
                     successModifier += "+ 1d6";
                     switch (successName) {
+                        case 'Success':
+                            successName = "Greater Success";
+                            break;
+                        case 'Greater Success':
+                            successName = "Superior Success";
+                            break;
                         case 'Critical Success':
+                            successName = "Greater Critical Success";
                             successModifier = "+ 1d6)";
                             break;
                         case 'Greater Critical Success':
+                            successName = "Superior Critical Success";
                             successModifier = "+ 2d6)";
                             break;
                         default:
@@ -1444,14 +1458,22 @@ export async function TaskCheck({
 
                 if(weaponDamage && successType){
                     
-                    let intermediateRollFormula = weaponDamage + modeDamage + successModifier;
+                    let intermediateRollFormula = null;
                     let rollFormula = null
+
+                    if(weaponType === "melee" && meleeDamageMod){
+                        intermediateRollFormula = weaponDamage + modeDamage + successModifier + meleeDamageMod;
+                    }
+                    else{
+                        intermediateRollFormula = weaponDamage + modeDamage + successModifier;
+                    }
                     if (criticalModifier) {
                         rollFormula = criticalModifier + (intermediateRollFormula);
                     }
                     else {
                         rollFormula = intermediateRollFormula;
                     }
+
                     let roll = await new Roll(rollFormula).evaluate({async: true});
                     let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
 
@@ -1461,7 +1483,6 @@ export async function TaskCheck({
                     },{
                         rollMode: rollModeSelection
                     });
-
                 }
                     
             }
@@ -1897,7 +1918,7 @@ export async function TaskCheck({
         }
     }
 
-    async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+    async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, meleeDamageMod) {
         let groupName = "useSwap";
         let choices = {};
         let radioStatus = true
@@ -1919,7 +1940,7 @@ export async function TaskCheck({
         
         let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus, meleeDamageMod});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",

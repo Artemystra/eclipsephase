@@ -6,11 +6,11 @@
         </div>
         {{#if criticalModifier}}
             <div class="form-group listBackgroundMain alignCenter">
-                <label>2 x [ {{weaponDamage}} {{modeDamage}} {{successModifier}}</label>
+                <label>2 x ( {{weaponDamage}} {{modeDamage}} {{successModifier}} {{#if meleeDamageMod}}{{meleeDamageMod}}{{/if}}</label>
             </div>
         {{else}}
             <div class="form-group listBackgroundMain alignCenter">
-                <label>{{weaponDamage}} {{modeDamage}} {{successModifier}}</label>
+                <label>{{weaponDamage}} {{modeDamage}} {{successModifier}} {{#if meleeDamageMod}}{{meleeDamageMod}}{{/if}}</label>
             </div>
         {{/if}}
     </div>

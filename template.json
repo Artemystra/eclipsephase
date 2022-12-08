@@ -43,8 +43,9 @@
           "durmod": null,
           "lucmod": null,
           "ttMod": null,
-          "energyMod":null,
-          "kineticMod":null
+          "energyMod": null,
+          "kineticMod": null,
+          "meleeDamageMod": null
         },
         "additionalSystems": {
           "hasPsi": null,
