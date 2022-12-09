@@ -426,6 +426,9 @@ export async function TaskCheck({
     } = {}) {
     //Guns check dialog
 
+    if (threatLevel<1){
+        threatLevel = false
+    }
     console.log("My Actor Type: ", actorType)
 
     if (askForOptions != optionsSettings && skillName === "guns") {
@@ -689,6 +692,9 @@ export async function TaskCheck({
  
     let woundsTotal = null;
     let totalEncumberance = actorData.physical.armorMalusTotal + actorData.physical.totalGearMalus + actorData.physical.totalWeaponMalus
+    if (actorType != "character"){
+        totalEncumberance = 0
+    }
     let rollMod = null;
     let specMod = 0;
     let poolMod = 0;
@@ -720,7 +726,6 @@ export async function TaskCheck({
             await poolUpdater(poolUpdate,"Threat");
         }
     let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
-    
     //Chat message variables
     
     spec = useSpecialization ? "(" + specName + ")" : "";
@@ -865,7 +870,7 @@ export async function TaskCheck({
 
             if (evaluatedRoll < 100) {
                 
-                let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName);
+                let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName, poolValue, flexValue);
 
                 swapPossible = swapPreparationData["swapPossible"]
                 severeConsequences = swapPreparationData["severeConsequences"]
@@ -1193,7 +1198,7 @@ export async function TaskCheck({
 
                 if (evaluatedRoll < 100) {
                     
-                    let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName);
+                    let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName, poolValue, flexValue);
 
                     swapPossible = swapPreparationData["swapPossible"]
                     severeConsequences = swapPreparationData["severeConsequences"]
@@ -1528,15 +1533,15 @@ export async function TaskCheck({
     }
 
     //Swap Preparation
-    async function swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName){
+    async function swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName, poolValue, flexValue){
         swipSwap = await swapDice(evaluatedRoll);
-        if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll) {
+        if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll && poolValue || swipSwap <= modSkillValue && swipSwap > evaluatedRoll && flexValue) {
             swapPossible = true;
         }
-        if (swipSwap <= modSkillValue && !successType) {
+        if (swipSwap <= modSkillValue && !successType && poolValue || swipSwap <= modSkillValue && !successType && flexValue) {
             swapPossible = true;
         }
-        if (swipSwap > modSkillValue && !successType) {
+        if (swipSwap > modSkillValue && !successType && poolValue || swipSwap > modSkillValue && !successType && flexValue) {
             severeConsequences = true;
             switch (successName){
                 case 'Fail':
