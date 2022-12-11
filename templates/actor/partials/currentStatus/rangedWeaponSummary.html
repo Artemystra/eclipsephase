@@ -18,8 +18,13 @@
                     <!--Ammunition Counter & Reload-->
                     <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
                         <img src="systems/eclipsephase/resources/icons/ammo.png" class="toggle icon-small"/>
+                        
                         <img src="systems/eclipsephase/resources/icons/reload.webp" class="toggle noShow reload icon-small rollable" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
-                        <label style="margin-left: 5px">{{item.system.ammoMin}}</label>/
+                        {{#if @root.isGM}}
+                            <input class="input-small sheet-inline-edit" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                        {{else}}
+                            <label class="input-xs">{{item.system.ammoMin}}</label>/
+                        {{/if}}
                         <h4 class="item-image flex-group-left input-small noMargin">
                             <strong>{{item.system.ammoMax}}</strong>
                         </h4>
