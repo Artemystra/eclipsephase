@@ -378,7 +378,6 @@ export async function TaskCheck({
     //Pools
     poolType = "",
     poolValue = 0,
-    threatLevel = 0,
     flexValue = 0,
     usePool = null,
     useThreat = null,
@@ -426,13 +425,10 @@ export async function TaskCheck({
     } = {}) {
     //Guns check dialog
 
-    if (threatLevel<1){
-        threatLevel = false
-    }
     console.log("My Actor Type: ", actorType)
 
     if (askForOptions != optionsSettings && skillName === "guns") {
-        let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
+        let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -460,7 +456,7 @@ export async function TaskCheck({
 
     //Psi check dialog
     else if (askForOptions != optionsSettings && skillName === "psi" && brewStatus === true) {
-        let checkOptions = await GetPsiTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
+        let checkOptions = await GetPsiTaskOptions(specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -477,7 +473,7 @@ export async function TaskCheck({
 
     //Fray skill check dialog
     else if (askForOptions != optionsSettings && skillName === "fray") {
-        let checkOptions = await GetFrayTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType);
+        let checkOptions = await GetFrayTaskOptions(rollType, specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -492,7 +488,7 @@ export async function TaskCheck({
 
     //Fray skill check dialog
     else if (askForOptions != optionsSettings && skillName === "melee") {
-        let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, threatLevel, actorType);
+        let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -509,7 +505,7 @@ export async function TaskCheck({
 
     //Default skill check dialog
     else if (askForOptions != optionsSettings) {
-        let checkOptions = await GetTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType);
+        let checkOptions = await GetTaskOptions(rollType, specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
             return;
@@ -712,18 +708,12 @@ export async function TaskCheck({
             specMod = 10;
         }
         //Checks if pool used
-        if (usePool){
+        if (usePool || useThreat){
             poolMod = 20;
             poolValue--;
             poolUpdate = poolValue;
             //Determine pool to be updated
             await poolUpdater(poolUpdate,poolType);
-        }
-        else if (useThreat) {
-            poolMod = 20;
-            threatLevel--;
-            poolUpdate = threatLevel;
-            await poolUpdater(poolUpdate,"Threat");
         }
     let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
     //Chat message variables
@@ -863,11 +853,6 @@ export async function TaskCheck({
             let severityLevel = null;
             let severityFlavor = null;
 
-            if (actorType != "character"){
-                poolValue = threatLevel;
-                poolType = "Threat";
-            }
-
             if (evaluatedRoll < 100) {
                 
                 let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName, poolValue, flexValue);
@@ -880,10 +865,10 @@ export async function TaskCheck({
 
             }
 
-            let combinedPools = poolValue+flexValue+threatLevel;
+            let combinedPools = poolValue+flexValue;
             
             if (!successType && swapPossible && combinedPools > 0){
-                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
 
                 if (checkOptions.cancelled) {
                     return;
@@ -893,12 +878,11 @@ export async function TaskCheck({
 
                 if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
+                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
 
                     successType = swapCheckData["successName"];
                     swapPossible = swapCheckData["swapPossible"];
                     successName = swapCheckData["successName"];
-                    threatLevel = swapCheckData["threatLevel"];
                     flexValue = swapCheckData["flexValue"];
                     poolValue = swapCheckData["poolValue"];
                     usedSwipSwap = swapCheckData["usedSwipSwap"];
@@ -907,7 +891,7 @@ export async function TaskCheck({
             }
 
             if (severeConsequences && severityLevel > 0 && combinedPools > 0){
-                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
 
                 if (checkOptions.cancelled) {
                     return;
@@ -919,9 +903,8 @@ export async function TaskCheck({
 
             if (usedMitigate === "pool" || usedMitigate === "flex"){
 
-                let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, severityLevel, actorType, usedMitigate);
+                let mitigationCheckData = await mitigationChecker(poolType, flexValue, severityLevel, actorType, usedMitigate);
 
-                threatLevel = mitigationCheckData["threatLevel"];
                 flexValue = mitigationCheckData["flexValue"];
                 poolValue = mitigationCheckData["poolValue"];
 
@@ -954,7 +937,7 @@ export async function TaskCheck({
             
             if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible || successType &&  flexValue > 0 && potentialRaise || successType &&  flexValue > 0 && swapPossible){
                 
-                let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType);
+                let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType);
 
                 if (checkOptions.cancelled) {
                     return;
@@ -1020,10 +1003,6 @@ export async function TaskCheck({
     
                     poolType = poolRAM;
     
-                    if (actorType != "character"){
-                        poolType = "Threat";
-                    }
-    
                     poolValue--;
                     poolUpdate = poolValue;
 
@@ -1071,10 +1050,6 @@ export async function TaskCheck({
                     }
     
                     poolType = poolRAM;
-    
-                    if (actorType != "character"){
-                        poolType = "Threat";
-                    }
     
                     poolValue--;
                     poolUpdate = poolValue;
@@ -1191,11 +1166,6 @@ export async function TaskCheck({
                 let severityLevel = null;
                 let severityFlavor = null;
 
-                if (actorType != "character"){
-                    poolValue = threatLevel;
-                    poolType = "Threat";
-                }
-
                 if (evaluatedRoll < 100) {
                     
                     let swapPreparationData = await swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName, poolValue, flexValue);
@@ -1211,11 +1181,11 @@ export async function TaskCheck({
                 let criticalModifier = null;
                 let successModifier = null;
                 let potentialRaise = false;
-                let combinedPools = poolValue+flexValue+threatLevel;
+                let combinedPools = poolValue+flexValue;
 
                 //SwipSwap Failed Rolls
                 if (!successType && swapPossible && combinedPools > 0){
-                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
     
                     if (checkOptions.cancelled) {
                         return;
@@ -1225,12 +1195,11 @@ export async function TaskCheck({
 
                     if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
+                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
 
                         successType = swapCheckData["successName"];
                         swapPossible = swapCheckData["swapPossible"];
                         successName = swapCheckData["successName"];
-                        threatLevel = swapCheckData["threatLevel"];
                         flexValue = swapCheckData["flexValue"];
                         poolValue = swapCheckData["poolValue"];
                         usedSwipSwap = swapCheckData["usedSwipSwap"];
@@ -1240,7 +1209,7 @@ export async function TaskCheck({
 
                 //Mitigate Failed Rolls
                 if (severeConsequences && severityLevel > 0 && combinedPools > 0){
-                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
     
                     if (checkOptions.cancelled) {
                         return;
@@ -1253,9 +1222,8 @@ export async function TaskCheck({
                 //Show Mitigation Results
                 if (usedMitigate === "pool" || usedMitigate === "flex"){
 
-                    let mitigationCheckData = await mitigationChecker(poolType, threatLevel, flexValue, severityLevel, actorType, usedMitigate);
+                    let mitigationCheckData = await mitigationChecker(poolType, flexValue, severityLevel, actorType, usedMitigate);
 
-                    threatLevel = mitigationCheckData["threatLevel"];
                     flexValue = mitigationCheckData["flexValue"];
                     poolValue = mitigationCheckData["poolValue"];
 
@@ -1295,7 +1263,7 @@ export async function TaskCheck({
                     }
 
                     if (weaponType === "ranged" && swapPossible || weaponType === "ranged" && potentialRaise){
-                        let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue);
+                        let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue);
     
                         if (checkOptions.cancelled) {
                             return;
@@ -1305,7 +1273,7 @@ export async function TaskCheck({
                     }
 
                     if (weaponType === "melee" && swapPossible || weaponType === "melee" && potentialRaise){
-                        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, meleeDamageMod);
+                        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, meleeDamageMod);
     
                         if (checkOptions.cancelled) {
                             return;
@@ -1328,9 +1296,7 @@ export async function TaskCheck({
                     }
                     poolValue--;
                     poolUpdate = poolValue;
-                    if (actorType != "character"){
-                        poolType = "Threat";
-                    }
+                    
                     if (usedSwipSwap === "flex"){
                         poolType = "Flex";
                         poolValue++;
@@ -1372,10 +1338,6 @@ export async function TaskCheck({
                         }
       
                       poolType = poolRAM;
-      
-                      if (actorType != "character"){
-                          poolType = "Threat";
-                      }
       
                       poolValue--;
                       poolUpdate = poolValue;
@@ -1428,10 +1390,6 @@ export async function TaskCheck({
                     }
       
                       poolType = poolRAM;
-      
-                      if (actorType != "character"){
-                          poolType = "Threat";
-                      }
       
                       poolValue--;
                       poolUpdate = poolValue;
@@ -1525,8 +1483,6 @@ export async function TaskCheck({
                 return actorWhole.update({"system.threatLevel.current" : poolUpdate});
             case 'Flex':
                 return actorWhole.update({"system.pools.flex.value" : poolUpdate});
-            case 'Threat':
-                return actorWhole.update({"system.threatLevel.current" : poolUpdate});
             default:
                 break;
             }
@@ -1565,7 +1521,7 @@ export async function TaskCheck({
     }
 
     //Roll Increase Check
-    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, threatLevel, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection){
+    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection){
         successType = true;
         swapPossible = false;
         if (swipSwap < 33){
@@ -1580,12 +1536,7 @@ export async function TaskCheck({
 
         poolValue--;
         poolUpdate = poolValue;
-        if (actorType != "character"){
-            poolType = "Threat";
-            poolValue++;
-            threatLevel--;
-            poolUpdate = threatLevel;
-        }
+
         if (usedSwipSwap === "flex"){
             poolType = "Flex";
             poolValue++;
@@ -1610,20 +1561,15 @@ export async function TaskCheck({
 
         poolUpdater(poolUpdate, poolType);
 
-        return {successType, swapPossible, successName, threatLevel, flexValue, poolValue, usedSwipSwap};
+        return {successType, swapPossible, successName, flexValue, poolValue, usedSwipSwap};
     }
 
     //Failure Mitigation Check
-    async function mitigationChecker(poolType, threatLevel, flexValue, severityLevel, actorType, usedMitigate){
+    async function mitigationChecker(poolType, flexValue, severityLevel, actorType, usedMitigate){
         let flavorText = null;
         poolValue--;
         poolUpdate = poolValue;
-        if (actorType != "character"){
-            poolType = "Threat";
-            poolValue++;
-            threatLevel--;
-            poolUpdate = threatLevel;
-        }
+        
         if (usedMitigate === "flex"){
             poolType = "Flex";
             poolValue++;
@@ -1656,13 +1602,13 @@ export async function TaskCheck({
 
         poolUpdater(poolUpdate, poolType)
 
-        return [threatLevel, flexValue, poolValue];
+        return [flexValue, poolValue];
     }
 
     //Skill check dialog constructor
-    async function GetTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType) {
+    async function GetTaskOptions(rollType, specName, poolType, poolValue, actorType) {
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -1698,9 +1644,9 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetFrayTaskOptions(rollType, specName, poolType, poolValue, threatLevel, actorType) {
+    async function GetFrayTaskOptions(rollType, specName, poolType, poolValue, actorType) {
         const template = "systems/eclipsephase/templates/chat/fray-test-dialog.html";
-        const html = await renderTemplate(template, {rollType, specName, poolType, poolValue, threatLevel, actorType});
+        const html = await renderTemplate(template, {rollType, specName, poolType, poolValue, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -1738,9 +1684,9 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetMeleeTaskOptions(specName, poolType, poolValue, threatLevel, actorType) {
+    async function GetMeleeTaskOptions(specName, poolType, poolValue, actorType) {
         const template = "systems/eclipsephase/templates/chat/melee-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -1780,9 +1726,9 @@ export async function TaskCheck({
     }
 
     //Psi check dialog constructor
-    async function GetPsiTaskOptions(specName, poolType, poolValue, threatLevel, actorType) {
+    async function GetPsiTaskOptions(specName, poolType, poolValue, actorType) {
         const template = "systems/eclipsephase/templates/chat/psi-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -1821,9 +1767,9 @@ export async function TaskCheck({
     }
 
     //Guns check dialog constructor
-    async function GetGunsTaskOptions(specName, poolType, poolValue, threatLevel, actorType) {
+    async function GetGunsTaskOptions(specName, poolType, poolValue, actorType) {
         const template = "systems/eclipsephase/templates/chat/gun-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, threatLevel, actorType});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
         return new Promise(resolve => {
             const data = {
@@ -1872,21 +1818,18 @@ export async function TaskCheck({
 
     }
 
-    async function GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue) {
+    async function GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue) {
         let groupName = "useSwap";
         let choices = {};
         let radioStatus = true
         if (poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else if (!poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
-        else if (poolValue && !flexValue && actorType === "character" && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
-        }
-        else if (threatLevel && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        else if (poolValue && !flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else {
             radioStatus = false
@@ -1894,7 +1837,7 @@ export async function TaskCheck({
         
         let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
@@ -1923,21 +1866,18 @@ export async function TaskCheck({
         }
     }
 
-    async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, meleeDamageMod) {
+    async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, meleeDamageMod) {
         let groupName = "useSwap";
         let choices = {};
         let radioStatus = true
         if (poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else if (!poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
-        else if (poolValue && !flexValue && actorType === "character" && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
-        }
-        else if (threatLevel && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        else if (poolValue && !flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else {
             radioStatus = false
@@ -1945,7 +1885,7 @@ export async function TaskCheck({
         
         let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus, meleeDamageMod});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus, meleeDamageMod});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
@@ -1976,7 +1916,7 @@ export async function TaskCheck({
 
     }
     
-    async function GetSwipSwapOptions(swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor) {
+    async function GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor) {
         let groupName = "useSwap";
         if (severityFlavor){
             groupName = "useMitigate";
@@ -1984,28 +1924,22 @@ export async function TaskCheck({
         let choices = {};
         let radioStatus = true
         if (severityFlavor && poolValue && flexValue){
-            choices = {none: "Don't Mitigate Failure",pool: "Use 1 <strong>" + poolType  + "</strong> to mitigate",flex: "Use 1 <strong>Flex</strong> to mitigate"};
+            choices = {none: "Don't Mitigate Failure",pool: "1 <strong>" + poolType  + "</strong> to mitigate",flex: "1 <strong>Flex</strong> to mitigate"};
         }
         else if (severityFlavor && !poolValue && flexValue){
-            choices = {none: "Don't Mitigate Failure",flex: "Use 1 <strong>Flex</strong> to mitigate"};
+            choices = {none: "Don't Mitigate Failure",flex: "1 <strong>Flex</strong> to mitigate"};
         }
-        else if (severityFlavor && poolValue && !flexValue && actorType === "character"){
-            choices = {none: "Don't Mitigate Failure",pool: "Use 1 <strong>" + poolType + "</strong> to mitigate"};
-        }
-        else if (severityFlavor && threatLevel){
-            choices = {none: "Don't Mitigate Failure",pool: "Use 1 <strong>" + poolType + "</strong> to mitigate"};
+        else if (severityFlavor && poolValue && !flexValue){
+            choices = {none: "Don't Mitigate Failure",pool: "1 <strong>" + poolType + "</strong> to mitigate"};
         }
         else if (poolValue && flexValue){
-            choices = {none: "Don't Swap Dice",pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>",flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice",pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>",flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else if (!poolValue && flexValue){
-            choices = {none: "Don't Swap Dice",flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice",flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
-        else if (poolValue && !flexValue && actorType === "character"){
-            choices = {none: "Don't Swap Dice",pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
-        }
-        else if (threatLevel){
-            choices = {none: "Don't Swap Dice",pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        else if (poolValue && !flexValue){
+            choices = {none: "Don't Swap Dice",pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else {
             radioStatus = false
@@ -2013,7 +1947,7 @@ export async function TaskCheck({
         
         let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/swap-dialog.html";
-        const html = await renderTemplate(template, {swipSwap, poolValue, threatLevel, actorType, poolType, flexValue, successName, swapPossible, severityFlavor, groupName, choices, chosen, radioStatus});
+        const html = await renderTemplate(template, {swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
                 title: "Swap Roll",
@@ -2039,21 +1973,18 @@ export async function TaskCheck({
         }
     }
 
-    async function GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType) {
+    async function GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType) {
         let groupName = "useSwap";
         let choices = {};
         let radioStatus = true
         if (poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else if (!poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", flex: "Use 1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = {none: "Don't Swap Dice", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
-        else if (poolValue && !flexValue && actorType === "character" && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
-        }
-        else if (threatLevel && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "Use 1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+        else if (poolValue && !flexValue && swapPossible){
+            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
         else {
             radioStatus = false
@@ -2061,7 +1992,7 @@ export async function TaskCheck({
         
         let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/raise-dialog.html";
-        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, threatLevel, actorType, poolType, groupName, choices, chosen, radioStatus});
+        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
                 title: "Raise Roll",

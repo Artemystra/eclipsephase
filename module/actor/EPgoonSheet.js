@@ -333,7 +333,7 @@ export default class EPgoonSheet extends ActorSheet {
             skillValue : skillRollValue,
             rolledFrom : dataset.rolledfrom,
             //Pools
-            threatLevel: threatLevel,
+            poolValue: threatLevel,
             poolType: poolType,
             //Weapon data
             weaponID : dataset.weaponid,
