@@ -96,7 +96,7 @@ export default class EPactor extends Actor {
       this._calculatePools(actorModel, morph)
     }
 
-    this._calculateArmor(actorModel, actorWhole);
+    this._calculateArmor(actorModel, actorWhole, brewStatus);
     this._calculateInitiative(actorModel);
     if (this.type === "character"){
       this._calculateHomebrewEncumberance(actorModel);
@@ -444,7 +444,7 @@ export default class EPactor extends Actor {
     }
   }
 
-  _calculateArmor(actorModel, actorWhole) {
+  _calculateArmor(actorModel, actorWhole, brewStatus) {
     let energyTotal = 0;
     let kineticTotal = 0;
     let mainArmorAmount = 0;
@@ -486,7 +486,11 @@ export default class EPactor extends Actor {
       armorSomCheck = actorModel.physical.kineticArmorTotal;
     }
 
-    if (actorWhole.type === "character" && armorSomCheck > actorSom){
+    //Homebrew for SOM armor malus
+    if (actorWhole.type === "character" && armorSomCheck > actorSom && brewStatus){
+      actorModel.physical.armorSomMalus = 20;
+    }
+    else if (actorWhole.type === "character" && armorSomCheck > actorSom && mainArmorAmount > 1){
       actorModel.physical.armorSomMalus = 20;
     }
 

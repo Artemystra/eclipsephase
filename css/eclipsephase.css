@@ -248,6 +248,7 @@
 }
 
 .eclipsephase .profile-img {
+  min-width: 100%;
   border: solid var(--pitchBorder) 5px;
   margin-top: 20px;
 }
@@ -1444,8 +1445,6 @@ ol {
 }
 
 .eclipsephase .sheet-header .profile-img-goon {
-  height: 300px;
-  width: 300px;
   -webkit-box-flex: 0;
   -ms-flex: 0 0 100px;
   flex: 0 0 100px;
