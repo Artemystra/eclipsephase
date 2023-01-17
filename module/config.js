@@ -173,47 +173,47 @@ eclipsephase.drugCategories = {
 }
 
 eclipsephase.genders = {
-    cis: "Cisgender",
-    trans: "Transgender",
-    nonBi: "Non-Binary",
-    fluid: "Genderfluid",
-    aGen: "Agender",
-    biGen: "Bigender",
-    polGen: "Polygender",
-    neu: "Neutrois",
-    genAp: "Gender Apathetic",
-    inter: "Intergender",
-    demi: "Demigender",
-    grey: "Greygender",
-    apora: "Aporagender",
-    mav: "Maverique",
-    novi: "Novigender"
+    cis: "ep2e.ego.general.gender.cis",
+    trans: "ep2e.ego.general.gender.trans",
+    nonBi: "ep2e.ego.general.gender.nonBi",
+    fluid: "ep2e.ego.general.gender.fluid",
+    aGen: "ep2e.ego.general.gender.aGen",
+    biGen: "ep2e.ego.general.gender.biGen",
+    polGen: "ep2e.ego.general.gender.polGen",
+    neu: "ep2e.ego.general.gender.neu",
+    genAp: "ep2e.ego.general.gender.genAp",
+    inter: "ep2e.ego.general.gender.inter",
+    demi: "ep2e.ego.general.gender.demi",
+    grey: "ep2e.ego.general.gender.grey",
+    apora: "ep2e.ego.general.gender.apora",
+    mav: "ep2e.ego.general.gender.mav",
+    novi: "ep2e.ego.general.gender.novi"
 }
 
 eclipsephase.sexes = {
-    male: "Male",
-    female: "Female",
-    inter: "Intersex",
-    dyadic: "Dyadic"
+    male: "ep2e.ego.general.sex.male",
+    female: "ep2e.ego.general.sex.female",
+    inter: "ep2e.ego.general.sex.inter",
+    dyadic: "ep2e.ego.general.sex.dyadic"
 }
 
 eclipsephase.origins = {
-    anarchist: "Anarchist",
-    argonaut: "Argonaut",
-    barsoomian: "Barsoomian",
-    brinker: "Brinker",
-    criminal: "Criminal",
-    extropian: "Extropian",
-    hypercorps: "Hypercorp",
-    jovian: "Jovian",
-    lunar: "Lunar/Orbital",
-    mercurial: "Mercurial",
-    reclaimer: "Reclaimer",
-    scum: "Scum",
-    socialite: "Socialite",
-    titanian: "Titanian",
-    venusian: "Venusian",
-    regional: "Regional"
+    anarchist: "ep2e.ego.general.origin.anarchist",
+    argonaut: "ep2e.ego.general.origin.argonaut",
+    barsoomian: "ep2e.ego.general.origin.barsoomian",
+    brinker: "ep2e.ego.general.origin.brinker",
+    criminal: "ep2e.ego.general.origin.criminal",
+    extropian: "ep2e.ego.general.origin.extropian",
+    hypercorps: "ep2e.ego.general.origin.hypercorps",
+    jovian: "ep2e.ego.general.origin.jovian",
+    lunar: "ep2e.ego.general.origin.lunar",
+    mercurial: "ep2e.ego.general.origin.mercurial",
+    reclaimer: "ep2e.ego.general.origin.reclaimer",
+    scum: "ep2e.ego.general.origin.scum",
+    socialite: "ep2e.ego.general.origin.socialite",
+    titanian: "ep2e.ego.general.origin.titanian",
+    venusian: "ep2e.ego.general.origin.venusian",
+    regional: "ep2e.ego.general.origin.regional"
 }
 
 eclipsephase.damageRatingMultiplier = {

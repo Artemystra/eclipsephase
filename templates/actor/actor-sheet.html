@@ -5,9 +5,9 @@
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
             {{!-- Secondary Tab Navigation --}}
                 <nav class="secondary-tabs tabs" data-group="secondary">
-                    <a class="item" data-tab="ego">Ego</a>
-                    <a class="item" data-tab="identification">ID</a>
-                    <a class="item" data-tab="muse">Muse</a>
+                    <a class="item" data-tab="ego">{{localize "ep2e.actorSheet.leftTabs.egoTab"}}</a>
+                    <a class="item" data-tab="identification">{{localize "ep2e.actorSheet.leftTabs.idTab"}}</a>
+                    <a class="item" data-tab="muse">{{localize "ep2e.actorSheet.leftTabs.museTab"}}</a>
                 </nav>
             <div class="contentleft">
                 {{!-- Left Body --}}
@@ -24,21 +24,21 @@
         <div class="wrappercenter">
             {{!-- Primary Tab Navigation --}}
                 <nav class="primary-tabs tabs" data-group="primary">
-                    <a class="item" data-tab="skills">Skills</a>
-                    <a class="item" data-tab="body">Morph</a>
-                    <a class="item" data-tab="weapons">Inventory</a>
+                    <a class="item" data-tab="skills">{{localize "ep2e.actorSheet.rightTabs.skillsTab"}}</a>
+                    <a class="item" data-tab="body">{{localize "ep2e.actorSheet.rightTabs.morphTab"}}</a>
+                    <a class="item" data-tab="weapons">{{localize "ep2e.actorSheet.rightTabs.inventoryTab"}}</a>
                     {{#if actor.vehicle.Vehicle}}
-                    <a class="item" data-tab="vehicles">Peripherals</a>
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
                     {{else if actor.vehicle.Robot}}
-                    <a class="item" data-tab="vehicles">Peripherals</a>
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
                     {{else if actor.vehicle.Smart-Animal}}
-                    <a class="item" data-tab="vehicles">Peripherals</a>
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
                     {{/if}}
                     {{#if actor.system.additionalSystems.hasPsi}}
-                    <a class="item" data-tab="psi">Psi</a>
+                    <a class="item" data-tab="psi">{{localize "ep2e.actorSheet.rightTabs.psiTab"}}</a>
                     {{/if}}
                     {{#if actor.showEffectsTab}}
-                    <a class="item" data-tab="effects">Effects</a>
+                    <a class="item" data-tab="effects">{{localize "ep2e.actorSheet.rightTabs.effectsTab"}}</a>
                     {{/if}}
                 </nav>
                 {{!-- Health Overview --}}

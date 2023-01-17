@@ -1,0 +1,67 @@
+{
+    "ACTOR.TypeCharacter" : "Spielercharakter",
+    "ACTOR.TypeNpc" : "Nicht-Spielercharakter",
+    "ACTOR.TypeGoon" : "Bedrohung",
+    "ITEM.TypeGear" : "Spezialausrüstung",
+    "ITEM.TypeRangedweapon" : "Fernkampfwaffe",
+    "ITEM.TypeCcweapon" : "Nahkampfwaffe",
+    "ITEM.TypeArmor" : "Rüstung",
+    "ITEM.TypeGrenade" : "Granate",
+    "ITEM.TypeTrait" : "Ego Vorteil",
+    "ITEM.TypeFlaw" : "Ego Nachteil",
+    "ITEM.TypeMorphtrait" : "Morph Vorteil",
+    "ITEM.TypeMorphflaw" : "Morph Nachteil",
+    "ITEM.TypeWare" : "Körpermodifikationen",
+    "ITEM.TypeAspect" : "Psi Fähigkeit",
+    "ITEM.TypeProgram" : "Programm",
+    "ITEM.TypeSpecialskill" : "Specialfertigkeit",
+    "ITEM.TypeKnowskill" : "Wissensertigkeit",
+    "ITEM.TypeVehicle" : "Vehikel",
+    "ITEM.TypeDrug" : "Droge",
+  
+    "ep2e": {
+      "actorSheet": {
+        "leftTabs": {
+          "egoTab": "Ego",
+          "idTab": "ID",
+          "museTab": "Test"
+        },
+        "rightTabs": {
+          "skillsTab": "Fertigkeiten",
+          "morphTab": "Morph",
+          "inventoryTab": "Inventar",
+          "peripheralsTab": "Peripherie",
+          "psiTab": "Psi",
+          "effectsTab": "Effekte"
+        }
+      },
+      "skills":{
+        "insightSkills": {
+          "insightHeadline": "Insight",
+          "infosec": "Infosec",
+          "interface": "Interface",
+          "perceive": "Wahrnehmung",
+          "program": "Programmieren",
+          "research": "Recherche",
+          "survival": "Überleben"
+        },
+        "vigorSkills": {
+          "vigorHeadline": "Vigor",
+          "athletics": "Athletik",
+          "fray": "Ausweichen",
+          "free fall": "Free Fall",
+          "guns": "Schiessen",
+          "infiltrate": "Infiltrieren",
+          "melee": "Nahkampf"
+        },
+        "moxieSkills": {
+          "moxieHeadline": "Insight",
+          "deceive": "Täuschen",
+          "kinesics": "Kinesik",
+          "persuade": "Überzeugen",
+          "provoke": "Provozieren",
+          "psi": "Psi"
+        }
+      }
+    }
+  }
