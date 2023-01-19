@@ -1,0 +1,348 @@
+<div class="tab vehicle" data-group="primary" data-tab="vehicles">
+    {{#each actor.vehicle.Vehicle as |item id|}}
+    <div class="item contentBox" data-item-id="{{item._id}}">
+        <div class="flexrow">
+            <h3 class="subheader">{{item.name}}</h3>
+            <div class="alignRight flexGrowThreeQuarter">
+                {{#if item.system.ins}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
+                <input class="input-xs sheet-inline-edit" data-field="system.curIns" type="number" name="item.system.curIns" value="{{item.system.curIns}}" placeholder="0"/>
+                <label class="flex-group-center
+                item-standard-margin-medium"><strong>/ {{item.system.ins}}</strong></label>
+                {{/if}}
+                {{#if item.system.mox}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
+                <input class="input-xs sheet-inline-edit"
+                    data-field="system.curMox" type="number"  name="item.system.curMox" value="{{item.system.curMox}}" placeholder="0"/>
+                <label class="flex-group-center
+                            item-standard-margin-medium"><strong>/
+                                {{item.system.mox}}</strong></label>
+                {{/if}}
+                {{#if item.system.vig}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
+                    <input class="input-xs sheet-inline-edit"
+                        data-field="system.curVig" type="number"  name="item.system.curVig" value="{{item.system.curVig}}" placeholder="0"/>
+                    <label class="flex-group-center
+                                item-standard-margin-medium"><strong>/
+                                    {{item.system.vig}}</strong></label>
+                {{/if}}
+                {{#if item.system.flex}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
+                    <input class="input-xs sheet-inline-edit"
+                        data-field="system.curFlex" type="number" name="item.system.curFlex" value="{{item.system.curFlex}}" placeholder="0"/>
+                    <label class="flex-group-center"><strong>/
+                        {{item.system.flex}}</strong></label>
+                {{/if}}
+            </div>
+        </div>
+            <div class="topLine">
+                <div class="item" data-item-id="{{item._id}}" style="padding: 0">
+                    <table class="noMargin alignCenter">
+                        <tr>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.pessengers"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.armor"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.woundThreshold"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.damageDurability"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.deathRating"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.movement"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.size"}}</label>
+                            </td>
+                            <td>
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="flex-group-center noMargin
+                                noBG"><strong>{{item.system.pass}}</strong></label>
+                            </td>
+                            <td>
+                                <input class="input-small
+                                sheet-inline-edit"
+                                data-field="system.armor" type="text"
+                                name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
+                            </td>
+                            <td>
+                                <input class="input-small
+                                sheet-inline-edit noMargin"
+                                data-field="system.curDur" type="number"
+                                name="item.system.curDur"
+                                value="{{item.system.curDur}}" placeholder="0"/>
+                                <label class="flex-group-center noMargin
+                                noBG"><strong>/ {{item.system.dur}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin
+                                noBG"><strong>{{item.dr}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin
+                                noBG"><strong>{{item.system.mov}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin
+                                noBG"><strong>{{item.system.slotType}}</strong></label>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="noMargin alignCenter">
+                        <tr>
+                            <td>
+                                <input class="sheet-inline-edit"
+                                data-field="system.description"
+                                type="text"
+                                name="item.system.description"
+                                value="{{item.system.description}}" placeholder="{{localize 'ep2e.peripherals.modPlaceholder'}}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+        </div>
+    </div>
+    {{/each}}
+    {{#each actor.vehicle.Robot as |item id|}}
+    <div class="item contentBox" data-item-id="{{item._id}}">
+        <div class="flexrow" style="justify-content: flex-end;">
+            <h3 class="subheader">{{item.name}}</h3>
+            <div class="alignRight flexGrowThreeQuarter">
+                {{#if item.system.ins}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
+                <input class="input-xs sheet-inline-edit"
+                data-field="system.curIns" type="number"
+                name="item.system.curIns" value="{{item.system.curIns}}" placeholder="0"/>
+                <label class="flex-group-center
+                item-standard-margin-medium"><strong>/ {{item.system.ins}}</strong></label>
+                {{/if}}
+                {{#if item.system.mox}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
+                <input class="input-xs sheet-inline-edit"
+                data-field="system.curMox" type="number"
+                name="item.system.curMox" value="{{item.system.curMox}}" placeholder="0"/>
+                <label class="flex-group-center
+                item-standard-margin-medium"><strong>/ {{item.system.mox}}</strong></label>
+                {{/if}}
+                {{#if item.system.vig}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
+                <input class="input-xs sheet-inline-edit"
+                data-field="system.curVig" type="number"
+                name="item.system.curVig" value="{{item.system.curVig}}" placeholder="0"/>
+                <label class="flex-group-center
+                item-standard-margin-medium"><strong>/ {{item.system.vig}}</strong></label>
+                {{/if}}
+                {{#if item.system.flex}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
+                <input class="input-xs sheet-inline-edit"
+                data-field="system.curFlex" type="number"
+                name="item.system.curFlex" value="{{item.system.curFlex}}" placeholder="0"/>
+                <label class="flex-group-center"><strong>/ {{item.system.flex}}</strong></label>
+                {{/if}}
+            </div>
+        </div>
+        <div class="topLine">
+            <div class="item" data-item-id="{{item._id}}" style="padding: 0">
+                <table class="noMargin alignCenter">
+                    <tr>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.peripherals.table.armor"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.peripherals.table.woundThreshold"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.peripherals.table.damageDurability"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.peripherals.table.deathRating"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.peripherals.table.movement"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.peripherals.table.size"}}</label>
+                        </td>
+                        <td>
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="input-small sheet-inline-edit"
+                            data-field="system.armor" type="text"
+                            name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
+                        </td>
+                        <td>
+                            <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
+                        </td>
+                        <td>
+                            <input class="input-small sheet-inline-edit noMargin" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/>
+                            <label class="flex-group-center noMargin noBG"><strong>/ {{item.system.dur}}</strong></label>
+                        </td>
+                        <td>
+                            <label class="flex-group-center noMargin noBG"><strong>{{item.dr}}</strong></label>
+                        </td>
+                        <td>
+                            <label class="flex-group-center noMargin
+                            noBG"><strong>{{item.system.mov}}</strong></label>
+                        </td>
+                        <td>
+                            <label class="flex-group-center noMargin
+                            noBG"><strong>{{item.system.slotType}}</strong></label>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                </table>
+                <table class="noMargin alignCenter">
+                    <tr>
+                        <td>
+                            <input class="sheet-inline-edit"
+                            data-field="system.description" type="text"
+                            name="item.system.description"
+                            value="{{item.system.description}}" placeholder="{{localize 'ep2e.peripherals.modPlaceholder'}}"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{#each actor.vehicle.Smart-Animal as |item id|}}
+    <div class="item contentBox" data-item-id="{{item._id}}">
+        <div class="flexrow">
+            <h3 class="subheader">{{item.name}}</h3>
+            <div class="alignRight flexGrowThreeQuarter">
+                <label class="resource-label">{{localize "ep2e.healthbar.tooltip.threat"}}</label>
+                <input class="input-xs sheet-inline-edit" data-field="system.curThreat" type="number" name="item.system.curThreat" value="{{item.system.curThreat}}" placeholder="0"/>
+                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.threat}}</strong></label>
+            </div>
+        </div>
+        <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+            <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
+                <div>
+                    <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
+                    <input class="input-xs sheet-inline-edit" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.dur}}/{{item.system.dr}}</span>                                
+                </div>
+                <div>
+                    <i class="fa-regular fa-bandage wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.woundswt"}}</span></i>
+                    <input class="input-xs" type="number" name="system.wounds" value="{{item.system.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.wt}})</span>
+                </div>
+                <div>
+                    <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
+                    <input class="input-xs sheet-inline-edit" data-field="system.curLuc" type="number" name="item.system.curLuc" value="{{item.system.curLuc}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.luc}}/{{item.system.ir}}</span>
+                </div>
+                <div>
+                    <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
+                    <input class="input-xs" type="number" name="system.trauma" value="{{item.system.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.tt}})</span>
+                </div>
+                <div>
+                    <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
+                    <strong>{{item.system.init}}</strong> 
+                </div>
+            </div>
+        </div>
+        <div class="topLine">
+                <div class="item" data-item-id="{{item._id}}" style="padding: 0">
+                    <table class="noMargin alignCenter">
+                        <tr>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.cognition"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.intuition"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.reflexes"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.savvy"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.somatics"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.willpower"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.armor"}}</label>
+                            </td>
+                            <td>
+                                <label class="resource-label">{{localize "ep2e.peripherals.table.movement"}}</label>
+                            </td>
+                            <td>
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.system.cog}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.system.int}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.system.ref}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.system.sav}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.system.som}}</strong></label>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.system.wil}}</strong></label>
+                            </td>
+                            <td>
+                                <input class="input-small sheet-inline-edit" data-field="system.armor" type="text" name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
+                            </td>
+                            <td>
+                                <label class="flex-group-center noMargin noBG"><strong>{{item.system.mov}}</strong></label>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="noMargin alignCenter">
+                        <tr>
+                            <td>
+                                <input class="sheet-inline-edit" data-field="system.description" type="text" name="item.system.description" value="{{item.system.description}}" placeholder="{{localize 'ep2e.peripherals.modPlaceholder'}}"/>
+                            </td>
+                        </tr>
+                    </table>
+                    {{#if item.system.skills.1.name}}
+                    <h3 style="margin-top: 10px;">{{localize "ep2e.peripherals.skillsHeadline"}}</h3>
+                    <div class="grid grid-3col">
+                        {{#each item.system.skills as |skill key|}}
+                            {{#if skill.name}}
+                            <div class="flexrow flex-group-center reveal">
+                                <label class="input-xs resource-value">{{key}}.</label>
+                                <label>{{skill.name}}</label>
+                                <label class="input-xs resource-value">{{skill.value}}</label>
+                                <label class="input-large">{{skill.specname}}</label>
+                            </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                </div>
+        </div>
+    </div>
+    {{/each}}
+</div>

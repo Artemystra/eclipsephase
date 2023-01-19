@@ -347,11 +347,11 @@
                                                 </li>
                                                 <p/>
                                                 <li>
-                                                    <label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</label>{{localize "ep2e.skills.restingMenu.restInfo.copy2"}}<p/><label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.emphasize2"}}</label>
+                                                    <label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</label>{{{localize "ep2e.skills.restingMenu.restInfo.copy2"}}}
                                                 </li>
                                                 <p/>
                                                 <li>
-                                                    <label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.subheadline3"}}</label>{{localize "ep2e.skills.restingMenu.restInfo.copy3"}}<p/><label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.emphasize3"}}</label>
+                                                    <label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.subheadline3"}}</label>{{{localize "ep2e.skills.restingMenu.restInfo.copy3"}}}
                                                 </li>
                                             </ul>
                                         </div>
@@ -450,9 +450,9 @@
                             <div class="grid grid-3col" style="margin-bottom: 0px;">
                                 <div></div>
                                 {{#if (eq actor.system.pools.update.possible 0)}}
-                                <button class="distribute">Distribute</button>
+                                <button class="distribute">{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
                                 {{else}}
-                                <button class="distribute" disabled>Distribute</button>
+                                <button class="distribute" disabled>{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
                                 {{/if}}
                                 <div></div>
                             </div>
@@ -464,7 +464,7 @@
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.knowSkills.knowHeadline"}}</h3>
                         <div class="alignRight flexGrowHalf">
-                            <div><a class="item-control item-create" title="Create item" data-type="knowSkill"><i class="fas fa-plus"></i> Add Skill</a></div>
+                            <div><a class="item-control item-create" title="Create item" data-type="knowSkill"><i class="fas fa-plus"></i> {{localize "ep2e.skills.addSkill"}}</a></div>
                         </div>
                     </div>
                     <div class="listBackground" style="position: relative; z-index: 2;">
@@ -484,7 +484,7 @@
                                     <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-pooltype="Insight" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                 {{else}}
                                     <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
-                                    <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                    <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">{{localize "ep2e.skills.chooseAptitude"}}</u></label>
                                     <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                             </div>
@@ -492,7 +492,7 @@
                     </div>
                     {{else}}
                     <div class="separator">
-                        <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Know Skill</a>
+                        <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> {{localize "ep2e.skills.knowSkills.addfirst"}}</a>
                     </div>
                     {{/if}}
                 </div>
@@ -501,7 +501,7 @@
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.exoticSkills.exoticHeadline"}}</h3>
                         <div class="alignRight flexGrowHalf">
-                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
+                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> {{localize "ep2e.skills.addSkill"}}</a>
                         </div>
                     </div>
                     <div class="listBackground edgeAbler">
@@ -521,7 +521,7 @@
                                     <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-apttype="{{item.system.aptitude}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                 {{else}}
                                     <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
-                                    <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">Choose Apt</u></label>
+                                    <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">{{localize "ep2e.skills.chooseAptitude"}}</u></label>
                                     <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                 {{/if}}
                             </div>
@@ -529,7 +529,7 @@
                     </div>
                     {{else}}
                     <div class="separator">
-                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add First Exotic Skill</a>
+                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> {{localize "ep2e.skills.exoticSkills.addfirst"}}</a>
                     </div>
                     {{/if}}
                 </div>

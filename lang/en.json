@@ -45,6 +45,10 @@
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
         "effectsTab": "Effects"
+      },
+      "button": {
+        "edit": "Edit",
+        "delete": "Delete"
       }
     },
     "healthbar": {
@@ -184,11 +188,9 @@
           "subheadline1": "General",
           "copy1": "You need to use a 'rest' action in order to recover pools. Choose the type of rest you want to use by clicking the checkbox next to it. You have 1 long and 2 short rest during the cycle of 24 in-game hours.",
           "subheadline2": "Short Rest",
-          "copy2": "A short rest takes the common transhuman being approximately 10 minutes and requires them to do nothing else than rest, talk and just come down. This requires biomods. Flats use up to 1 hour.",
-          "emphasize2": "A short rest recovers 1d6 pool points",
+          "copy2": "A short rest takes the common transhuman being approximately 10 minutes and requires them to do nothing else than rest, talk and just come down. This requires biomods. Flats use up to 1 hour.<p/><label class='resource-value'>A short rest recovers 1d6 pool points</label>",
           "subheadline3": "Long Rest",
-          "copy3": "A person with biomods takes about 4 hours for a long rest. This requires them to do nothing else than rest, talk and just come down. Flats need 8 hours to achieve the same.",
-          "emphasize3": "A long rest recovers all your pool points"
+          "copy3": "A person with biomods takes about 4 hours for a long rest. This requires them to do nothing else than rest, talk and just come down. Flats need 8 hours to achieve the same.<p/><label class='resource-value'>A long rest recovers all your pool points</label>"
         },
         "button": {
           "resetRest": "Reset Rest",
@@ -259,10 +261,12 @@
         "poolCopy4": "You may introduce a new, plausible relationship between your character and an existing NPC. This should be a loose/minor connection rather than a close/serious tie. For example, you may have a common friend, shared history, or old but mild rivalry. You may define the rough basics, but the GM determines the finer points and the NPC’s attitude towards your character."
       },
       "knowSkills": {
-        "knowHeadline": "Know Skills"
+        "knowHeadline": "Know Skills",
+        "addfirst": "Add first Know Skill"
       },
       "exoticSkills": {
-        "exoticHeadline": "Exotic Skills"
+        "exoticHeadline": "Exotic Skills",
+        "addfirst": "Add first Exotic Skill"
       },
       "additionalSkills": {
         "additionalHeadline": "Additional Skills",
@@ -271,6 +275,280 @@
         "accounting": "Accounting",
         "psychology": "Psychology",
         "Psychosurgery": "Psychosurgery"
+      },
+      "addSkill": "Add Skill",
+      "chooseAptitude": "Choose Apt"
+    },
+    "morph": {
+      "currentMorph": {
+        "headline": "Current Morph",
+        "sleevedLabel": "Sleeved",
+        "morphPlaceholder": "Morph name",
+        "morphType": {
+          "label": "Type",
+          "synth": "Synthetic",
+          "bio": "Biologic",
+          "info": "Infomorph"
+        },
+        "durabilityLabel": "Durability",
+        "movement": {
+          "label1": "Movement 1",
+          "label2": "Movement 2",
+          "speed": "Speed",
+          "type": "type"
+        },
+        "movementTypes": {
+          "none": "-Select-",
+          "boat": "Boat",
+          "hopper": "Hopper",
+          "hover": "Hover",
+          "ionic": "Ionic",
+          "microlight": "Microlight",
+          "roller": "Roller",
+          "rotor": "Rotor",
+          "snake": "Snake",
+          "submarine": "Submarine",
+          "swimmer": "Swimmer",
+          "thrustvector": "Thrust Vector",
+          "tracked": "Tracked",
+          "walker": "Walker",
+          "wheeled": "Wheeled",
+          "winged": "Winged"
+        },
+        "insightLabel": "Insight",
+        "moxieLabel": "Moxie",
+        "vigorLabel": "Vigor",
+        "flexLabel": "Flex",
+        "morphList": {
+          "placeholder": "New Morph"
+        }
+      },
+      "traitsLabel": "Morph Traits",
+      "wareLabel": "Morph Ware",
+      "noMorphTraits": "This Morph is Traitless",
+      "noMorphWare": "Your Morph is Flat"
+    },
+    "inventory": {
+      "armorLabel": "Armor",
+      "armorPlaceholder": "No Armor Name",
+      "rangedLabel": "Ranged Weapons",
+      "rangedPlaceholder": "No Weapon Name",
+      "ccLabel": "Close Combat Weapons",
+      "ccPlaceholder": "No Weapon Name",
+      "gearLabel": "Gear",
+      "consumablesLabel": "Consumables",
+      "programs": {
+        "label": "Programs Loaded",
+        "copy": "Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i>"
+      },
+      "npcInventory": {
+        "quickAddRanged": "Quick Add Ranged",
+        "noRanged": "Click to <label class='resource-value'>quick-add a ranged weapon</label> or drag & drop it from the <label class='resource-value'>compendium </label><i class='fas fa-atlas'></i>",
+        "quickAddMelee": "Quick Add Melee",
+        "noMelee": "Click to <label class='resource-value'>quick-add a melee weapon</label> or drag & drop it from the <label class='resource-value'>compendium </label><i class='fas fa-atlas'></i>",
+        "quickAddArmor": "Quick Add Armor",
+        "armorEnergy": "Energy",
+        "armorKinetic": "Kinetic",
+        "noArmor": "Has no armor",
+        "traitsAndWareHeadline": "Traits & Ware",
+        "armorAndGearHeadline": "Armor & Gear",
+        "traitsLabel": "Morph Traits",
+        "noTraitsCopy": "No morph traits present",
+        "flawsLabel": "Morph Flaws",
+        "noFlawsCopy": "No morph flaws present",
+        "wareLabel": "Ware",
+        "noWareCopy": "No ware installed",
+        "gearLabel": "Gear",
+        "noGearCopy": "No special gear"
+      },
+      "noGear": {
+        "headline": "No Gear Present",
+        "copy": "You do not have any gear yet. <label class='resource-value'>To add gear to your inventory, use the <i class='fas fa-atlas'></i></label> COMPENDIUM <label class='resource-value'>or create new <i class='fas fa-suitcase'></i></label> ITEMS<p><i style='font-size: 12px; margin-bottom: 10px;'>Find these options in the upper right of Foundry or ask your GM to provide items to you.</i>"
+      }
+    },
+    "peripherals": {
+      "pool": {
+        "ins": "Ins",
+        "vig": "Vig",
+        "mox": "Mox",
+        "flex": "Flex"
+      },
+      "table": {
+        "pessengers": "Pessengers",
+        "armor": "AV",
+        "woundThreshold": "WT",
+        "damageDurability": "Damage/Dur",
+        "deathRating": "DR",
+        "movement": "Mov",
+        "size": "Size"
+      },
+      "modPlaceholder": "No modifications",
+      "skillsHeadline": "Skills"
+    },
+    "psi": {
+      "infectionHeadline": "Infection Type",
+      "ratingLabel": "Infection Rating",
+      "strainPlaceholder": "Sub-Strain Name",
+      "descriptionPlaceholder": "Describe your inner monster",
+      "gammaHeadline": "Gamma Sleights",
+      "chiHeadline": "Chi Sleights"
+    },
+    "sideCar": {
+      "moreToggle": "More",
+      "lessToggle": "Less",
+      "currentStatus": {
+        "headline": "Current Modifiers",
+        "modBreakdown": "Mod Breakdown",
+        "generalModifiers": "General Modifiers",
+        "armorModifiers": "Armor Encumberance",
+        "gearModifiers": "Gear Encumberance",
+        "noModifiersSubHeader": "No modifiers present",
+        "noModifiersCopy": "Whenever you receive any negative modifiers while exploring the world, you'll find them here. Just give it a bit of time and we'll see each other soon...",
+        "statuses": {
+          "wounded": "Wound",
+          "woundsIgnored": "Wound(s) Ignored",
+          "traumatized": "Trauma",
+          "layersOfArmor": "layers of Armor",
+          "somExceeded": "AV exceeds SOM",
+          "weaponsExceeded": "Too many weapons",
+          "consumablesExceeded": "Too many consumables",
+          "gearExceeded": "Too much gear",
+          "bulkyItem": "Bulky Item"
+        }
+      },
+      "armor": {
+        "headline": "Armor",
+        "noArmorSubheadline": "No Armor Equipped",
+        "noArmorCopy": "You are not wearing any armor",
+        "armorSubheadline": "Cumulated Armor",
+        "energy": "Energy",
+        "kinetic": "Kinetic",
+        "concealWarning": "Not concealable while > 11",
+        "encumberanceWarning": "Unable to move while > Dur",
+        "armorCountSubheadline": "Armor Pieces active on You",
+        "mainArmorLabel": "Main Armor",
+        "additionalArmorLabel": "Additional Armor",
+        "cumulativeMalusLabel": "Cumulative Malus",
+        "mainArmorMalusCopy": "For every additional main armor a modifier of -20 will be calculated to all your actions.",
+        "additionalArmorMalusCopy": "Additional armor can be layered without any modifier. It still counts against other armor modifiers.",
+        "exceedingSomLabel": "Exceeding Somatics",
+        "exceedingSomCopy": "If either singular AV (kinetic OR energy) exceeds your SOM, you receive another -20 to all rolls.",
+        "armorUsageDescription": "To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available."
+      },
+      "ranged": {
+        "headline": "Ranged Combat"
+      },
+      "melee": {
+        "headline": "Close Combat"
+      },
+      "gear": {
+        "headline": "Special Gear"
+      },
+      "consumables": {
+        "headline": "Consumables"
+      }
+    },
+    "item": {
+      "general": {
+        "tabs": {
+          "detailsTab": "Item Details",
+          "effectsTab": "Effects"
+        },
+        "table": {
+          "cost": {
+            "label": "Cost",
+            "minor": "Minor",
+            "moderate": "Moderate",
+            "major": "Major",
+            "rare": "Rare"
+          },
+          "description": "Description"
+        }
+      },
+      "armor": {
+        "table": {
+          "energy": "Energy Protection",
+          "kinetic": "Kinetic Protection",
+          "type": {
+            "label": "Armor Type",
+            "main": "Main Armor",
+            "additional": "Additional Armor"
+          }
+        }
+      },
+      "aspect": {
+        "table": {
+          "type": {
+
+          },
+          "action": {
+            
+          },
+          "duration": {
+            
+          },
+          "modifier": "Infection Modifier"
+        }
+      },
+      "meleeWeapon": {
+        "table": {
+
+        }
+      },
+      "drug": {
+        "table": {
+
+        }
+      },
+      "egoQualities": {
+        "table": {
+
+        }
+      },
+      "gear": {
+        "table": {
+
+        }
+      },
+      "grenade": {
+        "table": {
+
+        }
+      },
+      "knowSkill": {
+        "table": {
+
+        }
+      },
+      "morphQualities": {
+        "table": {
+
+        }
+      },
+      "program": {
+        "table": {
+
+        }
+      },
+      "rangedWeapon": {
+        "table": {
+
+        }
+      },
+      "specialSkill": {
+        "table": {
+
+        }
+      },
+      "vehicle": {
+        "table": {
+
+        }
+      },
+      "ware": {
+        "table": {
+
+        }
       }
     }
   }

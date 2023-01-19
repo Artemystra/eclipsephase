@@ -30,26 +30,26 @@ eclipsephase.gearTypes = {
 }
 
 eclipsephase.moveTypes = {
-    none: "-Select-",
-    boat: "Boat",
-    hopper: "Hopper",
-    hover: "Hover",
-    ionic: "Ionic",
-    microlight: "Microlight",
-    roller: "Roller",
-    rotor: "Rotor",
-    snake: "Snake",
-    submarine: "Submarine",
-    swimmer: "Swimmer",
-    thrustvector: "Thrust Vector",
-    tracked: "Tracked",
-    walker: "Walker",
-    wheeled: "Wheeled",
-    winged: "Winged"
+    none: "ep2e.morph.currentMorph.movementTypes.none",
+    boat: "ep2e.morph.currentMorph.movementTypes.boat",
+    hopper: "ep2e.morph.currentMorph.movementTypes.hopper",
+    hover: "ep2e.morph.currentMorph.movementTypes.hover",
+    ionic: "ep2e.morph.currentMorph.movementTypes.ionic",
+    microlight: "ep2e.morph.currentMorph.movementTypes.microlight",
+    roller: "ep2e.morph.currentMorph.movementTypes.roller",
+    rotor: "ep2e.morph.currentMorph.movementTypes.rotor",
+    snake: "ep2e.morph.currentMorph.movementTypes.snake",
+    submarine: "ep2e.morph.currentMorph.movementTypes.submarine",
+    swimmer: "ep2e.morph.currentMorph.movementTypes.swimmer",
+    thrustvector: "ep2e.morph.currentMorph.movementTypes.thrustvector",
+    tracked: "ep2e.morph.currentMorph.movementTypes.tracked",
+    walker: "ep2e.morph.currentMorph.movementTypes.walker",
+    wheeled: "ep2e.morph.currentMorph.movementTypes.wheeled",
+    winged: "ep2e.morph.currentMorph.movementTypes.winged"
 }
 eclipsephase.armorTypes = {
-    main: "Main Armor",
-    additional: "Additional Armor"
+    main: "ep2e.item.armor.table.type.main",
+    additional: "ep2e.item.armor.table.type.additional"
 }
 
 eclipsephase.wareTypes = {
@@ -71,10 +71,10 @@ eclipsephase.wareTypes = {
 }
 
 eclipsephase.costTypes = {
-    minor: "Minor",
-    moderate: "Moderate",
-    major: "Major",
-    rare: "Rare"
+    minor: "ep2e.item.general.table.cost.minor",
+    moderate: "ep2e.item.general.table.cost.moderate",
+    major: "ep2e.item.general.table.cost.major",
+    rare: "ep2e.item.general.table.cost.rare"
 }
 
 eclipsephase.programLevels = {
@@ -135,9 +135,9 @@ eclipsephase.vehicleType = {
 }
 
 eclipsephase.bodyTypes = {
-    synth: "Synthetic",
-    bio: "Biologic",
-    info: "Infomorph"
+    synth: "ep2e.morph.currentMorph.morphType.synth",
+    bio: "ep2e.morph.currentMorph.morphType.bio",
+    info: "ep2e.morph.currentMorph.morphType.info"
 }
 
 eclipsephase.drugTypes = {

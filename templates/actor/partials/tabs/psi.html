@@ -2,24 +2,17 @@
     {{#if (ne actor.type "goon")}}
         <div class="contentBox">
             <div class="flexrow subheader">
-                <h3 class="subheader">Infection Type</h3>
+                <h3 class="subheader">{{localize "ep2e.psi.infectionHeadline"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
-                    <span class="resource-label  input-XL"><strong>Infection Rating</strong></span>
+                    <span class="resource-label  input-XL"><strong>{{localize "ep2e.psi.ratingLabel"}}:</strong></span>
                     <input class="input-small" type="text" style="text-align: center;"
                     name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
                 </div>
             </div>
             <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
                 <ol>
-                    <li class="skills"><input type="text"
-                    name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="Sub-strain name"/></li>
-                    <li><textarea class="description"
-                                name="system.psiStrain.description" rows="27"
-                                                                    cols="60"
-                                                                    placeholder="Describe
-                                                                                your
-                                                                                inner
-                                                                                monster">{{actor.system.psiStrain.description}}</textarea></li>
+                    <li class="skills"><input type="text" name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}"/></li>
+                    <li><textarea class="description" name="system.psiStrain.description" rows="27" cols="60" placeholder="{{localize 'ep2e.psi.descriptionPlaceholder'}}">{{actor.system.psiStrain.description}}</textarea></li>
                 </ol>
                 <ol>
                     {{#each actor.system.strainInfluence as |influence key|}}
@@ -33,7 +26,7 @@
     {{#if actor.aspect.Gamma}}
         <div class="contentBox">
             <div class="flexrow subheader">
-                <h3 class="subheader">Gamma Sleights</h3>
+                <h3 class="subheader">{{localize "ep2e.psi.gammaHeadline"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
@@ -42,18 +35,10 @@
                     {{#each actor.aspect.Gamma as |item id|}}
                     <div>
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                            
-                            
                             <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                            <label class="flex-group-center alignCenter"
-                            style="background: none; font-size: 12px; flex:
-                            0.4; margin-left: 10px;"><i>{{item.system.actionType}}</i></label>
-                            <label class="flex-group-center alignCenter"
-                            style="background: none; font-size: 12px; flex:
-                            0.4; margin-left: 10px;"><i>{{item.system.duration}}</i></label>
-                            <label class="flex-group-center alignCenter"
-                            style="background: none; font-size: 12px; flex:
-                            0.4; margin-left: 10px;"><i>{{item.system.infection}}</i></label>
+                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.actionType}}</i></label>
+                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.duration}}</i></label>
+                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.infection}}</i></label>
                             <div class="flex-group-right slideShow">
                                 <a><i class="fas fa-plus icon-small"></i></a>
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
@@ -65,12 +50,11 @@
                                 </div>
                                 {{/if}}
                                 <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     {{/each}}
                 </div>
@@ -80,7 +64,7 @@
         {{#if actor.aspect.Chi}}
         <div class="contentBox">
             <div class="flexrow subheader">
-                <h3 class="subheader">Chi Sleights</h3>
+                <h3 class="subheader">{{localize "ep2e.psi.chiHeadline"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
@@ -89,8 +73,6 @@
                     {{#each actor.aspect.Chi as |item id|}}
                     <div>
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                            
-                            
                             <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                             <div class="flex-group-right slideShow">
                                 <a><i class="fas fa-plus icon-small"></i></a>
@@ -103,8 +85,8 @@
                                 </div>
                                 {{/if}}
                                 <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
                                 </div>
                             </div>
                         </div>

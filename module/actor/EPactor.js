@@ -497,11 +497,11 @@ export default class EPactor extends Actor {
     actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+actorModel.physical.armorSomMalus;
 
     if (actorModel.health.physical.max < armorSomCheck){
-      actorModel.physical.armorDurAnnounce = "Unable to move";
+      actorModel.physical.armorDurAnnounce = 1;
     }
 
     if (armorSomCheck > 11){
-      actorModel.physical.armorVisibilityAnnounce = "Not concealable";
+      actorModel.physical.armorVisibilityAnnounce = 1;
     }
   }
 

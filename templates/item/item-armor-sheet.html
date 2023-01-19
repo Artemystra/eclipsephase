@@ -44,7 +44,7 @@
                         <select name="system.slotType" data-type="String">
                             {{#select item.system.slotType}}
                             {{#each config.armorTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            <option value="{{name}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
@@ -52,7 +52,7 @@
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}
                             {{#each config.costTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            <option value="{{name}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
