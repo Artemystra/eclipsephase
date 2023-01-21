@@ -12,83 +12,83 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Type</label>
+                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.type.label"}}</label>
                     </td>
-                    {{#if (eq item.system.type "Morph")}}
+                    {{#if (eq item.system.type "morph")}}
                     <td>
-                        <label class="resource-label">Insight</label>
+                        <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Moxie</label>
+                        <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
                     </td>
                     {{/if}}
-                    {{#if (eq item.system.type "Vehicle")}}
+                    {{#if (eq item.system.type "vehicle")}}
                     <td>
                         <label class="resource-label">Passengers</label>
                     </td>
                     {{/if}}
-                    {{#if (eq item.system.type "Smart-Animal")}}
+                    {{#if (eq item.system.type "animal")}}
                     <td>
-                        <label class="resource-label">Cog</label>
+                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.cognition"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Int</label>
+                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.intuition"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Ref</label>
+                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.reflexes"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Sav</label>
+                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.savvy"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Som</label>
+                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.somatics"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Wil</label>
+                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.willpower"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Init</label>
+                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.initiative"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">TV</label>
-                    </td>
-                    {{/if}}
-                    {{#if (ne item.system.type "Smart-Animal")}}
-                    <td>
-                        <label class="resource-label">Vigor</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">Flex</label>
+                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.threatValue"}}</label>
                     </td>
                     {{/if}}
+                    {{#if (ne item.system.type "animal")}}
                     <td>
-                        <label class="resource-label">AV</label>
+                        <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">DUR</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">Mov</label>
-                    </td>
-                    {{#if (ne item.system.type "Smart-Animal")}}
-                    <td>
-                        <label class="resource-label">Size</label>
+                        <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
                     </td>
                     {{/if}}
                     <td>
-                        <label class="resource-label">Cost</label>
+                        <label class="resource-label">{{localize "ep2e.peripherals.table.armor"}}</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.durability"}}</label>
+                    </td>
+                    <td>
+                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.movement"}}</label>
+                    </td>
+                    {{#if (ne item.system.type "animal")}}
+                    <td>
+                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.size.label"}}</label>
+                    </td>
+                    {{/if}}
+                    <td>
+                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <select name="system.type" data-type="String">
                             {{#select item.system.type}}
-                            {{#each config.vehicleType as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.vehicleType as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
-                    {{#if (eq item.system.type "Morph")}}
+                    {{#if (eq item.system.type "morph")}}
                     <td>
                         <input class="input-medium"type="number" name="system.ins" value="{{item.system.ins}}" placeholder="0"/>
                     </td>
@@ -96,12 +96,12 @@
                         <input class="input-medium" type="number" name="system.mox" value="{{item.system.mox}}" placeholder="0"/>
                     </td>
                     {{/if}}
-                    {{#if (eq item.system.type "Vehicle")}}
+                    {{#if (eq item.system.type "vehicle")}}
                     <td>
                         <input class="input-medium"type="number" name="system.mox" value="{{item.system.mox}}" placeholder="0"/>
                     </td>
                     {{/if}}
-                    {{#if (eq item.system.type "Smart-Animal")}}
+                    {{#if (eq item.system.type "animal")}}
                     <td>
                         <input class="input-medium"type="number" name="system.cog" value="{{item.system.cog}}" placeholder="0"/>
                     </td>
@@ -127,7 +127,7 @@
                         <input class="input-medium"type="number" name="system.threat" value="{{item.system.threat}}" placeholder="0"/>
                     </td>
                     {{/if}}
-                    {{#if (ne item.system.type "Smart-Animal")}}
+                    {{#if (ne item.system.type "animal")}}
                     <td>
                         <input class="input-medium"type="number" name="system.vig" value="{{item.system.vig}}" placeholder="0"/>
                     </td>
@@ -144,12 +144,12 @@
                     <td>
                         <input class="input-large" type="text" name="system.mov" value="{{item.system.mov}}" placeholder="e.g. 8/32 Rotor"/>
                     </td>
-                    {{#if (ne item.system.type "Smart-Animal")}}
+                    {{#if (ne item.system.type "animal")}}
                     <td>
                         <select name="system.slotType" data-type="String">
                             {{#select item.system.slotType}}
-                            {{#each config.vehicleSize as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.vehicleSize as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
@@ -157,16 +157,16 @@
                     <td>
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}
-                            {{#each config.costTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.costTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                 </tr>
             </table>
         </div>
-        {{#if (eq item.system.type "Smart-Animal")}}
-        <h3 style="margin-top: 10px;">Skills</h3>
+        {{#if (eq item.system.type "animal")}}
+        <h3 style="margin-top: 10px;">{{localize "ep2e.item.vehicle.table.skillsHeadline"}}</h3>
         <div class="grid grid-3col">
             {{#each item.system.skills as |skill key|}}
                 <div class="flexrow flex-group-center reveal">
@@ -180,10 +180,7 @@
         {{/if}}
         <p></p>
 
-        <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description"
-                                                   name="system.description"
-                                                   rows="10"
-                                                   cols="60">{{item.system.description}}</textarea></div>
+        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
     </section>
 </form>

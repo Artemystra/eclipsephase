@@ -6,9 +6,9 @@
         </div>
     </header>
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
-        <a class="item" data-tab="details">Item Details</a>
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
         {{#if item.showEffectsTab}}
-        <a class="item" data-tab="effects">Effects</a>
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
         {{/if}}
     </nav>
     {{!-- Sheet Body --}}
@@ -20,37 +20,37 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Category</label>
+                        <label class="resource-label">{{localize "ep2e.item.drug.table.category.label"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Drug Type</label>
+                        <label class="resource-label">{{localize "ep2e.item.drug.table.type.label"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Slot Type</label>
+                        <label class="resource-label">{{localize "ep2e.item.general.table.slot.label"}}</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <select name="system.category" data-type="String">
                             {{#select item.system.category}}
-                            {{#each config.drugCategories as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.drugCategories as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>   
                     </td>
                     <td>
                         <select name="system.drugType" data-type="String">
                             {{#select item.system.drugType}}
-                            {{#each config.drugTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.drugTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
                         <select name="system.slotType" data-type="String">
                             {{#select item.system.slotType}}
-                            {{#each config.gearTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.gearTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
@@ -59,16 +59,16 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Duration</label>
+                        <label class="resource-label">{{localize "ep2e.item.drug.table.duration"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Addiction Mod</label>
+                        <label class="resource-label">{{localize "ep2e.item.drug.table.addictionModifier"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Addiction Type</label>
+                        <label class="resource-label">{{localize "ep2e.item.drug.table.addictionType"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Cost</label>
+                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
                     </td>
                 </tr>
                 <tr>
@@ -81,16 +81,16 @@
                     <td>
                         <select name="system.addictionType" data-type="String">
                             {{#select item.system.addictionType}}
-                            {{#each config.drugAddicitonTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.drugAddicitonTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}
-                            {{#each config.costTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.costTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
@@ -98,21 +98,21 @@
             </table>
         </div>
         <p></p>
-        <h2>Application Vectors</h2>
+        <h2>{{localize "ep2e.item.drug.table.applicationVectors.label"}}</h2>
         <div class="flexrow flex-group-center">
             <table>
                <tr>
                    <td>
-                       <label class="resource-sub-label">Dermal</label>
+                       <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.dermalLabel"}}</label>
                    </td>
                    <td>
-                       <label class="resource-sub-label">Inhalation</label>
+                       <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.inhalationLabel"}}</label>
                    </td>
                    <td>
-                       <label class="resource-sub-label">Injection</label>
+                       <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.injectionLabel"}}</label>
                    </td>
                    <td>
-                       <label class="resource-sub-label">Oral</label>
+                       <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.oralLabel"}}</label>
                    </td>
                </tr>
                <tr>
@@ -132,8 +132,8 @@
             </table>
         </div>
         <p></p>
-        <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60">{{item.system.description}}</textarea></div>
+        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
     </div>
     {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
 

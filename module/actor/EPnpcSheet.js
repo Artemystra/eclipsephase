@@ -50,12 +50,91 @@ export default class EPnpcSheet extends ActorSheet {
 
     async getData() {
         const sheetData = super.getData();
+        const actor = sheetData.actor;
         sheetData.dtypes = ["String", "Number", "Boolean"];
         if(sheetData.actor.img === "icons/svg/mystery-man.svg"){
             sheetData.actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
           }
         if (sheetData.actor.type == 'npc') {
             this._prepareCharacterItems(sheetData);
+        }
+
+        for(let item of actor.items) {
+          let itemID = item._id;
+          let update = "";
+          let itemUpdate = [];
+          let skillApt = "";
+          let slotType = item.system.slotType;
+          
+          if (slotType){
+            switch (slotType) {
+              case 'Sidearm':
+                update = "sidearm"
+                break;
+              case 'One Handed':
+                update = "oneHanded"
+                break;
+              case 'Two Handed':
+                update = "twoHanded"
+                break;
+              case 'Bulky':
+                update = "bulky"
+                break;
+              case 'Consumable':
+                update = "consumable"
+                break;
+              case 'Accessory':
+                update = "accessory"
+                break;
+              case 'Integrated':
+                update = "integrated"
+                break;
+              default:
+                  break;
+            }
+          }
+          if (item.type === "knowSkill" || item.type === "specialSkill"){
+            skillApt = item.system.aptitude;
+            console.log ("This is my skillApt BEFORE:", skillApt)
+            switch (skillApt) {
+              case 'Intuition':
+                update = "int"
+                break;
+              case 'Cognition':
+                update = "cog"
+                break;
+              case 'Reflexes':
+                update = "ref"
+                break;
+              case 'Savvy':
+                update = "sav"
+                break;
+              case 'Somatics':
+                update = "som"
+                break;
+              case 'Willpower':
+                update = "wil"
+                break;
+              default:
+                  break;
+            }
+          }
+              
+          if (update != "" && slotType){
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.slotType": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+          if (update != "" && !slotType){
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.aptitude": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+            console.log ("This is my skillApt AFTER:", skillApt)
+          }
         }
 
         //Prepare dropdowns
@@ -153,22 +232,22 @@ export default class EPnpcSheet extends ActorSheet {
 
             if (item.type === 'specialSkill') {
                 let aptSelect = 0;
-                if (itemModel.aptitude === "Intuition") {
+                if (itemModel.aptitude === "int") {
                   aptSelect = actorModel.aptitudes.int.value;
                 }
-                else if (itemModel.aptitude === "Cognition") {
+                else if (itemModel.aptitude === "cog") {
                   aptSelect = actorModel.aptitudes.cog.value;
                 }
-                else if (itemModel.aptitude === "Reflexes") {
+                else if (itemModel.aptitude === "ref") {
                   aptSelect = actorModel.aptitudes.ref.value;
                 }
-                else if (itemModel.aptitude === "Somatics") {
+                else if (itemModel.aptitude === "som") {
                   aptSelect = actorModel.aptitudes.som.value;
                 }
-                else if (itemModel.aptitude === "Willpower") {
+                else if (itemModel.aptitude === "wil") {
                   aptSelect = actorModel.aptitudes.wil.value;
                 }
-                else if (itemModel.aptitude === "Savvy") {
+                else if (itemModel.aptitude === "sav") {
                   aptSelect = actorModel.aptitudes.sav.value;
                 }
                 item.roll = Number(item.system.value) + aptSelect;

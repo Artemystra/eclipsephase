@@ -31,7 +31,13 @@
         "reflexes": "REF",
         "savvy": "SAV",
         "somatics": "SOM",
-        "willpower": "WIL"
+        "willpower": "WIL",
+        "cog": "Cognition",
+        "int": "Intuition",
+        "ref": "Reflexes",
+        "sav": "Savvy",
+        "som": "Somatics",
+        "wil": "Willpower"
       },
       "leftTabs": {
         "egoTab": "Ego",
@@ -462,13 +468,22 @@
             "major": "Major",
             "rare": "Rare"
           },
-          "description": "Description"
+          "slot": {
+            "label": "Slot",
+            "digital": "Digital",
+            "consumable": "Consumable",
+            "accessory": "Accessory",
+            "bulky": "Bulky",
+            "notMobile": "Not Mobile"
+          },
+          "description": "Description",
+          "descriptionPlaceholder": "Add a description"
         }
       },
       "armor": {
         "table": {
-          "energy": "Energy Protection",
-          "kinetic": "Kinetic Protection",
+          "energy": "Energy",
+          "kinetic": "Kinetic",
           "type": {
             "label": "Armor Type",
             "main": "Main Armor",
@@ -479,75 +494,155 @@
       "aspect": {
         "table": {
           "type": {
-
+            "label": "Psi Type",
+            "gamma": "Gamma",
+            "chi": "Chi",
+            "epsilon": "Epsilon"
           },
           "action": {
-            
+            "label": "Action",
+            "quick": "Quick",
+            "task": "Task",
+            "complex": "Complex"
           },
           "duration": {
-            
+            "label": "Duration",
+            "instant": "Instant",
+            "action": "Actions Turns",
+            "minutes": "Minutes",
+            "hours": "Hours",
+            "sustained": "Sustained"
           },
-          "modifier": "Infection Modifier"
+          "modifierLabel": "Infection Modifier"
         }
       },
-      "meleeWeapon": {
+      "weapon": {
         "table": {
-
+          "range": "Range",
+          "maxAmmo": "Max Ammo",
+          "damageValue": "DV",
+          "effectArea": "Effect Area",
+          "armorUsed": {
+            "label": "Armor Used",
+            "none": "None",
+            "kinetic": "Kinetic",
+            "energy": "Energy"
+            },
+          "firingMode": {
+            "label": "Firing Mode",
+            "ss": "SS",
+            "sa": "SA",
+            "saBF": "SA/BF",
+            "bfFA": "BF/FA",
+            "saBFfa": "SA/BF/FA"
+          },
+          "slot": {
+            "label": "Slot",
+            "integrated": "Integrated",
+            "sidearm": "Sidearm",
+            "oneHanded": "One Handed",
+            "twoHanded": "Two Handed",
+            "bulky": "Bulky"
+          }
         }
       },
       "drug": {
         "table": {
-
+          "duration": "Duration",
+          "addictionModifier": "Addiction Mod",
+          "addictionType": "Addiction Type",
+          "applicationVectors": {
+            "headline": "Application Vectors",
+            "dermalLabel": "Dermal",
+            "inhalationLabel": "Inhalation",
+            "injectionLabel": "Injection",
+            "oralLabel": "Oral"
+          },
+          "category": {
+            "label": "Category",
+            "cognitive": "Cognitive Drug",
+            "combat": "Combat Drug",
+            "health": "Health Drug",
+            "nano": "Nanodrug",
+            "narco": "Narcoalgorithm",
+            "petals": "Petal",
+            "psi": "Psi Drug",
+            "rec": "Recreational",
+            "social": "Social Drug",
+            "toxins": "Toxin",
+            "nanotox": "Nanotoxin"
+          },
+          "type": {
+            "label": "Drug Type",
+            "biochem": "Biochem",
+            "nano": "Nano",
+            "electronic": "Electronic"
+          }
         }
       },
-      "egoQualities": {
+      "additionalSkill": {
         "table": {
-
-        }
-      },
-      "gear": {
-        "table": {
-
-        }
-      },
-      "grenade": {
-        "table": {
-
-        }
-      },
-      "knowSkill": {
-        "table": {
-
-        }
-      },
-      "morphQualities": {
-        "table": {
-
+          "nameLabel": "Name",
+          "valueLabel": "Value",
+          "aptitudeLabel": "Aptitude",
+          "specLabel": "Specialization"
         }
       },
       "program": {
         "table": {
-
-        }
-      },
-      "rangedWeapon": {
-        "table": {
-
-        }
-      },
-      "specialSkill": {
-        "table": {
-
+          "level": {
+            "label": "Level",
+            "intruder": "Intruder",
+            "user": "User",
+            "admin": "Admin",
+            "owner": "Owner"            
+          }
         }
       },
       "vehicle": {
         "table": {
-
+          "initiative": "Init",
+          "threatValue": "TV",
+          "durability": "DUR",
+          "movement": "Mov",
+          "skillsHeadline": "Skills",
+          "type": {
+            "label": "Type",
+            "robot": "Robot",
+            "vehicle": "Vehicle",
+            "morph": "Morph",
+            "animal": "Smart-Animal"          
+          },
+          "size": {
+            "label": "Size",
+            "vs": "Very Small",
+            "s": "Small",
+            "m": "Medium",
+            "l": "Large",
+            "vl": "Very Large"
+          }
         }
       },
       "ware": {
         "table": {
-
+          "type": {
+            "label": "Ware Type",
+            "b": "B",
+            "bch": "BCH",
+            "bh": "BH",
+            "bhm": "BHM",
+            "bm": "BM",
+            "c": "C",
+            "ch": "CH",
+            "chn": "CHN",
+            "chm": "CHM",
+            "h": "H",
+            "hn": "HN",
+            "hmn": "HMN",
+            "n": "N",
+            "nh": "NH",
+            "mn": "MN"
+          }
         }
       }
     }

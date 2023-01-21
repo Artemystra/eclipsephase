@@ -23,7 +23,7 @@
             </div>
         </div>
     {{/if}}
-    {{#if actor.aspect.Gamma}}
+    {{#if actor.aspect.gamma}}
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.psi.gammaHeadline"}}</h3>
@@ -32,7 +32,7 @@
             </div>
             <div class="itemBackground">
                 <div class="grid grid-2col">
-                    {{#each actor.aspect.Gamma as |item id|}}
+                    {{#each actor.aspect.gamma as |item id|}}
                     <div>
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                             <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
@@ -61,7 +61,7 @@
             </div>
         </div>
         {{/if}}
-        {{#if actor.aspect.Chi}}
+        {{#if actor.aspect.chi}}
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.psi.chiHeadline"}}</h3>
@@ -70,7 +70,7 @@
             </div>
             <div class="itemBackground">
                 <div class="grid grid-2col">
-                    {{#each actor.aspect.Chi as |item id|}}
+                    {{#each actor.aspect.chi as |item id|}}
                     <div>
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                             <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>

@@ -63,6 +63,330 @@ export default class EPactorSheet extends ActorSheet {
       actor.update({"system.mods.woundMultiplier" : 1});
     }
 
+    for(let item of actor.items) {
+      let itemID = item._id;
+      let itemType = item.type;
+      let update = "";
+      let itemUpdate = [];
+      let skillApt = "";
+      let psiType = "";
+      let slotType = item.system.slotType;
+      let costType = item.system.cost;
+      let firingMode = item.system.firingMode;
+      let armorUsed = item.system.armorused;
+      let programLevel = item.system.programLevel;
+      let vehicleType = item.system.type;
+      let wareType = item.system.wareType;
+      
+      if (itemType === "gear" || itemType === "rangedWeapon" || itemType === "ccWeapon" || itemType === "armor" || itemType === "ware" || itemType === "vehicle" || itemType === "drug" || itemType === "grenade"){
+        if (firingMode){
+          switch (firingMode) {
+            case 'SS':
+              update = "ss"
+              break;
+            case 'SA':
+              update = "sa"
+              break;
+            case 'SA/BF':
+              update = "saBF"
+              break;
+            case 'BF/FA':
+              update = "bfFA"
+              break;
+            case 'SA/BF/FA':
+              update = "saBFfa"
+              break;
+            default:
+              break;
+          }
+          if(update != ""){ 
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.firingMode": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+        }
+
+        if (armorUsed){
+          switch (armorUsed) {
+            case 'None':
+              update = "none"
+              break;
+            case 'Kinetic':
+              update = "kinetic"
+              break;
+            case 'Energy':
+              update = "energy"
+              break;
+            default:
+              break;
+          }
+          if(update != ""){ 
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.armorUsed": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+        }
+
+        if (programLevel){
+          switch (programLevel) {
+            case 'Intruder':
+              update = "intruder"
+              break;
+            case 'User':
+              update = "user"
+              break;
+            case 'Admin':
+              update = "admin"
+              break;
+            case 'Owner':
+              update = "owner"
+              break;
+            default:
+              break;
+          }
+          if(update != ""){ 
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.programLevel": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+        }
+
+        if (vehicleType){
+          switch (vehicleType) {
+            case 'Robot':
+              update = "robot"
+              break;
+            case 'Vehicle':
+              update = "vehicle"
+              break;
+            case 'Morph':
+              update = "morph"
+              break;
+            case 'Smart-Animal':
+              update = "animal"
+              break;
+            default:
+              break;
+          }
+          if(update != ""){ 
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.type": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+        }
+
+        if (wareType){
+          switch (wareType) {
+            case 'B':
+              update = "b"
+              break;
+            case 'BCH':
+              update = "bch"
+              break;
+            case 'BH':
+              update = "bh"
+              break;
+            case 'BHM':
+              update = "bhm"
+              break;
+            case 'BM':
+              update = "bm"
+              break;
+            case 'C':
+              update = "c"
+              break;
+            case 'CH':
+              update = "ch"
+              break;
+            case 'CHN':
+              update = "chn"
+              break;
+            case 'CHM':
+              update = "chm"
+              break;
+            case 'H':
+              update = "h"
+              break;
+            case 'HN':
+              update = "hn"
+              break;
+            case 'HMN':
+              update = "hmn"
+              break;
+            case 'N':
+              update = "n"
+              break;
+            case 'NH':
+              update = "nh"
+              break;
+            case 'MN':
+              update = "mn"
+              break;
+            default:
+              break;
+          }
+          if(update != ""){ 
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.wareType": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+        }
+        
+        if (slotType){
+          switch (slotType) {
+            case 'Sidearm':
+              update = "sidearm"
+              break;
+            case 'One Handed':
+              update = "oneHanded"
+              break;
+            case 'Two Handed':
+              update = "twoHanded"
+              break;
+            case 'Bulky':
+              update = "bulky"
+              break;
+            case 'Consumable':
+              update = "consumable"
+              break;
+            case 'Accessory':
+              update = "accessory"
+              break;
+            case 'Integrated':
+              update = "integrated"
+              break;
+            case 'Digital':
+              update = "digital"
+              break;
+            case 'Not Mobile':
+              update = "notMobile"
+              break;
+            case 'Main Armor':
+              update = "main"
+              break;
+            case 'Additional Armor':
+              update = "additional"
+              break;
+            case 'Very Small':
+              update = "vs"
+              break;
+            case 'Small':
+              update = "s"
+              break;
+            case 'Medium':
+              update = "m"
+              break;
+            case 'Large':
+              update = "l"
+              break;
+            case 'Very Large':
+              update = "vl"
+              break;
+            default:
+              break;
+          }
+          if(update != ""){ 
+            itemUpdate.push({
+              "_id" : itemID,
+              "system.slotType": update
+            });
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+        }
+        
+        switch (costType) {
+          case 'Minor':
+            update = "minor"
+            break;
+          case 'Moderate':
+            update = "moderate"
+            break;
+          case 'Major':
+            update = "major"
+            break;
+          case 'Rare':
+            update = "rare"
+            break;
+          default:
+            break;
+        }
+        if(update != ""){
+          itemUpdate.push({
+            "_id" : itemID,
+            "system.cost": update
+          });
+          actor.updateEmbeddedDocuments("Item", itemUpdate);
+        }
+      }
+      if (item.type === "knowSkill" || item.type === "specialSkill"){
+        skillApt = item.system.aptitude;
+        switch (skillApt) {
+          case 'Intuition':
+            update = "int"
+            break;
+          case 'Cognition':
+            update = "cog"
+            break;
+          case 'Reflexes':
+            update = "ref"
+            break;
+          case 'Savvy':
+            update = "sav"
+            break;
+          case 'Somatics':
+            update = "som"
+            break;
+          case 'Willpower':
+            update = "wil"
+            break;
+          default:
+            break;
+        }
+        if(update != ""){
+          itemUpdate.push({
+            "_id" : itemID,
+            "system.aptitude": update
+          });
+          actor.updateEmbeddedDocuments("Item", itemUpdate);}
+      }
+
+      if (item.type === "aspect"){
+        psiType = item.system.psiType;
+        console.log("My Sleight:",item)
+        switch (psiType) {
+          case 'none':
+            update = "gamma"
+            break;
+          case 'Gamma':
+            update = "gamma"
+            break;
+          case 'Chi':
+            update = "chi"
+            break;
+          case 'Epsilon':
+            update = "epsilon"
+            break;
+          default:
+            break;
+        }
+        itemUpdate.push({
+          "_id" : itemID,
+          "system.psiType": update
+        });
+        actor.updateEmbeddedDocuments("Item", itemUpdate);
+      }
+    }
+
 
     sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
@@ -182,8 +506,8 @@ export default class EPactorSheet extends ActorSheet {
         morph6: []
     };
       const aspect = {
-          Chi: [],
-          Gamma: []
+          chi: [],
+          gamma: []
       };
       const program = [];
       const vehicle = {
@@ -203,22 +527,22 @@ export default class EPactorSheet extends ActorSheet {
       // Append to features.
       if (item.type === 'specialSkill') {
         let aptSelect = 0;
-        if (itemModel.aptitude === "Intuition") {
+        if (itemModel.aptitude === "int") {
           aptSelect = actorModel.aptitudes.int.value;
         }
-        else if (itemModel.aptitude === "Cognition") {
+        else if (itemModel.aptitude === "cog") {
           aptSelect = actorModel.aptitudes.cog.value;
         }
-        else if (itemModel.aptitude === "Reflexes") {
+        else if (itemModel.aptitude === "ref") {
           aptSelect = actorModel.aptitudes.ref.value;
         }
-        else if (itemModel.aptitude === "Somatics") {
+        else if (itemModel.aptitude === "som") {
           aptSelect = actorModel.aptitudes.som.value;
         }
-        else if (itemModel.aptitude === "Willpower") {
+        else if (itemModel.aptitude === "wil") {
           aptSelect = actorModel.aptitudes.wil.value;
         }
-        else if (itemModel.aptitude === "Savvy") {
+        else if (itemModel.aptitude === "sav") {
           aptSelect = actorModel.aptitudes.sav.value;
         }
         item.roll = Number(itemModel.value) + aptSelect;
@@ -227,10 +551,10 @@ export default class EPactorSheet extends ActorSheet {
         }
         else if (item.type === 'knowSkill') {
           let aptSelect = 0;
-          if (itemModel.aptitude === "Intuition") {
+          if (itemModel.aptitude === "int") {
             aptSelect = actorModel.aptitudes.int.value;
           }
-          else if (itemModel.aptitude === "Cognition") {
+          else if (itemModel.aptitude === "cog") {
             aptSelect = actorModel.aptitudes.cog.value;
           }
           item.roll = Number(itemModel.value) + aptSelect;
@@ -258,15 +582,15 @@ export default class EPactorSheet extends ActorSheet {
         else if (item.type === 'program') {
           program.push(item);
         }
-        else if (item.system.slotType === 'Accessory' || item.system.slotType === 'Bulky' || item.system.slotType === 'Digital' || item.system.slotType === 'Not Mobile') {
+        else if (item.system.slotType === 'accessory' || item.system.slotType === 'bulky' || item.system.slotType === 'digital' || item.system.slotType === 'notMobile') {
           gear.push(item);
         }
-        else if (item.system.slotType === 'Consumable') {
+        else if (item.system.slotType === 'consumable') {
           consumable.push(item);
         }
         else if (item.type === 'vehicle') {
           itemModel.wt = Math.round(itemModel.dur / 5);
-          if (itemModel.type != "Smart-Animal"){
+          if (itemModel.type != "animal"){
             itemModel.dr = Math.round(itemModel.dur * 2);
           }
           else {
@@ -353,10 +677,10 @@ export default class EPactorSheet extends ActorSheet {
     actor.actorType = "PC";
 
     // Check if sleights are present and toggle Psi Tab based on this
-    if (actor.aspect.Chi.length>0){
+    if (actor.aspect.chi.length>0){
       actorModel.additionalSystems.hasPsi = 1;
     }
-    else if (actor.aspect.Gamma.length>0){
+    else if (actor.aspect.gamma.length>0){
       actorModel.additionalSystems.hasPsi = 1;
     }
     

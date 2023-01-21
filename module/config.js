@@ -6,27 +6,27 @@ eclipsephase.qualityTypes = {
 }
 
 eclipsephase.firingModes = {
-    ss: "SS",
-    sa: "SA",
-    saBF: "SA/BF",
-    bfFA: "BF/FA",
-    saBFfa: "SA/BF/FA"
+    ss: "ep2e.item.weapon.table.firingMode.ss",
+    sa: "ep2e.item.weapon.table.firingMode.sa",
+    saBF: "ep2e.item.weapon.table.firingMode.saBF",
+    bfFA: "ep2e.item.weapon.table.firingMode.bfFA",
+    saBFfa: "ep2e.item.weapon.table.firingMode.saBFfa"
 }
 
 eclipsephase.weaponTypes = {
-    integrated: "Integrated",
-    sidearm: "Sidearm",
-    oneHanded: "One Handed",
-    twoHanded: "Two Handed",
-    bulky: "Bulky"
+    integrated: "ep2e.item.weapon.table.slot.integrated",
+    sidearm: "ep2e.item.weapon.table.slot.sidearm",
+    oneHanded: "ep2e.item.weapon.table.slot.oneHanded",
+    twoHanded: "ep2e.item.weapon.table.slot.twoHanded",
+    bulky: "ep2e.item.weapon.table.slot.bulky"
 }
 
 eclipsephase.gearTypes = {
-    digital: "Digital",
-    cunsumable: "Consumable",
-    accessory: "Accessory",
-    bulky: "Bulky",
-    notMobile: "Not Mobile"
+    digital: "ep2e.item.general.table.slot.digital",
+    consumable: "ep2e.item.general.table.slot.consumable",
+    accessory: "ep2e.item.general.table.slot.accessory",
+    bulky: "ep2e.item.general.table.slot.bulky",
+    notMobile: "ep2e.item.general.table.slot.notMobile"
 }
 
 eclipsephase.moveTypes = {
@@ -53,21 +53,21 @@ eclipsephase.armorTypes = {
 }
 
 eclipsephase.wareTypes = {
-    b: "B",
-    bch: "BCH",
-    bh: "BH",
-    bhm: "BHM",
-    bm: "BM",
-    c: "C",
-    ch: "CH",
-    chn: "CHN",
-    chm: "CHM",
-    h: "H",
-    hn: "HN",
-    hmn: "HMN",
-    n: "N",
-    nh: "NH",
-    mn: "MN"
+    b: "ep2e.item.ware.table.type.b",
+    bch: "ep2e.item.ware.table.type.bch",
+    bh: "ep2e.item.ware.table.type.bh",
+    bhm: "ep2e.item.ware.table.type.bhm",
+    bm: "ep2e.item.ware.table.type.bm",
+    c: "ep2e.item.ware.table.type.c",
+    ch: "ep2e.item.ware.table.type.ch",
+    chn: "ep2e.item.ware.table.type.chn",
+    chm: "ep2e.item.ware.table.type.chm",
+    h: "ep2e.item.ware.table.type.h",
+    hn: "ep2e.item.ware.table.type.hn",
+    hmn: "ep2e.item.ware.table.type.hmn",
+    n: "ep2e.item.ware.table.type.n",
+    nh: "ep2e.item.ware.table.type.nh",
+    mn: "ep2e.item.ware.table.type.mn"
 }
 
 eclipsephase.costTypes = {
@@ -78,60 +78,59 @@ eclipsephase.costTypes = {
 }
 
 eclipsephase.programLevels = {
-    intruder: "Intruder",
-    user: "User",
-    admin: "Admin",
-    owner: "Owner"
+    intruder: "ep2e.item.program.table.level.intruder",
+    user: "ep2e.item.program.table.level.intruder",
+    admin: "ep2e.item.program.table.level.intruder",
+    owner: "ep2e.item.program.table.level.intruder"
 }
 
 eclipsephase.psiTypes = {
-    none: "Select",
-    gamma: "Gamma",
-    chi: "Chi",
-    epsilon: "Epsilon"
+    gamma: "ep2e.item.aspect.table.type.gamma",
+    chi: "ep2e.item.aspect.table.type.chi",
+    epsilon: "ep2e.item.aspect.table.type.epsilon"
 }
 
 eclipsephase.actionTypes = {
-    quick: "Quick",
-    task: "Task",
-    complex: "Complex"
+    quick: "ep2e.item.aspect.table.action.quick",
+    task: "ep2e.item.aspect.table.action.task",
+    complex: "ep2e.item.aspect.table.action.complex"
 }
 
 eclipsephase.duration = {
-    instant: "Instant",
-    action: "Actions Turns",
-    minutes: "Minutes",
-    hours: "Hours",
-    sustained: "Sustained"
+    instant: "ep2e.item.aspect.table.duration.instant",
+    action: "ep2e.item.aspect.table.duration.action",
+    minutes: "ep2e.item.aspect.table.duration.minutes",
+    hours: "ep2e.item.aspect.table.duration.hours",
+    sustained: "ep2e.item.aspect.table.duration.sustained"
 }
 
 eclipsephase.aptitudes = {
-    cog: "Cognition",
-    int: "Intuition",
-    ref: "Reflexes",
-    sav: "Savvy",
-    som: "Somatics",
-    wil: "Willpower"
+    cog: "ep2e.actorSheet.aptitudes.cog",
+    int: "ep2e.actorSheet.aptitudes.int",
+    ref: "ep2e.actorSheet.aptitudes.ref",
+    sav: "ep2e.actorSheet.aptitudes.sav",
+    som: "ep2e.actorSheet.aptitudes.som",
+    wil: "ep2e.actorSheet.aptitudes.wil"
 }
 
 eclipsephase.knowAptitudes = {
-    cog: "Cognition",
-    int: "Intuition"
+    cog: "ep2e.actorSheet.aptitudes.cog",
+    int: "ep2e.actorSheet.aptitudes.int"
 }
 
 eclipsephase.vehicleSize = {
-    vs: "Very Small",
-    s: "Small",
-    m: "Medium",
-    l: "Large",
-    vl: "Very Large"
+    vs: "ep2e.item.vehicle.table.size.vs",
+    s: "ep2e.item.vehicle.table.size.s",
+    m: "ep2e.item.vehicle.table.size.m",
+    l: "ep2e.item.vehicle.table.size.l",
+    vl: "ep2e.item.vehicle.table.size.vl"
 }
 
 eclipsephase.vehicleType = {
-    robot: "Robot",
-    vehicle: "Vehicle",
-    morph: "Morph",
-    animal: "Smart-Animal"
+    robot: "ep2e.item.vehicle.table.type.robot",
+    vehicle: "ep2e.item.vehicle.table.type.vehicle",
+    morph: "ep2e.item.vehicle.table.type.morph",
+    animal: "ep2e.item.vehicle.table.type.animal"
 }
 
 eclipsephase.bodyTypes = {
@@ -152,24 +151,24 @@ eclipsephase.drugAddicitonTypes = {
     mental: "Mental"
 }
 
-eclipsephase.grenadeArmorVector = {
-    none: "None",
-    kinetic: "Kinetic",
-    energy: "Energy"
+eclipsephase.drugCategories = {
+    cognitive: "ep2e.item.drug.table.category.cognitive",
+    combat: "ep2e.item.drug.table.category.combat",
+    health: "ep2e.item.drug.table.category.health",
+    nano: "ep2e.item.drug.table.category.nano",
+    narco: "ep2e.item.drug.table.category.narco",
+    petals: "ep2e.item.drug.table.category.petals",
+    psi: "ep2e.item.drug.table.category.psi",
+    rec: "ep2e.item.drug.table.category.rec",
+    social: "ep2e.item.drug.table.category.social",
+    toxins: "ep2e.item.drug.table.category.toxins",
+    nanotox: "ep2e.item.drug.table.category.nanotox"
 }
 
-eclipsephase.drugCategories = {
-    cognitive: "Cognitive Drug",
-    combat: "Combat Drug",
-    health: "Health Drug",
-    nano: "Nanodrug",
-    narco: "Narcoalgorithm",
-    petals: "Petal",
-    psi: "Psi Drug",
-    rec: "Recreational",
-    social: "Social Drug",
-    toxins: "Toxin",
-    nanotox: "Nanotoxin"
+eclipsephase.grenadeArmorVector = {
+    none: "ep2e.item.weapon.table.armorUsed.none",
+    kinetic: "ep2e.item.weapon.table.armorUsed.kinetic",
+    energy: "ep2e.item.weapon.table.armorUsed.energy"
 }
 
 eclipsephase.genders = {

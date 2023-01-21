@@ -5,10 +5,10 @@
         <div class="flexrow flex-group-center">
             <table>
                 <tr>
-                    <td><label class="resource-label">Name</label></td>
-                    <td><label class="resource-label">Value</label></td>
-                    <td><label class="resource-label">Aptitude</label></td>
-                    <td><label class="resource-label">Specialization</label></td>
+                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.nameLabel"}}</label></td>
+                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.valueLabel"}}</label></td>
+                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.aptitudeLabel"}}</label></td>
+                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.specLabel"}}</label></td>
                 </tr>
                 <tr>
                     <td><input type="text" name="name" value="{{item.name}}" placeholder="Skill name"/></td>
@@ -19,8 +19,8 @@
                     {{else}}
                     <td><select class="input-XL" name="system.aptitude" data-type="String">
                         {{#select item.system.aptitude}}
-                        {{#each config.knowAptitudes as |name type|}}
-                        <option value="{{name}}">{{name}}</option>
+                        {{#each config.knowAptitudes as |name key|}}
+                        <option value="{{key}}">{{localize name}}</option>
                         {{/each}} {{/select}}
                     </select></td>
                     {{/if}}
