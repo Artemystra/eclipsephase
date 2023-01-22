@@ -426,7 +426,11 @@ export default class EPnpcSheet extends ActorSheet {
           none: [],
           chi: [],
           gamma: [],
-          epsilon: []
+          epsilon: [],
+          None: [],
+          Chi: [],
+          Gamma: [],
+          Epsilon: []
         };
         const vehicle = [];
         const morphtrait = [];

@@ -422,7 +422,11 @@ export default class EPgoonSheet extends ActorSheet {
           none: [],
           chi: [],
           gamma: [],
-          epsilon: []
+          epsilon: [],
+          None: [],
+          Chi: [],
+          Gamma: [],
+          Epsilon: []
         };
         const vehicle = [];
 

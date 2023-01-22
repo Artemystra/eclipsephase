@@ -513,14 +513,22 @@ export default class EPactorSheet extends ActorSheet {
           none: [],
           chi: [],
           gamma: [],
-          epsilon: []
+          epsilon: [],
+          None: [],
+          Chi: [],
+          Gamma: [],
+          Epsilon: []
       };
       const program = [];
       const vehicle = {
           robot: [],
           vehicle: [],
           morph: [],
-          animal: []
+          animal: [],
+          Robot: [],
+          Vehicle: [],
+          Morph: [],
+          'Smart-Animal': []
       };
       //this will become more important once morphs are items themselves
       const morph = [];
