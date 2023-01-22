@@ -1,67 +1,650 @@
 {
-    "ACTOR.TypeCharacter" : "Spielercharakter",
-    "ACTOR.TypeNpc" : "Nicht-Spielercharakter",
-    "ACTOR.TypeGoon" : "Bedrohung",
-    "ITEM.TypeGear" : "Spezialausrüstung",
-    "ITEM.TypeRangedweapon" : "Fernkampfwaffe",
-    "ITEM.TypeCcweapon" : "Nahkampfwaffe",
-    "ITEM.TypeArmor" : "Rüstung",
-    "ITEM.TypeGrenade" : "Granate",
-    "ITEM.TypeTrait" : "Ego Vorteil",
-    "ITEM.TypeFlaw" : "Ego Nachteil",
-    "ITEM.TypeMorphtrait" : "Morph Vorteil",
-    "ITEM.TypeMorphflaw" : "Morph Nachteil",
-    "ITEM.TypeWare" : "Körpermodifikationen",
-    "ITEM.TypeAspect" : "Psi Fähigkeit",
-    "ITEM.TypeProgram" : "Programm",
-    "ITEM.TypeSpecialskill" : "Specialfertigkeit",
-    "ITEM.TypeKnowskill" : "Wissensertigkeit",
-    "ITEM.TypeVehicle" : "Vehikel",
-    "ITEM.TypeDrug" : "Droge",
-  
-    "ep2e": {
-      "actorSheet": {
-        "leftTabs": {
-          "egoTab": "Ego",
-          "idTab": "ID",
-          "museTab": "Test"
+  "ACTOR.TypeCharacter" : "Spielercharakter",
+  "ACTOR.TypeNpc" : "Nicht-Spielercharacter",
+  "ACTOR.TypeGoon" : "Bedrohung",
+  "ITEM.TypeGear" : "Spezialausrüstung",
+  "ITEM.TypeRangedweapon" : "Fernkampfwaffe",
+  "ITEM.TypeCcweapon" : "Nahkampfwaffe",
+  "ITEM.TypeArmor" : "Rüstung",
+  "ITEM.TypeGrenade" : "Granate",
+  "ITEM.TypeTrait" : "Ego Vorteil",
+  "ITEM.TypeFlaw" : "Ego Nachteil",
+  "ITEM.TypeMorphtrait" : "Morph Vorteil",
+  "ITEM.TypeMorphflaw" : "Morph Nachteil",
+  "ITEM.TypeWare" : "Körpermodifikation",
+  "ITEM.TypeAspect" : "Psi Kraft",
+  "ITEM.TypeProgram" : "Programm",
+  "ITEM.TypeSpecialskill" : "Spezialfertigkeit",
+  "ITEM.TypeKnowskill" : "Wissensfertigkeit",
+  "ITEM.TypeVehicle" : "Vehikel",
+  "ITEM.TypeDrug" : "Droge",
+
+  "ep2e": {
+    "actorSheet": {
+      "placeholders": {
+        "actorName": "Name"
+      },
+      "aptitudes": {
+        "headline": "Geistige Anlagen",
+        "cognition": "KOG",
+        "intuition": "INT",
+        "reflexes": "REF",
+        "savvy": "EMP",
+        "somatics": "SOM",
+        "willpower": "WIL",
+        "cog": "Kognition",
+        "int": "Intuition",
+        "ref": "Reflexe",
+        "sav": "Empathie",
+        "som": "Somatik",
+        "wil": "Wille"
+      },
+      "leftTabs": {
+        "egoTab": "Ego",
+        "idTab": "ID",
+        "museTab": "Muse"
+      },
+      "rightTabs": {
+        "skillsTab": "Skills",
+        "morphTab": "Morph",
+        "inventoryTab": "Inventar",
+        "peripheralsTab": "Peripherie",
+        "psiTab": "Psi",
+        "effectsTab": "Effekte"
+      },
+      "button": {
+        "edit": "Editieren",
+        "delete": "Löschen"
+      }
+    },
+    "healthbar": {
+      "tooltip": {
+        "durdr": "Aus/Tr",
+        "woundswt": "Wunden/(WG)",
+        "stressluc": "Stress/Luz",
+        "traumatt": "Trauma/(TG)",
+        "initiative": "Initiative",
+        "threat": "Bedrohung",
+        "stressTest": "Stress Test",
+        "iniMod": "Ini Mod"
+      }
+    },
+    "ego": {
+      "general": {
+        "headline": "Allgemein",
+        "egoFlexLabel": "Ego Flex",
+        "origin": {
+          "headline": "Herkunft",
+          "anarchist": "Anarchist:in",
+          "argonaut": "Argonaut:in",
+          "barsoomian": "Barsoomier:in",
+          "brinker": "Brinker:in",
+          "criminal": "Kriminelle:r",
+          "extropian": "Extropier:in",
+          "hypercorps": "Hypercorps",
+          "jovian": "Jovianer:in",
+          "lunar": "Lunare:r/Orbitale:r",
+          "mercurial": "Merkurier:in",
+          "reclaimer": "Rückforderer/Rückforderin",
+          "scum": "Scum",
+          "socialite": "Social-Elite",
+          "titanian": "Titanier:in",
+          "venusian": "Venusier:in",
+          "regional": "Regional"
         },
-        "rightTabs": {
-          "skillsTab": "Fertigkeiten",
-          "morphTab": "Morph",
-          "inventoryTab": "Inventar",
-          "peripheralsTab": "Peripherie",
-          "psiTab": "Psi",
-          "effectsTab": "Effekte"
+        "sex": {
+          "headline": "Geschlecht",
+          "male": "Männlich",
+          "female": "Weiblich",
+          "inter": "Intersexuell",
+          "dyadic": "Dyadisch"
+        },
+        "gender": {
+          "headline": "Identität",
+          "cis": "Cisgender",
+          "trans": "Transgender",
+          "nonBi": "Non-Binary",
+          "fluid": "Genderfluid",
+          "aGen": "Agender",
+          "biGen": "Bigender",
+          "polGen": "Polygender",
+          "neu": "Neutrois",
+          "genAp": "Gender Apathetic",
+          "inter": "Intergender",
+          "demi": "Demigender",
+          "grey": "Greygender",
+          "apora": "Aporagender",
+          "mav": "Maverique",
+          "novi": "Novigender"
         }
       },
-      "skills":{
-        "insightSkills": {
-          "insightHeadline": "Insight",
-          "infosec": "Infosec",
-          "interface": "Interface",
-          "perceive": "Wahrnehmung",
-          "program": "Programmieren",
-          "research": "Recherche",
-          "survival": "Überleben"
+      "motivations": {
+        "headline": "Motivationen",
+        "placeholder": "z.B. Den Himmel erreichen"
+      },
+      "languages": {
+        "headline": "Languages",
+        "placeholder": "z.B. Hindi, Chinesisch, Englisch"
+      },
+      "traits": {
+        "headline": "Vorteile",
+        "noItems": "Du hast keine Vorteile"
+      },
+      "flaws": {
+        "headline": "Nachteile",
+        "noItems": "Du hast keine Nachteile"
+      },
+      "personality": {
+        "headline": "Persönlichkeit"
+      }
+    },
+    "id": {
+      "headline": "Aktuelle ID",
+      "nameLabel": "Name",
+      "namePlaceholder": "Fake Name",
+      "repType": {
+        "@rep": "@-Rep",
+        "crep": "C-Rep",
+        "frep": "F-Rep",
+        "grep": "G-Rep",
+        "irep": "I-Rep",
+        "rrep": "R-Rep",
+        "xrep": "X-Rep"
+      },
+      "complexity": {
+        "min": "Kle",
+        "mod": "Mod",
+        "maj": "Gro"
+      },
+      "idSelector": {
+        "id1": "ID1",
+        "id2": "ID2",
+        "id3": "ID3",
+        "id4": "ID4",
+        "id5": "ID5",
+        "id6": "ID6"
+      }
+    },
+    "muse": {
+      "headline": "Muse Info",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. Amusing",
+      "aboutLabel": "Über"
+    },
+    "skills":{
+      "placeholders": {
+        "specialization": "Spezialisierung",
+        "additionalSpec": "No Spec"
+      },
+      "restingMenu": {
+        "headline": "Pools Widerherstellen",
+        "shortRest": "Kurze Rast:",
+        "longRest": "Lange Rast:",
+        "labelInsight": "Insight",
+        "labelVigor": "Vigor",
+        "labelMoxie": "Moxie",
+        "labelFlex": "Flex",
+        "messages": {
+          "pointsAvailable": "Poolpunkte zu verteilen",
+          "pointsOverspent": "Du hast deinen Würfelwurf übertroffen um",
+          "distributionDone": "Alle Punkte verteilt. Los geht's!"
         },
-        "vigorSkills": {
-          "vigorHeadline": "Vigor",
-          "athletics": "Athletik",
-          "fray": "Ausweichen",
-          "free fall": "Free Fall",
-          "guns": "Schiessen",
-          "infiltrate": "Infiltrieren",
-          "melee": "Nahkampf"
+        "restInfo": {
+          "headline": "Rast Regeln",
+          "subheadline1": "Allgemein",
+          "copy1": "Du musst eine 'Rast'-Aktion nutzen um Pools wieder aufzufüllen. Um den Typ der Rast zu wählen, klicke auf die zugehörige Checkbox. Jeder Charakter hat alle 24 Stunden eine lange- und zwei Kurze Rast zur Verfügung.",
+          "subheadline2": "Kurze Rast",
+          "copy2": "Ein durchschnittlicher Transhumaner braucht etwa 10 Minuten für eine kurze Rast in der er nichts anderes tun kann als sprechen oder sich hinzulegen um herunterzukommen. Dies benötigt Biomods, während Flats etwa eine Stunde rasten müssen.<p/><label class='resource-value'>Eine kurze Rast stellt 1W6 Poolpunkte wieder her</label>",
+          "subheadline3": "Lange Rast",
+          "copy3": "Eine Person mit Biomods braucht 4 Stunden für eine lange Rast in der sie nichts tun kann ausser sich hinzulegen, zu sprechen während sie herunter kommt. Flats brauchen 8 Stunden um den gleichen Effekt zu erreichen.<p/><label class='resource-value'>Eine lange Rast stellt alle Poolpunkte wieder her.</label>"
         },
-        "moxieSkills": {
-          "moxieHeadline": "Insight",
-          "deceive": "Täuschen",
-          "kinesics": "Kinesik",
-          "persuade": "Überzeugen",
-          "provoke": "Provozieren",
-          "psi": "Psi"
+        "button": {
+          "resetRest": "Reset Rest",
+          "distribute": "Distribute" 
+        }
+      },
+      "insightSkills": {
+        "insightHeadline": "Insight Skills",
+        "infosec": "Infosec",
+        "interface": "Interface",
+        "perceive": "Wahrnehmung",
+        "program": "Programm",
+        "research": "Recherche",
+        "survival": "Überleben",
+        "poolHeadline": "Insight",
+        "poolSubheadline1": "Initiative ergreifen:",
+        "poolCopy1": "Du bist als erstes an der Reihe, solange du nur mentale- oder Meshaktionen und keine physischen durchführen möchtest. Wenn mehrere Charaktere diese Funktion nutzen, werden sie nach ihrer Initiative abgehandelt, jedoch vor allen anderen.",
+        "poolSubheadline2": "Extra Aktion:",
+        "poolCopy2": "Du kannst eine Extraaktion (oder zwei schnelle Aktonen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
+        "poolSubheadline3": "Bekomm einen Tipp:",
+        "poolCopy3": "Du bekommst einen Tipp innerhalb einer Ivestigation, während einer Recherche oder einer Analyse ohne eine Probe dafür durchführen zu müssen."
+      },
+      "vigorSkills": {
+        "vigorHeadline": "Vigor Skills",
+        "athletics": "Athletik",
+        "fray": "Ausweichen",
+        "free fall": "Freifall",
+        "guns": "Fernkampf",
+        "infiltrate": "Infiltration",
+        "melee": "Nahkampf",
+        "poolHeadline": "Vigor",
+        "poolSubheadline1": "Initiative ergreifen:",
+        "poolCopy1": "Du bist als erstes an der Reihe. Wenn mehrere Charaktere diese Funktion nutzen, werden sie nach ihrer Initiative abgehandelt, jedoch vor allen anderen.",
+        "poolSubheadline2": "Extra Aktion:",
+        "poolCopy2": "Du kannst eine Extraaktion (oder zwei schnelle Aktonen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
+        "poolSubheadline3": "Wunde ignorieren:",
+        "poolCopy3": "Ignoriere den Effekt einer Wunde für 24 Stunden, oder bis zur nächsten langen Rast."
+      },
+      "moxieSkills": {
+        "moxieHeadline": "Insight Skills",
+        "deceive": "Täuschung",
+        "kinesics": "Kinesik",
+        "persuade": "Überzeugen",
+        "provoke": "Provozieren",
+        "psi": "Psi",
+        "poolHeadline": "Moxie",
+        "poolSubheadline1": "Trauma ignorieren:",
+        "poolCopy1": "Ignoriere den Effekt eines Traumas für 24 Stunden, oder bis zur nächsten langen Rast.",
+        "poolSubheadline2": "Rep wieder auffüllen:",
+        "poolCopy2": "Stelle Netzwerkgefallen einer Repfraktion wieder her. Zahle 1 Moxie für einen kleinen- oder 2 für einen moderaten Gefallen. Grosse Gefallen können auf diese Weise nicht aufgefüllt werden.",
+        "poolSubheadline3": "Bekomm einen Tipp:",
+        "poolCopy3": "Du bekommst einen Tipp innerhalb einer sozialen Interaktion ohne eine Probe dafür durchführen zu müssen.",
+        "poolSubheadline4": "Infektion kontrollieren:",
+        "poolCopy4": "Ignoriere einen Infektionstest, während der Nutzung der nächsten Psikraft.",
+        "poolSubheadline5": "Ausrutscher Negieren:",
+        "poolCopy5": "Negiere einen sozialen Ausrutscher den ein Spieler gemacht hat, der jedoch untypisch für den Charakter gewesen wäre."
+      },
+      "flex": {
+        "flexHeadline": "Flex",
+        "poolHeadline": "Flex",
+        "poolSubheadline1": "NSC einführen:",
+        "poolCopy1": "Ein neuer oder bereits bekannter NSC betritt die Szene. Ihre Anwesenheit muss plausibel sein. Du kannst einen der folgenden Aspekte des NSCs definieren: Ihren Morph, ihre Fraktion, einen besonderen Skill, einen bestimmten Vorteil, etc. Die SL bestimmt alle anderen Details.",
+        "poolSubheadline2": "Gegenstand einführen:",
+        "poolCopy2": "Ein Gegenstand, der bisher nicht aufgefallen ist, wird der Szene hinzugefügt. Seine Präsenz muss plausibel sein. Der Gegenstand kann nicht offensiv sein (keine Waffe) und muss mit einem kleinen Gefallen zu erhalten sein. (Nicht rar oder verboten) Es kann ein Werkzeug, ein wichtiger Ausrüstungsgegenstand oder sogar ein Hinweis sein. Die SL bestimmt den Ort des Gegestandes und die ausgestaltung aller Hinweise.",
+        "poolSubheadline3": "Umgebung definieren:",
+        "poolCopy3": "Du fügst der Szene ein Umgebungsmerkmal hinzu. Seine Präsenz muss plausibel sein. Es muss ein zusätzliches Detail sein und kann die Szene nicht drastisch ändern. Beispiele können Verstecke, Deckung, Ablenkungen, Unterstände, aber auch Dinge die man nutzen kann wie Leitern oder Fenster. ",
+        "poolSubheadline4": "Eine Beziehung definieren:",
+        "poolCopy4": "Du kannst eine Beziehung zu einem NSC auf plausible Weise verändern oder definieren. Es sollte eine lose Verbindung anstelle einer tiefen Vertrautheit sein. Es könnte sich beispielsweise um einen gemeinsamen Freund, eine vergangene Begebenheit oder eine milde Rivalität handeln. Du kannst eine grobe Richtung definieren, jedoch nicht das allgemeine Verhalten gegenüber deines Charakters."
+      },
+      "knowSkills": {
+        "knowHeadline": "Wissens-Skills",
+        "addfirst": "Füge den ersten Wissens-Skill hinzu"
+      },
+      "exoticSkills": {
+        "exoticHeadline": "Exotische-Skills",
+        "addfirst": "Füge den ersten Exotischen-Skill hinzu"
+      },
+      "additionalSkills": {
+        "additionalHeadline": "Weitere Skills",
+        "placeholder": "Skill Name",
+        "electronics": "Elektronik",
+        "accounting": "Buchhaltung",
+        "psychology": "Psychologie",
+        "Psychosurgery": "Psychochirurgie"
+      },
+      "addSkill": "Skill",
+      "chooseAptitude": "Anlage Wählen"
+    },
+    "morph": {
+      "currentMorph": {
+        "headline": "Aktueller Morph",
+        "sleevedLabel": "Bewohnt",
+        "morphPlaceholder": "Morphname",
+        "morphType": {
+          "label": "Typ",
+          "synth": "Synthetisch",
+          "bio": "Biologisch",
+          "info": "Digital"
+        },
+        "durabilityLabel": "Ausdauer",
+        "movement": {
+          "label1": "Bewegung 1",
+          "label2": "Bewegung 2",
+          "speed": "Geschw.",
+          "type": "Typ"
+        },
+        "movementTypes": {
+          "none": "-Select-",
+          "boat": "Boot",
+          "hopper": "Springer",
+          "hover": "Schweben",
+          "ionic": "Ionisch",
+          "microlight": "Mikroleicht",
+          "roller": "Roller",
+          "rotor": "Rotor",
+          "snake": "Schlange",
+          "submarine": "Untersee",
+          "swimmer": "Schwimmer",
+          "thrustvector": "Vektorschub",
+          "tracked": "Spurgelenkt",
+          "walker": "Läufer",
+          "wheeled": "Räder",
+          "winged": "Fliegend"
+        },
+        "insightLabel": "Insight",
+        "moxieLabel": "Moxie",
+        "vigorLabel": "Vigor",
+        "flexLabel": "Flex",
+        "morphList": {
+          "placeholder": "Neuer Morph"
+        }
+      },
+      "traitsLabel": "Morph Eigenschaften",
+      "wareLabel": "Morph Modifikation",
+      "noMorphTraits": "Dieser Morph ist eigenschaftslos",
+      "noMorphWare": "Dieser Morph ist flat"
+    },
+    "inventory": {
+      "armorLabel": "Rüstung",
+      "armorPlaceholder": "Kein Rüstungsname",
+      "rangedLabel": "Fernkampfwaffen",
+      "rangedPlaceholder": "Kein Waffenname",
+      "ccLabel": "Nahkampfwaffen",
+      "ccPlaceholder": "Kein Waffenname",
+      "gearLabel": "Spezialausrüstung",
+      "consumablesLabel": "Konsumgüter",
+      "programs": {
+        "label": "Geladene Programme",
+        "copy": "Programme werden vorbereitet indem man das Ziel analysiert und das Netzwerk auf Schwachstellen prüft und Codeschnipsel darauf massschneidert. Daher <u>kann ihre Nutzung weder gefunden, noch verhindert werden</u> und sie funktionieren in den meisten Situationen. <u>Drei Programme des gleichen Typs können genutzt werden um das gesamte Netzwerk lahmzulegen.</u> Obwohl so etwas durchaus auffällt benötigt es noch immer einen guten Hacker und etwas Zeit um den Grund für den Fehler zu finden.</i>"
+      },
+      "npcInventory": {
+        "quickAddRanged": "Fernkampaffe hinzufügen",
+        "noRanged": "Klicke um <label class='resource-value'>eine Fernkampfwaffe hinzuzufügen</label> oder ziehe sie aus einem <label class='resource-value'>Kompendium <i class='fas fa-atlas'></label></i>",
+        "quickAddMelee": "Nahkampfwaffe hinzufügen",
+        "noMelee": "Klicke um <label class='resource-value'>eine Nahkampfwaffe hinzuzufügen</label> oder ziehe sie aus einem <label class='resource-value'>Kompendium <i class='fas fa-atlas'></label></i>",
+        "quickAddArmor": "Rüstung hinzufügen",
+        "armorEnergy": "Energie",
+        "armorKinetic": "Kinetisch",
+        "noArmor": "Hat keine Rüstung",
+        "traitsAndWareHeadline": "Modifikationen",
+        "armorAndGearHeadline": "Ausrüstung",
+        "traitsLabel": "Morph Vorteile",
+        "noTraitsCopy": "Keine Morphvorteile",
+        "flawsLabel": "Morph Nachteile",
+        "noFlawsCopy": "Keine Morphnachteile",
+        "wareLabel": "Mods",
+        "noWareCopy": "Keine Mods installiert",
+        "gearLabel": "Spezialausrüstung",
+        "noGearCopy": "Keine Spezialausrüstung"
+      },
+      "noGear": {
+        "headline": "Keine Ausrüstung vorhanden",
+        "copy": "Du hast noch keine Ausrüstung. <label class='resource-value'>Nutze das <i class='fas fa-atlas'></i></label> Kompendium <label class='resource-value'>oder erstelle neue <i class='fas fa-suitcase'></i></label> Gegenstände<p><i style='font-size: 12px; margin-bottom: 10px;'> um sie deinem Inventar hinzuzufügen. Diese Optionen können oben rechts im Foundry-Menü gefunden werden, oder die SL kann sie dir zur verfügung stellen.</i>"
+      }
+    },
+    "peripherals": {
+      "pool": {
+        "ins": "Ins",
+        "vig": "Vig",
+        "mox": "Mox",
+        "flex": "Flex"
+      },
+      "table": {
+        "pessengers": "Passagiere",
+        "armor": "RW",
+        "woundThreshold": "WG",
+        "damageDurability": "Schaden/Aus",
+        "deathRating": "DG",
+        "movement": "Bew",
+        "size": "Grösse"
+      },
+      "modPlaceholder": "Keine Mods",
+      "skillsHeadline": "Skills"
+    },
+    "psi": {
+      "infectionHeadline": "Infektionstyp",
+      "ratingLabel": "Infektionsgrad",
+      "strainPlaceholder": "Name des Virenstamms",
+      "descriptionPlaceholder": "Beschreibe dein inneres Monster",
+      "gammaHeadline": "Gamma Fertigkeit",
+      "chiHeadline": "Chi Fertigkeit"
+    },
+    "sideCar": {
+      "moreToggle": "Mehr",
+      "lessToggle": "Weniger",
+      "currentStatus": {
+        "headline": "Würfelmodifikator",
+        "modBreakdown": "Aufschlüsselung",
+        "generalModifiers": "Allgemeine Mods",
+        "armorModifiers": "Rüstungsbehinderung",
+        "gearModifiers": "Ausrüstungsbehinderung",
+        "noModifiersSubHeader": "Kein Modifikator",
+        "noModifiersCopy": "Wan immer der Charakter negative Effekte erleidet werden sie hier zu finden sein. Warte nur ab. Wir werden uns bald wiedersehen...",
+        "statuses": {
+          "wounded": "Wunde",
+          "woundsIgnored": "Wunde(n) ignoriert",
+          "traumatized": "Trauma",
+          "layersOfArmor": "Rüstungslagen",
+          "somExceeded": "RW übersteigt SOM",
+          "weaponsExceeded": "Zu viele Waffen",
+          "consumablesExceeded": "Zu viele Konsumgüter",
+          "gearExceeded": "Zu viel Ausrüstung",
+          "bulkyItem": "Sperriger Gegenstand"
+        }
+      },
+      "armor": {
+        "headline": "Rüstung",
+        "noArmorSubheadline": "Keine Rüstung",
+        "noArmorCopy": "Du trägst keine Rüstung",
+        "armorSubheadline": "Rüstung Gesamt",
+        "energy": "Energie",
+        "kinetic": "Kinetisch",
+        "concealWarning": "Nich zu verbergen (>11)",
+        "encumberanceWarning": "Bewegungsunfähig (>Dur)",
+        "armorCountSubheadline": "Rüstung aktiv",
+        "mainArmorLabel": "Hauptrüstung",
+        "additionalArmorLabel": "Zusatzrüstung",
+        "cumulativeMalusLabel": "Malus Gesamt",
+        "mainArmorMalusCopy": "Für jedes Hauptrüstungsteil wird ein -20 Modifikator für alle Aktionen angerechnet.",
+        "additionalArmorMalusCopy": "Zusatzrüstung kann ohne Modifikator in Lagen getragen werden. Sie zählt weiterhin gegen andere Rüstungsmodifikatoren.",
+        "exceedingSomLabel": "Übersteigt Somatik",
+        "exceedingSomCopy": "Wenn ein einzelner Rüstwert (Kinetisch ODER Energie) deinen SOM-Wert übersteigt wird ein weiterer -20 Modifikator auf alle Würfe gerechnet.",
+        "armorUsageDescription": "Um Rüstung an- oder abzulegen navigiere in dein Inventar. Rüstungen können aus dem Kompendium und allen anderen Gegenstandssammlungen die zur Verfügung stehen auf den Bogen gezogen werden."
+      },
+      "ranged": {
+        "headline": "Fernkampf"
+      },
+      "melee": {
+        "headline": "Nahkampf"
+      },
+      "gear": {
+        "headline": "Spezialausrüstung"
+      },
+      "consumables": {
+        "headline": "Konsumgüter"
+      }
+    },
+    "item": {
+      "general": {
+        "tabs": {
+          "detailsTab": "Details",
+          "effectsTab": "Effekte"
+        },
+        "table": {
+          "cost": {
+            "label": "Kosten",
+            "minor": "Klein",
+            "moderate": "Moderat",
+            "major": "Gross",
+            "rare": "Rar"
+          },
+          "slot": {
+            "label": "Slot",
+            "digital": "Digital",
+            "consumable": "Konsumgut",
+            "accessory": "Zubehör",
+            "bulky": "Sperrig",
+            "notMobile": "Nicht Mobil"
+          },
+          "description": "Beschreibung",
+          "descriptionPlaceholder": "Beschreibung hinzufügen"
+        }
+      },
+      "armor": {
+        "table": {
+          "energy": "Energie",
+          "kinetic": "Kinetisch",
+          "type": {
+            "label": "Rüstungstyp",
+            "main": "Hauptrüstung",
+            "additional": "Zusatzrüstung"
+          }
+        }
+      },
+      "aspect": {
+        "table": {
+          "type": {
+            "label": "Psi Typ",
+            "gamma": "Gamma",
+            "chi": "Chi",
+            "epsilon": "Epsilon"
+          },
+          "action": {
+            "label": "Aktion",
+            "quick": "Schnell",
+            "task": "Ausgedehnt",
+            "complex": "Komplex"
+          },
+          "duration": {
+            "label": "Dauer",
+            "instant": "Sofort",
+            "action": "Aktionsrunden",
+            "minutes": "Minuten",
+            "hours": "Stunden",
+            "sustained": "Aufrechterhalten"
+          },
+          "modifierLabel": "Infektionsmod"
+        }
+      },
+      "weapon": {
+        "table": {
+          "range": "Reichw.",
+          "maxAmmo": "Munition",
+          "damageValue": "SW",
+          "effectArea": "Wirkbereich",
+          "armorUsed": {
+            "label": "Widerstandsart",
+            "none": "Keine",
+            "kinetic": "Kinetisch",
+            "energy": "Energie"
+            },
+          "firingMode": {
+            "label": "Feuermodus",
+            "ss": "ES",
+            "sa": "HA",
+            "saBF": "HA/SF",
+            "bfFA": "SF/VA",
+            "saBFfa": "HA/SF/VA"
+          },
+          "slot": {
+            "label": "Slot",
+            "integrated": "Integriert",
+            "sidearm": "Begleitwaffe",
+            "oneHanded": "Einhändig",
+            "twoHanded": "Zweihändig",
+            "bulky": "Sperrig"
+          }
+        }
+      },
+      "drug": {
+        "table": {
+          "duration": "Dauer",
+          "addictionModifier": "Suchtmod",
+          "addictionType": "Suchttyp",
+          "applicationVectors": {
+            "headline": "Anwendungsvektor",
+            "dermalLabel": "Dermal",
+            "inhalationLabel": "Inhalation",
+            "injectionLabel": "Injektion",
+            "oralLabel": "Oral"
+          },
+          "category": {
+            "label": "Kategorie",
+            "cognitive": "Kognitive Droge",
+            "combat": "Kampfdroge",
+            "health": "Heildroge",
+            "nano": "Nanodroge",
+            "narco": "Narcoalgorithmus",
+            "petals": "Blatt",
+            "psi": "Psidroge",
+            "rec": "Widerherstellung",
+            "social": "Soziale Droge",
+            "toxins": "Toxin",
+            "nanotox": "Nanotoxin"
+          },
+          "type": {
+            "label": "Drogentyp",
+            "biochem": "Biochem",
+            "nano": "Nano",
+            "electronic": "Elektronisch"
+          }
+        }
+      },
+      "additionalSkill": {
+        "table": {
+          "nameLabel": "Name",
+          "valueLabel": "Wert",
+          "aptitudeLabel": "Anlage",
+          "specLabel": "Spezialisierung"
+        }
+      },
+      "program": {
+        "table": {
+          "level": {
+            "label": "Level",
+            "intruder": "Eindringling",
+            "user": "Nutzer",
+            "admin": "Admin",
+            "owner": "Besitzer"            
+          }
+        }
+      },
+      "vehicle": {
+        "table": {
+          "initiative": "Init",
+          "threatValue": "BW",
+          "durability": "AUS",
+          "movement": "Bew",
+          "skillsHeadline": "Skills",
+          "type": {
+            "label": "Typ",
+            "robot": "Roboter",
+            "vehicle": "Vehikel",
+            "morph": "Morph",
+            "animal": "Smart-Animal"          
+          },
+          "size": {
+            "label": "Grösse",
+            "vs": "Sehr Klein",
+            "s": "Klein",
+            "m": "Mittel",
+            "l": "Gross",
+            "vl": "Sehr Gross"
+          }
+        }
+      },
+      "ware": {
+        "table": {
+          "type": {
+            "label": "Mod Typ",
+            "b": "B",
+            "bch": "BCH",
+            "bh": "BH",
+            "bhm": "BHM",
+            "bm": "BM",
+            "c": "C",
+            "ch": "CH",
+            "chn": "CHN",
+            "chm": "CHM",
+            "h": "H",
+            "hn": "HN",
+            "hmn": "HMN",
+            "n": "N",
+            "nh": "NH",
+            "mn": "MN"
+          }
         }
       }
     }
   }
+}
