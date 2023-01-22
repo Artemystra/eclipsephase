@@ -1,5 +1,5 @@
 <div class="tab vehicle" data-group="primary" data-tab="vehicles">
-    {{#each actor.vehicle.Vehicle as |item id|}}
+    {{#each actor.vehicle.vehicle as |item id|}}
     <div class="item contentBox" data-item-id="{{item._id}}">
         <div class="flexrow">
             <h3 class="subheader">{{item.name}}</h3>
@@ -118,7 +118,7 @@
         </div>
     </div>
     {{/each}}
-    {{#each actor.vehicle.Robot as |item id|}}
+    {{#each actor.vehicle.robot as |item id|}}
     <div class="item contentBox" data-item-id="{{item._id}}">
         <div class="flexrow" style="justify-content: flex-end;">
             <h3 class="subheader">{{item.name}}</h3>
@@ -224,7 +224,7 @@
         </div>
     </div>
     {{/each}}
-    {{#each actor.vehicle.Smart-Animal as |item id|}}
+    {{#each actor.vehicle.animal as |item id|}}
     <div class="item contentBox" data-item-id="{{item._id}}">
         <div class="flexrow">
             <h3 class="subheader">{{item.name}}</h3>

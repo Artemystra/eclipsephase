@@ -79,9 +79,9 @@ eclipsephase.costTypes = {
 
 eclipsephase.programLevels = {
     intruder: "ep2e.item.program.table.level.intruder",
-    user: "ep2e.item.program.table.level.intruder",
-    admin: "ep2e.item.program.table.level.intruder",
-    owner: "ep2e.item.program.table.level.intruder"
+    user: "ep2e.item.program.table.level.user",
+    admin: "ep2e.item.program.table.level.admin",
+    owner: "ep2e.item.program.table.level.owner"
 }
 
 eclipsephase.psiTypes = {

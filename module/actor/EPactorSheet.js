@@ -362,8 +362,10 @@ export default class EPactorSheet extends ActorSheet {
 
       if (item.type === "aspect"){
         psiType = item.system.psiType;
-        console.log("My Sleight:",item)
         switch (psiType) {
+          case '':
+            update = "gamma"
+            break;
           case 'none':
             update = "gamma"
             break;
@@ -379,11 +381,13 @@ export default class EPactorSheet extends ActorSheet {
           default:
             break;
         }
-        itemUpdate.push({
-          "_id" : itemID,
-          "system.psiType": update
-        });
-        actor.updateEmbeddedDocuments("Item", itemUpdate);
+        if(update != ""){
+          itemUpdate.push({
+            "_id" : itemID,
+            "system.psiType": update
+          });
+          actor.updateEmbeddedDocuments("Item", itemUpdate);
+        }
       }
     }
 
@@ -506,15 +510,17 @@ export default class EPactorSheet extends ActorSheet {
         morph6: []
     };
       const aspect = {
+          none: [],
           chi: [],
-          gamma: []
+          gamma: [],
+          epsilon: []
       };
       const program = [];
       const vehicle = {
-          Robot: [],
-          Vehicle: [],
-          Morph: [],
-          'Smart-Animal': []
+          robot: [],
+          vehicle: [],
+          morph: [],
+          animal: []
       };
       //this will become more important once morphs are items themselves
       const morph = [];
@@ -568,12 +574,83 @@ export default class EPactorSheet extends ActorSheet {
           flaw.push(item);
         }
         else if (itemModel.displayCategory === 'ranged') {
+          let slotType = itemModel.slotType;
+          let firingMode = itemModel.firingMode;
+          switch (slotType){
+            case 'integrated':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
+              break;
+            case 'sidearm':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.sidearm";
+              break;
+            case 'oneHanded':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.oneHanded";
+              break;
+            case 'twoHanded':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.twoHanded";
+              break;
+            case 'bulky':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.bulky";
+              break;
+            default:
+              break;
+          }
+          switch (firingMode){
+            case 'ss':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+              break;
+            case 'sa':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+              break;
+            case 'saBF':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+              break;
+            case 'bfFA':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+              break;
+            case 'saBFfa':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+              break;
+            default:
+              break;
+          }
           rangedweapon.push(item);
         }
         else if (itemModel.displayCategory === 'ccweapon') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'integrated':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
+                break;
+              case 'sidearm':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.sidearm";
+                break;
+              case 'oneHanded':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.oneHanded";
+                break;
+              case 'twoHanded':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.twoHanded";
+                break;
+              case 'bulky':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.bulky";
+                break;
+              default:
+                break;
+            }
           ccweapon.push(item);
         }
         else if (itemModel.displayCategory === 'armor') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'main':
+                itemModel.slotName = "ep2e.item.armor.table.type.main";
+                break;
+              case 'additional':
+                itemModel.slotName = "ep2e.item.armor.table.type.additional";
+                break;
+              default:
+                break;
+            }
           armor.push(item);
         }
         else if (item.type === 'aspect') {
@@ -583,9 +660,27 @@ export default class EPactorSheet extends ActorSheet {
           program.push(item);
         }
         else if (item.system.slotType === 'accessory' || item.system.slotType === 'bulky' || item.system.slotType === 'digital' || item.system.slotType === 'notMobile') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'accessory':
+                itemModel.slotName = "ep2e.item.general.table.slot.accessory";
+                break;
+              case 'bulky':
+                itemModel.slotName = "ep2e.item.general.table.slot.bulky";
+                break;
+              case 'digital':
+                itemModel.slotName = "ep2e.item.general.table.slot.digital";
+                break;
+              case 'notMobile':
+                itemModel.slotName = "ep2e.item.general.table.slot.notMobile";
+                break;
+              default:
+                break;
+            }
           gear.push(item);
         }
         else if (item.system.slotType === 'consumable') {
+          itemModel.slotName = "ep2e.item.general.table.slot.consumable";
           consumable.push(item);
         }
         else if (item.type === 'vehicle') {

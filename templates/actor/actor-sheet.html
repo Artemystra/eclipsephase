@@ -27,11 +27,11 @@
                     <a class="item" data-tab="skills">{{localize "ep2e.actorSheet.rightTabs.skillsTab"}}</a>
                     <a class="item" data-tab="body">{{localize "ep2e.actorSheet.rightTabs.morphTab"}}</a>
                     <a class="item" data-tab="weapons">{{localize "ep2e.actorSheet.rightTabs.inventoryTab"}}</a>
-                    {{#if actor.vehicle.Vehicle}}
+                    {{#if actor.vehicle.vehicle}}
                     <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
-                    {{else if actor.vehicle.Robot}}
+                    {{else if actor.vehicle.robot}}
                     <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
-                    {{else if actor.vehicle.Smart-Animal}}
+                    {{else if actor.vehicle.animal}}
                     <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
                     {{/if}}
                     {{#if actor.system.additionalSystems.hasPsi}}

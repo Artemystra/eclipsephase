@@ -7,9 +7,9 @@
             <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
         </div>
         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.rangedPlaceholder'}}"   data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}" style="text-align: left; font-weight: bold"/>
-        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.firingMode}}</strong></label>
+        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.firingModeLabel}}</strong></label>
         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.system.range}}</strong></label>
-        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.slotType}}</strong></label>
+        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
         <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>
         {{#if @root.isGM}}
             <input class="input-small sheet-inline-edit" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
@@ -44,9 +44,9 @@
             <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
         </div>
         <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.rangedPlaceholder'}}" style="text-align: left; font-weight: bold"/>
-        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.firingMode}}</strong></label>
+        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.firingModeLabel}}</strong></label>
         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.system.range}}</strong></label>
-        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.slotType}}</strong></label>
+        <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
         <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>
         {{#if  @root.isGM}}
             <input class="input-small sheet-inline-edit" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
