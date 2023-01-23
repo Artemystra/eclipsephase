@@ -36,8 +36,8 @@
                     <div>
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
                             <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.actionType}}</i></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.duration}}</i></label>
+                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.actionName}}</i></label>
+                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.durationName}}</i></label>
                             <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.infection}}</i></label>
                             <div class="flex-group-right slideShow">
                                 <a><i class="fas fa-plus icon-small"></i></a>

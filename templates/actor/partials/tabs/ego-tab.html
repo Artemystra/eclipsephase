@@ -14,7 +14,7 @@
                 name="system.ego.origin" data-type="String" >
                     {{#select actor.system.ego.origin}}
                     {{#each config.origins as |origin key|}}
-                    <option value="{{origin}}">{{localize origin}}</option>
+                    <option value="{{key}}">{{localize origin}}</option>
                     {{/each}} {{/select}}
                 </select>
             </div>
@@ -24,7 +24,7 @@
                 name="system.ego.sex" data-type="String">
                     {{#select actor.system.ego.sex}}
                     {{#each config.sexes as |sex key|}}
-                    <option value="{{sex}}">{{localize sex}}</option>
+                    <option value="{{key}}">{{localize sex}}</option>
                     {{/each}} {{/select}}
                 </select>
             </div>
@@ -34,7 +34,7 @@
                 name="system.ego.gender" data-type="String">
                     {{#select actor.system.ego.gender}}
                     {{#each config.genders as |gender key|}}
-                    <option value="{{gender}}">{{localize gender}}</option>
+                    <option value="{{key}}">{{localize gender}}</option>
                     {{/each}} {{/select}}
                 </select>
             </div>

@@ -1014,7 +1014,7 @@
         "base",
         "buyable"
       ],
-      "category": false,
+      "category": "",
       "dermal": false,
       "inhalation": false,
       "injection": false,

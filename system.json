@@ -2,7 +2,7 @@
   "id": "eclipsephase",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "0.8.0.1",
+  "version": "0.8.1",
   "compatibility": {
     "verified": "10",
     "minimum": "10"
@@ -182,18 +182,6 @@
       "lang": "en",
       "name": "English",
       "path": "lang/en.json",
-      "flags": {}
-    },
-    {
-      "lang": "cn",
-      "name": "Chinese",
-      "path": "lang/cn.json",
-      "flags": {}
-    },
-    {
-      "lang": "de",
-      "name": "Deutsch",
-      "path": "lang/de.json",
       "flags": {}
     }
   ],

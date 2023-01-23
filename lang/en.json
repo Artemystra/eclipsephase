@@ -508,7 +508,7 @@
           "duration": {
             "label": "Duration",
             "instant": "Instant",
-            "action": "Actions Turns",
+            "action": "Action Turns",
             "minutes": "Minutes",
             "hours": "Hours",
             "sustained": "Sustained"
