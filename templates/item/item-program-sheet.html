@@ -12,19 +12,18 @@
     <section class="sheet-body">
         <div class="grid grid-2col">
             <div class="flexrow flex-group-left">
-                <label class="resource-label input-medium">Level: </label>
+                <label class="resource-label input-medium">
+                    <td><label class="resource-label">{{localize "ep2e.item.program.table.level.label"}}:</label>
                 <select name="system.programLevel" data-type="String">
                     {{#select item.system.programLevel}}
-                    {{#each config.programLevels as |name type|}}
-                    <option value="{{name}}">{{name}}</option>
+                    {{#each config.programLevels as |name key|}}
+                    <option value="{{key}}">{{localize name}}</option>
                     {{/each}} {{/select}}
                 </select>
             </div>
         </div>
         <p></p>
-        <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description"
-            name="system.description" rows="10" cols="60" placeholder="Add a
-            description">{{item.system.description}}</textarea></div>
+        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
     </section>
 </form>

@@ -2,9 +2,9 @@
     {{#if actor.rangedWeapon}}
     <div class="contentBox gear">
         <div class="flexrow subheader flex-group-center">
-            <h3 class="subheader flex-group-left">Ranged Weapons</h3>
+            <h3 class="subheader flex-group-left">{{localize "ep2e.inventory.rangedLabel"}}</h3>
             <div class="alignRight">
-                <a class="item-control item-create" title="Create item" data-type="rangedWeapon"><i class="fas fa-plus"></i> Quick Add Ranged</a>
+                <a class="item-control item-create" title="Create item" data-type="rangedWeapon"><i class="fas fa-plus"></i> {{localize "ep2e.inventory.npcInventory.quickAddRanged"}}</a>
             </div>
         </div>
         <div class="itemBackground">
@@ -14,31 +14,25 @@
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
                     <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-name="guns" data-rolledfrom="rangedWeapon" data-weapontype="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
                 </div>
-                <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                <label class="labelWidth-large flex-group-center
-                noMargin"><strong>{{item.system.firingMode}}</strong></label>
-                <label class="labelWidth-medium flex-group-center
-                noMargin"><strong>{{item.system.range}}</strong></label>
-                <label class="labelWidth-large flex-group-center
-                noMargin"><strong>{{item.system.slotType}}</strong></label>
-                <label class="labelWidth-medium flex-group-right noMargin"><strong>Ammo</strong></label>
+                <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.rangedPlaceholder'}}" style="text-align: left; font-weight: bold"/>
+                <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.firingModeLabel}}</strong></label>
+                <label class="labelWidth-medium flex-group-center noMargin"><strong>{{item.system.range}}</strong></label>
+                <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
+                <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>
                 <input class="input-small sheet-inline-edit" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>
                 / <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.system.ammoMax}}</strong></h4>
-                <h4 class="item-image flex-group-right input-medium
-                noMargin"><strong>{{item.system.dv}}</strong></h4>
+                <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
                 <div class="flex-group-right slideShow">
                     <a><i class="fas fa-plus icon-small"></i></a>
                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                 </div>
                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                     <div class="itemDescription shape3">
-                        <input class="sheet-inline-edit"
-                        data-field="system.description" type="text"
-                        name="system.description" value="{{item.system.description}}" placeholder="No modifications"/>
+                        <input class="sheet-inline-edit" data-field="system.description" type="text" name="system.description" value="{{item.system.description}}" placeholder="No modifications"/>
                     </div>
                     <div class="flexrow flex-between item-controls">
-                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
+                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
                     </div>
                 </div>
             </div>
@@ -49,7 +43,7 @@
     <div class="contentBox gear">
         <div class="flexrow">
             <div class="separator" style=" margin-bottom: 10px; border-bottom: none;">
-                <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a ranged weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
+                <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> {{{localize "ep2e.inventory.npcInventory.noRanged"}}}</a>
             </div>
         </div>
     </div>
@@ -57,9 +51,9 @@
     {{#if actor.ccWeapon}}
     <div class="contentBox gear">
         <div class="flexrow subheader flex-group-center">
-            <h3 class="subheader flex-group-left">Close Combat Weapons</h3>
+            <h3 class="subheader flex-group-left">{{localize "ep2e.inventory.ccLabel"}}</h3>
             <div class="alignRight">
-                <a class="item-control item-create" title="Create item" data-type="ccWeapon"><i class="fas fa-plus"></i> Quick Add Melee</a>
+                <a class="item-control item-create" title="Create item" data-type="ccWeapon"><i class="fas fa-plus"></i> {{localize "ep2e.inventory.npcInventory.quickAddMelee"}}</a>
             </div>
         </div>
         <div class="itemBackground" style="margin-bottom: 10px;">
@@ -69,11 +63,9 @@
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
                     <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-name="melee" data-rolledfrom="ccWeapon" data-weapontype="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}" data-weaponid="{{item._id}}"/>
                 </div>
-                <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="No Weapon Name" style="text-align: left; font-weight: bold"/>
-                <label class="flex-group-center noMargin
-                flex-group-center"><strong>{{item.system.slotType}}</strong></label>
-                <h4 class="item-image flex-group-center noMargin" style="max-width:
-                145px;"><strong>{{item.system.dv}}</strong></h4>
+                <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.meleePlaceholder'}}" style="text-align: left; font-weight: bold"/>
+                <label class="flex-group-center noMargin flex-group-center"><strong>{{localize item.system.slotName}}</strong></label>
+                <h4 class="item-image flex-group-center noMargin" style="max-width: 145px;"><strong>{{item.system.dv}}</strong></h4>
                 <div class="flex-group-right slideShow" style="max-width: 115px;">
                     <a><i class="fas fa-plus icon-small"></i></a>
                     <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
@@ -81,13 +73,11 @@
                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                     <div class="itemDescription shape3">
                         <input class="sheet-inline-edit"
-                            data-field="system.description" type="text"
-                                                            name="item.system.description"
-                                                            value="{{item.system.description}}" placeholder="No modifications"/>
+                            data-field="system.description" type="text" name="item.system.description" value="{{item.system.description}}" placeholder="No modifications"/>
                     </div>
                     <div class="flexrow flex-between item-controls">
-                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
+                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
+                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
                     </div>
                 </div>
             </div>
@@ -98,64 +88,53 @@
     <div class="contentBox gear weaponslist">
         <div class="flexrow">
             <div class="separator" style=" border-bottom: none;">
-                <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> Click to <label class="resource-value">quick-add a melee weapon</label> or drag & drop it from the <label class="resource-value">compendium </label><i class="fas fa-atlas"></i></a>
+                <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> {{{localize "ep2e.inventory.npcInventory.noMelee"}}}</a>
             </div>
         </div>
     </div>
     {{/if}}
         <div class="contentBox">
             <div class="flexrow subheader">
-                <h3 class="subheader">Morph</h3>
+                <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                 </div>
             </div>
             <div class="listBackground" style="background-color: var(--accentBackground);">
                 <div class="grid grid-3col">
                     <div>
-                        <input class="input-xl" type="text"
-                        name="system.bodies.morph1.name"
-                        value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
+                        <input class="input-xl" type="text" name="system.bodies.morph1.name" value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
                     </div>
                     <div>
-                        <label class="resource-value">Morph Type:</label>
-                        <select class="selectSpecApt
-                        item-standard-margin-medium" name="system.bodyType.value" data-type="String">
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}:</label>
+                        <select class="selectSpecApt item-standard-margin-medium" name="system.bodyType.value" data-type="String">
                             {{#select actor.system.bodyType.value}}
                             {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{bodyType}}</option>
+                            <option value="{{key}}">{{localize bodyType}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </div>
                     <div>
-                        <label class="resource-value">Dur:</label>
-                        <input class="input-small
-                                    item-standard-margin-medium"
-                            style="text-align: center" type="number"
-                                                        name="system.bodies.morph1.dur"
-                                                        value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}:</label>
+                        <input class="input-small item-standard-margin-medium" style="text-align: center" type="number" name="system.bodies.morph1.dur" value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
                     </div>
                 </div>
                 <div class="grid grid-3col">
                     
                     <div>
-                        <label class="resource-value">Movement 1</label>                          
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.label1"}}</label>                          
                     </div>
                     <div>
-                        <label class="resource-value">Speed:</label>  
-                        <input class="input-medium
-                        item-standard-margin-medium" style="text-align:
-                        center" type="text"
-                        name="system.bodies.morph1.movement"
-                        value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label>  
+                        <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="system.bodies.morph1.movement" value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>
                     </div>
                     <div>
-                        <label class="resource-value">Type:</label>  
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
                         <select class="selectSpecApt
                                     item-standard-margin input-large"
                                 name="system.bodies.morph1.movetype" data-type="String" selected="Walker">
                             {{#select actor.system.bodies.morph1.movetype}}
                             {{#each config.moveTypes as |moveType key|}}
-                                <option value="{{key}}">{{moveType}}</option>
+                                <option value="{{key}}">{{localize moveType}}</option>
                             {{/each}}
                             {{/select}}
                         </select>
@@ -163,24 +142,18 @@
                 </div>
                 <div class="grid grid-3col">
                     <div>
-                        <label class="resource-value">Movement 2</label>                      
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.label2"}}</label>                      
                     </div>
                     <div>
-                        <label class="resource-value">Speed:</label> 
-                        <input class="input-medium
-                        item-standard-margin-medium" style="text-align:
-                        center" type="text"
-                        name="system.bodies.morph1.movement2"
-                        value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0"/>  
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label> 
+                        <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="system.bodies.morph1.movement2" value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0"/>  
                     </div>
                     <div>
-                        <label class="resource-value">Type:</label>  
-                        <select class="selectSpecApt
-                                    item-standard-margin input-large"
-                                name="system.bodies.morph1.movetype2" data-type="String">
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
+                        <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movetype2" data-type="String">
                             {{#select actor.system.bodies.morph1.movetype2}}
                             {{#each config.moveTypes as |moveType key|}}
-                                <option value="{{key}}">{{moveType}}</option>
+                                <option value="{{key}}">{{localize moveType}}</option>
                             {{/each}}
                             {{/select}}
                         </select>
@@ -191,14 +164,14 @@
         <div class="grid grid-2col">
             <div class="listBackground noMargin">
                 <div class="flexrow subheader flex-group-center">
-                    <h3 class="subheader flex-group-left" style="flex-grow: 1.5;">Traits & Ware</h3>
+                    <h3 class="subheader flex-group-left" style="flex-grow: 1.5;">{{localize "ep2e.inventory.npcInventory.traitsAndWareHeadline"}}</h3>
                     <div class="alignRight reveal">
                     </div>
                 </div>  
                 <div class="headSpace">
                     <div class="flexrow" style="align-items: center">
                         <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
-                        <label class="resource-label">Traits:</label>
+                        <label class="resource-label">{{localize "ep2e.inventory.npcInventory.traitsLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
                         {{#if actor.morphTrait}}
@@ -211,12 +184,12 @@
                         </div>
                         {{/each}}
                         {{else}}
-                        <label class="resource-value" style="height: 30px;">No Morph Traits Present</label>
+                        <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noTraitsCopy"}}</label>
                         {{/if}}
                     </div>
                     <div class="flexrow" style="align-items: center">
                         <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
-                        <label class="resource-label">Flaws:</label>
+                        <label class="resource-label">{{localize "ep2e.inventory.npcInventory.flawsLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
                         {{#if actor.morphFlaw}}
@@ -229,12 +202,12 @@
                         </div>
                         {{/each}}
                         {{else}}
-                        <label class="resource-value" style="height: 30px;">No Morph Flaws Present</label>
+                        <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noFlawsCopy"}}</label>
                         {{/if}}
                     </div>
                     <div class="flexrow" style="align-items: center">
                         <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
-                        <label class="resource-label">Ware:</label>
+                        <label class="resource-label">{{localize "ep2e.inventory.npcInventory.wareLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
                         {{#if actor.ware}}
@@ -247,16 +220,16 @@
                         </div>
                         {{/each}}
                         {{else}}
-                        <label class="resource-value" style="height: 30px;">No Ware Installed</label>
+                        <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noWareCopy"}}</label>
                         {{/if}}
                     </div>
                 </div>
             </div>
         <div class="contentBox">
             <div class="flexrow subheader flex-group-center">
-                <h3 class="subheader flex-group-left">Armor & Gear</h3>
+                <h3 class="subheader flex-group-left">{{localize "ep2e.inventory.npcInventory.armorAndGearHeadline"}}</h3>
                 <div class="alignRight reveal">
-                    <a class="item-control item-create flex-group-right" title="Create item" data-type="armor"><i class="fas fa-plus"></i> Quick Add Armor</a>
+                    <a class="item-control item-create flex-group-right" title="Create item" data-type="armor"><i class="fas fa-plus"></i> {{localize "ep2e.inventory.npcInventory.quickAddArmor"}}</a>
                 </div>
             </div>
             <div class="listBackground noMargin">
@@ -269,12 +242,12 @@
                         </div>
                         <div class="flexrow flex-group-right">
                             <label class="labelWidth-large
-                            flex-group-center noMargin">Energy:
+                            flex-group-center noMargin">{{localize "ep2e.inventory.npcInventory.armorEnergy"}}:
                             <strong>{{item.system.energy}}</strong></label>
                         </div>
                         <div class="flexrow flex-group-right">
                             <label class="labelWidth-large
-                            flex-group-center noMargin">Kinetic:
+                            flex-group-center noMargin">{{localize "ep2e.inventory.npcInventory.armorKinetic"}}:
                             <strong>{{item.system.kinetic}}</strong></label>
                         </div>
                         <div class="flex-group-right input-small">
@@ -284,14 +257,14 @@
                     {{/each}}
                     {{else}}
                     <div class=" flexrow" style="height: 30px;">
-                        <label class="resource-value">Has no armor</label>
+                        <label class="resource-value">{{localize "ep2e.inventory.npcInventory.noArmor"}}</label>
                     </div>
                     {{/if}}
                 </div>
                 <div class="headSpace">
                     <div class="flexrow" style="align-items: center">
                         <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
-                        <label class="resource-label">Gear:</label>
+                        <label class="resource-label">{{localize "ep2e.inventory.npcInventory.gearLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
                         {{#if actor.gear}}
@@ -308,7 +281,7 @@
                         </div>
                         {{/each}}
                         {{else}}
-                        <label class="resource-value" style="height: 30px;">No Special Gear</label>
+                        <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noGearCopy"}}</label>
                         {{/if}}
                     </div>
                 </div>

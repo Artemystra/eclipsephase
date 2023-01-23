@@ -81,36 +81,42 @@
         },
         "aptitudes": {
           "cog": {
+            "name": "ep2e.actorSheet.aptitudes.cognition",
             "value": null,
             "label": "cognition",
             "roll": null,
             "mod": null
           },
           "int": {
+            "name": "ep2e.actorSheet.aptitudes.intuition",
             "value": null,
             "label": "intuition",
             "roll": null,
             "mod": null
           },
           "ref": {
+            "name": "ep2e.actorSheet.aptitudes.reflexes",
             "value": null,
             "label": "reflexes",
             "roll": null,
             "mod": null
           },
           "sav": {
+            "name": "ep2e.actorSheet.aptitudes.savvy",
             "value": null,
             "label": "savvy",
             "roll": null,
             "mod": null
           },
           "som": {
+            "name": "ep2e.actorSheet.aptitudes.somatics",
             "value": null,
             "label": "somatics",
             "roll": null,
             "mod": null
           },
           "wil": {
+            "name": "ep2e.actorSheet.aptitudes.willpower",
             "value": null,
             "label": "willpower",
             "roll": null,
@@ -119,6 +125,7 @@
         },
         "skillsIns": {
           "infosec": {
+            "name": "ep2e.skills.insightSkills.infosec",
             "value": null,
             "specname": "",
             "spec": false,
@@ -126,6 +133,7 @@
             "mod": null
           },
           "interface": {
+            "name": "ep2e.skills.insightSkills.interface",
             "value": null,
             "specname": "",
             "spec": false,
@@ -133,6 +141,7 @@
             "mod": null
           },
           "perceive": {
+            "name": "ep2e.skills.insightSkills.perceive",
             "value": null,
             "specname": "",
             "spec": false,
@@ -140,6 +149,7 @@
             "mod": null
           },
           "program": {
+            "name": "ep2e.skills.insightSkills.program",
             "value": null,
             "specname": "",
             "spec": false,
@@ -147,6 +157,7 @@
             "mod": null
           },
           "research": {
+            "name": "ep2e.skills.insightSkills.research",
             "value": null,
             "specname": "",
             "spec": false,
@@ -154,6 +165,7 @@
             "mod": null
           },
           "survival": {
+            "name": "ep2e.skills.insightSkills.survival",
             "value": null,
             "specname": "",
             "spec": false,
@@ -163,6 +175,7 @@
         },
         "skillsMox": {
           "deceive": {
+            "name": "ep2e.skills.moxieSkills.deceive",
             "value": null,
             "specname": "",
             "spec": false,
@@ -170,6 +183,7 @@
             "mod": null
           },
           "kinesics": {
+            "name": "ep2e.skills.moxieSkills.kinesics",
             "value": null,
             "specname": "",
             "spec": false,
@@ -177,6 +191,7 @@
             "mod": null
           },
           "persuade": {
+            "name": "ep2e.skills.moxieSkills.persuade",
             "value": null,
             "specname": "",
             "spec": false,
@@ -184,6 +199,7 @@
             "mod": null
           },
           "provoke": {
+            "name": "ep2e.skills.moxieSkills.provoke",
             "value": null,
             "specname": "",
             "spec": false,
@@ -191,6 +207,7 @@
             "mod": null
           },
           "psi": {
+            "name": "ep2e.skills.moxieSkills.psi",
             "value": null,
             "specname": "",
             "spec": false,
@@ -200,6 +217,7 @@
         },
         "skillsVig": {
           "athletics": {
+            "name": "ep2e.skills.vigorSkills.athletics",
             "value": null,
             "specname": "",
             "spec": false,
@@ -207,6 +225,7 @@
             "mod": null
           },
           "fray": {
+            "name": "ep2e.skills.vigorSkills.fray",
             "value": null,
             "specname": "",
             "spec": false,
@@ -214,6 +233,7 @@
             "mod": null
           },
           "free fall": {
+            "name": "ep2e.skills.vigorSkills.free fall",
             "value": null,
             "specname": "",
             "spec": false,
@@ -221,6 +241,7 @@
             "mod": null
           },
           "guns": {
+            "name": "ep2e.skills.vigorSkills.guns",
             "value": null,
             "specname": "",
             "spec": false,
@@ -228,6 +249,7 @@
             "mod": null
           },
           "infiltrate": {
+            "name": "ep2e.skills.vigorSkills.infiltrate",
             "value": null,
             "specname": "",
             "spec": false,
@@ -235,6 +257,7 @@
             "mod": null
           },
           "melee": {
+            "name": "ep2e.skills.vigorSkills.melee",
             "value": null,
             "specname": "",
             "spec": false,
@@ -277,63 +300,63 @@
           "skills":{
             "skill1": {
               "value": 30,
-              "skillname": "electronics",
+              "skillname": "ep2e.skills.additionalSkills.electronics",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill2": {
               "value": 30,
-              "skillname": "infosec",
+              "skillname": "ep2e.skills.insightSkills.infosec",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill3": {
               "value": 60,
-              "skillname": "interface",
+              "skillname": "ep2e.skills.insightSkills.interface",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill4": {
               "value": 60,
-              "skillname": "accounting",
+              "skillname": "ep2e.skills.additionalSkills.accounting",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill5": {
               "value": 60,
-              "skillname": "psychology",
+              "skillname": "ep2e.skills.additionalSkills.psychology",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill6": {
               "value": 60,
-              "skillname": "psychosurgery",
+              "skillname": "ep2e.skills.additionalSkills.psychosurgery",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill7": {
               "value": 60,
-              "skillname": "perceive",
+              "skillname": "ep2e.skills.insightSkills.perceive",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill8": {
               "value": 60,
-              "skillname": "program",
+              "skillname": "ep2e.skills.insightSkills.program",
               "spec": false,
               "roll": null,
               "mod": null
             },
             "skill9": {
               "value": 60,
-              "skillname": "research",
+              "skillname": "ep2e.skills.insightSkills.research",
               "spec": false,
               "roll": null,
               "mod": null
@@ -373,6 +396,7 @@
               "name": "none",
                 "rep": {
                   "@-rep": {
+                    "name": "ep2e.id.repType.@rep",
                     "value": null,
                     "small1": false,
                     "small2": false,
@@ -382,6 +406,7 @@
                     "large": false
                   },
                   "c-rep": {
+                    "name": "ep2e.id.repType.crep",
                     "value": null,
                     "small1": false,
                     "small2": false,
@@ -391,6 +416,7 @@
                     "large": false
                   },
                   "f-rep": {
+                    "name": "ep2e.id.repType.frep",
                     "value": null,
                     "small1": false,
                     "small2": false,
@@ -400,6 +426,7 @@
                     "large": false
                   },
                   "g-rep": {
+                    "name": "ep2e.id.repType.grep",
                     "value": null,
                     "small1": false,
                     "small2": false,
@@ -409,6 +436,7 @@
                     "large": false
                   },
                   "i-rep": {
+                    "name": "ep2e.id.repType.irep",
                     "value": null,
                     "small1": false,
                     "small2": false,
@@ -418,6 +446,7 @@
                     "large": false
                   },
                   "r-rep": {
+                    "name": "ep2e.id.repType.rrep",
                     "value": null,
                     "small1": false,
                     "small2": false,
@@ -427,6 +456,7 @@
                     "large": false
                   },
                   "x-rep": {
+                    "name": "ep2e.id.repType.xrep",
                     "value": null,
                     "small1": false,
                     "small2": false,
@@ -439,276 +469,304 @@
               },
           "id2": {
             "name": "none",
-                "rep": {
-                  "@-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "c-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "f-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "g-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "i-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "r-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "x-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  }
+              "rep": {
+                "@-rep": {
+                  "name": "ep2e.id.repType.@rep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "c-rep": {
+                  "name": "ep2e.id.repType.crep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "f-rep": {
+                  "name": "ep2e.id.repType.frep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "g-rep": {
+                  "name": "ep2e.id.repType.grep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "i-rep": {
+                  "name": "ep2e.id.repType.irep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "r-rep": {
+                  "name": "ep2e.id.repType.rrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "x-rep": {
+                  "name": "ep2e.id.repType.xrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
                 }
-          },
+              }
+              },
           "id3": {
             "name": "none",
-                "rep": {
-                  "@-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "c-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "f-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "g-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "i-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "r-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "x-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  }
+              "rep": {
+                "@-rep": {
+                  "name": "ep2e.id.repType.@rep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "c-rep": {
+                  "name": "ep2e.id.repType.crep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "f-rep": {
+                  "name": "ep2e.id.repType.frep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "g-rep": {
+                  "name": "ep2e.id.repType.grep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "i-rep": {
+                  "name": "ep2e.id.repType.irep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "r-rep": {
+                  "name": "ep2e.id.repType.rrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "x-rep": {
+                  "name": "ep2e.id.repType.xrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
                 }
-          },
+              }
+            },
           "id4": {
             "name": "none",
-                "rep": {
-                  "@-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "c-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "f-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "g-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "i-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "r-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "x-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  }
+              "rep": {
+                "@-rep": {
+                  "name": "ep2e.id.repType.@rep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "c-rep": {
+                  "name": "ep2e.id.repType.crep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "f-rep": {
+                  "name": "ep2e.id.repType.frep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "g-rep": {
+                  "name": "ep2e.id.repType.grep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "i-rep": {
+                  "name": "ep2e.id.repType.irep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "r-rep": {
+                  "name": "ep2e.id.repType.rrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "x-rep": {
+                  "name": "ep2e.id.repType.xrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
                 }
-          },
+              }
+            },
           "id5": {
             "name": "none",
-                "rep": {
-                  "@-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "c-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "f-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "g-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "i-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "r-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "x-rep": {
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  }
+              "rep": {
+                "@-rep": {
+                  "name": "ep2e.id.repType.@rep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "c-rep": {
+                  "name": "ep2e.id.repType.crep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "f-rep": {
+                  "name": "ep2e.id.repType.frep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "g-rep": {
+                  "name": "ep2e.id.repType.grep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "i-rep": {
+                  "name": "ep2e.id.repType.irep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "r-rep": {
+                  "name": "ep2e.id.repType.rrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
+                },
+                "x-rep": {
+                  "name": "ep2e.id.repType.xrep",
+                  "value": null,
+                  "small1": false,
+                  "small2": false,
+                  "small3": false,
+                  "med1": false,
+                  "med2": false,
+                  "large": false
                 }
-          }
+              }
+            }
         }
       },
       "rest": {
@@ -956,7 +1014,7 @@
         "base",
         "buyable"
       ],
-      "category": false,
+      "category": "",
       "dermal": false,
       "inhalation": false,
       "injection": false,

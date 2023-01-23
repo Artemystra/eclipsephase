@@ -1,54 +1,54 @@
 <div>
     <div class="grid grid-3col" style="padding: 0 8px 0 8px;">
         <div>
-            <input type="text" style="max-width: 240px;" name="system.bodies.{{morph.key}}.name" value="{{morph.name}}" placeholder="Morph name"/>
+            <input type="text" style="max-width: 240px;" name="system.bodies.{{morph.key}}.name" value="{{morph.name}}" placeholder="{{localize 'ep2e.morph.currentMorph.morphPlaceholder'}}"/>
         </div>
         <div>
-            <label class="resource-value">Type:</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
             <select style="max-width: 125px;" class="selectSpecApt" name="system.bodies.{{morph.key}}.type" data-type="String">
                 {{#select morph.morph.type}}
                 {{#each config.bodyTypes as |bodyType key|}}
-                <option value="{{key}}">{{bodyType}}</option>
+                <option value="{{key}}">{{localize bodyType}}</option>
                 {{/each}} {{/select}}
             </select>
         </div>
         <div>
-            <label class="resource-value">Durability:</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
             <input class="input-small" type="number" name="system.bodies.{{morph.key}}.dur" value="{{morph.morph.dur}}" placeholder="0" style="text-align: center"/>
         </div>
     </div>
     <div class="grid grid-3col" style="padding: 5px 8px 5px 8px; background-color: var(--mainBackground);">
         <div>
-            <label class="resource-value">Movement 1</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.label1"}}</label>
         </div>
         <div>
-            <label class="resource-value">Speed:</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label>
             <input class="input-medium item-standard-margin-small" type="text" name="system.bodies.{{morph.key}}.movement" value="{{morph.morph.movement}}" placeholder="0/0" style="text-align: center"/>
         </select>
         </div>
         <div>
-            <label class="resource-value">Type:</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>
             <select class="selectSpecApt" style="max-width: 85px;" name="system.bodies.{{morph.key}}.movetype" data-type="String">
                 {{#select morph.morph.movetype}}
                 {{#each config.moveTypes as |moveType key|}}
-                    <option value="{{key}}">{{moveType}}</option>
+                    <option value="{{key}}">{{localize moveType}}</option>
                 {{/each}}
                 {{/select}}
             </select>
         </div>
         <div>
-            <label class="resource-value">Movement 2</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.label2"}}</label>
         </div>
         <div>
-            <label class="resource-value">Speed:</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label>
             <input class="input-medium item-standard-margin-small" type="text" name="system.bodies.{{morph.key}}.movement2" value="{{morph.morph.movement2}}" placeholder="0/0" style="text-align: center"/>
         </div>
         <div>
-            <label class="resource-value">Type:</label>
+            <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>
             <select class="selectSpecApt" style="max-width: 85px;" name="system.bodies.{{morph.key}}.movetype2" data-type="String">
                 {{#select morph.morph.movetype2}}
                 {{#each config.moveTypes as |moveType key|}}
-                    <option value="{{key}}">{{moveType}}</option>
+                    <option value="{{key}}">{{localize moveType}}</option>
                 {{/each}}
                 {{/select}}
             </select>
@@ -56,28 +56,28 @@
     </div>
     <div class=" grid grid-4col" style="padding: 0 8px 5px 8px;">
             <div>
-                <label class="resource-value">insight</label>
+                <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
                 <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.insight" value="{{morph.morph.insight}}" placeholder="0"/>
                 {{#if actor.system.pools.insight.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.insight.mod}}</label>
                 {{/if}}
             </div>
             <div>
-                <label class="resource-value">moxie</label>
+                <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
                 <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.moxie" value="{{morph.morph.moxie}}" placeholder="0"/>
                 {{#if actor.system.pools.moxie.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.moxie.mod}}</label>
                 {{/if}}
             </div>
             <div>
-                <label class="resource-value">vigor</label>
+                <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
                 <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.vigor" value="{{morph.morph.vigor}}" placeholder="0"/>
                 {{#if actor.system.pools.vigor.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.vigor.mod}}</label>
                 {{/if}}
             </div>
             <div>
-                <label class="resource-value">flex</label>
+                <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
                 <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.flex" value="{{morph.morph.flex}}" placeholder="0"/>
                 {{#if actor.system.pools.flex.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.flex.mod}}</label>

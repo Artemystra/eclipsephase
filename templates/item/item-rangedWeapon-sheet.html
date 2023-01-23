@@ -6,9 +6,9 @@
         </div>
     </header>
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
-        <a class="item" data-tab="details">Item Details</a>
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
         {{#if item.showEffectsTab}}
-        <a class="item" data-tab="effects">Effects</a>
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
         {{/if}}
     </nav>
     {{!-- Sheet Body --}}
@@ -20,58 +20,55 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Firing Mode</label>
+                        <label class="resource-label">{{localize "ep2e.item.weapon.table.firingMode.label"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Range</label>
+                        <label class="resource-label">{{localize "ep2e.item.weapon.table.range"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Max Ammo</label>
+                        <label class="resource-label">{{localize "ep2e.item.weapon.table.maxAmmo"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">DV</label>
+                        <label class="resource-label">{{localize "ep2e.item.weapon.table.damageValue"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Slot</label>
+                        <label class="resource-label">{{localize "ep2e.item.weapon.table.slot.label"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Cost</label>
+                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <select name="system.firingMode" data-type="String">
+                        <select class="alignCenter" name="system.firingMode" data-type="String">
                             {{#select item.system.firingMode}}
-                            {{#each config.firingModes as |name mode|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.firingModes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
-                        <input class="input-medium"type="text" name="system.range"
-                        value="{{item.system.range}}" placeholder="e.g. 120m"/>
+                        <input class="input-medium alignCenter"type="text" name="system.range" value="{{item.system.range}}" placeholder="e.g. 120m"/>
                     </td>
                     <td>
-                        <input class="input-small" type="number"
-                        name="system.ammoMax" value="{{item.system.ammoMax}}" placeholder="Max"/>
+                        <input class="input-small" type="number" name="system.ammoMax" value="{{item.system.ammoMax}}" placeholder="Max"/>
                     </td>
                     <td>
-                        <input class="input-large" type="text" name="system.dv"
-                                                               value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
+                        <input class="input-large alignCenter" type="text" name="system.dv" value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
                     </td>
                     <td>
                         <select name="system.slotType" data-type="String">
                             {{#select item.system.slotType}}
-                            {{#each config.weaponTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.weaponTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}
-                            {{#each config.costTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.costTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
@@ -80,11 +77,8 @@
         </div>
         <p></p>
 
-        <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description"
-                                                   name="system.description"
-                                                   rows="10"
-                                                   cols="60">{{item.system.description}}</textarea></div>
+        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
     </div>
     {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
 </section>

@@ -50,10 +50,13 @@ export default class EPnpcSheet extends ActorSheet {
 
     async getData() {
         const sheetData = super.getData();
+        const actor = sheetData.actor;
         sheetData.dtypes = ["String", "Number", "Boolean"];
         if(sheetData.actor.img === "icons/svg/mystery-man.svg"){
             sheetData.actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
           }
+
+          
         if (sheetData.actor.type == 'npc') {
             this._prepareCharacterItems(sheetData);
         }
@@ -93,8 +96,14 @@ export default class EPnpcSheet extends ActorSheet {
         const armor = [];
         const ware = [];
         const aspect = {
-            Chi: [],
-            Gamma: []
+          none: [],
+          chi: [],
+          gamma: [],
+          epsilon: [],
+          None: [],
+          Chi: [],
+          Gamma: [],
+          Epsilon: []
         };
         const vehicle = [];
         const morphtrait = [];
@@ -115,12 +124,72 @@ export default class EPnpcSheet extends ActorSheet {
                 features.push(item);
             }
             else if (itemModel.displayCategory === 'ranged') {
+              let slotType = itemModel.slotType;
+              let firingMode = itemModel.firingMode;
+                switch (slotType){
+                  case 'integrated':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
+                    break;
+                  case 'sidearm':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.sidearm";
+                    break;
+                  case 'oneHanded':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.oneHanded";
+                    break;
+                  case 'twoHanded':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.twoHanded";
+                    break;
+                  case 'bulky':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.bulky";
+                    break;
+                  default:
+                    break;
+                }
+                switch (firingMode){
+                  case 'ss':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+                    break;
+                  case 'sa':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+                    break;
+                  case 'saBF':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+                    break;
+                  case 'bfFA':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+                    break;
+                  case 'saBFfa':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+                    break;
+                  default:
+                    break;
+                }
                 rangedweapon.push(item)
             }
             //IMPORTANT: I reverted the ccWeapon-registration back to this state, since the item model did not work for them ON NPC&GOON Sheets.
             //I did not fully understand the issue, but please make sure that your changes work before updating this section, as otherwise items 
             //(ccWeapons) will not be usable anymore for goons & NPCs
             else if (item.type === 'ccWeapon') {
+              let slotType = itemModel.slotType;
+                switch (slotType){
+                  case 'integrated':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
+                    break;
+                  case 'sidearm':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.sidearm";
+                    break;
+                  case 'oneHanded':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.oneHanded";
+                    break;
+                  case 'twoHanded':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.twoHanded";
+                    break;
+                  case 'bulky':
+                    itemModel.slotName = "ep2e.item.weapon.table.slot.bulky";
+                    break;
+                  default:
+                    break;
+                }
                 ccweapon.push(item)
             }
             else if (itemModel.displayCategory === 'armor') {
@@ -153,22 +222,22 @@ export default class EPnpcSheet extends ActorSheet {
 
             if (item.type === 'specialSkill') {
                 let aptSelect = 0;
-                if (itemModel.aptitude === "Intuition") {
+                if (itemModel.aptitude === "int") {
                   aptSelect = actorModel.aptitudes.int.value;
                 }
-                else if (itemModel.aptitude === "Cognition") {
+                else if (itemModel.aptitude === "cog") {
                   aptSelect = actorModel.aptitudes.cog.value;
                 }
-                else if (itemModel.aptitude === "Reflexes") {
+                else if (itemModel.aptitude === "ref") {
                   aptSelect = actorModel.aptitudes.ref.value;
                 }
-                else if (itemModel.aptitude === "Somatics") {
+                else if (itemModel.aptitude === "som") {
                   aptSelect = actorModel.aptitudes.som.value;
                 }
-                else if (itemModel.aptitude === "Willpower") {
+                else if (itemModel.aptitude === "wil") {
                   aptSelect = actorModel.aptitudes.wil.value;
                 }
-                else if (itemModel.aptitude === "Savvy") {
+                else if (itemModel.aptitude === "sav") {
                   aptSelect = actorModel.aptitudes.sav.value;
                 }
                 item.roll = Number(item.system.value) + aptSelect;
@@ -201,10 +270,10 @@ export default class EPnpcSheet extends ActorSheet {
         actor.activeEffects = effects;
 
         // Check if sleights are present and toggle Psi Tab based on this
-        if (actor.aspect.Chi.length>0){
+        if (actor.aspect.chi.length>0){
           actorModel.additionalSystems.hasPsi = 1;
         }
-        else if (actor.aspect.Gamma.length>0){
+        else if (actor.aspect.gamma.length>0){
           actorModel.additionalSystems.hasPsi = 1;
         }
     }

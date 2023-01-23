@@ -1,11 +1,11 @@
 <div class="sideCarBox armorSideCar">
     <div>
-        <label class="resource-value" style="font-size: 20px;">Armor</label>
+        <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.armor.headline"}}</label>
         {{#if actor.system.physical.armorDurAnnounce}} 
-            <label style='color: var(--negative);'>{{actor.system.physical.armorDurAnnounce}}</label><br/>
+            <label style='color: var(--negative);'>{{localize "ep2e.sideCar.armor.encumberanceWarning"}}</label><br/>
         {{else}}
             {{#if actor.system.physical.armorVisibilityAnnounce}}
-                    <label style='color: var(--warning);'>{{actor.system.physical.armorVisibilityAnnounce}}</label><br/>
+                    <label style='color: var(--warning);'>{{localize "ep2e.sideCar.armor.concealWarning"}}</label><br/>
             {{/if}}
         {{/if}}
     </div>
@@ -15,15 +15,15 @@
                 <div class="tooltipTop"></div>
             </div>
             <div class="armorValue">
-                <h3 class="inline" style="margin-bottom: 20px;">Armor</h3>
+                <h3 class="inline" style="margin-bottom: 20px;">{{localize "ep2e.sideCar.armor.headline"}}</h3>
                 {{#if actor.system.additionalSystems.armorEquipped}}
                     <p/>
-                    <label class="resource-value">Cumulated Armor </label>
+                    <label class="resource-value">{{localize "ep2e.sideCar.armor.armorSubheadline"}} </label>
                     <div class="flexrow" style="align-items: center; margin-bottom: 15px;">
                         <img
                         src="systems/eclipsephase/resources/icons/power.webp"
                         class="icon-small"/><span class="toggle
-                                resource-label alignLeft">Energy:
+                                resource-label alignLeft">{{localize "ep2e.sideCar.armor.energy"}}:
                         </span><span class="toggle resource-value
                             alignLeft item-standard-margin-medium">
                             {{actor.system.physical.energyArmorTotal}}</span>
@@ -32,55 +32,47 @@
                         class="icon-small" style="max-width:
                         20px!important; max-height:
                         20px!important; margin-right: 5px;"/><span class="toggle
-                        resource-label alignLeft"> Kinetic: </span><span
+                        resource-label alignLeft"> {{localize "ep2e.sideCar.armor.kinetic"}}: </span><span
                         class="toggle resource-value alignLeft">
                         {{actor.system.physical.kineticArmorTotal}}</span>
-                        {{#if actor.system.physical.armorDurAnnounce}}
-                            <p/><label style='color: var(--negative);'>{{actor.system.physical.armorDurAnnounce}} while > DUR</label><br/>
-                        {{else}}
-                            {{#if actor.system.physical.armorVisibilityAnnounce}}
-                                <p/><label style='color: var(--warning);'>{{actor.system.physical.armorVisibilityAnnounce}} while >11</label><br/>
-                            {{/if}}
-                        {{/if}}
                     </div>
-                    <label class="resource-value">Armor Pieces active on You</label>
+                    <label class="resource-value">{{localize "ep2e.sideCar.armor.armorCountSubheadline"}}</label>
                     <div class="listBackgroundMain">
                         <span class="toggle resource-label
-                            alignLeft">Main Armor: </span><span
+                            alignLeft">{{localize "ep2e.sideCar.armor.mainArmorLabel"}}: </span><span
                             class="toggle resource-value
                             alignLeft">{{actor.system.physical.mainArmorTotal}}</span><br/>
                         <p/>
                         <span class="toggle resource-label
-                            alignLeft">Additional Armor: </span><span
+                            alignLeft">{{localize "ep2e.sideCar.armor.additionalArmorLabel"}}: </span><span
                             class="toggle resource-value
                             alignLeft">{{actor.system.physical.additionalArmorTotal}}</span><br/>
                     </div>
                     <p/>
-                    <label class="resource-value">Cumulative Malus
-                        -{{actor.system.physical.armorMalusTotal}}</label>
+                    <label class="resource-value">{{localize "ep2e.sideCar.armor.cumulativeMalusLabel"}} -{{actor.system.physical.armorMalusTotal}}</label>
                     <div class="listBackgroundMain">
-                        <span class="toggle resource-label alignLeft">Main Armor: </span><span class="toggle resource-value alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
+                        <span class="toggle resource-label alignLeft">{{localize "ep2e.sideCar.armor.mainArmorLabel"}}: </span><span class="toggle resource-value alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
                         <p/>
-                        <i style="font-size: 12px; margin-bottom: 10px;">For every additional main armor a modifier of -20 will be calculated to all your actions.</i>
+                        <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.mainArmorMalusCopy"}}</i>
                         <p/>
-                        <span class="toggle resource-label alignLeft">Additional Armor:
+                        <span class="toggle resource-label alignLeft">{{localize "ep2e.sideCar.armor.additionalArmorLabel"}}:
                         </span>
                         <p/>
-                        <i style="font-size: 12px; margin-bottom: 10px;">Additional armor can be layered without any modifier. It still counts against other armor modifiers.</i>
+                        <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.additionalArmorMalusCopy"}}</i>
                         {{#if actor.system.physical.armorSomMalus}}
                         <p/>
-                        <span class="toggle resource-label alignLeft">Exceeding Somatics:<span class="toggle resource-value alignLeft">-{{actor.system.physical.armorSomMalus}}</span>
+                        <span class="toggle resource-label alignLeft">{{localize "ep2e.sideCar.armor.exceedingSomLabel"}}:<span class="toggle resource-value alignLeft">-{{actor.system.physical.armorSomMalus}}</span>
                         </span>
                         <p/>
-                        <i style="font-size: 12px; margin-bottom: 10px;">If either singular AV (kinetic OR energy) exceeds your SOM, you receive another -20 to all rolls.</i>
+                        <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.exceedingSomCopy"}}</i>
                         {{/if}}
                     </div>
                     <p/>
                     {{else}}
-                    <label class="resource-value">You are not wearing any armor</label>
+                    <label class="resource-value">{{localize "ep2e.sideCar.armor.noArmorCopy"}}</label>
                     <p/>
                     {{/if}}
-                    <i style="font-size: 12px; margin-bottom: 10px;">To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available.</i>
+                    <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.armorUsageDescription"}}</i>
             </div>
             <div class="tooltipBottomBorder">
                 <div class="tooltipBottom"></div>
@@ -98,7 +90,7 @@
             </div>
         </div>
         {{else}}
-        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">No Armor Equipped</span></div>
+        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">{{localize "ep2e.sideCar.armor.noArmorSubheadline"}}</span></div>
         {{/if}}
     </div>
 </div>

@@ -63,7 +63,6 @@ export default class EPactorSheet extends ActorSheet {
       actor.update({"system.mods.woundMultiplier" : 1});
     }
 
-
     sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
     if(actor.img === "icons/svg/mystery-man.svg"){
@@ -102,17 +101,13 @@ export default class EPactorSheet extends ActorSheet {
       description: description
     }
 
-
-
-
     return mergeObject(sheetData, {
       isGM: game.user.isGM
     });
   }
+
   //Binds morphFlaws/Traits/Gear to a singular morph
   async _onDropItemCreate(item) {
-
-  
 
     // Create a Consumable spell scroll on the Inventory tab
     if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware") {
@@ -182,11 +177,21 @@ export default class EPactorSheet extends ActorSheet {
         morph6: []
     };
       const aspect = {
+          none: [],
+          chi: [],
+          gamma: [],
+          epsilon: [],
+          None: [],
           Chi: [],
-          Gamma: []
+          Gamma: [],
+          Epsilon: []
       };
       const program = [];
       const vehicle = {
+          robot: [],
+          vehicle: [],
+          morph: [],
+          animal: [],
           Robot: [],
           Vehicle: [],
           Morph: [],
@@ -203,22 +208,22 @@ export default class EPactorSheet extends ActorSheet {
       // Append to features.
       if (item.type === 'specialSkill') {
         let aptSelect = 0;
-        if (itemModel.aptitude === "Intuition") {
+        if (itemModel.aptitude === "int") {
           aptSelect = actorModel.aptitudes.int.value;
         }
-        else if (itemModel.aptitude === "Cognition") {
+        else if (itemModel.aptitude === "cog") {
           aptSelect = actorModel.aptitudes.cog.value;
         }
-        else if (itemModel.aptitude === "Reflexes") {
+        else if (itemModel.aptitude === "ref") {
           aptSelect = actorModel.aptitudes.ref.value;
         }
-        else if (itemModel.aptitude === "Somatics") {
+        else if (itemModel.aptitude === "som") {
           aptSelect = actorModel.aptitudes.som.value;
         }
-        else if (itemModel.aptitude === "Willpower") {
+        else if (itemModel.aptitude === "wil") {
           aptSelect = actorModel.aptitudes.wil.value;
         }
-        else if (itemModel.aptitude === "Savvy") {
+        else if (itemModel.aptitude === "sav") {
           aptSelect = actorModel.aptitudes.sav.value;
         }
         item.roll = Number(itemModel.value) + aptSelect;
@@ -227,10 +232,10 @@ export default class EPactorSheet extends ActorSheet {
         }
         else if (item.type === 'knowSkill') {
           let aptSelect = 0;
-          if (itemModel.aptitude === "Intuition") {
+          if (itemModel.aptitude === "int") {
             aptSelect = actorModel.aptitudes.int.value;
           }
-          else if (itemModel.aptitude === "Cognition") {
+          else if (itemModel.aptitude === "cog") {
             aptSelect = actorModel.aptitudes.cog.value;
           }
           item.roll = Number(itemModel.value) + aptSelect;
@@ -244,29 +249,153 @@ export default class EPactorSheet extends ActorSheet {
           flaw.push(item);
         }
         else if (itemModel.displayCategory === 'ranged') {
+          let slotType = itemModel.slotType;
+          let firingMode = itemModel.firingMode;
+          switch (slotType){
+            case 'integrated':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
+              break;
+            case 'sidearm':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.sidearm";
+              break;
+            case 'oneHanded':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.oneHanded";
+              break;
+            case 'twoHanded':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.twoHanded";
+              break;
+            case 'bulky':
+              itemModel.slotName = "ep2e.item.weapon.table.slot.bulky";
+              break;
+            default:
+              break;
+          }
+          switch (firingMode){
+            case 'ss':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+              break;
+            case 'sa':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+              break;
+            case 'saBF':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+              break;
+            case 'bfFA':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+              break;
+            case 'saBFfa':
+              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+              break;
+            default:
+              break;
+          }
           rangedweapon.push(item);
         }
         else if (itemModel.displayCategory === 'ccweapon') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'integrated':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
+                break;
+              case 'sidearm':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.sidearm";
+                break;
+              case 'oneHanded':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.oneHanded";
+                break;
+              case 'twoHanded':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.twoHanded";
+                break;
+              case 'bulky':
+                itemModel.slotName = "ep2e.item.weapon.table.slot.bulky";
+                break;
+              default:
+                break;
+            }
           ccweapon.push(item);
         }
         else if (itemModel.displayCategory === 'armor') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'main':
+                itemModel.slotName = "ep2e.item.armor.table.type.main";
+                break;
+              case 'additional':
+                itemModel.slotName = "ep2e.item.armor.table.type.additional";
+                break;
+              default:
+                break;
+            }
           armor.push(item);
         }
         else if (item.type === 'aspect') {
+          let psiDuration = itemModel.duration;
+          let psiAction = itemModel.actionType;
+          switch (psiDuration) {
+            case 'instant':
+              itemModel.durationName = "ep2e.item.aspect.table.duration.instant"
+              break;
+            case 'action':
+              itemModel.durationName = "ep2e.item.aspect.table.duration.action"
+              break;
+            case 'minutes':
+              itemModel.durationName = "ep2e.item.aspect.table.duration.minutes"
+              break;
+            case 'hours':
+              itemModel.durationName = "ep2e.item.aspect.table.duration.hours"
+              break;
+            case 'sustained':
+              itemModel.durationName = "ep2e.item.aspect.table.duration.sustained"
+              break;
+            default:
+              break;
+          }
+  
+          switch (psiAction) {
+            case 'quick':
+              itemModel.actionName = "ep2e.item.aspect.table.action.quick"
+              break;
+            case 'task':
+              itemModel.actionName = "ep2e.item.aspect.table.action.task"
+              break;
+            case 'complex':
+              itemModel.actionName = "ep2e.item.aspect.table.action.complex"
+              break;
+            default:
+              break;
+          }
           aspect[itemModel.psiType].push(item);
         }
         else if (item.type === 'program') {
           program.push(item);
         }
-        else if (item.system.slotType === 'Accessory' || item.system.slotType === 'Bulky' || item.system.slotType === 'Digital' || item.system.slotType === 'Not Mobile') {
+        else if (item.system.slotType === 'accessory' || item.system.slotType === 'bulky' || item.system.slotType === 'digital' || item.system.slotType === 'notMobile') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'accessory':
+                itemModel.slotName = "ep2e.item.general.table.slot.accessory";
+                break;
+              case 'bulky':
+                itemModel.slotName = "ep2e.item.general.table.slot.bulky";
+                break;
+              case 'digital':
+                itemModel.slotName = "ep2e.item.general.table.slot.digital";
+                break;
+              case 'notMobile':
+                itemModel.slotName = "ep2e.item.general.table.slot.notMobile";
+                break;
+              default:
+                break;
+            }
           gear.push(item);
         }
-        else if (item.system.slotType === 'Consumable') {
+        else if (item.system.slotType === 'consumable') {
+          itemModel.slotName = "ep2e.item.general.table.slot.consumable";
           consumable.push(item);
         }
         else if (item.type === 'vehicle') {
           itemModel.wt = Math.round(itemModel.dur / 5);
-          if (itemModel.type != "Smart-Animal"){
+          if (itemModel.type != "animal"){
             itemModel.dr = Math.round(itemModel.dur * 2);
           }
           else {
@@ -353,10 +482,10 @@ export default class EPactorSheet extends ActorSheet {
     actor.actorType = "PC";
 
     // Check if sleights are present and toggle Psi Tab based on this
-    if (actor.aspect.Chi.length>0){
+    if (actor.aspect.chi.length>0){
       actorModel.additionalSystems.hasPsi = 1;
     }
-    else if (actor.aspect.Gamma.length>0){
+    else if (actor.aspect.gamma.length>0){
       actorModel.additionalSystems.hasPsi = 1;
     }
     

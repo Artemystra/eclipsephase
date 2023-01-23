@@ -5,9 +5,9 @@
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
             {{!-- Secondary Tab Navigation --}}
                 <nav class="secondary-tabs tabs" data-group="secondary">
-                    <a class="item" data-tab="ego">Ego</a>
-                    <a class="item" data-tab="identification">ID</a>
-                    <a class="item" data-tab="muse">Muse</a>
+                    <a class="item" data-tab="ego">{{localize "ep2e.actorSheet.leftTabs.egoTab"}}</a>
+                    <a class="item" data-tab="identification">{{localize "ep2e.actorSheet.leftTabs.idTab"}}</a>
+                    <a class="item" data-tab="muse">{{localize "ep2e.actorSheet.leftTabs.museTab"}}</a>
                 </nav>
             <div class="contentleft">
                 {{!-- Left Body --}}
@@ -24,21 +24,21 @@
         <div class="wrappercenter">
             {{!-- Primary Tab Navigation --}}
                 <nav class="primary-tabs tabs" data-group="primary">
-                    <a class="item" data-tab="skills">Skills</a>
-                    <a class="item" data-tab="body">Morph</a>
-                    <a class="item" data-tab="weapons">Inventory</a>
-                    {{#if actor.vehicle.Vehicle}}
-                    <a class="item" data-tab="vehicles">Peripherals</a>
-                    {{else if actor.vehicle.Robot}}
-                    <a class="item" data-tab="vehicles">Peripherals</a>
-                    {{else if actor.vehicle.Smart-Animal}}
-                    <a class="item" data-tab="vehicles">Peripherals</a>
+                    <a class="item" data-tab="skills">{{localize "ep2e.actorSheet.rightTabs.skillsTab"}}</a>
+                    <a class="item" data-tab="body">{{localize "ep2e.actorSheet.rightTabs.morphTab"}}</a>
+                    <a class="item" data-tab="weapons">{{localize "ep2e.actorSheet.rightTabs.inventoryTab"}}</a>
+                    {{#if actor.vehicle.vehicle}}
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
+                    {{else if actor.vehicle.robot}}
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
+                    {{else if actor.vehicle.animal}}
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
                     {{/if}}
                     {{#if actor.system.additionalSystems.hasPsi}}
-                    <a class="item" data-tab="psi">Psi</a>
+                    <a class="item" data-tab="psi">{{localize "ep2e.actorSheet.rightTabs.psiTab"}}</a>
                     {{/if}}
                     {{#if actor.showEffectsTab}}
-                    <a class="item" data-tab="effects">Effects</a>
+                    <a class="item" data-tab="effects">{{localize "ep2e.actorSheet.rightTabs.effectsTab"}}</a>
                     {{/if}}
                 </nav>
                 {{!-- Health Overview --}}
@@ -56,23 +56,23 @@
                             
                                 <div class="contentBox" style="background-color: var(--focusBackground);">
                                     <div class="flexrow subheader">
-                                        <h3 class="subheader">Current Morph</h3>
+                                        <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
                                         <div class="alignRight flexGrowThreeQuarter">
-                                            <label class="resource-value">Sleeved:</label>
+                                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</label>
                                             <select class="bodySelect" name="system.bodies.activeMorph" data-type="text" style="width: 120px;">
                                                 {{#select actor.system.bodies.activeMorph}}
                                                 <option value="morph1">{{#if
-                                                actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}New Morph{{/if}}</option>
+                                                actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 <option value="morph2">{{#if
-                                                actor.system.bodies.morph2.name}}{{actor.system.bodies.morph2.name}}{{else}}New Morph{{/if}}</option>
+                                                actor.system.bodies.morph2.name}}{{actor.system.bodies.morph2.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 <option value="morph3">{{#if
-                                                actor.system.bodies.morph3.name}}{{actor.system.bodies.morph3.name}}{{else}}New Morph{{/if}}</option>
+                                                actor.system.bodies.morph3.name}}{{actor.system.bodies.morph3.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 <option value="morph4">{{#if
-                                                actor.system.bodies.morph4.name}}{{actor.system.bodies.morph4.name}}{{else}}New Morph{{/if}}</option>
+                                                actor.system.bodies.morph4.name}}{{actor.system.bodies.morph4.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 <option value="morph5">{{#if
-                                                actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}New Morph{{/if}}</option>
+                                                actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 <option value="morph6">{{#if
-                                                actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}New Morph{{/if}}</option>
+                                                actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 {{/select}}
                                             </select>
                                         </div>
@@ -148,365 +148,8 @@
                             {{/if}}
                         </div>
                     
-                    {{!-- Vehicles Tab --}}
-                    <div class="tab vehicle" data-group="primary" data-tab="vehicles">
-                        {{#each actor.vehicle.Vehicle as |item id|}}
-                        <div class="item contentBox" data-item-id="{{item._id}}">
-                            <div class="flexrow">
-                                <h3 class="subheader">{{item.name}}</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                    {{#if item.system.ins}}
-                                    <label class="resource-label">Ins</label>
-                                    <input class="input-xs sheet-inline-edit"
-                                    data-field="system.curIns" type="number"
-                                    name="item.system.curIns" value="{{item.system.curIns}}" placeholder="0"/>
-                                    <label class="flex-group-center
-                                    item-standard-margin-medium"><strong>/ {{item.system.ins}}</strong></label>
-                                    {{/if}}
-                                    {{#if item.system.mox}}
-                                    <label class="resource-label">Mox</label>
-                                    <input class="input-xs sheet-inline-edit"
-                                        data-field="system.curMox" type="number"
-                                                                    name="item.system.curMox"
-                                                                    value="{{item.system.curMox}}" placeholder="0"/>
-                                    <label class="flex-group-center
-                                                item-standard-margin-medium"><strong>/
-                                                    {{item.system.mox}}</strong></label>
-                                    {{/if}}
-                                    {{#if item.system.vig}}
-                                        <label class="resource-label">Vig</label>
-                                        <input class="input-xs sheet-inline-edit"
-                                            data-field="system.curVig" type="number"
-                                                                        name="item.system.curVig"
-                                                                        value="{{item.system.curVig}}" placeholder="0"/>
-                                        <label class="flex-group-center
-                                                    item-standard-margin-medium"><strong>/
-                                                        {{item.system.vig}}</strong></label>
-                                    {{/if}}
-                                    {{#if item.system.flex}}
-                                        <label class="resource-label">Flex</label>
-                                        <input class="input-xs sheet-inline-edit"
-                                            data-field="system.curFlex" type="number"
-                                                                        name="item.system.curFlex"
-                                                                        value="{{item.system.curFlex}}" placeholder="0"/>
-                                        <label class="flex-group-center"><strong>/
-                                            {{item.system.flex}}</strong></label>
-                                    {{/if}}
-                                </div>
-                            </div>
-                                <div class="topLine">
-                                    <div class="item" data-item-id="{{item._id}}" style="padding: 0">
-                                        <table class="noMargin alignCenter">
-                                            <tr>
-                                                <td>
-                                                    <label class="resource-label">Passengers</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Armor</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">WT</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Damage / DUR</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">DR</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Movement</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Size</label>
-                                                </td>
-                                                <td>
-                                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label class="flex-group-center noMargin
-                                                    noBG"><strong>{{item.system.pass}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <input class="input-small
-                                                    sheet-inline-edit"
-                                                    data-field="system.armor" type="text"
-                                                    name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <input class="input-small
-                                                    sheet-inline-edit noMargin"
-                                                    data-field="system.curDur" type="number"
-                                                    name="item.system.curDur"
-                                                    value="{{item.system.curDur}}" placeholder="0"/>
-                                                    <label class="flex-group-center noMargin
-                                                    noBG"><strong>/ {{item.system.dur}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin
-                                                    noBG"><strong>{{item.dr}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin
-                                                    noBG"><strong>{{item.system.mov}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin
-                                                    noBG"><strong>{{item.system.slotType}}</strong></label>
-                                                </td>
-                                                <td>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <table class="noMargin alignCenter">
-                                            <tr>
-                                                <td>
-                                                    <input class="sheet-inline-edit"
-                                                    data-field="system.description"
-                                                    type="text"
-                                                    name="item.system.description"
-                                                    value="{{item.system.description}}" placeholder="No modifications"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each actor.vehicle.Robot as |item id|}}
-                        <div class="item contentBox" data-item-id="{{item._id}}">
-                            <div class="flexrow" style="justify-content: flex-end;">
-                                <h3 class="subheader">{{item.name}}</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                    {{#if item.system.ins}}
-                                    <label class="resource-label">Ins</label>
-                                    <input class="input-xs sheet-inline-edit"
-                                    data-field="system.curIns" type="number"
-                                    name="item.system.curIns" value="{{item.system.curIns}}" placeholder="0"/>
-                                    <label class="flex-group-center
-                                    item-standard-margin-medium"><strong>/ {{item.system.ins}}</strong></label>
-                                    {{/if}}
-                                    {{#if item.system.mox}}
-                                    <label class="resource-label">Mox</label>
-                                    <input class="input-xs sheet-inline-edit"
-                                    data-field="system.curMox" type="number"
-                                    name="item.system.curMox" value="{{item.system.curMox}}" placeholder="0"/>
-                                    <label class="flex-group-center
-                                    item-standard-margin-medium"><strong>/ {{item.system.mox}}</strong></label>
-                                    {{/if}}
-                                    {{#if item.system.vig}}
-                                    <label class="resource-label">Vig</label>
-                                    <input class="input-xs sheet-inline-edit"
-                                    data-field="system.curVig" type="number"
-                                    name="item.system.curVig" value="{{item.system.curVig}}" placeholder="0"/>
-                                    <label class="flex-group-center
-                                    item-standard-margin-medium"><strong>/ {{item.system.vig}}</strong></label>
-                                    {{/if}}
-                                    {{#if item.system.flex}}
-                                    <label class="resource-label">Flex</label>
-                                    <input class="input-xs sheet-inline-edit"
-                                    data-field="system.curFlex" type="number"
-                                    name="item.system.curFlex" value="{{item.system.curFlex}}" placeholder="0"/>
-                                    <label class="flex-group-center"><strong>/ {{item.system.flex}}</strong></label>
-                                    {{/if}}
-                                </div>
-                            </div>
-                            <div class="topLine">
-                                <div class="item" data-item-id="{{item._id}}" style="padding: 0">
-                                    <table class="noMargin alignCenter">
-                                        <tr>
-                                            <td>
-                                                <label class="resource-label">Armor</label>
-                                            </td>
-                                            <td>
-                                                <label class="resource-label">WT</label>
-                                            </td>
-                                            <td>
-                                                <label class="resource-label">Damage / DUR</label>
-                                            </td>
-                                            <td>
-                                                <label class="resource-label">DR</label>
-                                            </td>
-                                            <td>
-                                                <label class="resource-label">Movement</label>
-                                            </td>
-                                            <td>
-                                                <label class="resource-label">Size</label>
-                                            </td>
-                                            <td>
-                                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input class="input-small sheet-inline-edit"
-                                                data-field="system.armor" type="text"
-                                                name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
-                                            </td>
-                                            <td>
-                                                <label class="flex-group-center noMargin noBG"><strong>{{item.wt}}</strong></label>
-                                            </td>
-                                            <td>
-                                                <input class="input-small sheet-inline-edit noMargin" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/>
-                                                <label class="flex-group-center noMargin noBG"><strong>/ {{item.system.dur}}</strong></label>
-                                            </td>
-                                            <td>
-                                                <label class="flex-group-center noMargin noBG"><strong>{{item.dr}}</strong></label>
-                                            </td>
-                                            <td>
-                                                <label class="flex-group-center noMargin
-                                                noBG"><strong>{{item.system.mov}}</strong></label>
-                                            </td>
-                                            <td>
-                                                <label class="flex-group-center noMargin
-                                                noBG"><strong>{{item.system.slotType}}</strong></label>
-                                            </td>
-                                            <td>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table class="noMargin alignCenter">
-                                        <tr>
-                                            <td>
-                                                <input class="sheet-inline-edit"
-                                                data-field="system.description" type="text"
-                                                name="item.system.description"
-                                                value="{{item.system.description}}" placeholder="No modifications"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                        {{#each actor.vehicle.Smart-Animal as |item id|}}
-                        <div class="item contentBox" data-item-id="{{item._id}}">
-                            <div class="flexrow">
-                                <h3 class="subheader">{{item.name}}</h3>
-                                <div class="alignRight flexGrowThreeQuarter">
-                                    <label class="resource-label">Threat</label>
-                                    <input class="input-xs sheet-inline-edit" data-field="system.curThreat" type="number" name="item.system.curThreat" value="{{item.system.curThreat}}" placeholder="0"/>
-                                    <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.threat}}</strong></label>
-                                </div>
-                            </div>
-                            <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
-                                <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
-                                    <div>
-                                        <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Dur/DR</span></i>
-                                        <input class="input-xs sheet-inline-edit" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.dur}}/{{item.system.dr}}</span>                                
-                                    </div>
-                                    <div>
-                                        <i class="fa-regular fa-bandage wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Wounds/(WT)</span></i>
-                                        <input class="input-xs" type="number" name="system.wounds" value="{{item.system.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.wt}})</span>
-                                    </div>
-                                    <div>
-                                        <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Stress/Luc</span></i>
-                                        <input class="input-xs sheet-inline-edit" data-field="system.curLuc" type="number" name="item.system.curLuc" value="{{item.system.curLuc}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.luc}}/{{item.system.ir}}</span>
-                                    </div>
-                                    <div>
-                                        <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Trauma/(TT)</span></i>
-                                        <input class="input-xs" type="number" name="system.trauma" value="{{item.system.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.tt}})</span>
-                                    </div>
-                                    <div>
-                                        <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">Ini Mod</span></i>
-                                        <strong>{{item.system.init}}</strong> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="topLine">
-                                    <div class="item" data-item-id="{{item._id}}" style="padding: 0">
-                                        <table class="noMargin alignCenter">
-                                            <tr>
-                                                <td>
-                                                    <label class="resource-label">Cog</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Int</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Ref</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Sav</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Som</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Wil</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Armor</label>
-                                                </td>
-                                                <td>
-                                                    <label class="resource-label">Movement</label>
-                                                </td>
-                                                <td>
-                                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.cog}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.int}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.ref}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.sav}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.som}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.wil}}</strong></label>
-                                                </td>
-                                                <td>
-                                                    <input class="input-small sheet-inline-edit" data-field="system.armor" type="text" name="system.armor" value="{{system.armor}}" placeholder="2/2"/>
-                                                </td>
-                                                <td>
-                                                    <label class="flex-group-center noMargin noBG"><strong>{{item.system.mov}}</strong></label>
-                                                </td>
-                                                <td>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        <table class="noMargin alignCenter">
-                                            <tr>
-                                                <td>
-                                                    <input class="sheet-inline-edit" data-field="system.description" type="text" name="item.system.description" value="{{item.system.description}}" placeholder="No modifications"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        {{#if item.system.skills.1.name}}
-                                        <h3 style="margin-top: 10px;">Skills</h3>
-                                        <div class="grid grid-3col">
-                                            {{#each item.system.skills as |skill key|}}
-                                                {{#if skill.name}}
-                                                <div class="flexrow flex-group-center reveal">
-                                                    <label class="input-xs resource-value">{{key}}.</label>
-                                                    <label>{{skill.name}}</label>
-                                                    <label class="input-xs resource-value">{{skill.value}}</label>
-                                                    <label class="input-large">{{skill.specname}}</label>
-                                                </div>
-                                                {{/if}}
-                                            {{/each}}
-                                        </div>
-                                        {{/if}}
-                                    </div>
-                            </div>
-                        </div>
-                        {{/each}}
-                    </div>
-
-
+                    {{!-- Peripherals Tab --}}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html }}
                     {{!-- Gear Tab --}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html }}
                     {{!-- Psi Tab --}}                    

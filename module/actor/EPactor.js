@@ -78,10 +78,6 @@ export default class EPactor extends Actor {
       }
     }
 
-    if(!actorModel.mods.woundMultiplier){
-      actorModel.mods.woundMultiplier = 1;
-    }
-
     //Characters only
     //Durability
     if(this.type === "character") {
@@ -145,22 +141,22 @@ export default class EPactor extends Actor {
     for (let value of items ) {
       let key = value.type;
       let aptSelect = 0;
-      if (value.aptitude === "Intuition") {
+      if (value.aptitude === "int") {
         aptSelect = actorModel.aptitudes.int.value;
       }
-      else if (value.aptitude === "Cognition") {
+      else if (value.aptitude === "cog") {
         aptSelect = actorModel.aptitudes.cog.value;
       }
-      else if (value.aptitude === "Reflexes") {
+      else if (value.aptitude === "ref") {
         aptSelect = actorModel.aptitudes.ref.value;
       }
-      else if (value.aptitude === "Somatics") {
+      else if (value.aptitude === "som") {
         aptSelect = actorModel.aptitudes.som.value;
       }
-      else if (value.aptitude === "Willpower") {
+      else if (value.aptitude === "wil") {
         aptSelect = actorModel.aptitudes.wil.value;
       }
-      else if (value.aptitude === "Savvy") {
+      else if (value.aptitude === "sav") {
         aptSelect = actorModel.aptitudes.sav.value;
       }
       if(key === 'specialSkill' || key === 'knowSkill'){
@@ -221,32 +217,32 @@ export default class EPactor extends Actor {
     let bulkyCount = 0;
     let bulkyMalus = 0;
     //Consumable Encumberance
-    let consumableItems = this.items.filter(i => i.system.slotType === "Consumable");
+    let consumableItems = this.items.filter(i => i.system.slotType === "consumable");
     let consumableCount = 0;
     let consumableMalus = 0;
     //Weapon loop
     for(let weaponCheck of weaponItems){
-        if(weaponCheck.system.active && weaponCheck.system.slotType === "Sidearm"){
+        if(weaponCheck.system.active && weaponCheck.system.slotType === "sidearm"){
           weaponScore++;
         } 
-        else if(weaponCheck.system.active && weaponCheck.system.slotType === "One Handed"){
+        else if(weaponCheck.system.active && weaponCheck.system.slotType === "oneHanded"){
           weaponScore += 2;
         }
-        else if(weaponCheck.system.active && weaponCheck.system.slotType === "Two Handed"){
+        else if(weaponCheck.system.active && weaponCheck.system.slotType === "twoHanded"){
           weaponScore += 5;
         }
-        else if(weaponCheck.system.active && weaponCheck.system.slotType === "Bulky"){
+        else if(weaponCheck.system.active && weaponCheck.system.slotType === "bulky"){
           bulkyWeaponCount++;
         }
     }
     //Gear loop
     for(let gearCheck of gearItems){
-      if(gearCheck.system.active && gearCheck.system.slotType === "Accessory"){
+      if(gearCheck.system.active && gearCheck.system.slotType === "accessory"){
         for(let i=0; i<gearCheck.system.quantity; i++){
           accessoryCount++;
         }
       }
-      else if(gearCheck.system.active && gearCheck.system.slotType === "Bulky"){
+      else if(gearCheck.system.active && gearCheck.system.slotType === "bulky"){
         for(let i=0; i<gearCheck.system.quantity; i++){
           bulkyCount++;
         }
@@ -312,10 +308,10 @@ export default class EPactor extends Actor {
       else if(gearCheck.system.displayCategory === "armor" && gearCheck.system.active){
         armorCount++
       }
-      else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active && gearCheck.system.slotType != "Consumable"){
+      else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active && gearCheck.system.slotType != "consumable"){
         gearCount++
       }
-      else if(gearCheck.system.slotType === "Consumable" && gearCheck.system.active){
+      else if(gearCheck.system.slotType === "consumable" && gearCheck.system.active){
         consumableCount++
       }
     }
@@ -497,11 +493,11 @@ export default class EPactor extends Actor {
     actorModel.physical.armorMalusTotal = actorModel.physical.mainArmorMalus+actorModel.physical.armorSomMalus;
 
     if (actorModel.health.physical.max < armorSomCheck){
-      actorModel.physical.armorDurAnnounce = "Unable to move";
+      actorModel.physical.armorDurAnnounce = 1;
     }
 
     if (armorSomCheck > 11){
-      actorModel.physical.armorVisibilityAnnounce = "Not concealable";
+      actorModel.physical.armorVisibilityAnnounce = 1;
     }
   }
 

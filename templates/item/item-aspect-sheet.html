@@ -25,8 +25,8 @@
                     <td>
                         <select name="system.psiType" data-type="String">
                             {{#select item.system.psiType}}
-                            {{#each config.psiTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.psiTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
@@ -40,55 +40,54 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Psi Type</label>
+                        <label class="resource-label">{{localize "ep2e.item.aspect.table.type.label"}}</label>
                     </td>
-                    {{#if (eq item.system.psiType "Chi")}}
+                    {{#if (eq item.system.psiType "chi")}}
                     {{else}}
                     <td>
-                        <label class="resource-label">Action</label>
+                        <label class="resource-label">{{localize "ep2e.item.aspect.table.action.label"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Duration</label>
+                        <label class="resource-label">{{localize "ep2e.item.aspect.table.duration.label"}}</label>
                     </td>
                     {{/if}}
                     <td>
-                        <label class="resource-label">Infection Modifier</label>
+                        <label class="resource-label">{{localize "ep2e.item.aspect.table.modifierLabel"}}</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <select name="system.psiType" data-type="String">
                             {{#select item.system.psiType}}
-                            {{#each config.psiTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.psiTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
-                    {{#if (eq item.system.psiType "Chi")}}
+                    {{#if (eq item.system.psiType "chi")}}
                     {{else}}
                     <td>
                         <select name="system.actionType" data-type="String">
                             {{#select item.system.actionType}}
-                            {{#each config.actionTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.actionTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
                         <select name="system.duration" data-type="String">
                             {{#select item.system.duration}}
-                            {{#each config.duration as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.duration as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     {{/if}}
                     <td>
-                        {{#if (eq item.system.psiType "Chi")}}
+                        {{#if (eq item.system.psiType "chi")}}
                         -
                         {{else}}
-                        <input class="input-large" type="number"
-                        name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
+                        <input class="input-large" type="number" name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
                         {{/if}}
                     </td>
                 </tr>
@@ -96,10 +95,7 @@
             {{/if}}
         </div>
         <p></p>
-        <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description"
-                                                   name="system.description"
-                                                   rows="10"
-                                                   cols="60">{{item.system.description}}</textarea></div>
+        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
     </section>
 </form>

@@ -6,9 +6,9 @@
         </div>
     </header>    
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
-        <a class="item" data-tab="details">Item Details</a>
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
         {{#if item.showEffectsTab}}
-        <a class="item" data-tab="effects">Effects</a>
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
         {{/if}}
     </nav>
     {{!-- Sheet Body --}}
@@ -19,26 +19,26 @@
             <table>
                 <tr>
                     <td>
-                        <label class="resource-label">Ware Type</label>
+                        <label class="resource-label">{{localize "ep2e.item.ware.table.type.label"}}</label>
                     </td>
                     <td>
-                        <label class="resource-label">Cost</label>
+                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <select name="system.wareType" data-type="String">
                             {{#select item.system.wareType}}
-                            {{#each config.wareTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.wareTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
                     <td>
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}
-                            {{#each config.costTypes as |name type|}}
-                            <option value="{{name}}">{{name}}</option>
+                            {{#each config.costTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
                     </td>
@@ -46,9 +46,8 @@
             </table>
         </div>
         <p></p>
-        <h2>Description</h2>
-        <div class="textAreaDescription"><textarea class="description"
-            name="system.description" rows="10" cols="60">{{item.system.description}}</textarea></div>
+        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
         </div>
             {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
     </section>

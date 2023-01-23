@@ -1,6 +1,6 @@
 <div class="sideCarBox consumableSideCar">
     <div style=" margin-bottom: 20px;">
-        <label class="resource-value" style="font-size: 20px;">Consumables</label>
+        <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.consumables.headline"}}</label>
     </div>
     {{#if actor.system.additionalSystems.consumableEquipped}}
         {{#each actor.consumable as |item id|}}
@@ -9,7 +9,7 @@
                 <div class=" flexrow flex-group-center offHand">
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                    <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.slotType}}</i></label>
+                    <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
                     <label class="flex-group-center alignCenter" style="background: none; margin-left: 10px;">{{item.system.quantity}}</label>
                 </div>
                 <div class="flex-group-right slideShow input-small">
