@@ -1,16 +1,54 @@
 
 <div class="alignCenter">
-  <span class="{{resultClass}}">{{resultText}}</span> <p>
+  {{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{taskName}}</span><p>
 
+  <div style="margin: 10px 0 20px 0; padding: 20px 0; background-color: var(--mainBackground);">
+    <span class="{{resultClass}}">{{localize resultText}}</span> <p>
+  </div>
 
-  Rolled <strong>{{taskName}}</strong> check<br/>
-  against <strong>{{targetNumber}}</strong><p>
+  {{#if modifiers}}
+    <div>
+      <div class="alignLeft" style="padding-left: 10px;">
+        <label><strong>{{localize "ep2e.roll.announce.appliedMods"}}</strong></label>
+      </div>
+      <div>
+        <table>
+          <tr>
+            <td class="table-dice-label">
+              {{localize "ep2e.roll.announce.baseValue"}}
+            </td>
+            <td class="table-dice-result">
+              <strong>{{taskValue}}</strong>
+            </td>
+          </tr>
+          {{#each modifiers}}
+          <tr>
+            <td class="table-dice-label">
+              {{localize text}}
+              {{#if comment}}
+              <br><label style="font-size: 12px">{{localize comment}}</label>
+              {{/if}}
+            </td>
+            <td class="table-dice-result">
+              {{#if (gt value 0)}}
+               <strong style="color: var(--positive);">{{value}}</strong>
+              {{/if}}
+              {{#if (lt value 0)}}
+              <strong style="color: var(--negative);">{{value}}</strong>
+              {{/if}}
 
-  <u>Applied Mods:</u><br/>
-  {{#each modifiers}}
-    {{text}}
-    <strong>{{value}}</strong>
-    <br/>
-  {{/each}}
+            </td>
+          </tr>
+          {{/each}}
+        </table>
+      </div>
+    </div>
+  {{/if}}
+  <table>
+    <tr>
+      <td class="table-dice-label" style="font-size: 16px;">{{localize "ep2e.roll.announce.rollTarget"}}</td>
+      <td class="table-dice-result" style="font-size: 16px;"><strong style="text-decoration: underline; text-decoration-style: double;">{{targetNumber}}</strong></td>
+    </tr>
+  </table>
 </div>
 

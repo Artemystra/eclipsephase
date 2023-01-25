@@ -3,6 +3,7 @@
  */
 const REPUTATION_TASK_DIALOG = 'systems/eclipsephase/templates/chat/rep-test-dialog.html'
 const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
+const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
 
 /*
  * Task result constants
@@ -19,14 +20,14 @@ export const TASK_RESULT = {
 }
 
 const TASK_RESULT_TEXT = {
-  0: { class: 'success', text: 'Critical Success' },
-  1: { class: 'success', text: 'Superior Success' },
-  2: { class: 'success', text: 'Greater Success' },
-  3: { class: 'success', text: 'Success' },
-  4: { class: 'fail', text: 'Critical Failure' },
-  5: { class: 'fail', text: 'Superior Failure' },
-  6: { class: 'fail', text: 'Greater Failure' },
-  7: { class: 'fail', text: 'Failure' }
+  0: { class: 'success', text: 'ep2e.roll.successType.criticalSuccess' },
+  1: { class: 'success', text: 'ep2e.roll.successType.surperiorSuccess' },
+  2: { class: 'success', text: 'ep2e.roll.successType.greaterSuccess' },
+  3: { class: 'success', text: 'ep2e.roll.successType.success' },
+  4: { class: 'fail', text: 'ep2e.roll.successType.criticalFailure' },
+  5: { class: 'fail', text: 'ep2e.roll.successType.surperiorFailure' },
+  6: { class: 'fail', text: 'ep2e.roll.successType.greaterFailure' },
+  7: { class: 'fail', text: 'ep2e.roll.successType.failure' }
 }
 
 
@@ -202,9 +203,10 @@ export class TaskRoll {
  * calculating the final result, and displaying the results to the user.
  */
 export class TaskRollModifier {
-  constructor(text, value) {
+  constructor(text, value, comment) {
     this._text = text
     this._value = value
+    this._comment = comment
   }
 
   /**
@@ -224,6 +226,13 @@ export class TaskRollModifier {
     return this._value
   }
 
+  /**
+   * Any special comments like a modifier to another roll or increased damage
+   * @type {String}
+   */
+  get comment() {
+    return this._comment
+  }
 
   /**
    * The value of the modifier, formatted to a string, with a + character
@@ -375,6 +384,8 @@ export async function TaskCheck({
     optionsSettings = null,
     brewStatus = false,
     rolledFrom = "",
+    announce = "",
+    usedRaise = null,
     //Pools
     poolType = "",
     poolValue = 0,
@@ -391,6 +402,8 @@ export async function TaskCheck({
     globalMod = null,
     rollFormula = "1d100",
     woundsMod = null,
+    modValue = null,
+    addition = "",
     //Psi
     infectionMod = null,
     aspectPushes = null,
@@ -408,9 +421,10 @@ export async function TaskCheck({
     superiorPosition = false,
     calledShot = false,
     inMelee = false,
-    usedRaise = null,
+    gunsMod = 0,
     //Melee
     numberOfTargets = 1,
+    meleeMod = 0,
     meleeDamageMod = null,
     //Weapon Data
     weaponName = null,
@@ -423,9 +437,11 @@ export async function TaskCheck({
     successType = false,
     attackMode=""
     } = {}) {
-    //Guns check dialog
 
-    console.log("My Actor Type: ", actorType)
+    //Task Roll created
+    let task = new TaskRoll (skillName, skillValue);
+
+    //Guns check dialog
 
     if (askForOptions != optionsSettings && skillName === "guns") {
         let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType);
@@ -519,163 +535,230 @@ export async function TaskCheck({
     }
 
     //Melee Combat
-    let meleeMod = numberOfTargets>1 ? 0 - (numberOfTargets-1)*20 : 0;
-    let meleeAnnounce = numberOfTargets>1 ? "<br>Multiple Targets (<strong> -" + (numberOfTargets-1)*20 +"</strong>)" : "";
-    let meleeModTitle = "";
 
     if (skillName === "melee"){
         if (attackMode === "charge"){
-            meleeMod -=10;
-            meleeAnnounce += "<br>Charging (<strong>-10 Hit +1d6DV</strong>)";
+            meleeMod -= 10;
+            modValue = -10;
+            addition = "ep2e.roll.announce.combat.melee.agressiveAddition";
+            announce = "ep2e.roll.announce.combat.melee.charge";
+            task.addModifier(new TaskRollModifier(announce, modValue, addition))
         }
         else if (attackMode === "aggressive"){
-            meleeMod +=10;
-            meleeAnnounce += "<br>Agressive Hit (<strong>+10</strong>)<br/>Fray <strong>-10</strong>";
+            meleeMod += 10;
+            modValue = 10;
+            addition = "ep2e.roll.announce.combat.melee.agressiveAddition";
+            announce = "ep2e.roll.announce.combat.melee.agressive";
+            task.addModifier(new TaskRollModifier(announce, modValue, addition))
         }
         else if (attackMode === "aggressiveCharge"){
-            meleeAnnounce += "<br>Agressive Charge (<strong>+1d10DV</strong>)<br/>Fray <strong>-10</strong>";
+            modValue = 0
+            addition = "ep2e.roll.announce.combat.melee.agressiveChargeAddition"
+            announce = "ep2e.roll.announce.combat.melee.agressiveCharge";
+            task.addModifier(new TaskRollModifier(announce, modValue, addition))
         }
 
         if (calledShot) {
             meleeMod -= 10;
-            meleeAnnounce += "<br>Called Shot (<strong>-10</strong>)";
+            modValue = -10
+            addition = "ep2e.roll.announce.combat.calledShotAddition";
+            announce = "ep2e.roll.announce.combat.calledShot";
+            task.addModifier(new TaskRollModifier(announce, modValue, addition))
         }
 
-        meleeModTitle = meleeAnnounce? "<p/><u>Melee Modifiers</u>" : "";
+        if (numberOfTargets>1) {
+            meleeMod -= numberOfTargets ? (numberOfTargets-1)*20 : 0;
+            modValue = 0 - (numberOfTargets-1)*20
+            announce = "ep2e.roll.announce.combat.melee.multipleTargets";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
     }
 
     //Ranged Combat
-    let gunsMod = 0;
-    let gunAnnounce = "";
-    let gunModTitle = "";
 
     if (skillName === "guns"){
         //Guns roll modifications
         if (!smartlink) {
             gunsMod -= 10;
-            gunAnnounce += "<br>No Smartgun (<strong>-10</strong>)";
+            modValue = -10
+            announce = "ep2e.roll.announce.combat.ranged.smartLink";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         if (running) {
             gunsMod -= 20;
-            gunAnnounce += "<br>Running (<strong>-20</strong>)";
+            modValue = -10
+            announce = "ep2e.roll.announce.combat.ranged.running";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         if (superiorPosition) {
             gunsMod += 20;
-            gunAnnounce += "<br>Superior Position (<strong>+20</strong>)";
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.superiorPosition";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         if (calledShot) {
             gunsMod -= 10;
-            gunAnnounce += "<br>Called Shot (<strong>-10</strong>)";
+            modValue = -10
+            addition = "ep2e.roll.announce.combat.calledShotAddition";
+            announce = "ep2e.roll.announce.combat.calledShot";
+            task.addModifier(new TaskRollModifier(announce, modValue, addition))
         }
         if (inMelee) {
             gunsMod -= 20;
-            gunAnnounce += "<br>Stuck in Melee (<strong>-10</strong>)";
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.inMelee";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
         if (coverAttacker) {
             gunsMod -= 10;
-            gunAnnounce += "<br>In Cover (<strong>-10</strong>)";
+            modValue = -10
+            announce = "ep2e.roll.announce.combat.ranged.coverAttacker";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
         if (aim === "quick") {
             gunsMod += 10;
-            gunAnnounce += "<br>Quick Aim (<strong>+10</strong>)";
+            modValue = 10
+            announce = "ep2e.roll.announce.combat.ranged.aimQuick";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (aim === "long") {
             gunsMod += 30;
-            gunAnnounce += "<br>Long Aim (<strong>+30</strong>)";
+            modValue = 30
+            announce = "ep2e.roll.announce.combat.ranged.aimLong";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
         if (size === "xs") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Very Small Target (<strong>-30</strong>)";
+            modValue = -30
+            announce = "ep2e.roll.announce.combat.ranged.sizeXS";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (size === "s") {
             gunsMod -= 10;
-            gunAnnounce += "<br>Small Target (<strong>-10</strong>)";
+            modValue = -10
+            announce = "ep2e.roll.announce.combat.ranged.sizeS";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (size === "l") {
             gunsMod += 10;
-            gunAnnounce += "<br>Large Target (<strong>+10</strong>)";
+            modValue = 10
+            announce = "ep2e.roll.announce.combat.ranged.sizeL";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (size === "xl") {
             gunsMod += 30;
-            gunAnnounce += "<br>Very Large Target (<strong>+30</strong>)";
+            modValue = 30
+            announce = "ep2e.roll.announce.combat.ranged.sizeXL";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
         if (range === "range" && prone) {
             gunsMod -= 20;
-            gunAnnounce += "<br>Prone at Range (<strong>-20</strong>)";
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.rangeProne";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (range === "beyond" && prone) {
             gunsMod -= 30;
-            gunAnnounce += "<br>Prone Beyond Range (<strong>-30</strong>)";
+            modValue = -30
+            announce = "ep2e.roll.announce.combat.ranged.beyondProne";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (range === "beyond+" && prone) {
             gunsMod -= 40;
-            gunAnnounce += "<br>Prone Far Beyond Range (<strong>-40</strong>)";
+            modValue = -40
+            announce = "ep2e.roll.announce.combat.ranged.beyondPlusProne";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (range === "range") {
             gunsMod -= 10;
-            gunAnnounce += "<br>At Range (<strong>-10</strong>)";
+            modValue = -10
+            announce = "ep2e.roll.announce.combat.ranged.range";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (range === "beyond") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Beyond Range (<strong>-20</strong>)";
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.beyond";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (range === "beyond+") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Far Beyond Range (<strong>-30</strong>)";
+            modValue = -30
+            announce = "ep2e.roll.announce.combat.ranged.beyondPlus";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (range === "pointBlank" || range === "pointBlank" && prone){
             gunsMod += 10;
-            gunAnnounce += "<br>Point Blank (<strong>+10</strong>)";
+            modValue = 10
+            announce = "ep2e.roll.announce.combat.ranged.pointBlank";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
 
         if (coverDefender === "minor") {
             gunsMod -= 10;
-            gunAnnounce += "<br>Target in minor Cover (<strong>-10</strong>)";
+            modValue = -10
+            announce = "ep2e.roll.announce.combat.ranged.defMinCover";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (coverDefender === "moderate") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Target in moderate Cover (<strong>-20</strong>)";
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.defModCover";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (coverDefender === "major") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Target in major Cover (<strong>-30</strong>)";
+            modValue = -30
+            announce = "ep2e.roll.announce.combat.ranged.defMajCover";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
         if (visualImpairment === "minor") {
             gunsMod -= 10;
-            gunAnnounce += "<br>Minor Visual Impairment <strong>-10</strong>";
+            modValue = -10
+            announce = "ep2e.roll.announce.combat.ranged.visImpMin";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (visualImpairment === "major") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Moderate Visual Impaired <strong>-20</strong>";
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.visImpMaj";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (visualImpairment === "blind") {
             gunsMod -= 30;
-            gunAnnounce += "<br>Blind (<strong>-30</strong>)";
+            modValue = -30
+            announce = "ep2e.roll.announce.combat.ranged.blind";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
         if (attackMode === "wBurst") {
             gunsMod += 10;
-            gunAnnounce += "<br>Wide Burst (<strong>+10</strong>)";
+            modValue = 10
+            announce = "ep2e.roll.announce.combat.ranged.wBurst";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (attackMode === "wFullAuto") {
             gunsMod += 30;
-            gunAnnounce += "<br>Wide Full Auto (<strong>+30</strong>)";
+            modValue = 30
+            announce = "ep2e.roll.announce.combat.ranged.wFullAuto";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (attackMode === "indirect") {
             gunsMod -= 20;
-            gunAnnounce += "<br>Indirect (<strong>-20</strong>)";
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.indirect";
+            task.addModifier(new TaskRollModifier(announce, modValue))
         }
-
-        gunModTitle = gunAnnounce ? "<p/><u>Shooting Modifiers</u>" : "";
     }
 
-
+    //console.log("this is my task: ", task)
+    
     //General roll modifications
     let curratedWounds = 10 * (Number(actorData.physical.wounds) + eval(actorData.mods.woundMod))*eval(actorData.mods.woundMultiplier);
     let curratedTrauma = 10 * (Number(actorData.mental.trauma) + eval(actorData.mods.traumaMod));
@@ -694,7 +777,6 @@ export async function TaskCheck({
     let rollMod = null;
     let specMod = 0;
     let poolMod = 0;
-    let spec = false;
         //Prevents wounds from being added to aptitudes
         if (rollType === "aptitude"){
             rollMod = Number(globalMod);
@@ -706,26 +788,39 @@ export async function TaskCheck({
         //Checks if spec used
         if (useSpecialization){
             specMod = 10;
+            task._name += "(" + specName + ")"
+            announce = "ep2e.roll.announce.specialization"
+            task.addModifier(new TaskRollModifier(announce, specMod))
         }
         //Checks if pool used
         if (usePool || useThreat){
             poolMod = 20;
-            poolValue--;
+            poolValue -= 1*numberOfTargets;
             poolUpdate = poolValue;
             //Determine pool to be updated
             await poolUpdater(poolUpdate,poolType);
+            task.addModifier(new TaskRollModifier(poolType+":", poolMod))
         }
+        
+        if (globalMod){
+            modValue = globalMod;
+            announce = "ep2e.roll.announce.global"
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+
+        if (totalEncumberance){
+            modValue = -(totalEncumberance);
+            announce = "ep2e.roll.announce.encumberance"
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+
+        if (woundsTotal){
+            modValue = -(woundsTotal);
+            announce = "ep2e.roll.announce.wounds"
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+
     let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
-    //Chat message variables
-    
-    spec = useSpecialization ? "(" + specName + ")" : "";
-    let poolAnnounce = usePool ? poolType + ": <strong>+ 20</strong><br>" : "";
-    let threatAnnounce = useThreat ? "threat: <strong>+ 20</strong><br>" : "";
-    let situationalPlus = globalMod>0 ? "+" : "";
-    let modAnnounce = rollMod||poolMod||totalEncumberance ? "<u>Applied General Mods:</u> <br>" : "";
-    let encumberanceModAnnounce = totalEncumberance ? "Encumberance:<strong> -" + totalEncumberance + "</strong><br>" : "";
-    let woundAnnounce = woundsTotal ? "Wound/Trauma:<strong> -" + woundsTotal + "</strong><br>" : "";
-    let globalAnnounce = globalMod ? "Situational:<strong>" + situationalPlus + globalMod + "</strong><br>" : "";
 
     //The dice roll
     for (i = numberOfTargets; i > 0; i--) {
@@ -740,60 +835,94 @@ export async function TaskCheck({
         let doubleSuperior = rollCheck >= 66;
         let superior = rollCheck >= 33;
         let successMessage = "";
+        let successClass = "";
         let successName = null;
 
         //Success messages
         if (autofail) {
-            successMessage = "<span class='fail'>Supreme Fail!</span> <p>";
+            successMessage = await successLabel("autofail");
+            successClass = "fail";
             successName = "Supreme Fail";
         } else if (autoSuccess) {
-            successMessage = "<span class='success'>Supreme Success!</span> <p>";
+            successMessage = await successLabel("autoSuccess");
+            successClass = "success";
             successType = true;
             successName = "Supreme Success";
         } else if (success && critical && doubleSuperior) {
-            successMessage = "<span class='success'>Superior Critical Success!</span> <p>";
+            successMessage = await successLabel("supCritSuc");
+            successClass = "success";
             successType = true;
             successName = "Superior Critical Success";
         } else if (!success && critical && rollCheck <= 33) {
-            successMessage = "<span class='fail'>Superior Critical Fail!</span> <p>";
+            successMessage = await successLabel("supCritFail");
+            successClass = "fail";
             successName = "Superior Critical Fail";
         } else if (success && critical && superior) {
-            successMessage = "<span class='success'>Greater Critical Success!</span> <p>";
+            successMessage = await successLabel("greatCritSuc");
+            successClass = "success";
             successType = true;
             successName = "Greater Critical Success";
         } else if (!success && critical && rollCheck <= 66) {
-            successMessage = "<span class='fail'> Greater Critical Fail!</span> <p>";
+            successMessage = await successLabel("greatCritFail");
+            successClass = "fail";
             successName = "Greater Critical Fail";
         } else if (success && critical) {
-            successMessage = "<span class='success'>Critical Success!</span> <p>";
+            successMessage = await successLabel("critSuc");
+            successClass = "success";
             successType = true;
             successName = "Critical Success";
         } else if (!success && critical) {
-            successMessage = "<span class='fail'>Critical Fail!</span> <p>";
+            successMessage = await successLabel("critFail");
+            successClass = "fail";
             successName = "Critical Fail";
         } else if (success && doubleSuperior) {
-            successMessage = "<span class='success'>Superior Success!</span> <p>";
+            successMessage = await successLabel("supSuc");
+            successClass = "success";
             successType = true;
             successName = "Superior Success";
         } else if (!success && !superior) {
-            successMessage = "<span class='fail'>Superior Fail!</span> <p>";
+            successMessage = await successLabel("supFail");
+            successClass = "fail";
             successName = "Superior Fail";
         } else if (success && superior) {
-            successMessage = "<span class='success'>Greater Success!</span> <p>";
+            successMessage = await successLabel("greatSuc");
+            successClass = "success";
             successType = true;
             successName = "Greater Success";
         } else if (!success && !doubleSuperior) {
-            successMessage = "<span class='fail'>Greater Fail!</span> <p>";
+            successMessage = await successLabel("greatFail");
+            successClass = "fail";
             successName = "Greater Fail";
         } else if (success) {
-            successMessage = "<span class='success'>Success!</span> <p>";
+            successMessage = await successLabel("suc");
+            successClass = "success";
             successType = true;
             successName = "Success";
         } else if (!success) {
-            successMessage = "<span class='fail'>Fail!</span> <p>";
+            successMessage = await successLabel("fail");
+            successClass = "fail";
             successName = "Fail";
         }
+        
+        let message = {}
+    
+        message.resultText = successMessage;
+        message.resultClass = successClass;
+    
+        message.taskName = specMod? task._taskName + " (" + specName + ")": task._taskName;
+        message.taskValue = Number(task._baseValue);
+        message.targetNumber = modSkillValue;
+    
+        message.modifiers = []
+        if(task._modifiers.length > 0) {
+            for(let mod of task._modifiers) {
+                message.modifiers.push({text: mod.text, value: mod.formattedValue, comment: mod.comment})
+            }
+        }
 
+        console.log("My message: ", message)
+
+        let html = await renderTemplate(TASK_RESULT_OUTPUT, message)
 
         //Visibility toggler
         let rollVisibility = "";
@@ -821,28 +950,19 @@ export async function TaskCheck({
             infectionAddition = "<p/><u>Infection raises to:</u><br><strong>" + infectionMod + "</strong>"
         }
 
+        //Output for the html template
+        
+
         //Chat message constructor
 
         //For default skill roll
         if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon") {
-            if(modSkillValue>0){
-                let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-                msg = await roll.toMessage({
-                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    flavor: label
-                },{
-                    rollMode: rollModeSelection
-                });
-            }
-            else{
-                let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-                msg = await roll.toMessage({
-                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    flavor: label
-                },{
-                    rollMode: rollModeSelection
-                });
-            }
+            msg = await roll.toMessage({
+                speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                flavor: html
+            },{
+                rollMode: rollModeSelection
+            });
 
             await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
 
@@ -950,9 +1070,11 @@ export async function TaskCheck({
 
                 if (swipSwap > 33){
                     successName = "Greater Success";
+                    successMessage = await successLabel("greatSuc");
                 }
                 if (swipSwap > 66){
                     successName = "Superior Success";
+                    successMessage = await successLabel("supSuc");
                 }
 
                 poolValue--;
@@ -965,16 +1087,26 @@ export async function TaskCheck({
                     poolUpdate = flexValue;
                 }
 
+                message = {}
+    
+                message.resultText = successMessage;
+                
+                message.type = "usedSwipSwap";
+                message.poolName = await poolName(poolType);
+                message.swipSwap = swipSwap;
+
+                html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+
                 if (rollModeSelection === "gmroll"){
                     ChatMessage.create({
-                        content: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>",
+                        content: html,
                         whisper: ChatMessage.getWhisperRecipients("GM")
                       });
                 }
                 else {
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                        flavor: html
                     })
                 }
 
@@ -989,15 +1121,19 @@ export async function TaskCheck({
                     switch (successName){
                         case 'Success':
                             successName = "Greater Success";
+                            successMessage = await successLabel("greatSuc");
                             break;
                         case 'Greater Success':
                             successName = "Superior Success";
+                            successMessage = await successLabel("supSuc");
                             break;
                         case 'Critical Success':
                             successName = "Greater Critical Success";
+                            successMessage = await successLabel("greatCritSuc");
                             break;
                         case 'Greater Critical Success':
                             successName = "Superior Critical Success";
+                            successMessage = await successLabel("supCritSuc");
                             break;
                     }
     
@@ -1006,9 +1142,17 @@ export async function TaskCheck({
                     poolValue--;
                     poolUpdate = poolValue;
 
+                    message = {}
+        
+                    message.resultText = successMessage;
                     
+                    message.type = "usedRaise";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+    
                     ChatMessage.create({
-                        content: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>",
+                        content: html,
                         whisper: ChatMessage.getWhisperRecipients("GM")
                     });
     
@@ -1016,17 +1160,33 @@ export async function TaskCheck({
                 }
     
                 else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+
+                    message = {}
+                    
+                    message.type = "beyondSuperior";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                        content: html,
                         whisper: [game.user._id]
                     })
                 }
     
                 else if (usedRaise && !poolValue){
+
+                    message = {}
+                    
+                    message.type = "notEnoughPool";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                        content: html,
                         whisper: [game.user._id]
                     })
                 }
@@ -1037,15 +1197,19 @@ export async function TaskCheck({
                     switch (successName){
                         case 'Success':
                             successName = "Greater Success";
+                            successMessage = await successLabel("greatSuc");
                             break;
                         case 'Greater Success':
                             successName = "Superior Success";
+                            successMessage = await successLabel("supSuc");
                             break;
                         case 'Critical Success':
                             successName = "Greater Critical Success";
+                            successMessage = await successLabel("greatCritSuc");
                             break;
                         case 'Greater Critical Success':
                             successName = "Superior Critical Success";
+                            successMessage = await successLabel("supCritSuc");
                             break;
                     }
     
@@ -1053,32 +1217,56 @@ export async function TaskCheck({
     
                     poolValue--;
                     poolUpdate = poolValue;
+
+                    message = {}
+        
+                    message.resultText = successMessage;
+                    
+                    message.type = "usedRaise";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
     
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>"
+                        flavor: html
                     })
     
                     poolUpdater(poolUpdate, poolType)
                 }
     
                 else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+
+                    message = {}
+                    
+                    message.type = "beyondSuperior";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                        content: html,
                         whisper: [game.user._id]
                     })
                 }
     
                 else if (usedRaise && !poolValue){
+
+                    message = {}
+                    
+                    message.type = "notEnoughPool";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                        content: html,
                         whisper: [game.user._id]
                     })
                 }
             }
-
         }
 
         //For roll from Weapon
@@ -1122,40 +1310,20 @@ export async function TaskCheck({
 
             //Rolls only if the weapon has enough amunition & updates the ammo accordingly
             if (updateAmmo>=0){
-                if(modSkillValue>0){
-                    let label = successMessage + rollVisibility + "Rolled <strong>" + skillName + spec + "</strong> check <br> against <strong>" + modSkillValue + "</strong><p> <h5 style='font-weight: normal; margin: 0;'>" + modAnnounce + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + infectionAddition + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-                    msg = await roll.toMessage({
-                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: label
-                    },{
-                        rollMode: rollModeSelection
-                    });
+                msg = await roll.toMessage({
+                    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                    flavor: html
+                },{
+                    rollMode: rollModeSelection
+                });
 
-                    ammoUpdate.push({
-                        "_id" : weaponID,
-                        "system.ammoMin": updateAmmo
-                    });
-            
-                    //This updates the items ammunition
-                    actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
-                }
-                else{
-                    let label = "is desperate and pushes their luck<br> and rolls a:<p>" + successMessage + "<p> <h5 style='font-weight: normal; margin: 0;'><u>Skill value lower than 0  due to:</u><p>" + woundAnnounce + encumberanceModAnnounce + globalAnnounce + poolAnnounce + threatAnnounce + gunModTitle + gunAnnounce + meleeModTitle + meleeAnnounce + "</h5>";
-                    msg = await roll.toMessage({
-                        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: label
-                    },{
-                        rollMode: rollModeSelection
-                    });
-
-                    ammoUpdate.push({
-                        "_id" : weaponID,
-                        "system.ammoMin": updateAmmo
-                    });
-            
-                    //This updates the items ammunition
-                    actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
-                }
+                ammoUpdate.push({
+                    "_id" : weaponID,
+                    "system.ammoMin": updateAmmo
+                });
+        
+                //This updates the items ammunition
+                actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
 
                 await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
 
@@ -1289,10 +1457,12 @@ export async function TaskCheck({
                     if (swipSwap > 33 && swipSwap < 66){
                         successModifier = "+ 1d6";
                         successName = "Greater Success";
+                        successMessage = await successLabel("greatSuc");
                     }
                     if (swipSwap > 66){
                         successModifier = "+ 2d6";
                         successName = "Superior Success"
+                        successMessage = await successLabel("supSuc");
                     }
                     poolValue--;
                     poolUpdate = poolValue;
@@ -1304,9 +1474,19 @@ export async function TaskCheck({
                         poolUpdate = flexValue;
                     }
 
+                    message = {}
+        
+                    message.resultText = successMessage;
+                    
+                    message.type = "usedSwipSwap";
+                    message.poolName = await poolName(poolType);
+                    message.swipSwap = swipSwap;
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+    
                     ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                        flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                        flavor: html
                     })
 
                     poolUpdater(poolUpdate, poolType)
@@ -1321,16 +1501,20 @@ export async function TaskCheck({
                         switch (successName) {
                             case 'Success':
                                 successName = "Greater Success";
+                                successMessage = await successLabel("greatSuc");
                                 break;
                             case 'Greater Success':
                                 successName = "Superior Success";
+                                successMessage = await successLabel("supSuc");
                                 break;
                             case 'Critical Success':
                                 successName = "Greater Critical Success";
+                                successMessage = await successLabel("greatCritSuc");
                                 successModifier = "+ 1d6)";
                                 break;
                             case 'Greater Critical Success':
                                 successName = "Superior Critical Success";
+                                successMessage = await successLabel("supCritSuc");
                                 successModifier = "+ 2d6)";
                                 break;
                             default:
@@ -1341,10 +1525,18 @@ export async function TaskCheck({
       
                       poolValue--;
                       poolUpdate = poolValue;
-  
+
+                      message = {}
+          
+                      message.resultText = successMessage;
                       
+                      message.type = "usedRaise";
+                      message.poolName = await poolName(poolType);
+      
+                      html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+
                       ChatMessage.create({
-                          content: "Used <strong>" + poolType + "<p/></strong>to raise the damage done",
+                          content: html,
                           whisper: ChatMessage.getWhisperRecipients("GM")
                       });
       
@@ -1352,17 +1544,33 @@ export async function TaskCheck({
                   }
       
                   else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+
+                    message = {}
+                    
+                    message.type = "beyondSuperior";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                       ChatMessage.create({
                           speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                          content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                          content: html,
                           whisper: [game.user._id]
                       })
                   }
       
                   else if (usedRaise && !poolValue){
+
+                    message = {}
+                    
+                    message.type = "notEnoughPool";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                       ChatMessage.create({
                           speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                          content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                          content: html,
                           whisper: [game.user._id]
                       })
                   }
@@ -1373,16 +1581,20 @@ export async function TaskCheck({
                     switch (successName) {
                         case 'Success':
                             successName = "Greater Success";
+                            successMessage = await successLabel("greatSuc");
                             break;
                         case 'Greater Success':
                             successName = "Superior Success";
+                            successMessage = await successLabel("supSuc");
                             break;
                         case 'Critical Success':
                             successName = "Greater Critical Success";
+                            successMessage = await successLabel("greatCritSuc");
                             successModifier = "+ 1d6)";
                             break;
                         case 'Greater Critical Success':
                             successName = "Superior Critical Success";
+                            successMessage = await successLabel("supCritSuc");
                             successModifier = "+ 2d6)";
                             break;
                         default:
@@ -1393,27 +1605,52 @@ export async function TaskCheck({
       
                       poolValue--;
                       poolUpdate = poolValue;
+
+                      message = {}
+          
+                      message.resultText = successMessage;
+                      
+                      message.type = "usedRaise";
+                      message.poolName = await poolName(poolType);
+      
+                      html = await renderTemplate(POOL_USAGE_OUTPUT, message)
       
                       ChatMessage.create({
                           speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                          flavor: "Used <strong>" + poolType + "<p/></strong>to raise the result to </strong><p/><span class='success'>" + successName + "</span></strong>"
+                          flavor: html
                       })
       
                       poolUpdater(poolUpdate, poolType)
                   }
       
                   else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
+
+                    message = {}
+                    
+                    message.type = "beyondSuperior";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                       ChatMessage.create({
                           speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                          content: "You cannot increse your success level beyond 'Superior...'. <p/><strong>" + poolType + "</strong><p/> has not been deducted.",
+                          content: html,
                           whisper: [game.user._id]
                       })
                   }
       
                   else if (usedRaise && !poolValue){
+
+                    message = {}
+                    
+                    message.type = "notEnoughPool";
+                    message.poolName = await poolName(poolType);
+    
+                    html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+                    
                       ChatMessage.create({
                           speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                          content: "You have not enough <p/><strong>" + poolType + "</strong><p/> to increase your success level.",
+                          content: html,
                           whisper: [game.user._id]
                       })
                   }
@@ -1525,13 +1762,13 @@ export async function TaskCheck({
         successType = true;
         swapPossible = false;
         if (swipSwap < 33){
-            successName = "Success";
+            successName = "ep2e.roll.successType.success";
         }
         if (swipSwap > 33 && swipSwap < 66){
-            successName = "Greater Success";
+            successName = "ep2e.roll.successType.greaterSuccess";
         }
         if (swipSwap > 66){
-            successName = "Superior Success";
+            successName = "ep2e.roll.successType.surperiorSuccess";
         }
 
         poolValue--;
@@ -1544,18 +1781,28 @@ export async function TaskCheck({
             poolUpdate = flexValue;
         }
 
+        let message = {}
+        
+        message.resultText = successName;
+        
+        message.type = "usedSwipSwap";
+        message.poolName = await poolName(poolType);
+        message.swipSwap = swipSwap;
+
+        let html = await renderTemplate(POOL_USAGE_OUTPUT, message);
+
         usedSwipSwap = null
 
         if (rollModeSelection === "gmroll"){
             ChatMessage.create({
-                content: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>",
+                content: html,
                 whisper: ChatMessage.getWhisperRecipients("GM")
               });
         }
         else {
             ChatMessage.create({
                 speaker: ChatMessage.getSpeaker(),
-                flavor: "Used <strong>" + poolType + "<p/></strong>to swap the result to <strong>" + swipSwap + "</strong><p/><span class='success'>" + successName + "</span></strong>"
+                flavor: html
             })
         }
 
@@ -1566,7 +1813,7 @@ export async function TaskCheck({
 
     //Failure Mitigation Check
     async function mitigationChecker(poolType, flexValue, severityLevel, actorType, usedMitigate){
-        let flavorText = null;
+        let severityAfter = "";
         poolValue--;
         poolUpdate = poolValue;
         
@@ -1578,31 +1825,98 @@ export async function TaskCheck({
         }
 
         if (severityLevel === 1){
-            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their greater failure to a <p/><strong><span class='fail'>Fail</span></strong>";
+            severityAfter = "ep2e.roll.successType.failure"
         }
         if (severityLevel === 2){
-            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their superior failure to a <p/><strong><span class='fail'>Greater Fail</span></strong>";
+            severityAfter = "ep2e.roll.successType.greaterFailure"
         }
         if (severityLevel === 3){
-            flavorText = "Used<p/><strong>" + poolType + "<p/></strong>to mitigate their Critical failure to a <p/><strong><span class='fail'>Superior Fail</span></strong>";
+            severityAfter = "ep2e.roll.successType.superiorFailure"
         }
+
+        let message = {}
+        
+        message.type = "mitigate";
+        message.poolName = await poolName(poolType);
+        message.severityNew = severityAfter;
+
+        let html = await renderTemplate(POOL_USAGE_OUTPUT, message);
+
 
         if (rollModeSelection === "gmroll"){
             ChatMessage.create({
-                content: flavorText,
+                content: html,
                 whisper: ChatMessage.getWhisperRecipients("GM")
               });
         }
         else {
             ChatMessage.create({
                 speaker: ChatMessage.getSpeaker(),
-                flavor: flavorText
+                flavor: html
             })
         }
 
         poolUpdater(poolUpdate, poolType)
 
         return [flexValue, poolValue];
+    }
+
+    async function poolName(poolType){
+        let poolName
+        switch(poolType){
+            case 'Insight':
+                poolName = "ep2e.skills.insightSkills.poolHeadline";
+                break;
+            case 'Vigor':
+                poolName = "ep2e.skills.vigorSkills.poolHeadline";
+                break;
+            case 'Moxie':
+                poolName = "ep2e.skills.moxieSkills.poolHeadline";
+                break;
+            case 'Flex':
+                poolName = "ep2e.skills.flex.poolHeadline";
+                break;
+            case 'Threat':
+                poolName = "ep2e.healthbar.tooltip.threat";
+                break;
+        }
+
+        return poolName;
+    }
+
+    async function successLabel(successName){
+        let successLabel
+        if (successName === "autofail") {
+            successLabel = "ep2e.roll.successType.supremeFailure";
+        } else if (successName === "autoSuccess") {
+            successLabel = "ep2e.roll.successType.supremeSuccess";
+        } else if (successName === "supCritSuc") {
+            successLabel = "ep2e.roll.successType.surperiorCriticalSuccess";
+        } else if (successName === "supCritFail") {
+            successLabel = "ep2e.roll.successType.surperiorCriticalFailure";
+        } else if (successName === "greatCritSuc") {
+            successLabel = "ep2e.roll.successType.greaterCriticalSuccess";
+        } else if (successName === "greatCritFail") {
+            successLabel = "ep2e.roll.successType.greaterCriticalFailure";
+        } else if (successName === "critSuc") {
+            successLabel = "ep2e.roll.successType.criticalSuccess";
+        } else if (successName === "critFail") {
+            successLabel = "ep2e.roll.successType.criticalFailure";
+        } else if (successName === "supSuc") {
+            successLabel = "ep2e.roll.successType.surperiorSuccess";
+        } else if (successName === "supFail") {
+            successLabel = "ep2e.roll.successType.surperiorFailure";
+        } else if (successName === "greatSuc") {
+            successLabel = "ep2e.roll.successType.greaterSuccess";
+        } else if (successName === "greatFail") {
+            successLabel = "ep2e.roll.successType.greaterFailure";
+        } else if (successName === "suc") {
+            successLabel = "ep2e.roll.successType.success";
+        } else if (successName === "fail") {
+            successLabel = "ep2e.roll.successType.failure";
+        }
+
+        return successLabel;
     }
 
     //Skill check dialog constructor
@@ -1820,21 +2134,20 @@ export async function TaskCheck({
 
     async function GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue) {
         let groupName = "useSwap";
-        let choices = {};
+        let choices = 0;
         let radioStatus = true
         if (poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 1;
         }
         else if (!poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 2;
         }
         else if (poolValue && !flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 3;
         }
         else {
             radioStatus = false
         }
-        
         let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
         const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
@@ -1868,22 +2181,20 @@ export async function TaskCheck({
 
     async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, meleeDamageMod) {
         let groupName = "useSwap";
-        let choices = {};
+        let choices = 0;
         let radioStatus = true
         if (poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 1;
         }
         else if (!poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 2;
         }
         else if (poolValue && !flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 3;
         }
         else {
             radioStatus = false
         }
-        
-        let chosen = "none";
         const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
         const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus, meleeDamageMod});
         return new Promise(resolve => {

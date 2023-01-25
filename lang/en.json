@@ -236,7 +236,7 @@
         "poolCopy3": "Ignore the effects of 1 wound for 24 hours or until your next recharge"
       },
       "moxieSkills": {
-        "moxieHeadline": "Insight Skills",
+        "moxieHeadline": "Moxie Skills",
         "deceive": "Deceive",
         "kinesics": "Kinesics",
         "persuade": "Persuade",
@@ -642,6 +642,90 @@
             "n": "N",
             "nh": "NH",
             "mn": "MN"
+          }
+        }
+      }
+    },
+    "roll": {
+      "successType": {
+        "success": "Success",
+        "greaterSuccess": "Greater Success",
+        "surperiorSuccess": "Superior Success",
+        "criticalSuccess": "Critical Success",
+        "greaterCriticalSuccess": "Greater Critical Success",
+        "surperiorCriticalSuccess": "Superior Critical Success",
+        "supremeSuccess": "Supreme Success",
+        "failure": "Fail",
+        "greaterFailure": "Grater Fail",
+        "surperiorFailure": "Superior Fail",
+        "criticalFailure": "Critical Fail",
+        "greaterCriticalFailure": "Greater Critical Fail",
+        "surperiorCriticalFailure": "Superior Critical Fail",
+        "supremeFailure": "Supreme Fail"
+      },
+      "announce": {
+        "global": "Situational",
+        "specialization": "Specialization",
+        "encumberance": "Encumberance",
+        "wounds": "Wounds/Trauma",
+        "rolled": "rolled",
+        "appliedMods": "Applied Mods",
+        "baseValue": "Base Value",
+        "rollTarget": "Roll Target",
+        "poolUsage": {
+          "poolUsed": "Pool Used",
+          "swappedTo": "Result swapped to",
+          "raisedTo": "Result raised to",
+          "beyondSuperior": "You cannot increse your success level beyond 'Superior...'.",
+          "notDeducted": "No pool has been deducted",
+          "notEnoughPool": "Not enough pool",
+          "cantRaise": "Result cannot be raised",
+          "newResult": "New Result",
+          "dontSwap": "Don't Swap Dice",
+          "swapTo": "Swap to",
+          "raiseLevel": "Raise Success Level",
+          "notAvailable": "not available"
+        },
+        "combat": {
+          "calledShot": "Called Shot",
+          "calledShotAddition": "Roll 'Greater Success' or better",
+          "melee": {
+            "charge": "Charging",
+            "chargeAddition": "(+1d6DV)",
+            "agressive": "Agressive Hit",
+            "agressiveAddition": "(Fray -10)",
+            "agressiveCharge": "Agressive Charge",
+            "agressiveChargeAddition": "(+1d10DV & Fray -10)",
+            "multipleTargets": "Multiple Targets"
+          },
+          "ranged": {
+            "smartLink": "No Smartgun",
+            "running": "Running",
+            "superiorPosition": "Superior Position",
+            "inMelee": "Stuck in Melee",
+            "coverAttacker": "In Cover",
+            "aimLong": "Long Aim",
+            "aimQuick": "Quick Aim",
+            "sizeXS": "Very Small Target",
+            "sizeS": "Small Target",
+            "sizeL": "Large Target",
+            "sizeXL": "Very Large Target",
+            "rangeProne": "Prone at Range",
+            "beyondProne": "Prone Beyond Range",
+            "beyondPlusProne": "Prone Far Beyond Range",
+            "range": "At Range",
+            "beyond": "Beyond Range",
+            "beyondPlus": "Far Beyond Range",
+            "pointBlank": "Point Blank",
+            "defMinCover": "Target in minor Cover",
+            "defModCover": "Target in moderate Cover",
+            "defMajCover": "Target in major Cover",
+            "visImpMin": "Minor Visual Impairment",
+            "visImpMaj": "Major Visual Impaired",
+            "blind": "Blind",
+            "wBurst": "Wide Burst",
+            "wFullAuto": "Wide Full Auto",
+            "Indirect": "Indirect"
           }
         }
       }

@@ -351,9 +351,14 @@
   width: 600px!important;
 }
 
-.eclipsephase .resource-label {
+.eclipsephase .resource-label,
+.chat-message .resource-label {
   text-transform: uppercase;
   text-align: left;
+}
+
+.whisper-to {
+  color: var(--highlight);
 }
 
 .dialog .resource-labelDialog {
@@ -498,7 +503,7 @@ span.success {
   border: #131313 2px solid;
 }
 
-.chat-message .table-draw .table-description {
+.table-draw .table-description {
   color: var(--inactive);
 }
 
@@ -1015,12 +1020,26 @@ table {
   margin-bottom: 10px;
 }
 
-table tr:first-child{
+table tr:nth-child(odd){
   background: var(--mainBackground);
 }
 
 table tr:nth-child(even){
   background: var(--focusBackground);
+}
+
+.table-dice-label {
+  padding-left: 10px!important;
+  text-align: left;
+  font-size: 14px;
+}
+
+.table-dice-result {
+  min-width: 55px;
+  max-width: 55px;
+  padding-right: 10px!important;
+  text-align: right;
+  font-size: 14px;
 }
 
 h1, h2, h3, h4 {
@@ -1421,7 +1440,7 @@ ol {
 .message-content {
   font-size: 16px!important;
   text-align: center;
-  margin: 20px 0;
+  margin: 20px 0 0 0;
 }
 
 .editor {
