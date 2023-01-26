@@ -442,16 +442,20 @@
         "armorUsageDescription": "To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available."
       },
       "ranged": {
-        "headline": "Ranged Combat"
+        "headline": "Ranged Combat",
+        "noRangedSubheadline": "No Weapon Equipped"
       },
       "melee": {
-        "headline": "Close Combat"
+        "headline": "Close Combat",
+        "noMeleeSubheadline": "No Weapon Equipped"
       },
       "gear": {
-        "headline": "Special Gear"
+        "headline": "Special Gear",
+        "noGearSubheadline": "None Equipped"
       },
       "consumables": {
-        "headline": "Consumables"
+        "headline": "Consumables",
+        "noConsumablesSubheadline": "None Equipped"
       }
     },
     "item": {
