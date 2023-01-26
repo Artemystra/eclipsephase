@@ -123,7 +123,7 @@
         "placeholder": "z.B. Den Himmel erreichen"
       },
       "languages": {
-        "headline": "Languages",
+        "headline": "Sprachen",
         "placeholder": "z.B. Hindi, Chinesisch, Englisch"
       },
       "traits": {
@@ -404,7 +404,7 @@
       "lessToggle": "Weniger",
       "currentStatus": {
         "headline": "Würfelmodifikator",
-        "modBreakdown": "Aufschlüsselung",
+        "modBreakdown": "Modliste",
         "generalModifiers": "Allgemeine Mods",
         "armorModifiers": "Rüstungsbehinderung",
         "gearModifiers": "Ausrüstungsbehinderung",
@@ -442,16 +442,20 @@
         "armorUsageDescription": "Um Rüstung an- oder abzulegen navigiere in dein Inventar. Rüstungen können aus dem Kompendium und allen anderen Gegenstandssammlungen die zur Verfügung stehen auf den Bogen gezogen werden."
       },
       "ranged": {
-        "headline": "Fernkampf"
+        "headline": "Fernkampf",
+        "noRangedSubheadline": "Keine Waffe ausgerüstet"
       },
       "melee": {
-        "headline": "Nahkampf"
+        "headline": "Nahkampf",
+        "noMeleeSubheadline": "Keine Waffe ausgerüstet"
       },
       "gear": {
-        "headline": "Spezialausrüstung"
+        "headline": "Spezialausrüstung",
+        "noGearSubheadline": "Keine ausgerüstet"
       },
       "consumables": {
-        "headline": "Konsumgüter"
+        "headline": "Konsumgüter",
+        "noConsumablesSubheadline": "Keine ausgerüstet"
       }
     },
     "item": {
