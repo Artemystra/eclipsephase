@@ -573,7 +573,7 @@ export async function TaskCheck({
         }
         if (superiorPosition) {
             gunsMod += 20;
-            modValue = -20
+            modValue = 20
             announce = "ep2e.roll.announce.combat.ranged.superiorPosition";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
