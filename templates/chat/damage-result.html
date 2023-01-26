@@ -1,0 +1,12 @@
+
+<div class="alignCenter">
+
+  {{#if (eq type "damage")}}
+      {{localize "ep2e.roll.announce.combat.hit"}} (<strong>{{weaponName}}</strong>)<p>
+      {{localize "ep2e.roll.announce.combat.damageDone"}}<p>
+  {{/if}}
+
+  {{#if (eq type "reload")}}
+    {{localize "ep2e.roll.announce.combat.ranged.reload"}}
+  {{/if}}
+</div>

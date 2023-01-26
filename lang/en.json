@@ -647,48 +647,169 @@
       }
     },
     "roll": {
+      "dialog": {
+        "generalModHeadline": "General Modifiers",
+        "attackerHeadline": "Attacker Modifiers",
+        "defenderHeadline": "Defender Modifiers",
+        "frayTypeHeadline": "Fray Type",
+        "dodgeRangedLabel": "Dodge Ranged",
+        "infectionHeadline": "Infection",
+        "baseCostLabel": "Base cost",
+        "pushesLabel": "Pushes",
+        "usePool": "Use",
+        "globalModLabel": "Global Mod",
+        "noSpecLabel": "No Specialization",
+        "noPool": "No pool left",
+        "useThreat": "Use Threat (+20)",
+        "calledShotLabel": "Called Shot (-10)",
+        "title": {
+          "guns": "Guns Check",
+          "melee": "Melee Check",
+          "reputation": "Reputation Check",
+          "damageRoll": "Damage Check",
+          "swap": "Swap Result",
+          "raise": "Raise Result",
+          "talentCheck": "Check"
+        },
+        "reputationMode": {
+          "headline": "Mode",
+          "trivial": "Trivial",
+          "minor": "Minor",
+          "moderate": "Moderate",
+          "major": "Major"
+        },
+        "ranged": {
+          "attacker": {
+            "smartLinkLabel": "Smart Link (-10 if none)",
+            "superiorPosition": "Superior Position (+20)",
+            "inCoverLabel": "In Cover (-10)",
+            "isRunningLabel": "Is Running (-20)",
+            "inMeleeLabel": "In Melee (-10)",
+            "fireMode": {
+              "label": "Fire Mode",
+              "single": "Single Shot",
+              "burst": "Narrow Burst (+1d10)",
+              "fullAuto": "Narrow Full Auto (+2d10)",
+              "wBurst": "Wide Burst (+10 Hit)",
+              "wFullAuto": "Wide Full Auto (+30 Hit)",
+              "indirect": "Indirect (-20)",
+              "suppressive": "Suppressive (uses 20 rounds)"
+            },
+            "aim": {
+              "label": "Aim",
+              "none": "Standard",
+              "quick": "Quick Aim (+10)",
+              "long": "Long Aim (+30)"
+            },
+            "distance": {
+              "label": "Distance",
+              "pointBlank": "Point Blank (+10)",
+              "none": "Standard",
+              "range": "Range (-10)",
+              "beyond": "Beyond (-20)",
+              "beyondPlus": "Beyond+ (-30)"
+            },
+            "visual": {
+              "label": "Visual Malus",
+              "none": "None",
+              "minor": "Minor (-10)",
+              "major": "Major (-30)",
+              "blind": "Blind (-30+)"
+            }
+          },
+          "defender": {
+            "isProne": "Is Prone (-10 if at range)",
+            "isHidden": "Is Hidden (-30)",
+            "size": {
+              "label": "Size",
+              "xs": "Very Small (-30)",
+              "s": "Small (-10)",
+              "none": "Normal",
+              "l": "Large (+10)",
+              "xl": "Very Large (+30)"
+            },
+            "cover": {
+              "label": "Cover",
+              "none": "None",
+              "minor": "Minor (-10)",
+              "moderate": "Moderate (-20)",
+              "major": "Major (-30)"
+            }
+          }
+        },
+        "melee": {
+          "attacker": {
+            "numberOfTargetsLabel": "Number of targets",
+            "numberOfTargetsMod": "(-20/target)",
+            "type": {
+              "label": "Attack Type",
+              "none": "Standard Attack",
+              "charge": "Charge Attack (-10 Hit, +1d6 DV)",
+              "aggressive": "Aggressive Hit (+10 Hit, -10 Fray)",
+              "aggressiveCharge": "Ruthless Attack(+1d10 DV, - 10 Fray)"
+            }
+          }
+        }
+      },
       "successType": {
         "success": "Success",
         "greaterSuccess": "Greater Success",
-        "surperiorSuccess": "Superior Success",
+        "superiorSuccess": "Superior Success",
         "criticalSuccess": "Critical Success",
         "greaterCriticalSuccess": "Greater Critical Success",
-        "surperiorCriticalSuccess": "Superior Critical Success",
+        "superiorCriticalSuccess": "Superior Critical Success",
         "supremeSuccess": "Supreme Success",
         "failure": "Fail",
         "greaterFailure": "Grater Fail",
-        "surperiorFailure": "Superior Fail",
+        "superiorFailure": "Superior Fail",
         "criticalFailure": "Critical Fail",
         "greaterCriticalFailure": "Greater Critical Fail",
-        "surperiorCriticalFailure": "Superior Critical Fail",
+        "superiorCriticalFailure": "Superior Critical Fail",
         "supremeFailure": "Supreme Fail"
+      },
+      "rollType": {
+        "label": "Roll Type",
+        "public": "Public Roll",
+        "private": "Private GM Roll",
+        "blind": "Blind GM Roll"
       },
       "announce": {
         "global": "Situational",
+        "favor": "Favor Modifier",
         "specialization": "Specialization",
         "encumberance": "Encumberance",
         "wounds": "Wounds/Trauma",
+        "woundModifier": "Wound Modifier",
+        "traumaModifier": "Trauma Modifier",
         "rolled": "rolled",
         "appliedMods": "Applied Mods",
         "baseValue": "Base Value",
         "rollTarget": "Roll Target",
+        "infectionRaise": "Infection raised to",
         "poolUsage": {
           "poolUsed": "Pool Used",
+          "usePoolSubheadline": "Use Pools",
           "swappedTo": "Result swapped to",
           "raisedTo": "Result raised to",
-          "beyondSuperior": "You cannot increse your success level beyond 'Superior...'.",
-          "notDeducted": "No pool has been deducted",
+          "beyondSuperior": "You cannot increse your success level beyond 'Superior'.",
+          "notDeducted": "No pool has been used",
           "notEnoughPool": "Not enough pool",
           "cantRaise": "Result cannot be raised",
           "newResult": "New Result",
           "dontSwap": "Don't Swap Dice",
           "swapTo": "Swap to",
           "raiseLevel": "Raise Success Level",
-          "notAvailable": "not available"
+          "notAvailable": "not available",
+          "missGoal": "You missed your goal",
+          "mitigateSpending": "Spend pool to mitigate the outcome",
+          "dontMitigate": "Don't Mitigate Failure",
+          "mitigate": "Mitigate"
         },
         "combat": {
           "calledShot": "Called Shot",
           "calledShotAddition": "Roll 'Greater Success' or better",
+          "hit": "You hit with your weapon",
+          "damageDone": "Your damage done",
           "melee": {
             "charge": "Charging",
             "chargeAddition": "(+1d6DV)",
@@ -725,7 +846,8 @@
             "blind": "Blind",
             "wBurst": "Wide Burst",
             "wFullAuto": "Wide Full Auto",
-            "Indirect": "Indirect"
+            "Indirect": "Indirect",
+            "reload": "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>"
           }
         }
       }

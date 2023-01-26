@@ -1,65 +1,69 @@
 <form>
     <div class="grid" style="margin-bottom: 0;">
         <div class="flexrow subheader">
-            <h3 class="subheader dialog">General Modifier</h3>
+            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.generalModHeadline"}}</h3>
         </div>
         <div class="flexrow subheader">
-            <h3 class="subheader dialog">Attacker Modifier</h3>
+            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.attackerHeadline"}}</h3>
         </div>
     </div>
     <div class="grid" style="margin-top: 0;">
         <div>
             <div class="contentBoxMargin">
                 <div class="form-group listBackgroundMain">
-                    <label class="resource-labelDialog" style="min-width: 140px;">Global Mod</label>
+                    <label class="resource-labelDialog" style="min-width: 140px;">{{localize "ep2e.roll.dialog.globalModLabel"}}</label>
                     <input type="number" name="GlobalMod" placeholder="e.g. -20" />
                 </div>
                 {{#if specName}}
                 <div class="form-group listBackgroundMain">
                     <input type="checkbox" name="useSpec">
-                    <label class="resource-label">Use "{{specName}}" (+10)</label>
+                    <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
                 </div>
                 {{else}}
                 <div class="form-group listBackgroundMain">
                     <input type="checkbox" name="useSpec" disabled>
-                    <label class="resource-label epInactive">No Specialization</label>
+                    <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noSpecLabel"}}</label>
                 </div>
                 {{/if}}
                 {{#if (eq actorType "character")}}
                     {{#if poolValue}}
                     <div class="form-group listBackgroundMain">
                         <input type="checkbox" name="usePool">
-                        <label class="resource-label">Use {{poolType}} (+20)</label>
+                        <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}} (+20)</label>
                     </div>
                     {{else}}
                     <div class="form-group listBackgroundMain">
                         <input type="checkbox" name="usePool" disabled>
-                        <label class="resource-label epInactive">No {{poolType}} left</label>
+                        <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
                     </div>
                     {{/if}}
                 {{else}}
                     {{#if poolValue}}
                     <div class="form-group listBackgroundMain">
                         <input type="checkbox" name="useThreat">
-                        <label class="resource-label">Use Threat (+20)</label>
+                        <label class="resource-label">{{localize "ep2e.roll.dialog.useThreat"}}</label>
                     </div>
                     {{else}}
                     <div class="form-group listBackgroundMain">
                         <input type="checkbox" name="useThreat" disabled>
-                        <label class="resource-label epInactive">No threat left</label>
+                        <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
                     </div>
                     {{/if}}
                 {{/if}}
             </div>
             <div class="contentBoxMargin">
                 <div class="flexrow subheader">
-                    <h3 class="subheader dialog">Mode</h3>
+                    <h3 class="subheader dialog">{{localize "ep2e.roll.rollType.label"}}</h3>
                 </div>
                 <div class="form-group listBackgroundMain">
                     <select name="RollMode">
-                        <option value="public">Public Roll</option>
-                        <option value="private">Private GM Roll</option>
-                        <option value="blind">Blind GM Roll</option>
+                        <option value="public">{{localize "ep2e.roll.rollType.public"}}</option>
+                        {{#if (eq taskType "psi")}}
+                            <option value="private" selected>{{localize "ep2e.roll.rollType.private"}}</option>
+                        {{else}}
+                            <option value="private">{{localize "ep2e.roll.rollType.private"}}</option>
+                        {{/if}}
+                        <option value="blind">{{localize "ep2e.roll.rollType.blind"}}</option>
                     </select>
                 </div>
             </div>
@@ -67,20 +71,20 @@
         <div>
             <div class="form-group listBackgroundMain">
                 <input type="checkbox" name="CalledShot">
-                <label class="resource-label">Called Shot (-10)</label>
+                <label class="resource-label">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
-                <label class="resource-labelDialog" style="min-width: 180px;">Number of targets</label>
+                <label class="resource-labelDialog" style="min-width: 180px;">{{localize "ep2e.roll.dialog.melee.attacker.numberOfTargetsLabel"}}</label>
                 <input class="input-xs" type="number" name="NumberTargets" placeholder="1" />
-                <label class="resource-labelDialog" style="min-width: 180px;">(-20/target)</label>
+                <label class="resource-labelDialog" style="min-width: 180px;">{{localize "ep2e.roll.dialog.melee.attacker.numberOfTargetsMod"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
-                <label class="resource-labelDialog">Attack Type:</label>
+                <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.melee.attacker.type.label"}}</label>
                 <select class="input-large" name="HitType" style="max-width: 160px">
-                    <option value="none">Standard Attack</option>
-                    <option value="charge">Charge Attack (-10 Hit, +1d6 DV)</option>
-                    <option value="aggressive">Aggressive Hit (+10 Hit, -10 Fray)</option>
-                    <option value="aggressiveCharge">Ruthless Attack(+1d10 DV, - 10 Fray)</option>
+                    <option value="none">{{localize "ep2e.roll.dialog.melee.attacker.type.none"}}</option>
+                    <option value="charge">{{localize "ep2e.roll.dialog.melee.attacker.type.charge"}}</option>
+                    <option value="aggressive">{{localize "ep2e.roll.dialog.melee.attacker.type.aggressive"}}</option>
+                    <option value="aggressiveCharge">{{localize "ep2e.roll.dialog.melee.attacker.type.aggressiveCharge"}}</option>
                 </select>
             </div>
         </div>

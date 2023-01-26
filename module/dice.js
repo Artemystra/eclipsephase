@@ -4,6 +4,7 @@
 const REPUTATION_TASK_DIALOG = 'systems/eclipsephase/templates/chat/rep-test-dialog.html'
 const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
 const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
+const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
 
 /*
  * Task result constants
@@ -21,16 +22,23 @@ export const TASK_RESULT = {
 
 const TASK_RESULT_TEXT = {
   0: { class: 'success', text: 'ep2e.roll.successType.criticalSuccess' },
-  1: { class: 'success', text: 'ep2e.roll.successType.surperiorSuccess' },
+  1: { class: 'success', text: 'ep2e.roll.successType.superiorSuccess' },
   2: { class: 'success', text: 'ep2e.roll.successType.greaterSuccess' },
   3: { class: 'success', text: 'ep2e.roll.successType.success' },
   4: { class: 'fail', text: 'ep2e.roll.successType.criticalFailure' },
-  5: { class: 'fail', text: 'ep2e.roll.successType.surperiorFailure' },
+  5: { class: 'fail', text: 'ep2e.roll.successType.superiorFailure' },
   6: { class: 'fail', text: 'ep2e.roll.successType.greaterFailure' },
   7: { class: 'fail', text: 'ep2e.roll.successType.failure' }
 }
 
+export class DialogName{
+    constructor (title){
+        this._title = title
+    }
 
+    get title() { 
+        return game.i18n.localize(this._title); }
+}
 
 /**
  * TaskRoll holds all of the intermediate and calculated values for a single roll.
@@ -184,6 +192,7 @@ export class TaskRoll {
 
     data.taskName = this.taskName
     data.targetNumber = this.totalTargetNumber
+    data.taskValue = this.baseValue
 
     data.modifiers = []
     if(this.modifiers.length > 0) {
@@ -274,13 +283,13 @@ export async function ReputationRoll(dataset, actorModel) {
   let favor_mod = parseInt(values['favorMod']) || 0
   let global_mod = parseInt(values['globalMod']) || 0
 
-  let task = new TaskRoll(`${dataset.name} network`, repValue)
+  let task = new TaskRoll(`${dataset.name}`, repValue)
 
   if(global_mod !== 0)
-    task.addModifier(new TaskRollModifier('Situational modifier', global_mod))
+    task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', global_mod))
 
   if(favor_mod !== 0)
-    task.addModifier(new TaskRollModifier('Favor modifier', favor_mod))
+    task.addModifier(new TaskRollModifier('ep2e.roll.announce.favor', favor_mod))
 
   applyHealthModifiers(actorModel, task)
 
@@ -308,10 +317,10 @@ function applyHealthModifiers(actorData, taskRoll) {
     let trauma = 10*parseInt(actorData.mental.trauma)+eval(actorData.mods.traumaMod)
 
   if(wounds > 0)
-    taskRoll.addModifier(new TaskRollModifier('Wound modifier', -wounds))
+    taskRoll.addModifier(new TaskRollModifier('ep2e.roll.announce.woundModifier', -wounds))
 
   if(trauma > 0)
-    taskRoll.addModifier(new TaskRollModifier('Trauma modifier', -trauma))
+    taskRoll.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
 }
 
 
@@ -355,8 +364,8 @@ async function showOptionsDialog(template, title, names) {
       default: 'normal',
       close: () => resolve({cancelled: true})
     }
-
-    new Dialog(data, null).render(true);
+    let options = {width:276}
+    new Dialog(data, options).render(true);
   })
 }
 
@@ -470,39 +479,7 @@ export async function TaskCheck({
         useThreat = checkOptions.useThreat;
     }
 
-    //Psi check dialog
-    else if (askForOptions != optionsSettings && skillName === "psi" && brewStatus === true) {
-        let checkOptions = await GetPsiTaskOptions(specName, poolType, poolValue, actorType);
-
-        if (checkOptions.cancelled) {
-            return;
-        }
-
-        globalMod = checkOptions.globalMod;
-        activeRollTarget = checkOptions.activeRollMode;
-        aspectPushes = checkOptions.pushes
-        aspectBase = checkOptions.aspects
-        useSpecialization = checkOptions.useSpecialization;
-        usePool = checkOptions.usePool;
-        useThreat = checkOptions.useThreat;
-    }
-
-    //Fray skill check dialog
-    else if (askForOptions != optionsSettings && skillName === "fray") {
-        let checkOptions = await GetFrayTaskOptions(rollType, specName, poolType, poolValue, actorType);
-
-        if (checkOptions.cancelled) {
-            return;
-        }
-        skillValue = checkOptions.ranged ? Math.floor(Number(skillValue)/2): skillValue;
-        globalMod = checkOptions.globalMod;
-        activeRollTarget = checkOptions.activeRollMode;
-        useSpecialization = checkOptions.useSpecialization;
-        usePool = checkOptions.usePool;
-        useThreat = checkOptions.useThreat;
-    }
-
-    //Fray skill check dialog
+    //Melee skill check dialog
     else if (askForOptions != optionsSettings && skillName === "melee") {
         let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType);
 
@@ -521,14 +498,18 @@ export async function TaskCheck({
 
     //Default skill check dialog
     else if (askForOptions != optionsSettings) {
-        let checkOptions = await GetTaskOptions(rollType, specName, poolType, poolValue, actorType);
+        let taskType = skillName
+        let checkOptions = await GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType);
 
         if (checkOptions.cancelled) {
             return;
         }
 
+        skillValue = checkOptions.ranged ? Math.floor(Number(skillValue)/2): skillValue;
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
+        aspectPushes = checkOptions.pushes
+        aspectBase = checkOptions.aspects
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
         useThreat = checkOptions.useThreat;
@@ -903,7 +884,38 @@ export async function TaskCheck({
             successClass = "fail";
             successName = "Fail";
         }
-        
+
+        //Visibility toggler
+        if (activeRollTarget === "" || activeRollTarget === "public") {
+            rollModeSelection = CONST.DICE_ROLL_MODES.PUBLIC
+        } else if (activeRollTarget === "private") {
+            rollModeSelection = CONST.DICE_ROLL_MODES.PRIVATE
+        } else if (activeRollTarget === "blind") {
+            rollModeSelection = CONST.DICE_ROLL_MODES.BLIND
+        }
+
+        //Infection (only relevant for psi checks)
+        if (skillName === "psi"){
+            if (success && doubleSuperior) {
+                aspectPushes -= 4
+            } else if (success && superior) {
+                aspectPushes -= 2
+            }
+            infectionMod = aspectPushes > 0 ? aspectBase * aspectPushes : aspectBase;
+            if (skillName === "psi" && brewStatus === true && aspectBase) {
+                infectionMod += Number(actorData.psiStrain.infection)
+                if (infectionMod <= 100){
+                    actorWhole.update({"system.psiStrain.infection" : infectionMod});
+                }
+                else {
+                    actorWhole.update({"system.psiStrain.infection" : 100});
+                    infectionMod = 100;
+                }
+            }
+        }
+
+        //Chat message builder
+
         let message = {}
     
         message.resultText = successMessage;
@@ -912,6 +924,10 @@ export async function TaskCheck({
         message.taskName = specMod? task._taskName + " (" + specName + ")": task._taskName;
         message.taskValue = Number(task._baseValue);
         message.targetNumber = modSkillValue;
+
+        message.visibility = activeRollTarget;
+
+        message.infection = infectionMod ? infectionMod : null;
     
         message.modifiers = []
         if(task._modifiers.length > 0) {
@@ -924,36 +940,6 @@ export async function TaskCheck({
 
         let html = await renderTemplate(TASK_RESULT_OUTPUT, message)
 
-        //Visibility toggler
-        let rollVisibility = "";
-        if (activeRollTarget === "" || activeRollTarget === "public") {
-            rollModeSelection = CONST.DICE_ROLL_MODES.PUBLIC
-        } else if (activeRollTarget === "private") {
-            rollModeSelection = CONST.DICE_ROLL_MODES.PRIVATE
-            rollVisibility = "<p/><h5 style='font-weight: normal; margin: 0;'>Private Roll <i class=\"fas fa-eye-slash\"></i></h5><p/>"
-        } else if (activeRollTarget === "blind") {
-            rollModeSelection = CONST.DICE_ROLL_MODES.BLIND
-            rollVisibility = "<p/><h5 style='font-weight: normal; margin: 0;'>Blind GM Roll <i class=\"fas fa-low-vision\"></i></h5><p/>"
-        }
-
-        //Infection (only relevant for psi checks)
-        let infectionAddition = "";
-
-        if (success && doubleSuperior) {
-            aspectPushes -= 4
-        } else if (success && superior) {
-            aspectPushes -= 2
-        }
-        infectionMod = aspectPushes > 0 ? aspectBase * aspectPushes : aspectBase;
-        if (skillName === "psi" && brewStatus === true && aspectBase) {
-            infectionMod += Number(actorData.psiStrain.infection)
-            infectionAddition = "<p/><u>Infection raises to:</u><br><strong>" + infectionMod + "</strong>"
-        }
-
-        //Output for the html template
-        
-
-        //Chat message constructor
 
         //For default skill roll
         if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon") {
@@ -1674,8 +1660,15 @@ export async function TaskCheck({
                         rollFormula = intermediateRollFormula;
                     }
 
+                    message = {}
+                    
+                    message.type = "damage";
+                    message.weaponName = weaponName;
+    
+                    html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+
                     let roll = await new Roll(rollFormula).evaluate({async: true});
-                    let label = "Rolls damage with <br> <strong>" + weaponName + "</strong>";
+                    let label = html;
 
                     roll.toMessage({
                         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -1687,9 +1680,17 @@ export async function TaskCheck({
                     
             }
             else {
+
+                message = {}
+                
+                message.type = "reload";
+                message.poolName = await poolName(poolType);
+
+                html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+
                 ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({actor: this.actor}),
-                    content: "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
+                    content: html,
                     whisper: [game.user._id]
                 })
             }
@@ -1768,7 +1769,7 @@ export async function TaskCheck({
             successName = "ep2e.roll.successType.greaterSuccess";
         }
         if (swipSwap > 66){
-            successName = "ep2e.roll.successType.surperiorSuccess";
+            successName = "ep2e.roll.successType.superiorSuccess";
         }
 
         poolValue--;
@@ -1891,9 +1892,9 @@ export async function TaskCheck({
         } else if (successName === "autoSuccess") {
             successLabel = "ep2e.roll.successType.supremeSuccess";
         } else if (successName === "supCritSuc") {
-            successLabel = "ep2e.roll.successType.surperiorCriticalSuccess";
+            successLabel = "ep2e.roll.successType.superiorCriticalSuccess";
         } else if (successName === "supCritFail") {
-            successLabel = "ep2e.roll.successType.surperiorCriticalFailure";
+            successLabel = "ep2e.roll.successType.superiorCriticalFailure";
         } else if (successName === "greatCritSuc") {
             successLabel = "ep2e.roll.successType.greaterCriticalSuccess";
         } else if (successName === "greatCritFail") {
@@ -1903,9 +1904,9 @@ export async function TaskCheck({
         } else if (successName === "critFail") {
             successLabel = "ep2e.roll.successType.criticalFailure";
         } else if (successName === "supSuc") {
-            successLabel = "ep2e.roll.successType.surperiorSuccess";
+            successLabel = "ep2e.roll.successType.superiorSuccess";
         } else if (successName === "supFail") {
-            successLabel = "ep2e.roll.successType.surperiorFailure";
+            successLabel = "ep2e.roll.successType.superiorFailure";
         } else if (successName === "greatSuc") {
             successLabel = "ep2e.roll.successType.greaterSuccess";
         } else if (successName === "greatFail") {
@@ -1920,13 +1921,14 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetTaskOptions(rollType, specName, poolType, poolValue, actorType) {
+    async function GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType) {
+        let dialogName = new DialogName ('ep2e.roll.dialog.title.talentCheck');
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, taskType});
 
         return new Promise(resolve => {
             const data = {
-                title: rollType[0].toUpperCase() + rollType.slice(1) + " Check",
+                title: skillName[0].toUpperCase() + skillName.slice(1) + " " + dialogName.title,
                 content: html,
                 buttons: {
                     cancel: {
@@ -1949,62 +1951,26 @@ export async function TaskCheck({
     //General skill check results
     function _proTaskCheckOptions(form) {
         return {
+            ranged: form.RangedFray ? form.RangedFray.checked : false,
+            aspects: form.AspectNumber ? parseInt(form.AspectNumber.value) : 0,
+            pushes: form.PushesNumber ? parseInt(form.PushesNumber.value)*2 : 0,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
             usePool: form.usePool ? form.usePool.checked : false,
             useThreat: form.useThreat ? form.useThreat.checked : false
         }
-    }
-
-    //Skill check dialog constructor
-    async function GetFrayTaskOptions(rollType, specName, poolType, poolValue, actorType) {
-        const template = "systems/eclipsephase/templates/chat/fray-test-dialog.html";
-        const html = await renderTemplate(template, {rollType, specName, poolType, poolValue, actorType});
-
-        return new Promise(resolve => {
-            const data = {
-                title: "Fray Check",
-                content: html,
-                buttons: {
-                    cancel: {
-                        label: "Cancel",
-                        callback: html => resolve ({cancelled: true})
-                    },
-                    normal: {
-                        label: "Roll!",
-                        callback: html => resolve(_proFrayCheckOptions(html[0].querySelector("form")))
-                    }
-                },
-                default: "normal",
-                close: () => resolve ({cancelled: true})
-            };
-            let options = {width:276}
-            new Dialog(data, options).render(true);
-        });
-    }
-
-    //General skill check results
-    function _proFrayCheckOptions(form) {
-        return {
-            ranged: form.RangedFray.checked,
-            globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
-            activeRollMode: form.RollMode.value,
-            useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.checked : false,
-            useThreat: form.useThreat ? form.useThreat.checked : false
-        }
-
     }
 
     //Skill check dialog constructor
     async function GetMeleeTaskOptions(specName, poolType, poolValue, actorType) {
+        let dialogName = new DialogName ('ep2e.roll.dialog.title.melee');
         const template = "systems/eclipsephase/templates/chat/melee-test-dialog.html";
         const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
         return new Promise(resolve => {
             const data = {
-                title: "Melee Check",
+                title: dialogName.title,
                 content: html,
                 buttons: {
                     cancel: {
@@ -2039,55 +2005,15 @@ export async function TaskCheck({
 
     }
 
-    //Psi check dialog constructor
-    async function GetPsiTaskOptions(specName, poolType, poolValue, actorType) {
-        const template = "systems/eclipsephase/templates/chat/psi-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
-
-        return new Promise(resolve => {
-            const data = {
-                title: "Psi Check",
-                content: html,
-                buttons: {
-                    cancel: {
-                        label: "Cancel",
-                        callback: html => resolve ({cancelled: true})
-                    },
-                    normal: {
-                        label: "Roll!",
-                        callback: html => resolve(_proPsiTaskCheckOptions(html[0].querySelector("form")))
-                    }
-                },
-                default: "normal",
-                close: () => resolve ({cancelled: true})
-            };
-            let options = {width:276}
-            new Dialog(data, options).render(true);
-        });
-    }
-
-    //Psi check results
-    function _proPsiTaskCheckOptions(form) {
-        return {
-            globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
-            aspects: parseInt(form.AspectNumber.value),
-            pushes: parseInt(form.PushesNumber.value)*2,
-            activeRollMode: form.RollMode.value,
-            useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.checked : false,
-            useThreat: form.useThreat ? form.useThreat.checked : false
-        }
-
-    }
-
     //Guns check dialog constructor
     async function GetGunsTaskOptions(specName, poolType, poolValue, actorType) {
+        let dialogName = new DialogName ('ep2e.roll.dialog.title.guns');
         const template = "systems/eclipsephase/templates/chat/gun-test-dialog.html";
         const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
         return new Promise(resolve => {
             const data = {
-                title: "Guns Check",
+                title: dialogName.title,
                 content: html,
                 buttons: {
                     cancel: {
@@ -2149,11 +2075,12 @@ export async function TaskCheck({
             radioStatus = false
         }
         let chosen = "none";
+        let dialogName = new DialogName ('ep2e.roll.dialog.title.damageRoll');
         const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
         const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
         return new Promise(resolve => {
             const data = {
-                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
+                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " " + dialogName.title,
                 content: html,
                 buttons: {
                     cancel: {
@@ -2195,11 +2122,12 @@ export async function TaskCheck({
         else {
             radioStatus = false
         }
+        let dialogName = new DialogName ('ep2e.roll.dialog.title.damageRoll');
         const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
         const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus, meleeDamageMod});
         return new Promise(resolve => {
             const data = {
-                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " Damage Roll",
+                title: weaponName[0].toUpperCase() + weaponName.slice(1) + " " + dialogName.title,
                 content: html,
                 buttons: {
                     cancel: {
@@ -2228,40 +2156,33 @@ export async function TaskCheck({
     }
     
     async function GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor) {
-        let groupName = "useSwap";
-        if (severityFlavor){
-            groupName = "useMitigate";
-        }
-        let choices = {};
-        let radioStatus = true
+        
+        let choices = 0;
+
         if (severityFlavor && poolValue && flexValue){
-            choices = {none: "Don't Mitigate Failure",pool: "1 <strong>" + poolType  + "</strong> to mitigate",flex: "1 <strong>Flex</strong> to mitigate"};
+            choices = 1;
         }
         else if (severityFlavor && !poolValue && flexValue){
-            choices = {none: "Don't Mitigate Failure",flex: "1 <strong>Flex</strong> to mitigate"};
+            choices = 2;
         }
         else if (severityFlavor && poolValue && !flexValue){
-            choices = {none: "Don't Mitigate Failure",pool: "1 <strong>" + poolType + "</strong> to mitigate"};
+            choices = 3;
         }
         else if (poolValue && flexValue){
-            choices = {none: "Don't Swap Dice",pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>",flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 1;
         }
         else if (!poolValue && flexValue){
-            choices = {none: "Don't Swap Dice",flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 2;
         }
         else if (poolValue && !flexValue){
-            choices = {none: "Don't Swap Dice",pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 3;
         }
-        else {
-            radioStatus = false
-        }
-        
-        let chosen = "none";
+        let dialogName = new DialogName ('ep2e.roll.dialog.title.swap');
         const template = "systems/eclipsephase/templates/chat/swap-dialog.html";
-        const html = await renderTemplate(template, {swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor, groupName, choices, chosen, radioStatus});
+        const html = await renderTemplate(template, {swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor, choices});
         return new Promise(resolve => {
             const data = {
-                title: "Swap Roll",
+                title: dialogName.title,
                 content: html,
                 dv: weaponDamage,
                 buttons: {
@@ -2285,28 +2206,24 @@ export async function TaskCheck({
     }
 
     async function GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType) {
-        let groupName = "useSwap";
-        let choices = {};
-        let radioStatus = true
+
+        let choices = 0;
+
         if (poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 1;
         }
         else if (!poolValue && flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", flex: "1 <strong>Flex</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 2;
         }
         else if (poolValue && !flexValue && swapPossible){
             choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
         }
-        else {
-            radioStatus = false
-        }
-        
-        let chosen = "none";
+        let dialogName = new DialogName ('ep2e.roll.dialog.title.raise');
         const template = "systems/eclipsephase/templates/chat/raise-dialog.html";
-        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, groupName, choices, chosen, radioStatus});
+        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, choices});
         return new Promise(resolve => {
             const data = {
-                title: "Raise Roll",
+                title: dialogName.title,
                 content: html,
                 buttons: {
                     normal: {

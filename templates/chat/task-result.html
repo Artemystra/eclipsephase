@@ -1,8 +1,17 @@
 
 <div class="alignCenter">
-  {{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{taskName}}</span><p>
+  {{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{taskName}}</span>
+  {{#if (eq visibility "private")}}
+  <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.private"}} <i class='fas fa-eye-slash'></i></h5>
+  {{else if (eq visibility "blind")}}
+  <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.blind"}} <i class='fas fa-low-vision'></i></h5>
+  {{/if}}
 
-  <div style="margin: 10px 0 20px 0; padding: 20px 0; background-color: var(--mainBackground);">
+  {{#if infection}}
+    <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.announce.infectionRaise"}} <strong>{{infection}}</strong></h5><p>
+  {{/if}}
+
+  <p></p><div style="display: flex; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
     <span class="{{resultClass}}">{{localize resultText}}</span> <p>
   </div>
 

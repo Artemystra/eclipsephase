@@ -1,33 +1,74 @@
 <form>
     {{#if severityFlavor}}
         <div class="contentBoxMargin listBackgroundMain alignCenter">
-            <label class="resource-labelDialog">You missed your goal with a</label><p/>
+            <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.missGoal"}}</label><p/>
             <span class="fail">{{successName}}</span><p/>
-            <label class="resource-labelDialog">There might be {{severityFlavor}} consequences <br/>if you don't use your pools...</label>
+            <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.mitigateSpending"}}</label><p/>
         </div>
         <div class="contentBoxMargin">
             <div class="flexrow subheader">
-                <h3 class="subheader dialog">Use Pools</h3>
+                <h3 class="subheader dialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</h3>
             </div>
             <div class="form-group listBackgroundMain">
                 <div style="display: grid;">
-                    {{radioBoxes groupName choices checked=chosen localize=true}}
+                    <label>
+                        {{#if (eq choices 1)}}
+                        <input type="radio" name="useMitigate" value="none" checked>
+                            {{localize "ep2e.roll.announce.poolUsage.dontMitigate"}}<p>
+                        <input type="radio" name="useMitigate" value="pool">
+                            {{localize "ep2e.roll.announce.poolUsage.mitigate"}} (1 {{poolType}})<p>
+                        <input type="radio" name="useMitigate" value="flex">
+                            {{localize "ep2e.roll.announce.poolUsage.mitigate"}} (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                        {{/if}}
+                        {{#if (eq choices 2)}}
+                        <input type="radio" name="useMitigate" value="none" checked>
+                            {{localize "ep2e.roll.announce.poolUsage.dontMitigate"}}<p>
+                        <input type="radio" name="useMitigate" value="flex">
+                            {{localize "ep2e.roll.announce.poolUsage.mitigate"}} (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                        {{/if}}
+                        {{#if (eq choices 3)}}
+                        <input type="radio" name="useMitigate" value="none" checked>
+                            {{localize "ep2e.roll.announce.poolUsage.dontMitigate"}}<p>
+                        <input type="radio" name="useMitigate" value="pool">
+                            {{localize "ep2e.roll.announce.poolUsage.mitigate"}} (1 {{poolType}})<p>
+                        {{/if}}
+                    </label>
                 </div>
             </div>
         </div>
     {{else}}
         <div class="contentBoxMargin listBackgroundMain alignCenter">
-            <label class="resource-labelDialog">You'll miss your goal with a</label><p/>
+            <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.missGoal"}}</label><p/>
             <span class="fail">{{successName}}</span><p/>
-            <label class="resource-labelDialog">if you don't use your pools...</label>
         </div>
         <div class="contentBoxMargin">
             <div class="flexrow subheader">
-                <h3 class="subheader dialog">Use Pools</h3>
+                <h3 class="subheader dialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</h3>
             </div>
             <div class="form-group listBackgroundMain">
                 <div style="display: grid;">
-                    {{radioBoxes groupName choices checked=chosen localize=true}}
+                    <label>
+                        {{#if (eq choices 1)}}
+                        <input type="radio" name="useSwap" value="none" checked>
+                            {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
+                        <input type="radio" name="useSwap" value="pool">
+                            {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})<p>
+                        <input type="radio" name="useSwap" value="flex">
+                            {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                        {{/if}}
+                        {{#if (eq choices 2)}}
+                        <input type="radio" name="useSwap" value="none" checked>
+                            {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
+                        <input type="radio" name="useSwap" value="flex">
+                            {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                        {{/if}}
+                        {{#if (eq choices 3)}}
+                        <input type="radio" name="useSwap" value="none" checked>
+                            {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
+                        <input type="radio" name="useSwap" value="pool">
+                            {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})<p>
+                        {{/if}}
+                    </label>
                 </div>
             </div>
         </div>

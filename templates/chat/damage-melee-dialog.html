@@ -16,7 +16,7 @@
     </div>
     <div class="contentBox">
         <div class="flexrow subheader">
-            <h3 class="subheader dialog">Use Pools</h3>
+            <h3 class="subheader dialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</h3>
         </div>
         {{#if swapPossible}}
         <div class="form-group listBackgroundMain">
@@ -26,21 +26,21 @@
                     <input type="radio" name="useSwap" value="none" checked>
                         {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
                     <input type="radio" name="useSwap" value="pool">
-                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong>) (1 {{poolType}})<p>
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})<p>
                     <input type="radio" name="useSwap" value="flex">
-                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong>) (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
                     {{/if}}
                     {{#if (eq choices 2)}}
                     <input type="radio" name="useSwap" value="none" checked>
                         {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
                     <input type="radio" name="useSwap" value="flex">
-                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong>) (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
                     {{/if}}
                     {{#if (eq choices 3)}}
                     <input type="radio" name="useSwap" value="none" checked>
                         {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
                     <input type="radio" name="useSwap" value="pool">
-                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong>) (1 {{poolType}})<p>
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})<p>
                     {{/if}}
                 </label>
             </div>

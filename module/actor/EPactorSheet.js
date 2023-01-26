@@ -9,7 +9,6 @@ import itemRoll from "../item/EPitem.js";
  * @extends {ActorSheet}
  */
 export default class EPactorSheet extends ActorSheet {
-
     constructor(...args) {
       super(...args);
 
@@ -565,6 +564,8 @@ export default class EPactorSheet extends ActorSheet {
       const maxMoxie = actorModel.pools.moxie.totalMoxie;
       const maxFlex = actorModel.pools.flex.totalFlex;
       let poolSpend = null
+
+      actorWhole.update({"actor.system.pools.update.insight" : null, "actor.system.pools.update.vigor" : null, "actor.system.pools.update.moxie" : null, "actor.system.pools.update.flex" : null});
 
       if (!brewStatus){
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);

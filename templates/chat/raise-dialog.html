@@ -12,7 +12,28 @@
         {{#if swapPossible}}
         <div class="form-group listBackgroundMain">
             <div style="display: grid;">
-                {{radioBoxes groupName choices checked=chosen localize=true}}
+                <label>
+                    {{#if (eq choices 1)}}
+                    <input type="radio" name="useSwap" value="none" checked>
+                        {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
+                    <input type="radio" name="useSwap" value="pool">
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})<p>
+                    <input type="radio" name="useSwap" value="flex">
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                    {{/if}}
+                    {{#if (eq choices 2)}}
+                    <input type="radio" name="useSwap" value="none" checked>
+                        {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
+                    <input type="radio" name="useSwap" value="flex">
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})<p>
+                    {{/if}}
+                    {{#if (eq choices 3)}}
+                    <input type="radio" name="useSwap" value="none" checked>
+                        {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}<p>
+                    <input type="radio" name="useSwap" value="pool">
+                        {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})<p>
+                    {{/if}}
+                </label>
             </div>
         </div>
         {{/if}}
@@ -20,12 +41,12 @@
             {{#if poolValue}}
                 <div class="form-group listBackgroundMain">
                     <input type="checkbox" name="useRaise">
-                    <label class="resource-label">1 {{poolType}} to raise <strong>Success Level</strong></label>
+                    <label class="resource-label">{{localize "ep2e.roll.announce.poolUsage.raiseLevel"}} 1 {{poolType}}</label>
                 </div>
             {{else}}
                 <div class="form-group listBackgroundMain">
                     <input type="checkbox" name="useRaise" disabled>
-                    <label class="resource-label epInactive">No {{poolType}} available</label>
+                    <label class="resource-label epInactive">{{poolType}} {{localize "ep2e.roll.announce.poolUsage.notAvailable"}}</label>
                 </div>
             {{/if}}
         {{/if}}
