@@ -2061,7 +2061,6 @@ export async function TaskCheck({
     async function GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue) {
         let groupName = "useSwap";
         let choices = 0;
-        let radioStatus = true
         if (poolValue && flexValue && swapPossible){
             choices = 1;
         }
@@ -2071,13 +2070,9 @@ export async function TaskCheck({
         else if (poolValue && !flexValue && swapPossible){
             choices = 3;
         }
-        else {
-            radioStatus = false
-        }
-        let chosen = "none";
         let dialogName = new DialogName ('ep2e.roll.dialog.title.damageRoll');
         const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " " + dialogName.title,
@@ -2109,7 +2104,6 @@ export async function TaskCheck({
     async function GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, meleeDamageMod) {
         let groupName = "useSwap";
         let choices = 0;
-        let radioStatus = true
         if (poolValue && flexValue && swapPossible){
             choices = 1;
         }
@@ -2119,12 +2113,9 @@ export async function TaskCheck({
         else if (poolValue && !flexValue && swapPossible){
             choices = 3;
         }
-        else {
-            radioStatus = false
-        }
         let dialogName = new DialogName ('ep2e.roll.dialog.title.damageRoll');
         const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, chosen, radioStatus, meleeDamageMod});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, meleeDamageMod});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " " + dialogName.title,

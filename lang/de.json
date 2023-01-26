@@ -645,6 +645,212 @@
           }
         }
       }
+    },
+    "roll": {
+      "dialog": {
+        "generalModHeadline": "Allgemein",
+        "attackerHeadline": "Angreifer",
+        "defenderHeadline": "Verteidiger",
+        "frayTypeHeadline": "Ausweichen",
+        "dodgeRangedLabel": "Fernkampf ausweichen",
+        "infectionHeadline": "Infektion",
+        "baseCostLabel": "Basiskosten",
+        "pushesLabel": "Pushes",
+        "usePool": "Nutze",
+        "globalModLabel": "Globale Mod",
+        "noSpecLabel": "Keine Spezialisierung",
+        "noPool": "Nicht genug Pool",
+        "useThreat": "Nutze Bedrohung (+20)",
+        "calledShotLabel": "Gezielter Angriff (-10)",
+        "title": {
+          "guns": "Fernkampfprobe",
+          "melee": "Nahkampfprobe",
+          "reputation": "Reputationsprobe",
+          "damageRoll": "Schadenswurf",
+          "swap": "Ergebnis Drehen",
+          "raise": "Ergebnis Verbessern",
+          "talentCheck": "Probe"
+        },
+        "reputationMode": {
+          "headline": "Reputationsmod",
+          "trivial": "Trivial",
+          "minor": "Klein",
+          "moderate": "Moderat",
+          "major": "Gross"
+        },
+        "ranged": {
+          "attacker": {
+            "smartLinkLabel": "Smart Link (-10 if none)",
+            "superiorPosition": "Erhabene Position (+20)",
+            "inCoverLabel": "In Deckung (-10)",
+            "isRunningLabel": "Rennt (-20)",
+            "inMeleeLabel": "Im Nahkampf (-10)",
+            "fireMode": {
+              "label": "Feuermodus",
+              "single": "Einzelschuss",
+              "burst": "Enge Salve (+1d10)",
+              "fullAuto": "Fokussiert und Vollautomatisch (+2d10)",
+              "wBurst": "Weite Salve (+10 Hit)",
+              "wFullAuto": "Vollautomatischer Streuschuss (+30 Hit)",
+              "indirect": "Indirekt (-20)",
+              "suppressive": "Niederhalten (verbraucht 20 Schuss)"
+            },
+            "aim": {
+              "label": "Zielen",
+              "none": "Standard",
+              "quick": "Schnell zielen (+10)",
+              "long": "Lang zielen (+30)"
+            },
+            "distance": {
+              "label": "Distanz",
+              "pointBlank": "Point Blank (+10)",
+              "none": "Standard",
+              "range": "Auf Distanz (-10)",
+              "beyond": "Ausser Reichweite (-20)",
+              "beyondPlus": "Weit Ausser Reichweite (-30)"
+            },
+            "visual": {
+              "label": "Visueller Malus",
+              "none": "Keiner",
+              "minor": "Klein (-10)",
+              "major": "Gross (-30)",
+              "blind": "Blind (-30+)"
+            }
+          },
+          "defender": {
+            "isProne": "Gestürzt (-10 auf Reichweite)",
+            "isHidden": "Versteckt (-30)",
+            "size": {
+              "label": "Grösse",
+              "xs": "Sehr Klein (-30)",
+              "s": "Klein (-10)",
+              "none": "Normal",
+              "l": "Gross (+10)",
+              "xl": "Sehr Gross (+30)"
+            },
+            "cover": {
+              "label": "Deckung",
+              "none": "Keine",
+              "minor": "Gering (-10)",
+              "moderate": "Moderat (-20)",
+              "major": "Voll (-30)"
+            }
+          }
+        },
+        "melee": {
+          "attacker": {
+            "numberOfTargetsLabel": "Anzahl der Ziele",
+            "numberOfTargetsMod": "(-20/Ziel)",
+            "type": {
+              "label": "Angriffstyp",
+              "none": "Standardangriff",
+              "charge": "Sturmangriff (-10 Nahkampf, +1d6 SW)",
+              "aggressive": "Aggressiver Angriff (+10 Nahkampf, -10 Ausweichen)",
+              "aggressiveCharge": "Rücksichtsloser Angriff (+1d10 SW, - 10 Ausweichen)"
+            }
+          }
+        }
+      },
+      "successType": {
+        "success": "Erfolg",
+        "greaterSuccess": "Grösserer Erfolg",
+        "superiorSuccess": "Überragender Erfolg",
+        "criticalSuccess": "Kritischer Erfolg",
+        "greaterCriticalSuccess": "Grösserer Kritischer Success",
+        "superiorCriticalSuccess": "Überragender Kritischer Success",
+        "supremeSuccess": "Perfekter Erfolg",
+        "failure": "Fehlschlag",
+        "greaterFailure": "Grösserer Fehlschlag",
+        "superiorFailure": "Überragender Fehlschlag",
+        "criticalFailure": "Kritischer Fehlschlag",
+        "greaterCriticalFailure": "Grösserer Kritischer Fehlschlag",
+        "superiorCriticalFailure": "Überragender Kritischer Fehlschlag",
+        "supremeFailure": "Absoluter Fehlschlag"
+      },
+      "rollType": {
+        "label": "Art des Wurfes",
+        "public": "Offener Wurf",
+        "private": "Privater SL Wurf",
+        "blind": "Blinder SL Wurf"
+      },
+      "announce": {
+        "global": "Situationsmod",
+        "favor": "Gefallenmod",
+        "specialization": "Spezialisierung",
+        "encumberance": "Überlastung",
+        "wounds": "Wunde(n)/Trauma",
+        "woundModifier": "Woundmodifikator",
+        "traumaModifier": "Traumamodifikator",
+        "rolled": "gewürfelt",
+        "appliedMods": "Angewandte Modifikatoren",
+        "baseValue": "Grundwert",
+        "rollTarget": "Modifizierter Wert",
+        "infectionRaise": "Ienfektion steig auf",
+        "poolUsage": {
+          "poolUsed": "Pool genutzt",
+          "usePoolSubheadline": "Pools nutzen",
+          "swappedTo": "Ergebnis gedreht zu",
+          "raisedTo": "Ergebnis verbessert",
+          "beyondSuperior": "Ein Ergebnis kann nicht über 'Überragend' verbessert werden.",
+          "notDeducted": "Kein Pool genutzt",
+          "notEnoughPool": "Pool zu gering",
+          "cantRaise": "Ergebnis kann nicht verbessert werden",
+          "newResult": "Neues Ergebnis",
+          "dontSwap": "Ergebnis nicht drehen",
+          "swapTo": "Drehen zu",
+          "raiseLevel": "Erfolg verbessern",
+          "notAvailable": "nicht verfügbar",
+          "missGoal": "Würfelziel verfehlt",
+          "mitigateSpending": "Nutze Poolpunkte um das Ergebnis auszugleichen",
+          "dontMitigate": "Nicht ausgleichen",
+          "mitigate": "Ausgleichen"
+        },
+        "combat": {
+          "calledShot": "Gezielter Angriff",
+          "calledShotAddition": "Wirf einen 'Grösseren Erfolg' oder besser",
+          "hit": "Du hast getroffen",
+          "damageDone": "Schaden verursacht",
+          "melee": {
+            "charge": "Sturmangriff",
+            "chargeAddition": "(+1d6SW)",
+            "agressive": "Agressiver Angriff",
+            "agressiveAddition": "(Ausweichen -10)",
+            "agressiveCharge": "Rücksichtsloser Angriff",
+            "agressiveChargeAddition": "(+1d10SW & Ausweichen -10)",
+            "multipleTargets": "Mehrere Ziele"
+          },
+          "ranged": {
+            "smartLink": "Keine Smartgun",
+            "running": "Angreifer rennt",
+            "superiorPosition": "Erhabene Position",
+            "inMelee": "Angreifer im Nahkampf",
+            "coverAttacker": "Angreifer in Deckung",
+            "aimLong": "Langes Zielen",
+            "aimQuick": "Schnelles Zielen",
+            "sizeXS": "Sehr kleines Ziel",
+            "sizeS": "Kleines Ziel",
+            "sizeL": "Grosses Ziel",
+            "sizeXL": "Sehr grosses Ziel",
+            "rangeProne": "Gestürzt auf Distanz",
+            "beyondProne": "Gestürzt ausser Reichweite",
+            "beyondPlusProne": "Gestürzt weit ausser Reichweite",
+            "range": "Auf Distanz",
+            "beyond": "Ausser Reichweite",
+            "beyondPlus": "Weit ausser Reichweite",
+            "pointBlank": "Point Blank",
+            "defMinCover": "Ziel in geringer Deckung",
+            "defModCover": "Ziel in moderater Deckung",
+            "defMajCover": "Ziel in Volldeckung",
+            "visImpMin": "Leichte Sichterschwernis",
+            "visImpMaj": "Schwere Sichterschwernis",
+            "blind": "Blind",
+            "wBurst": "Weite Salve",
+            "wFullAuto": "Vollautomatischer Streuschuss",
+            "Indirect": "Indirekt",
+            "reload": "Deine Waffe ist leer. <p/> <strong>Lade sie zunächst nach! </strong>"
+          }
+        }
+      }
     }
   }
 }

@@ -815,7 +815,7 @@
             "chargeAddition": "(+1d6DV)",
             "agressive": "Agressive Hit",
             "agressiveAddition": "(Fray -10)",
-            "agressiveCharge": "Agressive Charge",
+            "agressiveCharge": "Ruthless Attack",
             "agressiveChargeAddition": "(+1d10DV & Fray -10)",
             "multipleTargets": "Multiple Targets"
           },
