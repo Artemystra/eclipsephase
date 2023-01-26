@@ -790,7 +790,7 @@
         "wounds": "Wunde(n)/Trauma",
         "woundModifier": "Woundmodifikator",
         "traumaModifier": "Traumamodifikator",
-        "rolled": "gewürfelt",
+        "rolled": "würfelt",
         "appliedMods": "Angewandte Modifikatoren",
         "baseValue": "Grundwert",
         "rollTarget": "Modifizierter Wert",
