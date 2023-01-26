@@ -1,13 +1,13 @@
 <form>
 
     <div class="contentBoxMargin listBackgroundMain alignCenter">
-        <label class="resource-labelDialog">You met your goal with a</label><p/>
-        <span class="success">{{successName}}</span><p/>
-        <label class="resource-labelDialog">You can even increase it <br/>by using your pools...</label>
+        <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.metGoal"}}</label><p/>
+        <span class="success">{{localize successMessage}}</span><p/>
+        <label class="resource-labelDialog">{{{localize "ep2e.roll.announce.poolUsage.raiseSuccess"}}}</label>
     </div>
     <div class="contentBox">
         <div class="flexrow subheader">
-            <h3 class="subheader dialog">Use Pools</h3>
+            <h3 class="subheader dialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</h3>
         </div>
         {{#if swapPossible}}
         <div class="form-group listBackgroundMain">

@@ -31,7 +31,7 @@ const TASK_RESULT_TEXT = {
   7: { class: 'fail', text: 'ep2e.roll.successType.failure' }
 }
 
-export class DialogName{
+export class Localizer{
     constructor (title){
         this._title = title
     }
@@ -997,7 +997,7 @@ export async function TaskCheck({
             }
 
             if (severeConsequences && severityLevel > 0 && combinedPools > 0){
-                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successMessage, swapPossible, severityFlavor);
 
                 if (checkOptions.cancelled) {
                     return;
@@ -1043,7 +1043,7 @@ export async function TaskCheck({
             
             if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible || successType &&  flexValue > 0 && potentialRaise || successType &&  flexValue > 0 && swapPossible){
                 
-                let checkOptions = await GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType);
+                let checkOptions = await GetRaiseOptions(successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType);
 
                 if (checkOptions.cancelled) {
                     return;
@@ -1922,7 +1922,9 @@ export async function TaskCheck({
 
     //Skill check dialog constructor
     async function GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType) {
-        let dialogName = new DialogName ('ep2e.roll.dialog.title.talentCheck');
+        let dialogName = new Localizer ('ep2e.roll.dialog.title.talentCheck');
+        let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
+        let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
         const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, taskType});
 
@@ -1932,11 +1934,11 @@ export async function TaskCheck({
                 content: html,
                 buttons: {
                     cancel: {
-                        label: "Cancel",
+                        label: cancelButton.title,
                         callback: html => resolve ({cancelled: true})
                     },
                     normal: {
-                        label: "Roll!",
+                        label: rollButton.title,
                         callback: html => resolve(_proTaskCheckOptions(html[0].querySelector("form")))
                     }
                 },
@@ -1964,7 +1966,9 @@ export async function TaskCheck({
 
     //Skill check dialog constructor
     async function GetMeleeTaskOptions(specName, poolType, poolValue, actorType) {
-        let dialogName = new DialogName ('ep2e.roll.dialog.title.melee');
+        let dialogName = new Localizer ('ep2e.roll.dialog.title.melee');
+        let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
+        let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/melee-test-dialog.html";
         const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
@@ -1974,11 +1978,11 @@ export async function TaskCheck({
                 content: html,
                 buttons: {
                     cancel: {
-                        label: "Cancel",
+                        label: cancelButton.title,
                         callback: html => resolve ({cancelled: true})
                     },
                     normal: {
-                        label: "Roll!",
+                        label: rollButton.title,
                         callback: html => resolve(_proMeleeCheckOptions(html[0].querySelector("form")))
                     }
                 },
@@ -2007,7 +2011,9 @@ export async function TaskCheck({
 
     //Guns check dialog constructor
     async function GetGunsTaskOptions(specName, poolType, poolValue, actorType) {
-        let dialogName = new DialogName ('ep2e.roll.dialog.title.guns');
+        let dialogName = new Localizer ('ep2e.roll.dialog.title.guns');
+        let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
+        let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/gun-test-dialog.html";
         const html = await renderTemplate(template, {specName, poolType, poolValue, actorType});
 
@@ -2017,11 +2023,11 @@ export async function TaskCheck({
                 content: html,
                 buttons: {
                     cancel: {
-                        label: "Cancel",
+                        label: cancelButton.title,
                         callback: html => resolve ({cancelled: true})
                     },
                     normal: {
-                        label: "Roll!",
+                        label: rollButton.title,
                         callback: html => resolve(_proGunsTaskCheckOptions(html[0].querySelector("form")))
                     }
                 },
@@ -2070,7 +2076,9 @@ export async function TaskCheck({
         else if (poolValue && !flexValue && swapPossible){
             choices = 3;
         }
-        let dialogName = new DialogName ('ep2e.roll.dialog.title.damageRoll');
+        let dialogName = new Localizer ('ep2e.roll.dialog.title.damageRoll');
+        let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
+        let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/damage-gun-dialog.html";
         const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices});
         return new Promise(resolve => {
@@ -2079,11 +2087,11 @@ export async function TaskCheck({
                 content: html,
                 buttons: {
                     cancel: {
-                        label: "Cancel",
+                        label: cancelButton.title,
                         callback: html => resolve ({cancelled: true})
                     },
                     normal: {
-                        label: "Roll!",
+                        label: rollButton.title,
                         callback: html => resolve(_proRangedRollOptions(html[0].querySelector("form")))
                     }
                 },
@@ -2113,7 +2121,9 @@ export async function TaskCheck({
         else if (poolValue && !flexValue && swapPossible){
             choices = 3;
         }
-        let dialogName = new DialogName ('ep2e.roll.dialog.title.damageRoll');
+        let dialogName = new Localizer ('ep2e.roll.dialog.title.damageRoll');
+        let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
+        let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/damage-melee-dialog.html";
         const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, groupName, choices, meleeDamageMod});
         return new Promise(resolve => {
@@ -2122,11 +2132,11 @@ export async function TaskCheck({
                 content: html,
                 buttons: {
                     cancel: {
-                        label: "Cancel",
+                        label: cancelButton.title,
                         callback: html => resolve ({cancelled: true})
                     },
                     normal: {
-                        label: "Roll!",
+                        label: rollButton.title,
                         callback: html => resolve(_proMeleeRollOptions(html[0].querySelector("form")))
                     }
                 },
@@ -2146,7 +2156,7 @@ export async function TaskCheck({
 
     }
     
-    async function GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor) {
+    async function GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successMessage, swapPossible, severityFlavor) {
         
         let choices = 0;
 
@@ -2168,9 +2178,10 @@ export async function TaskCheck({
         else if (poolValue && !flexValue){
             choices = 3;
         }
-        let dialogName = new DialogName ('ep2e.roll.dialog.title.swap');
+        let dialogName = new Localizer ('ep2e.roll.dialog.title.swap');
+        let useSelection = new Localizer ('ep2e.roll.dialog.button.useSelection');
         const template = "systems/eclipsephase/templates/chat/swap-dialog.html";
-        const html = await renderTemplate(template, {swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor, choices});
+        const html = await renderTemplate(template, {swipSwap, poolValue, actorType, poolType, flexValue, successMessage, swapPossible, severityFlavor, choices});
         return new Promise(resolve => {
             const data = {
                 title: dialogName.title,
@@ -2178,7 +2189,7 @@ export async function TaskCheck({
                 dv: weaponDamage,
                 buttons: {
                     normal: {
-                        label: "Use this Selection",
+                        label: useSelection.title,
                         callback: html => resolve(_proSwipSwapOptions(html[0].querySelector("form")))
                     }
                 },
@@ -2196,7 +2207,7 @@ export async function TaskCheck({
         }
     }
 
-    async function GetRaiseOptions(successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType) {
+    async function GetRaiseOptions(successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType) {
 
         let choices = 0;
 
@@ -2207,18 +2218,19 @@ export async function TaskCheck({
             choices = 2;
         }
         else if (poolValue && !flexValue && swapPossible){
-            choices = {none: "Don't Swap Dice", pool: "1 <strong>" + poolType + "</strong> to swap to <strong>" + swipSwap + "</strong>"};
+            choices = 3;
         }
-        let dialogName = new DialogName ('ep2e.roll.dialog.title.raise');
+        let dialogName = new Localizer ('ep2e.roll.dialog.title.raise');
+        let useSelection = new Localizer ('ep2e.roll.dialog.button.useSelection');
         const template = "systems/eclipsephase/templates/chat/raise-dialog.html";
-        const html = await renderTemplate(template, {successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, choices});
+        const html = await renderTemplate(template, {successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, choices});
         return new Promise(resolve => {
             const data = {
                 title: dialogName.title,
                 content: html,
                 buttons: {
                     normal: {
-                        label: "Use this Selection",
+                        label: useSelection.title,
                         callback: html => resolve(_proRaiseOptions(html[0].querySelector("form")))
                     }
                 },

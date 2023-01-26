@@ -177,7 +177,7 @@
         "additionalSpec": "No Spec"
       },
       "restingMenu": {
-        "headline": "Pools Widerherstellen",
+        "headline": "Pools wiederherstellen",
         "shortRest": "Kurze Rast:",
         "longRest": "Lange Rast:",
         "labelInsight": "Insight",
@@ -199,8 +199,8 @@
           "copy3": "Eine Person mit Biomods braucht 4 Stunden für eine lange Rast in der sie nichts tun kann ausser sich hinzulegen, zu sprechen während sie herunter kommt. Flats brauchen 8 Stunden um den gleichen Effekt zu erreichen.<p/><label class='resource-value'>Eine lange Rast stellt alle Poolpunkte wieder her.</label>"
         },
         "button": {
-          "resetRest": "Reset Rest",
-          "distribute": "Distribute" 
+          "resetRest": "Rast Zurücksetzen",
+          "distribute": "Verteilen" 
         }
       },
       "insightSkills": {
@@ -671,6 +671,11 @@
           "raise": "Ergebnis Verbessern",
           "talentCheck": "Probe"
         },
+        "button": {
+          "roll": "Würfeln",
+          "cancel": "Abbrechen",
+          "useSelection": "Auswahl bestätigen"
+        },
         "reputationMode": {
           "headline": "Reputationsmod",
           "trivial": "Trivial",
@@ -756,8 +761,8 @@
         "greaterSuccess": "Grösserer Erfolg",
         "superiorSuccess": "Überragender Erfolg",
         "criticalSuccess": "Kritischer Erfolg",
-        "greaterCriticalSuccess": "Grösserer Kritischer Success",
-        "superiorCriticalSuccess": "Überragender Kritischer Success",
+        "greaterCriticalSuccess": "Grösserer Kritischer Erfolg",
+        "superiorCriticalSuccess": "Überragender Kritischer Erfolg",
         "supremeSuccess": "Perfekter Erfolg",
         "failure": "Fehlschlag",
         "greaterFailure": "Grösserer Fehlschlag",
@@ -785,7 +790,11 @@
         "appliedMods": "Angewandte Modifikatoren",
         "baseValue": "Grundwert",
         "rollTarget": "Modifizierter Wert",
-        "infectionRaise": "Ienfektion steig auf",
+        "infectionRaise": "Ienfektion steigt auf",
+        "rest": {
+          "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
+          "long": "Ich habe meine<p/><strong>lange Rast<p/></strong>um zu regenerieren<p/>"
+        },
         "poolUsage": {
           "poolUsed": "Pool genutzt",
           "usePoolSubheadline": "Pools nutzen",
@@ -799,6 +808,8 @@
           "dontSwap": "Ergebnis nicht drehen",
           "swapTo": "Drehen zu",
           "raiseLevel": "Erfolg verbessern",
+          "metGoal": "Würfelziel erreicht",
+          "raiseSuccess": "Du kannst dein Ergebnis verbessern indem du Pools verwendest",
           "notAvailable": "nicht verfügbar",
           "missGoal": "Würfelziel verfehlt",
           "mitigateSpending": "Nutze Poolpunkte um das Ergebnis auszugleichen",
@@ -847,7 +858,9 @@
             "wBurst": "Weite Salve",
             "wFullAuto": "Vollautomatischer Streuschuss",
             "Indirect": "Indirekt",
-            "reload": "Deine Waffe ist leer. <p/> <strong>Lade sie zunächst nach! </strong>"
+            "reload": "Deine Waffe ist leer. <p/> <strong>Lade sie zunächst nach! </strong>",
+            "reloadedWeapon": "Waffe nachgeladen",
+            "weaponFull": "Deine Waffe ist noch voll."
           }
         }
       }

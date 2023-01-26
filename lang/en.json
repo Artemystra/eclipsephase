@@ -671,6 +671,11 @@
           "raise": "Raise Result",
           "talentCheck": "Check"
         },
+        "button": {
+          "roll": "Roll",
+          "cancel": "Cancel",
+          "useSelection": "Use this Selection"
+        },
         "reputationMode": {
           "headline": "Mode",
           "trivial": "Trivial",
@@ -786,6 +791,10 @@
         "baseValue": "Base Value",
         "rollTarget": "Roll Target",
         "infectionRaise": "Infection raised to",
+        "rest": {
+          "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
+          "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+        },
         "poolUsage": {
           "poolUsed": "Pool Used",
           "usePoolSubheadline": "Use Pools",
@@ -799,6 +808,8 @@
           "dontSwap": "Don't Swap Dice",
           "swapTo": "Swap to",
           "raiseLevel": "Raise Success Level",
+          "metGoal": "You met your goal",
+          "raiseSuccess": "You can even increase it <br/>by using your pools...",
           "notAvailable": "not available",
           "missGoal": "You missed your goal",
           "mitigateSpending": "Spend pool to mitigate the outcome",
@@ -847,7 +858,9 @@
             "wBurst": "Wide Burst",
             "wFullAuto": "Wide Full Auto",
             "Indirect": "Indirect",
-            "reload": "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>"
+            "reloadNeeded": "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
+            "reloadedWeapon": "I reloaded my weapon",
+            "weaponFull": "Your weapon is still fully loaded."
           }
         }
       }

@@ -565,7 +565,7 @@ export default class EPactorSheet extends ActorSheet {
       const maxFlex = actorModel.pools.flex.totalFlex;
       let poolSpend = null
 
-      actorWhole.update({"actor.system.pools.update.insight" : null, "actor.system.pools.update.vigor" : null, "actor.system.pools.update.moxie" : null, "actor.system.pools.update.flex" : null});
+      await actorWhole.update({"actor.system.pools.update.insight" : null, "actor.system.pools.update.vigor" : null, "actor.system.pools.update.moxie" : null, "actor.system.pools.update.flex" : null});
 
       if (!brewStatus){
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
@@ -578,8 +578,8 @@ export default class EPactorSheet extends ActorSheet {
       let recover = null;
       let restValue = null;
       if (dataset.resttype === "short"){
-    
-        let label = "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>";
+        
+        let label = game.i18n.localize("ep2e.roll.announce.rest.short");
         recover = await roll.toMessage({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
             flavor: label
@@ -591,16 +591,18 @@ export default class EPactorSheet extends ActorSheet {
       }
 
       if (dataset.resttype === "long" && !brewStatus){
+        let label = game.i18n.localize("ep2e.roll.announce.rest.long");
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker({actor: this.actor}),
-          flavor: "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+          flavor: label
       })
         return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
       }
       else if (dataset.resttype === "long" && brewStatus){
+          let label = game.i18n.localize("ep2e.roll.announce.rest.long");
           ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: "I used my<p/><strong>Long Rest<p/></strong>to recover all pools but Flex<p/>"
+            flavor: label
         })
         return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null});
       }
@@ -906,16 +908,18 @@ export default class EPactorSheet extends ActorSheet {
       });
 
       this.actor.updateEmbeddedDocuments("Item", ammoUpdate);
+      let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
 
       ChatMessage.create({
         speaker: ChatMessage.getSpeaker({actor: this.actor}),
-        flavor: "I reloaded my<p/><strong>" + weaponName + "<p/></strong>with a total of " + difference + " bullets. <p/>"
+        flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
     })
     }
     else {
+    let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.weaponFull");
     ChatMessage.create({
       speaker: ChatMessage.getSpeaker({actor: this.actor}),
-      content: "<center>Your " + weaponName + " is still fully loaded.<p/><strong>No reload needed</strong></center>",
+      content: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>",
       whisper: [game.user._id]
     })
     }

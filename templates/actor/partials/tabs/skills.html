@@ -361,7 +361,7 @@
                                     </div>
                                 </i>
                             </div>
-                            <div class="flexrow" style="align-items: baseline; background-color: var(--pitchBorder); padding: 18px 0 20px 10px;">
+                            <div class="flexrow" style="align-items: baseline; background-color: var(--pitchBorder); padding: 18px 0 20px 10px; margin: 5px 0 5px 0;">
                                 <label class="resource-value" style ="font-size: 16px; max-width: 106px;">{{localize "ep2e.skills.restingMenu.shortRest"}}</label>
                                 {{#if actor.system.rest.short1}}
                                 <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1" disabled {{checked actor.system.rest.short1}}>
@@ -381,10 +381,10 @@
                                 {{/if}}
                             </div>
                             {{#if isGM}}
-                                <div class="grid grid-3col" style="margin-bottom: 0px;">
-                                    <div></div>
-                                    <button class="restReset">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
-                                    <div></div>
+                                <div class="flex-group-center" style="margin-bottom: 0px;">
+                                    <div style="display: inline-block;">
+                                        <button class="restReset">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
+                                    </div>
                                 </div>
                             {{/if}}
                         {{/if}}
@@ -447,14 +447,14 @@
                                 </div>
                             </div>
                             {{/if}}
-                            <div class="grid grid-3col" style="margin-bottom: 0px;">
-                                <div></div>
-                                {{#if (eq actor.system.pools.update.possible 0)}}
-                                <button class="distribute">{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
-                                {{else}}
-                                <button class="distribute" disabled>{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
-                                {{/if}}
-                                <div></div>
+                            <div class="flex-group-center" style="margin-bottom: 0px;">
+                                <div style="display: inline-block;">
+                                    {{#if (eq actor.system.pools.update.possible 0)}}
+                                    <button class="distribute">{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
+                                    {{else}}
+                                    <button class="distribute" disabled>{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
+                                    {{/if}}
+                                </div>
                             </div>
                         {{/if}}
                     </div>
