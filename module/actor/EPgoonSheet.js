@@ -396,7 +396,8 @@ export default class EPgoonSheet extends ActorSheet {
             actorData : actorModel,
             actorWhole : actorWhole,
             //Skill data
-            skillName : dataset.name.toLowerCase(),
+            skillKey : dataset.key.toLowerCase(),
+            skillName : dataset.name,
             specName : specNameValue,
             rollType : dataset.type,
             skillValue : skillRollValue,

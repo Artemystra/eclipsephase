@@ -48,10 +48,10 @@
                                 <input class=" input-xs" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <span class=" resource-value input-xs">{{numberFormat skill.derived decimals=0}}</span>
-                                    <!-- <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Insight" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
+                                    <!-- <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Insight" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
                                 </div>
                                 <input type="text" class="input-largeSpec" name="system.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="{{localize 'ep2e.skills.placeholders.specialization'}}"/>
-                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Insight" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
+                                <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Insight" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
                             </div>
                             {{/each}}
                         {{else}}
@@ -61,7 +61,7 @@
                                 <input class=" input-xs" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                    <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}"  data-specname="{{specname}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}"  data-specname="{{specname}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
                                 </div>
                                 <input type="text" class="input-largeSpec" name="system.skillsIns.{{key}}.specname" value="{{specname}}" placeholder="{{localize 'ep2e.skills.placeholders.specialization'}}"/>
                             </div>
@@ -118,10 +118,10 @@
                                 <input class=" input-xs" type="number" name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <span class="resource-value input-xs">{{numberFormat skill.derived decimals=0}}</span>
-                                    <!-- <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Vigor" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
+                                    <!-- <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Vigor" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
                                 </div>
                                 <input type="text" class="input-largeSpec" name="system.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="{{localize 'ep2e.skills.placeholders.specialization'}}"/>
-                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Vigor" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
+                                <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Vigor" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
                             </div>
                             {{/each}}
                         {{else}}
@@ -131,7 +131,7 @@
                                 <input class=" input-xs" type="number" name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                    <img data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
                                 </div>
                                 <input type="text" class="input-largeSpec item-standard-margin-both-large" name="system.skillsVig.{{key}}.specname" value="{{specname}}" placeholder="{{localize 'ep2e.skills.placeholders.specialization'}}"/>
                             </div>
@@ -196,10 +196,10 @@
                                 <input class=" input-xs" type="number" name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <span class="resource-value input-xs">{{numberFormat skill.derived decimals=0}}</span>
-                                    <!-- <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Moxie" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
+                                    <!-- <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Moxie" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
                                 </div>
                                 <input type="text" class="input-largeSpec" name="system.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="{{localize 'ep2e.skills.placeholders.specialization'}}"/>
-                                <img data-type="skill" data-name="{{key}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Moxie" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
+                                <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Moxie" src="icons/svg/d10-grey.svg" class="info icon-dice roll-label task-check icon-hidden"/>
                             </div>
                             {{/each}}
                         {{else}}
@@ -209,7 +209,7 @@
                                 <input class=" input-xs" type="number" name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                    <img data-type="skill" data-name="{{key}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
+                                    <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
                                 </div>
                                 <input type="text" class="input-largeSpec" name="system.skillsMox.{{key}}.specname" value="{{specname}}" placeholder="{{localize 'ep2e.skills.placeholders.specialization'}}"/>
                             </div>
@@ -235,16 +235,10 @@
                                     <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
                                     <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="system.value" value="{{item.system.value}}" placeholder="0"/>
                                     <span class="toggle resource-value input-xs">{{numberFormat item.roll decimals=0}}</span>
-                                    <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-dice task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
+                                    <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-dice task-check noShow" data-type="skill" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                     {{#if item.system.specname}}
-                                    <label class="resource-label item-control
-                                      item-edit hoverable truncate
-                                      item-standard-margin-both-large">{{item.system.specname}}</label>
-                                    <img src="icons/svg/d10-grey.svg"
-                                         class="info roll-label task-check icon-dice icon-hidden"
-                                         data-type="skill"
-                                         data-name="{{item.name}}"
-                                         data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.system.specname}}</label>
+                                    <img src="icons/svg/d10-grey.svg"class="info roll-label task-check icon-dice icon-hidden" data-type="skill" data-key="{{item.name}}" data-key="{{item.name}}" data-name="{{item.name}}" data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
                                     {{else}}
                                     <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
                                     <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
@@ -260,7 +254,7 @@
                                     <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
                                     <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                     <span class="toggle resource-value input-xs">{{numberFormat item.roll decimals=0}}</span>
-                                    <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-dice task-check noShow" data-type="skill" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
+                                    <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-dice task-check noShow" data-type="skill" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                     {{#if item.system.specname}}
                                     <label class="resource-label item-control
                                                   item-edit hoverable truncate
@@ -268,7 +262,7 @@
                                     <img src="icons/svg/d10-grey.svg"
                                          class="info roll-label task-check icon-dice icon-hidden"
                                          data-type="skill"
-                                         data-name="{{item.name}}"
+                                         data-key="{{item.name}}" data-name="{{item.name}}"
                                          data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
                                     {{else}}
                                     <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
@@ -481,7 +475,7 @@
                                 {{else}}
                                     <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
                                 {{/if}}
-                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-pooltype="Insight" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
+                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-pooltype="Insight" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                 {{else}}
                                     <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
                                     <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">{{localize "ep2e.skills.chooseAptitude"}}</u></label>
@@ -518,7 +512,7 @@
                                 {{else}}
                                     <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
                                 {{/if}}
-                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-apttype="{{item.system.aptitude}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
+                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-apttype="{{item.system.aptitude}}" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
                                 {{else}}
                                     <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
                                     <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">{{localize "ep2e.skills.chooseAptitude"}}</u></label>

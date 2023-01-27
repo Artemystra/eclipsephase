@@ -855,7 +855,8 @@ export default class EPactorSheet extends ActorSheet {
         actorWhole : actorWhole,
         actorData : actorModel,
         //Skill data
-        skillName : dataset.name.toLowerCase(),
+        skillKey : dataset.key.toLowerCase(),
+        skillName : dataset.name,
         specName : specNameValue,
         rollType : dataset.type,
         skillValue : skillRollValue,

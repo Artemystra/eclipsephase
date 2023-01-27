@@ -385,6 +385,7 @@ export async function TaskCheck({
     actorData = "",
     actorWhole = "",
     actorType = actorWhole.type,
+    skillKey = "",
     skillName = "",
     specName = "",
     useSpecialization = null,
@@ -452,7 +453,7 @@ export async function TaskCheck({
 
     //Guns check dialog
 
-    if (askForOptions != optionsSettings && skillName === "guns") {
+    if (askForOptions != optionsSettings && skillKey === "guns") {
         let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
@@ -480,7 +481,7 @@ export async function TaskCheck({
     }
 
     //Melee skill check dialog
-    else if (askForOptions != optionsSettings && skillName === "melee") {
+    else if (askForOptions != optionsSettings && skillKey === "melee") {
         let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
@@ -498,7 +499,7 @@ export async function TaskCheck({
 
     //Default skill check dialog
     else if (askForOptions != optionsSettings) {
-        let taskType = skillName
+        let taskType = skillKey
         let checkOptions = await GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType);
 
         if (checkOptions.cancelled) {
@@ -517,7 +518,7 @@ export async function TaskCheck({
 
     //Melee Combat
 
-    if (skillName === "melee"){
+    if (skillKey === "melee"){
         if (attackMode === "charge"){
             meleeMod -= 10;
             modValue = -10;
@@ -557,7 +558,7 @@ export async function TaskCheck({
 
     //Ranged Combat
 
-    if (skillName === "guns"){
+    if (skillKey === "guns"){
         //Guns roll modifications
         if (!smartlink) {
             gunsMod -= 10;
@@ -895,14 +896,14 @@ export async function TaskCheck({
         }
 
         //Infection (only relevant for psi checks)
-        if (skillName === "psi"){
+        if (skillKey === "psi"){
             if (success && doubleSuperior) {
                 aspectPushes -= 4
             } else if (success && superior) {
                 aspectPushes -= 2
             }
             infectionMod = aspectPushes > 0 ? aspectBase * aspectPushes : aspectBase;
-            if (skillName === "psi" && brewStatus === true && aspectBase) {
+            if (skillKey === "psi" && brewStatus === true && aspectBase) {
                 infectionMod += Number(actorData.psiStrain.infection)
                 if (infectionMod <= 100){
                     actorWhole.update({"system.psiStrain.infection" : infectionMod});
