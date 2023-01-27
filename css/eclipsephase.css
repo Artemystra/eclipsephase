@@ -1033,7 +1033,12 @@ table tr:nth-child(even){
   background: var(--focusBackground);
 }
 
-.table-dice-label {
+.listBackgroundMain table tr{
+  background: var(--mainBackground);
+}
+
+.table-dice-label,
+.table-radio-label {
   padding-left: 10px!important;
   text-align: left;
   font-size: 14px;
@@ -1044,6 +1049,13 @@ table tr:nth-child(even){
   max-width: 55px;
   padding-right: 10px!important;
   text-align: right;
+  font-size: 14px;
+}
+
+.table-radio-button {
+  min-width: 25px;
+  max-width: 25px;
+  text-align: center;
   font-size: 14px;
 }
 
