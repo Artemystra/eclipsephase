@@ -937,8 +937,6 @@ export async function TaskCheck({
             }
         }
 
-        console.log("My message: ", message)
-
         let html = await renderTemplate(TASK_RESULT_OUTPUT, message)
 
 
@@ -1340,7 +1338,7 @@ export async function TaskCheck({
 
                 //SwipSwap Failed Rolls
                 if (!successType && swapPossible && combinedPools > 0){
-                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successMessage, swapPossible, severityFlavor);
     
                     if (checkOptions.cancelled) {
                         return;
@@ -1364,7 +1362,7 @@ export async function TaskCheck({
 
                 //Mitigate Failed Rolls
                 if (severeConsequences && severityLevel > 0 && combinedPools > 0){
-                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                    let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successMessage, swapPossible, severityFlavor);
     
                     if (checkOptions.cancelled) {
                         return;
@@ -1418,7 +1416,7 @@ export async function TaskCheck({
                     }
 
                     if (weaponType === "ranged" && swapPossible || weaponType === "ranged" && potentialRaise){
-                        let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue);
+                        let checkOptions = await GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue);
     
                         if (checkOptions.cancelled) {
                             return;
@@ -1428,7 +1426,7 @@ export async function TaskCheck({
                     }
 
                     if (weaponType === "melee" && swapPossible || weaponType === "melee" && potentialRaise){
-                        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, meleeDamageMod);
+                        let checkOptions = await GetDamageMeleeOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, meleeDamageMod);
     
                         if (checkOptions.cancelled) {
                             return;
