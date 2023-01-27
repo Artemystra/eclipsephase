@@ -228,48 +228,44 @@
                     </div>
                     <div class="listBackground edgeAbler">
                         {{#if (ne actor.type "goon")}}
+                            
+                        <div class="listBackground edgeAbler">
                             {{#each actor.specialSkill as |item id|}}
-                            <div>
-                                <div class="item flexrow flex-group-center reveal skill" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                    <span class="tooltipText">{{item.name}}</span>
                                     <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                    <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
-                                    <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="system.value" value="{{item.system.value}}" placeholder="0"/>
-                                    <span class="toggle resource-value input-xs">{{numberFormat item.roll decimals=0}}</span>
-                                    <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-dice task-check noShow" data-type="skill" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
+                                    <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
+                                    <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                    {{#if item.system.aptitude}}
+                                        <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
                                     {{#if item.system.specname}}
-                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large">{{item.system.specname}}</label>
-                                    <img src="icons/svg/d10-grey.svg"class="info roll-label task-check icon-dice icon-hidden" data-type="skill" data-key="{{item.name}}" data-key="{{item.name}}" data-name="{{item.name}}" data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
+                                        <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large">{{item.system.specname}}</label>
                                     {{else}}
-                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
-                                    <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                                        <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
+                                    {{/if}}
+                                        <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-apttype="{{item.system.aptitude}}" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
+                                    {{else}}
+                                        <label class="resource-value input-small item-control item-edit hoverable">{{item.roll}}</label>
+                                        <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">{{localize "ep2e.skills.chooseAptitude"}}</u></label>
+                                        <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                     {{/if}}
                                 </div>
-                            </div>
                             {{/each}}
                         {{else}}
+                        <div class="listBackground edgeAbler">
                             {{#each actor.specialSkill as |item id|}}
-                            <div>
-                                <div class="item flexrow flex-group-center reveal skill" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" style="padding-left: 0;">
+                                    <span class="tooltipText">{{item.name}}</span>
                                     <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
-                                    <label class="resource-label item-control item-edit hoverable truncate">{{item.name}}</label>
+                                    <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
                                     <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
-                                    <span class="toggle resource-value input-xs">{{numberFormat item.roll decimals=0}}</span>
-                                    <img src="icons/svg/d10-grey.svg" class="toggle input-small roll-label icon-dice task-check noShow" data-type="skill" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
-                                    {{#if item.system.specname}}
-                                    <label class="resource-label item-control
-                                                  item-edit hoverable truncate
-                                                  item-standard-margin-both-large">{{item.system.specname}}</label>
-                                    <img src="icons/svg/d10-grey.svg"
-                                         class="info roll-label task-check icon-dice icon-hidden"
-                                         data-type="skill"
-                                         data-key="{{item.name}}" data-name="{{item.name}}"
-                                         data-specname="{{item.system.specname}}" data-rollvalue="{{item.specroll}}"/>
-                                    {{else}}
-                                    <label class="resource-label item-control item-edit hoverable truncate item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
-                                    <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                    {{/if}}
+                                {{#if item.system.specname}}
+                                    <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large">{{item.system.specname}}</label>
+                                {{else}}
+                                    <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
+                                {{/if}}
+                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-apttype="{{item.system.aptitude}}" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.system.value}}"/>
                                 </div>
-                            </div>
                             {{/each}}
                         {{/if}}
                     </div>
