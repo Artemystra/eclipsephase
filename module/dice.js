@@ -760,13 +760,17 @@ export async function TaskCheck({
     let specMod = 0;
     let poolMod = 0;
         //Prevents wounds from being added to aptitudes
-        if (rollType === "aptitude"){
+        /*if (rollType === "aptitude"){
             rollMod = Number(globalMod);
         }
         else {
             woundsTotal = woundsMod;
             rollMod = Number(globalMod) - Number(woundsTotal);
-        }
+        }*/
+
+        woundsTotal = woundsMod;
+        rollMod = Number(globalMod) - Number(woundsTotal);
+
         //Checks if spec used
         if (useSpecialization){
             specMod = 10;

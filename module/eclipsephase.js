@@ -185,11 +185,12 @@ Hooks.once("ready", async function() {
 
 const testVar = game.settings.get("eclipsephase", "migrationVersion");
 let startMigration = false
+let endMigration = false
 
 let isNewVersion = foundry.utils.isNewerVersion(game.system.version, testVar)
 
 if (isNewVersion){
-  let migration = await GetGunsTaskOptions();
+  let migration = await migrationStart(endMigration);
   
   if (migration.cancelled) {
   }
@@ -887,14 +888,22 @@ if (startMigration){
 
       actor.update({"system.ego.gender" : updateGender,"system.ego.origin" : updateOrigin,"system.ego.sex" : updateSex});
     }
+    
+    //Update aptitude Names 
+      
+      actor.update({"system.aptitudes.cog.name" : "ep2e.actorSheet.aptitudes.cog", "system.aptitudes.int.name" : "ep2e.actorSheet.aptitudes.int","system.aptitudes.ref.name" : "ep2e.actorSheet.aptitudes.ref","system.aptitudes.sav.name" : "ep2e.actorSheet.aptitudes.sav","system.aptitudes.som.name" : "ep2e.actorSheet.aptitudes.som","system.aptitudes.wil.name" : "ep2e.actorSheet.aptitudes.wil", "system.aptitudes.cog.label" : "ep2e.actorSheet.aptitudes.cognition", "system.aptitudes.int.label" : "ep2e.actorSheet.aptitudes.intuition", "system.aptitudes.ref.label" : "ep2e.actorSheet.aptitudes.reflexes", "system.aptitudes.sav.label" : "ep2e.actorSheet.aptitudes.savvy", "system.aptitudes.som.label" : "ep2e.actorSheet.aptitudes.somatics", "system.aptitudes.wil.label" : "ep2e.actorSheet.aptitudes.willpower"});
+    
   }
 
   game.settings.set("eclipsephase", "migrationVersion", game.system.version);
+
+  endMigration = true
+  await migrationEnd(endMigration)
 }
 
-  async function GetGunsTaskOptions() {
+  async function migrationStart(endMigration) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await renderTemplate(template, {});
+    const html = await renderTemplate(template, {endMigration});
 
     return new Promise(resolve => {
         const data = {
@@ -916,6 +925,28 @@ if (startMigration){
         let options = {width:600}
         new Dialog(data, options).render(true);
     });
+}
+
+async function migrationEnd(endMigration) {
+  const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
+  const html = await renderTemplate(template, {endMigration});
+
+  return new Promise(resolve => {
+      const data = {
+          title: "Migration Needed",
+          content: html,
+          buttons: {
+              normal: {
+                  label: "Thank you!",
+                  callback: html => resolve ({start: true})
+              }
+          },
+          default: "normal",
+          close: () => resolve ({cancelled: true})
+      };
+      let options = {width:250}
+      new Dialog(data, options).render(true);
+  });
 }
 
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to

@@ -23,7 +23,7 @@
             {{#each actor.system.aptitudes as |aptitude key|}}
             <div class="flexrow flex-group-center reveal standard-height">
                 <div class="flexrow flex-group-center input-small">
-                    <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.name}}</span>
+                    <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
                     <label class="toggle roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
@@ -56,7 +56,7 @@
             {{#each actor.system.aptitudes as |aptitude key|}}
             <div class="flexrow flex-group-center reveal standard-height">
                 <div class="flexrow flex-group-center input-small">
-                    <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.name}}</span>
+                    <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
                     <label class="toggle roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>

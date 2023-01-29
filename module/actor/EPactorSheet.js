@@ -811,25 +811,23 @@ export default class EPactorSheet extends ActorSheet {
       poolType = "Vigor"
     }
 
-    console.log("My aptType: ", aptType)
-
     switch (aptType) {
-      case 'Intuition':
+      case 'int':
         poolType = "Insight"
         break;
-      case 'Cognition':
+      case 'cog':
         poolType = "Insight"
         break;
-      case 'Reflexes':
+      case 'ref':
         poolType = "Vigor"
         break;
-      case 'Somatics':
+      case 'som':
         poolType = "Vigor"
         break;
-      case 'Willpower':
+      case 'wil':
         poolType = "Moxie"
         break;
-      case 'Savvy':
+      case 'sav':
         poolType = "Moxie"
         break;
       default:

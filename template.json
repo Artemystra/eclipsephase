@@ -81,44 +81,44 @@
         },
         "aptitudes": {
           "cog": {
-            "name": "ep2e.actorSheet.aptitudes.cognition",
+            "name": "ep2e.actorSheet.aptitudes.cog",
             "value": null,
-            "label": "cognition",
+            "label": "ep2e.actorSheet.aptitudes.cognition",
             "roll": null,
             "mod": null
           },
           "int": {
-            "name": "ep2e.actorSheet.aptitudes.intuition",
+            "name": "ep2e.actorSheet.aptitudes.int",
             "value": null,
             "label": "intuition",
             "roll": null,
             "mod": null
           },
           "ref": {
-            "name": "ep2e.actorSheet.aptitudes.reflexes",
+            "name": "ep2e.actorSheet.aptitudes.ref",
             "value": null,
-            "label": "reflexes",
+            "label": "ep2e.actorSheet.aptitudes.reflexes",
             "roll": null,
             "mod": null
           },
           "sav": {
-            "name": "ep2e.actorSheet.aptitudes.savvy",
+            "name": "ep2e.actorSheet.aptitudes.sav",
             "value": null,
-            "label": "savvy",
+            "label": "ep2e.actorSheet.aptitudes.savvy",
             "roll": null,
             "mod": null
           },
           "som": {
-            "name": "ep2e.actorSheet.aptitudes.somatics",
+            "name": "ep2e.actorSheet.aptitudes.som",
             "value": null,
-            "label": "somatics",
+            "label": "ep2e.actorSheet.aptitudes.somatics",
             "roll": null,
             "mod": null
           },
           "wil": {
-            "name": "ep2e.actorSheet.aptitudes.willpower",
+            "name": "ep2e.actorSheet.aptitudes.wil",
             "value": null,
-            "label": "willpower",
+            "label": "ep2e.actorSheet.aptitudes.willpower",
             "roll": null,
             "mod": null
           }
