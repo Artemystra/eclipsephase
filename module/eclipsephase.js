@@ -886,7 +886,9 @@ if (startMigration){
           break;
       }
 
-      actor.update({"system.ego.gender" : updateGender,"system.ego.origin" : updateOrigin,"system.ego.sex" : updateSex});
+      if (updateGender || updateOrigin || updateSex){
+        actor.update({"system.ego.gender" : updateGender,"system.ego.origin" : updateOrigin,"system.ego.sex" : updateSex});
+      }
     }
     
     //Update aptitude Names 

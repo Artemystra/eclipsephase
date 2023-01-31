@@ -67,26 +67,38 @@ export default class EPactor extends Actor {
     if(this.type === 'npc' || this.type === 'goon') {
 
       //Calculating WT & DR
-      actorModel.health.physical.max = (actorModel.bodies.morph1.dur) + 
-        eval(actorModel.mods.durmod) // only one morph for npcs
-      actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5)
-      actorModel.physical.dr = Math.round(actorModel.health.physical.max * 
-        eclipsephase.damageRatingMultiplier[actorModel.bodyType.value])
+      actorModel.health.physical.max = (actorModel.bodies.morph1.dur) + eval(actorModel.mods.durmod); // only one morph for npcs
+      actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
+      actorModel.physical.dr = Math.round(actorModel.health.physical.max * eclipsephase.damageRatingMultiplier[actorModel.bodyType.value]);
 
       if(actorModel.health.physical.value === null) {
-        actorModel.health.physical.value = actorModel.health.physical.max
+        actorModel.health.physical.value = 0;
       }
     }
 
     //Characters only
     //Durability
     if(this.type === "character") {
-      let morph = actorModel.bodies[actorModel.bodies.activeMorph]
-      actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod)
-      actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5)
-      actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]))
+      let morph = actorModel.bodies[actorModel.bodies.activeMorph];
+      actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod);
+      actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
+      actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]));
+      actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max;
+      actorModel.health.death.value = actorModel.health.physical.value - actorModel.physical.dr
+
+      if (actorModel.health.physical.value < actorModel.health.physical.max){
+        actorModel.health.death.value = 0
+      }
+      else {
+        actorModel.health.death.value = actorModel.health.physical.value - actorModel.health.physical.max
+      }
+
+
       if(actorModel.health.physical.value === null) {
-        actorModel.health.physical.value = actorModel.health.physical.max
+        actorModel.health.physical.value = 0
+      }
+      else if (actorModel.health.physical.value > actorModel.physical.dr){
+        actorModel.health.physical.value = actorModel.physical.dr
       }
 
       this._calculatePools(actorModel, morph)
@@ -185,9 +197,23 @@ export default class EPactor extends Actor {
     actorModel.health.mental.max = (actorModel.aptitudes.wil.value * 2) + eval(actorModel.mods.lucmod);
     actorModel.mental.ir = actorModel.health.mental.max * 2;
     actorModel.mental.tt = Math.round(actorModel.health.mental.max / 5) + eval(actorModel.mods.ttMod);
-    if(actorModel.health.mental.value === null){
-      actorModel.health.mental.value = actorModel.health.mental.max;
-    }
+    actorModel.health.insanity.max = actorModel.mental.ir - actorModel.health.mental.max;
+    actorModel.health.insanity.value = actorModel.health.mental.value - actorModel.mental.ir;
+
+      if (actorModel.health.mental.value < actorModel.health.mental.max){
+        actorModel.health.insanity.value = 0
+      }
+      else {
+        actorModel.health.insanity.value = actorModel.health.mental.value - actorModel.health.mental.max
+      }
+
+
+      if(actorModel.health.mental.value === null) {
+        actorModel.health.mental.value = 0
+      }
+      else if (actorModel.health.mental.value > actorModel.mental.ir){
+        actorModel.health.mental.value = actorModel.mental.ir
+      }
   }
 
   _calculatePools(actorModel, morph) {

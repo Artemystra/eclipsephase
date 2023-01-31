@@ -32,6 +32,14 @@
           "mental": {
             "value": null,
             "max": 0
+          },
+          "death": {
+            "value": null,
+            "max": 0
+          },
+          "insanity": {
+            "value": null,
+            "max": 0
           }
         },
         "mods": {
