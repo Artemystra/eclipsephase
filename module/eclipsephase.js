@@ -187,7 +187,8 @@ const testVar = game.settings.get("eclipsephase", "migrationVersion");
 let startMigration = false
 let endMigration = false
 
-let isNewVersion = foundry.utils.isNewerVersion(game.system.version, testVar)
+let isNewVersion = foundry.utils.isNewerVersion("0.8.2", testVar)
+//For just testing against the latest version: game.system.version
 
 if (isNewVersion){
   let migration = await migrationStart(endMigration);

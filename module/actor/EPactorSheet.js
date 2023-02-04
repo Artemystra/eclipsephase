@@ -520,15 +520,19 @@ export default class EPactorSheet extends ActorSheet {
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
+    
+    // Custom Droplists
 
-
+    // Close dropdown when dom element is clicked
 
     registerEffectHandlers(html, actor);
     registerCommonHandlers(html, actor);
    /* registerItemHandlers(html,this.actor,this);*/
 
-   // Add Inventory Item
-   html.find('.item-create').click(this._onItemCreate.bind(this));
+    
+
+    // Add Inventory Item
+    html.find('.item-create').click(this._onItemCreate.bind(this));
 
     // Update Inventory Item
     html.find('.item-edit').click(ev => {
@@ -548,6 +552,112 @@ export default class EPactorSheet extends ActorSheet {
     // Rollable abilities.
     html.find('.task-check').click(this._onTaskCheck.bind(this));
 
+    // Use Pools Outside rolls
+    html.find('.poolUse').click(async f => {
+      const dialog = 'systems/eclipsephase/templates/chat/confirmation.html';
+      const result = 'systems/eclipsephase/templates/chat/pool-usage.html';
+      const brewStatus = game.settings.get("eclipsephase", "superBrew");
+      const element = f.currentTarget;
+      const dataset = element.dataset;
+      const type = dataset.type;
+      const pool = dataset.pool;
+      const dialogType = "poolUsage"
+
+      let poolUpdate = "";
+      let poolValue = null;
+      let subtitle = "";
+      let copy = "";
+      let poolName = "";
+      let newPoolValue = null;
+      let poolChange = 1;
+      let inputNeeded = false;
+      let inputType = null;
+
+      switch (pool){
+        case "ins":
+          poolValue = actor.system.pools.insight.value;
+          poolUpdate = "system.pools.insight.value"
+          poolName = "ep2e.skills.insightSkills.poolHeadline"
+          subtitle = "ep2e.skills.insightSkills.poolSubheadline"+type;
+          copy = "ep2e.skills.insightSkills.poolCopy"+type;
+          break;
+        case "vig":
+          poolValue = actor.system.pools.vigor.value;
+          poolUpdate = "system.pools.vigor.value"
+          poolName = "ep2e.skills.vigorSkills.poolHeadline"
+          subtitle = "ep2e.skills.vigorSkills.poolSubheadline"+type;
+          copy = "ep2e.skills.vigorSkills.poolCopy"+type;
+          if (type === "3"){
+            inputNeeded = true;
+            inputType = "woundIgnore";
+          }
+          break;
+        case "mox":
+          poolValue = actor.system.pools.moxie.value;
+          poolUpdate = "system.pools.moxie.value"
+          poolName = "ep2e.skills.moxieSkills.poolHeadline"
+          subtitle = "ep2e.skills.moxieSkills.poolSubheadline"+type;
+          copy = "ep2e.skills.moxieSkills.poolCopy"+type; 
+          if (type === "1"){
+            inputNeeded = true;
+            inputType = "traumaIgnore";
+          }    
+          if (type === "2"){
+            inputNeeded = true;
+            inputType = "repFill";
+          }
+          break; 
+        case "flex":
+          poolValue = actor.system.pools.flex.value;
+          poolUpdate = "system.pools.flex.value"
+          poolName = "ep2e.skills.flex.poolHeadline"
+          subtitle = "ep2e.skills.flex.poolSubheadline"+type;
+          copy = "ep2e.skills.flex.poolCopy"+type;
+          break;
+        default:
+          break;
+      }
+      
+      let purpose = await poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, copy, poolName, inputType, inputNeeded)
+
+      if(purpose.cancelled){
+        return
+      }
+
+      let modifier = Number(purpose.modifier);
+
+      if (modifier){
+        poolChange *= modifier
+      }
+
+      newPoolValue = poolValue - poolChange
+
+      if (newPoolValue >= 0) {
+  
+        let dialogData = {type : dialogType, poolName : poolName, subtitle : subtitle, copy : copy, number : poolChange}
+        let html = await renderTemplate(result, dialogData)
+
+        ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+          flavor: html
+        })
+  
+          return actor.update({[poolUpdate] : newPoolValue});
+
+      }
+      else {
+        let chatData = {type : "notEnoughPool", poolName : poolName, brewStatus : brewStatus, poolType : pool}
+        let html = await renderTemplate(result, chatData)
+
+        ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+          flavor: html,
+          whisper: [game.user._id]
+        })
+      }
+
+    });
+
     // Recover Pools
     html.find('.rest').click(async func => {
       const element = event.currentTarget;
@@ -565,7 +675,7 @@ export default class EPactorSheet extends ActorSheet {
       const maxFlex = actorModel.pools.flex.totalFlex;
       let poolSpend = null
 
-      await actorWhole.update({"actor.system.pools.update.insight" : null, "actor.system.pools.update.vigor" : null, "actor.system.pools.update.moxie" : null, "actor.system.pools.update.flex" : null});
+      await actorWhole.update({"system.pools.update.insight" : null, "system.pools.update.vigor" : null, "system.pools.update.moxie" : null, "system.pools.update.flex" : null});
 
       if (!brewStatus){
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
@@ -941,4 +1051,40 @@ export default class EPactorSheet extends ActorSheet {
   }
 }
 
+//Special Dialogs
 
+async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, copy, poolName, inputType, inputNeeded) {
+  let dialogName = game.i18n.localize('ep2e.skills.pool.dialogHeadline') + " (" + game.i18n.localize(poolName) +")";
+  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+  let confirmButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
+  console.log("These are the value of inputNeeded: ",inputNeeded, " and the inputType: ", inputType)
+  const html = await renderTemplate(dialog, {type, pool, dialogType, subtitle, copy, poolName, inputType, inputNeeded});
+
+  return new Promise(resolve => {
+      const data = {
+          title: dialogName,
+          content: html,
+          buttons: {
+              cancel: {
+                  label: cancelButton,
+                  callback: html => resolve ({cancelled: true})
+              },
+              normal: {
+                  label: confirmButton,
+                  callback: html => resolve(_poolUsageModifiers(html[0].querySelector("form")))
+              }
+          },
+          default: "normal",
+          close: () => resolve ({cancelled: true})
+      };
+      let options = {width:315}
+      new Dialog(data, options).render(true);
+  });
+}
+
+//General skill check results
+function _poolUsageModifiers(form) {
+    return {
+        modifier: form.modifier ? form.modifier.value : null
+    }
+}

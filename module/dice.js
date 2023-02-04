@@ -1168,7 +1168,7 @@ export async function TaskCheck({
 
                     message = {}
                     
-                    message.type = "notEnoughPool";
+                    message.type = "cantRaise";
                     message.poolName = await poolName(poolType);
     
                     html = await renderTemplate(POOL_USAGE_OUTPUT, message)
@@ -1244,7 +1244,7 @@ export async function TaskCheck({
 
                     message = {}
                     
-                    message.type = "notEnoughPool";
+                    message.type = "cantRaise";
                     message.poolName = await poolName(poolType);
     
                     html = await renderTemplate(POOL_USAGE_OUTPUT, message)
@@ -1552,7 +1552,7 @@ export async function TaskCheck({
 
                     message = {}
                     
-                    message.type = "notEnoughPool";
+                    message.type = "cantRaise";
                     message.poolName = await poolName(poolType);
     
                     html = await renderTemplate(POOL_USAGE_OUTPUT, message)
@@ -1632,7 +1632,7 @@ export async function TaskCheck({
 
                     message = {}
                     
-                    message.type = "notEnoughPool";
+                    message.type = "cantRaise";
                     message.poolName = await poolName(poolType);
     
                     html = await renderTemplate(POOL_USAGE_OUTPUT, message)
@@ -1997,7 +1997,7 @@ export async function TaskCheck({
         });
     }
 
-    //General skill check results
+    //Melee skill check results
     function _proMeleeCheckOptions(form) {
         return {
             numberOfTargets: parseInt(form.NumberTargets.value)>0 ? parseInt(form.NumberTargets.value) : 1,

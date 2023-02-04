@@ -1,10 +1,9 @@
-
 <div class="alignCenter">
 
   {{#if (eq type "usedSwipSwap")}}
     {{localize "ep2e.roll.announce.poolUsage.poolUsed"}} (<strong>{{localize poolName}}</strong>)<br>
     {{localize "ep2e.roll.announce.poolUsage.swappedTo"}} <strong>{{swipSwap}}</strong><p>
-    <div style="display: flex; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+    <div style="display: flex; margin: 0 0 20px 10px; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
       <span class="success">{{localize resultText}}</span>
     </div>
   {{/if}}
@@ -12,30 +11,51 @@
   {{#if (eq type "usedRaise")}}
     {{localize "ep2e.roll.announce.poolUsage.poolUsed"}} (<strong>{{localize poolName}}</strong>)<br>
     {{localize "ep2e.roll.announce.poolUsage.raisedTo"}}<p>
-    <div style="display: flex; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+    <div style="display: flex; margin: 0 0 20px 10px; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
       <span class="success">{{localize resultText}}</span>
     </div>
   {{/if}}
 
   {{#if (eq type "beyondSuperior")}}
-  <div style="display: flex; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+  <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
     {{localize "ep2e.roll.announce.poolUsage.beyondSuperior"}}<p>
     {{localize "ep2e.roll.announce.poolUsage.notDeducted"}} ({{localize poolName}})<p>
   </div>
   {{/if}}
 
-  {{#if (eq type "notEnoughPool")}}
-  <div style="display: flex; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+  {{#if (eq type "cantRaise")}}
+  <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
     {{localize "ep2e.roll.announce.poolUsage.notEnoughPool"}} (<strong>{{localize poolName}}</strong>)<br>
     {{localize "ep2e.roll.announce.poolUsage.cantRaise"}}<p>
   </div>
   {{/if}}
 
   {{#if (eq type "mitigate")}}
-  <div style="display: flex; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+  <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
     {{localize "ep2e.roll.announce.poolUsage.poolUsed"}} (<strong>{{localize poolName}}</strong>)<p>
       {{localize "ep2e.roll.announce.poolUsage.newResult"}}<br>
     <span class="fail">{{localize severityNew}}</span><p>
+  </div>
+  {{/if}}
+
+  {{#if (eq type "poolUsage")}}
+      <p>{{localize "ep2e.skills.pool.chatHeadline"}} ({{number}} <strong>{{localize poolName}}</strong>)</p>
+      {{localize "ep2e.skills.pool.chatEffect"}}<p>
+      <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+        <span class="resource-value"><strong>{{localize subtitle}}: </strong></span><span>{{localize copy}}</span>
+      </div>
+  {{/if}}
+
+  {{#if (eq type "notEnoughPool")}}
+  <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+    {{localize "ep2e.roll.announce.poolUsage.notEnoughPool"}} (<strong>{{localize poolName}}</strong>)<br>
+    {{#if (eq brewStatus true)}}
+      {{#if (ne poolType "flex")}}
+        <p>{{localize "ep2e.skills.pool.considerResting"}}</p>
+      {{/if}}
+    {{else}}
+      <p>{{localize "ep2e.skills.pool.considerResting"}}</p>
+    {{/if}}
   </div>
   {{/if}}
 

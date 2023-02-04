@@ -1,0 +1,43 @@
+<form>
+  <div class="alignCenter">
+      {{#if (eq dialogType "poolUsage")}}
+        <div class="contentBoxMargin">
+          <div class="flexrow subheader">
+              <h3 class="subheader dialog">{{localize "ep2e.skills.pool.infoSubheadline"}}</h3>
+          </div>
+          <div class="listBackgroundMain">
+            <p>{{localize "ep2e.skills.pool.dialogCopy"}}</p>
+            <div class="listBackgroundPitch">
+              <span class="resource-value"><strong>{{localize subtitle}}: </strong></span><span>{{localize copy}}</span>
+            </div>
+          </div>
+        </div>
+        {{#if inputNeeded}}
+          <div class="contentBoxMargin">
+            <div class="flexrow subheader">
+              <h3 class="subheader dialog">{{localize "ep2e.skills.pool.inputSubheadline"}}</h3>
+            </div>
+            <div class="listBackgroundMain">
+              <div class="form-group listBackgroundMain alignLeft">
+            {{#if (eq inputType "repFill")}}
+                <label class="resource-label">{{localize "ep2e.skills.pool.repSize"}}</label>
+                <select name="modifier" class="alignCenter input-large">
+                    <option value="1">{{localize "ep2e.roll.dialog.reputationMode.minor"}} (1 {{localize poolName}})</option>
+                    <option value="2">{{localize "ep2e.roll.dialog.reputationMode.moderate"}} (2 {{localize poolName}})</option>
+                </select>
+            {{/if}}
+            {{#if (eq inputType "woundIgnore")}}
+                <label class="resource-label">{{localize "ep2e.skills.pool.numberWounds"}}</label>
+                <input class="input-small" type="number" name="modifier" placeholder="1" />
+            {{/if}}
+            {{#if (eq inputType "traumaIgnore")}}
+                <label class="resource-label">{{localize "ep2e.skills.pool.numberTrauma"}}</label>
+                <input class="input-small" type="number" name="modifier" placeholder="1" />
+            {{/if}}
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+</form>

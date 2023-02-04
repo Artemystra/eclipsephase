@@ -54,7 +54,15 @@
       },
       "button": {
         "edit": "Editieren",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "close": "Schließen",
+        "confirm": "Bestätigen"
+      },
+      "dialogHeadline": {
+        "warning": "Warnung",
+        "error": "Fehler",
+        "success": "Erfolg",
+        "confirmationNeeded": "Bestätigung Nötig"
       }
     },
     "healthbar": {
@@ -212,11 +220,11 @@
         "research": "Recherche",
         "survival": "Überleben",
         "poolHeadline": "Insight",
-        "poolSubheadline1": "Initiative ergreifen:",
+        "poolSubheadline1": "Initiative ergreifen",
         "poolCopy1": "Du bist als erstes an der Reihe, solange du nur mentale- oder Meshaktionen und keine physischen durchführen möchtest. Wenn mehrere Charaktere diese Funktion nutzen, werden sie nach ihrer Initiative abgehandelt, jedoch vor allen anderen.",
-        "poolSubheadline2": "Extra Aktion:",
+        "poolSubheadline2": "Extra Aktion",
         "poolCopy2": "Du kannst eine Extraaktion (oder zwei schnelle Aktonen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
-        "poolSubheadline3": "Bekomm einen Tipp:",
+        "poolSubheadline3": "Bekomm einen Tipp",
         "poolCopy3": "Du bekommst einen Tipp innerhalb einer Ivestigation, während einer Recherche oder einer Analyse ohne eine Probe dafür durchführen zu müssen."
       },
       "vigorSkills": {
@@ -228,42 +236,42 @@
         "infiltrate": "Infiltration",
         "melee": "Nahkampf",
         "poolHeadline": "Vigor",
-        "poolSubheadline1": "Initiative ergreifen:",
+        "poolSubheadline1": "Initiative ergreifen",
         "poolCopy1": "Du bist als erstes an der Reihe. Wenn mehrere Charaktere diese Funktion nutzen, werden sie nach ihrer Initiative abgehandelt, jedoch vor allen anderen.",
-        "poolSubheadline2": "Extra Aktion:",
+        "poolSubheadline2": "Extra Aktion",
         "poolCopy2": "Du kannst eine Extraaktion (oder zwei schnelle Aktonen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
-        "poolSubheadline3": "Wunde ignorieren:",
+        "poolSubheadline3": "Wunde ignorieren",
         "poolCopy3": "Ignoriere den Effekt einer Wunde für 24 Stunden, oder bis zur nächsten langen Rast."
       },
       "moxieSkills": {
-        "moxieHeadline": "Insight Skills",
+        "moxieHeadline": "Moxie Skills",
         "deceive": "Täuschung",
         "kinesics": "Kinesik",
         "persuade": "Überzeugen",
         "provoke": "Provozieren",
         "psi": "Psi",
         "poolHeadline": "Moxie",
-        "poolSubheadline1": "Trauma ignorieren:",
+        "poolSubheadline1": "Trauma ignorieren",
         "poolCopy1": "Ignoriere den Effekt eines Traumas für 24 Stunden, oder bis zur nächsten langen Rast.",
-        "poolSubheadline2": "Rep wieder auffüllen:",
+        "poolSubheadline2": "Rep wieder auffüllen",
         "poolCopy2": "Stelle Netzwerkgefallen einer Repfraktion wieder her. Zahle 1 Moxie für einen kleinen- oder 2 für einen moderaten Gefallen. Grosse Gefallen können auf diese Weise nicht aufgefüllt werden.",
-        "poolSubheadline3": "Bekomm einen Tipp:",
+        "poolSubheadline3": "Einen Tipp bekommen",
         "poolCopy3": "Du bekommst einen Tipp innerhalb einer sozialen Interaktion ohne eine Probe dafür durchführen zu müssen.",
-        "poolSubheadline4": "Infektion kontrollieren:",
+        "poolSubheadline4": "Infektion kontrollieren",
         "poolCopy4": "Ignoriere einen Infektionstest, während der Nutzung der nächsten Psikraft.",
-        "poolSubheadline5": "Ausrutscher Negieren:",
+        "poolSubheadline5": "Ausrutscher Negieren",
         "poolCopy5": "Negiere einen sozialen Ausrutscher den ein Spieler gemacht hat, der jedoch untypisch für den Charakter gewesen wäre."
       },
       "flex": {
         "flexHeadline": "Flex",
         "poolHeadline": "Flex",
-        "poolSubheadline1": "NSC einführen:",
+        "poolSubheadline1": "NSC einführen",
         "poolCopy1": "Ein neuer oder bereits bekannter NSC betritt die Szene. Ihre Anwesenheit muss plausibel sein. Du kannst einen der folgenden Aspekte des NSCs definieren: Ihren Morph, ihre Fraktion, einen besonderen Skill, einen bestimmten Vorteil, etc. Die SL bestimmt alle anderen Details.",
-        "poolSubheadline2": "Gegenstand einführen:",
+        "poolSubheadline2": "Gegenstand einführen",
         "poolCopy2": "Ein Gegenstand, der bisher nicht aufgefallen ist, wird der Szene hinzugefügt. Seine Präsenz muss plausibel sein. Der Gegenstand kann nicht offensiv sein (keine Waffe) und muss mit einem kleinen Gefallen zu erhalten sein. (Nicht rar oder verboten) Es kann ein Werkzeug, ein wichtiger Ausrüstungsgegenstand oder sogar ein Hinweis sein. Die SL bestimmt den Ort des Gegestandes und die ausgestaltung aller Hinweise.",
-        "poolSubheadline3": "Umgebung definieren:",
+        "poolSubheadline3": "Umgebung definieren",
         "poolCopy3": "Du fügst der Szene ein Umgebungsmerkmal hinzu. Seine Präsenz muss plausibel sein. Es muss ein zusätzliches Detail sein und kann die Szene nicht drastisch ändern. Beispiele können Verstecke, Deckung, Ablenkungen, Unterstände, aber auch Dinge die man nutzen kann wie Leitern oder Fenster. ",
-        "poolSubheadline4": "Eine Beziehung definieren:",
+        "poolSubheadline4": "Eine Beziehung definieren",
         "poolCopy4": "Du kannst eine Beziehung zu einem NSC auf plausible Weise verändern oder definieren. Es sollte eine lose Verbindung anstelle einer tiefen Vertrautheit sein. Es könnte sich beispielsweise um einen gemeinsamen Freund, eine vergangene Begebenheit oder eine milde Rivalität handeln. Du kannst eine grobe Richtung definieren, jedoch nicht das allgemeine Verhalten gegenüber deines Charakters."
       },
       "knowSkills": {
@@ -281,6 +289,19 @@
         "accounting": "Buchhaltung",
         "psychology": "Psychologie",
         "Psychosurgery": "Psychochirurgie"
+      },
+      "pool": {
+      "label": "pool",
+      "dialogHeadline": "Pool nutzen",
+      "dialogCopy": "Dies verbraucht einen Poolpunkt um den folgenden Effekt zu erlangen:",
+      "subheadline": "Information",
+      "inputSubheadline": "Eingabe Nötig",
+      "chatHeadline": "NUtzt einen Pool",
+      "chatEffect": "Erhaltener Effekt:",
+      "considerResting": "Du kannst ihn mit einer 'Ausruhen'-Aktion wieder füllen",
+      "numberWounds": "Anzahl Wunden zu ignorieren",
+      "numberTrauma": "Anzahl Trauma zu ignorieren",
+      "repSize": "Größe des Gefallens"
       },
       "addSkill": "Skill",
       "chooseAptitude": "Anlage Wählen"

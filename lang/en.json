@@ -54,7 +54,15 @@
       },
       "button": {
         "edit": "Edit",
-        "delete": "Delete"
+        "delete": "Delete",
+        "close": "Close",
+        "confirm": "Confirm"
+      },
+      "dialogHeadline": {
+        "warning": "Warning",
+        "error": "Error",
+        "success": "Success",
+        "confirmationNeeded": "Confirmation Needed"
       }
     },
     "healthbar": {
@@ -212,11 +220,11 @@
         "research": "Research",
         "survival": "Survival",
         "poolHeadline": "Insight",
-        "poolSubheadline1": "Take the Initiative:",
+        "poolSubheadline1": "Take the Initiative",
         "poolCopy1": "Go first in an action turn if you are only taking mental or mesh actions and no physical movement. If multiple characters choose this option, they go in Initiative order before everyone else.",
-        "poolSubheadline2": "Extra Action:",
+        "poolSubheadline2": "Extra Action",
         "poolCopy2": "Take an extra complex mental or mesh action (or 2 quick actions) in an action turn. These actions may only be taken after everyone else has gone. If multiple characters choose this option, they go in Initiative order after everyone else has taken their turn.",
-        "poolSubheadline3": "Aquire A Clue:",
+        "poolSubheadline3": "Aquire A Clue",
         "poolCopy3": "Gain a hint or lead through investigation, research, or analysis of the facts at hand, without needing to make a test."
       },
       "vigorSkills": {
@@ -228,11 +236,11 @@
         "infiltrate": "Infiltrate",
         "melee": "Melee",
         "poolHeadline": "Vigor",
-        "poolSubheadline1": "Take the Initiative:",
+        "poolSubheadline1": "Take the Initiative",
         "poolCopy1": "Go first in an action turn. If multiple characters choose this option, they go in Initiative order before everyone else.",
-        "poolSubheadline2": "Extra Action:",
+        "poolSubheadline2": "Extra Action",
         "poolCopy2": "Take an extra complex physical action (or 2 quick actions) in an action turn. This action may only be taken after everyone else has gone. If multiple characters choose this option, they go in Initiative order after everyone else has taken their turn.",
-        "poolSubheadline3": "Ignore Wound:",
+        "poolSubheadline3": "Ignore Wound",
         "poolCopy3": "Ignore the effects of 1 wound for 24 hours or until your next recharge"
       },
       "moxieSkills": {
@@ -243,27 +251,27 @@
         "provoke": "Provoke",
         "psi": "Psi",
         "poolHeadline": "Moxie",
-        "poolSubheadline1": "Ignore Trauma:",
+        "poolSubheadline1": "Ignore Trauma",
         "poolCopy1": "Ignore the effects of 1 trauma for 24 hours or until your next recharge",
-        "poolSubheadline2": "Refresh Rep:",
+        "poolSubheadline2": "Refresh Rep",
         "poolCopy2": "Restore rep network favors at a cost of 1 point for a Minor favor and 2 points for a Moderate favor. Major favors cannot be refreshed this way.",
-        "poolSubheadline3": "Aquire A Clue:",
+        "poolSubheadline3": "Aquire A Clue",
         "poolCopy3": "Get a tip or lead by gathering information via social interactions without needing to make a test.",
-        "poolSubheadline4": "Control Your Infection:",
+        "poolSubheadline4": "Control Your Infection",
         "poolCopy4": "Avoid making an Infection Test when using a psi sleight (asyncs only).",
-        "poolSubheadline5": "Negate Gaffe:",
+        "poolSubheadline5": "Negate Gaffe",
         "poolCopy5": "Ignore a player’s social gaffe that the character wouldn’t make."
       },
       "flex": {
         "flexHeadline": "Flex",
         "poolHeadline": "Flex",
-        "poolSubheadline1": "Introduce NPC:",
+        "poolSubheadline1": "Introduce NPC",
         "poolCopy1": "A new or existing NPC joins the scene. Their presence must be plausible. You may define one aspect of this NPC: their morph, factional allegiance, a noteworthy skill, a specific trait, etc. The GM determines the other details.",
-        "poolSubheadline2": "Introduce An Item:",
+        "poolSubheadline2": "Introduce An Item",
         "poolCopy2": "A previously unnoticed item is added to the scene. Its presence must be plausible. The item cannot be offensive (no weapons) and it must be of Minor (not Rare or Restricted) Complexity. It can be a useful tool, a necessary piece of gear, or even a clue. The GM determines its placement within the scene and the nature of any clues.",
-        "poolSubheadline3": "Define Environment:",
+        "poolSubheadline3": "Define Environment",
         "poolCopy3": "You may introduce an environmental factor to a scene. Its presence must be plausible. It should provide a new detail that does not drastically alter the scene. Examples include hiding spots, cover, distractions, shelter, or exploitable elements such as a ladder or window.",
-        "poolSubheadline4": "Define A Relationship:",
+        "poolSubheadline4": "Define A Relationship",
         "poolCopy4": "You may introduce a new, plausible relationship between your character and an existing NPC. This should be a loose/minor connection rather than a close/serious tie. For example, you may have a common friend, shared history, or old but mild rivalry. You may define the rough basics, but the GM determines the finer points and the NPC’s attitude towards your character."
       },
       "knowSkills": {
@@ -281,6 +289,19 @@
         "accounting": "Accounting",
         "psychology": "Psychology",
         "Psychosurgery": "Psychosurgery"
+      },
+      "pool": {
+        "label": "pool",
+        "dialogHeadline": "Use Pool",
+        "dialogCopy": "You are about to use 1 of your pools to receive the following effect:",
+        "infoSubheadline": "Information",
+        "inputSubheadline": "Input Needed",
+        "chatHeadline": "Used a Pool",
+        "chatEffect": "Received Effect:",
+        "considerResting": "Consider using a 'rest'-action",
+        "numberWounds": "Wounds to Ignore",
+        "numberTrauma": "Trauma to Ignore",
+        "repSize": "Size of Favor"
       },
       "addSkill": "Add Skill",
       "chooseAptitude": "Choose Apt"

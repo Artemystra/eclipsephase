@@ -42,6 +42,9 @@ export function registerEffectHandlers(html,callerobj){
 }
 
 export function registerCommonHandlers(html,callerobj){
+    
+    //Open/Close items (gear/weapons/flaws/traits etc.)
+
     html.find(".slideShow").click(ev => {
         const current = $(ev.currentTarget);
         const first = current.children().first();
@@ -51,6 +54,52 @@ export function registerCommonHandlers(html,callerobj){
         last.toggleClass("noShow");
         target.slideToggle(200);
     });
+    
+    // Custom Droplists (for pools)
+    
+    const dropdownBtns = html.find(".dropdown");
+    const closeBtns = html.find(".closeButton");
+
+    // Close the dropdown menu if the user clicks outside of it
+    
+    //This part needs further investigation as it triggers AFTER the button is clicked, leading to directly closing the just opened dropdown.
+    /*document.addEventListener("click", function(event) {
+      console.log("My event target matches .dropdown: ",event.target.matches(".dropdown"))
+      console.log("this is because my event target is: ",event.target)
+      if (!event.target.matches(".dropdown")) {
+        console.log("Now I trigger closeAll")
+        closeAllDropdowns();
+      }
+    });*/
+
+    document.addEventListener("click", function(event) {
+      if (event.target.matches(".droplistBackground") || event.target.matches(".droplistElement")) {
+        closeAllDropdowns();
+      }
+    });
+
+    closeBtns.click(ev => {
+      closeAllDropdowns();
+    });
+
+    for (const btn of dropdownBtns) {
+      btn.addEventListener("click", function() {
+        const dropdownContainer = this.nextElementSibling;
+        const open = dropdownContainer.style.display === "grid";
+        closeAllDropdowns();
+        if (!open) {
+          dropdownContainer.style.display = "grid";
+        }
+      });
+    }
+
+    function closeAllDropdowns() {
+      const dropdownContainers = document.querySelectorAll(".poolDroplist");
+      for (const container of dropdownContainers) {
+          container.style.display = "none";
+      }
+    }
+    
   }
 
 export function itemCreate(event,callerobj){

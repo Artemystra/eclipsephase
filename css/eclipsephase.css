@@ -769,7 +769,9 @@ hljs-string{
 .task-check:focus,
 .rollable:hover,
 .rollable:focus,
-a:hover{
+a:hover,
+.droplistElement:hover,
+.droplistHeader:hover{
   text-shadow: 0 0 10px var(--highlight);
   cursor: pointer;
 }
@@ -1305,6 +1307,7 @@ h3.subheaderBlank {
 .flexrow.subheader {
   border-bottom: solid var(--accentBackground) 3px;
   background-color: var(--focusBackground);
+  height: 30px;
 }
 
 .flexrow.subheader.colorV1{
@@ -1781,6 +1784,33 @@ h3.inline {
 .directory .directory-header .header-search input {
   background: none;
   margin: 10px 3px;
+}
+
+.poolDroplist {
+  position: absolute;
+  z-index: 300;
+  top: 0px;
+  right: 0px;
+  max-width: 70%;
+}
+
+.droplistBackground,
+.droplistHeader {
+  padding: 10px 0;
+  background-color: var(--pitchBorder);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  transition: all 0.1s cubic-bezier(0.16, 1, 0.5, 1);
+}
+
+.droplistElement,
+.droplistHeader {
+  padding: 8px 10px;
+}
+
+.droplistHeader {
+  clip-path: polygon(15% 0, 100% 0%, 100% 100%, 38% 100%);
 }
 
 /* Module Styling Support */
