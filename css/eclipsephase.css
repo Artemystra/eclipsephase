@@ -1807,6 +1807,8 @@ h3.inline {
 .droplistElement,
 .droplistHeader {
   padding: 8px 10px;
+  width: 100%;
+  text-align: right;
 }
 
 .droplistHeader {
