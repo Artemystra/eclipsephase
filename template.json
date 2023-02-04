@@ -98,7 +98,7 @@
           "int": {
             "name": "ep2e.actorSheet.aptitudes.int",
             "value": null,
-            "label": "intuition",
+            "label": "ep2e.actorSheet.aptitudes.intuition",
             "roll": null,
             "mod": null
           },
