@@ -12,7 +12,7 @@
             <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small"/>
-                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-name="guns" data-rolledfrom="rangedWeapon" data-weapontype="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
+                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-key="guns" data-name="{{localize 'ep2e.skills.vigorSkills.guns'}}" data-rolledfrom="rangedWeapon" data-weapontype="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
                 </div>
                 <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.rangedPlaceholder'}}" style="text-align: left; font-weight: bold"/>
                 <label class="labelWidth-large flex-group-center noMargin"><strong>{{localize item.system.firingModeLabel}}</strong></label>
@@ -61,7 +61,7 @@
             <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
-                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-name="melee" data-rolledfrom="ccWeapon" data-weapontype="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}" data-weaponid="{{item._id}}"/>
+                    <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-key="melee" data-name="{{localize 'ep2e.skills.vigorSkills.melee'}}" data-rolledfrom="ccWeapon" data-weapontype="melee" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}" data-weaponid="{{item._id}}"/>
                 </div>
                 <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.meleePlaceholder'}}" style="text-align: left; font-weight: bold"/>
                 <label class="flex-group-center noMargin flex-group-center"><strong>{{localize item.system.slotName}}</strong></label>
