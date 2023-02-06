@@ -1,10 +1,13 @@
 
 <div class="alignCenter">
-  {{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{taskName}}</span>
+  <p>{{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{taskName}}</span></p>
+  {{#if (eq rolledFrom "psiSleight")}}
+    <p><span class="resource-value">{{sleightName}} </span>{{#if isGM}}<a><i class="fa-regular fa-circle-info moreInfo" data-title="{{sleightName}}" data-resource="{{sleightInfection}}" data-description="{{sleightDescription}}" data-action="{{sleightAction}}" data-duration="{{sleightDuration}}"  data-rolledfrom="{{rolledFrom}}"></i></a>{{/if}}</p>
+  {{/if}}
   {{#if (eq visibility "private")}}
-  <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.private"}} <i class='fas fa-eye-slash'></i></h5>
+    <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.private"}} <i class='fas fa-eye-slash'></i></h5>
   {{else if (eq visibility "blind")}}
-  <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.blind"}} <i class='fas fa-low-vision'></i></h5>
+    <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.blind"}} <i class='fas fa-low-vision'></i></h5>
   {{/if}}
 
   {{#if infection}}

@@ -32,8 +32,36 @@
                 </div>
                 <!--Weapon Details-->
                 <div class="flexrow flex-group-center slideShow" style="height: 26px; background-color: var(--accentBackground);">
-                    <a><i class="fa-solid fa-chevron-down"></i><label class="resource-label" style="margin: 0 113px 0 113px">More</label><i class="fa-solid fa-chevron-down"></i></a>
-                    <a class="noShow"><i class="fa-solid fa-chevron-up"></i><label class="resource-label" style="margin: 0 113px 0 113px">Less</label><i class="fa-solid fa-chevron-up"></i></a>
+                    <a class="flexrow">
+                        <table>
+                            <tr style="background-color: var(--accentBackground);">
+                                <td style="padding-left: 15px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </td>
+                                <td style="width: 100%;">
+                                    <label class="resource-label">{{localize "ep2e.sideCar.moreToggle"}}</label>
+                                </td>
+                                <td style="padding-right: 25px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
+                    <a class="noShow flexrow">
+                        <table>
+                            <tr style="background-color: var(--accentBackground);">
+                                <td style="padding-left: 15px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-up"></i>
+                                </td>
+                                <td style="width: 100%;">
+                                    <label class="resource-label">{{localize "ep2e.sideCar.lessToggle"}}</label>
+                                </td>
+                                <td style="padding-right: 25px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-up"></i>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
                 </div>
                 <div class="item showMore noShow" data-item-id="{{item._id}}">
                     <div class="grid grid-3col">

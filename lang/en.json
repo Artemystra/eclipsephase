@@ -62,7 +62,8 @@
         "warning": "Warning",
         "error": "Error",
         "success": "Success",
-        "confirmationNeeded": "Confirmation Needed"
+        "confirmationNeeded": "Confirmation Needed",
+        "information": "Information"
       }
     },
     "healthbar": {
@@ -680,7 +681,17 @@
         "dodgeRangedLabel": "Dodge Ranged",
         "infectionHeadline": "Infection",
         "baseCostLabel": "Base cost",
-        "pushesLabel": "Pushes",
+        "push": {
+          "label": "Push",
+          "none": "-Select-",
+          "range": "Range",
+          "effect": "Effect",
+          "power": "Power",
+          "penetration": "Penetration",
+          "duration": "Duration",
+          "target": "Additional Target"
+        },
+        "ignoreInfection": "Ignore Infection (1 Moxie)",
         "usePool": "Use",
         "globalModLabel": "Global Mod",
         "noSpecLabel": "No Specialization",

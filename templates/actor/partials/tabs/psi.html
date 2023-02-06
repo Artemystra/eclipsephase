@@ -1,100 +1,48 @@
 <div class="tab psi" data-group="primary" data-tab="psi">    
     {{#if (ne actor.type "goon")}}
-        <div class="contentBox">
-            <div class="flexrow subheader">
+        <div class="contentBox item" style="margin-bottom: 10px;">
+            <div class="flexrow subheader slideShow" style="min-width: 100%;">
                 <h3 class="subheader">{{localize "ep2e.psi.infectionHeadline"}}</h3>
                 <div class="alignRight flexGrowThreeQuarter">
                     <span class="resource-label  input-XL"><strong>{{localize "ep2e.psi.ratingLabel"}}:</strong></span>
-                    <input class="input-small" type="text" style="text-align: center;"
-                    name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
+                    <input class="input-small" type="text" style="text-align: center;" name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
                 </div>
+                <div style="display: none;"></div>
             </div>
-            <div class="grid listBackground noMargin" style="clip-path: polygon(100% 0, 0 0, 0 80%, 4% 92%, 25% 92%, 35% 100%, 97% 100%, 100% 95%)">
-                <ol>
-                    <li class="skills"><input type="text" name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}"/></li>
-                    <li><textarea class="description" name="system.psiStrain.description" rows="27" cols="60" placeholder="{{localize 'ep2e.psi.descriptionPlaceholder'}}">{{actor.system.psiStrain.description}}</textarea></li>
-                </ol>
-                <ol>
-                    {{#each actor.system.strainInfluence as |influence key|}}
-                    <li><div class="textAreaDescription"><textarea
-                        class="description" name="system.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
-                    {{/each}}
-                </ol>
+            <div class="listBackground noMargin item noShow showMore">
+                <div class="flexrow grid">
+                    <ol>
+                        <li class="skills"><input type="text" name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}"/></li>
+                        <li><textarea class="description" name="system.psiStrain.description" rows="27" cols="60" placeholder="{{localize 'ep2e.psi.descriptionPlaceholder'}}">{{actor.system.psiStrain.description}}</textarea></li>
+                    </ol>
+                    <ol>
+                        {{#each actor.system.strainInfluence as |influence key|}}
+                        <li><div class="textAreaDescription"><textarea
+                            class="description" name="system.strainInfluence.{{key}}.description" rows="4" cols="60">{{influence.description}}</textarea></div></li>
+                        {{/each}}
+                    </ol>
+                </div>
             </div>
         </div>
     {{/if}}
     {{#if actor.aspect.gamma}}
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">{{localize "ep2e.psi.gammaHeadline"}}</h3>
-                <div class="alignRight flexGrowThreeQuarter">
-                </div>
+        <div class="sideCarBox gammaBackground">
+            <div style=" margin-bottom: 20px;">
+                <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.psi.gammaHeadline"}}</label>
             </div>
-            <div class="itemBackground">
-                <div class="grid grid-2col">
-                    {{#each actor.aspect.gamma as |item id|}}
-                    <div>
-                        <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                            <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.actionName}}</i></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.durationName}}</i></label>
-                            <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{item.system.infection}}</i></label>
-                            <div class="flex-group-right slideShow">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.system.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.system.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
+
+            {{> systems/eclipsephase/templates/actor/partials/item-partials/gamma-sleight.html }}
+
         </div>
         {{/if}}
         {{#if actor.aspect.chi}}
-        <div class="contentBox">
-            <div class="flexrow subheader">
-                <h3 class="subheader">{{localize "ep2e.psi.chiHeadline"}}</h3>
-                <div class="alignRight flexGrowThreeQuarter">
-                </div>
+        <div class="sideCarBox chiBackground">
+            <div style=" margin-bottom: 20px;">
+                <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.psi.chiHeadline"}}</label>
             </div>
-            <div class="itemBackground">
-                <div class="grid grid-2col">
-                    {{#each actor.aspect.chi as |item id|}}
-                    <div>
-                        <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
-                            <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                            <div class="flex-group-right slideShow">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                            </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.system.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.system.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
+
+            {{> systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html }}
+
         </div>
         {{/if}}
 </div>

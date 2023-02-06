@@ -396,6 +396,16 @@ export async function TaskCheck({
     rolledFrom = "",
     announce = "",
     usedRaise = null,
+    //Results
+    success = false,
+    critical = false,
+    autoSuccess = false,
+    autoFail = false,
+    doubleSuperior = false,
+    superior = false,
+    successMessage = "",
+    successClass = "",
+    successName = null,
     //Pools
     poolType = "",
     poolValue = 0,
@@ -416,8 +426,9 @@ export async function TaskCheck({
     addition = "",
     //Psi
     infectionMod = null,
-    aspectPushes = null,
+    aspectPushed = null,
     aspectBase = null,
+    ignoreInfection = null,
     //Guns
     aim = "",
     size = "",
@@ -445,7 +456,13 @@ export async function TaskCheck({
     updateAmmo = "",
     ammoUpdate = [],
     successType = false,
-    attackMode=""
+    attackMode="",
+    //Psi
+    sleightName = "",
+    sleightDescription = "",
+    sleightAction = "",
+    sleightDuration = "",
+    sleightInfection = ""
     } = {}) {
 
     //Task Roll created
@@ -500,7 +517,7 @@ export async function TaskCheck({
     //Default skill check dialog
     else if (askForOptions != optionsSettings) {
         let taskType = skillKey
-        let checkOptions = await GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType);
+        let checkOptions = await GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType, sleightInfection, rolledFrom);
 
         if (checkOptions.cancelled) {
             return;
@@ -509,7 +526,8 @@ export async function TaskCheck({
         skillValue = checkOptions.ranged ? Math.floor(Number(skillValue)/2): skillValue;
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
-        aspectPushes = checkOptions.pushes
+        ignoreInfection = checkOptions.ignoreInfection;
+        aspectPushed = checkOptions.pushes
         aspectBase = checkOptions.aspects
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
@@ -806,6 +824,25 @@ export async function TaskCheck({
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
+        if (skillKey === "psi"){
+            if (ignoreInfection && poolValue>0){
+                poolUpdate = poolValue -1;
+                await poolUpdater(poolUpdate,poolType);
+            }
+            else{
+                ignoreInfection = false;
+            }
+            infectionMod = aspectPushed != "none" ? aspectBase * 2 : aspectBase;
+            infectionMod += Number(actorData.psiStrain.infection)
+                if (infectionMod <= 100){
+                    actorWhole.update({"system.psiStrain.infection" : infectionMod});
+                }
+                else {
+                    actorWhole.update({"system.psiStrain.infection" : 100});
+                    infectionMod = 100;
+                }
+        }
+
     let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
 
     //The dice roll
@@ -814,81 +851,22 @@ export async function TaskCheck({
 
         //Success check
         let rollCheck = roll.total;
-        let success = rollCheck <= modSkillValue;
-        let critical = rollCheck === 11 || rollCheck === 22 || rollCheck === 33 || rollCheck === 44 || rollCheck === 55 || rollCheck === 66 || rollCheck === 77 || rollCheck === 88;
-        let autoSuccess = rollCheck === 100;
-        let autofail = rollCheck === 99;
-        let doubleSuperior = rollCheck >= 66;
-        let superior = rollCheck >= 33;
-        let successMessage = "";
-        let successClass = "";
-        let successName = null;
+
+        let rollResult = await successCheck(rollCheck, modSkillValue)
+
+        success = rollResult["success"]
+        critical = rollResult["critical"]
+        autoSuccess = rollResult["autoSuccess"]
+        autoFail = rollResult["autoFail"]
+        doubleSuperior = rollResult["doubleSuperior"]
+        superior = rollResult["superior"]
 
         //Success messages
-        if (autofail) {
-            successMessage = await successLabel("autofail");
-            successClass = "fail";
-            successName = "Supreme Fail";
-        } else if (autoSuccess) {
-            successMessage = await successLabel("autoSuccess");
-            successClass = "success";
-            successType = true;
-            successName = "Supreme Success";
-        } else if (success && critical && doubleSuperior) {
-            successMessage = await successLabel("supCritSuc");
-            successClass = "success";
-            successType = true;
-            successName = "Superior Critical Success";
-        } else if (!success && critical && rollCheck <= 33) {
-            successMessage = await successLabel("supCritFail");
-            successClass = "fail";
-            successName = "Superior Critical Fail";
-        } else if (success && critical && superior) {
-            successMessage = await successLabel("greatCritSuc");
-            successClass = "success";
-            successType = true;
-            successName = "Greater Critical Success";
-        } else if (!success && critical && rollCheck <= 66) {
-            successMessage = await successLabel("greatCritFail");
-            successClass = "fail";
-            successName = "Greater Critical Fail";
-        } else if (success && critical) {
-            successMessage = await successLabel("critSuc");
-            successClass = "success";
-            successType = true;
-            successName = "Critical Success";
-        } else if (!success && critical) {
-            successMessage = await successLabel("critFail");
-            successClass = "fail";
-            successName = "Critical Fail";
-        } else if (success && doubleSuperior) {
-            successMessage = await successLabel("supSuc");
-            successClass = "success";
-            successType = true;
-            successName = "Superior Success";
-        } else if (!success && !superior) {
-            successMessage = await successLabel("supFail");
-            successClass = "fail";
-            successName = "Superior Fail";
-        } else if (success && superior) {
-            successMessage = await successLabel("greatSuc");
-            successClass = "success";
-            successType = true;
-            successName = "Greater Success";
-        } else if (!success && !doubleSuperior) {
-            successMessage = await successLabel("greatFail");
-            successClass = "fail";
-            successName = "Greater Fail";
-        } else if (success) {
-            successMessage = await successLabel("suc");
-            successClass = "success";
-            successType = true;
-            successName = "Success";
-        } else if (!success) {
-            successMessage = await successLabel("fail");
-            successClass = "fail";
-            successName = "Fail";
-        }
+        let successContent = await successTranslation(success,critical,autoSuccess,autoFail,doubleSuperior,superior)
+
+        successMessage = successContent["successMessage"];
+        successClass = successContent["successClass"];
+        successName = successContent["successName"];
 
         //Visibility toggler
         if (activeRollTarget === "" || activeRollTarget === "public") {
@@ -899,29 +877,12 @@ export async function TaskCheck({
             rollModeSelection = CONST.DICE_ROLL_MODES.BLIND
         }
 
-        //Infection (only relevant for psi checks)
-        if (skillKey === "psi"){
-            if (success && doubleSuperior) {
-                aspectPushes -= 4
-            } else if (success && superior) {
-                aspectPushes -= 2
-            }
-            infectionMod = aspectPushes > 0 ? aspectBase * aspectPushes : aspectBase;
-            if (skillKey === "psi" && brewStatus === true && aspectBase) {
-                infectionMod += Number(actorData.psiStrain.infection)
-                if (infectionMod <= 100){
-                    actorWhole.update({"system.psiStrain.infection" : infectionMod});
-                }
-                else {
-                    actorWhole.update({"system.psiStrain.infection" : 100});
-                    infectionMod = 100;
-                }
-            }
-        }
-
         //Chat message builder
 
         let message = {}
+
+        message.isGM = game.user.isGM
+        message.rolledFrom = rolledFrom ? rolledFrom : null;
     
         message.resultText = successMessage;
         message.resultClass = successClass;
@@ -932,6 +893,11 @@ export async function TaskCheck({
 
         message.visibility = activeRollTarget;
 
+        message.sleightName = sleightName ? sleightName : null;
+        message.sleightDescription = sleightDescription ? sleightDescription : null;
+        message.sleightDuration = sleightDuration ? sleightDuration : null;
+        message.sleightAction = sleightAction ? sleightAction : null;
+        message.sleightInfection = sleightInfection ? sleightInfection : null;
         message.infection = infectionMod ? infectionMod : null;
     
         message.modifiers = []
@@ -1060,10 +1026,14 @@ export async function TaskCheck({
                 if (swipSwap > 33){
                     successName = "Greater Success";
                     successMessage = await successLabel("greatSuc");
+                    success = true;
+                    superior = true;
                 }
                 if (swipSwap > 66){
                     successName = "Superior Success";
                     successMessage = await successLabel("supSuc");
+                    success = true;
+                    doubleSuperior = true;
                 }
 
                 poolValue--;
@@ -1111,18 +1081,22 @@ export async function TaskCheck({
                         case 'Success':
                             successName = "Greater Success";
                             successMessage = await successLabel("greatSuc");
+                            superior = true;
                             break;
                         case 'Greater Success':
                             successName = "Superior Success";
                             successMessage = await successLabel("supSuc");
+                            doubleSuperior = true;
                             break;
                         case 'Critical Success':
                             successName = "Greater Critical Success";
                             successMessage = await successLabel("greatCritSuc");
+                            superior = true;
                             break;
                         case 'Greater Critical Success':
                             successName = "Superior Critical Success";
                             successMessage = await successLabel("supCritSuc");
+                            doubleSuperior = true;
                             break;
                     }
     
@@ -1187,18 +1161,22 @@ export async function TaskCheck({
                         case 'Success':
                             successName = "Greater Success";
                             successMessage = await successLabel("greatSuc");
+                            superior = true;
                             break;
                         case 'Greater Success':
                             successName = "Superior Success";
                             successMessage = await successLabel("supSuc");
+                            doubleSuperior = true;
                             break;
                         case 'Critical Success':
                             successName = "Greater Critical Success";
                             successMessage = await successLabel("greatCritSuc");
+                            superior = true;
                             break;
                         case 'Greater Critical Success':
                             successName = "Superior Critical Success";
                             successMessage = await successLabel("supCritSuc");
+                            doubleSuperior = true;
                             break;
                     }
     
@@ -1256,7 +1234,85 @@ export async function TaskCheck({
                     })
                 }
             }
+
+            
+
+        //Infection (only relevant for psi checks)
+        if (skillKey === "psi" && !ignoreInfection){
+
+            //Success check of the virus
+            let rollCheck = roll.total;
+
+            let rollResult = await successCheck(rollCheck, infectionMod)
+
+            success = rollResult["success"]
+            critical = rollResult["critical"]
+            autoSuccess = rollResult["autoSuccess"]
+            autoFail = rollResult["autoFail"]
+            doubleSuperior = rollResult["doubleSuperior"]
+            superior = rollResult["superior"]
+
+            //Success messages
+            let successContent = await successTranslation(success,critical,autoSuccess,autoFail,doubleSuperior,superior)
+
+            successMessage = successContent["successMessage"];
+            successClass = successContent["successClass"];
+            successName = successContent["successName"];
+
+            if (successClass === "fail"){
+                successClass = "success"
+            }
+            else {
+                successClass = "fail"
+            }
+
+            let message = {}
+            
+            message.resultText = successMessage;
+            message.resultClass = successClass;
+        
+            message.targetNumber = infectionMod;
+
+            message.visibility = activeRollTarget;
+
+            let html = await renderTemplate(TASK_RESULT_OUTPUT, message)
+
+
+            //For default skill roll
+            
+            msg = await roll.toMessage({
+                speaker: ChatMessage.getSpeaker({alias: "The Infection"}),
+                flavor: html
+            },{
+                rollMode: rollModeSelection
+            });
+
+            await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+
+            if(success || autoSuccess){
+                let virusMod = null;
+                if(superior){
+                    virusMod = " + 1"
+                }
+                else if(doubleSuperior || critical || autoSuccess){
+                    virusMod = " + 2"
+                }
+
+                rollFormula = "1d6"+virusMod
+
+                let d6 = await new Roll(rollFormula).evaluate({async: true});
+
+                msg = await d6.toMessage({
+                    speaker: ChatMessage.getSpeaker({alias: "The Infection"})
+                },{
+                    rollMode: rollModeSelection
+                });
+    
+                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+            }
+
         }
+    }
 
         //For roll from Weapon
         else if (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon") {
@@ -1700,6 +1756,89 @@ export async function TaskCheck({
         } 
     }
 
+    //Success Check
+    async function successCheck(rollCheck, modSkillValue){
+
+        let success = rollCheck <= modSkillValue;
+        let critical = rollCheck === 11 || rollCheck === 22 || rollCheck === 33 || rollCheck === 44 || rollCheck === 55 || rollCheck === 66 || rollCheck === 77 || rollCheck === 88;
+        let autoSuccess = rollCheck === 100;
+        let autoFail = rollCheck === 99;
+        let doubleSuperior = rollCheck >= 66;
+        let superior = rollCheck >= 33;
+
+        return {success, critical, autoSuccess, autoFail, doubleSuperior, superior};
+    }
+
+    //Success Translation
+    async function successTranslation(success,critical,autoSuccess,autoFail,doubleSuperior,superior){
+
+        if (autoFail) {
+            successMessage = await successLabel("autoFail");
+            successClass = "fail";
+            successName = "Supreme Fail";
+        } else if (autoSuccess) {
+            successMessage = await successLabel("autoSuccess");
+            successClass = "success";
+            successType = true;
+            successName = "Supreme Success";
+        } else if (success && critical && doubleSuperior) {
+            successMessage = await successLabel("supCritSuc");
+            successClass = "success";
+            successType = true;
+            successName = "Superior Critical Success";
+        } else if (!success && critical && rollCheck <= 33) {
+            successMessage = await successLabel("supCritFail");
+            successClass = "fail";
+            successName = "Superior Critical Fail";
+        } else if (success && critical && superior) {
+            successMessage = await successLabel("greatCritSuc");
+            successClass = "success";
+            successType = true;
+            successName = "Greater Critical Success";
+        } else if (!success && critical && rollCheck <= 66) {
+            successMessage = await successLabel("greatCritFail");
+            successClass = "fail";
+            successName = "Greater Critical Fail";
+        } else if (success && critical) {
+            successMessage = await successLabel("critSuc");
+            successClass = "success";
+            successType = true;
+            successName = "Critical Success";
+        } else if (!success && critical) {
+            successMessage = await successLabel("critFail");
+            successClass = "fail";
+            successName = "Critical Fail";
+        } else if (success && doubleSuperior) {
+            successMessage = await successLabel("supSuc");
+            successClass = "success";
+            successType = true;
+            successName = "Superior Success";
+        } else if (!success && !superior) {
+            successMessage = await successLabel("supFail");
+            successClass = "fail";
+            successName = "Superior Fail";
+        } else if (success && superior) {
+            successMessage = await successLabel("greatSuc");
+            successClass = "success";
+            successType = true;
+            successName = "Greater Success";
+        } else if (!success && !doubleSuperior) {
+            successMessage = await successLabel("greatFail");
+            successClass = "fail";
+            successName = "Greater Fail";
+        } else if (success) {
+            successMessage = await successLabel("suc");
+            successClass = "success";
+            successType = true;
+            successName = "Success";
+        } else if (!success) {
+            successMessage = await successLabel("fail");
+            successClass = "fail";
+            successName = "Fail";
+        }
+
+        return {successMessage, successClass, successName};
+    }
 
     //SwipSwap Dice
     async function swapDice(str){
@@ -1890,7 +2029,7 @@ export async function TaskCheck({
 
     async function successLabel(successName){
         let successLabel
-        if (successName === "autofail") {
+        if (successName === "autoFail") {
             successLabel = "ep2e.roll.successType.supremeFailure";
         } else if (successName === "autoSuccess") {
             successLabel = "ep2e.roll.successType.supremeSuccess";
@@ -1924,12 +2063,12 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType) {
+    async function GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType, sleightInfection, rolledFrom) {
         let dialogName = new Localizer ('ep2e.roll.dialog.title.talentCheck');
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, taskType});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, taskType, sleightInfection, rolledFrom});
 
         return new Promise(resolve => {
             const data = {
@@ -1958,7 +2097,8 @@ export async function TaskCheck({
         return {
             ranged: form.RangedFray ? form.RangedFray.checked : false,
             aspects: form.AspectNumber ? parseInt(form.AspectNumber.value) : 0,
-            pushes: form.PushesNumber ? parseInt(form.PushesNumber.value)*2 : 0,
+            pushes: form.Push.value,
+            ignoreInfection: form.IgnoreInfection ? form.IgnoreInfection.checked : false,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,

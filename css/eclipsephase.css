@@ -816,26 +816,6 @@ a:hover,
   justify-content: center;
 }
 
-/*.eclipsephase .tabs .item:first-child,
-.eclipsephase .tabs .item:last-child {
-  font-weight: bold;
-  text-align: center;
-}
-
-.eclipsephase .tabs .item.active:first-child {
-  text-shadow: none;
-  background-color: var(--mainBackground);
-  text-align: center;
-  clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
-}
-
-.eclipsephase .tabs .item.active:last-child {
-  text-shadow: none;
-  background-color: var(--mainBackground);
-  text-align: center;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%);
-}*/
-
 .eclipsephase .tabs .item.active {
   text-shadow: none;
   background-color: var(--mainBackground);
@@ -966,6 +946,10 @@ button.restReset {
   max-width: 18px!important;
 }
 
+.icon-space {
+  margin-right: 5px;
+}
+
 /* Own Styles */
 .skill {
   min-height: 26px;
@@ -1084,7 +1068,7 @@ h3.subheader.dialog {
   height: 30px;
   border: none;
   align-items: center;
-  background-color: var(--focusBackground);
+  background: none;
 }
 
 h3.subheaderMirror {
@@ -1302,6 +1286,18 @@ h3.subheaderBlank {
 .statusSideCar {
   max-height: 50px;
   min-height: 50px;
+}
+
+.chiBackground{
+  background-image: url(../resources/img/chiBackground.webp);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.gammaBackground{
+  background-image: url(../resources/img/gammaBackground.webp);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 }
 
 .flexrow.subheader {

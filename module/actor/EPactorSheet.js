@@ -554,7 +554,7 @@ export default class EPactorSheet extends ActorSheet {
 
     // Use Pools Outside rolls
     html.find('.poolUse').click(async f => {
-      const dialog = 'systems/eclipsephase/templates/chat/confirmation.html';
+      const dialog = 'systems/eclipsephase/templates/chat/pop-up.html';
       const result = 'systems/eclipsephase/templates/chat/pool-usage.html';
       const brewStatus = game.settings.get("eclipsephase", "superBrew");
       const element = f.currentTarget;
@@ -907,18 +907,24 @@ export default class EPactorSheet extends ActorSheet {
     let poolType = dataset.pooltype;
     let aptType = dataset.apttype;
     const flexPool = actorModel.pools.flex.value;
-    let skillPoolValue = null
+    let skillPoolValue = null;
 
     if (dataset.rolledfrom === "rangedWeapon") {
       specNameValue = actorModel.skillsVig.guns.specname;
       skillRollValue = actorModel.skillsVig.guns.roll;
-      poolType = "Vigor"
+      poolType = "Vigor";
     }
 
     if (dataset.rolledfrom === "ccWeapon") {
       specNameValue = actorModel.skillsVig.melee.specname;
       skillRollValue = actorModel.skillsVig.melee.roll;
-      poolType = "Vigor"
+      poolType = "Vigor";
+    }
+
+    if (dataset.rolledfrom === "psiSleight") {
+      specNameValue = actorModel.skillsMox.psi.specname;
+      skillRollValue = actorModel.skillsMox.psi.roll;
+      poolType = "Moxie";
     }
 
     switch (aptType) {
@@ -981,6 +987,12 @@ export default class EPactorSheet extends ActorSheet {
         currentAmmo : dataset.currentammo,
         maxAmmo : dataset.maxammo,
         meleeDamageMod: actorModel.mods.meleeDamageMod,
+        //Psi
+        sleightName : dataset.sleightname,
+        sleightDescription : dataset.description,
+        sleightAction : dataset.action,
+        sleightDuration : dataset.duration,
+        sleightInfection : dataset.infection,
         //System Options
         askForOptions : event.shiftKey,
         optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
@@ -1057,7 +1069,6 @@ async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, c
   let dialogName = game.i18n.localize('ep2e.skills.pool.dialogHeadline') + " (" + game.i18n.localize(poolName) +")";
   let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
   let confirmButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
-  console.log("These are the value of inputNeeded: ",inputNeeded, " and the inputType: ", inputType)
   const html = await renderTemplate(dialog, {type, pool, dialogType, subtitle, copy, poolName, inputType, inputNeeded});
 
   return new Promise(resolve => {

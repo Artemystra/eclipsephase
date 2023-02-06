@@ -1,5 +1,6 @@
 // Import Modules
 // const util = require('util');
+import * as EPchat from "./chat.js";
 import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
@@ -164,7 +165,9 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/consumable.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gear.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/ranged-weapons.html",
-    "systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html"
+    "systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/gamma-sleight.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -955,6 +958,9 @@ async function migrationEnd(endMigration) {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => createEclipsePhaseMacro(data, slot));
 });
+
+//Gets chat data
+Hooks.on("renderChatLog", (app, html, data) => EPchat.addChatListeners(html));
 
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)

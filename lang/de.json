@@ -62,7 +62,8 @@
         "warning": "Warnung",
         "error": "Fehler",
         "success": "Erfolg",
-        "confirmationNeeded": "Bestätigung Nötig"
+        "confirmationNeeded": "Bestätigung Nötig",
+        "information": "Information"
       }
     },
     "healthbar": {
@@ -325,7 +326,7 @@
           "type": "Typ"
         },
         "movementTypes": {
-          "none": "-Select-",
+          "none": "-Wähle-",
           "boat": "Boot",
           "hopper": "Springer",
           "hover": "Schweben",
@@ -417,8 +418,8 @@
       "ratingLabel": "Infektionsgrad",
       "strainPlaceholder": "Name des Virenstamms",
       "descriptionPlaceholder": "Beschreibe dein inneres Monster",
-      "gammaHeadline": "Gamma Fertigkeit",
-      "chiHeadline": "Chi Fertigkeit"
+      "gammaHeadline": "Gamma Fertigkeiten",
+      "chiHeadline": "Chi Fertigkeiten"
     },
     "sideCar": {
       "moreToggle": "Mehr",
@@ -533,10 +534,10 @@
           "duration": {
             "label": "Dauer",
             "instant": "Sofort",
-            "action": "Aktionsrunden",
+            "action": "Runden",
             "minutes": "Minuten",
             "hours": "Stunden",
-            "sustained": "Aufrechterhalten"
+            "sustained": "Halten"
           },
           "modifierLabel": "Infektionsmod"
         }
@@ -680,7 +681,17 @@
         "dodgeRangedLabel": "Fernkampf ausweichen",
         "infectionHeadline": "Infektion",
         "baseCostLabel": "Basiskosten",
-        "pushesLabel": "Pushes",
+        "push": {
+          "label": "Push",
+          "none": "-Wähle-",
+          "range": "Reichweite",
+          "effect": "Effekt",
+          "power": "Kraft",
+          "penetration": "Durchdringung",
+          "duration": "Dauer",
+          "target": "Zusätzliches Ziel"
+        },
+        "ignoreInfection": "Infektion ignorieren (1 Moxie)",
         "usePool": "Nutze",
         "globalModLabel": "Globale Mod",
         "noSpecLabel": "Keine Spezialisierung",
