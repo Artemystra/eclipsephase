@@ -819,9 +819,9 @@
       },
       "psiStrain": {
         "name": "",
-        "strainType": "",
+        "strainType": 0,
         "description": "",
-        "infection": ""
+        "infection": 0
       },
       "strainInfluence": {
         "influence1": {

@@ -36,7 +36,8 @@ export default class EPactor extends Actor {
     const actorWhole = this;
     const flags = actorModel.flags;
     const items = this.items;
-    const psiMod = 0;
+    let gammaCount = 0;
+    let chiCount = 0;
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
     actorModel.currentStatus = [];
 
@@ -57,6 +58,16 @@ export default class EPactor extends Actor {
       if(gearCheck.system.displayCategory === "ranged" || gearCheck.system.displayCategory === "ccweapon" || gearCheck.system.displayCategory === "gear" || gearCheck.system.displayCategory === "armor"){
         actorModel.additionalSystems.hasGear = true;
         break;
+      }
+    }
+    for(let psiTypeCheck of items){
+      if (psiTypeCheck.type === "aspect"){
+        if(psiTypeCheck.system.psiType === "chi"){
+          chiCount++
+        }
+        else if(psiTypeCheck.system.psiType === "gamma"){
+          gammaCount++
+        }
       }
     }
 
@@ -112,11 +123,8 @@ export default class EPactor extends Actor {
       this._poolUpdate(actorModel);
       this._modificationListCreator(actorModel, actorWhole);
     }
-
-    //Psi-Calculator - Not Working yet
-    if (this.type === "npc" || this.type === "character") {
-      actorModel.psiStrain.new = 0;
-      actorModel.psiStrain.current = Number(actorModel.psiStrain.infection) + actorModel.psiStrain.new;
+    if (this.type === "npc" || this.type === "character"){
+      this._minimumInfection(actorModel, gammaCount, chiCount);
     }
 
 
@@ -538,5 +546,24 @@ export default class EPactor extends Actor {
 
     skill.roll = Number(skill.derived)
     skill.specialized = skill.roll + 10
+  }
+
+  _minimumInfection(actorModel, gammaCount, chiCount) {
+
+    let minimumInfection = 0;
+    let currentInfection = actorModel.psiStrain.infection;
+
+    if (gammaCount > 0){
+      minimumInfection = 20
+    }
+    else if (chiCount > 0){
+      minimumInfection = 10
+    }
+    
+    if (currentInfection < minimumInfection){
+      actorModel.psiStrain.infection = minimumInfection;
+    }
+
+    actorModel.psiStrain.minimumInfection = minimumInfection
   }
 }

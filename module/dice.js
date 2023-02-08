@@ -824,9 +824,10 @@ export async function TaskCheck({
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
-        if (skillKey === "psi"){
+        if (skillKey === "psi" && actorWhole.type != "goon"){
             if (ignoreInfection && poolValue>0){
                 poolUpdate = poolValue -1;
+                poolValue--;
                 await poolUpdater(poolUpdate,poolType);
             }
             else{
@@ -943,7 +944,7 @@ export async function TaskCheck({
             let combinedPools = poolValue+flexValue;
             
             if (!successType && swapPossible && combinedPools > 0){
-                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successName, swapPossible, severityFlavor);
+                let checkOptions = await GetSwipSwapOptions(swipSwap, poolValue, actorType, poolType, flexValue, successMessage, swapPossible, severityFlavor);
 
                 if (checkOptions.cancelled) {
                     return;
@@ -953,10 +954,11 @@ export async function TaskCheck({
 
                 if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
+                    let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successMessage, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
 
                     successType = swapCheckData["successName"];
                     swapPossible = swapCheckData["swapPossible"];
+                    successMessage = swapCheckData["successMessage"];
                     successName = swapCheckData["successName"];
                     flexValue = swapCheckData["flexValue"];
                     poolValue = swapCheckData["poolValue"];
@@ -1238,10 +1240,18 @@ export async function TaskCheck({
             
 
         //Infection (only relevant for psi checks)
-        if (skillKey === "psi" && !ignoreInfection){
+        if (skillKey === "psi" && !ignoreInfection && actorWhole.type != "goon"){
+
+            let stressDamageRoll = null;
+            let traumaThreshold = actorWhole.system.mental.tt
+            let stressUpdate = actorWhole.system.health.mental.value;
+            let traumaUpdate = actorWhole.system.mental.trauma;
+            let insanity = actorWhole.system.health.insanity.max + actorWhole.system.health.mental.max
+            let d6 = {total: null};
 
             //Success check of the virus
-            let rollCheck = roll.total;
+            let infectionRoll = await new Roll(rollFormula).evaluate({async: true});
+            let rollCheck = infectionRoll.total;
 
             let rollResult = await successCheck(rollCheck, infectionMod)
 
@@ -1275,12 +1285,12 @@ export async function TaskCheck({
 
             message.visibility = activeRollTarget;
 
+
             let html = await renderTemplate(TASK_RESULT_OUTPUT, message)
 
 
-            //For default skill roll
-            
-            msg = await roll.toMessage({
+            //Viruses Skill check printed to the chat
+            msg = await infectionRoll.toMessage({
                 speaker: ChatMessage.getSpeaker({alias: "The Infection"}),
                 flavor: html
             },{
@@ -1289,18 +1299,19 @@ export async function TaskCheck({
 
             await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
 
+            //Effect in case virus was successful
             if(success || autoSuccess){
-                let virusMod = null;
-                if(superior){
+                let virusMod = "";
+                if(superior && !doubleSuperior && !critical && !autoSuccess){
                     virusMod = " + 1"
                 }
-                else if(doubleSuperior || critical || autoSuccess){
+                else {
                     virusMod = " + 2"
                 }
 
-                rollFormula = "1d6"+virusMod
+                rollFormula = "1d6"
 
-                let d6 = await new Roll(rollFormula).evaluate({async: true});
+                d6 = await new Roll(rollFormula+virusMod).evaluate({async: true});
 
                 msg = await d6.toMessage({
                     speaker: ChatMessage.getSpeaker({alias: "The Infection"})
@@ -1310,7 +1321,38 @@ export async function TaskCheck({
     
                 await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
             }
+            
+            if (aspectPushed != "none" && d6.total === 1){
+                stressDamageRoll += "2d6";
+            }
+            else if (d6.total === 1 || aspectPushed != "none"){
+                stressDamageRoll = "1d6";
+            }
 
+            if (stressDamageRoll && actorWhole.type === "character"){
+                
+                let stressDamage = await new Roll(stressDamageRoll).evaluate({async: true});
+
+                msg = await stressDamage.toMessage({
+                    speaker: ChatMessage.getSpeaker({alias: "The Infection damages you for"})
+                },{
+                    rollMode: rollModeSelection
+                });
+    
+                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+    
+                stressUpdate += stressDamage.total;
+    
+                if (stressDamage.total >= traumaThreshold){
+                    traumaUpdate += Math.floor(stressDamage.total/traumaThreshold);
+                }
+
+                if (stressUpdate > insanity){
+                    stressUpdate = insanity
+                }
+    
+                actorWhole.update({"system.health.mental.value" : stressUpdate, "system.mental.trauma" : traumaUpdate})
+            }
         }
     }
 
@@ -1408,10 +1450,11 @@ export async function TaskCheck({
 
                     if (usedSwipSwap === "pool" || usedSwipSwap === "flex"){
 
-                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successName, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
+                        let swapCheckData = await swapChecker(successType, swapPossible, swipSwap, successMessage, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection);
 
                         successType = swapCheckData["successName"];
                         swapPossible = swapCheckData["swapPossible"];
+                        successMessage = swapCheckData["successMessage"];
                         successName = swapCheckData["successName"];
                         flexValue = swapCheckData["flexValue"];
                         poolValue = swapCheckData["poolValue"];
@@ -1786,7 +1829,7 @@ export async function TaskCheck({
             successClass = "success";
             successType = true;
             successName = "Superior Critical Success";
-        } else if (!success && critical && rollCheck <= 33) {
+        } else if (!success && critical && !superior) {
             successMessage = await successLabel("supCritFail");
             successClass = "fail";
             successName = "Superior Critical Fail";
@@ -1795,7 +1838,7 @@ export async function TaskCheck({
             successClass = "success";
             successType = true;
             successName = "Greater Critical Success";
-        } else if (!success && critical && rollCheck <= 66) {
+        } else if (!success && critical && !doubleSuperior) {
             successMessage = await successLabel("greatCritFail");
             successClass = "fail";
             successName = "Greater Critical Fail";
@@ -1901,17 +1944,20 @@ export async function TaskCheck({
     }
 
     //Roll Increase Check
-    async function swapChecker(successType, swapPossible, swipSwap, successName, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection){
+    async function swapChecker(successType, swapPossible, swipSwap, successMessage, poolValue, flexValue, actorType, poolType, usedSwipSwap, rollModeSelection){
         successType = true;
         swapPossible = false;
         if (swipSwap < 33){
-            successName = "ep2e.roll.successType.success";
+            successMessage = "ep2e.roll.successType.success";
+            successName = "suc"
         }
         if (swipSwap > 33 && swipSwap < 66){
-            successName = "ep2e.roll.successType.greaterSuccess";
+            successMessage = "ep2e.roll.successType.greaterSuccess";
+            successName = "greatSuc"
         }
         if (swipSwap > 66){
-            successName = "ep2e.roll.successType.superiorSuccess";
+            successMessage = "ep2e.roll.successType.superiorSuccess";
+            successName = "supSuc"
         }
 
         poolValue--;
@@ -1926,7 +1972,7 @@ export async function TaskCheck({
 
         let message = {}
         
-        message.resultText = successName;
+        message.resultText = successMessage;
         
         message.type = "usedSwipSwap";
         message.poolName = await poolName(poolType);
@@ -1951,7 +1997,7 @@ export async function TaskCheck({
 
         poolUpdater(poolUpdate, poolType);
 
-        return {successType, swapPossible, successName, flexValue, poolValue, usedSwipSwap};
+        return {successType, swapPossible, successMessage, successName, flexValue, poolValue, usedSwipSwap};
     }
 
     //Failure Mitigation Check
@@ -2097,7 +2143,7 @@ export async function TaskCheck({
         return {
             ranged: form.RangedFray ? form.RangedFray.checked : false,
             aspects: form.AspectNumber ? parseInt(form.AspectNumber.value) : 0,
-            pushes: form.Push.value,
+            pushes: form.Push ? form.Push.value : "none",
             ignoreInfection: form.IgnoreInfection ? form.IgnoreInfection.checked : false,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,

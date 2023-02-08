@@ -691,7 +691,7 @@
           "duration": "Dauer",
           "target": "Zusätzliches Ziel"
         },
-        "ignoreInfection": "Infektion ignorieren (1 Moxie)",
+        "ignoreInfection": "Infektion ignorieren",
         "usePool": "Nutze",
         "globalModLabel": "Globale Mod",
         "noSpecLabel": "Keine Spezialisierung",

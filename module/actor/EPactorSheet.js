@@ -673,6 +673,8 @@ export default class EPactorSheet extends ActorSheet {
       const maxVigor = actorModel.pools.vigor.totalVigor;
       const maxMoxie = actorModel.pools.moxie.totalMoxie;
       const maxFlex = actorModel.pools.flex.totalFlex;
+      const easeInfection = actorModel.psiStrain.infection - 10;
+      const resetInfection = actorModel.psiStrain.minimumInfection
       let poolSpend = null
 
       await actorWhole.update({"system.pools.update.insight" : null, "system.pools.update.vigor" : null, "system.pools.update.moxie" : null, "system.pools.update.flex" : null});
@@ -706,7 +708,7 @@ export default class EPactorSheet extends ActorSheet {
           speaker: ChatMessage.getSpeaker({actor: this.actor}),
           flavor: label
       })
-        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null, "system.psiStrain.infection" : resetInfection});
       }
       else if (dataset.resttype === "long" && brewStatus){
           let label = game.i18n.localize("ep2e.roll.announce.rest.long");
@@ -714,16 +716,16 @@ export default class EPactorSheet extends ActorSheet {
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
             flavor: label
         })
-        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null});
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null, "system.psiStrain.infection" : resetInfection});
       }
       else if (restValue >= poolSpend && !brewStatus){
-        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null});
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null, "system.psiStrain.infection" : easeInfection});
       }
       else if (restValue >= poolSpend && brewStatus){
-        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null});
+        return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.rest.restValue" : null, "system.psiStrain.infection" : easeInfection});
       }
       else {
-        return actorWhole.update({"system.rest.restValue" : restValue});
+        return actorWhole.update({"system.rest.restValue" : restValue, "system.psiStrain.infection" : easeInfection});
       }
   });
 

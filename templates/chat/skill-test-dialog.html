@@ -83,10 +83,31 @@
                 <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
             </select>
         </div>
-        <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="IgnoreInfection">
-            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ignoreInfection"}}</label>
-        </div>
+        {{#if (eq actorType "character")}}
+            {{#if poolValue}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="IgnoreInfection">
+                <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ignoreInfection"}}<br>(1 {{poolType}})</label>
+            </div>
+            {{else}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="ignoreInfection" disabled>
+                <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
+            </div>
+            {{/if}}
+        {{else if (eq actorType "npc")}}
+            {{#if poolValue}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="IgnoreInfection">
+                <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ignoreInfection"}}<br>(1 {{poolType}})</label>
+            </div>
+            {{else}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="ignoreInfection" disabled>
+                <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
+            </div>
+            {{/if}}
+        {{/if}}
     </div>
     {{/if}}
     <div class="contentBoxMargin">

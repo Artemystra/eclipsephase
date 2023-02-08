@@ -200,6 +200,41 @@ export default class EPnpcSheet extends ActorSheet {
             }
 
             else if (item.type === 'aspect') {
+              let psiDuration = itemModel.duration;
+              let psiAction = itemModel.actionType;
+              switch (psiDuration) {
+                case 'instant':
+                  itemModel.durationName = "ep2e.item.aspect.table.duration.instant"
+                  break;
+                case 'action':
+                  itemModel.durationName = "ep2e.item.aspect.table.duration.action"
+                  break;
+                case 'minutes':
+                  itemModel.durationName = "ep2e.item.aspect.table.duration.minutes"
+                  break;
+                case 'hours':
+                  itemModel.durationName = "ep2e.item.aspect.table.duration.hours"
+                  break;
+                case 'sustained':
+                  itemModel.durationName = "ep2e.item.aspect.table.duration.sustained"
+                  break;
+                default:
+                  break;
+              }
+      
+              switch (psiAction) {
+                case 'quick':
+                  itemModel.actionName = "ep2e.item.aspect.table.action.quick"
+                  break;
+                case 'task':
+                  itemModel.actionName = "ep2e.item.aspect.table.action.task"
+                  break;
+                case 'complex':
+                  itemModel.actionName = "ep2e.item.aspect.table.action.complex"
+                  break;
+                default:
+                  break;
+              }
                 aspect[itemModel.psiType].push(item);
             }
 
@@ -390,6 +425,11 @@ export default class EPnpcSheet extends ActorSheet {
           skillRollValue = actorModel.skillsVig.melee.roll;
         }
 
+        if (dataset.rolledfrom === "psiSleight") {
+          specNameValue = actorModel.skillsMox.psi.specname;
+          skillRollValue = actorModel.skillsMox.psi.roll;
+        }
+
         Dice.TaskCheck ({
             //Actor data
             actorData : actorModel,
@@ -411,6 +451,13 @@ export default class EPnpcSheet extends ActorSheet {
             weaponType : dataset.weapontype,
             currentAmmo : dataset.currentammo,
             maxAmmo : dataset.maxammo,
+            meleeDamageMod: actorModel.mods.meleeDamageMod,
+            //Psi
+            sleightName : dataset.sleightname,
+            sleightDescription : dataset.description,
+            sleightAction : dataset.action,
+            sleightDuration : dataset.duration,
+            sleightInfection : dataset.infection,
             //System Options
             askForOptions : event.shiftKey,
             optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
