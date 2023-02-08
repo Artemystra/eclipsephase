@@ -47,6 +47,15 @@ function registerSystemSettings() {
     default: false
   });
 
+  game.settings.register("eclipsephase", "restReset", {
+    config: true,
+    scope: "world",
+    name: "Reset Temporary Bonuses",
+    hint: 'If activated ANY rest (short an long) will reset all temporary bonuses like "ignore wound" or "ignore trauma". Keep this deactivated so only long rests reset them.',
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register("eclipsephase", "hideNPCs", {
     config: true,
     scope: "world",

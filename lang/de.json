@@ -56,7 +56,9 @@
         "edit": "Editieren",
         "delete": "Löschen",
         "close": "Schließen",
-        "confirm": "Bestätigen"
+        "confirm": "Bestätigen",
+        "showDetails": "Mehr Details",
+        "hideDetails": "Weniger Details"
       },
       "dialogHeadline": {
         "warning": "Warnung",
@@ -242,7 +244,7 @@
         "poolSubheadline2": "Extra Aktion",
         "poolCopy2": "Du kannst eine Extraaktion (oder zwei schnelle Aktonen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
         "poolSubheadline3": "Wunde ignorieren",
-        "poolCopy3": "Ignoriere den Effekt einer Wunde für 24 Stunden, oder bis zur nächsten langen Rast."
+        "poolCopy3": "Ignoriere den Effekt einer Wunde für 24 Stunden, oder bis zur nächsten Rast."
       },
       "moxieSkills": {
         "moxieHeadline": "Moxie Skills",
@@ -253,7 +255,7 @@
         "psi": "Psi",
         "poolHeadline": "Moxie",
         "poolSubheadline1": "Trauma ignorieren",
-        "poolCopy1": "Ignoriere den Effekt eines Traumas für 24 Stunden, oder bis zur nächsten langen Rast.",
+        "poolCopy1": "Ignoriere den Effekt eines Traumas für 24 Stunden, oder bis zur nächsten Rast.",
         "poolSubheadline2": "Rep wieder auffüllen",
         "poolCopy2": "Stelle Netzwerkgefallen einer Repfraktion wieder her. Zahle 1 Moxie für einen kleinen- oder 2 für einen moderaten Gefallen. Grosse Gefallen können auf diese Weise nicht aufgefüllt werden.",
         "poolSubheadline3": "Einen Tipp bekommen",
@@ -297,7 +299,7 @@
       "dialogCopy": "Dies verbraucht einen Poolpunkt um den folgenden Effekt zu erlangen:",
       "subheadline": "Information",
       "inputSubheadline": "Eingabe Nötig",
-      "chatHeadline": "NUtzt einen Pool",
+      "chatHeadline": "Nutzt einen Pool",
       "chatEffect": "Erhaltener Effekt:",
       "considerResting": "Du kannst ihn mit einer 'Ausruhen'-Aktion wieder füllen",
       "numberWounds": "Anzahl Wunden zu ignorieren",
@@ -436,6 +438,7 @@
           "wounded": "Wunde",
           "woundsIgnored": "Wunde(n) ignoriert",
           "traumatized": "Trauma",
+          "traumasIgnored": "Trauma(s) ignoriert",
           "layersOfArmor": "Rüstungslagen",
           "somExceeded": "RW übersteigt SOM",
           "weaponsExceeded": "Zu viele Waffen",

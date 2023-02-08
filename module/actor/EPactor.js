@@ -416,7 +416,8 @@ export default class EPactor extends Actor {
   _modificationListCreator(actorModel, actorWhole){
     let wounds = (actorModel.physical.wounds + actorModel.mods.woundMod) * 10 * actorModel.mods.woundMultiplier;
     let ignoreWounds = actorModel.mods.woundMod
-    let trauma = actorModel.mental.trauma * 10;
+    let trauma = (actorModel.mental.trauma + actorModel.mods.traumaMod) * 10;
+    let ignoreTrauma = actorModel.mods.traumaMod
     let armorEncumberance = actorModel.physical.mainArmorMalus;
     let numberOfLayers = armorEncumberance/20+1;
     let armorSomCumberance = actorModel.physical.armorSomMalus;
@@ -429,6 +430,7 @@ export default class EPactor extends Actor {
     actorModel.currentStatus.generalModifierSum = 0;
     actorModel.currentStatus.woundModifierSum = 0;
     actorModel.currentStatus.ignoreWound = ignoreWounds*(-1);
+    actorModel.currentStatus.ignoreTrauma = ignoreTrauma*(-1);
     actorModel.currentStatus.traumaModifierSum = 0;
     actorModel.currentStatus.armorModifier = false;
     actorModel.currentStatus.armorModifierSum = 0;
@@ -444,6 +446,12 @@ export default class EPactor extends Actor {
       actorModel.currentStatus.traumaModifierSum = trauma;
     }
     else if(wounds >= 0 && actorModel.currentStatus.ignoreWound > 0){
+      actorModel.currentStatus.generalModifier = true;
+      actorModel.currentStatus.generalModifierSum = wounds + trauma;
+      actorModel.currentStatus.woundModifierSum = wounds;
+      actorModel.currentStatus.traumaModifierSum = trauma;
+    }
+    else if(trauma >= 0 && actorModel.currentStatus.ignoreTrauma > 0){
       actorModel.currentStatus.generalModifier = true;
       actorModel.currentStatus.generalModifierSum = wounds + trauma;
       actorModel.currentStatus.woundModifierSum = wounds;

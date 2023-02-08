@@ -30,6 +30,9 @@
                                     <div>
                                         {{#if actor.system.mental.trauma}}
                                             <span class="resource-label alignLeft">{{actor.system.mental.trauma}} x {{localize "ep2e.sideCar.currentStatus.statuses.traumatized"}}</span><br>
+                                            {{#if actor.system.currentStatus.ignoreTrauma}}
+                                                <span class="footnote alignLeft" style="margin: 0;">{{actor.system.currentStatus.ignoreTrauma}} {{localize "ep2e.sideCar.currentStatus.statuses.traumasIgnored"}}</span>
+                                            {{/if}}
                                         {{/if}}
                                     </div>
                                 </div>
@@ -49,6 +52,9 @@
                                             <div class="flexrow alignRight" style="padding-right: 10px;">  
                                                 <span class="resource-value">-{{actor.system.currentStatus.traumaModifierSum}}</span><br>
                                             </div>
+                                            {{#if actor.system.currentStatus.ignoreTrauma}}
+                                                <div style="min-height: 15px"></div>
+                                            {{/if}}
                                         {{/if}}
                                     </div>
                                     <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  

@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
 import * as Dice from "../dice.js";
 import itemRoll from "../item/EPitem.js";
 
@@ -572,6 +572,13 @@ export default class EPactorSheet extends ActorSheet {
       let poolChange = 1;
       let inputNeeded = false;
       let inputType = null;
+      
+      //Temp effect variables
+      let effectLabel = "";
+      let effectIcon = ""
+      let effectTarget = "";
+      let effectMode = 0;
+      let effectVal = "";
 
       switch (pool){
         case "ins":
@@ -590,6 +597,11 @@ export default class EPactorSheet extends ActorSheet {
           if (type === "3"){
             inputNeeded = true;
             inputType = "woundIgnore";
+            effectLabel = "Temp Ignore Wound";
+            effectIcon = "systems/eclipsephase/resources/icons/add.png";
+            effectTarget = "system.mods.woundMod";
+            effectMode = 2;
+            effectVal = "-1";
           }
           break;
         case "mox":
@@ -601,6 +613,11 @@ export default class EPactorSheet extends ActorSheet {
           if (type === "1"){
             inputNeeded = true;
             inputType = "traumaIgnore";
+            effectLabel = "Temp Ignore Trauma";
+            effectIcon = "systems/eclipsephase/resources/icons/add.png";
+            effectTarget = "system.mods.traumaMod";
+            effectMode = 2;
+            effectVal = "-1";
           }    
           if (type === "2"){
             inputNeeded = true;
@@ -633,6 +650,10 @@ export default class EPactorSheet extends ActorSheet {
       newPoolValue = poolValue - poolChange
 
       if (newPoolValue >= 0) {
+
+        if (inputType === "woundIgnore" || inputType === "traumaIgnore"){
+          await _tempEffectCreation(actor, poolChange, effectLabel, effectIcon, effectTarget, effectMode, effectVal);
+        }
   
         let dialogData = {type : dialogType, poolName : poolName, subtitle : subtitle, copy : copy, number : poolChange}
         let html = await renderTemplate(result, dialogData)
@@ -663,8 +684,10 @@ export default class EPactorSheet extends ActorSheet {
       const element = event.currentTarget;
       const dataset = element.dataset;
       const brewStatus = game.settings.get("eclipsephase", "superBrew");
+      const restReset = game.settings.get("eclipsephase", "restReset");
       const actorWhole = this.actor;
       const actorModel = this.actor.system;
+      const restType = dataset.resttype;
       const curInsight = actorModel.pools.insight.value;
       const curVigor = actorModel.pools.vigor.value;
       const curMoxie = actorModel.pools.moxie.value;
@@ -679,6 +702,23 @@ export default class EPactorSheet extends ActorSheet {
 
       await actorWhole.update({"system.pools.update.insight" : null, "system.pools.update.vigor" : null, "system.pools.update.moxie" : null, "system.pools.update.flex" : null});
 
+      if (!restReset && restType === "long"){
+        for (let effect of actor.effects){
+          if (effect.label === "Temp Ignore Trauma" || effect.label === "Temp Ignore Wound"){
+            let effectID = effect._id;
+            actor.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
+          }
+        }
+      }
+      else if (restReset) {
+        for (let effect of actor.effects){
+          if (effect.label === "Temp Ignore Trauma" || effect.label === "Temp Ignore Wound"){
+            let effectID = effect._id;
+            actor.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
+          }
+        }
+      }
+
       if (!brewStatus){
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
       }
@@ -689,7 +729,7 @@ export default class EPactorSheet extends ActorSheet {
       let roll = await new Roll("1d6").evaluate({async: true});
       let recover = null;
       let restValue = null;
-      if (dataset.resttype === "short"){
+      if (restType === "short"){
         
         let label = game.i18n.localize("ep2e.roll.announce.rest.short");
         recover = await roll.toMessage({
@@ -702,7 +742,7 @@ export default class EPactorSheet extends ActorSheet {
         await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
       }
 
-      if (dataset.resttype === "long" && !brewStatus){
+      if (restType === "long" && !brewStatus){
         let label = game.i18n.localize("ep2e.roll.announce.rest.long");
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker({actor: this.actor}),
@@ -710,7 +750,7 @@ export default class EPactorSheet extends ActorSheet {
       })
         return actorWhole.update({"system.pools.insight.value" : maxInsight, "system.pools.vigor.value" : maxVigor, "system.pools.moxie.value" : maxMoxie, "system.pools.flex.value" : maxFlex, "system.rest.restValue" : null, "system.psiStrain.infection" : resetInfection});
       }
-      else if (dataset.resttype === "long" && brewStatus){
+      else if (restType === "long" && brewStatus){
           let label = game.i18n.localize("ep2e.roll.announce.rest.long");
           ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: this.actor}),

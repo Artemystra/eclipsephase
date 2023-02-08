@@ -41,6 +41,18 @@ export function registerEffectHandlers(html,callerobj){
   
 }
 
+
+
+export async function _tempEffectCreation(callerobj, numberOfRuns, tempEffLabel, tempEffIcon, tempEffTar, tempEffMode, tempEffVal){
+  for (let i = 0; numberOfRuns > i; i++){
+    callerobj.createEmbeddedDocuments('ActiveEffect', [{
+      label: tempEffLabel,
+      icon: tempEffIcon,
+      changes: [{key : tempEffTar, mode : tempEffMode, value : tempEffVal}]
+    }]);
+  }
+}
+
 export function registerCommonHandlers(html,callerobj){
     
     //Open/Close items (gear/weapons/flaws/traits etc.)
@@ -49,7 +61,7 @@ export function registerCommonHandlers(html,callerobj){
         const current = $(ev.currentTarget);
         const first = current.children().first();
         const last = current.children().last();
-        const target = current.parent(".item").children().last();
+        const target = current.closest(".item").children().last();
         first.toggleClass("noShow");
         last.toggleClass("noShow");
         target.slideToggle(200);

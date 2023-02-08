@@ -56,7 +56,9 @@
         "edit": "Edit",
         "delete": "Delete",
         "close": "Close",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "showDetails": "Show Details",
+        "hideDetails": "Hide Details"
       },
       "dialogHeadline": {
         "warning": "Warning",
@@ -436,6 +438,7 @@
           "wounded": "Wound",
           "woundsIgnored": "Wound(s) Ignored",
           "traumatized": "Trauma",
+          "traumasIgnored": "Trauma(s) Ignored",
           "layersOfArmor": "layers of Armor",
           "somExceeded": "AV exceeds SOM",
           "weaponsExceeded": "Too many weapons",
