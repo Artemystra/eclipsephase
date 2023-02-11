@@ -57,6 +57,7 @@
         "delete": "Delete",
         "close": "Close",
         "confirm": "Confirm",
+        "select": "Select",
         "showDetails": "Show Details",
         "hideDetails": "Hide Details"
       },
@@ -683,6 +684,7 @@
         "frayTypeHeadline": "Fray Type",
         "dodgeRangedLabel": "Dodge Ranged",
         "infectionHeadline": "Infection",
+        "autoPush": "Auto Push Selection",
         "baseCostLabel": "Base cost",
         "push": {
           "label": "Push",

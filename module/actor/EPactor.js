@@ -29,7 +29,7 @@ export default class EPactor extends Actor {
   /**
    * Augment the basic actor data with additional dynamic data.
    */
-  prepareData() {
+  async prepareData() {
     super.prepareData();
 
     const actorModel = this.system;
@@ -37,7 +37,15 @@ export default class EPactor extends Actor {
     const flags = actorModel.flags;
     const items = this.items;
     let gammaCount = 0;
-    let chiCount = 0;
+    let chiCount = 0;    
+    let chiMultiplier = 1;
+    if(actorWhole.type === "character" || actorWhole.type === "npc"){
+      if (actorModel.psiStrain.infection >= 33){
+        chiMultiplier = 2;
+      }
+    }
+    actorModel.mods.psiMultiplier = chiMultiplier
+
     const brewStatus = game.settings.get("eclipsephase", "superBrew");
     actorModel.currentStatus = [];
 
@@ -60,6 +68,7 @@ export default class EPactor extends Actor {
         break;
       }
     }
+    //Prepares information what type of psi a character uses
     for(let psiTypeCheck of items){
       if (psiTypeCheck.type === "aspect"){
         if(psiTypeCheck.system.psiType === "chi"){
@@ -70,8 +79,10 @@ export default class EPactor extends Actor {
         }
       }
     }
+    
+    
 
-    this._calculateMentalHealth(actorModel)
+    this._calculateMentalHealth(actorModel, chiMultiplier)
 
     //Physical Health
     //NPCs & Goons only
@@ -91,7 +102,7 @@ export default class EPactor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorModel.bodies[actorModel.bodies.activeMorph];
-      actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod);
+      actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0);
       actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
       actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]));
       actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max;
@@ -112,16 +123,16 @@ export default class EPactor extends Actor {
         actorModel.health.physical.value = actorModel.physical.dr
       }
 
-      this._calculatePools(actorModel, morph)
+      this._calculatePools(actorModel, morph, chiMultiplier)
     }
 
     this._calculateArmor(actorModel, actorWhole, brewStatus);
-    this._calculateInitiative(actorModel);
+    this._calculateInitiative(actorModel, chiMultiplier);
     if (this.type === "character"){
       this._calculateHomebrewEncumberance(actorModel);
       this._calculateSideCart(actorModel, items);
       this._poolUpdate(actorModel);
-      this._modificationListCreator(actorModel, actorWhole);
+      this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     }
     if (this.type === "npc" || this.type === "character"){
       this._minimumInfection(actorModel, gammaCount, chiCount);
@@ -130,31 +141,31 @@ export default class EPactor extends Actor {
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(actorModel.aptitudes)) {
-      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod);
+      aptitude.calc = aptitude.value * 3 + eval(aptitude.mod) + (aptitude.chiMod ? (eval(aptitude.chiMod)*chiMultiplier) : 0);
       aptitude.roll = aptitude.calc;
     }
 
     // Insight Skills
     for (let [key, skill] of Object.entries(actorModel.skillsIns)) {
-      skill.mod = eval(skill.mod);
+      skill.mod = eval(skill.mod) + (skill.chiMod ? (eval(skill.chiMod)*chiMultiplier) : 0);
       this._calculateSkillValue(key,skill,actorModel,actorWhole.type);
     }
 
     // Moxie skills
     for (let [key, skill] of Object.entries(actorModel.skillsMox)) {
-      skill.mod = eval(skill.mod);
+      skill.mod = eval(skill.mod) + (skill.chiMod ? (eval(skill.chiMod)*chiMultiplier) : 0);
       this._calculateSkillValue(key,skill,actorModel,this.type);
     }
 
     // Vigor skills
     for (let [key, skill] of Object.entries(actorModel.skillsVig)) {
-      skill.mod = eval(skill.mod);
+      skill.mod = eval(skill.mod) + (skill.chiMod ? (eval(skill.chiMod)*chiMultiplier) : 0);
       this._calculateSkillValue(key,skill,actorModel,this.type);
     }
 
     //Pool Bonuses
     for (let [key, pool] of Object.entries(actorModel.pools)) {
-      pool.mod = eval(pool.mod);
+      pool.mod = eval(pool.mod) + (pool.chiMod ? (eval(pool.chiMod)*chiMultiplier) : 0);
     }
 
     //Showing skill calculations for know/spec skills
@@ -195,16 +206,16 @@ export default class EPactor extends Actor {
     // const data = actorModel.data;
   }
 
-  _calculateInitiative(actorModel) {
+  _calculateInitiative(actorModel, chiMultiplier) {
     actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value +
-      actorModel.aptitudes.int.value) / 5) + eval(actorModel.mods.iniMod)
+      actorModel.aptitudes.int.value) / 5) + eval(actorModel.mods.iniMod) + (actorModel.mods.iniChiMod ? (eval(actorModel.mods.iniChiMod)*chiMultiplier) : 0)
     actorModel.initiative.display = "1d6 + " + actorModel.initiative.value
   }
 
-  _calculateMentalHealth(actorModel) {
-    actorModel.health.mental.max = (actorModel.aptitudes.wil.value * 2) + eval(actorModel.mods.lucmod);
+  _calculateMentalHealth(actorModel, chiMultiplier) {
+    actorModel.health.mental.max = (actorModel.aptitudes.wil.value * 2) + eval(actorModel.mods.lucmod) + (actorModel.mods.lucChiMod ? (eval(actorModel.mods.lucChiMod)*chiMultiplier): 0);
     actorModel.mental.ir = actorModel.health.mental.max * 2;
-    actorModel.mental.tt = Math.round(actorModel.health.mental.max / 5) + eval(actorModel.mods.ttMod);
+    actorModel.mental.tt = Math.round(actorModel.health.mental.max / 5) + eval(actorModel.mods.ttMod) + (actorModel.mods.ttChiMod ? (eval(actorModel.mods.ttChiMod)*chiMultiplier) : 0);
     actorModel.health.insanity.max = actorModel.mental.ir - actorModel.health.mental.max;
     actorModel.health.insanity.value = actorModel.health.mental.value - actorModel.mental.ir;
 
@@ -224,16 +235,20 @@ export default class EPactor extends Actor {
       }
   }
 
-  _calculatePools(actorModel, morph) {
+  _calculatePools(actorModel, morph, chiMultiplier) {
     actorModel.pools.flex.totalFlex = Number(morph.flex) +
       Number(actorModel.ego.egoFlex) +
-      eval(actorModel.pools.flex.mod)
+      eval(actorModel.pools.flex.mod) + 
+      (actorModel.pools.flex.chiMod ? (eval(actorModel.pools.flex.chiMod)*chiMultiplier) : 0)
     actorModel.pools.insight.totalInsight = Number(morph.insight) +
-      eval(actorModel.pools.insight.mod)
+      eval(actorModel.pools.insight.mod) + 
+      (actorModel.pools.insight.chiMod ? (eval(actorModel.pools.insight.chiMod)*chiMultiplier) : 0)
     actorModel.pools.moxie.totalMoxie = Number(morph.moxie) +
-      eval(actorModel.pools.moxie.mod)
+      eval(actorModel.pools.moxie.mod) + 
+      (actorModel.pools.moxie.chiMod ? (eval(actorModel.pools.moxie.chiMod)*chiMultiplier) : 0)
     actorModel.pools.vigor.totalVigor = Number(morph.vigor) +
-      eval(actorModel.pools.vigor.mod)
+      eval(actorModel.pools.vigor.mod) + 
+      (actorModel.pools.vigor.chiMod ? (eval(actorModel.pools.vigor.chiMod)*chiMultiplier) : 0)
   }
 
   _calculateHomebrewEncumberance(actorModel) {
@@ -413,11 +428,11 @@ export default class EPactor extends Actor {
     }
   }
 
-  _modificationListCreator(actorModel, actorWhole){
-    let wounds = (actorModel.physical.wounds + actorModel.mods.woundMod) * 10 * actorModel.mods.woundMultiplier;
-    let ignoreWounds = actorModel.mods.woundMod
-    let trauma = (actorModel.mental.trauma + actorModel.mods.traumaMod) * 10;
-    let ignoreTrauma = actorModel.mods.traumaMod
+  _modificationListCreator(actorModel, actorWhole, chiMultiplier){
+    let wounds = (actorModel.physical.wounds + actorModel.mods.woundMod + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*chiMultiplier) : 0)) * 10 * actorModel.mods.woundMultiplier;
+    let ignoreWounds = actorModel.mods.woundMod + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*chiMultiplier) : 0)
+    let trauma = (actorModel.mental.trauma + actorModel.mods.traumaMod + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*chiMultiplier) : 0)) * 10;
+    let ignoreTrauma = actorModel.mods.traumaMod + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*chiMultiplier) : 0)
     let armorEncumberance = actorModel.physical.mainArmorMalus;
     let numberOfLayers = armorEncumberance/20+1;
     let armorSomCumberance = actorModel.physical.armorSomMalus;
@@ -548,9 +563,9 @@ export default class EPactor extends Actor {
     let skillValue = data.aptitudes[skillData.aptitude].value
 
     if(actorType === 'character' || actorType === 'npc')
-      skill.derived = skill.value + skillValue * skillData.multiplier + Number(skill.mod)
+      skill.derived = skill.value + skillValue * skillData.multiplier + Number(skill.mod);
     else
-      skill.derived = skill.value
+      skill.derived = skill.value + Number(skill.mod)
 
     skill.roll = Number(skill.derived)
     skill.specialized = skill.roll + 10
@@ -574,4 +589,56 @@ export default class EPactor extends Actor {
 
     actorModel.psiStrain.minimumInfection = minimumInfection
   }
+
+  async _autoPush(actorModel, actorWhole) {
+    let currentInfection = actorModel.psiStrain.infection;
+    let autoPushSelection = actorModel.additionalSystems.autoPushSelection
+
+    switch(currentInfection){
+      case (currentInfection < 33):
+        actorModel.additionalSystems.autoPush = 0;
+        actorModel.additionalSystems.autoPushSelection = false;
+        break;
+      case (currentInfection > 66 && !autoPushSelection):
+        actorModel.additionalSystems.autoPush = 2;
+        let pushSelection = await autoPushSelector("selectAutoPush")
+        let selection = pushSelection.pushType;
+        actorModel.additionalSystems.autoPushSelection = selection;
+
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+async function autoPushSelector(dialogType) {
+  let dialog = 'systems/eclipsephase/templates/chat/pop-up.html';
+  let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+  let selectButton = game.i18n.localize('ep2e.actorSheet.button.select');
+  const html = await renderTemplate(dialog, {dialogType});
+
+  return new Promise(resolve => {
+      const data = {
+          title: dialogName,
+          content: html,
+          buttons: {
+              normal: {
+                  label: selectButton,
+                  callback: html => resolve(_autoPushSelection(html[0].querySelector("form")))
+              }
+          },
+          default: "normal",
+          close: () => resolve ({cancelled: true})
+      };
+      let options = {width:315}
+      new Dialog(data, options).render(true);
+  });
+}
+
+//General skill check results
+function _autoPushSelection(form) {
+    return {
+        pushType: form.autoPush ? form.autoPush.value : false
+    }
 }

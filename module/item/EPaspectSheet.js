@@ -1,3 +1,4 @@
+import { registerEffectHandlers,registerCommonHandlers } from "../common/common-sheet-functions.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -31,10 +32,17 @@ export default class EPaspectSheet extends ItemSheet {
   /** @override */
   getData() {
     const sheetData = super.getData()
+    const item = sheetData.item
+
     sheetData.config = CONFIG.eclipsephase
+    item.showEffectsTab = true
+    if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM) {
+      item.showEffectsTab=true
+    }
 
     console.log("***** aspect-sheet")
     console.log(sheetData)
+
     return sheetData
   }
 
@@ -57,6 +65,9 @@ export default class EPaspectSheet extends ItemSheet {
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
+
+    registerEffectHandlers(html,this.item);
+    registerCommonHandlers(html,this.item);
 
     // Roll handlers, click handlers, etc. would go here.
   }

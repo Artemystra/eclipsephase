@@ -7,95 +7,105 @@
             </div>
         </div>
     </header>
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
+        {{#if item.showEffectsTab}}
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
+        {{/if}}
+    </nav>
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
-        <div class="flexrow flex-group-center">
-            {{#if item.homebrew}}
-            <table>
-                <tr>
-                    <td>
-                        <label class="resource-label">Psi Type</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">Infection Modifier</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="system.psiType" data-type="String">
-                            {{#select item.system.psiType}}
-                            {{#each config.psiTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    <td>
-                        <input class="input-large" type="number"
-                        name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
-                    </td>
-                </tr>
-            </table>
-            {{else}}
-            <table>
-                <tr>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.aspect.table.type.label"}}</label>
-                    </td>
-                    {{#if (eq item.system.psiType "chi")}}
-                    {{else}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.aspect.table.action.label"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.aspect.table.duration.label"}}</label>
-                    </td>
-                    {{/if}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.aspect.table.modifierLabel"}}</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="system.psiType" data-type="String">
-                            {{#select item.system.psiType}}
-                            {{#each config.psiTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    {{#if (eq item.system.psiType "chi")}}
-                    {{else}}
-                    <td>
-                        <select name="system.actionType" data-type="String">
-                            {{#select item.system.actionType}}
-                            {{#each config.actionTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    <td>
-                        <select name="system.duration" data-type="String">
-                            {{#select item.system.duration}}
-                            {{#each config.duration as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    {{/if}}
-                    <td>
+        <div class="tab details" data-group="primary" data-tab="details">
+            <div class="flexrow flex-group-center">
+                {{#if item.homebrew}}
+                <table>
+                    <tr>
+                        <td>
+                            <label class="resource-label">Psi Type</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">Infection Modifier</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="system.psiType" data-type="String">
+                                {{#select item.system.psiType}}
+                                {{#each config.psiTypes as |name key|}}
+                                <option value="{{key}}">{{localize name}}</option>
+                                {{/each}} {{/select}}
+                            </select>
+                        </td>
+                        <td>
+                            <input class="input-large" type="number"
+                            name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
+                        </td>
+                    </tr>
+                </table>
+                {{else}}
+                <table>
+                    <tr>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.aspect.table.type.label"}}</label>
+                        </td>
                         {{#if (eq item.system.psiType "chi")}}
-                        -
                         {{else}}
-                        <input class="input-large" type="number" name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.aspect.table.action.label"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.aspect.table.duration.label"}}</label>
+                        </td>
                         {{/if}}
-                    </td>
-                </tr>
-            </table>
-            {{/if}}
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.aspect.table.modifierLabel"}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="system.psiType" data-type="String">
+                                {{#select item.system.psiType}}
+                                {{#each config.psiTypes as |name key|}}
+                                <option value="{{key}}">{{localize name}}</option>
+                                {{/each}} {{/select}}
+                            </select>
+                        </td>
+                        {{#if (eq item.system.psiType "chi")}}
+                        {{else}}
+                        <td>
+                            <select name="system.actionType" data-type="String">
+                                {{#select item.system.actionType}}
+                                {{#each config.actionTypes as |name key|}}
+                                <option value="{{key}}">{{localize name}}</option>
+                                {{/each}} {{/select}}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="system.duration" data-type="String">
+                                {{#select item.system.duration}}
+                                {{#each config.duration as |name key|}}
+                                <option value="{{key}}">{{localize name}}</option>
+                                {{/each}} {{/select}}
+                            </select>
+                        </td>
+                        {{/if}}
+                        <td>
+                            {{#if (eq item.system.psiType "chi")}}
+                            -
+                            {{else}}
+                            <input class="input-large" type="number" name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
+                            {{/if}}
+                        </td>
+                    </tr>
+                </table>
+                {{/if}}
+            </div>
+            <p></p>
+            <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+            <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
         </div>
-        <p></p>
-        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
-        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+        
+        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
     </section>
 </form>

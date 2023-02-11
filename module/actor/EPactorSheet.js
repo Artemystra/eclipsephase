@@ -107,14 +107,15 @@ export default class EPactorSheet extends ActorSheet {
 
   //Binds morphFlaws/Traits/Gear to a singular morph
   async _onDropItemCreate(item) {
+    const actor = this.actor
+    const actorModel = actor.system
+    const itemModel = item.system
+    
+    let currentMorph = actorModel.bodies.activeMorph
+
 
     // Create a Consumable spell scroll on the Inventory tab
     if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware") {
-      let actor = this.actor
-      let actorModel = actor.system
-      let currentMorph = actorModel.bodies.activeMorph
-      let itemModel = item.system
-
       itemModel.boundTo = currentMorph
     }
 
@@ -520,10 +521,6 @@ export default class EPactorSheet extends ActorSheet {
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
-    
-    // Custom Droplists
-
-    // Close dropdown when dom element is clicked
 
     registerEffectHandlers(html, actor);
     registerCommonHandlers(html, actor);
@@ -542,7 +539,7 @@ export default class EPactorSheet extends ActorSheet {
     });
 
         // Delete Inventory Item
-  html.find('.item-delete').click(ev => {
+  html.find('.item-delete').click(async ev => {
     const li = $(ev.currentTarget).parents(".item");
     actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
     li.slideUp(200, () => this.render(false));
@@ -726,7 +723,8 @@ export default class EPactorSheet extends ActorSheet {
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie);
       }
 
-      let roll = await new Roll("1d6").evaluate({async: true});
+      let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : 0)
+      let roll = await new Roll(rollFormula).evaluate({async: true});
       let recover = null;
       let restValue = null;
       if (restType === "short"){
@@ -804,7 +802,7 @@ export default class EPactorSheet extends ActorSheet {
       //Reload Ranged Weapon Functionality
       html.find(".reload").click(this._onReloadWeapon.bind(this));
 
-      ///(De)Activate morph/body bound traits/flaws/ware
+      //(De)Activate morph/body bound traits/flaws/ware
       html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
 
       //Edit Item Checkboxes

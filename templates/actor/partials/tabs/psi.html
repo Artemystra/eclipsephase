@@ -39,7 +39,7 @@
                     <div class="alignRight flexGrowThreeQuarter" style ="height: 28px;">
                         <span class="resource-label  input-XL"><strong>{{localize "ep2e.psi.ratingLabel"}}:</strong></span>
                         {{#if isGM}}
-                            <input class="input-small" type="text" style="text-align: center;" name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
+                            <input class="input-small infectionRating" type="text" style="text-align: center;" name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
                         {{else}}
                             <span class="resource-label  input-XL"><strong>{{actor.system.psiStrain.infection}}</strong></span>
                         {{/if}}

@@ -313,8 +313,8 @@ export async function ReputationRoll(dataset, actorModel) {
  */
 function applyHealthModifiers(actorData, taskRoll) {
 
-    let wounds = 10*(parseInt(actorData.physical.wounds)+eval(actorData.mods.woundMod))*eval(actorData.mods.woundMultiplier)
-    let trauma = 10*parseInt(actorData.mental.trauma)+eval(actorData.mods.traumaMod)
+    let wounds = 10*(parseInt(actorData.physical.wounds)+eval(actorData.mods.woundMod) + (actorData.mods.woundChiMod ? (eval(actorData.mods.woundChiMod)*actorData.mods.psiMultiplier) : 0))*eval(actorData.mods.woundMultiplier)
+    let trauma = 10*parseInt(actorData.mental.trauma)+eval(actorData.mods.traumaMod) + (actorData.mods.traumaChiMod ? (eval(actorData.mods.traumaChiMod)*actorData.mods.psiMultiplier) : 0)
 
   if(wounds > 0)
     taskRoll.addModifier(new TaskRollModifier('ep2e.roll.announce.woundModifier', -wounds))
@@ -586,7 +586,7 @@ export async function TaskCheck({
         }
         if (running) {
             gunsMod -= 20;
-            modValue = -10
+            modValue = -20
             announce = "ep2e.roll.announce.combat.ranged.running";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
@@ -760,8 +760,8 @@ export async function TaskCheck({
     //console.log("this is my task: ", task)
     
     //General roll modifications
-    let curratedWounds = 10 * (Number(actorData.physical.wounds) + eval(actorData.mods.woundMod))*eval(actorData.mods.woundMultiplier);
-    let curratedTrauma = 10 * (Number(actorData.mental.trauma) + eval(actorData.mods.traumaMod));
+    let curratedWounds = 10 * (Number(actorData.physical.wounds) + eval(actorData.mods.woundMod) + (actorData.mods.woundChiMod ? (eval(actorData.mods.woundChiMod)*actorData.mods.psiMultiplier) : 0))*eval(actorData.mods.woundMultiplier);
+    let curratedTrauma = 10 * (Number(actorData.mental.trauma) + eval(actorData.mods.traumaMod) + (actorData.mods.traumaChiMod ? (eval(actorData.mods.traumaChiMod)*actorData.mods.psiMultiplier) : 0));
     if (curratedWounds > 0) {
         woundsMod += curratedWounds
     }

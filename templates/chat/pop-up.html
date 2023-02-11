@@ -40,7 +40,7 @@
           </div>
         {{/if}}
       {{/if}}
-      <!-- Click a rule text button in the Chat (chat.js line 13 onwards)-->
+      <!-- Bring a rule text button in the Chat (chat.js line 13 onwards)-->
       {{#if (eq dialogType "information")}}
         <!-- if not rolled from a skill/item)-->
         {{#if (eq rolledFrom "false")}}
@@ -87,5 +87,24 @@
           </div>
         {{/if}}
       {{/if}}
+      <!-- Choose an auto Push if Infection Rating > 66 (EPactor.js line 593 onwards)-->
+      {{#if (eq dialogType "selectAutoPush")}}
+      <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.autoPush"}}</h3>
+        </div>
+        <div class="form-group listBackgroundMain">
+            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.push.label"}}</label>
+            <select name="autoPush">
+                <option value="none">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                <option value="range">{{localize "ep2e.roll.dialog.push.range"}}</option>
+                <option value="effect">{{localize "ep2e.roll.dialog.push.effect"}}</option>
+                <option value="power">{{localize "ep2e.roll.dialog.push.power"}}</option>
+                <option value="penetration">{{localize "ep2e.roll.dialog.push.penetration"}}</option>
+                <option value="duration">{{localize "ep2e.roll.dialog.push.duration"}}</option>
+                <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
+            </select>
+        </div>
+        {{/if}}
     </div>
 </form>
