@@ -920,7 +920,9 @@ export async function TaskCheck({
                 rollMode: rollModeSelection
             });
 
-            await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+            if (game.dice3d){
+                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+            }
 
             let evaluatedRoll = msg.content;
             let swipSwap = 0;
@@ -1297,7 +1299,9 @@ export async function TaskCheck({
                 rollMode: rollModeSelection
             });
 
-            await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+            if (game.dice3d){
+                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+            }
 
             //Effect in case virus was successful
             if(success || autoSuccess){
@@ -1319,7 +1323,9 @@ export async function TaskCheck({
                     rollMode: rollModeSelection
                 });
     
-                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+                if (game.dice3d){
+                    await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+                }
             }
             
             if (aspectPushed != "none" && d6.total === 1){
@@ -1339,7 +1345,9 @@ export async function TaskCheck({
                     rollMode: rollModeSelection
                 });
     
-                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+                if (game.dice3d){
+                    await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+                }
     
                 stressUpdate += stressDamage.total;
     
@@ -1412,7 +1420,9 @@ export async function TaskCheck({
                 //This updates the items ammunition
                 actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
 
-                await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+                if (game.dice3d){
+                    await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+                }
 
                 let evaluatedRoll = msg.content;
                 let swipSwap = 0;

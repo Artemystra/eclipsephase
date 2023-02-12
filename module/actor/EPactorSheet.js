@@ -723,7 +723,7 @@ export default class EPactorSheet extends ActorSheet {
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie);
       }
 
-      let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : 0)
+      let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : "")
       let roll = await new Roll(rollFormula).evaluate({async: true});
       let recover = null;
       let restValue = null;
@@ -737,7 +737,9 @@ export default class EPactorSheet extends ActorSheet {
 
         restValue = recover.content
 
-        await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
+        if (game.dice3d){
+          await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
+        }
       }
 
       if (restType === "long" && !brewStatus){
