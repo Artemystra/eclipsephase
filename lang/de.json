@@ -1,22 +1,22 @@
 {
   "ACTOR.TypeCharacter" : "Spielercharakter",
-  "ACTOR.TypeNpc" : "Nicht-Spielercharacter",
+  "ACTOR.TypeNpc" : "Nichtspielercharakter",
   "ACTOR.TypeGoon" : "Bedrohung",
   "ITEM.TypeGear" : "Spezialausrüstung",
   "ITEM.TypeRangedweapon" : "Fernkampfwaffe",
   "ITEM.TypeCcweapon" : "Nahkampfwaffe",
   "ITEM.TypeArmor" : "Rüstung",
   "ITEM.TypeGrenade" : "Granate",
-  "ITEM.TypeTrait" : "Ego Vorteil",
-  "ITEM.TypeFlaw" : "Ego Nachteil",
-  "ITEM.TypeMorphtrait" : "Morph Vorteil",
-  "ITEM.TypeMorphflaw" : "Morph Nachteil",
+  "ITEM.TypeTrait" : "Ego-Vorteil",
+  "ITEM.TypeFlaw" : "Ego-Nachteil",
+  "ITEM.TypeMorphtrait" : "Morph-Vorteil",
+  "ITEM.TypeMorphflaw" : "Morph-Nachteil",
   "ITEM.TypeWare" : "Körpermodifikation",
-  "ITEM.TypeAspect" : "Psi Kraft",
+  "ITEM.TypeAspect" : "Psi-Kraft",
   "ITEM.TypeProgram" : "Programm",
-  "ITEM.TypeSpecialskill" : "Spezialfertigkeit",
-  "ITEM.TypeKnowskill" : "Wissensfertigkeit",
-  "ITEM.TypeVehicle" : "Vehikel",
+  "ITEM.TypeSpecialskill" : "Spezial-Skill",
+  "ITEM.TypeKnowskill" : "Wissens-Skill",
+  "ITEM.TypeVehicle" : "Fahrzeug",
   "ITEM.TypeDrug" : "Droge",
 
   "ep2e": {
@@ -37,7 +37,7 @@
         "ref": "Reflexe",
         "sav": "Empathie",
         "som": "Somatik",
-        "wil": "Wille"
+        "wil": "Willenskraft"
       },
       "leftTabs": {
         "egoTab": "Ego",
@@ -45,7 +45,7 @@
         "museTab": "Muse"
       },
       "rightTabs": {
-        "skillsTab": "Skills",
+        "skillsTab": "Fähigkeiten",
         "morphTab": "Morph",
         "inventoryTab": "Inventar",
         "peripheralsTab": "Peripherie",
@@ -72,11 +72,11 @@
       "tooltip": {
         "durdr": "Aus/Tr",
         "woundswt": "Wunden/(WG)",
-        "stressluc": "Stress/Luz",
+        "stressluc": "Stress/Kla",
         "traumatt": "Trauma/(TG)",
         "initiative": "Initiative",
         "threat": "Bedrohung",
-        "stressTest": "Stress Test",
+        "stressTest": "Belastungs-Probe",
         "iniMod": "Ini Mod"
       }
     },
@@ -97,8 +97,8 @@
           "lunar": "Lunare:r/Orbitale:r",
           "mercurial": "Merkurier:in",
           "reclaimer": "Rückforderer/Rückforderin",
-          "scum": "Scum",
-          "socialite": "Social-Elite",
+          "scum": "Abschaum",
+          "socialite": "Socialite",
           "titanian": "Titanier:in",
           "venusian": "Venusier:in",
           "regional": "Regional"
@@ -111,7 +111,7 @@
           "dyadic": "Dyadisch"
         },
         "gender": {
-          "headline": "Identität",
+          "headline": "Soziales Geschlecht",
           "cis": "Cisgender",
           "trans": "Transgender",
           "nonBi": "Non-Binary",
@@ -152,7 +152,7 @@
     "id": {
       "headline": "Aktuelle ID",
       "nameLabel": "Name",
-      "namePlaceholder": "Fake Name",
+      "namePlaceholder": "Zweitidentität",
       "repType": {
         "@rep": "@-Rep",
         "crep": "C-Rep",
@@ -201,11 +201,11 @@
           "distributionDone": "Alle Punkte verteilt. Los geht's!"
         },
         "restInfo": {
-          "headline": "Rast Regeln",
+          "headline": "Ausruhen",
           "subheadline1": "Allgemein",
-          "copy1": "Du musst eine 'Rast'-Aktion nutzen um Pools wieder aufzufüllen. Um den Typ der Rast zu wählen, klicke auf die zugehörige Checkbox. Jeder Charakter hat alle 24 Stunden eine lange- und zwei Kurze Rast zur Verfügung.",
+          "copy1": "Du musst eine 'Rast'-Aktion nutzen, um Pools wieder aufzufüllen. Um den Typ der Rast zu wählen, klicke auf die zugehörige Checkbox. Jeder Charakter hat alle 24 Stunden eine lange- und zwei Kurze Rast zur Verfügung.",
           "subheadline2": "Kurze Rast",
-          "copy2": "Ein durchschnittlicher Transhumaner braucht etwa 10 Minuten für eine kurze Rast in der er nichts anderes tun kann als sprechen oder sich hinzulegen um herunterzukommen. Dies benötigt Biomods, während Flats etwa eine Stunde rasten müssen.<p/><label class='resource-value'>Eine kurze Rast stellt 1W6 Poolpunkte wieder her</label>",
+          "copy2": "Ein durchschnittlicher Transhumaner braucht etwa 10 Minuten für eine kurze Rast in der er nichts anderes tun kann als sprechen oder sich hinzulegen, um herunterzukommen. Dies benötigt Biomods, während Flats etwa eine Stunde rasten müssen.<p/><label class='resource-value'>Eine kurze Rast stellt 1W6 Poolpunkte wieder her</label>",
           "subheadline3": "Lange Rast",
           "copy3": "Eine Person mit Biomods braucht 4 Stunden für eine lange Rast in der sie nichts tun kann ausser sich hinzulegen, zu sprechen während sie herunter kommt. Flats brauchen 8 Stunden um den gleichen Effekt zu erreichen.<p/><label class='resource-value'>Eine lange Rast stellt alle Poolpunkte wieder her.</label>"
         },
@@ -224,10 +224,10 @@
         "survival": "Überleben",
         "poolHeadline": "Insight",
         "poolSubheadline1": "Initiative ergreifen",
-        "poolCopy1": "Du bist als erstes an der Reihe, solange du nur mentale- oder Meshaktionen und keine physischen durchführen möchtest. Wenn mehrere Charaktere diese Funktion nutzen, werden sie nach ihrer Initiative abgehandelt, jedoch vor allen anderen.",
-        "poolSubheadline2": "Extra Aktion",
-        "poolCopy2": "Du kannst eine Extraaktion (oder zwei schnelle Aktonen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
-        "poolSubheadline3": "Bekomm einen Tipp",
+        "poolCopy1": "Du bist als erstes an der Reihe, solange du nur mentale oder Meshaktionen und keine physischen durchführen möchtest. Wenn mehrere Charaktere diese Funktion nutzen, werden sie nach ihrer Initiative abgehandelt, jedoch vor allen anderen.",
+        "poolSubheadline2": "Zusatzhandlung",
+        "poolCopy2": "Du kannst eine Extra-Aktion (oder zwei schnelle Aktionen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
+        "poolSubheadline3": "Hinweis erhalten",
         "poolCopy3": "Du bekommst einen Tipp innerhalb einer Ivestigation, während einer Recherche oder einer Analyse ohne eine Probe dafür durchführen zu müssen."
       },
       "vigorSkills": {
@@ -241,8 +241,8 @@
         "poolHeadline": "Vigor",
         "poolSubheadline1": "Initiative ergreifen",
         "poolCopy1": "Du bist als erstes an der Reihe. Wenn mehrere Charaktere diese Funktion nutzen, werden sie nach ihrer Initiative abgehandelt, jedoch vor allen anderen.",
-        "poolSubheadline2": "Extra Aktion",
-        "poolCopy2": "Du kannst eine Extraaktion (oder zwei schnelle Aktonen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
+        "poolSubheadline2": "Zusatzhandlung",
+        "poolCopy2": "Du kannst eine Extra-Aktion (oder zwei schnelle Aktionen) in einer Kampfrunde durchführen. Diese Aktion findet nach denen aller anderen Spieler:innen statt. Wenn mehrere Charaktere diese Option wählen werden sie innerhalb ihrer Initiative, aber nach der ersten Handlung aller anderen abgehandelt.",
         "poolSubheadline3": "Wunde ignorieren",
         "poolCopy3": "Ignoriere den Effekt einer Wunde für 24 Stunden, oder bis zur nächsten Rast."
       },
@@ -261,8 +261,8 @@
         "poolSubheadline3": "Einen Tipp bekommen",
         "poolCopy3": "Du bekommst einen Tipp innerhalb einer sozialen Interaktion ohne eine Probe dafür durchführen zu müssen.",
         "poolSubheadline4": "Infektion kontrollieren",
-        "poolCopy4": "Ignoriere einen Infektionstest, während der Nutzung der nächsten Psikraft.",
-        "poolSubheadline5": "Ausrutscher Negieren",
+        "poolCopy4": "Ignoriere einen Infektionstest während der Nutzung der nächsten Psikraft.",
+        "poolSubheadline5": "Ausrutscher negieren",
         "poolCopy5": "Negiere einen sozialen Ausrutscher den ein Spieler gemacht hat, der jedoch untypisch für den Charakter gewesen wäre."
       },
       "flex": {
@@ -287,7 +287,7 @@
       },
       "additionalSkills": {
         "additionalHeadline": "Weitere Skills",
-        "placeholder": "Skill Name",
+        "placeholder": "Skill-Name",
         "electronics": "Elektronik",
         "accounting": "Buchhaltung",
         "psychology": "Psychologie",
@@ -313,7 +313,7 @@
       "currentMorph": {
         "headline": "Aktueller Morph",
         "sleevedLabel": "Bewohnt",
-        "morphPlaceholder": "Morphname",
+        "morphPlaceholder": "Morph-Name",
         "morphType": {
           "label": "Typ",
           "synth": "Synthetisch",
@@ -369,7 +369,7 @@
       "consumablesLabel": "Konsumgüter",
       "programs": {
         "label": "Geladene Programme",
-        "copy": "Programme werden vorbereitet indem man das Ziel analysiert und das Netzwerk auf Schwachstellen prüft und Codeschnipsel darauf massschneidert. Daher <u>kann ihre Nutzung weder gefunden, noch verhindert werden</u> und sie funktionieren in den meisten Situationen. <u>Drei Programme des gleichen Typs können genutzt werden um das gesamte Netzwerk lahmzulegen.</u> Obwohl so etwas durchaus auffällt benötigt es noch immer einen guten Hacker und etwas Zeit um den Grund für den Fehler zu finden.</i>"
+        "copy": "Programme werden vorbereitet, indem man das Ziel analysiert und das Netzwerk auf Schwachstellen prüft und Codeschnipsel darauf massschneidert. Daher <u>kann ihre Nutzung weder gefunden, noch verhindert werden</u> und sie funktionieren in den meisten Situationen. <u>Drei Programme des gleichen Typs können genutzt werden um das gesamte Netzwerk lahmzulegen.</u> Obwohl so etwas durchaus auffällt benötigt es noch immer einen guten Hacker und etwas Zeit um den Grund für den Fehler zu finden.</i>"
       },
       "npcInventory": {
         "quickAddRanged": "Fernkampaffe hinzufügen",
@@ -382,10 +382,10 @@
         "noArmor": "Hat keine Rüstung",
         "traitsAndWareHeadline": "Modifikationen",
         "armorAndGearHeadline": "Ausrüstung",
-        "traitsLabel": "Morph Vorteile",
-        "noTraitsCopy": "Keine Morphvorteile",
-        "flawsLabel": "Morph Nachteile",
-        "noFlawsCopy": "Keine Morphnachteile",
+        "traitsLabel": "Morph-Vorteile",
+        "noTraitsCopy": "Keine Morph-Vorteile",
+        "flawsLabel": "Morph-Nachteile",
+        "noFlawsCopy": "Keine Morph-Nachteile",
         "wareLabel": "Mods",
         "noWareCopy": "Keine Mods installiert",
         "gearLabel": "Spezialausrüstung",
@@ -420,8 +420,8 @@
       "ratingLabel": "Infektionsgrad",
       "strainPlaceholder": "Name des Virenstamms",
       "descriptionPlaceholder": "Beschreibe dein inneres Monster",
-      "gammaHeadline": "Gamma Fertigkeiten",
-      "chiHeadline": "Chi Fertigkeiten"
+      "gammaHeadline": "Gamma-Fertigkeiten",
+      "chiHeadline": "Chi-Fertigkeiten"
     },
     "sideCar": {
       "moreToggle": "Mehr",
@@ -433,7 +433,7 @@
         "armorModifiers": "Rüstungsbehinderung",
         "gearModifiers": "Ausrüstungsbehinderung",
         "noModifiersSubHeader": "Kein Modifikator",
-        "noModifiersCopy": "Wan immer der Charakter negative Effekte erleidet werden sie hier zu finden sein. Warte nur ab. Wir werden uns bald wiedersehen...",
+        "noModifiersCopy": "Wann immer der Charakter negative Effekte erleidet werden sie hier zu finden sein. Warte nur ab. Wir werden uns bald wiedersehen...",
         "statuses": {
           "wounded": "Wunde",
           "woundsIgnored": "Wunde(n) ignoriert",
@@ -460,11 +460,11 @@
         "mainArmorLabel": "Hauptrüstung",
         "additionalArmorLabel": "Zusatzrüstung",
         "cumulativeMalusLabel": "Malus Gesamt",
-        "mainArmorMalusCopy": "Für jedes Hauptrüstungsteil wird ein -20 Modifikator für alle Aktionen angerechnet.",
+        "mainArmorMalusCopy": "Für jedes zusätzliche Rüstungsteil wird ein -20 Modifikator für alle Aktionen angerechnet.",
         "additionalArmorMalusCopy": "Zusatzrüstung kann ohne Modifikator in Lagen getragen werden. Sie zählt weiterhin gegen andere Rüstungsmodifikatoren.",
         "exceedingSomLabel": "Übersteigt Somatik",
-        "exceedingSomCopy": "Wenn ein einzelner Rüstwert (Kinetisch ODER Energie) deinen SOM-Wert übersteigt wird ein weiterer -20 Modifikator auf alle Würfe gerechnet.",
-        "armorUsageDescription": "Um Rüstung an- oder abzulegen navigiere in dein Inventar. Rüstungen können aus dem Kompendium und allen anderen Gegenstandssammlungen die zur Verfügung stehen auf den Bogen gezogen werden."
+        "exceedingSomCopy": "Wenn ein einzelner Rüstwert (Kinetisch ODER Energie) deinen SOM-Wert übersteigt, wird ein weiterer -20 Modifikator auf alle Würfe gerechnet.",
+        "armorUsageDescription": "Um Rüstung an- oder abzulegen, navigiere in dein Inventar. Rüstungen können aus dem Kompendium und allen anderen Gegenstandssammlungen die zur Verfügung stehen auf den Bogen gezogen werden."
       },
       "ranged": {
         "headline": "Fernkampf",
@@ -638,7 +638,7 @@
           "type": {
             "label": "Typ",
             "robot": "Roboter",
-            "vehicle": "Vehikel",
+            "vehicle": "Fahrzeug",
             "morph": "Morph",
             "animal": "Smart-Animal"          
           },

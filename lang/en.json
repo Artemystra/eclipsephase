@@ -199,7 +199,7 @@
         "messages": {
           "pointsAvailable": "pool points left to distribute",
           "pointsOverspent": "You overspent your dice roll by",
-          "distributionDone": "Ready to Go! No pool points left"
+          "distributionDone": "Ready to go! No pool points left"
         },
         "restInfo": {
           "headline": "Resting",
