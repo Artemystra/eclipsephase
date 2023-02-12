@@ -1,4 +1,5 @@
 import * as Dice from "../dice.js"
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
 
 export default class EPgoonSheet extends ActorSheet {
 
@@ -307,8 +308,13 @@ export default class EPgoonSheet extends ActorSheet {
     activateListeners(html) {
         super.activateListeners(html);
 
+        const actor = this.actor
+
         // Everything below here is only needed if the sheet is editable
         if (!this.options.editable) return;
+
+        registerEffectHandlers(html, actor);
+        registerCommonHandlers(html, actor);
 
         // Add Inventory Item
         html.find('.item-create').click(this._onItemCreate.bind(this));
@@ -366,16 +372,6 @@ export default class EPgoonSheet extends ActorSheet {
         //show on hover
         html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
 
-        //slide-show on click
-        html.find(".slideShow").click(ev => {
-            const current = $(ev.currentTarget);
-            const first = current.children().first();
-            const last = current.children().last();
-            const target = current.parent(".item").children().last();
-            first.toggleClass("noShow");
-            last.toggleClass("noShow");
-            target.slideToggle(200);
-        })
     }
 
     _onItemCreate(event) {

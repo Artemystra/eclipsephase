@@ -1,0 +1,89 @@
+<li><select name="system.subStrain.label" class="psiFormElement" data-type="String">
+    {{#select actor.system.subStrain.label}}
+    {{#each config.strains as |strain key|}}
+        <option value="{{key}}">{{localize strain}}</option>
+    {{/each}} 
+    {{/select}}
+</select></li>
+
+<!-- Architect -->
+{{#if (eq actor.system.subStrain.label "architect")}}
+<li>
+    <label>{{localize "ep2e.psi.effect.restrictedBehaviour.label"}}</label>
+    <div class="psiInfluenceContainer">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize actor.system.subStrain.influence1}}</div>
+    </div>
+</li>
+<li>
+    <label>{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</label>
+    <div class="psiInfluenceContainer">
+        <div class="psi-circle">2</div>
+        <select name="system.subStrain.influence2" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence2}}
+            {{#each config.architectEnhanced as |behaviour key|}}
+                <option value="{{key}}">{{localize behaviour}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li>
+    <label>{{localize "ep2e.psi.effect.restrictedBehaviour.label"}}</label>
+    <div class="psiInfluenceContainer">
+        <div class="psi-circle">3</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.relaxation"}}</div>
+    </div>
+</li>
+<li>
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="psiInfluenceContainer">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.influence4" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence4}}
+            {{#each config.architectMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li>
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="psiInfluenceContainer">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.influence5" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence5}}
+            {{#each config.architectMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li>
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="psiInfluenceContainer">
+        <div class="psi-circle">6</div>
+        <select name="system.subStrain.influence6" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence6}}
+            {{#each config.architectMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+{{/if}}
+
+<!-- Custom Virus -->
+{{#if (eq actor.system.subStrain.label "custom")}}
+{{#each actor.system.strainInfluence as |influence key|}}
+<li>
+    <div style="padding: 10px 10px; display: flex; align-items: center;">
+        <div class="psi-circle">{{influence.number}}</div>
+        <input type="text" class="psiFormElement"  name="system.strainInfluence.{{key}}.description" value="{{localize influence.description}}" placeholder="Name an effect"/>
+    </div>
+</li>
+{{/each}}
+{{/if}}

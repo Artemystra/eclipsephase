@@ -224,3 +224,31 @@ eclipsephase.damageRatingMultiplier = {
 eclipsephase.morphNames = [
   "morph1", "morph2", "morph3", "morph4", "morph5", "morph6"
 ]
+
+eclipsephase.strains = {
+    none: "ep2e.psi.strain.none",
+    architect: "ep2e.psi.strain.architect",
+    beast: "ep2e.psi.strain.beast",
+    haunter: "ep2e.psi.strain.haunter",
+    stranger: "ep2e.psi.strain.stranger",
+    xenomorph: "ep2e.psi.strain.xenomorph",
+    custom: "ep2e.psi.strain.custom"
+}
+
+eclipsephase.architectEnhanced = {
+    arrogance: "ep2e.psi.effect.enhancedBehaviour.arrogance",
+    curiosity: "ep2e.psi.effect.enhancedBehaviour.curiosity",
+    callouseness: "ep2e.psi.effect.enhancedBehaviour.callouseness",
+    ruthlessness: "ep2e.psi.effect.enhancedBehaviour.ruthlessness"
+}
+
+eclipsephase.architectMotivation = {
+    hoard: "ep2e.psi.effect.motivation.hoard",
+    innerWorkings: "ep2e.psi.effect.motivation.innerWorkings",
+    create: "ep2e.psi.effect.motivation.create",
+    advancedTech: "ep2e.psi.effect.motivation.advancedTech",
+    discardTies: "ep2e.psi.effect.motivation.discardTies",
+    discoverUnknown: "ep2e.psi.effect.motivation.discoverUnknown",
+    repurpose: "ep2e.psi.effect.motivation.repurpose",
+    uncoverSecrets: "ep2e.psi.effect.motivation.uncoverSecrets"
+}

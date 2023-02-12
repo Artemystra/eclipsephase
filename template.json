@@ -58,7 +58,8 @@
         },
         "additionalSystems": {
           "hasPsi": null,
-          "hasGear": null
+          "hasGear": null,
+          "psiAutoClose": false
         },
         "initiative": {
           "value": null,
@@ -817,30 +818,50 @@
             "morph"
           ]
         }
-      },
+      },    
       "psiStrain": {
         "name": "",
         "strainType": 0,
         "description": "",
         "infection": 0
       },
+      "subStrain": {
+        "label": "",
+        "influence2": "",
+        "influence3": "",
+        "influence4": "",
+        "influence5": "",
+        "influence6": ""
+      },
       "strainInfluence": {
         "influence1": {
-          "description": "Physical Damage. Take 1d6"
+          "number": "1 ",
+          "label": "",
+          "description": "ep2e.psi.effect.takeDamage"
         },
         "influence2": {
+          "number": "2 ",
+          "label": "",
           "description": ""
         },
         "influence3": {
+          "number": "3 ",
+          "label": "",
           "description": ""
         },
         "influence4": {
+          "number": "4 ",
+          "label": "",
           "description": ""
         },
         "influence5": {
+          "number": "5 ",
+          "label": "",
           "description": ""
         },
         "influence6": {
+          "number": "6 ",
+          "label": "",
           "description": ""
         }
       },
@@ -878,23 +899,38 @@
         "strainType": "",
         "description": ""
       },
+      "subStrain": {
+        "label": "",
+        "influence1": "ep2e.psi.effect.physicalDamage",
+        "influence2": "",
+        "influence3": "",
+        "influence4": "",
+        "influence5": "",
+        "influence6": ""
+      },
       "strainInfluence": {
         "influence1": {
-          "description": "Physical Damage. Take 1d6"
+          "number": "1 ",
+          "description": "ep2e.psi.effect.physicalDamage"
         },
         "influence2": {
+          "number": "2 ",
           "description": ""
         },
         "influence3": {
+          "number": "3 ",
           "description": ""
         },
         "influence4": {
+          "number": "4 ",
           "description": ""
         },
         "influence5": {
+          "number": "5 ",
           "description": ""
         },
         "influence6": {
+          "number": "6 ",
           "description": ""
         }
       },
