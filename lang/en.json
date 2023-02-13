@@ -434,7 +434,7 @@
         "custom": "The Custom"
       },
       "effect" : {
-        "physicalDamage" : "Physical Damage.",
+        "physicalDamage" : "Physical Damage:",
         "takeDamage" : "Take 1d6 damage",
         "frenzy" : "Frenzy",
         "hallucination" : "Hallucination",
