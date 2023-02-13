@@ -844,6 +844,11 @@ export default class EPactorSheet extends ActorSheet {
       //post to chat WIP
       html.find('.post-chat').click(this._postToChat.bind(this));
 
+      //Reset Psi
+      html.find(".strainSelection").change(ev => {
+        actor.update({"system.subStrain.influence2.label" : "none", "system.subStrain.influence2.description" : "none", "system.subStrain.influence3.label" : "none", "system.subStrain.influence3.description" : "none", "system.subStrain.influence4.description" : "none", "system.subStrain.influence5.description" : "none", "system.subStrain.influence6.description" : "none",})
+      });
+
   }
 
   /**

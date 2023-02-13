@@ -459,6 +459,11 @@ span.success {
   opacity: 1;
 }
 
+span.neutral {
+  font-size: 20px;
+  opacity: 1;
+}
+
 .message-timestamp,
 .message-sender,
 .flavor-text {
@@ -806,13 +811,17 @@ a:hover,
 }
 
 .eclipsephase .psi-circle {
-  text-align: center;
+  display: flex;
   border: 2px solid var(--inactive);
   font-size: 16px;
   min-width: 20px;
+  min-height: 24px;
   margin-right: 10px;
   border-radius: 50%;
-  font-weight: bolder;
+  font-weight: bolder;    
+  justify-content: center;
+  align-items: center;
+  padding-top: 1px;
 }
 
 .eclipsephase .psiInfluenceContainer {

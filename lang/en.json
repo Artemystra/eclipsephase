@@ -783,7 +783,11 @@
           "power": "Power",
           "penetration": "Penetration",
           "duration": "Duration",
-          "target": "Additional Target"
+          "target": "Additional Target",
+          "infectionDamage": "The Infection damages you for",
+          "infectionInfluence": "The Infection influences you",
+          "infectionTries": "The Infection fastens it's grip",
+          "effectReceived": "Effect received"
         },
         "ignoreInfection": "Ignore Infection",
         "usePool": "Use",

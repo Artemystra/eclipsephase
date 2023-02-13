@@ -237,6 +237,7 @@ eclipsephase.strains = {
 }
 
 eclipsephase.architectEnhanced = {
+    none: "ep2e.psi.strain.none",
     arrogance: "ep2e.psi.effect.enhancedBehaviour.arrogance",
     curiosity: "ep2e.psi.effect.enhancedBehaviour.curiosity",
     callouseness: "ep2e.psi.effect.enhancedBehaviour.callouseness",
@@ -244,6 +245,7 @@ eclipsephase.architectEnhanced = {
 }
 
 eclipsephase.architectMotivation = {
+    none: "ep2e.psi.strain.none",
     hoard: "ep2e.psi.effect.motivation.hoard",
     innerWorkings: "ep2e.psi.effect.motivation.innerWorkings",
     create: "ep2e.psi.effect.motivation.create",
@@ -255,6 +257,7 @@ eclipsephase.architectMotivation = {
 }
 
 eclipsephase.beastEnhanced = {
+    none: "ep2e.psi.strain.none",
     aggression: "ep2e.psi.effect.enhancedBehaviour.aggression",
     arousal: "ep2e.psi.effect.enhancedBehaviour.arousal",
     gluttony: "ep2e.psi.effect.enhancedBehaviour.gluttony",
@@ -262,11 +265,13 @@ eclipsephase.beastEnhanced = {
 }
 
 eclipsephase.beastRestricted = {
+    none: "ep2e.psi.strain.none",
     remorse: "ep2e.psi.effect.restrictedBehaviour.remorse",
     empathy: "ep2e.psi.effect.restrictedBehaviour.empathy"
 }
 
 eclipsephase.beastMotivation = {
+    none: "ep2e.psi.strain.none",
     domination: "ep2e.psi.effect.motivation.domination",
     noQuarter: "ep2e.psi.effect.motivation.noQuarter",
     cannibalism: "ep2e.psi.effect.motivation.cannibalism",
@@ -277,6 +282,7 @@ eclipsephase.beastMotivation = {
 }
 
 eclipsephase.haunterEnhanced = {
+    none: "ep2e.psi.strain.none",
     avoidance: "ep2e.psi.effect.enhancedBehaviour.avoidance",
     mistrust: "ep2e.psi.effect.enhancedBehaviour.mistrust",
     denial: "ep2e.psi.effect.enhancedBehaviour.denial",
@@ -285,6 +291,7 @@ eclipsephase.haunterEnhanced = {
 }
 
 eclipsephase.haunterMotivation = {
+    none: "ep2e.psi.strain.none",
     cutTies: "ep2e.psi.effect.motivation.cutTies",
     isolation: "ep2e.psi.effect.motivation.isolation",
     crushHope: "ep2e.psi.effect.motivation.crushHope",
@@ -294,6 +301,7 @@ eclipsephase.haunterMotivation = {
 }
 
 eclipsephase.strangerEnhanced = {
+    none: "ep2e.psi.strain.none",
     deceit: "ep2e.psi.effect.enhancedBehaviour.deceit",
     selfSabotage: "ep2e.psi.effect.enhancedBehaviour.selfSabotage",
     cruelty: "ep2e.psi.effect.enhancedBehaviour.cruelty",
@@ -301,12 +309,14 @@ eclipsephase.strangerEnhanced = {
 }
 
 eclipsephase.strangerRestricted = {
+    none: "ep2e.psi.strain.none",
     remorse: "ep2e.psi.effect.restrictedBehaviour.remorse",
     empathy: "ep2e.psi.effect.restrictedBehaviour.empathy",
     takeResponsibility: "ep2e.psi.effect.restrictedBehaviour.takeResponsibility"
 }
 
 eclipsephase.strangerMotivation = {
+    none: "ep2e.psi.strain.none",
     follPlans: "ep2e.psi.effect.motivation.follPlans",
     manipulation: "ep2e.psi.effect.motivation.manipulation",
     testLimits: "ep2e.psi.effect.motivation.testLimits",
@@ -318,6 +328,7 @@ eclipsephase.strangerMotivation = {
 }
 
 eclipsephase.xenomorphEnhanced = {
+    none: "ep2e.psi.strain.none",
     nonVerbalCommunication: "ep2e.psi.effect.enhancedBehaviour.nonVerbalCommunication",
     cliquishness: "ep2e.psi.effect.enhancedBehaviour.cliquishness",
     arousal: "ep2e.psi.effect.enhancedBehaviour.arousal",
@@ -327,6 +338,7 @@ eclipsephase.xenomorphEnhanced = {
 }
 
 eclipsephase.xenomorphMotivation = {
+    none: "ep2e.psi.strain.none",
     transform: "ep2e.psi.effect.motivation.transform",
     control: "ep2e.psi.effect.motivation.control",
     trueForm: "ep2e.psi.effect.motivation.trueForm",
@@ -339,13 +351,15 @@ eclipsephase.xenomorphMotivation = {
 }
 
 eclipsephase.psiCustomLabels = {
-    enhanced: "ep2e.psi.effect.enhancedBehaviour.label",
-    restricted: "ep2e.psi.effect.restrictedBehaviour.label",
+    none: "ep2e.psi.strain.none",
+    enhancedBehaviour: "ep2e.psi.effect.enhancedBehaviour.label",
+    restrictedBehaviour: "ep2e.psi.effect.restrictedBehaviour.label",
     motivation: "ep2e.psi.effect.motivation.label",
     special: "ep2e.psi.effect.other",
 }
 
 eclipsephase.psiStrainLabels = {
-    enhanced: "ep2e.psi.effect.enhancedBehaviour.label",
-    restricted: "ep2e.psi.effect.restrictedBehaviour.label"
+    none: "ep2e.psi.strain.none",
+    enhancedBehaviour: "ep2e.psi.effect.enhancedBehaviour.label",
+    restrictedBehaviour: "ep2e.psi.effect.restrictedBehaviour.label"
 }

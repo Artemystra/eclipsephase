@@ -1,4 +1,4 @@
-<li><select name="system.subStrain.label" class="psiFormElement" data-type="String">
+<li><select name="system.subStrain.label" class="psiFormElement strainSelection" data-type="String">
     {{#select actor.system.subStrain.label}}
     {{#each config.strains as |strain key|}}
         <option value="{{key}}">{{localize strain}}</option>
@@ -25,7 +25,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">2</div>
-        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence2.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence2.description}}
                 {{#each config.architectEnhanced as |behaviour key|}}
@@ -33,8 +33,10 @@
                 {{/each}} 
                 {{/select}}
             </select>
-        {{else}}
+        {{else if (eq actor.system.subStrain.influence2.label "restrictedBehaviour")}}
             <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.relaxation"}}</div>
+        {{else}}
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -48,7 +50,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">3</div>
-        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence3.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence3.description}}
                 {{#each config.architectEnhanced as |behaviour key|}}
@@ -56,8 +58,10 @@
                 {{/each}} 
                 {{/select}}
             </select>
-        {{else}}
+        {{else if (eq actor.system.subStrain.influence3.label "restrictedBehaviour")}}
             <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.relaxation"}}</div>
+        {{else}}
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -121,7 +125,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">2</div>
-        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence2.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence2.description}}
                 {{#each config.beastEnhanced as |behaviour key|}}
@@ -129,7 +133,7 @@
                 {{/each}} 
                 {{/select}}
             </select>
-        {{else}}
+        {{else if (eq actor.system.subStrain.influence2.label "restrictedBehaviour")}}
             <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence2.description}}
                 {{#each config.beastRestricted as |behaviour key|}}
@@ -137,6 +141,8 @@
                 {{/each}} 
                 {{/select}}
             </select>
+        {{else}}
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -150,7 +156,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">3</div>
-        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence3.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence3.description}}
                 {{#each config.beastEnhanced as |behaviour key|}}
@@ -158,7 +164,7 @@
                 {{/each}} 
                 {{/select}}
             </select>
-        {{else}}
+        {{else if (eq actor.system.subStrain.influence3.label "restrictedBehaviour")}}
             <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence3.description}}
                 {{#each config.beastRestricted as |behaviour key|}}
@@ -166,6 +172,8 @@
                 {{/each}} 
                 {{/select}}
             </select>
+        {{else}}
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -223,7 +231,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">2</div>
-        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence2.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence2.description}}
                 {{#each config.haunterEnhanced as |behaviour key|}}
@@ -231,8 +239,10 @@
                 {{/each}} 
                 {{/select}}
             </select>
-        {{else}}
+        {{else if (eq actor.system.subStrain.influence2.label "restrictedBehaviour")}}
             <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.empathy"}}</div>
+        {{else}}
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -246,7 +256,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">3</div>
-        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence3.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence3.description}}
                 {{#each config.haunterEnhanced as |behaviour key|}}
@@ -254,8 +264,10 @@
                 {{/each}} 
                 {{/select}}
             </select>
-        {{else}}
+        {{else if (eq actor.system.subStrain.influence3.label "restrictedBehaviour")}}
             <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.empathy"}}</div>
+        {{else}}
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -313,7 +325,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">2</div>
-        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence2.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence2.description}}
                 {{#each config.strangerEnhanced as |behaviour key|}}
@@ -321,14 +333,16 @@
                 {{/each}} 
                 {{/select}}
             </select>
+        {{else if (eq actor.system.subStrain.influence2.label "restrictedBehaviour")}}
+            <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence2.description}}
+                {{#each config.strangerRestricted as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
         {{else}}
-        <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
-            {{#select actor.system.subStrain.influence2.description}}
-            {{#each config.strangerRestricted as |behaviour key|}}
-                <option value="{{key}}">{{localize behaviour}}</option>
-            {{/each}} 
-            {{/select}}
-        </select>
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -342,7 +356,7 @@
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">3</div>
-        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+        {{#if (eq actor.system.subStrain.influence3.label "enhancedBehaviour")}}
             <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence3.description}}
                 {{#each config.strangerEnhanced as |behaviour key|}}
@@ -350,7 +364,7 @@
                 {{/each}} 
                 {{/select}}
             </select>
-        {{else}}
+        {{else if (eq actor.system.subStrain.influence3.label "restrictedBehaviour")}}
             <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
                 {{#select actor.system.subStrain.influence3.description}}
                 {{#each config.strangerRestricted as |behaviour key|}}
@@ -358,6 +372,8 @@
                 {{/each}} 
                 {{/select}}
             </select>
+        {{else}}
+            <div class="psiFreeTextElement"></div>
         {{/if}}
     </div>
 </li>
@@ -484,7 +500,7 @@
 <li  class="psiInfluenceContainer">
     <select name="system.strainInfluence.{{key}}.label" class="psiFormLabel" data-type="String">
         {{#select influence.label}}
-            <option value="enhanced">{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</option>
+            <option value="enhancedBehaviour">{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</option>
             <option value="restricted">{{localize "ep2e.psi.effect.restrictedBehaviour.label"}}</option>
             <option value="motivation">{{localize "ep2e.psi.effect.motivation.label"}}</option>
             <option value="other">{{localize "ep2e.psi.effect.other"}}</option>

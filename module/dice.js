@@ -1,3 +1,4 @@
+import { eclipsephase } from "./config.js";
 /*
  * Path constants for dialog templates
  */
@@ -5,6 +6,7 @@ const REPUTATION_TASK_DIALOG = 'systems/eclipsephase/templates/chat/rep-test-dia
 const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
 const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
 const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
+const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
 
 /*
  * Task result constants
@@ -1245,6 +1247,11 @@ export async function TaskCheck({
         if (skillKey === "psi" && !ignoreInfection && actorWhole.type != "goon"){
 
             let stressDamageRoll = null;
+            let physicalDamageRoll = null;
+            let durUpdate = actorWhole.system.health.physical.value;
+            let woundUpdate = actorWhole.system.physical.wounds;
+            let death = actorWhole.system.health.death.max + actorWhole.system.health.physical.max
+            let woundThreshold = actorWhole.system.physical.wt
             let traumaThreshold = actorWhole.system.mental.tt
             let stressUpdate = actorWhole.system.health.mental.value;
             let traumaUpdate = actorWhole.system.mental.trauma;
@@ -1287,13 +1294,13 @@ export async function TaskCheck({
 
             message.visibility = activeRollTarget;
 
-
             let html = await renderTemplate(TASK_RESULT_OUTPUT, message)
+            let alias = game.i18n.localize("ep2e.roll.dialog.push.infectionTries");
 
 
             //Viruses Skill check printed to the chat
             msg = await infectionRoll.toMessage({
-                speaker: ChatMessage.getSpeaker({alias: "The Infection"}),
+                speaker: ChatMessage.getSpeaker({alias: alias}),
                 flavor: html
             },{
                 rollMode: rollModeSelection
@@ -1317,8 +1324,67 @@ export async function TaskCheck({
 
                 d6 = await new Roll(rollFormula+virusMod).evaluate({async: true});
 
+                let message = {};
+                let result = d6.total > 6 ? 6 : d6.total;
+                let psiLabel = "";
+                let psiCopy = "";
+
+                if(actorData.subStrain.label != "custom"){
+                    if(result === 1){
+                        message.influenceLabel = "ep2e.psi.effect.physicalDamage";
+                        message.influenceCopy = "ep2e.psi.effect.takeDamage";
+                    }
+                    else if (result > 1 && result <=3) {   
+                        psiLabel = eval("actorData.subStrain.influence" + result + ".label");
+                        psiCopy = eval("actorData.subStrain.influence" + result + ".description");
+                        if(psiLabel === "restrictedBehaviour" && actorData.subStrain.label != "architect"){
+                            message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
+                            message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.relaxation";
+                        }
+                        else if(psiLabel === "restrictedBehaviour" && actorData.subStrain.label != "haunter"){
+                            message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
+                            message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.empathy";
+                        }
+                        else if(actorData.subStrain.label != "xenomorph"){
+                            message.influenceLabel = eval("eclipsephase.psiStrainLabels.enhancedBehaviour");
+                            message.influenceCopy = "ep2e.psi.effect." + psiLabel + "." + psiCopy; 
+                        }
+                        else {
+                            message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
+                            message.influenceCopy = "ep2e.psi.effect." + psiLabel + "." + psiCopy; 
+                        }
+                    }
+                    else if (result > 3 && actorData.subStrain.label != "beast" && actorData.subStrain.label != "haunter") {
+                        psiCopy = eval("actorData.subStrain.influence" + result + ".description");
+                        message.influenceLabel = "ep2e.psi.effect.motivation.label";
+                        message.influenceCopy = "ep2e.psi.effect.motivation." + psiCopy;
+                    }
+                    else if (result > 3 && result <=5){
+                        psiCopy = eval("actorData.subStrain.influence" + result + ".description");
+                        message.influenceLabel = "ep2e.psi.effect.motivation.label";
+                        message.influenceCopy = "ep2e.psi.effect.motivation." + psiCopy;
+                    }
+                    else if (result === 6 && actorData.subStrain.label === "beast"){
+                        message.influenceCopy = "ep2e.psi.effect.frenzy"
+                    }
+                    else if (result === 6 && actorData.subStrain.label === "haunter"){
+                        message.influenceCopy = "ep2e.psi.effect.hallucination"
+                    }
+                }
+                else{   
+                    message.influenceLabel = eclipsephase.psiCustomLabels + "." + actorData.strainInfluence.influence + result + ".label";
+                    message.influenceCopy = actorData.strainInfluence.influence + result + ".description";
+                }
+
+                console.log("My influence label:" + message.influenceLabel)
+                console.log("My influence copy:" + message.influenceCopy)
+
+                let html = await renderTemplate(PSI_INFLUENCE_OUTPUT, message)
+                let alias = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");
+
                 msg = await d6.toMessage({
-                    speaker: ChatMessage.getSpeaker({alias: "The Infection"})
+                    speaker: ChatMessage.getSpeaker({alias: alias}),
+                    flavor: html
                 },{
                     rollMode: rollModeSelection
                 });
@@ -1329,18 +1395,19 @@ export async function TaskCheck({
             }
             
             if (aspectPushed != "none" && d6.total === 1){
-                stressDamageRoll += "2d6";
+                physicalDamageRoll += "2d6";
             }
             else if (d6.total === 1 || aspectPushed != "none"){
-                stressDamageRoll = "1d6";
+                physicalDamageRoll = "1d6";
             }
 
-            if (stressDamageRoll && actorWhole.type === "character"){
+            if (physicalDamageRoll && actorWhole.type === "character"){
                 
-                let stressDamage = await new Roll(stressDamageRoll).evaluate({async: true});
+                let physicalDamage = await new Roll(physicalDamageRoll).evaluate({async: true});
+                let alias = game.i18n.localize("ep2e.roll.dialog.push.infectionDamage");
 
-                msg = await stressDamage.toMessage({
-                    speaker: ChatMessage.getSpeaker({alias: "The Infection damages you for"})
+                msg = await physicalDamage.toMessage({
+                    speaker: ChatMessage.getSpeaker({alias: alias})
                 },{
                     rollMode: rollModeSelection
                 });
@@ -1349,17 +1416,17 @@ export async function TaskCheck({
                     await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
                 }
     
-                stressUpdate += stressDamage.total;
+                durUpdate += physicalDamage.total;
     
-                if (stressDamage.total >= traumaThreshold){
-                    traumaUpdate += Math.floor(stressDamage.total/traumaThreshold);
+                if (physicalDamage.total >= woundThreshold){
+                    woundUpdate += Math.floor(physicalDamage.total/woundThreshold);
                 }
 
-                if (stressUpdate > insanity){
-                    stressUpdate = insanity
+                if (durUpdate > death){
+                    durUpdate = death
                 }
     
-                actorWhole.update({"system.health.mental.value" : stressUpdate, "system.mental.trauma" : traumaUpdate})
+                actorWhole.update({"system.health.physical.value" : durUpdate, "system.physical.wounds" : woundUpdate})
             }
         }
     }

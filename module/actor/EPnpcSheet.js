@@ -1,4 +1,5 @@
 import * as Dice from "../dice.js"
+import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
 
 export default class EPnpcSheet extends ActorSheet {
@@ -375,6 +376,11 @@ export default class EPnpcSheet extends ActorSheet {
 
         //Item Input Fields
         html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
+
+        //Reset Psi
+        html.find(".strainSelection").change(ev => {
+          this.actor.update({"system.subStrain.influence2.label" : "none", "system.subStrain.influence2.description" : "none", "system.subStrain.influence3.label" : "none", "system.subStrain.influence3.description" : "none", "system.subStrain.influence4.description" : "none", "system.subStrain.influence5.description" : "none", "system.subStrain.influence6.description" : "none",})
+        });
 
         //show on hover
         html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));

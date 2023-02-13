@@ -1,4 +1,5 @@
 import * as Dice from "../dice.js"
+import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
 
 export default class EPgoonSheet extends ActorSheet {
