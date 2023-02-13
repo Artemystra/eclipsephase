@@ -71,10 +71,10 @@ export default class EPgoonSheet extends ActorSheet {
         // Rich text editor now requires preformatted text
         sheetData.enrichedDescription = await TextEditor.enrichHTML(sheetData.actor.system.description, {async: true})
 
-
-        console.log("******* goon sheet")
-        console.log(sheetData)
-        return sheetData
+        return mergeObject(sheetData, {
+          isGM: game.user.isGM
+        });
+        
 }
 
     _prepareCharacterItems(sheetData) {

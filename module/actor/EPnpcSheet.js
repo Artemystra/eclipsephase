@@ -72,7 +72,9 @@ export default class EPnpcSheet extends ActorSheet {
         console.log("******* npc sheet")
         console.log(sheetData)
 
-        return sheetData;
+        return mergeObject(sheetData, {
+          isGM: game.user.isGM
+        });
     }
 
     _prepareCharacterItems(sheetData) {
