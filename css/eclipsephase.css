@@ -816,9 +816,10 @@ a:hover,
 }
 
 .eclipsephase .psiInfluenceContainer {
-  padding: 0 10px 10px 10px; 
-  display: flex; 
-  align-items: center;
+  padding: 5px 10px 5px 10px;
+  background-color: var(--focusBackground);
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 5px;
 }
 
 .eclipsephase .psiFormElement,
@@ -826,13 +827,18 @@ a:hover,
   text-align: left; 
   min-height: 40px; 
   font-size: 16px; 
-  max-width: 90%;
-  min-width: 90%;
+  max-width: 88%;
+  min-width: 88%;
 }
 
 .eclipsephase .psiFreeTextElement {
   display: flex;
   align-items: center;
+}
+
+.eclipsephase .psiFormLabel {
+  max-height: 15px;
+  margin: -1px -4px -1px -4px;
 }
 
 .eclipsephase .tabs .item {

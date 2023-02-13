@@ -224,6 +224,7 @@ eclipsephase.damageRatingMultiplier = {
 eclipsephase.morphNames = [
   "morph1", "morph2", "morph3", "morph4", "morph5", "morph6"
 ]
+//Psi Influence Dropdowns
 
 eclipsephase.strains = {
     none: "ep2e.psi.strain.none",
@@ -251,4 +252,100 @@ eclipsephase.architectMotivation = {
     discoverUnknown: "ep2e.psi.effect.motivation.discoverUnknown",
     repurpose: "ep2e.psi.effect.motivation.repurpose",
     uncoverSecrets: "ep2e.psi.effect.motivation.uncoverSecrets"
+}
+
+eclipsephase.beastEnhanced = {
+    aggression: "ep2e.psi.effect.enhancedBehaviour.aggression",
+    arousal: "ep2e.psi.effect.enhancedBehaviour.arousal",
+    gluttony: "ep2e.psi.effect.enhancedBehaviour.gluttony",
+    riskTaking: "ep2e.psi.effect.enhancedBehaviour.riskTaking"
+}
+
+eclipsephase.beastRestricted = {
+    remorse: "ep2e.psi.effect.restrictedBehaviour.remorse",
+    empathy: "ep2e.psi.effect.restrictedBehaviour.empathy"
+}
+
+eclipsephase.beastMotivation = {
+    domination: "ep2e.psi.effect.motivation.domination",
+    noQuarter: "ep2e.psi.effect.motivation.noQuarter",
+    cannibalism: "ep2e.psi.effect.motivation.cannibalism",
+    claimTerritory: "ep2e.psi.effect.motivation.claimTerritory",
+    eradicate: "ep2e.psi.effect.motivation.eradicate",
+    instillFear: "ep2e.psi.effect.motivation.instillFear",
+    stalkPrey: "ep2e.psi.effect.motivation.stalkPrey"
+}
+
+eclipsephase.haunterEnhanced = {
+    avoidance: "ep2e.psi.effect.enhancedBehaviour.avoidance",
+    mistrust: "ep2e.psi.effect.enhancedBehaviour.mistrust",
+    denial: "ep2e.psi.effect.enhancedBehaviour.denial",
+    nihilism: "ep2e.psi.effect.enhancedBehaviour.nihilism",
+    unsettlingMannerisms: "ep2e.psi.effect.enhancedBehaviour.unsettlingMannerisms"
+}
+
+eclipsephase.haunterMotivation = {
+    cutTies: "ep2e.psi.effect.motivation.cutTies",
+    isolation: "ep2e.psi.effect.motivation.isolation",
+    crushHope: "ep2e.psi.effect.motivation.crushHope",
+    hiddenTruths: "ep2e.psi.effect.motivation.hiddenTruths",
+    releaseFromMisery: "ep2e.psi.effect.motivation.releaseFromMisery",
+    shakeConfidence: "ep2e.psi.effect.motivation.shakeConfidence"
+}
+
+eclipsephase.strangerEnhanced = {
+    deceit: "ep2e.psi.effect.enhancedBehaviour.deceit",
+    selfSabotage: "ep2e.psi.effect.enhancedBehaviour.selfSabotage",
+    cruelty: "ep2e.psi.effect.enhancedBehaviour.cruelty",
+    spite: "ep2e.psi.effect.enhancedBehaviour.spite"
+}
+
+eclipsephase.strangerRestricted = {
+    remorse: "ep2e.psi.effect.restrictedBehaviour.remorse",
+    empathy: "ep2e.psi.effect.restrictedBehaviour.empathy",
+    takeResponsibility: "ep2e.psi.effect.restrictedBehaviour.takeResponsibility"
+}
+
+eclipsephase.strangerMotivation = {
+    follPlans: "ep2e.psi.effect.motivation.follPlans",
+    manipulation: "ep2e.psi.effect.motivation.manipulation",
+    testLimits: "ep2e.psi.effect.motivation.testLimits",
+    betrayal: "ep2e.psi.effect.motivation.betrayal",
+    covertOpponent: "ep2e.psi.effect.motivation.covertOpponent",
+    grandScheme: "ep2e.psi.effect.motivation.grandScheme",
+    mislead: "ep2e.psi.effect.motivation.mislead",
+    twistTruth: "ep2e.psi.effect.motivation.twistTruth"
+}
+
+eclipsephase.xenomorphEnhanced = {
+    nonVerbalCommunication: "ep2e.psi.effect.enhancedBehaviour.nonVerbalCommunication",
+    cliquishness: "ep2e.psi.effect.enhancedBehaviour.cliquishness",
+    arousal: "ep2e.psi.effect.enhancedBehaviour.arousal",
+    gluttony: "ep2e.psi.effect.enhancedBehaviour.gluttony",
+    grooming: "ep2e.psi.effect.enhancedBehaviour.grooming",
+    socialize: "ep2e.psi.effect.enhancedBehaviour.socialize"
+}
+
+eclipsephase.xenomorphMotivation = {
+    transform: "ep2e.psi.effect.motivation.transform",
+    control: "ep2e.psi.effect.motivation.control",
+    trueForm: "ep2e.psi.effect.motivation.trueForm",
+    eatTheWeak: "ep2e.psi.effect.motivation.eatTheWeak",
+    establishColony: "ep2e.psi.effect.motivation.establishColony",
+    hibernate: "ep2e.psi.effect.motivation.hibernate",
+    molt: "ep2e.psi.effect.motivation.molt",
+    playWithPrey: "ep2e.psi.effect.motivation.playWithPrey",
+    protectTribe: "ep2e.psi.effect.motivation.protectTribe"
+}
+
+eclipsephase.psiCustomLabels = {
+    enhanced: "ep2e.psi.effect.enhancedBehaviour.label",
+    restricted: "ep2e.psi.effect.restrictedBehaviour.label",
+    motivation: "ep2e.psi.effect.motivation.label",
+    special: "ep2e.psi.effect.other",
+}
+
+eclipsephase.psiStrainLabels = {
+    enhanced: "ep2e.psi.effect.enhancedBehaviour.label",
+    restricted: "ep2e.psi.effect.restrictedBehaviour.label"
 }

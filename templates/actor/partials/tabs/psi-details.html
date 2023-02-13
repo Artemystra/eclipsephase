@@ -8,66 +8,468 @@
 
 <!-- Architect -->
 {{#if (eq actor.system.subStrain.label "architect")}}
-<li>
-    <label>{{localize "ep2e.psi.effect.restrictedBehaviour.label"}}</label>
-    <div class="psiInfluenceContainer">
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.physicalDamage"}}</label>
+    <div class="flexrow flex-group-center">
         <div class="psi-circle">1</div>
-        <div type="text" class="psiFreeTextElement">{{localize actor.system.subStrain.influence1}}</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.takeDamage"}}</div>
     </div>
 </li>
-<li>
-    <label>{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</label>
-    <div class="psiInfluenceContainer">
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence2.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence2.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
         <div class="psi-circle">2</div>
-        <select name="system.subStrain.influence2" class="psiFormElement" data-type="String">
-            {{#select actor.system.subStrain.influence2}}
-            {{#each config.architectEnhanced as |behaviour key|}}
+        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+            <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence2.description}}
+                {{#each config.architectEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+            <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.relaxation"}}</div>
+        {{/if}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence3.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence3.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+            <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence3.description}}
+                {{#each config.architectEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+            <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.relaxation"}}</div>
+        {{/if}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.influence4.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence4.description}}
+            {{#each config.architectMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.influence5.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence5.description}}
+            {{#each config.architectMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <select name="system.subStrain.influence6.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence6.description}}
+            {{#each config.architectMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+{{/if}}
+
+<!-- Beast -->
+{{#if (eq actor.system.subStrain.label "beast")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.physicalDamage"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.takeDamage"}}</div>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence2.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence2.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+            <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence2.description}}
+                {{#each config.beastEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+            <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence2.description}}
+                {{#each config.beastRestricted as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{/if}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence3.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence3.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+            <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence3.description}}
+                {{#each config.beastEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+            <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence3.description}}
+                {{#each config.beastRestricted as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{/if}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.influence4.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence4.description}}
+            {{#each config.beastMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.influence5.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence5.description}}
+            {{#each config.beastMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.other"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.frenzy"}}</div>
+    </div>
+</li>
+{{/if}}
+
+<!-- Haunter -->
+{{#if (eq actor.system.subStrain.label "haunter")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.physicalDamage"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.takeDamage"}}</div>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence2.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence2.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+            <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence2.description}}
+                {{#each config.haunterEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+            <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.empathy"}}</div>
+        {{/if}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence3.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence3.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+            <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence3.description}}
+                {{#each config.haunterEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+            <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.empathy"}}</div>
+        {{/if}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.influence4.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence4.description}}
+            {{#each config.haunterMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.influence5.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence5.description}}
+            {{#each config.haunterMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.other"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.hallucination"}}</div>
+    </div>
+</li>
+{{/if}}
+
+<!-- Stranger -->
+{{#if (eq actor.system.subStrain.label "stranger")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.physicalDamage"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.takeDamage"}}</div>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence2.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence2.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        {{#if (eq actor.system.subStrain.influence2.label "enhanced")}}
+            <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence2.description}}
+                {{#each config.strangerEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+        <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence2.description}}
+            {{#each config.strangerRestricted as |behaviour key|}}
                 <option value="{{key}}">{{localize behaviour}}</option>
             {{/each}} 
             {{/select}}
         </select>
+        {{/if}}
     </div>
 </li>
-<li>
-    <label>{{localize "ep2e.psi.effect.restrictedBehaviour.label"}}</label>
-    <div class="psiInfluenceContainer">
+<li class="psiInfluenceContainer">
+    <select name="system.subStrain.influence3.label" class="psiFormLabel" data-type="String">
+        {{#select actor.system.subStrain.influence3.label}}
+            {{#each config.psiStrainLabels as |label key|}}
+                <option value="{{key}}">{{localize label}}</option>
+            {{/each}} 
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
         <div class="psi-circle">3</div>
-        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.restrictedBehaviour.relaxation"}}</div>
+        {{#if (eq actor.system.subStrain.influence3.label "enhanced")}}
+            <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence3.description}}
+                {{#each config.strangerEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{else}}
+            <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence3.description}}
+                {{#each config.strangerRestricted as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+        {{/if}}
     </div>
 </li>
-<li>
+<li class="psiInfluenceContainer">
     <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
-    <div class="psiInfluenceContainer">
+    <div class="flexrow flex-group-center">
         <div class="psi-circle">4</div>
-        <select name="system.subStrain.influence4" class="psiFormElement" data-type="String">
-            {{#select actor.system.subStrain.influence4}}
-            {{#each config.architectMotivation as |motivation key|}}
+        <select name="system.subStrain.influence4.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence4.description}}
+            {{#each config.strangerMotivation as |motivation key|}}
                 <option value="{{key}}">{{localize motivation}}</option>
             {{/each}} 
             {{/select}}
         </select>
     </div>
 </li>
-<li>
+<li class="psiInfluenceContainer">
     <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
-    <div class="psiInfluenceContainer">
+    <div class="flexrow flex-group-center">
         <div class="psi-circle">5</div>
-        <select name="system.subStrain.influence5" class="psiFormElement" data-type="String">
-            {{#select actor.system.subStrain.influence5}}
-            {{#each config.architectMotivation as |motivation key|}}
+        <select name="system.subStrain.influence5.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence5.description}}
+            {{#each config.strangerMotivation as |motivation key|}}
                 <option value="{{key}}">{{localize motivation}}</option>
             {{/each}} 
             {{/select}}
         </select>
     </div>
 </li>
-<li>
+<li class="psiInfluenceContainer">
     <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
-    <div class="psiInfluenceContainer">
+    <div class="flexrow flex-group-center">
         <div class="psi-circle">6</div>
-        <select name="system.subStrain.influence6" class="psiFormElement" data-type="String">
-            {{#select actor.system.subStrain.influence6}}
-            {{#each config.architectMotivation as |motivation key|}}
+        <select name="system.subStrain.influence6.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence6.description}}
+            {{#each config.strangerMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+{{/if}}
+
+<!-- Xenomorph -->
+{{#if (eq actor.system.subStrain.label "xenomorph")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.physicalDamage"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.psi.effect.takeDamage"}}</div>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+            <select name="system.subStrain.influence2.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence2.description}}
+                {{#each config.xenomorphEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+            <select name="system.subStrain.influence3.description" class="psiFormElement" data-type="String">
+                {{#select actor.system.subStrain.influence3.description}}
+                {{#each config.xenomorphEnhanced as |behaviour key|}}
+                    <option value="{{key}}">{{localize behaviour}}</option>
+                {{/each}} 
+                {{/select}}
+            </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.influence4.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence4.description}}
+            {{#each config.xenomorphMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.influence5.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence5.description}}
+            {{#each config.xenomorphMotivation as |motivation key|}}
+                <option value="{{key}}">{{localize motivation}}</option>
+            {{/each}} 
+            {{/select}}
+        </select>
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.psi.effect.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <select name="system.subStrain.influence6.description" class="psiFormElement" data-type="String">
+            {{#select actor.system.subStrain.influence6.description}}
+            {{#each config.xenomorphMotivation as |motivation key|}}
                 <option value="{{key}}">{{localize motivation}}</option>
             {{/each}} 
             {{/select}}
@@ -79,8 +481,16 @@
 <!-- Custom Virus -->
 {{#if (eq actor.system.subStrain.label "custom")}}
 {{#each actor.system.strainInfluence as |influence key|}}
-<li>
-    <div style="padding: 10px 10px; display: flex; align-items: center;">
+<li  class="psiInfluenceContainer">
+    <select name="system.strainInfluence.{{key}}.label" class="psiFormLabel" data-type="String">
+        {{#select influence.label}}
+            <option value="enhanced">{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</option>
+            <option value="restricted">{{localize "ep2e.psi.effect.restrictedBehaviour.label"}}</option>
+            <option value="motivation">{{localize "ep2e.psi.effect.motivation.label"}}</option>
+            <option value="other">{{localize "ep2e.psi.effect.other"}}</option>
+        {{/select}}
+    </select>
+    <div class="flexrow flex-group-center">
         <div class="psi-circle">{{influence.number}}</div>
         <input type="text" class="psiFormElement"  name="system.strainInfluence.{{key}}.description" value="{{localize influence.description}}" placeholder="Name an effect"/>
     </div>

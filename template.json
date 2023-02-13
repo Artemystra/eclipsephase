@@ -827,16 +827,31 @@
       },
       "subStrain": {
         "label": "",
-        "influence2": "",
-        "influence3": "",
-        "influence4": "",
-        "influence5": "",
-        "influence6": ""
+        "influence2": {
+          "label": "",
+          "description": ""
+        },
+        "influence3": {
+          "label": "",
+          "description": ""
+        },
+        "influence4": {
+          "label": "",
+          "description": ""
+        },
+        "influence5": {
+          "label": "",
+          "description": ""
+        },
+        "influence6": {
+          "label": "",
+          "description": ""
+        }
       },
       "strainInfluence": {
         "influence1": {
           "number": "1 ",
-          "label": "",
+          "label": "ep2e.psi.effect.physicalDamage",
           "description": "ep2e.psi.effect.takeDamage"
         },
         "influence2": {
@@ -901,36 +916,56 @@
       },
       "subStrain": {
         "label": "",
-        "influence1": "ep2e.psi.effect.physicalDamage",
-        "influence2": "",
-        "influence3": "",
-        "influence4": "",
-        "influence5": "",
-        "influence6": ""
+        "influence2": {
+          "label": "",
+          "description": ""
+        },
+        "influence3": {
+          "label": "",
+          "description": ""
+        },
+        "influence4": {
+          "label": "",
+          "description": ""
+        },
+        "influence5": {
+          "label": "",
+          "description": ""
+        },
+        "influence6": {
+          "label": "",
+          "description": ""
+        }
       },
       "strainInfluence": {
         "influence1": {
           "number": "1 ",
-          "description": "ep2e.psi.effect.physicalDamage"
+          "label": "ep2e.psi.effect.physicalDamage",
+          "description": "ep2e.psi.effect.takeDamage"
         },
         "influence2": {
           "number": "2 ",
+          "label": "",
           "description": ""
         },
         "influence3": {
           "number": "3 ",
+          "label": "",
           "description": ""
         },
         "influence4": {
           "number": "4 ",
+          "label": "",
           "description": ""
         },
         "influence5": {
           "number": "5 ",
+          "label": "",
           "description": ""
         },
         "influence6": {
           "number": "6 ",
+          "label": "",
           "description": ""
         }
       },
