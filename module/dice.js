@@ -764,6 +764,7 @@ export async function TaskCheck({
     //General roll modifications
     let curratedWounds = 10 * (Number(actorData.physical.wounds) + eval(actorData.mods.woundMod) + (actorData.mods.woundChiMod ? (eval(actorData.mods.woundChiMod)*actorData.mods.psiMultiplier) : 0))*eval(actorData.mods.woundMultiplier);
     let curratedTrauma = 10 * (Number(actorData.mental.trauma) + eval(actorData.mods.traumaMod) + (actorData.mods.traumaChiMod ? (eval(actorData.mods.traumaChiMod)*actorData.mods.psiMultiplier) : 0));
+    
     if (curratedWounds > 0) {
         woundsMod += curratedWounds
     }

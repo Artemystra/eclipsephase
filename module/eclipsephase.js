@@ -200,7 +200,7 @@ const testVar = game.settings.get("eclipsephase", "migrationVersion");
 let startMigration = false
 let endMigration = false
 
-let isNewVersion = foundry.utils.isNewerVersion("0.8.2", testVar)
+let isNewVersion = foundry.utils.isNewerVersion("0.8.6", testVar)
 //For just testing against the latest version: game.system.version
 
 if (isNewVersion){
@@ -252,7 +252,6 @@ if (startMigration){
       let wareType = item.system.wareType;
 
       if (itemType === "gear" && !itemUpdated){
-        console.log("Gear Switch Triggert!")
         switch (costType) {
           case 'Minor':
             updateCost = "minor"
@@ -296,7 +295,6 @@ if (startMigration){
       }
 
       if (itemType === "rangedWeapon" && !itemUpdated){
-        console.log("Ranged Switch Triggert!")
         if (firingMode){
           switch (firingMode) {
             case 'SS':
@@ -366,7 +364,6 @@ if (startMigration){
       }
 
       if (itemType === "ccWeapon" && !itemUpdated){
-        console.log("Melee Switch Triggert!")
         switch (costType) {
           case 'Minor':
             updateCost = "minor"
@@ -413,7 +410,6 @@ if (startMigration){
       }
 
       if (itemType === "armor" && !itemUpdated){
-        console.log("Armor Switch Triggert!")
         switch (costType) {
           case 'Minor':
             updateCost = "minor"
@@ -451,7 +447,6 @@ if (startMigration){
       }
 
       if (itemType === "ware" && !itemUpdated){
-        console.log("Ware Switch Triggert!")
         switch (costType) {
           case 'Minor':
             updateCost = "minor"
@@ -529,7 +524,6 @@ if (startMigration){
       }
 
       if (itemType === "vehicle" && !itemUpdated){
-        console.log("Vehicle Switch Triggert!")
         switch (costType) {
           case 'Minor':
             updateCost = "minor"
@@ -595,7 +589,6 @@ if (startMigration){
       }
 
       if (itemType === "grenade" && !itemUpdated){
-        console.log("Grenade Switch Triggert!")
         switch (costType) {
           case 'Minor':
             updateCost = "minor"
@@ -646,7 +639,6 @@ if (startMigration){
       }
 
       if (itemType === "program" && !itemUpdated){
-        console.log("Program Switch Triggert!")
         switch (programLevel) {
           case 'Intruder':
             updateProgram = "intruder"
@@ -673,7 +665,6 @@ if (startMigration){
       }
       
       if (item.type === "knowSkill" && !itemUpdated || item.type === "specialSkill" && !itemUpdated){
-        console.log("Skill Switch Triggert!")
         switch (skillApt) {
           case 'Intuition':
             updateApt = "int"
@@ -706,7 +697,6 @@ if (startMigration){
       
 
       if (item.type === "aspect" && !itemUpdated){
-        console.log("Aspect Switch Triggert!")
         switch (psiType) {
           case '':
             updatePsiType = "gamma"
@@ -770,6 +760,10 @@ if (startMigration){
         });
         actor.updateEmbeddedDocuments("Item", itemUpdate);
       }
+    }
+
+    if (actor.system.mods.woundMultiplier < 1){
+      actor.update({"system.mods.woundMultiplier" : 1})
     }
 
     //Ego Details migration (only player characters)
