@@ -366,10 +366,14 @@ export default class EPactorSheet extends ActorSheet {
           }
           aspect[itemModel.psiType].push(item);
         }
-        else if (item.type === 'program') {
+        else if (item.type === 'program' || item.system.slotType === 'digital') {
+
+          if (itemModel.slotType = 'digital')
+          itemModel.slotName = "ep2e.item.general.table.slot.digital";
+
           program.push(item);
         }
-        else if (item.system.slotType === 'accessory' || item.system.slotType === 'bulky' || item.system.slotType === 'digital' || item.system.slotType === 'notMobile') {
+        else if (item.system.slotType === 'accessory' || item.system.slotType === 'bulky' || item.system.slotType === 'notMobile') {
           let slotType = itemModel.slotType;
             switch (slotType){
               case 'accessory':
@@ -377,9 +381,6 @@ export default class EPactorSheet extends ActorSheet {
                 break;
               case 'bulky':
                 itemModel.slotName = "ep2e.item.general.table.slot.bulky";
-                break;
-              case 'digital':
-                itemModel.slotName = "ep2e.item.general.table.slot.digital";
                 break;
               case 'notMobile':
                 itemModel.slotName = "ep2e.item.general.table.slot.notMobile";
@@ -389,7 +390,7 @@ export default class EPactorSheet extends ActorSheet {
             }
           gear.push(item);
         }
-        else if (item.system.slotType === 'consumable') {
+        else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital') {
           itemModel.slotName = "ep2e.item.general.table.slot.consumable";
           consumable.push(item);
         }

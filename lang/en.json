@@ -369,8 +369,8 @@
       "gearLabel": "Gear",
       "consumablesLabel": "Consumables",
       "programs": {
-        "label": "Programs Loaded",
-        "copy": "Programs are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three programs of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i>"
+        "label": "Apps Loaded",
+        "copy": "Apps are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three apps of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i>"
       },
       "npcInventory": {
         "quickAddRanged": "Quick Add Ranged",

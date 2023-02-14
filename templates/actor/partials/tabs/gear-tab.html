@@ -126,28 +126,24 @@
             <div class="itemBackground" style="position: relative; z-index: 2;">
                 <div class="grid grid-2col">
                     {{#each actor.program as |item id|}}
-                    <div>
-                        <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
-                            <label class="flex-group-center noMargin flex-group-left"><strong>{{item.name}}</strong></label>
-                            <label
-                            class="input-small"><strong>Uses</strong></label><input
-                            class="input-small sheet-inline-edit"
-                            data-field="system.quantity" type="number"
-                            name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
-                            <div class="flex-group-right slideShow" style="max-width: 45px;">
-                                <a><i class="fas fa-plus icon-small"></i></a>
-                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}">
+                        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                        <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+                        <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
+                        <input class="input-small sheet-inline-edit" data-field="system.quantity" type="number" name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
+                        <div class="flex-group-right slideShow">
+                            <a><i class="fas fa-plus icon-small"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                        </div>
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            {{#if item.system.description}}
+                            <div class="itemDescription shape3">
+                                {{item.system.description}}
                             </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.system.description}}
-                                <div class="itemDescription shape3">
-                                    {{item.system.description}}
-                                </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
-                                </div>
+                            {{/if}}
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
                             </div>
                         </div>
                     </div>

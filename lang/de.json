@@ -368,8 +368,8 @@
       "gearLabel": "Spezialausrüstung",
       "consumablesLabel": "Konsumgüter",
       "programs": {
-        "label": "Geladene Programme",
-        "copy": "Programme werden vorbereitet, indem man das Ziel analysiert und das Netzwerk auf Schwachstellen prüft und Codeschnipsel darauf massschneidert. Daher <u>kann ihre Nutzung weder gefunden, noch verhindert werden</u> und sie funktionieren in den meisten Situationen. <u>Drei Programme des gleichen Typs können genutzt werden um das gesamte Netzwerk lahmzulegen.</u> Obwohl so etwas durchaus auffällt benötigt es noch immer einen guten Hacker und etwas Zeit um den Grund für den Fehler zu finden.</i>"
+        "label": "Geladene Apps",
+        "copy": "Apps werden vorbereitet, indem man das Ziel analysiert und das Netzwerk auf Schwachstellen prüft und Codeschnipsel darauf massschneidert. Daher <u>kann ihre Nutzung weder gefunden, noch verhindert werden</u> und sie funktionieren in den meisten Situationen. <u>Drei Apps des gleichen Typs können genutzt werden um das gesamte Netzwerk lahmzulegen.</u> Obwohl so etwas durchaus auffällt benötigt es noch immer einen guten Hacker und etwas Zeit um den Grund für den Fehler zu finden.</i>"
       },
       "npcInventory": {
         "quickAddRanged": "Fernkampaffe hinzufügen",
