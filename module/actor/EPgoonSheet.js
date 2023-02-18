@@ -74,8 +74,16 @@ export default class EPgoonSheet extends ActorSheet {
         return mergeObject(sheetData, {
           isGM: game.user.isGM
         });
-        
-}
+      }
+    
+    async _onDropItemCreate(item){
+      
+      item.system.updated = game.system.version
+
+      // Create the owned item as normal
+      return super._onDropItemCreate(item)
+
+    }
 
     _prepareCharacterItems(sheetData) {
 
@@ -275,8 +283,8 @@ export default class EPgoonSheet extends ActorSheet {
         actor.showEffectsTab=false
         if(game.settings.get("eclipsephase", "effectPanel")  && game.user.isGM){
           var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
-          for(let i of effectList){
-            effects.push(i.data);
+          for(let item of effectList){
+            effects.push(item);
           }
           actor.showEffectsTab=true;
         }

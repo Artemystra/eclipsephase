@@ -228,7 +228,7 @@
         "poolCopy1": "Go first in an action turn if you are only taking mental or mesh actions and no physical movement. If multiple characters choose this option, they go in Initiative order before everyone else.",
         "poolSubheadline2": "Extra Action",
         "poolCopy2": "Take an extra complex mental or mesh action (or 2 quick actions) in an action turn. These actions may only be taken after everyone else has gone. If multiple characters choose this option, they go in Initiative order after everyone else has taken their turn.",
-        "poolSubheadline3": "Aquire A Clue",
+        "poolSubheadline3": "Acquire A Clue",
         "poolCopy3": "Gain a hint or lead through investigation, research, or analysis of the facts at hand, without needing to make a test."
       },
       "vigorSkills": {
@@ -259,7 +259,7 @@
         "poolCopy1": "Ignore the effects of 1 trauma for 24 hours or until your next recharge",
         "poolSubheadline2": "Refresh Rep",
         "poolCopy2": "Restore rep network favors at a cost of 1 point for a Minor favor and 2 points for a Moderate favor. Major favors cannot be refreshed this way.",
-        "poolSubheadline3": "Aquire A Clue",
+        "poolSubheadline3": "Acquire A Clue",
         "poolCopy3": "Get a tip or lead by gathering information via social interactions without needing to make a test.",
         "poolSubheadline4": "Control Your Infection",
         "poolCopy4": "Avoid making an Infection Test when using a psi sleight (asyncs only).",

@@ -124,6 +124,7 @@ export default class EPactorSheet extends ActorSheet {
       item.system.ammoMin = ammoUp;
     }
 
+    item.system.updated = game.system.version
 
     // Create the owned item as normal
     return super._onDropItemCreate(item)

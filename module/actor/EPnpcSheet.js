@@ -31,7 +31,7 @@ export default class EPnpcSheet extends ActorSheet {
             resizable: false,
             tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" }]
         });
-    }
+      }
 
     /** @override */
 
@@ -75,7 +75,16 @@ export default class EPnpcSheet extends ActorSheet {
         return mergeObject(sheetData, {
           isGM: game.user.isGM
         });
-    }
+      }
+
+      async _onDropItemCreate(item){
+      
+        item.system.updated = game.system.version
+  
+        // Create the owned item as normal
+        return super._onDropItemCreate(item)
+  
+      }
 
     _prepareCharacterItems(sheetData) {
         let actor = sheetData.actor
