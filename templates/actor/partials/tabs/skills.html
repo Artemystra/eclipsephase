@@ -425,16 +425,31 @@
                                 {{else}}
                                 <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1"{{checked actor.system.rest.short1}}>
                                 {{/if}}
-                                {{#if actor.system.rest.short2}}
-                                <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
+
+                                {{#if actor.system.additionalSystems.extraRest}}
+                                    {{#if actor.system.rest.shortExtra}}
+                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra" disabled {{checked actor.system.rest.shortExtra}}>
+                                    {{else}}
+                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra"{{checked actor.system.rest.shortExtra}}>
+                                    {{/if}}
+                                    {{#if actor.system.rest.short2}}
+                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
+                                    {{else}}
+                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
+                                    {{/if}}
                                 {{else}}
-                                <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
+                                    {{#if actor.system.rest.short2}}
+                                    <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
+                                    {{else}}
+                                    <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
+                                    {{/if}}
                                 {{/if}}
+
                                 <label class="resource-value input-largeSpec" style ="font-size: 16px; text-align: right;">{{localize "ep2e.skills.restingMenu.longRest"}}</label>
                                 {{#if actor.system.rest.long}}
-                                <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" disabled {{checked actor.system.rest.long}}>
+                                <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="long" name="system.rest.long" disabled {{checked actor.system.rest.long}}>
                                 {{else}}
-                                <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" {{checked actor.system.rest.long}}>
+                                <input style="margin-right: 20px;" type="checkbox" class="rest" data-resttype="long" name="system.rest.long" {{checked actor.system.rest.long}}>
                                 {{/if}}
                             </div>
                             {{#if isGM}}

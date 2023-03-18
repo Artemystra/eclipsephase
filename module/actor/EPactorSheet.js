@@ -773,7 +773,7 @@ export default class EPactorSheet extends ActorSheet {
 
   html.find('.restReset').click(async func => {
         const actorWhole = this.actor
-        return actorWhole.update({"system.rest.short1" : false, "system.rest.short2" : false, "system.rest.long" : false});
+        return actorWhole.update({"system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false, "system.rest.long" : false});
   });
 
   html.find('.distribute').click(async func => {

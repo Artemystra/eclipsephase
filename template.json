@@ -782,6 +782,7 @@
       "rest": {
         "short1": false,
         "short2": false,
+        "shortExtra": false,
         "long": false,
         "restValue": null
       },
