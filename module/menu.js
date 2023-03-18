@@ -69,7 +69,7 @@ class EPmenuLayer extends PlaceablesLayer {
                 for (let actor of game.actors){
                     let actorType = actor.type;
                     if (actorType === "character"){
-                        actor.update({"system.rest.long" : false, "system.rest.short1" : false, "system.rest.short2" : false});
+                        actor.update({"system.rest.long" : false, "system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false});
                     }
                 }
             })
