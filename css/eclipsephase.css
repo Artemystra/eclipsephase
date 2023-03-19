@@ -1110,7 +1110,7 @@ h3.subheader.colorV1{
 }
 
 h3.subheader.dialog {
-  height: 30px;
+  min-height: 30px;
   border: none;
   align-items: center;
   background: none;
@@ -1348,7 +1348,7 @@ h3.subheaderBlank {
 .flexrow.subheader {
   border-bottom: solid var(--accentBackground) 3px;
   background-color: var(--focusBackground);
-  height: 30px;
+  min-height: 30px;
 }
 
 .flexrow.subheader.colorV1{

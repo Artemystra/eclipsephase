@@ -1,110 +1,131 @@
 <form>
   <div class="alignCenter">
-      <!-- Use pool directly from actor sheet (EPactorSheet.js line 1056 onwards)-->
-      {{#if (eq dialogType "poolUsage")}}
-        <div class="contentBoxMargin">
-          <div class="flexrow subheader">
-              <h3 class="subheader dialog">{{localize "ep2e.skills.pool.infoSubheadline"}}</h3>
-          </div>
-          <div class="listBackgroundMain">
-            <p>{{localize "ep2e.skills.pool.dialogCopy"}}</p>
-            <div class="listBackgroundPitch">
-              <span class="resource-value"><strong>{{localize subtitle}}: </strong></span><span>{{localize copy}}</span>
-            </div>
-          </div>
-        </div>
-        {{#if inputNeeded}}
-          <div class="contentBoxMargin">
-            <div class="flexrow subheader">
-              <h3 class="subheader dialog">{{localize "ep2e.skills.pool.inputSubheadline"}}</h3>
-            </div>
-            <div class="listBackgroundMain">
-              <div class="form-group listBackgroundMain alignLeft">
-            {{#if (eq inputType "repFill")}}
-                <label class="resource-label">{{localize "ep2e.skills.pool.repSize"}}</label>
-                <select name="modifier" class="alignCenter input-large">
-                    <option value="1">{{localize "ep2e.roll.dialog.reputationMode.minor"}} (1 {{localize poolName}})</option>
-                    <option value="2">{{localize "ep2e.roll.dialog.reputationMode.moderate"}} (2 {{localize poolName}})</option>
-                </select>
-            {{/if}}
-            {{#if (eq inputType "woundIgnore")}}
-                <label class="resource-label">{{localize "ep2e.skills.pool.numberWounds"}}</label>
-                <input class="input-small" type="number" name="modifier" placeholder="1" />
-            {{/if}}
-            {{#if (eq inputType "traumaIgnore")}}
-                <label class="resource-label">{{localize "ep2e.skills.pool.numberTrauma"}}</label>
-                <input class="input-small" type="number" name="modifier" placeholder="1" />
-            {{/if}}
-              </div>
-            </div>
-          </div>
-        {{/if}}
-      {{/if}}
-      <!-- Bring a rule text button in the Chat (chat.js line 13 onwards)-->
-      {{#if (eq dialogType "information")}}
-        <!-- if not rolled from a skill/item)-->
-        {{#if (eq rolledFrom "false")}}
-          <div class="contentBoxMargin">
-            <div class="flexrow subheader">
-                <h3 class="subheader dialog">{{localize subtitle}}</h3>
-            </div>
-            <div class="listBackgroundMain">
-              <p>{{localize copy}}</p>
-            </div>
-          </div>
-        {{/if}}
-        <!-- if not rolled from a skill/item)-->
-        {{#if (eq rolledFrom "psiSleight")}}
-          <div class="item" style="margin-bottom: 10px;">
-              <div class="flexrow subheader">
-                  <!--Name & Dice Roller-->
-                  <div class="flexrow subheader flex-between">
-                    <h3 class="subheader dialog">{{localize subtitle}}</h3>
-                    <div class="flexrow alignRight flexGrowQuarter" style="align-items: center; justify-content: flex-end;">
-                        <i class="fa-regular fa-virus-covid icon-space"></i></i>
-                        <h4 class="item-image input-xs noMargin"><strong> {{resource}}</strong></h4>
-                    </div>
-                  </div>
-              </div>
-              <!--Psi Details-->
-              <div>
-                  <div class="grid" style="justify-items: center">
-                      <div class="flexrow flex-group-left">
-                          <i class="fa-regular fa-chevrons-right icon-space"></i>
-                          <label class="labelWidth-large noMargin"><strong>{{localize action}}</strong></label>
-                      </div>
-                      <div class="flexrow flex-group-left">
-                          <i class="fa-regular fa-clock-rotate-left icon-space"></i>
-                          <label class="labelWidth-medium noMargin"><strong> {{localize duration}}</strong></label>
-                      </div>
-                  </div>
-                  <div>
-                      <div class="itemDescription">
-                        {{localize copy}}
-                      </div>
-                  </div>
-              </div>
-          </div>
-        {{/if}}
-      {{/if}}
-      <!-- Choose an auto Push if Infection Rating > 66 (EPactor.js line 593 onwards)-->
-      {{#if (eq dialogType "selectAutoPush")}}
+      
+    <!-- Use pool directly from actor sheet (EPactorSheet.js line 1056 onwards)-->
+    {{#if (eq dialogType "poolUsage")}}
       <div class="contentBoxMargin">
         <div class="flexrow subheader">
-            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.autoPush"}}</h3>
+            <h3 class="subheader dialog">{{localize "ep2e.skills.pool.infoSubheadline"}}</h3>
         </div>
-        <div class="form-group listBackgroundMain">
-            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.push.label"}}</label>
-            <select name="autoPush">
-                <option value="none">{{localize "ep2e.roll.dialog.push.none"}}</option>
-                <option value="range">{{localize "ep2e.roll.dialog.push.range"}}</option>
-                <option value="effect">{{localize "ep2e.roll.dialog.push.effect"}}</option>
-                <option value="power">{{localize "ep2e.roll.dialog.push.power"}}</option>
-                <option value="penetration">{{localize "ep2e.roll.dialog.push.penetration"}}</option>
-                <option value="duration">{{localize "ep2e.roll.dialog.push.duration"}}</option>
-                <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
-            </select>
+        <div class="listBackgroundMain">
+          <p>{{localize "ep2e.skills.pool.dialogCopy"}}</p>
+          <div class="listBackgroundPitch">
+            <span class="resource-value"><strong>{{localize subtitle}}: </strong></span><span>{{localize copy}}</span>
+          </div>
         </div>
-        {{/if}}
-    </div>
+      </div>
+      {{#if inputNeeded}}
+        <div class="contentBoxMargin">
+          <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.skills.pool.inputSubheadline"}}</h3>
+          </div>
+          <div class="listBackgroundMain">
+            <div class="form-group listBackgroundMain alignLeft">
+          {{#if (eq inputType "repFill")}}
+              <label class="resource-label">{{localize "ep2e.skills.pool.repSize"}}</label>
+              <select name="modifier" class="alignCenter input-large">
+                  <option value="1">{{localize "ep2e.roll.dialog.reputationMode.minor"}} (1 {{localize poolName}})</option>
+                  <option value="2">{{localize "ep2e.roll.dialog.reputationMode.moderate"}} (2 {{localize poolName}})</option>
+              </select>
+          {{/if}}
+          {{#if (eq inputType "woundIgnore")}}
+              <label class="resource-label">{{localize "ep2e.skills.pool.numberWounds"}}</label>
+              <input class="input-small" type="number" name="modifier" placeholder="1" />
+          {{/if}}
+          {{#if (eq inputType "traumaIgnore")}}
+              <label class="resource-label">{{localize "ep2e.skills.pool.numberTrauma"}}</label>
+              <input class="input-small" type="number" name="modifier" placeholder="1" />
+          {{/if}}
+            </div>
+          </div>
+        </div>
+      {{/if}}
+    {{/if}}
+
+    <!-- Bring a rule text button in the Chat (chat.js line 13 onwards)-->
+    {{#if (eq dialogType "information")}}
+      <!-- if not rolled from a skill/item)-->
+      {{#if (eq rolledFrom "false")}}
+        <div class="contentBoxMargin">
+          <div class="flexrow subheader">
+              <h3 class="subheader dialog">{{localize subtitle}}</h3>
+          </div>
+          <div class="listBackgroundMain">
+            <p>{{localize copy}}</p>
+          </div>
+        </div>
+      {{/if}}
+      <!-- if not rolled from a skill/item)-->
+      {{#if (eq rolledFrom "psiSleight")}}
+        <div class="item" style="margin-bottom: 10px;">
+            <div class="flexrow subheader">
+                <!--Name & Dice Roller-->
+                <div class="flexrow subheader flex-between">
+                  <h3 class="subheader dialog">{{localize subtitle}}</h3>
+                  <div class="flexrow alignRight flexGrowQuarter" style="align-items: center; justify-content: flex-end;">
+                      <i class="fa-regular fa-virus-covid icon-space"></i></i>
+                      <h4 class="item-image input-xs noMargin"><strong> {{resource}}</strong></h4>
+                  </div>
+                </div>
+            </div>
+            <!--Psi Details-->
+            <div>
+                <div class="grid" style="justify-items: center">
+                    <div class="flexrow flex-group-left">
+                        <i class="fa-regular fa-chevrons-right icon-space"></i>
+                        <label class="labelWidth-large noMargin"><strong>{{localize action}}</strong></label>
+                    </div>
+                    <div class="flexrow flex-group-left">
+                        <i class="fa-regular fa-clock-rotate-left icon-space"></i>
+                        <label class="labelWidth-medium noMargin"><strong> {{localize duration}}</strong></label>
+                    </div>
+                </div>
+                <div>
+                    <div class="itemDescription">
+                      {{localize copy}}
+                    </div>
+                </div>
+            </div>
+        </div>
+      {{/if}}
+    {{/if}}
+
+    <!-- Choose an auto Push if Infection Rating > 66 (EPactor.js line 593 onwards)-->
+    {{#if (eq dialogType "selectAutoPush")}}
+    <div class="contentBoxMargin">
+      <div class="flexrow subheader">
+          <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.autoPush"}}</h3>
+      </div>
+      <div class="form-group listBackgroundMain">
+          <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.push.label"}}</label>
+          <select name="autoPush">
+              <option value="none">{{localize "ep2e.roll.dialog.push.none"}}</option>
+              <option value="range">{{localize "ep2e.roll.dialog.push.range"}}</option>
+              <option value="effect">{{localize "ep2e.roll.dialog.push.effect"}}</option>
+              <option value="power">{{localize "ep2e.roll.dialog.push.power"}}</option>
+              <option value="penetration">{{localize "ep2e.roll.dialog.push.penetration"}}</option>
+              <option value="duration">{{localize "ep2e.roll.dialog.push.duration"}}</option>
+              <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
+          </select>
+      </div>
+      {{/if}}
+
+      <!-- Ask for confirmation (Confirm/Cancel) (common-sheet-functions.js line 135 onwards)-->
+      {{#if (eq dialogType "confirmation")}}
+      <div class="item" style="margin-bottom: 10px;">
+          <!--Only show headline if defined-->
+          {{#if popUpHeadline}}
+          <div class="flexrow subheader">
+              <h3 class="subheader dialog" style="clip-path: none;">{{localize popUpHeadline}}</h3>
+          </div>
+          {{/if}}
+          <!--Copy-->
+          <div class="listBackgroundMain alignLeft">
+            <p>{{{localize popUpCopy}}}</p>
+            <b>{{popUpTarget}}</b>
+            {{{localize popUpInfo}}}
+          </div>
+      </div>
+      {{/if}}
+  </div>
 </form>

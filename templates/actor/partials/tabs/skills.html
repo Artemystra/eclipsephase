@@ -427,15 +427,15 @@
                                 {{/if}}
 
                                 {{#if actor.system.additionalSystems.extraRest}}
-                                    {{#if actor.system.rest.shortExtra}}
-                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra" disabled {{checked actor.system.rest.shortExtra}}>
-                                    {{else}}
-                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra"{{checked actor.system.rest.shortExtra}}>
-                                    {{/if}}
                                     {{#if actor.system.rest.short2}}
                                     <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
                                     {{else}}
                                     <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
+                                    {{/if}}
+                                    {{#if actor.system.rest.shortExtra}}
+                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra" disabled {{checked actor.system.rest.shortExtra}}>
+                                    {{else}}
+                                    <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra"{{checked actor.system.rest.shortExtra}}>
                                     {{/if}}
                                 {{else}}
                                     {{#if actor.system.rest.short2}}
@@ -541,7 +541,7 @@
                     </div>
                     <div class="listBackground" style="position: relative; z-index: 2;">
                         {{#each actor.knowSkill as |item id|}}
-                            <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}">
+                            <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                                 <span class="tooltipText">{{item.name}}</span>
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
@@ -578,7 +578,7 @@
                     </div>
                     <div class="listBackground edgeAbler">
                         {{#each actor.specialSkill as |item id|}}
-                            <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" style="padding-left: 0;">
+                            <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="padding-left: 0;">
                                 <span class="tooltipText">{{item.name}}</span>
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>

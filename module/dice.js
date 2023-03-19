@@ -350,16 +350,18 @@ async function showOptionsDialog(template, title, names) {
   }
 
   return new Promise((resolve, reject) => {
+    let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
+    let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
     const data = {
       title: title,
       content: html,
       buttons: {
         cancel: {
-          label: 'Cancel',
+          label: cancelButton,
           callback: (html) => resolve({cancelled: true})
         },
         normal: {
-          label: 'Roll!',
+          label: rollButton,
           callback: (html) => resolve(extractFormValues(html))
         }
       },
