@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation } from "../common/common-sheet-functions.js";
 import * as Dice from "../dice.js";
 import itemRoll from "../item/EPitem.js";
 
@@ -540,12 +540,38 @@ export default class EPactorSheet extends ActorSheet {
       item.sheet.render(true);
     });
 
-        // Delete Inventory Item
-  html.find('.item-delete').click(async ev => {
-    const li = $(ev.currentTarget).parents(".item");
-    actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
-    li.slideUp(200, () => this.render(false));
-  });
+    // Delete Inventory Item
+    html.find('.item-delete').click(async ev => {
+      let askForOptions = ev.shiftKey;
+
+      if (!askForOptions){
+        const li = $(ev.currentTarget).parents(".item");
+        const itemName = [li.data("itemName")] ? [li.data("itemName")] : null;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete"))+ " " +(itemName?itemName:"");
+        const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";
+        const popUpInfo = "ep2e.actorSheet.popUp.deleteAdditionalInfo";
+
+        console.log("The name of the item is: ", itemName)
+        console.log("The ID of the item is: ", [li.data("itemId")])
+
+        let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
+
+        if(popUp.confirm === true){
+          actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
+          li.slideUp(200, () => this.render(false));
+        }
+        else{
+          return
+        }
+
+      }
+      else if (askForOptions){
+        const li = $(ev.currentTarget).parents(".item");
+        actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
+        li.slideUp(200, () => this.render(false));
+      }
+    });
 
 
     // Rollable abilities.

@@ -66,6 +66,10 @@
         "success": "Erfolg",
         "confirmationNeeded": "Bestätigung Nötig",
         "information": "Information"
+      },
+      "popUp": {
+        "deleteCopyGeneral": "<b>Vorsicht:</b>Das Item wird permanent gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>"
       }
     },
     "healthbar": {

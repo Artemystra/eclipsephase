@@ -62,7 +62,7 @@
             <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
                 {{#if actor.trait}}
                 {{#each actor.trait as |item id|}}
-                <div class="item flexrow" data-item-id="{{item._id}}"  style="align-items: start; min-width: 100%;">
+                <div class="item flexrow" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="align-items: start; min-width: 100%;">
                     <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
                         <i class="far fa-plus-square" style="color: var(--positive);"></i>
                     </div>
@@ -73,7 +73,7 @@
                         <a><i class="fas fa-plus icon-small"></i></a>
                         <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                     </div>
-                    <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
+                    <div class="showMore descriptionContainer flexrow" style="align-items: start;">
                         {{#if item.system.description}}
                         <div class="itemDescription shape3" style="min-width: 100%;">
                             {{item.system.description}}
@@ -103,7 +103,7 @@
             <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
                 {{#if actor.flaw}}
                 {{#each actor.flaw as |item id|}}
-                <div class="item flexrow" data-item-id="{{item._id}}" style="align-items: start; min-width: 100%;">
+                <div class="item flexrow" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="align-items: start; min-width: 100%;">
                     <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
                         <i class="far fa-minus-square" style="color: var(--negative);"></i>
                     </div>
@@ -114,7 +114,7 @@
                         <a><i class="fas fa-plus icon-small"></i></a>
                         <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                     </div>
-                    <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
+                    <div class="showMore descriptionContainer flexrow" style="align-items: start;">
                         {{#if item.system.description}}
                         <div class="itemDescription shape3" style="min-width: 100%;">
                             {{item.system.description}}

@@ -7,7 +7,7 @@
     <div class="itemBackground noPadBot grid grid-3col" style="position: relative; z-index: 2;">
         {{#if morph.presentTraits}}
         {{#each morph.traits as |item id|}}
-        <div class="item flexrow" data-item-id="{{item._id}}"  style="align-items: start;">
+        <div class="item flexrow" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="align-items: start;">
             <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
                 <i class="far fa-plus-square" style="color: var(--positive);"></i>
             </div>
@@ -18,7 +18,7 @@
                 <a><i class="fas fa-plus icon-small"></i></a>
                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
             </div>
-            <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
+            <div class="showMore descriptionContainer flexrow flex-group-center" style="align-items: start;">
                 {{#if item.system.description}}
                 <div class="itemDescription shape3" style="min-width: 100%;">
                     {{item.system.description}}
@@ -32,7 +32,7 @@
         </div>
         {{/each}}
         {{#each morph.flaws as |item id|}}
-        <div class="item flexrow" data-item-id="{{item._id}}" style="align-items: start;">
+        <div class="item flexrow" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="align-items: start;">
             <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
                 <i class="far fa-minus-square" style="color: var(--negative);"></i>
             </div>
@@ -43,7 +43,7 @@
                 <a><i class="fas fa-plus icon-small"></i></a>
                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
             </div>
-            <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
+            <div class="showMore descriptionContainer flexrow flex-group-center" style="align-items: start;">
                 {{#if item.system.description}}
                 <div class="itemDescription shape3" style="min-width: 100%;">
                     {{item.system.description}}
@@ -84,7 +84,7 @@
                 <a><i class="fas fa-plus icon-small"></i></a>
                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
             </div>
-            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+            <div class="item showMore descriptionContainer flex-group-center" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                 {{#if item.system.description}}
                 <div class="itemDescription shape3">
                     {{item.system.description}}

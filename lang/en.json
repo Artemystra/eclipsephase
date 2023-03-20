@@ -67,6 +67,10 @@
         "success": "Success",
         "confirmationNeeded": "Confirmation Needed",
         "information": "Information"
+      },
+      "popUp": {
+        "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>"
       }
     },
     "healthbar": {
