@@ -838,7 +838,7 @@ export async function TaskCheck({
             else{
                 ignoreInfection = false;
             }
-            infectionMod = aspectPushed != "none" ? aspectBase * 2 : aspectBase;
+            infectionMod = aspectPushed != "none" ? aspectBase * 2 : aspectBase + 0;
             infectionMod += Number(actorData.psiStrain.infection)
                 if (infectionMod <= 100){
                     actorWhole.update({"system.psiStrain.infection" : infectionMod});
@@ -2222,7 +2222,7 @@ export async function TaskCheck({
     function _proTaskCheckOptions(form) {
         return {
             ranged: form.RangedFray ? form.RangedFray.checked : false,
-            aspects: form.AspectNumber ? parseInt(form.AspectNumber.value) : 0,
+            aspects: form.AspectNumber>0 ? parseInt(form.AspectNumber.value) : 0,
             pushes: form.Push ? form.Push.value : "none",
             ignoreInfection: form.IgnoreInfection ? form.IgnoreInfection.checked : false,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
