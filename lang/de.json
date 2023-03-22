@@ -1006,7 +1006,7 @@
     "systemMessage": {
       "resetRest": {
         "title": "Rast Zurücksetzen",
-        "copy": "Dieser Dialog setzt ALLE Rast der ausgewählten, aktiven Charaktere zurück. Wenn ein Charakter nicht aktiv von einem/einer Spieler:in kontrolliert wird, wird diese:r hier nicht aufgeführt. Spieler:innen können ihren aktiven Charakter wechseln indem sie das Spieler-Menü in der unteren linken Ecke von Foundry benutzen.",
+        "copy": "Dieser Dialog setzt ALLE Rast der ausgewählten, aktiven Charaktere zurück. Wenn ein Charakter nicht aktiv von einem/einer Spieler:in kontrolliert wird, wird diese:r hier nicht aufgeführt. Spieler:innen können ihren aktiven Charakter wechseln, indem sie das Spieler-Menü in der unteren linken Ecke von Foundry benutzen.",
         "headline": "Aktive Spielercharaktere"
       }
     }
