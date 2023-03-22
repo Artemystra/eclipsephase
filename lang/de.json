@@ -57,6 +57,8 @@
         "delete": "Löschen",
         "close": "Schließen",
         "confirm": "Bestätigen",
+        "select": "Auswählen",
+        "reset": "Zurücksetzen",
         "showDetails": "Mehr Details",
         "hideDetails": "Weniger Details"
       },
@@ -999,6 +1001,13 @@
             "weaponFull": "Deine Waffe ist noch voll."
           }
         }
+      }
+    },
+    "systemMessage": {
+      "resetRest": {
+        "title": "Rast Zurücksetzen",
+        "copy": "Dieser Dialog setzt ALLE Rast der ausgewählten, aktiven Charaktere zurück. Wenn ein Charakter nicht aktiv von einem/einer Spieler:in kontrolliert wird, wird diese:r hier nicht aufgeführt. Spieler:innen können ihren aktiven Charakter wechseln indem sie das Spieler-Menü in der unteren linken Ecke von Foundry benutzen.",
+        "headline": "Aktive Spielercharaktere"
       }
     }
   }

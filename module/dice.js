@@ -2313,6 +2313,14 @@ export async function TaskCheck({
 
     //Guns skill check results
     function _proGunsTaskCheckOptions(form) {
+        for (let key of Object.entries(form)){
+            if(key[1].checked === true){
+                console.log("This form entry is checked: ",key[1].name)
+            }
+            else {
+                console.log("This form entry is NOT checked: ",key[1].name)
+            }
+        }
         return {
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,
