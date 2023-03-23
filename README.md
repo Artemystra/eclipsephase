@@ -17,7 +17,7 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <li>Automated Chat Feedback</li>
 <li>Active Effects</li>
 </ul>
-<h3>Legal Disclaimer</h3>
+<h3><a href="#legal-disclaimer-1">Legal Disclaimer</a></h3>
 
 <h2>For Players</h2>
 <h3>Character Sheet Design</h3>
