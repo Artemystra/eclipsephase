@@ -1,12 +1,36 @@
-<h5 style="font-size: 10px;">Disclaimer: This is the first, unofficial Foundry VTT system for Eclipse Phase 2nd Edition. All official logos, icons or other trademarks are intellectual property of Posthuman Studios, LLC (https://eclipsephase.com) and used with their permission.
+The first inofficial Eclipse Phase 2e system is about two years in the making and nears it's version 1.0 (A state in which the core rules are working with some convenience features where I see fit.). If you like my work and want to support me, please consider buying me a kofi (https://ko-fi.com/diemen) or just texting me here or on discord (jorra#7357) to say "thank you!". It means a lot to me!
 
-Rules and non-registered trademarks are published under (CC) BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/3.0/). This is also true for any additions made or code written by the developer (me)
+<h2>Most important features in overview</h2>
+<h3>For Players</h3>
+<ul>
+<li>Character Sheet Design</li>
+<li>Action bar</li>
+<li>Contextual Dice Roll Menus</li>
+<li>Modification Overview</li>
+<li>Rules & Tooltips</li>
+</ul>
+<h3>For GMs</h3>
+<ul>
+<li>NPC & Threat Sheet Design</li>
+<li>Enriched Dice Results</li>
+<li>Extensive Compendium Packs</li>
+<li>Automated Chat Feedback</li>
+<li>Active Effects</li>
+</ul>
+<h3>Legal Disclaimer</h3>
 
-All of this was built on the Boilerplate System of FoundryVTT which was distributed for mingling around in it. Thanks, Atropos for this! (https://gitlab.com/foundrynet/worldbuilding)
-
-It's build by a total newbie so do not expect much, but if I did not write it otherwise I'll maintain the code and try to improve it over time. Feel free to get your own fork (hue hue hue) to try to make it even better.
-
-If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
+<h2>For Players</h2>
+<h3>Character Sheet Design</h3>
+<h3>Action bar</h3>
+<h3>Contextual Dice Roll Menus</h3>
+<h3>Modification Overview</h3>
+<h3>Rules & Tooltips</h3>
+<h2>For Players</h2>
+<h3>Character Sheet Design</h3>
+<h3>Action bar</h3>
+<h3>Contextual Dice Roll Menus</h3>
+<h3>Modification Overview</h3>
+<h3>Rules & Tooltips</h3>
 
 <h2><strong>Current state of sheets</strong></h2>
 <h2>Character Sheet</h2>
@@ -115,3 +139,14 @@ system.skillsVig.free fall.mod = affects the skilltotal of given skill. Also aff
 system.skillsVig.guns.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
 system.skillsVig.infiltrate.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
 system.skillsVig.melee.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<p>
+
+<h2><strong>Legal Disclaimer</strong></h2>
+<h5 style="font-size: 10px;">Disclaimer: This is the first, unofficial Foundry VTT system for Eclipse Phase 2nd Edition. All official logos, icons or other trademarks are intellectual property of Posthuman Studios, LLC (https://eclipsephase.com) and used with their permission.
+
+Rules and non-registered trademarks are published under (CC) BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/3.0/). This is also true for any additions made or code written by the developer (me)
+
+All of this was built on the Boilerplate System of FoundryVTT which was distributed for mingling around in it. Thanks, Atropos for this! (https://gitlab.com/foundrynet/worldbuilding)
+
+It's build by a total newbie so do not expect much, but if I did not write it otherwise I'll maintain the code and try to improve it over time. Feel free to get your own fork (hue hue hue) to try to make it even better.
+
+If you want to use it for your own campaigns: Go for it! Please have fun.</h5>
