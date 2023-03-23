@@ -3,34 +3,34 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <h2>Most important features in overview</h2>
 <h3>For Players</h3>
 <ul>
-<li>Character Sheet Design</li>
-<li>Action bar</li>
-<li>Contextual Dice Roll Menus</li>
-<li>Modification Overview</li>
-<li>Rules & Tooltips</li>
+<li><a href="#character-sheet-design">Character Sheet Design</a></li>
+<li><a href="#action-side-car">Action Side Car</a></li>
+<li><a href="#contextual-dice-roll-menus">Contextual Dice Roll Menus</a></li>
+<li><a href="#modification-overview">Modification Overview</a></li>
+<li><a href="#rules--tooltips">Rules & Tooltips</a></li>
 </ul>
 <h3>For GMs</h3>
 <ul>
-<li>NPC & Threat Sheet Design</li>
-<li>Enriched Dice Results</li>
-<li>Extensive Compendium Packs</li>
-<li>Automated Chat Feedback</li>
-<li>Active Effects</li>
+<li><a href="#character-sheet-design-1">NPC & Threat Sheet Design</a></li>
+<li><a href="#action-bar-1">Enriched Dice Results</a></li>
+<li><a href="#legal-disclaimer-1">Extensive Compendium Packs</a></li>
+<li><a href="#legal-disclaimer-1">Automated Chat Feedback</a></li>
+<li><a href="#legal-disclaimer-1">Active Effects</a></li>
 </ul>
 <h3><a href="#legal-disclaimer-1">Legal Disclaimer</a></h3>
 
 <h2>For Players</h2>
 <h3>Character Sheet Design</h3>
-<h3>Action bar</h3>
+<h3>Action Side Car</h3>
 <h3>Contextual Dice Roll Menus</h3>
 <h3>Modification Overview</h3>
 <h3>Rules & Tooltips</h3>
-<h2>For Players</h2>
-<h3>Character Sheet Design</h3>
-<h3>Action bar</h3>
-<h3>Contextual Dice Roll Menus</h3>
-<h3>Modification Overview</h3>
-<h3>Rules & Tooltips</h3>
+<h2>For GMs</h2>
+<h3>NPC & Threat Sheet Design</h3>
+<h3>Enriched Dice Results</h3>
+<h3>Extensive Compendium Packs</h3>
+<h3>Automated Chat Feedback</h3>
+<h3>Active Effects</h3>
 
 <h2><strong>Current state of sheets</strong></h2>
 <h2>Character Sheet</h2>
