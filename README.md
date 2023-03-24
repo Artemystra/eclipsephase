@@ -45,27 +45,27 @@ Apart from this the Action Side Car comes with a number of convenience features 
 <li>
 <strong>Modification Overview<strong><br>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/modifiers.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/modifiers.png">
 </div><br>
 To provide you as a player with a better idea of the modifications automatically applied to your rolls, you have the Modification Over on top of the Side Car. You can always hover it to get more information about the nature of the modifications you're suffering.
 </li>
 <li>
 <strong>Armor Section<strong><br>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/armorOverview.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/armorOverview.png">
 </div><br>
 Presents the player with a cumulated value for both their energy and their kinetic armor. Beside stating if the armor exceeding certain thresholds it's also hoverable so players can understand the armor values and how any modification may impact them a bit better.
 </li>
 <li>
 <strong>Item Details<strong><br>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/itemDetails.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/itemDetails.png">
 </div><br>
 While it's necessary to reduce the provided information, about any item shown, to the bare minimum in order to save as much space as possible, players can easily decollapse these items to get to know more about their items at hand.
 </li>
 <strong>Reload Automation<strong><br>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/reload.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/reload.png">
 </div><br>
 Melee and Ranged weapons can be directly rolled from this section. If applicable, ranged weapons automatically deduct the ammo used from the sheet. The Action Side Bar provides players with the option to reload them directly. This mechanic is not yet bound to any ammunition. This will eventually change before deployment of v1.0.
 </li>
@@ -74,20 +74,20 @@ Melee and Ranged weapons can be directly rolled from this section. If applicable
 <h3>Contextual Dice Roll Menus</h3>
 <p>Most of the rules in Eclipse Phase a relatively straight forward, which is reflected in the minimal design of the common dice roll pop-up. To save you, as a player, time and nerves special rolls like attacks, fray or psi are enriched to provide the best UX as possible, while navigating through your GMs challenges.</p>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/diceRollMenu.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/diceRollMenu.png">
 </div><br>
 <i>Hacking is not yet fully implemented. This might change after the deployment of v1.0 as result of the rules complexity around this topic.</i>
 
 <h3>Rules & Tooltips</h3>
 <p>Where applicable the system is enriched with other tooltips including some of the more complex rules of Eclipse Phase, to save you time searching for them in the rulebook. If you're missing some important rules feel free to open an issue and let's discuss this matter.</p>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/Tooltips.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/Tooltips.png">
 </div><br>
 
 <h3>Automatic Rest Calculator</h3>
 <p>Resting allows players to recover pool points. All you have to do is choosing your preferred rest type by clicking the checkbox next to it. The roll will happen automatically and refills your pools to the max if possible. If not it's presenting you with another menu to choose how to distribute your points.</p>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/restCalculator.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/restCalculator.png">
 </div><br>
 
 <h2>For GMs</h2>
@@ -102,19 +102,19 @@ While player character sheets are quite complex, they're designed to be used in 
 <h3>Enriched Dice Results</h3>
 <p>While the rules of EP are relatively straight forward, keeping track of all the modifiers affecting your players rolls can be tedious. This is why the system tries to make dice roll results as tranparent as possible.</p>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/diceResults.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/diceResults.png">
 </div><br>
 
 <h3>Extensive Compendium Packs</h3>
 <p>Since Eclipse Phase is published under a creative commons license it's possible for us to provide you with many of the standard items, available from the EP2E base rules.</p>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/Compendiums.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/Compendiums.png">
 </div><br>
 
 <h3>Automated Chat Feedback</h3>
 <p>While TTRPG is all about trust and communication, there are sometimes things players forget to communicate while still important that you're keeping track of them. For this reason the system provides you with many automated chat messages, briefing you about what your players are about and how they're trying to achieve it.</p>
 <div style="display: grid; align-items: center;">
-    <img src="https://war-klar.de/PicShare/GitHub/chatFeedback.webp">
+    <img src="https://war-klar.de/PicShare/GitHub/chatFeedback.png">
 </div><br>
 
 <h3>Active Effects</h3>
