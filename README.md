@@ -21,7 +21,7 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 
 <h2>For Players</h2>
 <h3>Character Sheet Design</h3>
-<p><img src="https://war-klar.de/PicShare/GitHub/characterSheet.png"><br>
+<p><img src="https://war-klar.de/PicShare/GitHub/characterSheet2.png"><br>
 <i>The character sheet is designed to reduce player search time</i></p>
 <ol>
 <li>
