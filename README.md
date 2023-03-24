@@ -4,18 +4,47 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <h3>For Players</h3>
 <ul>
 <li><a href="#character-sheet-design">Character Sheet Design</a></li>
+<p><img src="https://war-klar.de/PicShare/GitHub/characterSheet.jpg"><br>
+<i>The character sheet is designed to reduce player search time</i></p>
+<ol>
+<li>
+<strong>The Persona Section<strong><br>
+Holds every information that rarely changes during a session or even a campaign. It holds your aptitudes, traits & flaws and the personality description of your character as well as their goals, IDs and rep.
+</li>
+<li>
+<strong>The Inventory Section<strong><br>
+A normal character has a lot of inventory to manage, such as armor, weapons, special gear and even vehicles or special abilities like psi sleights. While the skills tab is the most commonly used in this section, most of the other tabs are often just to help you setting your character up for a mission and then not to be seen again for some time. Yet itßs still common to browse your different inventories while making up your mind how to overcome a threat.
+</li>
+<li>
+<strong>The Action Side Car<strong><br>
+Here you find an overview of the most important items your character has currently at hand. It's meant to be a combat/scene companion that gives you qick access to the items currently at hand. The Side Car also provides a lot of other helpful information.
+</li>
+</ol>
 <li><a href="#action-side-car">Action Side Car</a></li>
+<p>The basic idea of the Action Side Car is that players setup their characters inventory for a mission or scene and save navigation time afterwards, as they would not need to navigate their (probably extensive) inventories anymore in search for this one item they want to use.</p>
+Apart from this the Action Side Car comes with a number of convenience features that help players and GMs alike to understand the rules a bit better:
+<ul>
+<li>
+<div style="display: grid; align-items: center;">
+    <img src="https://war-klar.de/PicShare/GitHub/armorOverview.png">
+    <img src="https://war-klar.de/PicShare/GitHub/armorTooltip.png">
+</div>
+<strong>The Inventory Section<strong><br>
+A normal character has a lot of inventory to manage, such as armor, weapons, special gear and even vehicles or special abilities like psi sleights. While the skills tab is the most commonly used in this section, most of the other tabs are often just to help you setting your character up for a mission and then not to be seen again for some time. Yet itßs still common to browse your different inventories while making up your mind how to overcome a threat.
+</li>
+</ul>
 <li><a href="#contextual-dice-roll-menus">Contextual Dice Roll Menus</a></li>
 <li><a href="#modification-overview">Modification Overview</a></li>
 <li><a href="#rules--tooltips">Rules & Tooltips</a></li>
+<li><a href="#automatic-rest-calculator">Automatic Rest Calculator</a></li>
 </ul>
 <h3>For GMs</h3>
 <ul>
-<li><a href="#character-sheet-design-1">NPC & Threat Sheet Design</a></li>
-<li><a href="#action-bar-1">Enriched Dice Results</a></li>
-<li><a href="#legal-disclaimer-1">Extensive Compendium Packs</a></li>
-<li><a href="#legal-disclaimer-1">Automated Chat Feedback</a></li>
-<li><a href="#legal-disclaimer-1">Active Effects</a></li>
+<li><a href="#npc--threat-sheet-design">NPC & Threat Sheet Design</a></li>
+<li><a href="#enriched-dice-results">Enriched Dice Results</a></li>
+<li><a href="#extensive-compendium-packs">Extensive Compendium Packs</a></li>
+<li><a href="#automated-chat-feedback">Automated Chat Feedback</a></li>
+<li><a href="#active-effects">Active Effects</a></li>
 </ul>
 <h3><a href="#legal-disclaimer-1">Legal Disclaimer</a></h3>
 
@@ -25,6 +54,7 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <h3>Contextual Dice Roll Menus</h3>
 <h3>Modification Overview</h3>
 <h3>Rules & Tooltips</h3>
+<h3>Automatic Rest Calculator</h3>
 <h2>For GMs</h2>
 <h3>NPC & Threat Sheet Design</h3>
 <h3>Enriched Dice Results</h3>
@@ -34,7 +64,6 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 
 <h2><strong>Current state of sheets</strong></h2>
 <h2>Character Sheet</h2>
-<img src="https://war-klar.de/PicShare/GitHub/characterSheet.jpg"><p/>
 <h2>NPC Sheet</h2>
 <img src="https://war-klar.de/PicShare/GitHub/npcSheet.jpg"><p/>
 <h2>Threat Sheet</h2>
