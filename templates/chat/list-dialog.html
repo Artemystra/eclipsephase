@@ -1,0 +1,22 @@
+<form>
+    <div class="form-group listBackgroundMain">
+        <p>{{{localize "ep2e.systemMessage.resetRest.copy"}}}</p>
+    </div>
+    {{#if (gt charCount 0)}}
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.systemMessage.resetRest.headline"}}</h3>
+        </div>
+        <div class="grid" style="margin-top: 0;">
+            {{#each charList as |char|}}
+            <div>
+                <input type="checkbox" name="{{char._id}}" checked>
+                <label class="resource-label">{{char.name}}</label>
+            </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <div style="height: 190px">
+            <img src="systems/eclipsephase/resources/img/userConfiguration.webp"/>
+        </div>
+    {{/if}}
+</form>

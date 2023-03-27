@@ -65,13 +65,116 @@ class EPmenuLayer extends PlaceablesLayer {
             }
             html
               .find('.ep-menu.ep-restore-rest')
-              .click(event => {
-                for (let actor of game.actors){
-                    let actorType = actor.type;
-                    if (actorType === "character"){
-                        actor.update({"system.rest.long" : false, "system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false});
+              .click(async event => {
+                let charList = await identifyChars()
+
+                let charCount = charList.length
+
+                let charSelect = await selectChars(charList, charCount)
+
+                if(charSelect.cancelled){
+                  return
+                }
+
+                let resetCount = charSelect.resetList.length
+
+                if (resetCount > 0){
+                  for (let actor of game.actors){
+                    let actorID = actor._id;
+                    for (let id of charSelect.resetList){
+                      if (actorID === id){
+                          actor.update({"system.rest.long" : false, "system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false});
+                      }
                     }
+                  }
                 }
             })
+
+            async function selectChars(charList, charCount){
+              let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+              let resetButton = game.i18n.localize('ep2e.actorSheet.button.reset');
+              let closeButton = game.i18n.localize('ep2e.actorSheet.button.close');
+              let title = game.i18n.localize('ep2e.systemMessage.resetRest.title');
+              const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+              const html = await renderTemplate(template, {charList, charCount});
+
+              
+              if(charCount > 0){
+              return new Promise(resolve => {
+                  const data = {
+                      title: title,
+                      content: html,
+                      buttons: {
+                        cancel: {
+                          label: cancelButton,
+                          callback: html => resolve ({cancelled: true})
+                        },
+                        normal: {
+                            label: resetButton,
+                            callback: html => resolve(_proResetPlayerList(html[0].querySelector("form")))
+                        }
+                      },
+                      default: "normal",
+                      close: () => resolve ({cancelled: true})
+                  };
+                  let options = {width:536}
+                  new Dialog(data, options).render(true);
+              });
+            }
+            else{
+              return new Promise(resolve => {
+                  const data = {
+                      title: title,
+                      content: html,
+                      buttons: {
+                        cancel: {
+                          label: closeButton,
+                          callback: html => resolve ({cancelled: true})
+                        }
+                      },
+                      default: "normal",
+                      close: () => resolve ({cancelled: true})
+                  };
+                  let options = {width:536}
+                  new Dialog(data, options).render(true);
+              });
+            }
+
+            }
+
+            //Guns skill check results
+            function _proResetPlayerList(form) {
+              let resetList = [];
+              for (let key of Object.entries(form)){
+                if(key[1].checked === true){
+                    resetList.push(key[1].name)
+                }
+              }
+              return {
+                  resetList
+              }
+
           }
+
+            async function identifyChars() {
+              let ownedChars = [];
+              let charIDs = [];
+              for (let u of game.users){
+                  if (u.character){
+                      charIDs.push(u.character._id);
+                  }
+              }
+    
+              for (let a of game.actors){
+                  for (let o of charIDs){
+                      if (a._id === o){
+                        ownedChars.push(a);
+                      }
+                  }
+              }
+              return ownedChars
+            }
+          }
+
+          
 }

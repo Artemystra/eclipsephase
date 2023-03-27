@@ -1316,7 +1316,10 @@ export async function TaskCheck({
             //Effect in case virus was successful
             if(success || autoSuccess){
                 let virusMod = "";
-                if(superior && !doubleSuperior && !critical && !autoSuccess){
+                if(success && !superior && !doubleSuperior && !critical && !autoSuccess){
+                    virusMod = "";
+                }
+                else if(success && superior && !doubleSuperior && !critical && !autoSuccess){
                     virusMod = " + 1"
                 }
                 else {
@@ -2222,7 +2225,7 @@ export async function TaskCheck({
     function _proTaskCheckOptions(form) {
         return {
             ranged: form.RangedFray ? form.RangedFray.checked : false,
-            aspects: form.AspectNumber ? parseInt(form.AspectNumber.value) : 0,
+            aspects: form.AspectNumber ? 0 + parseInt(form.AspectNumber.value) : 0,
             pushes: form.Push ? form.Push.value : "none",
             ignoreInfection: form.IgnoreInfection ? form.IgnoreInfection.checked : false,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
@@ -2310,6 +2313,14 @@ export async function TaskCheck({
 
     //Guns skill check results
     function _proGunsTaskCheckOptions(form) {
+        for (let key of Object.entries(form)){
+            if(key[1].checked === true){
+                console.log("This form entry is checked: ",key[1].name)
+            }
+            else {
+                console.log("This form entry is NOT checked: ",key[1].name)
+            }
+        }
         return {
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,

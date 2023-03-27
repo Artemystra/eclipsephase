@@ -447,13 +447,13 @@ a.entity-link {
   min-height: 36px;
 }
 
-span.fail {
+.fail {
   font-size: 20px;
   color: var(--negative);
   opacity: 1;
 }
 
-span.success {
+.success {
   font-size: 20px;
   color: var(--positive);
   opacity: 1;
@@ -1103,6 +1103,7 @@ h3.subheader {
   font-size: 16px;
   display: flex;
   align-items: center;
+  margin-bottom: -3px;
 }
 
 h3.subheader.colorV1{

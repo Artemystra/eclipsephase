@@ -1,0 +1,29 @@
+<div class="item flexrow" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="align-items: start;">
+    <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
+        {{#if (eq itemType "fail")}}
+        <i class="far fa-minus-square fail"></i>
+        {{else if (eq itemType "success")}}
+        <i class="far fa-plus-square success"></i>
+        {{else if (eq itemType "ware")}}
+        <img src="{{item.img}}" title="{{item.name}}" width="24" height="24" style="max-width: 24px;"/>
+        {{/if}}
+    </div>
+    <div class="flexrow alignCenter" style="min-height: 36px; max-width: 140px;">
+        <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
+    </div>
+    <div class="flexrow flex-group-center slideShow">
+        <a><i class="fas fa-plus icon-small"></i></a>
+        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+    </div>
+    <div class="showMore descriptionContainer flexrow flex-group-center" style="align-items: start;">
+        {{#if item.system.description}}
+        <div class="itemDescription shape3" style="min-width: 100%;">
+            {{item.system.description}}
+        </div>
+        {{/if}}
+        <div class="flexrow flex-between item-controls">
+            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
+            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
+        </div>
+    </div>
+</div>

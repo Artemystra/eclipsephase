@@ -1,0 +1,1014 @@
+{
+  "ACTOR.TypeCharacter" : "玩家角色",
+  "ACTOR.TypeNpc" : "NPC",
+  "ACTOR.TypeGoon" : "威胁",
+  "ITEM.TypeGear" : "装备",
+  "ITEM.TypeRangedweapon" : "远程武器",
+  "ITEM.TypeCcweapon" : "近战武器",
+  "ITEM.TypeArmor" : "护甲",
+  "ITEM.TypeGrenade" : "手雷",
+  "ITEM.TypeTrait" : "正面特征",
+  "ITEM.TypeFlaw" : "负面特征",
+  "ITEM.TypeMorphtrait" : "义体正面特征",
+  "ITEM.TypeMorphflaw" : "义体负面特征",
+  "ITEM.TypeWare" : "插件",
+  "ITEM.TypeAspect" : "灵术",
+  "ITEM.TypeProgram" : "程序",
+  "ITEM.TypeSpecialskill" : "特殊技能",
+  "ITEM.TypeKnowskill" : "知识技能",
+  "ITEM.TypeVehicle" : "载具",
+  "ITEM.TypeDrug" : "药物",
+
+  "ep2e": {
+    "actorSheet": {
+      "placeholders": {
+        "actorName": "名称"
+      },
+      "aptitudes": {
+        "headline": "属性",
+        "cognition": "COG",
+        "intuition": "INT",
+        "reflexes": "REF",
+        "savvy": "SAV",
+        "somatics": "SOM",
+        "willpower": "WIL",
+        "cog": "认知",
+        "int": "直觉",
+        "ref": "反射",
+        "sav": "机智",
+        "som": "体能",
+        "wil": "意志"
+      },
+      "leftTabs": {
+        "egoTab": "意识",
+        "idTab": "ID",
+        "museTab": "缪斯"
+      },
+      "rightTabs": {
+        "skillsTab": "技能",
+        "morphTab": "义体",
+        "inventoryTab": "物品栏",
+        "peripheralsTab": "外设",
+        "psiTab": "灵能",
+        "effectsTab": "效果"
+      },
+      "button": {
+        "edit": "编辑",
+        "delete": "删除",
+        "close": "关闭",
+        "confirm": "确认",
+        "select": "选择",
+        "showDetails": "展示细节",
+        "hideDetails": "隐藏细节"
+      },
+      "dialogHeadline": {
+        "warning": "警告",
+        "error": "错误",
+        "success": "成功",
+        "confirmationNeeded": "需要确认",
+        "information": "信息"
+      },
+      "popUp": {
+        "deleteCopyGeneral": "<b>警告:</b>这会将物品从你的人物卡中永远删除。",
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>若需略过删除物品时的提示框，请按住SHIFT建的同时点击删除键。</p></i>"
+      }
+    },
+    "healthbar": {
+      "tooltip": {
+        "durdr": "DUR/DR",
+        "woundswt": "损伤/(WT)",
+        "stressluc": "LUC/IR",
+        "traumatt": "创伤/(TT)",
+        "initiative": "先攻",
+        "threat": "威胁",
+        "stressTest": "压力检定",
+        "iniMod": "先攻调整"
+      }
+    },
+    "ego": {
+      "general": {
+        "headline": "常规",
+        "egoFlexLabel": "意识通用点",
+        "origin": {
+          "headline": "派系",
+          "anarchist": "无政府主义者",
+          "argonaut": "阿尔戈",
+          "barsoomian": "巴松人",
+          "brinker": "边民",
+          "criminal": "犯罪集团",
+          "extropian": "外熵族",
+          "hypercorps": "财阀",
+          "jovian": "木星人",
+          "lunar": "月球/轨道",
+          "mercurial": "幻变族",
+          "reclaimer": "复星者",
+          "scum": "游荡者",
+          "socialite": "社交名流",
+          "titanian": "泰坦人",
+          "venusian": "金星人",
+          "regional": "地方派系"
+        },
+        "sex": {
+          "headline": "性别",
+          "male": "男性",
+          "female": "女性",
+          "inter": "双性",
+          "dyadic": "无性"
+        },
+        "gender": {
+          "headline": "性别认同",
+          "cis": "顺性别",
+          "trans": "跨性别",
+          "nonBi": "非二元性别",
+          "fluid": "流性别",
+          "aGen": "无性别",
+          "biGen": "双性别",
+          "polGen": "多性别",
+          "neu": "性别中立",
+          "genAp": "冷漠性别",
+          "inter": "中性别",
+          "demi": "半性别",
+          "grey": "灰性别",
+          "apora": "异性别",
+          "mav": "超性别",
+          "novi": "复杂性别"
+        }
+      },
+      "motivations": {
+        "headline": "动机",
+        "placeholder": "例如 抵达界限"
+      },
+      "languages": {
+        "headline": "语言",
+        "placeholder": "例如 印地语, 汉语, 英语"
+      },
+      "traits": {
+        "headline": "正面特征",
+        "noItems": "你没有正面特征"
+      },
+      "flaws": {
+        "headline": "负面特征",
+        "noItems": "你没有负面特征"
+      },
+      "personality": {
+        "headline": "个人描述"
+      }
+    },
+    "id": {
+      "headline": "当前ID",
+      "nameLabel": "名称",
+      "namePlaceholder": "假名",
+      "repType": {
+        "@rep": "@-声望",
+        "crep": "C-声望",
+        "frep": "F-声望",
+        "grep": "G-声望",
+        "irep": "I-声望",
+        "rrep": "R-声望",
+        "xrep": "X-声望"
+      },
+      "complexity": {
+        "min": "次级",
+        "mod": "中级",
+        "maj": "上级"
+      },
+      "idSelector": {
+        "id1": "ID1",
+        "id2": "ID2",
+        "id3": "ID3",
+        "id4": "ID4",
+        "id5": "ID5",
+        "id6": "ID6"
+      }
+    },
+    "muse": {
+      "headline": "缪斯信息",
+      "nameLabel": "名称",
+      "namePlaceholder": "例如 阿缪辛",
+      "aboutLabel": "关于"
+    },
+    "skills":{
+      "placeholders": {
+        "specialization": "专精",
+        "additionalSpec": "无专精"
+      },
+      "restingMenu": {
+        "headline": "填充能力池",
+        "shortRest": "短填充:",
+        "longRest": "长填充:",
+        "labelInsight": "洞察",
+        "labelVigor": "活力",
+        "labelMoxie": "人格",
+        "labelFlex": "通用",
+        "messages": {
+          "pointsAvailable": "待分配的能力点",
+          "pointsOverspent": "你多分配了",
+          "distributionDone": "准备完成！没有剩余点数"
+        },
+        "restInfo": {
+          "headline": "休息",
+          "subheadline1": "常规",
+          "copy1": "你需要使用一个“休息”动作来填充能力池。选择你要使用的填充类型并点击其后的勾选框。游戏内的每个24小时，你都拥有1次长填充和2次短填充。",
+          "subheadline2": "短填充",
+          "copy2": "短填充会花费普通超人类大概10分钟时间，且在这段时间内他只能进行休息、说话、和其他轻度活动。这需要基础生物模块。自然人需要花费1个小时。.<p/><label class='resource-value'>一次短填充可以恢复1d6点能力点</label>",
+          "subheadline3": "长填充",
+          "copy3": "拥有基础生物模块的刃可以花费大约4小时进行长填充。他在这段时间内只能进行休息、说话、和其他轻度活动。自然人需要花费8个小时才能达成同样的效果。<p/><label class='resource-value'>长填充可以恢复所有能力点</label>"
+        },
+        "button": {
+          "resetRest": "重置填充",
+          "distribute": "分配" 
+        }
+      },
+      "insightSkills": {
+        "insightHeadline": "洞察技能",
+        "infosec": "信息安全",
+        "interface": "界面操作",
+        "perceive": "察觉",
+        "program": "编程",
+        "research": "检索",
+        "survival": "生存",
+        "poolHeadline": "洞察池",
+        "poolSubheadline1": "抢夺先攻",
+        "poolCopy1": "如果你只进行精神或网络动作，并不进行任何躯体移动，你可以在一个动作回合中抢先行动。如果多个角色选择了这个选项，他们在其他所有人之前按照先攻顺序行动。",
+        "poolSubheadline2": "额外动作",
+        "poolCopy2": "在一个动作回合内，进行1个额外的精神或网络复杂动作（或2个快速动作）。这些动作只能在所有人行动完成后才能进行。如果多个角色选择了这个选项，他们在其他所有人行动完成后按照先攻顺序行动。",
+        "poolSubheadline3": "获取线索",
+        "poolCopy3": "在调查、检索、或分析手头的事实时获取一个提示或引导，而不需要进行检定。"
+      },
+      "vigorSkills": {
+        "vigorHeadline": "活力技能",
+        "athletics": "运动",
+        "fray": "回避",
+        "free fall": "自由落体",
+        "guns": "枪术",
+        "infiltrate": "渗透",
+        "melee": "近战",
+        "poolHeadline": "活力池",
+        "poolSubheadline1": "抢夺先攻",
+        "poolCopy1": "在一个动作回合中抢先行动。如果多个角色选择了这个选项，他们在其他所有人之前按照先攻顺序行动。",
+        "poolSubheadline2": "额外动作",
+        "poolCopy2": "在一个动作回合内，进行1个额外的躯体复杂动作（或2个快速动作）。这些动作只能在所有人行动完成后才能进行。如果多个角色选择了这个选项，他们在其他所有人行动完成后按照先攻顺序行动。",
+        "poolSubheadline3": "忽视损伤",
+        "poolCopy3": "忽视1个损伤效果，持续24小时或直到你的下一次填充。"
+      },
+      "moxieSkills": {
+        "moxieHeadline": "人格技能",
+        "deceive": "欺骗",
+        "kinesics": "身势学",
+        "persuade": "劝说",
+        "provoke": "煽动",
+        "psi": "灵能",
+        "poolHeadline": "人格池",
+        "poolSubheadline1": "忽视创伤",
+        "poolCopy1": "忽视1个创伤效果，持续24小时或直到你的下一次填充。",
+        "poolSubheadline2": "重置声望",
+        "poolCopy2": "重置声望网络的支援，花费1点可以重置1个次级支援，2点重置1个中级支援。上级支援不能用这种方法重置。",
+        "poolSubheadline3": "获取线索",
+        "poolCopy3": "在通过社交互动收集情报时获取一个提示或引导，而不需要进行检定。",
+        "poolSubheadline4": "控制感染",
+        "poolCopy4": "在使用灵术时避免进行感染检定（仅限异能者）。",
+        "poolSubheadline5": "避免失态",
+        "poolCopy5": "忽视玩家做出的1个角色不会犯的社交失态。"
+      },
+      "flex": {
+        "flexHeadline": "通用",
+        "poolHeadline": "通用池",
+        "poolSubheadline1": "引入NPC",
+        "poolCopy1": "1个新的或已存在的NPC加入场景。他们的存在必须是合理的。你可以定义该NPC的1个角度：他的义体、支持的派系、值得一提的技能、一个特别的特征等等。GM决定其他细节。",
+        "poolSubheadline2": "引入物品",
+        "poolCopy2": "一个之前没注意到的物品加入场景。它的存在必须是合理的。这个物品不能具有进攻性（不能是武器），而且必须是次级复杂度（也不能是稀有或受限物品）。它可以是实用的工具、装备的一个必须部件、或甚至是一个线索。GM决定它在场景中的位置以及其他细节。",
+        "poolSubheadline3": "定义环境",
+        "poolCopy3": "你可以引入一个环境因素到场景中。它的存在必须是合理的。它应该提供一个不会剧烈改变场景的新细节。例子包括隐藏的地点、掩蔽、使人分心的事物、庇护处、或可以利用的元素（例如梯子或窗）。",
+        "poolSubheadline4": "定义关系",
+        "poolCopy4": "你可以介绍你和一个已知NPC之间的一段崭新的，合理的关系。这应该是一段松散的或不那么重要的关系，而不能是紧密或严肃的纽带。例如，你可以是一个普通朋友，分享一段共同的经历，或是温和的竞争对手。你可以定义粗略的基础，但GM决定更多细节以及NPC对你的角色的态度。"
+      },
+      "knowSkills": {
+        "knowHeadline": "知识技能",
+        "addfirst": "添加第一个知识技能"
+      },
+      "exoticSkills": {
+        "exoticHeadline": "异种技能",
+        "addfirst": "添加第一个异种技能"
+      },
+      "additionalSkills": {
+        "additionalHeadline": "额外技能",
+        "placeholder": "技能名",
+        "electronics": "电子",
+        "accounting": "会计业",
+        "psychology": "心理学",
+        "Psychosurgery": "心智手术"
+      },
+      "pool": {
+        "label": "能力池",
+        "dialogHeadline": "使用能力池",
+        "dialogCopy": "你可以使用1点能力池点数以获得下列效果：",
+        "infoSubheadline": "信息",
+        "inputSubheadline": "需要输入",
+        "chatHeadline": "消耗能力池",
+        "chatEffect": "获得效果：",
+        "considerResting": "考虑使用“休息”动作",
+        "numberWounds": "忽视的损伤数",
+        "numberTrauma": "忽视的创伤数",
+        "repSize": "支援等级"
+      },
+      "addSkill": "添加技能",
+      "chooseAptitude": "选择属性"
+    },
+    "morph": {
+      "currentMorph": {
+        "headline": "当前义体",
+        "sleevedLabel": "已套入",
+        "morphPlaceholder": "义体名",
+        "morphType": {
+          "label": "类型",
+          "synth": "人造",
+          "bio": "生物",
+          "info": "信息"
+        },
+        "durabilityLabel": "耐久值",
+        "movement": {
+          "label1": "移动 1",
+          "label2": "移动 2",
+          "speed": "速度",
+          "type": "类型"
+        },
+        "movementTypes": {
+          "none": "-选择-",
+          "boat": "舟行",
+          "hopper": "跳行",
+          "hover": "悬浮",
+          "ionic": "离子推进",
+          "microlight": "微轻",
+          "roller": "滚动",
+          "rotor": "旋翼",
+          "snake": "蛇行",
+          "submarine": "潜水",
+          "swimmer": "游泳",
+          "thrustvector": "矢量推进",
+          "tracked": "履带",
+          "walker": "行走",
+          "wheeled": "轮行",
+          "winged": "飞翼"
+        },
+        "insightLabel": "洞察",
+        "moxieLabel": "人格",
+        "vigorLabel": "活力",
+        "flexLabel": "通用",
+        "morphList": {
+          "placeholder": "新义体"
+        }
+      },
+      "traitsLabel": "义体特征",
+      "wareLabel": "义体插件",
+      "noMorphTraits": "这具义体没有特征",
+      "noMorphWare": "你的义体是自然人"
+    },
+    "inventory": {
+      "armorLabel": "护甲",
+      "armorPlaceholder": "无护甲名",
+      "rangedLabel": "远程武器",
+      "rangedPlaceholder": "无武器名",
+      "ccLabel": "近战武器",
+      "ccPlaceholder": "无武器名",
+      "gearLabel": "装备",
+      "consumablesLabel": "消耗品",
+      "programs": {
+        "label": "加载的应用",
+        "copy": "应用是通过分析目标网络的漏洞，并编写针对这些漏洞的代码段来准备的。因此，<u>应用无法被轻易发现或阻止，</u>并可以在几乎任何状况下运行。<u>可以使用3种同类型的应用一次性感染一个网络中的全部设备。</u>虽然这是一次相当明显得攻击，但也需要一个优秀的黑客花费一些时间才能找到这种恶意行为的来源。</i>"
+      },
+      "npcInventory": {
+        "quickAddRanged": "快速添加远程",
+        "noRanged": "点击以<label class='resource-value'>快速添加一把远程武器</label>或从<label class='resource-value'>合集包</label><i class='fas fa-atlas'></i>中拖入",
+        "quickAddMelee": "快速添加近战",
+        "noMelee": "点击以<label class='resource-value'>快速添加一把近战武器</label>或从<label class='resource-value'>合集包</label><i class='fas fa-atlas'></i>中拖入",
+        "quickAddArmor": "快速添加护甲",
+        "armorEnergy": "能量",
+        "armorKinetic": "动能",
+        "noArmor": "没有护甲",
+        "traitsAndWareHeadline": "特征和插件",
+        "armorAndGearHeadline": "护甲和装备",
+        "traitsLabel": "义体正面特征",
+        "noTraitsCopy": "没有可展示的义体正面特征",
+        "flawsLabel": "义体负面特征",
+        "noFlawsCopy": "没有可展示的义体负面特征",
+        "wareLabel": "插件",
+        "noWareCopy": "没有安装插件",
+        "gearLabel": "装备",
+        "noGearCopy": "没有特殊装备"
+      },
+      "noGear": {
+        "headline": "没有可展示的装备",
+        "copy": "你没有任何装备。<label class='resource-value'>要添加装备到你的物品栏, 使用<i class='fas fa-atlas'></i></label>合集包<label class='resource-value'>或创造新的<i class='fas fa-suitcase'></i></label>物品<p><i style='font-size: 12px; margin-bottom: 10px;'>可以在Foundry的右上角找到这些选项或请求你的GM为你提供物品。</i>"
+      }
+    },
+    "peripherals": {
+      "pool": {
+        "ins": "洞察",
+        "vig": "活力",
+        "mox": "人格",
+        "flex": "通用"
+      },
+      "table": {
+        "pessengers": "乘客",
+        "armor": "AV",
+        "woundThreshold": "WT",
+        "damageDurability": "伤害/耐久",
+        "deathRating": "DR",
+        "movement": "移动",
+        "size": "体型"
+      },
+      "modPlaceholder": "没有调整值",
+      "skillsHeadline": "技能"
+    },
+    "psi": {
+      "infectionHeadline": "感染类型",
+      "ratingLabel": "感染深度",
+      "strainPlaceholder": "亚株名",
+      "descriptionPlaceholder": "描述你心中的怪物",
+      "gammaHeadline": "伽马灵术",
+      "chiHeadline": "希灵术",
+      "autoClose": "自动关闭细节",
+      "strain" : {
+        "none": "-选择-",
+        "architect": "建筑师",
+        "beast": "野兽",
+        "haunter": "鬼怪",
+        "stranger": "陌客r",
+        "xenomorph": "异形",
+        "custom": "自定义"
+      },
+      "effect" : {
+        "physicalDamage" : "实体伤害:",
+        "takeDamage" : "造成1d6伤害",
+        "frenzy" : "狂怒",
+        "hallucination" : "幻觉",
+        "other": "其他",
+        "enhancedBehaviour": {
+          "label": "行为强化：",
+          "arrogance": "傲慢",
+          "curiosity": "好奇",
+          "callouseness": "麻木",
+          "ruthlessness": "冷酷",
+          "aggression": "侵袭",
+          "arousal": "激情",
+          "gluttony": "暴食",
+          "riskTaking": "冒险",
+          "avoidance": "回避",
+          "mistrust": "不信任",
+          "denial": "否定",
+          "nihilism": "虚无主义",
+          "unsettlingMannerisms": "不安的言行",
+          "deceit": "欺骗",
+          "selfSabotage": "自毁",
+          "cruelty": "残忍",
+          "spite": "刁难",
+          "nonVerbalCommunication": "非语言交流",
+          "cliquishness": "小圈子",
+          "grooming": "驯养",
+          "socialize": "社交"
+        },
+        "restrictedBehaviour": {
+          "label": "行为束缚：",
+          "relaxation": "放松",
+          "remorse": "懊悔",
+          "empathy": "共情",
+          "takeResponsibility": "负责"
+        },
+        "motivation": {
+          "label": "动机：",
+          "hoard": "积蓄",
+          "innerWorkings": "公开内部机制",
+          "create": "创造",
+          "advancedTech": "获取先进技术",
+          "discardTies": "放弃情感纽带",
+          "discoverUnknown": "发现未知",
+          "repurpose": "回收利用",
+          "uncoverSecrets": "发掘秘密",
+          "domination": "支配",
+          "noQuarter": "不妥协",
+          "cannibalism": "食人",
+          "claimTerritory": "宣称领土",
+          "eradicate": "根除敌人",
+          "instillFear": "散播恐惧",
+          "stalkPrey": "追踪猎物",
+          "cutTies": "切断纽带",
+          "isolation": "孤立",
+          "crushHope": "粉碎希望",
+          "hiddenTruths": "揭露隐藏真相",
+          "releaseFromMisery": "将他人从痛苦中解放",
+          "shakeConfidence": "动摇集体信心",
+          "follPlans": "挫败计划",
+          "manipulation": "操纵",
+          "testLimits": "测试极限",
+          "betrayal": "背叛",
+          "covertOpponent": "转化对手",
+          "grandScheme": "执行宏伟计划",
+          "mislead": "误导他人",
+          "twistTruth": "扭曲真实",
+          "transform": "改变环境",
+          "control": "控制领地 ",
+          "trueForm": "展现真实形态",
+          "eatTheWeak": "食用弱者",
+          "establishColony": "建立殖民地",
+          "hibernate": "冬眠",
+          "molt": "脱毛",
+          "playWithPrey": "玩弄猎物",
+          "protectTribe": "保护部落"
+        }
+      }
+    },
+    "sideCar": {
+      "moreToggle": "展开",
+      "lessToggle": "隐藏",
+      "currentStatus": {
+        "headline": "当前调整值",
+        "modBreakdown": "调整值详情",
+        "generalModifiers": "一般调整值",
+        "armorModifiers": "护甲妨碍",
+        "gearModifiers": "装备妨碍",
+        "noModifiersSubHeader": "没有可展示的调整值",
+        "noModifiersCopy": "在你探索世界的过程中，每当你承受了任何负面调整值时，你都能在这里找到。再给一点时间，我们很快就能看到每一个了……",
+        "statuses": {
+          "wounded": "损伤",
+          "woundsIgnored": "忽视的损伤",
+          "traumatized": "创伤",
+          "traumasIgnored": "忽视的创伤",
+          "layersOfArmor": "护甲层数",
+          "somExceeded": "超过SOM的AV",
+          "weaponsExceeded": "武器过多",
+          "consumablesExceeded": "消耗品过多",
+          "gearExceeded": "装备过多",
+          "bulkyItem": "笨重物品"
+        }
+      },
+      "armor": {
+        "headline": "护甲",
+        "noArmorSubheadline": "没有装备护甲d",
+        "noArmorCopy": "你没有装备任何护甲",
+        "armorSubheadline": "累计护甲",
+        "energy": "能量",
+        "kinetic": "动能",
+        "concealWarning": "大于11时不可隐藏",
+        "encumberanceWarning": "大于DUR时不可移动",
+        "armorCountSubheadline": "你身上激活的护甲",
+        "mainArmorLabel": "主要护甲",
+        "additionalArmorLabel": "额外护甲",
+        "cumulativeMalusLabel": "累计减值",
+        "mainArmorMalusCopy": "每有一件额外的主要护甲，你的所有动作都需要承受一次-20调整值。",
+        "additionalArmorMalusCopy": "额外护甲可以在无调整值的情况下叠加上去。这仍需要计算其他的护甲调整值。",
+        "exceedingSomLabel": "超出体能",
+        "exceedingSomCopy": "如果任意一项AV（动能或能量）超出了你的SOM，你的所有投骰再承受一个-20调整值。",
+        "armorUsageDescription": "要激活或停用额外的/不同的护甲，你只需要打开物品栏选项卡。你可以从合集包或其他物品集合中拖入护甲。"
+      },
+      "ranged": {
+        "headline": "远程战斗",
+        "noRangedSubheadline": "没有装备武器"
+      },
+      "melee": {
+        "headline": "近战战斗",
+        "noMeleeSubheadline": "没有装备武器"
+      },
+      "gear": {
+        "headline": "特殊装备",
+        "noGearSubheadline": "没有装备"
+      },
+      "consumables": {
+        "headline": "消耗品",
+        "noConsumablesSubheadline": "没有消耗品"
+      }
+    },
+    "item": {
+      "general": {
+        "tabs": {
+          "detailsTab": "物品细节",
+          "effectsTab": "效果"
+        },
+        "table": {
+          "cost": {
+            "label": "花费",
+            "minor": "次级",
+            "moderate": "中级",
+            "major": "上级",
+            "rare": "稀有"
+          },
+          "slot": {
+            "label": "分类",
+            "digital": "数字",
+            "consumable": "消耗品",
+            "accessory": "配件",
+            "bulky": "笨重",
+            "notMobile": "不可移动"
+          },
+          "description": "描述",
+          "descriptionPlaceholder": "添加描述"
+        }
+      },
+      "armor": {
+        "table": {
+          "energy": "能量",
+          "kinetic": "动能",
+          "type": {
+            "label": "护甲类型",
+            "main": "主要护甲",
+            "additional": "额外护甲"
+          }
+        }
+      },
+      "aspect": {
+        "table": {
+          "type": {
+            "label": "灵能类型",
+            "gamma": "伽马",
+            "chi": "希",
+            "epsilon": "厄普西隆"
+          },
+          "action": {
+            "label": "动作",
+            "quick": "快速",
+            "task": "作业",
+            "complex": "复杂"
+          },
+          "duration": {
+            "label": "持续时间",
+            "instant": "立即",
+            "action": "动作回合",
+            "minutes": "分钟",
+            "hours": "小时",
+            "sustained": "维持"
+          },
+          "modifierLabel": "感染调整值"
+        }
+      },
+      "weapon": {
+        "table": {
+          "range": "远程",
+          "maxAmmo": "弹药上限",
+          "damageValue": "DV",
+          "effectArea": "效果区域",
+          "armorUsed": {
+            "label": "护甲",
+            "none": "无",
+            "kinetic": "动能",
+            "energy": "能量"
+            },
+          "firingMode": {
+            "label": "射击模式",
+            "ss": "SS",
+            "sa": "SA",
+            "saBF": "SA/BF",
+            "bfFA": "BF/FA",
+            "saBFfa": "SA/BF/FA"
+          },
+          "slot": {
+            "label": "分类",
+            "integrated": "内置",
+            "sidearm": "副武器",
+            "oneHanded": "单手",
+            "twoHanded": "双手",
+            "bulky": "笨重"
+          }
+        }
+      },
+      "drug": {
+        "table": {
+          "duration": "持续时间",
+          "addictionModifier": "成瘾调整值",
+          "addictionType": "成瘾类型",
+          "applicationVectors": {
+            "headline": "摄入媒介",
+            "dermalLabel": "接触式",
+            "inhalationLabel": "吸入式",
+            "injectionLabel": "注射式",
+            "oralLabel": "口服式"
+          },
+          "category": {
+            "label": "类别",
+            "cognitive": "认知药物",
+            "combat": "战斗药物",
+            "health": "健康药物",
+            "nano": "纳米药物",
+            "narco": "药物算法",
+            "petals": "万花镜",
+            "psi": "灵能药物",
+            "rec": "娱乐药物",
+            "social": "社交药物",
+            "toxins": "毒素",
+            "nanotox": "纳米毒素"
+          },
+          "type": {
+            "label": "药物类型",
+            "biochem": "生化",
+            "nano": "纳米",
+            "electronic": "电子"
+          }
+        }
+      },
+      "additionalSkill": {
+        "table": {
+          "nameLabel": "名称",
+          "valueLabel": "数值",
+          "aptitudeLabel": "属性",
+          "specLabel": "专精"
+        }
+      },
+      "program": {
+        "table": {
+          "level": {
+            "label": "等级",
+            "intruder": "入侵者",
+            "user": "用户",
+            "admin": "管理员",
+            "owner": "所有者"            
+          }
+        }
+      },
+      "vehicle": {
+        "table": {
+          "initiative": "先攻",
+          "threatValue": "TV",
+          "durability": "DUR",
+          "movement": "移动",
+          "skillsHeadline": "技能",
+          "type": {
+            "label": "类型",
+            "robot": "机器人",
+            "vehicle": "载具",
+            "morph": "义体",
+            "animal": "伶俐动物"          
+          },
+          "size": {
+            "label": "体型",
+            "vs": "超小型",
+            "s": "小型",
+            "m": "中型",
+            "l": "大型",
+            "vl": "超大型"
+          }
+        }
+      },
+      "ware": {
+        "table": {
+          "type": {
+            "label": "插件类型",
+            "b": "B",
+            "bch": "BCH",
+            "bh": "BH",
+            "bhm": "BHM",
+            "bm": "BM",
+            "c": "C",
+            "ch": "CH",
+            "chn": "CHN",
+            "chm": "CHM",
+            "h": "H",
+            "hn": "HN",
+            "hmn": "HMN",
+            "n": "N",
+            "nh": "NH",
+            "mn": "MN"
+          }
+        }
+      }
+    },
+    "roll": {
+      "dialog": {
+        "generalModHeadline": "一般调整值",
+        "attackerHeadline": "攻击者调整值",
+        "defenderHeadline": "防御者调整值s",
+        "frayTypeHeadline": "回避类型",
+        "dodgeRangedLabel": "躲避远程",
+        "infectionHeadline": "感染",
+        "autoPush": "自动增幅选项",
+        "baseCostLabel": "基础消耗",
+        "push": {
+          "label": "增幅",
+          "none": "-选择-",
+          "range": "射程",
+          "effect": "效果",
+          "power": "强度",
+          "penetration": "穿透力",
+          "duration": "持续时间",
+          "target": "额外目标",
+          "infectionDamage": "感染伤害了你",
+          "infectionInfluence": "感染影响了你",
+          "infectionTries": "感染收紧了它的掌控",
+          "effectReceived": "获得效果"
+        },
+        "ignoreInfection": "忽视感染",
+        "usePool": "使用",
+        "globalModLabel": "全局调整值",
+        "noSpecLabel": "无专精",
+        "noPool": "无剩余能力池",
+        "useThreat": "使用威胁 （+20）",
+        "calledShotLabel": "预告打击 (-10)",
+        "title": {
+          "guns": "枪术检定",
+          "melee": "近战检定",
+          "reputation": "声望检定",
+          "damageRoll": "伤害检定k",
+          "swap": "颠倒结果",
+          "raise": "提升结果",
+          "talentCheck": "检定"
+        },
+        "button": {
+          "roll": "投骰",
+          "cancel": "取消",
+          "useSelection": "使用该选项"
+        },
+        "reputationMode": {
+          "headline": "类型",
+          "trivial": "琐碎",
+          "minor": "次级",
+          "moderate": "中级",
+          "major": "上级"
+        },
+        "ranged": {
+          "attacker": {
+            "smartLinkLabel": "链接准心（如果没有则-10）",
+            "superiorPosition": "优势位置（+20）",
+            "inCoverLabel": "掩蔽后（-10）",
+            "isRunningLabel": "奔跑中（-20）",
+            "inMeleeLabel": "近战中（-10）",
+            "fireMode": {
+              "label": "射击模式",
+              "single": "单发射击",
+              "burst": "窄点射（+1d10）",
+              "fullAuto": "窄全自动（+2d10）",
+              "wBurst": "宽点射（+10命中）",
+              "wFullAuto": "宽全自动（+30命中）",
+              "indirect": "间接（-20）",
+              "suppressive": "压制（使用20发弹药）"
+            },
+            "aim": {
+              "label": "瞄准",
+              "none": "标准",
+              "quick": "快速瞄准(+10）",
+              "long": "长瞄准（+30）"
+            },
+            "distance": {
+              "label": "距离",
+              "pointBlank": "贴身（+10）",
+              "none": "标准",
+              "range": "射程内（-10）",
+              "beyond": "射程外（-20）",
+              "beyondPlus": "超射程外（-30）"
+            },
+            "visual": {
+              "label": "视觉减值",
+              "none": "无",
+              "minor": "次级（-10）",
+              "major": "上级（-30）",
+              "blind": "目盲（-30+）"
+            }
+          },
+          "defender": {
+            "isProne": "俯卧（射程内-10）",
+            "isHidden": "躲藏（-30）",
+            "size": {
+              "label": "体型",
+              "xs": "超小型（-30）",
+              "s": "小型（-10）",
+              "none": "中型",
+              "l": "大型（+10）",
+              "xl": "超大型（+30）"
+            },
+            "cover": {
+              "label": "掩蔽",
+              "none": "无",
+              "minor": "次级（-10）",
+              "moderate": "中级（-20）",
+              "major": "上级（-30）"
+            }
+          }
+        },
+        "melee": {
+          "attacker": {
+            "numberOfTargetsLabel": "目标数量",
+            "numberOfTargetsMod": "（-20/目标）",
+            "type": {
+              "label": "攻击类型",
+              "none": "标准攻击",
+              "charge": "冲锋攻击（-10命中，+1d6 DV）",
+              "aggressive": "侵袭攻击（+10命中，-10回避）",
+              "aggressiveCharge": "侵袭冲锋（+1d10 DV，-10 回避）"
+            }
+          }
+        }
+      },
+      "successType": {
+        "success": "成功",
+        "greaterSuccess": "1个大成功",
+        "superiorSuccess": "2个大成功",
+        "criticalSuccess": "重成功",
+        "greaterCriticalSuccess": "重成功和1个大成功",
+        "superiorCriticalSuccess": "重成功和2个大成功",
+        "supremeSuccess": "超成功",
+        "failure": "失败",
+        "greaterFailure": "1个大失败",
+        "superiorFailure": "2个大失败",
+        "criticalFailure": "重失败",
+        "greaterCriticalFailure": "重失败和1个大失败",
+        "superiorCriticalFailure": "重失败和2个大失败",
+        "supremeFailure": "超失败"
+      },
+      "rollType": {
+        "label": "投骰类型",
+        "public": "公开投骰",
+        "private": "GM私骰",
+        "blind": "GM暗骰"
+      },
+      "announce": {
+        "global": "状态",
+        "favor": "支援调整值",
+        "specialization": "专精",
+        "encumberance": "妨碍",
+        "wounds": "损伤/创伤",
+        "woundModifier": "损伤调整值",
+        "traumaModifier": "创伤调整值",
+        "rolled": "投骰",
+        "appliedMods": "附加调整值",
+        "baseValue": "基础值",
+        "rollTarget": "目标值",
+        "infectionRaise": "感染加深至",
+        "rest": {
+          "short": "我使用一次<p/><strong>短填充<p/></strong>恢复了部分能力池<p/>",
+          "long": "我使用我的<p/><strong>长填充<p/></strong>恢复了全部能力池<p/>"
+        },
+        "poolUsage": {
+          "poolUsed": "已使用能力池",
+          "usePoolSubheadline": "使用能力池",
+          "swappedTo": "结果颠倒为",
+          "raisedTo": "结果提升至",
+          "beyondSuperior": "你的成功度已到最大，不能进一步提升",
+          "notDeducted": "不使用能力池",
+          "notEnoughPool": "能力池不足",
+          "cantRaise": "结果无法提升",
+          "newResult": "新的结果",
+          "dontSwap": "不颠倒骰子",
+          "swapTo": "颠倒为",
+          "raiseLevel": "提升成功度",
+          "metGoal": "你达成了目标",
+          "raiseSuccess": "你可以使用你的能力池<br/>提升你的成功度...",
+          "notAvailable": "不可使用",
+          "missGoal": "你未达成目标",
+          "mitigateSpending": "花费能力池以减轻后果",
+          "dontMitigate": "不减轻失败",
+          "mitigate": "减轻"
+        },
+        "combat": {
+          "calledShot": "预告打击",
+          "calledShotAddition": "投出“1个大成功”或更好的结果",
+          "hit": "你使用你的武器命中了",
+          "damageDone": "你造成了伤害",
+          "melee": {
+            "charge": "冲锋",
+            "chargeAddition": "（+1d6 DV）",
+            "agressive": "侵袭攻击",
+            "agressiveAddition": "（回避-10）",
+            "agressiveCharge": "侵袭冲锋",
+            "agressiveChargeAddition": "（+1d10 DV且回避-10）",
+            "multipleTargets": "多目标"
+          },
+          "ranged": {
+            "smartLink": "非智能枪械",
+            "running": "奔跑",
+            "superiorPosition": "优势位置",
+            "inMelee": "困于近战",
+            "coverAttacker": "掩蔽后",
+            "aimLong": "长瞄准",
+            "aimQuick": "快速瞄准",
+            "sizeXS": "超小型目标",
+            "sizeS": "小型目标",
+            "sizeL": "大型目标",
+            "sizeXL": "超大型目标",
+            "rangeProne": "射程内俯卧",
+            "beyondProne": "射程外俯卧",
+            "beyondPlusProne": "超射程外俯卧",
+            "range": "射程内",
+            "beyond": "射程外",
+            "beyondPlus": "超射程外",
+            "pointBlank": "贴身",
+            "defMinCover": "目标位于次级掩蔽",
+            "defModCover": "目标位于中级掩蔽",
+            "defMajCover": "目标位于上级掩蔽",
+            "visImpMin": "次级视觉衰弱",
+            "visImpMaj": "上级视觉衰弱",
+            "blind": "目盲",
+            "wBurst": "宽点射t",
+            "wFullAuto": "宽全自动",
+            "Indirect": "间接",
+            "reloadNeeded": "你的武器弹药不足。<p/> <strong>请先装填！</strong>",
+            "reloadedWeapon": "我装填了我的武器",
+            "weaponFull": "你的武器弹药已满。"
+          }
+        }
+      }
+    },
+    "migration": {
+      "headlineStart": "<h3 class='subheader dialog'>尊敬的规则系统用户</h3>",
+      "legacy": "<label class='resource-label'>感谢你使用我们的系统游玩《隐蚀期》。在接下来的更新中，为了确保整体文件的完整性，我们请求你快速地将你的数据迁移到最新的框架中，即0.8.1版本更新的框架。<p/><p/><b>为了引入一些比已有框架更酷的特性（例如本地化），这一步骤是必须的，而且只需要花费短短几秒钟。</b><p/><p/>谢谢你，祝你游戏愉快!<p><i>注意：我们对药物进行了整体的重做。只需要将其从合集包再次拖入，并删除旧的药物。</i></p></label>",
+      "0861": "<label class='resource-label'><p>我们已经更新了物品结构，未来的迁移只会在你的物品处于特定版本时才会触发。<p/><p><b>这能防止你的角色卡和物品在触发迁移时损坏。</b><p/><p>请尽早迁移到这个版本，以协助我们稳定你角色的物品数据<p/> <p>谢谢你，祝你游戏愉快！</p></label>",
+      "headlineEnd": "<h3 class='subheader dialog'>全部完成！</h3>",
+      "done": "<label class='resource-label'>请愉快地开始对抗TITAN并拯救宇宙吧！或做任何你想做的事情！</i></p></label>"
+    }
+  }
+}

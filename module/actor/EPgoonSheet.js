@@ -99,6 +99,7 @@ export default class EPgoonSheet extends ActorSheet {
         const armor = [];
         const ware = [];
         const morphTrait = [];
+        const morphFlaw = [];
         const effects = [];
         const aspect = {
           none: [],
@@ -201,9 +202,13 @@ export default class EPgoonSheet extends ActorSheet {
             else if (item.type === 'ware') {
                 ware.push(item)
             }
-            else if (item.type === 'morphTrait' || item.type === 'morphFlaw'){
+            else if (item.type === 'morphTrait'){
                 morphTrait.push(item);
             }
+
+            else if (item.type === 'morphFlaw'){
+              morphFlaw.push(item);
+          }
                 
             else if (item.type === 'aspect') {
               let psiDuration = itemModel.duration;
@@ -300,6 +305,7 @@ export default class EPgoonSheet extends ActorSheet {
         actor.vehicle = vehicle;
         actor.specialSkill = special;
         actor.morphTrait = morphTrait;
+        actor.morphFlaw = morphFlaw;
         actor.activeEffects = effects;
 
         // Check if sleights are present and toggle Psi Tab based on this

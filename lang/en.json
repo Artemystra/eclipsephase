@@ -58,6 +58,7 @@
         "close": "Close",
         "confirm": "Confirm",
         "select": "Select",
+        "reset": "Reset",
         "showDetails": "Show Details",
         "hideDetails": "Hide Details"
       },
@@ -1009,6 +1010,13 @@
       "0861": "<label class='resource-label'><p>We have updated the items-structure to allow future migrations to only trigger, if your item is on a specific version.<p/><p><b>This prevents your character sheets/items from ending up broken, while you're triggering a migration.</b><p/><p>Please migrate to this version at your earliest convenience to help us stabilize your character's item-data<p/> <p>Thank you and have a great day playing!</p></label>",
       "headlineEnd": "<h3 class='subheader dialog'>You are all set!</h3>",
       "done": "<label class='resource-label'>Have fun fighting TITAN and rescuing the universe, or whatever it is that floats your boat!</i></p></label>"
+    },
+    "systemMessage": {
+      "resetRest": {
+        "title": "Reset Rest",
+        "copy": "This dialog resets ALL rest for the selected, active characters. If a character is not actively controlled by any player, it will not show in this list. Players can change their active character by using the player menu in the lower left of foundry.",
+        "headline": "Active Player Characters"
+      }
     }
   }
 }
