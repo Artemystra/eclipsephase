@@ -17,7 +17,11 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <li><a href="#automated-chat-feedback">Automated Chat Feedback</a></li>
 <li><a href="#active-effects">Active Effects</a></li>
 </ul>
-<h3><a href="#legal-disclaimer-1">Legal Disclaimer</a></h3>
+<h3><a href="#legal-disclaimer-1">Disclaimers</a></h3>
+<ul>
+<li><a href="#npc--threat-sheet-design">Personal</a></li>
+<li><a href="#enriched-dice-results">Legal</a></li>
+</ul>
 
 <h2>For Players</h2>
 <h3>Character Sheet Design</h3>
@@ -171,13 +175,13 @@ system.skillsVig.guns.mod = affects the skilltotal of given skill. Also affects 
 system.skillsVig.infiltrate.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
 system.skillsVig.melee.mod = affects the skilltotal of given skill. Also affects the skilltest roll.</p>
 
-<h2><strong>Legal Disclaimer</strong></h2>
+<h2><strong>Disclaimers</strong></h2>
+<h3>Personal</h3>
+<p>Please keep in mind, that this system is build from ground up using a boilerplate and coded by one person who is totally new to coding in general. While I had some great help in the past (looking at you, Will) most of the code is done by myself and not very coherent nor well documented (though I'm trying my best). If not otherwise noted, this system will keep updating constantly, but please feel free to reach out with your own ideas if you like. I really hope that you like the system and that you're going to enjoy many meaningful hours of fun with your friends & players all around the world!</p>
+
+<h3>Legal</h3>
 <p>This is the first, unofficial Foundry VTT system for Eclipse Phase 2nd Edition. All official logos, icons or other trademarks are intellectual property of Posthuman Studios, LLC (https://eclipsephase.com) and used with their permission.</p>
 
 <p>Rules and non-registered trademarks are published under (CC) BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/3.0/). This is also true for any additions made or code written by the developer (me)</p>
 
 <p>All of this was built on the Boilerplate System of FoundryVTT which was distributed for mingling around in it. Thanks, Atropos for this! (https://gitlab.com/foundrynet/worldbuilding)</p>
-
-<p>It's build by a total newbie so do not expect much, but if I did not write it otherwise I'll maintain the code and try to improve it over time. Feel free to get your own fork (hue hue hue) to try to make it even better.</p>
-
-<p>If you want to use it for your own campaigns: Go for it! Please have fun.</p>

@@ -178,7 +178,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/ranged-weapons.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gamma-sleight.html",
-    "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html"
+    "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
