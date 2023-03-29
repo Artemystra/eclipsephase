@@ -189,6 +189,12 @@
       "name": "Deutsch",
       "path": "lang/de.json",
       "flags": {}
+    },
+    {
+      "lang": "cn",
+      "name": "Chinese",
+      "path": "lang/cn.json",
+      "flags": {}
     }
   ],
   "gridDistance": 2,
