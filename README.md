@@ -22,10 +22,10 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <li><a href="#automated-chat-feedback">Automated Chat Feedback</a></li>
 <li><a href="#active-effects">Active Effects</a></li>
 </ul>
-<h3><a href="#legal-disclaimer-1">Disclaimers</a></h3>
+<h3>Disclaimers</h3>
 <ul>
-<li><a href="#npc--threat-sheet-design">Personal</a></li>
-<li><a href="#enriched-dice-results">Legal</a></li>
+<li><a href="#personal">Personal</a></li>
+<li><a href="#legal">Legal</a></li>
 </ul>
 
 <h2>Localization</h2>
