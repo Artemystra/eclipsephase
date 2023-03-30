@@ -2225,7 +2225,7 @@ export async function TaskCheck({
     function _proTaskCheckOptions(form) {
         return {
             ranged: form.RangedFray ? form.RangedFray.checked : false,
-            aspects: form.AspectNumber ? 0 + parseInt(form.AspectNumber.value) : 0,
+            aspects: form.AspectNumber ? (parseInt(form.AspectNumber.value)>0 ? parseInt(form.AspectNumber.value) : 0) : 0,
             pushes: form.Push ? form.Push.value : "none",
             ignoreInfection: form.IgnoreInfection ? form.IgnoreInfection.checked : false,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
