@@ -1718,17 +1718,18 @@ h3.inline {
     transition-delay: 1s;
     visibility: hidden;
     position: absolute;
-    width: 120px;
+    width: 140px;
     background-color: var(--focusBackground);
     color: var(--mainText);
     text-align: center;
-    padding: 5px 0;
+    padding: 5px 3px;
     border-style: solid;
     border-width: 3px;
     border-radius: 6px;
     border-color: var(--highlightBackground);
     top: -35px;
     left: 22px;
+    z-index: 100;
 }
 
 .wantToKnowMore:hover .tooltipText {

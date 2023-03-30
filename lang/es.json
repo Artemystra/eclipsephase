@@ -1,0 +1,1022 @@
+{
+  "ACTOR.TypeCharacter" : "Player Character",
+  "ACTOR.TypeNpc" : "Non-Player Character",
+  "ACTOR.TypeGoon" : "Threat",
+  "ITEM.TypeGear" : "Gear",
+  "ITEM.TypeRangedweapon" : "Ranged Weapon",
+  "ITEM.TypeCcweapon" : "Close Combat Weapon",
+  "ITEM.TypeArmor" : "Armor",
+  "ITEM.TypeGrenade" : "Grenade",
+  "ITEM.TypeTrait" : "Trait",
+  "ITEM.TypeFlaw" : "Flaw",
+  "ITEM.TypeMorphtrait" : "Morph Trait",
+  "ITEM.TypeMorphflaw" : "Morph Flaw",
+  "ITEM.TypeWare" : "Ware",
+  "ITEM.TypeAspect" : "Psi Sleight",
+  "ITEM.TypeProgram" : "Program",
+  "ITEM.TypeSpecialskill" : "Special Skill",
+  "ITEM.TypeKnowskill" : "Know Skill",
+  "ITEM.TypeVehicle" : "Vehicle",
+  "ITEM.TypeDrug" : "Drug",
+
+  "ep2e": {
+    "actorSheet": {
+      "placeholders": {
+        "actorName": "Name"
+      },
+      "aptitudes": {
+        "headline": "Aptitudes",
+        "cognition": "COG",
+        "intuition": "INT",
+        "reflexes": "REF",
+        "savvy": "SAV",
+        "somatics": "SOM",
+        "willpower": "WIL",
+        "cog": "Cognition",
+        "int": "Intuition",
+        "ref": "Reflexes",
+        "sav": "Savvy",
+        "som": "Somatics",
+        "wil": "Willpower"
+      },
+      "leftTabs": {
+        "egoTab": "Ego",
+        "idTab": "ID",
+        "museTab": "Muse"
+      },
+      "rightTabs": {
+        "skillsTab": "Skills",
+        "morphTab": "Morph",
+        "inventoryTab": "Inventory",
+        "peripheralsTab": "Peripherals",
+        "psiTab": "Psi",
+        "effectsTab": "Effects"
+      },
+      "button": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "close": "Close",
+        "confirm": "Confirm",
+        "select": "Select",
+        "reset": "Reset",
+        "showDetails": "Show Details",
+        "hideDetails": "Hide Details"
+      },
+      "dialogHeadline": {
+        "warning": "Warning",
+        "error": "Error",
+        "success": "Success",
+        "confirmationNeeded": "Confirmation Needed",
+        "information": "Information"
+      },
+      "popUp": {
+        "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>"
+      }
+    },
+    "healthbar": {
+      "tooltip": {
+        "durdr": "Dur/Dr",
+        "woundswt": "Wounds/(WT)",
+        "stressluc": "Stress/Luc",
+        "traumatt": "Trauma/(TT)",
+        "initiative": "Initiative",
+        "threat": "Threat",
+        "stressTest": "Stress Test",
+        "iniMod": "Ini Mod"
+      }
+    },
+    "ego": {
+      "general": {
+        "headline": "General",
+        "egoFlexLabel": "Ego Flex",
+        "origin": {
+          "headline": "Origin",
+          "anarchist": "Anarchist",
+          "argonaut": "Argonaut",
+          "barsoomian": "Barsoomian",
+          "brinker": "Brinker",
+          "criminal": "Criminal",
+          "extropian": "Extropian",
+          "hypercorps": "Hypercorp",
+          "jovian": "Jovian",
+          "lunar": "Lunar/Orbital",
+          "mercurial": "Mercurial",
+          "reclaimer": "Reclaimer",
+          "scum": "Scum",
+          "socialite": "Socialite",
+          "titanian": "Titanian",
+          "venusian": "Venusian",
+          "regional": "Regional"
+        },
+        "sex": {
+          "headline": "Sex",
+          "male": "Male",
+          "female": "Female",
+          "inter": "Intersex",
+          "dyadic": "Dyadic"
+        },
+        "gender": {
+          "headline": "Gender",
+          "cis": "Cisgender",
+          "trans": "Transgender",
+          "nonBi": "Non-Binary",
+          "fluid": "Genderfluid",
+          "aGen": "Agender",
+          "biGen": "Bigender",
+          "polGen": "Polygender",
+          "neu": "Neutrois",
+          "genAp": "Gender Apathetic",
+          "inter": "Intergender",
+          "demi": "Demigender",
+          "grey": "Greygender",
+          "apora": "Aporagender",
+          "mav": "Maverique",
+          "novi": "Novigender"
+        }
+      },
+      "motivations": {
+        "headline": "Motivations",
+        "placeholder": "e.g. Reach the horizon"
+      },
+      "languages": {
+        "headline": "Languages",
+        "placeholder": "e.g. Hindi, Chinese, English"
+      },
+      "traits": {
+        "headline": "Traits",
+        "noItems": "You are traitless"
+      },
+      "flaws": {
+        "headline": "Flaws",
+        "noItems": "You are flawless"
+      },
+      "personality": {
+        "headline": "Personality"
+      }
+    },
+    "id": {
+      "headline": "Current ID",
+      "nameLabel": "Name",
+      "namePlaceholder": "Fake Name",
+      "repType": {
+        "@rep": "@-Rep",
+        "crep": "C-Rep",
+        "frep": "F-Rep",
+        "grep": "G-Rep",
+        "irep": "I-Rep",
+        "rrep": "R-Rep",
+        "xrep": "X-Rep"
+      },
+      "complexity": {
+        "min": "Min",
+        "mod": "Mod",
+        "maj": "Maj"
+      },
+      "idSelector": {
+        "id1": "ID1",
+        "id2": "ID2",
+        "id3": "ID3",
+        "id4": "ID4",
+        "id5": "ID5",
+        "id6": "ID6"
+      }
+    },
+    "muse": {
+      "headline": "Muse Info",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. Amusing",
+      "aboutLabel": "About"
+    },
+    "skills":{
+      "placeholders": {
+        "specialization": "Specialization",
+        "additionalSpec": "No Spec"
+      },
+      "restingMenu": {
+        "headline": "Recover Pools",
+        "shortRest": "Short Rest:",
+        "longRest": "Long Rest:",
+        "labelInsight": "Insight",
+        "labelVigor": "Vigor",
+        "labelMoxie": "Moxie",
+        "labelFlex": "Flex",
+        "messages": {
+          "pointsAvailable": "pool points left to distribute",
+          "pointsOverspent": "You overspent your dice roll by",
+          "distributionDone": "Ready to go! No pool points left"
+        },
+        "restInfo": {
+          "headline": "Resting",
+          "subheadline1": "General",
+          "copy1": "You need to use a 'rest' action in order to recover pools. Choose the type of rest you want to use by clicking the checkbox next to it. You have 1 long and 2 short rest during the cycle of 24 in-game hours.",
+          "subheadline2": "Short Rest",
+          "copy2": "A short rest takes the common transhuman being approximately 10 minutes and requires them to do nothing else than rest, talk and just come down. This requires biomods. Flats use up to 1 hour.<p/><label class='resource-value'>A short rest recovers 1d6 pool points</label>",
+          "subheadline3": "Long Rest",
+          "copy3": "A person with biomods takes about 4 hours for a long rest. This requires them to do nothing else than rest, talk and just come down. Flats need 8 hours to achieve the same.<p/><label class='resource-value'>A long rest recovers all your pool points</label>"
+        },
+        "button": {
+          "resetRest": "Reset Rest",
+          "distribute": "Distribute" 
+        }
+      },
+      "insightSkills": {
+        "insightHeadline": "Insight Skills",
+        "infosec": "Infosec",
+        "interface": "Interface",
+        "perceive": "Perceive",
+        "program": "Program",
+        "research": "Research",
+        "survival": "Survival",
+        "poolHeadline": "Insight",
+        "poolSubheadline1": "Take the Initiative",
+        "poolCopy1": "Go first in an action turn if you are only taking mental or mesh actions and no physical movement. If multiple characters choose this option, they go in Initiative order before everyone else.",
+        "poolSubheadline2": "Extra Action",
+        "poolCopy2": "Take an extra complex mental or mesh action (or 2 quick actions) in an action turn. These actions may only be taken after everyone else has gone. If multiple characters choose this option, they go in Initiative order after everyone else has taken their turn.",
+        "poolSubheadline3": "Acquire A Clue",
+        "poolCopy3": "Gain a hint or lead through investigation, research, or analysis of the facts at hand, without needing to make a test."
+      },
+      "vigorSkills": {
+        "vigorHeadline": "Vigor Skills",
+        "athletics": "Athletics",
+        "fray": "Fray",
+        "free fall": "Free Fall",
+        "guns": "Guns",
+        "infiltrate": "Infiltrate",
+        "melee": "Melee",
+        "poolHeadline": "Vigor",
+        "poolSubheadline1": "Take the Initiative",
+        "poolCopy1": "Go first in an action turn. If multiple characters choose this option, they go in Initiative order before everyone else.",
+        "poolSubheadline2": "Extra Action",
+        "poolCopy2": "Take an extra complex physical action (or 2 quick actions) in an action turn. This action may only be taken after everyone else has gone. If multiple characters choose this option, they go in Initiative order after everyone else has taken their turn.",
+        "poolSubheadline3": "Ignore Wound",
+        "poolCopy3": "Ignore the effects of 1 wound for 24 hours or until your next recharge"
+      },
+      "moxieSkills": {
+        "moxieHeadline": "Moxie Skills",
+        "deceive": "Deceive",
+        "kinesics": "Kinesics",
+        "persuade": "Persuade",
+        "provoke": "Provoke",
+        "psi": "Psi",
+        "poolHeadline": "Moxie",
+        "poolSubheadline1": "Ignore Trauma",
+        "poolCopy1": "Ignore the effects of 1 trauma for 24 hours or until your next recharge",
+        "poolSubheadline2": "Refresh Rep",
+        "poolCopy2": "Restore rep network favors at a cost of 1 point for a Minor favor and 2 points for a Moderate favor. Major favors cannot be refreshed this way.",
+        "poolSubheadline3": "Acquire A Clue",
+        "poolCopy3": "Get a tip or lead by gathering information via social interactions without needing to make a test.",
+        "poolSubheadline4": "Control Your Infection",
+        "poolCopy4": "Avoid making an Infection Test when using a psi sleight (asyncs only).",
+        "poolSubheadline5": "Negate Gaffe",
+        "poolCopy5": "Ignore a player’s social gaffe that the character wouldn’t make."
+      },
+      "flex": {
+        "flexHeadline": "Flex",
+        "poolHeadline": "Flex",
+        "poolSubheadline1": "Introduce NPC",
+        "poolCopy1": "A new or existing NPC joins the scene. Their presence must be plausible. You may define one aspect of this NPC: their morph, factional allegiance, a noteworthy skill, a specific trait, etc. The GM determines the other details.",
+        "poolSubheadline2": "Introduce An Item",
+        "poolCopy2": "A previously unnoticed item is added to the scene. Its presence must be plausible. The item cannot be offensive (no weapons) and it must be of Minor (not Rare or Restricted) Complexity. It can be a useful tool, a necessary piece of gear, or even a clue. The GM determines its placement within the scene and the nature of any clues.",
+        "poolSubheadline3": "Define Environment",
+        "poolCopy3": "You may introduce an environmental factor to a scene. Its presence must be plausible. It should provide a new detail that does not drastically alter the scene. Examples include hiding spots, cover, distractions, shelter, or exploitable elements such as a ladder or window.",
+        "poolSubheadline4": "Define A Relationship",
+        "poolCopy4": "You may introduce a new, plausible relationship between your character and an existing NPC. This should be a loose/minor connection rather than a close/serious tie. For example, you may have a common friend, shared history, or old but mild rivalry. You may define the rough basics, but the GM determines the finer points and the NPC’s attitude towards your character."
+      },
+      "knowSkills": {
+        "knowHeadline": "Know Skills",
+        "addfirst": "Add first Know Skill"
+      },
+      "exoticSkills": {
+        "exoticHeadline": "Exotic Skills",
+        "addfirst": "Add first Exotic Skill"
+      },
+      "additionalSkills": {
+        "additionalHeadline": "Additional Skills",
+        "placeholder": "Skill Name",
+        "electronics": "Electronics",
+        "accounting": "Accounting",
+        "psychology": "Psychology",
+        "Psychosurgery": "Psychosurgery"
+      },
+      "pool": {
+        "label": "pool",
+        "dialogHeadline": "Use Pool",
+        "dialogCopy": "You are about to use 1 of your pools to receive the following effect:",
+        "infoSubheadline": "Information",
+        "inputSubheadline": "Input Needed",
+        "chatHeadline": "Used a Pool",
+        "chatEffect": "Received Effect:",
+        "considerResting": "Consider using a 'rest'-action",
+        "numberWounds": "Wounds to Ignore",
+        "numberTrauma": "Trauma to Ignore",
+        "repSize": "Size of Favor"
+      },
+      "addSkill": "Add Skill",
+      "chooseAptitude": "Choose Apt"
+    },
+    "morph": {
+      "currentMorph": {
+        "headline": "Current Morph",
+        "sleevedLabel": "Sleeved",
+        "morphPlaceholder": "Morph name",
+        "morphType": {
+          "label": "Type",
+          "synth": "Synthetic",
+          "bio": "Biologic",
+          "info": "Infomorph"
+        },
+        "durabilityLabel": "Durability",
+        "movement": {
+          "label1": "Movement 1",
+          "label2": "Movement 2",
+          "speed": "Speed",
+          "type": "type"
+        },
+        "movementTypes": {
+          "none": "-Select-",
+          "boat": "Boat",
+          "hopper": "Hopper",
+          "hover": "Hover",
+          "ionic": "Ionic",
+          "microlight": "Microlight",
+          "roller": "Roller",
+          "rotor": "Rotor",
+          "snake": "Snake",
+          "submarine": "Submarine",
+          "swimmer": "Swimmer",
+          "thrustvector": "Thrust Vector",
+          "tracked": "Tracked",
+          "walker": "Walker",
+          "wheeled": "Wheeled",
+          "winged": "Winged"
+        },
+        "insightLabel": "Insight",
+        "moxieLabel": "Moxie",
+        "vigorLabel": "Vigor",
+        "flexLabel": "Flex",
+        "morphList": {
+          "placeholder": "New Morph"
+        }
+      },
+      "traitsLabel": "Morph Traits",
+      "wareLabel": "Morph Ware",
+      "noMorphTraits": "This Morph is Traitless",
+      "noMorphWare": "Your Morph is Flat"
+    },
+    "inventory": {
+      "armorLabel": "Armor",
+      "armorPlaceholder": "No Armor Name",
+      "rangedLabel": "Ranged Weapons",
+      "rangedPlaceholder": "No Weapon Name",
+      "ccLabel": "Close Combat Weapons",
+      "ccPlaceholder": "No Weapon Name",
+      "gearLabel": "Gear",
+      "consumablesLabel": "Consumables",
+      "programs": {
+        "label": "Apps Loaded",
+        "copy": "Apps are prepared by analyzing the target network for vulnerabilities writing code snippets directly tailored to those. Therefore <u>they cannot be easily found nor prevented</u> and work in nearly any situation. <u>Three apps of the same type can be used to affect all devices in the network</u> at once. Although this is a quite obvious attack even this takes some time and a good hacker to find the source of such a malicious act.</i>"
+      },
+      "npcInventory": {
+        "quickAddRanged": "Quick Add Ranged",
+        "noRanged": "Click to <label class='resource-value'>quick-add a ranged weapon</label> or drag & drop it from the <label class='resource-value'>compendium </label><i class='fas fa-atlas'></i>",
+        "quickAddMelee": "Quick Add Melee",
+        "noMelee": "Click to <label class='resource-value'>quick-add a melee weapon</label> or drag & drop it from the <label class='resource-value'>compendium </label><i class='fas fa-atlas'></i>",
+        "quickAddArmor": "Quick Add Armor",
+        "armorEnergy": "Energy",
+        "armorKinetic": "Kinetic",
+        "noArmor": "Has no armor",
+        "traitsAndWareHeadline": "Traits & Ware",
+        "armorAndGearHeadline": "Armor & Gear",
+        "traitsLabel": "Morph Traits",
+        "noTraitsCopy": "No morph traits present",
+        "flawsLabel": "Morph Flaws",
+        "noFlawsCopy": "No morph flaws present",
+        "wareLabel": "Ware",
+        "noWareCopy": "No ware installed",
+        "gearLabel": "Gear",
+        "noGearCopy": "No special gear"
+      },
+      "noGear": {
+        "headline": "No Gear Present",
+        "copy": "You do not have any gear yet. <label class='resource-value'>To add gear to your inventory, use the <i class='fas fa-atlas'></i></label> COMPENDIUM <label class='resource-value'>or create new <i class='fas fa-suitcase'></i></label> ITEMS<p><i style='font-size: 12px; margin-bottom: 10px;'>Find these options in the upper right of Foundry or ask your GM to provide items to you.</i>"
+      }
+    },
+    "peripherals": {
+      "pool": {
+        "ins": "Ins",
+        "vig": "Vig",
+        "mox": "Mox",
+        "flex": "Flex"
+      },
+      "table": {
+        "pessengers": "Pessengers",
+        "armor": "AV",
+        "woundThreshold": "WT",
+        "damageDurability": "Damage/Dur",
+        "deathRating": "DR",
+        "movement": "Mov",
+        "size": "Size"
+      },
+      "modPlaceholder": "No modifications",
+      "skillsHeadline": "Skills"
+    },
+    "psi": {
+      "infectionHeadline": "Infection Type",
+      "ratingLabel": "Infection Rating",
+      "strainPlaceholder": "Sub-Strain Name",
+      "descriptionPlaceholder": "Describe your inner monster",
+      "gammaHeadline": "Gamma Sleights",
+      "chiHeadline": "Chi Sleights",
+      "autoClose": "Auto Close Details",
+      "strain" : {
+        "none": "-Select-",
+        "architect": "The Architect",
+        "beast": "The Beast",
+        "haunter": "The Haunter",
+        "stranger": "The Stranger",
+        "xenomorph": "The Xenomorph",
+        "custom": "The Custom"
+      },
+      "effect" : {
+        "physicalDamage" : "Physical Damage:",
+        "takeDamage" : "Take 1d6 damage",
+        "frenzy" : "Frenzy",
+        "hallucination" : "Hallucination",
+        "other": "Other",
+        "enhancedBehaviour": {
+          "label": "Enhanced Bahaviour:",
+          "arrogance": "Arrogance",
+          "curiosity": "Curiosity",
+          "callouseness": "Callouseness",
+          "ruthlessness": "Ruthlessness",
+          "aggression": "Aggression",
+          "arousal": "Arousal",
+          "gluttony": "Gluttony",
+          "riskTaking": "Risk Taking",
+          "avoidance": "Avoidance",
+          "mistrust": "Mistrust",
+          "denial": "Denial",
+          "nihilism": "Nihilism",
+          "unsettlingMannerisms": "Unsettling Mannerisms",
+          "deceit": "Deceit",
+          "selfSabotage": "Self-Sabotage",
+          "cruelty": "Cruelty",
+          "spite": "Spite",
+          "nonVerbalCommunication": "Non-Verbal Communication",
+          "cliquishness": "Cliquishness",
+          "grooming": "Grooming",
+          "socialize": "Socialize"
+        },
+        "restrictedBehaviour": {
+          "label": "Restricted Bahaviour:",
+          "relaxation": "Relaxation",
+          "remorse": "Remorse",
+          "empathy": "Empathy",
+          "takeResponsibility": "Take Responsibility"
+        },
+        "motivation": {
+          "label": "Motivation:",
+          "hoard": "Hoard",
+          "innerWorkings": "Expose Inner Workings",
+          "create": "Create",
+          "advancedTech": "Acquire Advanced Tech",
+          "discardTies": "Discard Emotional Ties",
+          "discoverUnknown": "Discover the Unknown",
+          "repurpose": "Repurpose",
+          "uncoverSecrets": "Uncover Secrets",
+          "domination": "Domination",
+          "noQuarter": "No Quarter",
+          "cannibalism": "Cannibalism",
+          "claimTerritory": "Claim Territory",
+          "eradicate": "Eradicate Enemies",
+          "instillFear": "Instill Fear",
+          "stalkPrey": "Stalk Prey",
+          "cutTies": "Cut Ties",
+          "isolation": "Isolation",
+          "crushHope": "Crush Hope",
+          "hiddenTruths": "Expose Hidden Truths",
+          "releaseFromMisery": "Release Other From Misery",
+          "shakeConfidence": "Shake Collective Confidence",
+          "follPlans": "Foll Plans",
+          "manipulation": "Manipulation",
+          "testLimits": "Test Limits",
+          "betrayal": "Betrayal",
+          "covertOpponent": "Covert Opponent",
+          "grandScheme": "Execute Grand Scheme",
+          "mislead": "Mislead Others",
+          "twistTruth": "Twist Truth",
+          "transform": "Transform Environment",
+          "control": "Control Territory",
+          "trueForm": "Express True Form",
+          "eatTheWeak": "Eat the Weak",
+          "establishColony": "Establish Colony",
+          "hibernate": "Hibernate",
+          "molt": "Molt",
+          "playWithPrey": "Play with Prey",
+          "protectTribe": "Protect Tribe"
+        }
+      }
+    },
+    "sideCar": {
+      "moreToggle": "More",
+      "lessToggle": "Less",
+      "currentStatus": {
+        "headline": "Current Modifiers",
+        "modBreakdown": "Mod Breakdown",
+        "generalModifiers": "General Modifiers",
+        "armorModifiers": "Armor Encumberance",
+        "gearModifiers": "Gear Encumberance",
+        "noModifiersSubHeader": "No modifiers present",
+        "noModifiersCopy": "Whenever you receive any negative modifiers while exploring the world, you'll find them here. Just give it a bit of time and we'll see each other soon...",
+        "statuses": {
+          "wounded": "Wound",
+          "woundsIgnored": "Wound(s) Ignored",
+          "traumatized": "Trauma",
+          "traumasIgnored": "Trauma(s) Ignored",
+          "layersOfArmor": "layers of Armor",
+          "somExceeded": "AV exceeds SOM",
+          "weaponsExceeded": "Too many weapons",
+          "consumablesExceeded": "Too many consumables",
+          "gearExceeded": "Too much gear",
+          "bulkyItem": "Bulky Item"
+        }
+      },
+      "armor": {
+        "headline": "Armor",
+        "noArmorSubheadline": "No Armor Equipped",
+        "noArmorCopy": "You are not wearing any armor",
+        "armorSubheadline": "Cumulated Armor",
+        "energy": "Energy",
+        "kinetic": "Kinetic",
+        "concealWarning": "Not concealable while > 11",
+        "encumberanceWarning": "Unable to move while > Dur",
+        "armorCountSubheadline": "Armor Pieces active on You",
+        "mainArmorLabel": "Main Armor",
+        "additionalArmorLabel": "Additional Armor",
+        "cumulativeMalusLabel": "Cumulative Malus",
+        "mainArmorMalusCopy": "For every additional main armor a modifier of -20 will be calculated to all your actions.",
+        "additionalArmorMalusCopy": "Additional armor can be layered without any modifier. It still counts against other armor modifiers.",
+        "exceedingSomLabel": "Exceeding Somatics",
+        "exceedingSomCopy": "If either singular AV (kinetic OR energy) exceeds your SOM, you receive another -20 to all rolls.",
+        "armorUsageDescription": "To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available."
+      },
+      "ranged": {
+        "headline": "Ranged Combat",
+        "noRangedSubheadline": "No Weapon Equipped"
+      },
+      "melee": {
+        "headline": "Close Combat",
+        "noMeleeSubheadline": "No Weapon Equipped"
+      },
+      "gear": {
+        "headline": "Special Gear",
+        "noGearSubheadline": "None Equipped"
+      },
+      "consumables": {
+        "headline": "Consumables",
+        "noConsumablesSubheadline": "None Equipped"
+      }
+    },
+    "item": {
+      "general": {
+        "tabs": {
+          "detailsTab": "Item Details",
+          "effectsTab": "Effects"
+        },
+        "table": {
+          "cost": {
+            "label": "Cost",
+            "minor": "Minor",
+            "moderate": "Moderate",
+            "major": "Major",
+            "rare": "Rare"
+          },
+          "slot": {
+            "label": "Slot",
+            "digital": "Digital",
+            "consumable": "Consumable",
+            "accessory": "Accessory",
+            "bulky": "Bulky",
+            "notMobile": "Not Mobile"
+          },
+          "description": "Description",
+          "descriptionPlaceholder": "Add a description"
+        }
+      },
+      "armor": {
+        "table": {
+          "energy": "Energy",
+          "kinetic": "Kinetic",
+          "type": {
+            "label": "Armor Type",
+            "main": "Main Armor",
+            "additional": "Additional Armor"
+          }
+        }
+      },
+      "aspect": {
+        "table": {
+          "type": {
+            "label": "Psi Type",
+            "gamma": "Gamma",
+            "chi": "Chi",
+            "epsilon": "Epsilon"
+          },
+          "action": {
+            "label": "Action",
+            "quick": "Quick",
+            "task": "Task",
+            "complex": "Complex"
+          },
+          "duration": {
+            "label": "Duration",
+            "instant": "Instant",
+            "action": "Action Turns",
+            "minutes": "Minutes",
+            "hours": "Hours",
+            "sustained": "Sustained"
+          },
+          "modifierLabel": "Infection Modifier"
+        }
+      },
+      "weapon": {
+        "table": {
+          "range": "Range",
+          "maxAmmo": "Max Ammo",
+          "damageValue": "DV",
+          "effectArea": "Effect Area",
+          "armorUsed": {
+            "label": "Armor Used",
+            "none": "None",
+            "kinetic": "Kinetic",
+            "energy": "Energy"
+            },
+          "firingMode": {
+            "label": "Firing Mode",
+            "ss": "SS",
+            "sa": "SA",
+            "saBF": "SA/BF",
+            "bfFA": "BF/FA",
+            "saBFfa": "SA/BF/FA"
+          },
+          "slot": {
+            "label": "Slot",
+            "integrated": "Integrated",
+            "sidearm": "Sidearm",
+            "oneHanded": "One Handed",
+            "twoHanded": "Two Handed",
+            "bulky": "Bulky"
+          }
+        }
+      },
+      "drug": {
+        "table": {
+          "duration": "Duration",
+          "addictionModifier": "Addiction Mod",
+          "addictionType": "Addiction Type",
+          "applicationVectors": {
+            "headline": "Application Vectors",
+            "dermalLabel": "Dermal",
+            "inhalationLabel": "Inhalation",
+            "injectionLabel": "Injection",
+            "oralLabel": "Oral"
+          },
+          "category": {
+            "label": "Category",
+            "cognitive": "Cognitive Drug",
+            "combat": "Combat Drug",
+            "health": "Health Drug",
+            "nano": "Nanodrug",
+            "narco": "Narcoalgorithm",
+            "petals": "Petal",
+            "psi": "Psi Drug",
+            "rec": "Recreational",
+            "social": "Social Drug",
+            "toxins": "Toxin",
+            "nanotox": "Nanotoxin"
+          },
+          "type": {
+            "label": "Drug Type",
+            "biochem": "Biochem",
+            "nano": "Nano",
+            "electronic": "Electronic"
+          }
+        }
+      },
+      "additionalSkill": {
+        "table": {
+          "nameLabel": "Name",
+          "valueLabel": "Value",
+          "aptitudeLabel": "Aptitude",
+          "specLabel": "Specialization"
+        }
+      },
+      "program": {
+        "table": {
+          "level": {
+            "label": "Level",
+            "intruder": "Intruder",
+            "user": "User",
+            "admin": "Admin",
+            "owner": "Owner"            
+          }
+        }
+      },
+      "vehicle": {
+        "table": {
+          "initiative": "Init",
+          "threatValue": "TV",
+          "durability": "DUR",
+          "movement": "Mov",
+          "skillsHeadline": "Skills",
+          "type": {
+            "label": "Type",
+            "robot": "Robot",
+            "vehicle": "Vehicle",
+            "morph": "Morph",
+            "animal": "Smart-Animal"          
+          },
+          "size": {
+            "label": "Size",
+            "vs": "Very Small",
+            "s": "Small",
+            "m": "Medium",
+            "l": "Large",
+            "vl": "Very Large"
+          }
+        }
+      },
+      "ware": {
+        "table": {
+          "type": {
+            "label": "Ware Type",
+            "b": "B",
+            "bch": "BCH",
+            "bh": "BH",
+            "bhm": "BHM",
+            "bm": "BM",
+            "c": "C",
+            "ch": "CH",
+            "chn": "CHN",
+            "chm": "CHM",
+            "h": "H",
+            "hn": "HN",
+            "hmn": "HMN",
+            "n": "N",
+            "nh": "NH",
+            "mn": "MN"
+          }
+        }
+      }
+    },
+    "roll": {
+      "dialog": {
+        "generalModHeadline": "General Modifiers",
+        "attackerHeadline": "Attacker Modifiers",
+        "defenderHeadline": "Defender Modifiers",
+        "frayTypeHeadline": "Fray Type",
+        "dodgeRangedLabel": "Dodge Ranged",
+        "infectionHeadline": "Infection",
+        "autoPush": "Auto Push Selection",
+        "baseCostLabel": "Base cost",
+        "push": {
+          "label": "Push",
+          "none": "-Select-",
+          "range": "Range",
+          "effect": "Effect",
+          "power": "Power",
+          "penetration": "Penetration",
+          "duration": "Duration",
+          "target": "Additional Target",
+          "infectionDamage": "The Infection damages you for",
+          "infectionInfluence": "The Infection influences you",
+          "infectionTries": "The Infection fastens it's grip",
+          "effectReceived": "Effect received"
+        },
+        "ignoreInfection": "Ignore Infection",
+        "usePool": "Use",
+        "globalModLabel": "Global Mod",
+        "noSpecLabel": "No Specialization",
+        "noPool": "No pool left",
+        "useThreat": "Use Threat (+20)",
+        "calledShotLabel": "Called Shot (-10)",
+        "title": {
+          "guns": "Guns Check",
+          "melee": "Melee Check",
+          "reputation": "Reputation Check",
+          "damageRoll": "Damage Check",
+          "swap": "Swap Result",
+          "raise": "Raise Result",
+          "talentCheck": "Check"
+        },
+        "button": {
+          "roll": "Roll",
+          "cancel": "Cancel",
+          "useSelection": "Use this Selection"
+        },
+        "reputationMode": {
+          "headline": "Mode",
+          "trivial": "Trivial",
+          "minor": "Minor",
+          "moderate": "Moderate",
+          "major": "Major"
+        },
+        "ranged": {
+          "attacker": {
+            "smartLinkLabel": "Smart Link (-10 if none)",
+            "superiorPosition": "Superior Position (+20)",
+            "inCoverLabel": "In Cover (-10)",
+            "isRunningLabel": "Is Running (-20)",
+            "inMeleeLabel": "In Melee (-10)",
+            "fireMode": {
+              "label": "Fire Mode",
+              "single": "Single Shot",
+              "burst": "Narrow Burst (+1d10)",
+              "fullAuto": "Narrow Full Auto (+2d10)",
+              "wBurst": "Wide Burst (+10 Hit)",
+              "wFullAuto": "Wide Full Auto (+30 Hit)",
+              "indirect": "Indirect (-20)",
+              "suppressive": "Suppressive (uses 20 rounds)"
+            },
+            "aim": {
+              "label": "Aim",
+              "none": "Standard",
+              "quick": "Quick Aim (+10)",
+              "long": "Long Aim (+30)"
+            },
+            "distance": {
+              "label": "Distance",
+              "pointBlank": "Point Blank (+10)",
+              "none": "Standard",
+              "range": "Range (-10)",
+              "beyond": "Beyond (-20)",
+              "beyondPlus": "Beyond+ (-30)"
+            },
+            "visual": {
+              "label": "Visual Malus",
+              "none": "None",
+              "minor": "Minor (-10)",
+              "major": "Major (-30)",
+              "blind": "Blind (-30+)"
+            }
+          },
+          "defender": {
+            "isProne": "Is Prone (-10 if at range)",
+            "isHidden": "Is Hidden (-30)",
+            "size": {
+              "label": "Size",
+              "xs": "Very Small (-30)",
+              "s": "Small (-10)",
+              "none": "Normal",
+              "l": "Large (+10)",
+              "xl": "Very Large (+30)"
+            },
+            "cover": {
+              "label": "Cover",
+              "none": "None",
+              "minor": "Minor (-10)",
+              "moderate": "Moderate (-20)",
+              "major": "Major (-30)"
+            }
+          }
+        },
+        "melee": {
+          "attacker": {
+            "numberOfTargetsLabel": "Number of targets",
+            "numberOfTargetsMod": "(-20/target)",
+            "type": {
+              "label": "Attack Type",
+              "none": "Standard Attack",
+              "charge": "Charge Attack (-10 Hit, +1d6 DV)",
+              "aggressive": "Aggressive Hit (+10 Hit, -10 Fray)",
+              "aggressiveCharge": "Ruthless Attack(+1d10 DV, - 10 Fray)"
+            }
+          }
+        }
+      },
+      "successType": {
+        "success": "Success",
+        "greaterSuccess": "Greater Success",
+        "superiorSuccess": "Superior Success",
+        "criticalSuccess": "Critical Success",
+        "greaterCriticalSuccess": "Greater Critical Success",
+        "superiorCriticalSuccess": "Superior Critical Success",
+        "supremeSuccess": "Supreme Success",
+        "failure": "Fail",
+        "greaterFailure": "Greater Fail",
+        "superiorFailure": "Superior Fail",
+        "criticalFailure": "Critical Fail",
+        "greaterCriticalFailure": "Greater Critical Fail",
+        "superiorCriticalFailure": "Superior Critical Fail",
+        "supremeFailure": "Supreme Fail"
+      },
+      "rollType": {
+        "label": "Roll Type",
+        "public": "Public Roll",
+        "private": "Private GM Roll",
+        "blind": "Blind GM Roll"
+      },
+      "announce": {
+        "global": "Situational",
+        "favor": "Favor Modifier",
+        "specialization": "Specialization",
+        "encumberance": "Encumberance",
+        "wounds": "Wounds/Trauma",
+        "woundModifier": "Wound Modifier",
+        "traumaModifier": "Trauma Modifier",
+        "rolled": "rolled",
+        "appliedMods": "Applied Mods",
+        "baseValue": "Base Value",
+        "rollTarget": "Roll Target",
+        "infectionRaise": "Infection raised to",
+        "rest": {
+          "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
+          "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+        },
+        "poolUsage": {
+          "poolUsed": "Pool Used",
+          "usePoolSubheadline": "Use Pools",
+          "swappedTo": "Result swapped to",
+          "raisedTo": "Result raised to",
+          "beyondSuperior": "You cannot increse your success level beyond 'Superior'.",
+          "notDeducted": "No pool has been used",
+          "notEnoughPool": "Not enough pool",
+          "cantRaise": "Result cannot be raised",
+          "newResult": "New Result",
+          "dontSwap": "Don't Swap Dice",
+          "swapTo": "Swap to",
+          "raiseLevel": "Raise Success Level",
+          "metGoal": "You met your goal",
+          "raiseSuccess": "You can even increase it <br/>by using your pools...",
+          "notAvailable": "not available",
+          "missGoal": "You missed your goal",
+          "mitigateSpending": "Spend pool to mitigate the outcome",
+          "dontMitigate": "Don't Mitigate Failure",
+          "mitigate": "Mitigate"
+        },
+        "combat": {
+          "calledShot": "Called Shot",
+          "calledShotAddition": "Roll 'Greater Success' or better",
+          "hit": "You hit with your weapon",
+          "damageDone": "Your damage done",
+          "melee": {
+            "charge": "Charging",
+            "chargeAddition": "(+1d6DV)",
+            "agressive": "Agressive Hit",
+            "agressiveAddition": "(Fray -10)",
+            "agressiveCharge": "Ruthless Attack",
+            "agressiveChargeAddition": "(+1d10DV & Fray -10)",
+            "multipleTargets": "Multiple Targets"
+          },
+          "ranged": {
+            "smartLink": "No Smartgun",
+            "running": "Running",
+            "superiorPosition": "Superior Position",
+            "inMelee": "Stuck in Melee",
+            "coverAttacker": "In Cover",
+            "aimLong": "Long Aim",
+            "aimQuick": "Quick Aim",
+            "sizeXS": "Very Small Target",
+            "sizeS": "Small Target",
+            "sizeL": "Large Target",
+            "sizeXL": "Very Large Target",
+            "rangeProne": "Prone at Range",
+            "beyondProne": "Prone Beyond Range",
+            "beyondPlusProne": "Prone Far Beyond Range",
+            "range": "At Range",
+            "beyond": "Beyond Range",
+            "beyondPlus": "Far Beyond Range",
+            "pointBlank": "Point Blank",
+            "defMinCover": "Target in minor Cover",
+            "defModCover": "Target in moderate Cover",
+            "defMajCover": "Target in major Cover",
+            "visImpMin": "Minor Visual Impairment",
+            "visImpMaj": "Major Visual Impaired",
+            "blind": "Blind",
+            "wBurst": "Wide Burst",
+            "wFullAuto": "Wide Full Auto",
+            "Indirect": "Indirect",
+            "reloadNeeded": "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
+            "reloadedWeapon": "I reloaded my weapon",
+            "weaponFull": "Your weapon is still fully loaded."
+          }
+        }
+      }
+    },
+    "migration": {
+      "headlineStart": "<h3 class='subheader dialog'>Dear System User</h3>",
+      "legacy": "<label class='resource-label'>Thank you for playing Eclipse Phase with our system. To guarantee the overall file integrity in the upcoming updates, we ask you to shortly migrate your data to the latest structure, provided with update 0.8.1.<p/><p/><b>This is necessary for implementing even cooler features than we already have (like lokalization e.g.), and will only take a few seconds.</b><p/><p/> Thank you and have a great day playing!<p><i>Note: Please note that drugs underwent a general overhaul. Just pull them from the compendium again and delete the old ones.</i></p></label>",
+      "0861": "<label class='resource-label'><p>We have updated the items-structure to allow future migrations to only trigger, if your item is on a specific version.<p/><p><b>This prevents your character sheets/items from ending up broken, while you're triggering a migration.</b><p/><p>Please migrate to this version at your earliest convenience to help us stabilize your character's item-data<p/> <p>Thank you and have a great day playing!</p></label>",
+      "headlineEnd": "<h3 class='subheader dialog'>You are all set!</h3>",
+      "done": "<label class='resource-label'>Have fun fighting TITAN and rescuing the universe, or whatever it is that floats your boat!</i></p></label>"
+    },
+    "systemMessage": {
+      "resetRest": {
+        "title": "Reset Rest",
+        "copy": "This dialog resets ALL rest for the selected, active characters. If a character is not actively controlled by any player, it will not show in this list. Players can change their active character by using the player menu in the lower left of foundry.",
+        "headline": "Active Player Characters"
+      }
+    }
+  }
+}
