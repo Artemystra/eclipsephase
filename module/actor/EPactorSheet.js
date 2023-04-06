@@ -396,6 +396,26 @@ export default class EPactorSheet extends ActorSheet {
           consumable.push(item);
         }
         else if (item.type === 'vehicle') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'vs':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.vs";
+                break;
+              case 's':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.s";
+                break;
+              case 'n':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.m";
+                break;
+              case 'l':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.l";
+                break;
+              case 'vl':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.vl";
+                break;
+              default:
+                break;
+            }
           itemModel.wt = Math.round(itemModel.dur / 5);
           if (itemModel.type != "animal"){
             itemModel.dr = Math.round(itemModel.dur * 2);

@@ -7,180 +7,197 @@
     </header>
 
     {{!-- Sheet Body --}}
-    <section class="sheet-body">
-        <div class="flexrow flex-group-center">
-            <table>
-                <tr>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.type.label"}}</label>
-                    </td>
-                    {{#if (eq item.system.type "morph")}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
-                    </td>
-                    {{/if}}
-                    {{#if (eq item.system.type "vehicle")}}
-                    <td>
-                        <label class="resource-label">Passengers</label>
-                    </td>
-                    {{/if}}
-                    {{#if (eq item.system.type "animal")}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.cognition"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.intuition"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.reflexes"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.savvy"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.somatics"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.actorSheet.aptitudes.willpower"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.initiative"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.threatValue"}}</label>
-                    </td>
-                    {{/if}}
-                    {{#if (ne item.system.type "animal")}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
-                    </td>
-                    {{/if}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.peripherals.table.armor"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.durability"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.movement"}}</label>
-                    </td>
-                    {{#if (ne item.system.type "animal")}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.vehicle.table.size.label"}}</label>
-                    </td>
-                    {{/if}}
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="system.type" data-type="String">
-                            {{#select item.system.type}}
-                            {{#each config.vehicleType as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    {{#if (eq item.system.type "morph")}}
-                    <td>
-                        <input class="input-medium"type="number" name="system.ins" value="{{item.system.ins}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium" type="number" name="system.mox" value="{{item.system.mox}}" placeholder="0"/>
-                    </td>
-                    {{/if}}
-                    {{#if (eq item.system.type "vehicle")}}
-                    <td>
-                        <input class="input-medium"type="number" name="system.mox" value="{{item.system.mox}}" placeholder="0"/>
-                    </td>
-                    {{/if}}
-                    {{#if (eq item.system.type "animal")}}
-                    <td>
-                        <input class="input-medium"type="number" name="system.cog" value="{{item.system.cog}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.int" value="{{item.system.int}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.ref" value="{{item.system.ref}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.sav" value="{{item.system.sav}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.som" value="{{item.system.som}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.wil" value="{{item.system.wil}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.init" value="{{item.system.init}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.threat" value="{{item.system.threat}}" placeholder="0"/>
-                    </td>
-                    {{/if}}
-                    {{#if (ne item.system.type "animal")}}
-                    <td>
-                        <input class="input-medium"type="number" name="system.vig" value="{{item.system.vig}}" placeholder="0"/>
-                    </td>
-                    <td>
-                        <input class="input-medium"type="number" name="system.flex" value="{{item.system.flex}}" placeholder="0"/>
-                    </td>
-                    {{/if}}
-                    <td>
-                        <input class="input-medium alignCenter" type="text" name="system.armor" value="{{item.system.armor}}" placeholder="e.g. 2/2"/>
-                    </td>
-                    <td>
-                        <input class="input-medium" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="e.g. 20"/>
-                    </td>
-                    <td>
-                        <input class="input-large" type="text" name="system.mov" value="{{item.system.mov}}" placeholder="e.g. 8/32 Rotor"/>
-                    </td>
-                    {{#if (ne item.system.type "animal")}}
-                    <td>
-                        <select name="system.slotType" data-type="String">
-                            {{#select item.system.slotType}}
-                            {{#each config.vehicleSize as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    {{/if}}
-                    <td>
-                        <select name="system.cost" data-type="String">
-                            {{#select item.system.cost}}
-                            {{#each config.costTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                </tr>
-            </table>
+<section class="sheet-body" style="margin-top: 10px;">
+    <div class="item contentBox" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+        <div class="flexrow">
+            <h3 class="subheader">
+                {{localize "ep2e.item.vehicle.table.type.label"}}
+                <select name="system.type" data-type="String">
+                    {{#select item.system.type}}
+                    {{#each config.vehicleType as |name key|}}
+                    <option value="{{key}}">{{localize name}}</option>
+                    {{/each}} {{/select}}
+                </select>
+            </h3>
+            <div class="alignRight flexGrowThreeQuarter">
+                {{#if (eq item.system.type "morph")}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
+                    <input class="input-small"type="number" name="system.pools.ins.max" value="{{item.system.pools.ins.max}}" placeholder="0"/>
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
+                    <input class="input-small"type="number" name="system.pools.mox.max" value="{{item.system.pools.mox.max}}" placeholder="0"/>
+                {{/if}}
+                {{#if (eq item.system.type "animal")}}
+                    <label class="resource-label">{{localize "ep2e.healthbar.tooltip.threat"}}</label>
+                    <input class="input-small"type="number" name="system.pools.threat.max" value="{{item.system.pools.threat.max}}" placeholder="0"/>
+                {{/if}}
+                {{#if (ne item.system.type "animal")}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
+                    <input class="input-small"type="number" name="system.pools.vig.max" value="{{item.system.pools.vig.max}}" placeholder="0"/>
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
+                    <input class="input-small"type="number" name="system.pools.flex.max" value="{{item.system.pools.flex.max}}" placeholder="0"/>
+                {{/if}}
+            </div>
         </div>
-        {{#if (eq item.system.type "animal")}}
-        <h3 style="margin-top: 10px;">{{localize "ep2e.item.vehicle.table.skillsHeadline"}}</h3>
-        <div class="grid grid-3col">
-            {{#each item.system.skills as |skill key|}}
-                <div class="flexrow flex-group-center reveal">
-                    <label class="input-xs resource-value">{{key}}.</label>
-                    <input type="text" name="system.skills.{{key}}.name" value="{{skill.name}}" placeholder="Skill Name"/>
-                    <input class=" input-xs" type="number" name="system.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                    <input type="text" class="input-largeSpec" name="system.skills.{{key}}.specname" value="{{skill.specname}}" placeholder="Spec"/>
+        <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+            {{#if (ne item.system.type "animal")}}
+                {{#if (ne item.system.type "vehicle")}}
+                    <div class="flexrow flex-group-center listBackground grid grid-4col" style="background-color: var(--pitchBorder); margin: 0;">
+                {{else}}
+                    <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
+                {{/if}}
+            {{else}}
+                <div class="flexrow flex-group-center listBackground grid grid-6col-true" style="background-color: var(--pitchBorder); margin: 0;">
+            {{/if}}
+                <div>
+                    <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
+                    <input class="input-medium" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="e.g. 20"/>                              
                 </div>
-            {{/each}}
+                {{#if (eq item.system.type "animal")}}
+                <div>
+                    <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
+                    <input class="input-medium" type="number" name="system.luc" value="{{item.system.luc}}" placeholder="e.g. 20"/>  
+                </div>
+                {{/if}}
+                <div style="display: flex; justify-content: center;">
+                    <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
+                    <input class="input-small alignCenter" type="number" name="system.armor.energy" value="{{item.system.armor.energy}}" placeholder="0"/>
+                    <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 20px!important; max-height: 20px!important; margin-right: 5px;"/>
+                    <input class="input-small alignCenter" type="number" name="system.armor.kinetic" value="{{item.system.armor.kinetic}}" placeholder="0"/>
+                </div>
+                {{#if (eq item.system.type "animal")}}
+                    <div>
+                        <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
+                        <input class="input-medium"type="number" name="system.init" value="{{item.system.init}}" placeholder="0"/>
+                    </div>
+                {{/if}}
+                {{#if (eq item.system.type "vehicle")}}
+                    <div>
+                        <i class="fa-regular fa-seat-airline wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.peripherals.table.passengers"}}</span></i>
+                        <input class="input-medium"type="number" name="system.pass" value="{{item.system.pass}}" placeholder="0"/>
+                    </div>
+                {{/if}}
+                <div>
+                    <i class="fa-regular fa-money-bill wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span></i>
+                    <select name="system.cost" data-type="String">
+                        {{#select item.system.cost}}
+                        {{#each config.costTypes as |name key|}}
+                        <option value="{{key}}">{{localize name}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                </div>
+                <div>
+                    <i class="fa-regular fa-ruler wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
+                    <select name="system.slotType" data-type="String">
+                        {{#select item.system.slotType}}
+                        {{#each config.vehicleSize as |name key|}}
+                        <option value="{{key}}">{{localize name}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                </div>
+            </div>
         </div>
-        {{/if}}
-        <p></p>
-
-        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
-        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
-    </section>
+        <div class="topLine">
+            <div class="grid grid-2col noMargin" style="padding: 0; background-color: var(--pitchBorder);">
+                <div>
+                    <!--Animal/Morph aptitudes-->
+                    {{#if (eq item.system.type "animal")}}
+                    <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground);">{{localize "ep2e.actorSheet.aptitudes.headline"}}</h3>
+                    <div class="grid grid-3col" style="background-color: var(--pitchBorder);">
+                        {{#each item.system.aptitudes as |aptitude key|}}
+                        <div class="flexrow flex-group-center reveal standard-height">
+                            <div class="flexrow flex-group-center input-small">
+                                <!--IMPORTANT: Deleted "toggle" here. Has to be added later to activate the switch between the label and the roll dice icon!-->
+                                <span class="resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
+                                <label class="roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="item.system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            </div>
+                            <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    {{#if (eq item.system.type "morph")}}
+                    <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground);">{{localize "ep2e.actorSheet.aptitudes.headline"}}</h3>
+                    <div class="grid grid-3col" style="background-color: var(--pitchBorder);">
+                        {{#each item.system.aptitudes as |aptitude key|}}
+                        <div class="flexrow flex-group-center reveal standard-height">
+                            <div class="flexrow flex-group-center input-small">
+                                <!--IMPORTANT: Deleted "toggle" here. Has to be added later to activate the switch between the label and the roll dice icon!-->
+                                <span class="resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
+                                <label class="roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="item.system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                            </div>
+                            <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                    <!--Movement-->
+                    <h3 style="padding: 0 10px; border-bottom: 2px solid var(--accentBackground); margin-top: 9px;">{{localize "ep2e.peripherals.table.movement"}}</h3>
+                    <div class="grid">
+                        {{#each item.system.movement as |mov key|}}
+                        <div style="padding: 0 10px">
+                            <span class="resource-label alignCenter" style=" min-width: 26px;">{{key}}.</span>
+                            <i class="fa-regular fa-gauge-max"></i>
+                            <input class="item-standard-margin-small input-small" type="text" name="system.movement.{{key}}.speed" value="{{speed}}" placeholder="0/0" style="text-align: center"/>
+                            <i class="fa-regular fa-tags"></i>
+                            <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
+                                {{#select mov.type}}
+                                {{#each config.moveTypes as |moveType key|}}
+                                    <option value="{{key}}">{{localize moveType}}</option>
+                                {{/each}}
+                                <option value="none">{{localize "ep2e.morph.currentMorph.movementTypes.none"}}</option>
+                                <option value="boat">{{localize "ep2e.morph.currentMorph.movementTypes.boat"}}</option>
+                                <option value="hopper">{{localize "ep2e.morph.currentMorph.movementTypes.hopper"}}</option>
+                                <option value="hover">{{localize "ep2e.morph.currentMorph.movementTypes.hover"}}</option>
+                                <option value="ionic">{{localize "ep2e.morph.currentMorph.movementTypes.ionic"}}</option>
+                                <option value="microlight">{{localize "ep2e.morph.currentMorph.movementTypes.microlight"}}</option>
+                                <option value="roller">{{localize "ep2e.morph.currentMorph.movementTypes.roller"}}</option>
+                                <option value="rotor">{{localize "ep2e.morph.currentMorph.movementTypes.rotor"}}</option>
+                                <option value="snake">{{localize "ep2e.morph.currentMorph.movementTypes.snake"}}</option>
+                                <option value="submarine">{{localize "ep2e.morph.currentMorph.movementTypes.submarine"}}</option>
+                                <option value="swimmer">{{localize "ep2e.morph.currentMorph.movementTypes.swimmer"}}</option>
+                                <option value="thrustvector">{{localize "ep2e.morph.currentMorph.movementTypes.thrustvector"}}</option>
+                                <option value="tracked">{{localize "ep2e.morph.currentMorph.movementTypes.tracked"}}</option>
+                                <option value="walker">{{localize "ep2e.morph.currentMorph.movementTypes.walker"}}</option>
+                                <option value="wheeled">{{localize "ep2e.morph.currentMorph.movementTypes.wheeled"}}</option>
+                                <option value="winged">{{localize "ep2e.morph.currentMorph.movementTypes.winged"}}</option>
+                                {{/select}}
+                            </select>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+                <!--Skills-->
+                <div>
+                    <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground);">{{localize "ep2e.peripherals.skillsHeadline"}}</h3>
+                    {{#if (ne item.system.type "animal")}}
+                        {{#if (ne item.system.type "morph")}}
+                            <div style="overflow-x: hidden; overflow-y: auto; max-height: 70px;">
+                        {{else}}
+                            <div style="overflow-x: hidden; overflow-y: auto; max-height: 160px;">
+                        {{/if}}
+                    {{else}}
+                        <div style="overflow-x: hidden; overflow-y: auto; max-height: 160px;">
+                    {{/if}}
+                            {{#each item.system.skills as |skill key|}}
+                                <div class="flexrow flex-group-center reveal" style="padding: 5px 5px;">
+                                    <label class="input-xs resource-value">{{key}}.</label>
+                                    <input type="text" name="system.skills.{{key}}.name" value="{{skill.name}}" placeholder="Skill Name"/>
+                                    <input class=" input-small" type="number" name="system.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                    <input type="text" class="input-largeSpec" name="system.skills.{{key}}.specname" value="{{skill.specname}}" placeholder="Spec"/>
+                                </div>
+                            {{/each}}
+                        </div>
+                </div>
+            </div>
+            <!--Vehicle Modifications/Ware-->
+            {{#if item.system.description}}
+                <div style="background-color: var(--pitchBorder); padding: 10px;">
+                    <label>{{item.system.description}}</label>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+    <h2>{{localize "ep2e.item.general.table.description"}}</h2>
+    <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+</section>
 </form>

@@ -1,0 +1,192 @@
+<div class="item contentBox" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="margin-bottom: 10px;">
+    <div class="flexrow">
+        <h3 class="subheader">{{item.name}}</h3>
+        <div class="alignRight flexGrowThreeQuarter">
+            {{#if (eq item.system.type "morph")}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
+                <input class="input-xs sheet-inline-edit" data-field="system.pools.ins.current" type="number" name="item.system.pools.ins.current" value="{{item.system.pools.ins.current}}" placeholder="0"/>
+                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.ins.max}}</strong></label>
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
+                <input class="input-xs sheet-inline-edit" data-field="system.pools.mox.current" type="number" name="item.system.pools.mox.current" value="{{item.system.pools.mox.current}}" placeholder="0"/>
+                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.mox.max}}</strong></label>
+            {{/if}}
+            {{#if (eq item.system.type "animal")}}
+                <label class="resource-label">{{localize "ep2e.healthbar.tooltip.threat"}}</label>
+                <input class="input-xs sheet-inline-edit" data-field="system.pools.threat.current" type="number" name="item.system.pools.threat.current" value="{{item.system.pools.threat.current}}" placeholder="0"/>
+                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.threat.max}}</strong></label>
+            {{/if}}
+            {{#if (ne item.system.type "animal")}}
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
+                <input class="input-xs sheet-inline-edit" data-field="system.pools.vig.current" type="number" name="item.system.pools.vig.current" value="{{item.system.pools.vig.current}}" placeholder="0"/>
+                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.vig.max}}</strong></label>
+                <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
+                <input class="input-xs sheet-inline-edit" data-field="system.pools.flex.current" type="number" name="item.system.pools.flex.current" value="{{item.system.pools.flex.current}}" placeholder="0"/>
+                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.flex.max}}</strong></label>
+            {{/if}}
+        </div>
+        <div class="flexrow item-controls flex-group-center" style="max-width: 50px; min-width: 50px; height: 24px;">
+            <a class="item-control item-delete resource-label editWithLabel input-xs alignCenter" title="Delete Item"><i class="far fa-times-circle"></i></a>
+            <a class="item-control item-edit resource-label editWithLabel  input-xs alignCenter" title="Edit Item"><i class="far fa-edit"></i></a>
+        </div>
+    </div>
+    <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+        {{#if (ne item.system.type "animal")}}
+            {{#if (ne item.system.type "vehicle")}}
+                <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+            {{else}}
+                <div class="flexrow flex-group-center listBackground grid grid-4col" style="background-color: var(--pitchBorder); margin: 0;">
+            {{/if}}
+        {{else}}
+            <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
+        {{/if}}
+            <div>
+                <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
+                <input class="input-xs sheet-inline-edit" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.dur}}/{{item.system.dr}}</span>                               
+            </div>
+            {{#if (eq item.system.type "animal")}}
+            <div>
+                <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
+                <input class="input-xs sheet-inline-edit" data-field="system.curLuc" type="number" name="item.system.curLuc" value="{{item.system.curLuc}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.luc}}/{{item.system.ir}}</span>
+            </div>
+            {{/if}}
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
+                {{#if item.system.armor.energy}}
+                    <strong style="margin: 0 10px;">{{item.system.armor.energy}}</strong>
+                {{else}}
+                    <strong style="margin: 0 10px;">0</strong>
+                {{/if}}
+                <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 20px!important; max-height: 20px!important; margin-right: 5px;"/>
+                {{#if item.system.armor.kinetic}}
+                    <strong style="margin: 0 10px;">{{item.system.armor.kinetic}}</strong>
+                {{else}}
+                    <strong style="margin: 0 10px;">0</strong>
+                {{/if}}
+            </div>
+            {{#if (eq item.system.type "animal")}}
+                <div>
+                    <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
+                    <strong>{{item.system.init}}</strong> 
+                </div>
+            {{/if}}
+            {{#if (eq item.system.type "vehicle")}}
+                <div>
+                    <i class="fa-regular fa-seat-airline wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.peripherals.table.passengers"}}</span></i>
+                    <input class="input-medium"type="number" name="system.pass" value="{{item.system.pass}}" placeholder="0"/>
+                </div>
+            {{/if}}
+            <div>
+                <i class="fa-regular fa-ruler wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
+                <span class="resource-label alignCenter" style=" min-width: 26px; width: auto;">{{localize item.system.slotName}}</span>
+            </div>
+        </div>
+    </div>
+    <!-- This is the baseline for the wounds/trauma overlay later on
+    <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+        <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
+            <div>                             
+            </div>
+            <div>
+                <i class="fa-regular fa-bandage wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.woundswt"}}</span></i>
+                <input class="input-xs" type="number" name="system.wounds" value="{{item.system.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.wt}})</span>
+            </div>
+            <div>
+            </div>
+            <div>
+                <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
+                <input class="input-xs" type="number" name="system.trauma" value="{{item.system.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.tt}})</span>
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+    -->
+    <div class="topLine">
+        <div class="grid grid-2col noMargin" style="padding: 0; background-color: var(--pitchBorder);">
+            <div>
+                <!--Animal/Morph aptitudes-->
+                {{#if (eq item.system.type "animal")}}
+                <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground);">{{localize "ep2e.actorSheet.aptitudes.headline"}}</h3>
+                <div class="grid grid-3col" style="background-color: var(--pitchBorder);">
+                    {{#each item.system.aptitudes as |aptitude key|}}
+                    <div class="flexrow flex-group-center reveal standard-height">
+                        <div class="flexrow flex-group-center input-small">
+                            <!--IMPORTANT: Deleted "toggle" here. Has to be added later to activate the switch between the label and the roll dice icon!-->
+                            <span class="resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
+                            <label class="roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="item.system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        </div>
+                        <span class="resource-label alignCenter" style=" min-width: 26px;">{{aptitude.value}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+                {{#if (eq item.system.type "morph")}}
+                <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground);">{{localize "ep2e.actorSheet.aptitudes.headline"}}</h3>
+                <div class="grid grid-3col" style="background-color: var(--pitchBorder);">
+                    {{#each item.system.aptitudes as |aptitude key|}}
+                    <div class="flexrow flex-group-center reveal standard-height">
+                        <div class="flexrow flex-group-center input-small">
+                            <!--IMPORTANT: Deleted "toggle" here. Has to be added later to activate the switch between the label and the roll dice icon!-->
+                            <span class="resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
+                            <label class="roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="item.system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                        </div>
+                        <span class="resource-label alignCenter" style=" min-width: 26px;">{{aptitude.value}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+                <!--Movement-->
+                {{#if item.system.movement.1.speed}}
+                <h3 style="padding: 0 10px; border-bottom: 2px solid var(--accentBackground); margin-top: 9px;">{{localize "ep2e.peripherals.table.movement"}}</h3>
+                <div class="grid">
+                    {{#each item.system.movement as |mov key|}}
+                    <div style="padding: 0 10px">
+                        {{#if mov.speed}}
+                        <span class="resource-label alignCenter" style=" min-width: 26px;">{{key}}.</span>
+                        <span class="resource-label alignCenter" style=" min-width: 26px;">{{mov.speed}}</span>
+                        <span class="resource-label alignCenter" style=" min-width: 26px;">{{mov.type}}</span>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+            </div>
+            <!--Skills-->
+            <div>
+                {{#if item.system.skills.1.name}}
+                <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground);">{{localize "ep2e.peripherals.skillsHeadline"}}</h3>
+                {{#if (ne item.system.type "animal")}}
+                    {{#if (ne item.system.type "morph")}}
+                        <div style="overflow-x: hidden; overflow-y: auto; max-height: 70px;">
+                    {{else}}
+                        <div style="overflow-x: hidden; overflow-y: auto; max-height: 160px;">
+                    {{/if}}
+                {{else}}
+                    <div style="overflow-x: hidden; overflow-y: auto; max-height: 160px;">
+                {{/if}}
+                        {{#each item.system.skills as |skill key|}}
+                        {{#if skill.name}}
+                        <div class="flexrow flex-group-center" style="padding: 5px 5px;">
+                            <label class="input-xs resource-value">{{key}}.</label>
+                            <label class="input-xl">{{skill.name}}</label>
+                            <label class="input-xs resource-value">{{skill.value}}</label>
+                            {{#if skill.specname}}
+                                <label>{{skill.specname}}</label>
+                            {{else}}
+                                <label style="color: var(--inactive);">No Spec</label>
+                            {{/if}}
+                        </div>
+                        {{/if}}
+                    {{/each}}
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+        <!--Vehicle Modifications/Ware-->
+        {{#if item.system.description}}
+            <div style="background-color: var(--pitchBorder); padding: 10px;">
+                <label>{{item.system.description}}</label>
+            </div>
+        {{/if}}
+    </div>
+</div>

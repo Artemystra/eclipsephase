@@ -88,6 +88,11 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.grid-6col-true {
+  grid-column: span 6 / span 6;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
 .grid-7col {
   grid-column: span 7 / span 7;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -1639,6 +1644,7 @@ h3.inline {
   font-weight: bold;
 }
 
+/*Tooltips shown on hover*/
 .tooltip {
   position: relative;
 }
@@ -1735,17 +1741,6 @@ h3.inline {
 .wantToKnowMore:hover .tooltipText {
   opacity: 1;
 }
-
-/*.wantToKnowMore .tooltipText::after {
-  content: " ";
-  position: absolute;
-  top: 119%;
-  left: 43%;
-  margin-top: -2px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--highlightBackground) transparent transparent transparent;
-}*/
 
 .wantToKnowMore:hover .tooltipText {
   visibility: visible;
@@ -1856,6 +1851,71 @@ h3.inline {
 
 .droplistHeader {
   clip-path: polygon(15% 0, 100% 0%, 100% 100%, 38% 100%);
+}
+
+/*Sliders */
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 
 /* Module Styling Support */

@@ -714,3 +714,141 @@ export async function migrationPre0861(startMigration, endMigration){
         return {endMigration}
     }
 }
+
+export async function migrationPre09(startMigration, endMigration){
+  if (startMigration){
+    console.log("0.9 Migration triggered!")
+      for(let actor of game.actors){
+          for(let item of actor.items){
+            let latestUpdate = "0.9";
+            let updated = foundry.utils.isNewerVersion(item.system.updated, "0.9")
+            console.log("This item is on version: ", item.system.updated, " that is newer than 0.9! That's ", updated)
+            if(item.system.type === "animal" && !updated || item.system.type === "vehicle" && !updated || item.system.type === "robot" && !updated || item.system.type === "morph" && !updated){
+              let itemID = item._id;
+              let vig = item.system.vig;
+              let mox = item.system.mox;
+              let ins = item.system.ins;
+              let flex = item.system.flex;
+              let threat = item.system.threat;
+              let cog = item.system.cog;
+              let int = item.system.int;
+              let ref = item.system.ref;
+              let sav = item.system.sav;
+              let som = item.system.som;
+              let wil = item.system.wil;
+              let curIns = item.system.curIns;
+              let curMox = item.system.curMox;
+              let curVig = item.system.curVig;
+              let curFlex = item.system.curFlex;
+              let curThreat = item.system.curThreat;
+              let itemUpdate = [];
+              let armorTotal = item.system.armor
+              let movementType = item.system.mov
+              let movementTypes = movementType.split(',');
+              let number = 0;
+              let animalUpdate = {"_id": itemID};
+              let morphUpdate = {"_id": itemID};
+              let generalUpdate = {"_id": itemID};
+              let armor = {"_id": itemID};
+              let movement = {"_id": itemID};
+              
+              //Migrate Vehicles & Robots
+              if(item.system.type === "vehicle" || item.system.type === "robot"){
+                console.log("I am ", item.name, " and being currently updated!")
+                generalUpdate["system.pools.vig.max"] = vig,
+                generalUpdate["system.pools.vig.curent"] = curVig,
+                generalUpdate["system.pools.flex.max"] = flex,
+                generalUpdate["system.pools.flex.curent"] = curFlex
+                generalUpdate["system.skills.1.name"] = "Fray"
+                generalUpdate["system.skills.1.value"] = 30
+                generalUpdate["system.skills.2.name"] = "Guns"
+                generalUpdate["system.skills.2.value"] = 30
+                generalUpdate["system.skills.3.name"] = "Hardware:[appropriate field]"
+                generalUpdate["system.skills.3.value"] = 20
+                generalUpdate["system.skills.3.specname"] = "specific bot/vehicle"
+                generalUpdate["system.skills.4.name"] = "Infosec"
+                generalUpdate["system.skills.4.value"] = 20
+                generalUpdate["system.skills.5.name"] = "Interface"
+                generalUpdate["system.skills.5.value"] = 30
+                generalUpdate["system.skills.6.name"] = "Perceive"
+                generalUpdate["system.skills.6.value"] = 40
+                generalUpdate["system.skills.7.name"] = "Pilot:[appropriate field]"
+                generalUpdate["system.skills.7.value"] = 60
+                generalUpdate["system.skills.7.name"] = "specific bot/vehicle"
+                generalUpdate["system.skills.8.name"] = "Research"
+                generalUpdate["system.skills.8.value"] = 20
+                generalUpdate["system.skills.9.name"] = "Know:[bot/vehicle] Specs"
+                generalUpdate["system.skills.9.value"] = 80
+                generalUpdate["system.updated"] = latestUpdate
+              }
+
+              //Migrate Morphs
+              if(item.system.type === "morph"){
+                console.log("I am ", item.name, " and being currently updated!")
+                morphUpdate["system.aptitudes.cog.value"] = cog,
+                morphUpdate["system.aptitudes.int.value"] = int,
+                morphUpdate["system.aptitudes.ref.value"] = ref,
+                morphUpdate["system.aptitudes.sav.value"] = sav,
+                morphUpdate["system.aptitudes.som.value"] = som,
+                morphUpdate["system.aptitudes.wil.value"] = wil,
+                morphUpdate["system.pools.vig.max"] = vig,
+                morphUpdate["system.pools.vig.curent"] = curVig,
+                morphUpdate["system.pools.mox.max"] = mox,
+                morphUpdate["system.pools.mox.curent"] = curMox,
+                morphUpdate["system.pools.ins.max"] = ins,
+                morphUpdate["system.pools.ins.curent"] = curIns,
+                morphUpdate["system.pools.flex.max"] = flex,
+                morphUpdate["system.pools.flex.curent"] = curFlex
+                morphUpdate["system.updated"] = latestUpdate
+              }
+
+              //Migrate Smart Animals
+              if(item.system.type === "animal"){
+                console.log("I am ", item.name, " and being currently updated!")
+                animalUpdate["system.aptitudes.cog.value"] = cog,
+                animalUpdate["system.aptitudes.int.value"] = int,
+                animalUpdate["system.aptitudes.ref.value"] = ref,
+                animalUpdate["system.aptitudes.sav.value"] = sav,
+                animalUpdate["system.aptitudes.som.value"] = som,
+                animalUpdate["system.aptitudes.wil.value"] = wil,
+                animalUpdate["system.pools.threat.max"] = threat,
+                animalUpdate["system.pools.threat.curent"] = curThreat
+                animalUpdate["system.updated"] = latestUpdate
+                
+              }
+              
+              //Migrate Vehicles Movement
+              for (let type of movementTypes){
+                let toSplit = movementTypes[number].trim();
+                
+                let movementSplit = toSplit.split(' ');
+                let speedKey = "system.movement."+(number+1)+".speed";
+                let typeKey = "system.movement."+(number+1)+".type";
+                movement[speedKey] = movementSplit[0];
+                movement[typeKey] = movementSplit[1].toLowerCase();
+                number++
+              }
+
+              //Migrate Vehicles Armor
+
+              if(armorTotal === "-" || !armorTotal){
+                armor["system.armor.energy"] = 0;
+                armor["system.armor.kinetic"] = 0;
+              }
+              else{
+                let armorSplit =  armorTotal.split('/');
+                armor["system.armor.energy"] = armorSplit[0];
+                armor["system.armor.kinetic"] = armorSplit[1];
+              }
+
+              itemUpdate.push(generalUpdate, morphUpdate, animalUpdate, movement, armor);
+                actor.updateEmbeddedDocuments("Item", itemUpdate);
+            }
+          }
+      }
+
+      game.settings.set("eclipsephase", "migrationVersion", "0.9");
+      endMigration = true
+      return {endMigration}
+  }
+}
