@@ -723,12 +723,20 @@
         }
       },
       "vehicle": {
+        "autoBot": "Add AI",
         "table": {
           "initiative": "先攻",
           "threatValue": "TV",
           "durability": "DUR",
           "movement": "移动",
           "skillsHeadline": "技能",
+          "habitat": {
+            "none": "-Select-",
+            "ground": "Groundcraft",
+            "air": "Aircraft",
+            "space": "Spacecraft",
+            "nautical": "Nautical Craft"
+          },
           "type": {
             "label": "类型",
             "robot": "机器人",

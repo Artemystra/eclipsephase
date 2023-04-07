@@ -572,9 +572,6 @@ export default class EPactorSheet extends ActorSheet {
         const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";
         const popUpInfo = "ep2e.actorSheet.popUp.deleteAdditionalInfo";
 
-        console.log("The name of the item is: ", itemName)
-        console.log("The ID of the item is: ", [li.data("itemId")])
-
         let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
 
         if(popUp.confirm === true){
@@ -1188,7 +1185,7 @@ async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, c
   });
 }
 
-//General skill check results
+//Pool usage confirmation check results
 function _poolUsageModifiers(form) {
     return {
         modifier: form.modifier ? form.modifier.value : null

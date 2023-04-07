@@ -71,7 +71,9 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
-        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>"
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up hold SHIFT while pressing the delete button.</p></i>",
+        "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
+        "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Hold SHIFT while pressing the 'Auto-Bot'-button.</p></i>"
       }
     },
     "healthbar": {
@@ -709,7 +711,11 @@
           "nameLabel": "Name",
           "valueLabel": "Value",
           "aptitudeLabel": "Aptitude",
-          "specLabel": "Specialization"
+          "specLabel": "Specialization",
+          "defaultKnowLabel": "Know: ",
+          "defaultMedicineLabel": "Medicine: ",
+          "defaultHardwareLabel": "Hardware: ",
+          "defaultPilotLabel": "Pilot: "
         }
       },
       "program": {
@@ -724,12 +730,22 @@
         }
       },
       "vehicle": {
+        "autoBot": "Add AI",
+        "skillFieldDefault": "[appropriate field]",
         "table": {
           "initiative": "Init",
           "threatValue": "TV",
           "durability": "DUR",
           "movement": "Mov",
           "skillsHeadline": "Skills",
+          "habitat": {
+            "none": "-Select-",
+            "ground": "Groundcraft",
+            "air": "Aircraft",
+            "space": "Spacecraft",
+            "nautical": "Nautical Craft",
+            "aerospace": "Aerospace"
+          },
           "type": {
             "label": "Type",
             "robot": "Robot",

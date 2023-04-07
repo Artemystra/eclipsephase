@@ -168,7 +168,15 @@
                 </div>
                 <!--Skills-->
                 <div>
-                    <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground);">{{localize "ep2e.peripherals.skillsHeadline"}}</h3>
+                    <div style="display: flex;">
+                        <h3 style="padding: 10px 0 0 10px; border-bottom: 2px solid var(--accentBackground); flex-grow: 1;">{{localize "ep2e.peripherals.skillsHeadline"}}</h3>
+                        {{#if (eq item.system.type "robot")}}
+                        <button class="autoBot" style="min-width: 100px; max-width: 350px; width:fit-content; max-height: 30px; display: flex; align-items: center; justify-content: center;" data-name="{{item.name}}" data-id="{{item._id}}">{{localize "ep2e.item.vehicle.autoBot"}}</button>
+                        {{/if}}
+                        {{#if (eq item.system.type "vehicle")}}
+                        <button class="autoBot" style="min-width: 100px; max-width: 350px; width:fit-content; max-height: 30px; display: flex; align-items: center; justify-content: center;" data-name="{{item.name}}" data-id="{{item._id}}">{{localize "ep2e.item.vehicle.autoBot"}}</button>
+                        {{/if}}
+                    </div>
                     {{#if (ne item.system.type "animal")}}
                         {{#if (ne item.system.type "morph")}}
                             <div style="overflow-x: hidden; overflow-y: auto; max-height: 70px;">
@@ -189,12 +197,6 @@
                         </div>
                 </div>
             </div>
-            <!--Vehicle Modifications/Ware-->
-            {{#if item.system.description}}
-                <div style="background-color: var(--pitchBorder); padding: 10px;">
-                    <label>{{item.system.description}}</label>
-                </div>
-            {{/if}}
         </div>
     </div>
     <h2>{{localize "ep2e.item.general.table.description"}}</h2>

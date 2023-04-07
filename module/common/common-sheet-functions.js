@@ -154,7 +154,7 @@ export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpIn
               }
           },
           default: "normal",
-          close: () => resolve ({cancelled: true})
+          close: () => resolve ({confirm: false})
       };
       let options = {width:250}
       new Dialog(data, options).render(true);

@@ -10,7 +10,31 @@
             <input class="input-xs" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
         </div>
         {{#if (eq actor.type "character")}}
-        <div>
+        <div class="tooltip">
+            <div role="healthOverlay">
+                <div class="tooltipTopBorder">
+                    <div class="tooltipTop"></div>
+                </div>
+                <div class="insight">
+                    <h3 class="inline">{{localize "ep2e.skills.insightSkills.poolHeadline"}}</h3>
+                    <ul>
+                        <li>
+                            <label class="resource-value">{{localize "ep2e.skills.insightSkills.poolSubheadline1"}}: </label>{{localize "ep2e.skills.insightSkills.poolCopy1"}}
+                        </li>
+                        <p/>
+                        <li>
+                            <label class="resource-value">{{localize "ep2e.skills.insightSkills.poolSubheadline2"}}: </label>{{localize "ep2e.skills.insightSkills.poolCopy2"}}
+                        </li>
+                        <p/>
+                        <li>
+                            <label class="resource-value">{{localize "ep2e.skills.insightSkills.poolSubheadline3"}}: </label>{{localize "ep2e.skills.insightSkills.poolCopy3"}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="tooltipBottomBorder">
+                    <div class="tooltipBottom"></div>
+                </div>
+            </div>
             <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
             <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
         </div>

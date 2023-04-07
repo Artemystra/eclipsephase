@@ -71,7 +71,9 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Vorsicht:</b>Das Item wird permanent gelöscht. Dies kann nicht rückgängig gemacht werden.",
-        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>"
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>",
+        "autoBotCopyGeneral": "<p><b>Vorsicht:</b>Dies ersetzt alle manuell eingetragenen Skills mit den Standard Skills & Skillwerten für Bot AIs.</p><p><b>Wähle den Fahrzeugtyp:</b></p>",
+        "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Halte SHIFT gedrückt während du den 'Auto-Bot'-button drückst um diese Nachricht nicht zu sehen.</p></i>"
       }
     },
     "healthbar": {
@@ -724,12 +726,20 @@
         }
       },
       "vehicle": {
+        "autoBot": "AI Hinzufügen",
         "table": {
           "initiative": "Init",
           "threatValue": "BW",
           "durability": "AUS",
           "movement": "Bew",
           "skillsHeadline": "Skills",
+          "habitat": {
+            "none": "-Wähle-",
+            "ground": "Bodenfahrzeug",
+            "air": "Flugzeug",
+            "space": "Raumfahrzeug",
+            "nautical": "Unterseefahrzeug"
+          },
           "type": {
             "label": "Typ",
             "robot": "Roboter",

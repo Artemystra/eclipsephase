@@ -717,12 +717,10 @@ export async function migrationPre0861(startMigration, endMigration){
 
 export async function migrationPre09(startMigration, endMigration){
   if (startMigration){
-    console.log("0.9 Migration triggered!")
       for(let actor of game.actors){
           for(let item of actor.items){
             let latestUpdate = "0.9";
             let updated = foundry.utils.isNewerVersion(item.system.updated, "0.9")
-            console.log("This item is on version: ", item.system.updated, " that is newer than 0.9! That's ", updated)
             if(item.system.type === "animal" && !updated || item.system.type === "vehicle" && !updated || item.system.type === "robot" && !updated || item.system.type === "morph" && !updated){
               let itemID = item._id;
               let vig = item.system.vig;
@@ -754,37 +752,35 @@ export async function migrationPre09(startMigration, endMigration){
               
               //Migrate Vehicles & Robots
               if(item.system.type === "vehicle" || item.system.type === "robot"){
-                console.log("I am ", item.name, " and being currently updated!")
                 generalUpdate["system.pools.vig.max"] = vig,
                 generalUpdate["system.pools.vig.curent"] = curVig,
                 generalUpdate["system.pools.flex.max"] = flex,
                 generalUpdate["system.pools.flex.curent"] = curFlex
-                generalUpdate["system.skills.1.name"] = "Fray"
-                generalUpdate["system.skills.1.value"] = 30
-                generalUpdate["system.skills.2.name"] = "Guns"
-                generalUpdate["system.skills.2.value"] = 30
-                generalUpdate["system.skills.3.name"] = "Hardware:[appropriate field]"
-                generalUpdate["system.skills.3.value"] = 20
-                generalUpdate["system.skills.3.specname"] = "specific bot/vehicle"
-                generalUpdate["system.skills.4.name"] = "Infosec"
-                generalUpdate["system.skills.4.value"] = 20
-                generalUpdate["system.skills.5.name"] = "Interface"
-                generalUpdate["system.skills.5.value"] = 30
-                generalUpdate["system.skills.6.name"] = "Perceive"
-                generalUpdate["system.skills.6.value"] = 40
-                generalUpdate["system.skills.7.name"] = "Pilot:[appropriate field]"
-                generalUpdate["system.skills.7.value"] = 60
-                generalUpdate["system.skills.7.name"] = "specific bot/vehicle"
-                generalUpdate["system.skills.8.name"] = "Research"
-                generalUpdate["system.skills.8.value"] = 20
-                generalUpdate["system.skills.9.name"] = "Know:[bot/vehicle] Specs"
-                generalUpdate["system.skills.9.value"] = 80
+                generalUpdate["system.skills.1.name"] = game.i18n.localize("ep2e.skills.vigorSkills.fray");
+                generalUpdate["system.skills.1.value"] = 30;
+                generalUpdate["system.skills.2.name"] = game.i18n.localize("ep2e.skills.vigorSkills.guns");
+                generalUpdate["system.skills.2.value"] = 30;
+                generalUpdate["system.skills.3.name"] = game.i18n.localize('ep2e.item.additionalSkill.table.defaultHardwareLabel')+game.i18n.localize('ep2e.item.vehicle.skillFieldDefault');;
+                generalUpdate["system.skills.3.value"] = 20;
+                generalUpdate["system.skills.3.specname"] = item.name;
+                generalUpdate["system.skills.4.name"] = game.i18n.localize("ep2e.skills.insightSkills.infosec");
+                generalUpdate["system.skills.4.value"] = 20;
+                generalUpdate["system.skills.5.name"] = game.i18n.localize("ep2e.skills.insightSkills.interface");
+                generalUpdate["system.skills.5.value"] = 30;
+                generalUpdate["system.skills.6.name"] = game.i18n.localize("ep2e.skills.insightSkills.perceive");
+                generalUpdate["system.skills.6.value"] = 40;
+                generalUpdate["system.skills.7.name"] = game.i18n.localize('ep2e.item.additionalSkill.table.defaultPilotLabel')+game.i18n.localize('ep2e.item.vehicle.skillFieldDefault');
+                generalUpdate["system.skills.7.value"] = 60;
+                generalUpdate["system.skills.7.specname"] = item.name;
+                generalUpdate["system.skills.8.name"] = game.i18n.localize("ep2e.skills.insightSkills.research");
+                generalUpdate["system.skills.8.value"] = 20;
+                generalUpdate["system.skills.9.name"] = game.i18n.localize('ep2e.item.additionalSkill.table.defaultKnowLabel')+item.name+" Specs";
+                generalUpdate["system.skills.9.value"] = 80;
                 generalUpdate["system.updated"] = latestUpdate
               }
 
               //Migrate Morphs
               if(item.system.type === "morph"){
-                console.log("I am ", item.name, " and being currently updated!")
                 morphUpdate["system.aptitudes.cog.value"] = cog,
                 morphUpdate["system.aptitudes.int.value"] = int,
                 morphUpdate["system.aptitudes.ref.value"] = ref,
@@ -804,7 +800,6 @@ export async function migrationPre09(startMigration, endMigration){
 
               //Migrate Smart Animals
               if(item.system.type === "animal"){
-                console.log("I am ", item.name, " and being currently updated!")
                 animalUpdate["system.aptitudes.cog.value"] = cog,
                 animalUpdate["system.aptitudes.int.value"] = int,
                 animalUpdate["system.aptitudes.ref.value"] = ref,

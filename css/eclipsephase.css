@@ -1650,7 +1650,8 @@ h3.inline {
 }
 
 .tooltip div[role=tooltip],
-.tooltip div[role=tooltipNegative]{
+.tooltip div[role=tooltipNegative],
+.tooltip div[role=healthOverlay]{
   display: none;
   opacity: 0;
   transition: opacity 1s;
@@ -1666,6 +1667,19 @@ h3.inline {
   position: absolute;
   top: 1em;
   left: -268px;
+  z-index: 100;
+  color: var(--mainText);
+}
+
+.tooltip:hover div[role=healthOverlay] {
+  opacity: 1;
+  font-family: 'Cousine', monospace;
+  max-width: 320px;
+  min-width: 320px;
+  display: block;
+  text-align: left;
+  position: absolute;
+  top: 1em;
   z-index: 100;
   color: var(--mainText);
 }
@@ -1724,7 +1738,8 @@ h3.inline {
     transition-delay: 1s;
     visibility: hidden;
     position: absolute;
-    width: 140px;
+    min-width: 140px;
+    width: fit-content;
     background-color: var(--focusBackground);
     color: var(--mainText);
     text-align: center;
