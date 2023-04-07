@@ -127,5 +127,31 @@
           </div>
       </div>
       {{/if}}
+
+      <!-- Replace Skills with bot AI skills (Confirm/Cancel) (EPvehicleSheet.js line 63 onwards)-->
+      {{#if (eq dialogType "autoBot")}}
+      <div class="item" style="margin-bottom: 10px;">
+          <!--Only show headline if defined-->
+          {{#if popUpHeadline}}
+          <div class="flexrow subheader">
+              <h3 class="subheader dialog" style="clip-path: none;">{{localize popUpHeadline}}</h3>
+          </div>
+          {{/if}}
+          <!--Copy-->
+          <div class="listBackgroundMain alignLeft">
+            {{{localize popUpCopy}}}
+            <div style="display: flex; justify-content: center; margin: 10px 0;">
+              <select name="type">
+                <option value="none">{{localize "ep2e.item.vehicle.table.habitat.none"}}</option>
+                <option value="ground">{{localize "ep2e.item.vehicle.table.habitat.ground"}}</option>
+                <option value="air">{{localize "ep2e.item.vehicle.table.habitat.air"}}</option>
+                <option value="space">{{localize "ep2e.item.vehicle.table.habitat.space"}}</option>
+                <option value="nautical">{{localize "ep2e.item.vehicle.table.habitat.nautical"}}</option>
+              </select>
+            </div>
+            {{{localize popUpInfo}}}
+          </div>
+      </div>
+      {{/if}}
   </div>
 </form>

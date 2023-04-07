@@ -1,7 +1,12 @@
 The first inofficial Eclipse Phase 2e system is about two years in the making and nears it's version 1.0 (A state in which the core rules are working with some convenience features where I see fit.). If you like my work and want to support me, please consider buying me a kofi (https://ko-fi.com/diemen) or just texting me here or on discord (jorra#7357) to say "thank you!". It means a lot to me!
 
 <h2>Most important features in overview</h2>
-<h3>For Players</h3>
+<h3>Localization</h3>
+<ul>
+<li><a href="#languages-included">Languages included</a></li>
+<li><a href="#about-localization">About Localization</a></li>
+</ul>
+<h3>Features For Players</h3>
 <ul>
 <li><a href="#character-sheet-design">Character Sheet Design</a></li>
 <li><a href="#action-side-car">Action Side Car</a></li>
@@ -9,7 +14,7 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <li><a href="#rules--tooltips">Rules & Tooltips</a></li>
 <li><a href="#automatic-rest-calculator">Automatic Rest Calculator</a></li>
 </ul>
-<h3>For GMs</h3>
+<h3>Features For GMs</h3>
 <ul>
 <li><a href="#npc--threat-sheet-design">NPC & Threat Sheet Design</a></li>
 <li><a href="#enriched-dice-results">Enriched Dice Results</a></li>
@@ -17,13 +22,25 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <li><a href="#automated-chat-feedback">Automated Chat Feedback</a></li>
 <li><a href="#active-effects">Active Effects</a></li>
 </ul>
-<h3><a href="#legal-disclaimer-1">Disclaimers</a></h3>
+<h3>Disclaimers</h3>
 <ul>
-<li><a href="#npc--threat-sheet-design">Personal</a></li>
-<li><a href="#enriched-dice-results">Legal</a></li>
+<li><a href="#personal">Personal</a></li>
+<li><a href="#legal">Legal</a></li>
 </ul>
 
-<h2>For Players</h2>
+<h2>Localization</h2>
+<h3>Languages Included</h3>
+<p>To date we're supporting the system in the following languages:</p>
+<ol>
+<li>English</li>
+<li>Chinese (Simplified)</li>
+<li>German</li>
+</ol>
+
+<h3>About Localization</h3>
+<p>We're happy to announce that from this moment on forward, the system at hand is fully localized and can and will be translated into as many laguages as possible. Please keep in mind, that the system is made for fans by fans. None of us gets paid for writing code, designing the sheets, improving the overall UX/UI or translating it into another language. Apart from the fact, that this means, that there might be errors and some sentences, words or speech patterns that are not as professional and clear as you might wish for, it also means, that none of this happens without YOU. Yes, we need YOU to make localization happen. So if you happen to speak & write any laguage not localized yet or are under the impression that you can support us or one of our language experts who created a localization for a specific language, feel free to reach out via discord. I'm happy to help you getting started or connect you to the people necessary to discuss your ideas of how to make our system more accessible for people speaking other languages than english.</p>
+
+<h2>Features For Players</h2>
 <h3>Character Sheet Design</h3>
 <p><img src="https://war-klar.de/PicShare/GitHub/characterSheet2.png"><br>
 <i>The character sheet is designed to reduce player search time</i></p>
@@ -94,7 +111,7 @@ Melee and Ranged weapons can be directly rolled from this section. If applicable
     <img src="https://war-klar.de/PicShare/GitHub/restCalculator.png">
 </div><br>
 
-<h2>For GMs</h2>
+<h2>Features For GMs</h2>
 <h3>NPC & Threat Sheet Design</h3>
 <p><h2>NPC Sheet</h2>
 <img src="https://war-klar.de/PicShare/GitHub/npcSheet.jpg"></p>

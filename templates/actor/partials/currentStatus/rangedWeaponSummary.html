@@ -8,7 +8,8 @@
             <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
                 <div class="flexrow subheader">
                     <!--Name & Dice Roller-->
-                    <div class="flexrow flex-group-left reveal">
+                    <div class="flexrow flex-group-left reveal wantToKnowMore">
+                        <span class="tooltipText">{{item.name}}</span>
                         <h3 class="subheader truncate">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small" style="margin-right: 5px;"/>
                             <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-key="guns" data-name="{{localize 'ep2e.skills.vigorSkills.guns'}}" data-rolledfrom="rangedWeapon" data-weapontype="ranged" data-roll="{{item.system.dv}}" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>

@@ -71,9 +71,7 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
-        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up hold SHIFT while pressing the delete button.</p></i>",
-        "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
-        "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Hold SHIFT while pressing the 'Auto-Bot'-button.</p></i>"
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>"
       }
     },
     "healthbar": {
@@ -412,12 +410,12 @@
         "flex": "Flex"
       },
       "table": {
-        "passengers": "Passengers",
-        "armor": "Armor",
+        "pessengers": "Pessengers",
+        "armor": "AV",
         "woundThreshold": "WT",
         "damageDurability": "Damage/Dur",
         "deathRating": "DR",
-        "movement": "Movement",
+        "movement": "Mov",
         "size": "Size"
       },
       "modPlaceholder": "No modifications",
@@ -711,11 +709,7 @@
           "nameLabel": "Name",
           "valueLabel": "Value",
           "aptitudeLabel": "Aptitude",
-          "specLabel": "Specialization",
-          "defaultKnowLabel": "Know: ",
-          "defaultMedicineLabel": "Medicine: ",
-          "defaultHardwareLabel": "Hardware: ",
-          "defaultPilotLabel": "Pilot: "
+          "specLabel": "Specialization"
         }
       },
       "program": {
@@ -730,22 +724,12 @@
         }
       },
       "vehicle": {
-        "autoBot": "Add AI",
-        "skillFieldDefault": "[appropriate field]",
         "table": {
           "initiative": "Init",
           "threatValue": "TV",
           "durability": "DUR",
           "movement": "Mov",
           "skillsHeadline": "Skills",
-          "habitat": {
-            "none": "-Select-",
-            "ground": "Groundcraft",
-            "air": "Aircraft",
-            "space": "Spacecraft",
-            "nautical": "Nautical Craft",
-            "aerospace": "Aerospace"
-          },
           "type": {
             "label": "Type",
             "robot": "Robot",
@@ -1022,11 +1006,10 @@
     },
     "migration": {
       "headlineStart": "<h3 class='subheader dialog'>Dear System User</h3>",
-      "headlineEnd": "<h3 class='subheader dialog'>You are all set!</h3>",
-      "done": "<label class='resource-label'>Have fun fighting TITAN and rescuing the universe, or whatever it is that floats your boat!</i></p></label>",
       "legacy": "<label class='resource-label'>Thank you for playing Eclipse Phase with our system. To guarantee the overall file integrity in the upcoming updates, we ask you to shortly migrate your data to the latest structure, provided with update 0.8.1.<p/><p/><b>This is necessary for implementing even cooler features than we already have (like lokalization e.g.), and will only take a few seconds.</b><p/><p/> Thank you and have a great day playing!<p><i>Note: Please note that drugs underwent a general overhaul. Just pull them from the compendium again and delete the old ones.</i></p></label>",
       "0861": "<label class='resource-label'><p>We have updated the items-structure to allow future migrations to only trigger, if your item is on a specific version.<p/><p><b>This prevents your character sheets/items from ending up broken, while you're triggering a migration.</b><p/><p>Please migrate to this version at your earliest convenience to help us stabilize your character's item-data<p/> <p>Thank you and have a great day playing!</p></label>",
-      "09": "<label class='resource-label'><p>Smart Animals & Vehicles underwent a huge revamp.<p/><p><b>This migration is meant to update all drones/vehicles/smart animals on any sheet so they're compatible with the new system.</b><p/><p>Please migrate to this version at your earliest convenience to profit from the latest updates, <b>but do not forget to backup your world first in case of any game breaking bugs!</b><p/> <p>Thank you and have a great day playing!</p></label>"
+      "headlineEnd": "<h3 class='subheader dialog'>You are all set!</h3>",
+      "done": "<label class='resource-label'>Have fun fighting TITAN and rescuing the universe, or whatever it is that floats your boat!</i></p></label>"
     },
     "systemMessage": {
       "resetRest": {

@@ -1184,33 +1184,93 @@
         "base",
         "buyable"
       ],
-      "cog": null,
-      "int": null,
-      "ref": null,
-      "sav": null,
-      "som": null,
-      "wil": null,
+      "aptitudes": {
+        "cog": {
+          "name": "ep2e.actorSheet.aptitudes.cog",
+          "value": null,
+          "label": "ep2e.actorSheet.aptitudes.cognition"
+        },
+        "int": {
+          "name": "ep2e.actorSheet.aptitudes.int",
+          "value": null,
+          "label": "ep2e.actorSheet.aptitudes.intuition"
+        },
+        "ref": {
+          "name": "ep2e.actorSheet.aptitudes.ref",
+          "value": null,
+          "label": "ep2e.actorSheet.aptitudes.reflexes"
+        },
+        "sav": {
+          "name": "ep2e.actorSheet.aptitudes.sav",
+          "value": null,
+          "label": "ep2e.actorSheet.aptitudes.savvy"
+        },
+        "som": {
+          "name": "ep2e.actorSheet.aptitudes.som",
+          "value": null,
+          "label": "ep2e.actorSheet.aptitudes.somatics"
+        },
+        "wil": {
+          "name": "ep2e.actorSheet.aptitudes.wil",
+          "value": null,
+          "label": "ep2e.actorSheet.aptitudes.willpower"
+        }
+      },
+      "pools": {
+        "vig": {
+          "max": null,
+          "current": null
+        },
+        "mox": {
+          "max": null,
+          "current": null
+        },
+        "ins": {
+          "max": null,
+          "current": null
+        },
+        "flex": {
+          "max": null,
+          "current": null
+        },
+        "threat": {
+          "max": null,
+          "current": null
+        }
+      },
+      "movement": {
+        "1": {
+          "speed": "",
+          "type": ""
+        },
+        "2": {
+          "speed": "",
+          "type": ""
+        },
+        "3": {
+          "speed": "",
+          "type": ""
+        },
+        "4": {
+          "speed": "",
+          "type": ""
+        }
+      },
+      "armor": {
+        "energy": null,
+         "kinetic": null
+      },
       "init": null,
-      "vig": null,
-      "mox": null,
-      "ins": null,
-      "flex": null,
-      "threat": null,
       "type": null,
-      "armor": null,
       "luc": null,
       "dur": null,
       "wounds": null,
       "trauma": null,
-      "curIns": null,
-      "curMox": null,
-      "curVig": null,
-      "curFlex": null,
-      "curThreat": null,
       "curDur": null,
       "curLuc": null,
-      "mov": null,
       "pass": null,
+      "autoControl": null,
+      "controlType": null,
       "skills": {
         "1": {
           "name": null,
@@ -1274,8 +1334,15 @@
           "specname": "",
           "spec": false,
           "mod": null
+        },
+        "10": {
+          "name": null,
+          "value": null,
+          "specname": "",
+          "spec": false,
+          "mod": null
         }
-      }
+      }      
     }
   }
 }

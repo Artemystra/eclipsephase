@@ -396,6 +396,26 @@ export default class EPactorSheet extends ActorSheet {
           consumable.push(item);
         }
         else if (item.type === 'vehicle') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'vs':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.vs";
+                break;
+              case 's':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.s";
+                break;
+              case 'n':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.m";
+                break;
+              case 'l':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.l";
+                break;
+              case 'vl':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.vl";
+                break;
+              default:
+                break;
+            }
           itemModel.wt = Math.round(itemModel.dur / 5);
           if (itemModel.type != "animal"){
             itemModel.dr = Math.round(itemModel.dur * 2);
@@ -551,9 +571,6 @@ export default class EPactorSheet extends ActorSheet {
         const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete"))+ " " +(itemName?itemName:"");
         const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";
         const popUpInfo = "ep2e.actorSheet.popUp.deleteAdditionalInfo";
-
-        console.log("The name of the item is: ", itemName)
-        console.log("The ID of the item is: ", [li.data("itemId")])
 
         let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
 
@@ -1168,7 +1185,7 @@ async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, c
   });
 }
 
-//General skill check results
+//Pool usage confirmation check results
 function _poolUsageModifiers(form) {
     return {
         modifier: form.modifier ? form.modifier.value : null

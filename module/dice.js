@@ -1997,14 +1997,16 @@ export async function TaskCheck({
     //Swap Preparation
     async function swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName, poolValue, flexValue){
         swipSwap = await swapDice(evaluatedRoll);
-        if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll && poolValue || swipSwap <= modSkillValue && swipSwap > evaluatedRoll && flexValue) {
+        console.log("This is my successName: ", successName)
+        if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll && poolValue && successName != "Supreme Fail" || swipSwap <= modSkillValue && swipSwap > evaluatedRoll && flexValue && successName != "Supreme Fail") {
             swapPossible = true;
         }
-        if (swipSwap <= modSkillValue && !successType && poolValue || swipSwap <= modSkillValue && !successType && flexValue) {
+        if (swipSwap <= modSkillValue && !successType && poolValue && successName != "Supreme Fail" || swipSwap <= modSkillValue && !successType && flexValue && successName != "Supreme Fail") {
             swapPossible = true;
         }
-        if (swipSwap > modSkillValue && !successType && poolValue || swipSwap > modSkillValue && !successType && flexValue) {
+        if (successName === "Supreme Fail" || swipSwap > modSkillValue && !successType && poolValue || swipSwap > modSkillValue && !successType && flexValue) {
             severeConsequences = true;
+            swapPossible = false;
             switch (successName){
                 case 'Fail':
                     severityLevel = 0;
@@ -2225,7 +2227,7 @@ export async function TaskCheck({
     function _proTaskCheckOptions(form) {
         return {
             ranged: form.RangedFray ? form.RangedFray.checked : false,
-            aspects: form.AspectNumber ? 0 + parseInt(form.AspectNumber.value) : 0,
+            aspects: form.AspectNumber ? (parseInt(form.AspectNumber.value)>0 ? parseInt(form.AspectNumber.value) : 0) : 0,
             pushes: form.Push ? form.Push.value : "none",
             ignoreInfection: form.IgnoreInfection ? form.IgnoreInfection.checked : false,
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
