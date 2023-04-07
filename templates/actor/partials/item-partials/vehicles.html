@@ -3,25 +3,35 @@
         <h3 class="subheader">{{item.name}}</h3>
         <div class="alignRight flexGrowThreeQuarter">
             {{#if (eq item.system.type "morph")}}
-                <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
-                <input class="input-xs sheet-inline-edit" data-field="system.pools.ins.current" type="number" name="item.system.pools.ins.current" value="{{item.system.pools.ins.current}}" placeholder="0"/>
-                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.ins.max}}</strong></label>
-                <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
-                <input class="input-xs sheet-inline-edit" data-field="system.pools.mox.current" type="number" name="item.system.pools.mox.current" value="{{item.system.pools.mox.current}}" placeholder="0"/>
-                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.mox.max}}</strong></label>
+                {{#if item.system.pools.ins.max}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.ins"}}</label>
+                    <input class="input-xs sheet-inline-edit" data-field="system.pools.ins.current" type="number" name="item.system.pools.ins.current" value="{{item.system.pools.ins.current}}" placeholder="0"/>
+                    <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.ins.max}}</strong></label>
+                {{/if}}
+                {{#if item.system.pools.mox.max}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.mox"}}</label>
+                    <input class="input-xs sheet-inline-edit" data-field="system.pools.mox.current" type="number" name="item.system.pools.mox.current" value="{{item.system.pools.mox.current}}" placeholder="0"/>
+                    <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.mox.max}}</strong></label>
+                {{/if}}
             {{/if}}
             {{#if (eq item.system.type "animal")}}
-                <label class="resource-label">{{localize "ep2e.healthbar.tooltip.threat"}}</label>
-                <input class="input-xs sheet-inline-edit" data-field="system.pools.threat.current" type="number" name="item.system.pools.threat.current" value="{{item.system.pools.threat.current}}" placeholder="0"/>
-                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.threat.max}}</strong></label>
+                {{#if item.system.pools.threat.max}}
+                    <label class="resource-label">{{localize "ep2e.healthbar.tooltip.threat"}}</label>
+                    <input class="input-xs sheet-inline-edit" data-field="system.pools.threat.current" type="number" name="item.system.pools.threat.current" value="{{item.system.pools.threat.current}}" placeholder="0"/>
+                    <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.threat.max}}</strong></label>
+                {{/if}}
             {{/if}}
             {{#if (ne item.system.type "animal")}}
-                <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
-                <input class="input-xs sheet-inline-edit" data-field="system.pools.vig.current" type="number" name="item.system.pools.vig.current" value="{{item.system.pools.vig.current}}" placeholder="0"/>
-                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.vig.max}}</strong></label>
-                <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
-                <input class="input-xs sheet-inline-edit" data-field="system.pools.flex.current" type="number" name="item.system.pools.flex.current" value="{{item.system.pools.flex.current}}" placeholder="0"/>
-                <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.flex.max}}</strong></label>
+                {{#if item.system.pools.vig.max}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.vig"}}</label>
+                    <input class="input-xs sheet-inline-edit" data-field="system.pools.vig.current" type="number" name="item.system.pools.vig.current" value="{{item.system.pools.vig.current}}" placeholder="0"/>
+                    <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.vig.max}}</strong></label>
+                {{/if}}
+                {{#if item.system.pools.flex.max}}
+                    <label class="resource-label">{{localize "ep2e.peripherals.pool.flex"}}</label>
+                    <input class="input-xs sheet-inline-edit" data-field="system.pools.flex.current" type="number" name="item.system.pools.flex.current" value="{{item.system.pools.flex.current}}" placeholder="0"/>
+                    <label class="flex-group-center item-standard-margin-medium"><strong>/ {{item.system.pools.flex.max}}</strong></label>
+                {{/if}}
             {{/if}}
         </div>
         <div class="flexrow item-controls flex-group-center" style="max-width: 50px; min-width: 50px; height: 24px;">
