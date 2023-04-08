@@ -1654,7 +1654,6 @@ h3.inline {
 .tooltip div[role=healthOverlay]{
   display: none;
   opacity: 0;
-  transition: opacity 1s;
 }
 
 .tooltip:hover div[role=tooltip] {
@@ -1679,7 +1678,8 @@ h3.inline {
   display: block;
   text-align: left;
   position: absolute;
-  top: 1em;
+  top: -67px;
+  left: -8px;
   z-index: 100;
   color: var(--mainText);
 }
@@ -1710,6 +1710,7 @@ h3.inline {
 
 .tooltipTop{
   clip-path: polygon(71% 0, 73% 35%, 97% 35%, 100% 75%, 100% 100%, 0% 100%, 0% 100%, 0 0, 0% 0);
+  padding: 10px 20px;
 }
 
 .tooltipTopBorder{
@@ -1768,7 +1769,9 @@ h3.inline {
 .restInfo,
 .information,
 .armorValue,
-.currentStatus{
+.currentStatus,
+.mentalHealth,
+.physicalHealth{
   max-height: 400px;
   overflow: auto;
   background-repeat: no-repeat;
@@ -1777,6 +1780,14 @@ h3.inline {
   padding: 3em 2em 2em 3.5em;
   border-left: solid 0.25em var(--mainBackground);
   border-right: solid 0.25em var(--mainBackground);
+}
+
+.mentalHealth{
+  max-height: 200px;
+  padding: 5px 0em 2em 1.5em;
+}
+.physicalHealth{
+  max-height: 200px;
 }
 
 .currentStatus{
