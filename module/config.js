@@ -133,6 +133,14 @@ eclipsephase.vehicleType = {
     animal: "ep2e.item.vehicle.table.type.animal"
 }
 
+eclipsephase.vehicleHabitat = {
+    none: "ep2e.item.vehicle.table.habitat.none",
+    ground: "ep2e.item.vehicle.table.habitat.ground",
+    air: "ep2e.item.vehicle.table.habitat.air",
+    space: "ep2e.item.vehicle.table.habitat.space",
+    nautical: "ep2e.item.vehicle.table.habitat.nautical"
+}
+
 eclipsephase.bodyTypes = {
     synth: "ep2e.morph.currentMorph.morphType.synth",
     bio: "ep2e.morph.currentMorph.morphType.bio",

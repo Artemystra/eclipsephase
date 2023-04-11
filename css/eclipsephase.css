@@ -88,6 +88,11 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.grid-6col-true {
+  grid-column: span 6 / span 6;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
 .grid-7col {
   grid-column: span 7 / span 7;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -447,13 +452,13 @@ a.entity-link {
   min-height: 36px;
 }
 
-span.fail {
+.fail {
   font-size: 20px;
   color: var(--negative);
   opacity: 1;
 }
 
-span.success {
+.success {
   font-size: 20px;
   color: var(--positive);
   opacity: 1;
@@ -650,7 +655,7 @@ input[class="rest"]:checked{
 
 input[class="sheet equipped checkBox"],
 input[class="sheet equipped checkBox"]:checked{
-  margin: 0 15px 0 0;
+  margin: 0 5px 0 0;
 }
 
 input [class="leftField"],
@@ -1103,6 +1108,7 @@ h3.subheader {
   font-size: 16px;
   display: flex;
   align-items: center;
+  margin-bottom: -3px;
 }
 
 h3.subheader.colorV1{
@@ -1110,7 +1116,7 @@ h3.subheader.colorV1{
 }
 
 h3.subheader.dialog {
-  height: 30px;
+  min-height: 30px;
   border: none;
   align-items: center;
   background: none;
@@ -1348,7 +1354,7 @@ h3.subheaderBlank {
 .flexrow.subheader {
   border-bottom: solid var(--accentBackground) 3px;
   background-color: var(--focusBackground);
-  height: 30px;
+  min-height: 30px;
 }
 
 .flexrow.subheader.colorV1{
@@ -1638,15 +1644,16 @@ h3.inline {
   font-weight: bold;
 }
 
+/*Tooltips shown on hover*/
 .tooltip {
   position: relative;
 }
 
 .tooltip div[role=tooltip],
-.tooltip div[role=tooltipNegative]{
+.tooltip div[role=tooltipNegative],
+.tooltip div[role=healthOverlay]{
   display: none;
   opacity: 0;
-  transition: opacity 1s;
 }
 
 .tooltip:hover div[role=tooltip] {
@@ -1659,6 +1666,20 @@ h3.inline {
   position: absolute;
   top: 1em;
   left: -268px;
+  z-index: 100;
+  color: var(--mainText);
+}
+
+.tooltip:hover div[role=healthOverlay] {
+  opacity: 1;
+  font-family: 'Cousine', monospace;
+  max-width: 320px;
+  min-width: 320px;
+  display: block;
+  text-align: left;
+  position: absolute;
+  top: -67px;
+  left: -8px;
   z-index: 100;
   color: var(--mainText);
 }
@@ -1689,6 +1710,7 @@ h3.inline {
 
 .tooltipTop{
   clip-path: polygon(71% 0, 73% 35%, 97% 35%, 100% 75%, 100% 100%, 0% 100%, 0% 100%, 0 0, 0% 0);
+  padding: 10px 20px;
 }
 
 .tooltipTopBorder{
@@ -1717,33 +1739,24 @@ h3.inline {
     transition-delay: 1s;
     visibility: hidden;
     position: absolute;
-    width: 120px;
+    min-width: 140px;
+    width: fit-content;
     background-color: var(--focusBackground);
     color: var(--mainText);
     text-align: center;
-    padding: 5px 0;
+    padding: 5px 3px;
     border-style: solid;
     border-width: 3px;
     border-radius: 6px;
     border-color: var(--highlightBackground);
     top: -35px;
     left: 22px;
+    z-index: 100;
 }
 
 .wantToKnowMore:hover .tooltipText {
   opacity: 1;
 }
-
-/*.wantToKnowMore .tooltipText::after {
-  content: " ";
-  position: absolute;
-  top: 119%;
-  left: 43%;
-  margin-top: -2px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: var(--highlightBackground) transparent transparent transparent;
-}*/
 
 .wantToKnowMore:hover .tooltipText {
   visibility: visible;
@@ -1756,7 +1769,9 @@ h3.inline {
 .restInfo,
 .information,
 .armorValue,
-.currentStatus{
+.currentStatus,
+.mentalHealth,
+.physicalHealth{
   max-height: 400px;
   overflow: auto;
   background-repeat: no-repeat;
@@ -1765,6 +1780,14 @@ h3.inline {
   padding: 3em 2em 2em 3.5em;
   border-left: solid 0.25em var(--mainBackground);
   border-right: solid 0.25em var(--mainBackground);
+}
+
+.mentalHealth{
+  max-height: 200px;
+  padding: 5px 0em 2em 1.5em;
+}
+.physicalHealth{
+  max-height: 200px;
 }
 
 .currentStatus{
@@ -1854,6 +1877,71 @@ h3.inline {
 
 .droplistHeader {
   clip-path: polygon(15% 0, 100% 0%, 100% 100%, 38% 100%);
+}
+
+/*Sliders */
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 
 /* Module Styling Support */

@@ -18,7 +18,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861 } from "./common/migration.js";
+import  { migrationLegacy, migrationPre0861,  migrationPre09} from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -178,7 +178,9 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/ranged-weapons.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gamma-sleight.html",
-    "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html"
+    "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -204,6 +206,7 @@ const currentVersion = game.system.version
 const messageHeadline = "ep2e.migration.headlineStart"
 let isLegacy = foundry.utils.isNewerVersion("0.8.1", gameVersion)
 let before0861 = foundry.utils.isNewerVersion("0.8.6.1", gameVersion)
+let before09 = foundry.utils.isNewerVersion("0.9", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -239,6 +242,24 @@ else if (before0861) {
   let Migration0861 = await migrationPre0861(startMigration)
 
   endMigration = Migration0861["endMigration"]
+
+  await migrationEnd(endMigration)
+
+}
+//0.9 Migration
+else if (before09) {
+  const messageCopy = "ep2e.migration.09"
+  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    startMigration = migration.start
+  }
+
+  let Migration09 = await migrationPre09(startMigration)
+
+  endMigration = Migration09["endMigration"]
 
   await migrationEnd(endMigration)
 

@@ -11,54 +11,64 @@
                 <div class="itemBackground">
                         {{#each actor.armor as |item id|}}
                         {{#if item.system.active}}
-                        <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}">
+                        <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                             <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked item.system.active}}>
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                            <div class="item-image flex-group-center input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <input class="sheet-inline-edit" data-field="name" type="text" name="item.system.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.armorPlaceholder'}}" style="text-align: left; font-weight: bold; min-width: 240px;"/>
                             <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
                             <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
                             <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
                             <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.kinetic}}</strong></label>
                             <label class="labelWidth-XL flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
-                            <div class="flex-group-right slideShow">
+                            <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
+                                <a class="item-control item-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit"></i></a>
+                            </div>
+                            {{#if item.system.description}}
+                            <div class="flex-group-right slideShow input-xs">
                                 <a><i class="fas fa-plus icon-small"></i></a>
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.system.description}}
-                                    <div class="itemDescription shape3">
-                                        {{item.system.description}}
-                                    </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
+                            {{else}}
+                            <div class="flex-group-right slideShow input-xs icon-hidden">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                            </div>
+                            {{/if}}
+                            <div class="item showMore descriptionContainer" style="padding-bottom: 10px;">
+                                <div class="itemDescription shape3">
+                                    {{item.system.description}}
                                 </div>
                             </div>
                         </div>
                         {{else}}
-                        <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}">
+                        <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                             <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked system.active}}>
-                            <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                            <div class="item-image flex-group-center input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.armorPlaceholder'}}" style="text-align: left; font-weight: bold; min-width: 240px;"/>
                             <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
                             <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
                             <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
                             <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.kinetic}}</strong></label>
                             <label class="labelWidth-XL flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
-                            <div class="flex-group-right slideShow">
+                            <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
+                                <a class="item-control item-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit"></i></a>
+                            </div>
+                            {{#if item.system.description}}
+                            <div class="flex-group-right slideShow input-xs">
                                 <a><i class="fas fa-plus icon-small"></i></a>
                                 <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                             </div>
-                            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                                {{#if item.system.description}}
-                                    <div class="itemDescription shape3">
-                                        {{item.system.description}}
-                                    </div>
-                                {{/if}}
-                                <div class="flexrow flex-between item-controls">
-                                    <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                                    <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
+                            {{else}}
+                            <div class="flex-group-right slideShow input-xs icon-hidden">
+                                <a><i class="fas fa-plus icon-small"></i></a>
+                                <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                            </div>
+                            {{/if}}
+                            <div class="item showMore descriptionContainer" style="padding-bottom: 10px;">
+                                <div class="itemDescription shape3">
+                                    {{item.system.description}}
                                 </div>
                             </div>
                         </div>
@@ -126,24 +136,22 @@
             <div class="itemBackground" style="position: relative; z-index: 2;">
                 <div class="grid grid-2col">
                     {{#each actor.program as |item id|}}
-                    <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}">
+                    <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                         <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                         <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                         <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
                         <input class="input-small sheet-inline-edit" data-field="system.quantity" type="number" name="item.system.quantity" value="{{item.system.quantity}}" placeholder="0"/>
-                        <div class="flex-group-right slideShow">
+                        <div class="flexrow item-controls flex-group-right" style="max-width: 50px; min-width: 50px;">
+                            <a class="item-control item-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit"></i></a>
+                        </div>
+                        <div class="flex-group-right slideShow input-xs">
                             <a><i class="fas fa-plus icon-small"></i></a>
                             <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
                         </div>
-                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                            {{#if item.system.description}}
+                        <div class="item showMore descriptionContainer" style="padding-bottom: 10px;">
                             <div class="itemDescription shape3">
                                 {{item.system.description}}
-                            </div>
-                            {{/if}}
-                            <div class="flexrow flex-between item-controls">
-                                <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                                <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
                             </div>
                         </div>
                     </div>

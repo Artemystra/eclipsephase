@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation } from "../common/common-sheet-functions.js";
 import * as Dice from "../dice.js";
 import itemRoll from "../item/EPitem.js";
 
@@ -396,6 +396,26 @@ export default class EPactorSheet extends ActorSheet {
           consumable.push(item);
         }
         else if (item.type === 'vehicle') {
+          let slotType = itemModel.slotType;
+            switch (slotType){
+              case 'vs':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.vs";
+                break;
+              case 's':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.s";
+                break;
+              case 'n':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.m";
+                break;
+              case 'l':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.l";
+                break;
+              case 'vl':
+                itemModel.slotName = "ep2e.item.vehicle.table.size.vl";
+                break;
+              default:
+                break;
+            }
           itemModel.wt = Math.round(itemModel.dur / 5);
           if (itemModel.type != "animal"){
             itemModel.dr = Math.round(itemModel.dur * 2);
@@ -540,12 +560,35 @@ export default class EPactorSheet extends ActorSheet {
       item.sheet.render(true);
     });
 
-        // Delete Inventory Item
-  html.find('.item-delete').click(async ev => {
-    const li = $(ev.currentTarget).parents(".item");
-    actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
-    li.slideUp(200, () => this.render(false));
-  });
+    // Delete Inventory Item
+    html.find('.item-delete').click(async ev => {
+      let askForOptions = ev.shiftKey;
+
+      if (!askForOptions){
+        const li = $(ev.currentTarget).parents(".item");
+        const itemName = [li.data("itemName")] ? [li.data("itemName")] : null;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete"))+ " " +(itemName?itemName:"");
+        const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";
+        const popUpInfo = "ep2e.actorSheet.popUp.deleteAdditionalInfo";
+
+        let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
+
+        if(popUp.confirm === true){
+          actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
+          li.slideUp(200, () => this.render(false));
+        }
+        else{
+          return
+        }
+
+      }
+      else if (askForOptions){
+        const li = $(ev.currentTarget).parents(".item");
+        actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
+        li.slideUp(200, () => this.render(false));
+      }
+    });
 
 
     // Rollable abilities.
@@ -773,7 +816,7 @@ export default class EPactorSheet extends ActorSheet {
 
   html.find('.restReset').click(async func => {
         const actorWhole = this.actor
-        return actorWhole.update({"system.rest.short1" : false, "system.rest.short2" : false, "system.rest.long" : false});
+        return actorWhole.update({"system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false, "system.rest.long" : false});
   });
 
   html.find('.distribute').click(async func => {
@@ -1142,7 +1185,7 @@ async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, c
   });
 }
 
-//General skill check results
+//Pool usage confirmation check results
 function _poolUsageModifiers(form) {
     return {
         modifier: form.modifier ? form.modifier.value : null

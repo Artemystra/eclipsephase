@@ -4,7 +4,7 @@
         <div class="tooltip">
             <label class="resource-value" style ="font-size: 16px;">{{localize "ep2e.sideCar.currentStatus.headline"}}:</label>
             {{#if actor.system.currentStatus.currentModifiersSum}}
-                <label class="resource-value" style ="font-size: 16px; color: var(--negative);">-{{actor.system.currentStatus.currentModifiersSum}}</label>
+                <label class="resource-value" style ="font-size: 16px; color: var(--negative);">{{actor.system.currentStatus.currentModifiersSum}}</label>
             {{else}}
                 <label class="resource-value" style ="font-size: 16px;">0</label>
             {{/if}}
@@ -40,7 +40,7 @@
                                     <div>
                                         {{#if actor.system.physical.wounds}}
                                             <div class="flexrow alignRight" style="padding-right: 10px;">
-                                                <span class="resource-value">-{{actor.system.currentStatus.woundModifierSum}}</span><br>
+                                                <span class="resource-value">{{actor.system.currentStatus.woundModifierSum}}</span><br>
                                             </div>
                                             {{#if actor.system.currentStatus.ignoreWound}}
                                                 <div style="min-height: 15px"></div>
@@ -50,7 +50,7 @@
                                     <div>
                                         {{#if actor.system.mental.trauma}}
                                             <div class="flexrow alignRight" style="padding-right: 10px;">  
-                                                <span class="resource-value">-{{actor.system.currentStatus.traumaModifierSum}}</span><br>
+                                                <span class="resource-value">{{actor.system.currentStatus.traumaModifierSum}}</span><br>
                                             </div>
                                             {{#if actor.system.currentStatus.ignoreTrauma}}
                                                 <div style="min-height: 15px"></div>
@@ -58,7 +58,7 @@
                                         {{/if}}
                                     </div>
                                     <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  
-                                        <span class="resource-value">-{{actor.system.currentStatus.generalModifierSum}}</span><br>
+                                        <span class="resource-value">{{actor.system.currentStatus.generalModifierSum}}</span><br>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
                                         </div>
                                     {{/if}}
                                     <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  
-                                        <span class="resource-value">-{{actor.system.currentStatus.armorModifierSum}}</span><br>
+                                        <span class="resource-value">{{actor.system.currentStatus.armorModifierSum}}</span><br>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +131,7 @@
                                             </div>
                                         {{/if}}
                                         <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  
-                                            <span class="resource-value">-{{actor.system.currentStatus.encumberanceModifierSum}}</span><br>
+                                            <span class="resource-value">{{actor.system.currentStatus.encumberanceModifierSum}}</span><br>
                                         </div>
                                     </div>
                                 </div>

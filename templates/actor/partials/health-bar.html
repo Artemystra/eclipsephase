@@ -10,6 +10,30 @@
             <input class="input-xs" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
         </div>
         {{#if (eq actor.type "character")}}
+        <!--<div class="tooltip">
+            <div role="healthOverlay">
+                <div class="tooltipTopBorder">
+                    <div class="tooltipTop">
+                        <h3 class="inline" style="max-width: 210;">Geistige Gesundheit</h3>
+                    </div>
+                </div>
+                <div class="mentalHealth">
+                    <div style="padding-bottom: 10px;">
+                        <i class="fa-solid fa-brain" style="font-size: 18px;"></i>
+                        <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
+                    </div>
+                    <div style="padding-bottom: 10px;">
+                        <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
+                        <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
+                    </div>
+                </div>
+                <div class="tooltipBottomBorder">
+                    <div class="tooltipBottom"></div>
+                </div>
+            </div>
+            <i class="fa-solid fa-brain" style="font-size: 18px;"></i>
+            <span><div style="display: inline-block; min-width: 25px;" class="input-xs">{{actor.system.health.mental.value}}</div>/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
+        </div>-->
         <div>
             <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
             <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>

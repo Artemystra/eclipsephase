@@ -131,3 +131,32 @@ export function itemCreate(event,callerobj){
       }
       return callerobj.createEmbeddedDocuments("Item", [itemData]);
     }
+
+export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget) {
+  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+  let deleteButton = game.i18n.localize('ep2e.actorSheet.button.delete');
+  const dialogType = "confirmation"
+  const template = "systems/eclipsephase/templates/chat/pop-up.html";
+  const html = await renderTemplate(template, {popUpHeadline, popUpCopy, dialogType, popUpInfo, popUpTarget});
+
+  return new Promise(resolve => {
+      const data = {
+          title: popUpTitle,
+          content: html,
+          buttons: {
+              cancel: {
+                label: cancelButton,
+                callback: html => resolve ({confirm: false})
+              },
+              normal: {
+                  label: deleteButton,
+                  callback: html => resolve ({confirm: true})
+              }
+          },
+          default: "normal",
+          close: () => resolve ({confirm: false})
+      };
+      let options = {width:250}
+      new Dialog(data, options).render(true);
+  });
+}

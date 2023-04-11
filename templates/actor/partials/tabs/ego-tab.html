@@ -62,29 +62,9 @@
             <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
                 {{#if actor.trait}}
                 {{#each actor.trait as |item id|}}
-                <div class="item flexrow" data-item-id="{{item._id}}"  style="align-items: start; min-width: 100%;">
-                    <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
-                        <i class="far fa-plus-square" style="color: var(--positive);"></i>
-                    </div>
-                    <div class="flexrow alignCenter" style="min-height: 36px;">
-                        <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
-                    </div>
-                    <div class="flexrow flex-group-center slideShow">
-                        <a><i class="fas fa-plus icon-small"></i></a>
-                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                    </div>
-                    <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
-                        {{#if item.system.description}}
-                        <div class="itemDescription shape3" style="min-width: 100%;">
-                            {{item.system.description}}
-                        </div>
-                        {{/if}}
-                        <div class="flexrow flex-between item-controls">
-                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                        </div>
-                    </div>
-                </div>
+                
+                    {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="success" ego=true}}
+
                 {{/each}}
                 {{else}}
                 <div class="flex-group-center">
@@ -103,29 +83,9 @@
             <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
                 {{#if actor.flaw}}
                 {{#each actor.flaw as |item id|}}
-                <div class="item flexrow" data-item-id="{{item._id}}" style="align-items: start; min-width: 100%;">
-                    <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
-                        <i class="far fa-minus-square" style="color: var(--negative);"></i>
-                    </div>
-                    <div class="flexrow alignCenter" style="min-height: 36px;">
-                        <h4 class="item-name noMargin truncate"><strong>{{item.name}}</strong></h4>
-                    </div>
-                    <div class="flexrow flex-group-center slideShow">
-                        <a><i class="fas fa-plus icon-small"></i></a>
-                        <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
-                    </div>
-                    <div class="showMore descriptionContainer flexrow" style="align-items: start;" data-item-id="{{item._id}}">
-                        {{#if item.system.description}}
-                        <div class="itemDescription shape3" style="min-width: 100%;">
-                            {{item.system.description}}
-                        </div>
-                        {{/if}}
-                        <div class="flexrow flex-between item-controls">
-                            <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle"></i></a>
-                            <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit"></i></a>
-                        </div>
-                    </div>
-                </div>
+                
+                    {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="fail" ego=true}}
+
                 {{/each}}
                 {{else}}
                 <div class="flex-group-center">
