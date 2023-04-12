@@ -2,7 +2,7 @@
 <div class="alignCenter">
   <p>{{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{taskName}}</span></p>
   {{#if (eq rolledFrom "psiSleight")}}
-    <p><span class="resource-value">{{sleightName}} </span>{{#if isGM}}<a><i class="fa-regular fa-circle-info moreInfo" data-title="{{sleightName}}" data-resource="{{sleightInfection}}" data-description="{{sleightDescription}}" data-action="{{sleightAction}}" data-duration="{{sleightDuration}}"  data-rolledfrom="{{rolledFrom}}"></i></a>{{/if}}</p>
+    <p><span class="resource-value">{{sleightName}} </span><a class="GMinfo"><i class="fa-regular fa-circle-info moreInfo" data-title="{{sleightName}}" data-resource="{{sleightInfection}}" data-description="{{sleightDescription}}" data-action="{{sleightAction}}" data-duration="{{sleightDuration}}"  data-rolledfrom="{{rolledFrom}}"></i></a></p>
   {{/if}}
   {{#if (eq visibility "private")}}
     <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.private"}} <i class='fas fa-eye-slash'></i></h5>

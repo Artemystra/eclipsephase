@@ -1,8 +1,19 @@
-export async function addChatListeners(html){
-    html.on('click', 'i.moreInfo', gievMore);
+export async function GMvision(html){
+    let GMvision = game.user.isGM
+    let GMinfo = html.find(".GMinfo")
+    
+    if(!GMvision){
+        for (let entry of GMinfo){
+            entry.classList.add("noShow");
+        }
+    }
 }
 
-async function gievMore(event){
+export async function addChatListeners(html){
+    html.on('click', 'i.moreInfo', moreInfo);
+}
+
+async function moreInfo(event){
     const element = event.currentTarget;
     const dataset = element.dataset;
     const template = 'systems/eclipsephase/templates/chat/pop-up.html'
