@@ -195,6 +195,12 @@
       "name": "Chinese",
       "path": "lang/cn.json",
       "flags": {}
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Portuguese (Brazil)",
+      "path": "lang/pt-BR.json",
+      "flags": {}
     }
   ],
   "gridDistance": 2,
