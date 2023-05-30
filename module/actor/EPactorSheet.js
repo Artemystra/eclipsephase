@@ -927,13 +927,12 @@ export default class EPactorSheet extends ActorSheet {
     for (let effectScan of allEffects){
       if (effectScan.origin){
 
-        //Replaces fromUuid for now. Need to look into this at a later
+        /*Woraround fromUuid. Currently not needed - just in case fromUuid changes in the future/will become deactivated during an unstable dev release
         let Uuid = (effectScan.origin).split(".");
         let parentItem = actor.items.get(Uuid[3]);
-
-        /*This generates a problem with legacy characters and do currently need a revamp
-        let parentItem = await fromUuid(effectScan.origin)
         */
+      
+        let parentItem = await fromUuid(effectScan.origin)
 
         if (parentItem.system.boundTo){
 

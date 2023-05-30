@@ -1,5 +1,3 @@
-2023/05/30-17:22:20.923 7aa8 Recovering log #3
-2023/05/30-17:22:20.925 7aa8 Level-0 table #5: started
-2023/05/30-17:22:20.932 7aa8 Level-0 table #5: 170910 bytes OK
-2023/05/30-17:22:20.945 7aa8 Delete type=0 #3
-2023/05/30-17:22:20.946 7aa8 Delete type=3 #2
+2023/05/30-17:35:25.917 8ca0 Recovering log #6
+2023/05/30-17:35:25.922 8ca0 Delete type=0 #6
+2023/05/30-17:35:25.922 8ca0 Delete type=3 #4
