@@ -1,0 +1,1038 @@
+{
+  "TYPES.Actor.character": "Personagem do Jogador",
+  "TYPES.Actor.npc": "Personagem Não Jogador",
+  "TYPES.Actor.goon": "Ameaça",
+  "TYPES.Item.gear": "Equipamento",
+  "TYPES.Item.rangedWeapon": "Arma de Distância",
+  "TYPES.Item.ccWeapon": "Arma de Combate Próximo",
+  "TYPES.Item.armor": "Armadura",
+  "TYPES.Item.grenade": "Granada",
+  "TYPES.Item.trait": "Traço",
+  "TYPES.Item.flaw": "Falha",
+  "TYPES.Item.morphtrait": "Traço de Morfo",
+  "TYPES.Item.morphflaw": "Falha de Morfo",
+  "TYPES.Item.ware": "Ware",
+  "TYPES.Item.aspect": "Truque Psi",
+  "TYPES.Item.program": "Programa",
+  "TYPES.Item.specialskill": "Perícia Especial",
+  "TYPES.Item.knowskill": "Perícia de Saber",
+  "TYPES.Item.vehicle": "Veículo",
+  "TYPES.Item.drug": "Droga",
+  "ep2e": {
+    "actorSheet": {
+      "placeholders": {
+        "actorName": "Nome"
+      },
+      "aptitudes": {
+        "headline": "Aptidões",
+        "cognition": "COG",
+        "intuition": "INT",
+        "reflexes": "REF",
+        "savvy": "SAG",
+        "somatics": "SOM",
+        "willpower": "VON",
+        "cog": "Cognição",
+        "int": "Intuição",
+        "ref": "Reflexos",
+        "sav": "Sagacidade",
+        "som": "Somática",
+        "wil": "Vontade"
+      },
+      "leftTabs": {
+        "egoTab": "Ego",
+        "idTab": "ID",
+        "museTab": "Musa"
+      },
+      "rightTabs": {
+        "skillsTab": "Perícias",
+        "morphTab": "Morfo",
+        "inventoryTab": "Inventário",
+        "peripheralsTab": "Periféricos",
+        "psiTab": "Psi",
+        "effectsTab": "Efeitos"
+      },
+      "button": {
+        "edit": "Editar",
+        "delete": "Excluir",
+        "close": "Fechar",
+        "confirm": "Confirmar",
+        "select": "Selecionar",
+        "reset": "Redefinir",
+        "showDetails": "Mostrar Detalhes",
+        "hideDetails": "Ocultar detalhes"
+      },
+      "dialogHeadline": {
+        "warning": "Aviso",
+        "error": "Erro",
+        "success": "Sucesso",
+        "confirmationNeeded": "Confirmação Necessária",
+        "information": "Informação"
+      },
+      "popUp": {
+        "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
+        "autoBotCopyGeneral": "<p><b>Aviso:</b> Isto irá redefinir todas as perícias do veículo/bot para os valores de perícia da IA padrão do bot. Isso sobrescreverá quaisquer mudanças que você tenha feito em suas perícias.</p><p><b>Selecione o tipo do seu veículo:</b></p>",
+        "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Segure SHIFT enquanto pressiona o botão 'Auto-Bot'.</p></i>"
+      }
+    },
+    "healthbar": {
+      "tooltip": {
+        "durdr": "Dur/GD",
+        "woundswt": "Ferimentos/(LF)",
+        "stressluc": "Estresse/Luc",
+        "traumatt": "Trauma/(LT)",
+        "initiative": "Iniciativa",
+        "threat": "Ameaça",
+        "stressTest": "Teste de Estresse",
+        "iniMod": "Mod Ini"
+      }
+    },
+    "ego": {
+      "general": {
+        "headline": "Geral",
+        "egoFlexLabel": "Flex do Ego",
+        "origin": {
+          "headline": "Origem",
+          "anarchist": "Anarquista",
+          "argonaut": "Argonauta",
+          "barsoomian": "Barsoomiano",
+          "brinker": "Marginal",
+          "criminal": "Criminoso",
+          "extropian": "Extropiano",
+          "hypercorps": "Hipercorp",
+          "jovian": "Joviano",
+          "lunar": "Lunar/Orbital",
+          "mercurial": "Mercurial",
+          "reclaimer": "Reivindicador",
+          "scum": "Ralé",
+          "socialite": "Socialite",
+          "titanian": "Titaniano",
+          "venusian": "Venusiano",
+          "regional": "Regional"
+        },
+        "sex": {
+          "headline": "Sexo",
+          "male": "Masculino",
+          "female": "Feminino",
+          "inter": "Intersexo",
+          "dyadic": "Diádico"
+        },
+        "gender": {
+          "headline": "Gênero",
+          "cis": "Cisgênero",
+          "trans": "Transgênero",
+          "nonBi": "Não Binário",
+          "fluid": "Gênero Fluido",
+          "aGen": "Agênero",
+          "biGen": "Bigênero",
+          "polGen": "Poligênero",
+          "neu": "Neutrois",
+          "genAp": "Apagênero",
+          "inter": "Intergênero",
+          "demi": "Demigênero",
+          "grey": "Gênero Cinza",
+          "apora": "Aporagênero",
+          "mav": "Maverique",
+          "novi": "Novigênero"
+        }
+      },
+      "motivations": {
+        "headline": "Motivações",
+        "placeholder": "ex.: Alcançar o horizonte"
+      },
+      "languages": {
+        "headline": "Idiomas",
+        "placeholder": "ex.: hindi, chinês, inglês"
+      },
+      "traits": {
+        "headline": "Traços",
+        "noItems": "Você não possui traços"
+      },
+      "flaws": {
+        "headline": "Falhas",
+        "noItems": "Você não possui falhas"
+      },
+      "personality": {
+        "headline": "Personalidade"
+      }
+    },
+    "id": {
+      "headline": "ID Atual",
+      "nameLabel": "Nome",
+      "namePlaceholder": "Nome Falso",
+      "repType": {
+        "@rep": "@-Rep",
+        "crep": "C-Rep",
+        "frep": "F-Rep",
+        "grep": "G-Rep",
+        "irep": "I-Rep",
+        "rrep": "R-Rep",
+        "xrep": "X-Rep"
+      },
+      "complexity": {
+        "min": "Men",
+        "mod": "Mod",
+        "maj": "Mai"
+      },
+      "idSelector": {
+        "id1": "ID1",
+        "id2": "ID2",
+        "id3": "ID3",
+        "id4": "ID4",
+        "id5": "ID5",
+        "id6": "ID6"
+      }
+    },
+    "muse": {
+      "headline": "Musa (Infomações)",
+      "nameLabel": "Nome",
+      "namePlaceholder": "ex.: Divertida",
+      "aboutLabel": "Sobre"
+    },
+    "skills": {
+      "placeholders": {
+        "specialization": "Especialização",
+        "additionalSpec": "Sem Esp"
+      },
+      "restingMenu": {
+        "headline": "Recuperar Paradas",
+        "shortRest": "Descanso Curto:",
+        "longRest": "Descanso Longo:",
+        "labelInsight": "Inspiração",
+        "labelVigor": "Vigor",
+        "labelMoxie": "Manha",
+        "labelFlex": "Flex",
+        "messages": {
+          "pointsAvailable": "pontos de parada restantes para distribuir",
+          "pointsOverspent": "Você excedeu o gasto em sua rolagem por",
+          "distributionDone": "Pronto! Não restam pontos de parada"
+        },
+        "restInfo": {
+          "headline": "Descanso",
+          "subheadline1": "Geral",
+          "copy1": "Você precisa usar uma ação 'descanso' para recuperar as paradas. Escolha o tipo de descanso que você deseja usar clicando na caixa de seleção ao lado. Você tem 1 descanso longo e 2 descansos curtos por ciclo de 24 horas de tempo de jogo.",
+          "subheadline2": "Descanso Curto",
+          "copy2": "Um descanso curto leva cerca de 10 minutos para o transumano comum e exige que ele não faça nada além de descansar, conversar e repousar. Isso exige biomods. Toscos levam até 1 hora.<p/><label class='resource-value'>Um descanso curto recupera 1d6 pontos de parada</label>",
+          "subheadline3": "Descanso Longo",
+          "copy3": "Uma pessoa com biomods leva cerca de 4 horas para um longo descanso. Isso exige que eles não façam nada além de descansar, conversar e repousar. Toscos precisam de 8 horas para isso.<p/><label class='resource-value'>Um descanso longo recupera todos os seus pontos de parada</label>"
+        },
+        "button": {
+          "resetRest": "Reiniciar Descansos",
+          "distribute": "Distribuir"
+        }
+      },
+      "insightSkills": {
+        "insightHeadline": "Perícias de Inspiração",
+        "infosec": "Infoseg",
+        "interface": "Interface",
+        "perceive": "Percepção",
+        "program": "Programação",
+        "research": "Pesquisa",
+        "survival": "Sobrevivência",
+        "poolHeadline": "Inspiração",
+        "poolSubheadline1": "Tomar a Iniciativa",
+        "poolCopy1": "Agir primeiro em um turno de ação se você estiver fazendo apenas ações mentais ou da mesh e nenhum movimento físico. Se vários personagens escolherem essa opção, eles agem em ordem de Iniciativa antes de todos os outros.",
+        "poolSubheadline2": "Ação Extra",
+        "poolCopy2": "Fazer uma ação complexa mental ou da mesh extra (ou 2 ações rápidas) em um turno de ação. Essa ação só pode ser feita depois que todos já agiram. Se vários personagens escolherem essa opção, eles agem em ordem de Iniciativa depois que todos os outros tiveram seus turnos.",
+        "poolSubheadline3": "Adquirir uma Pista",
+        "poolCopy3": "Ganhar uma dica ou pista através de investigação, pesquisa ou análise dos fatos disponíveis, sem precisar fazer um teste."
+      },
+      "vigorSkills": {
+        "vigorHeadline": "Perícias de Vigor",
+        "athletics": "Atletismo",
+        "fray": "Evasão",
+        "free fall": "Queda Livre",
+        "guns": "Tiro",
+        "infiltrate": "Infiltração",
+        "melee": "Luta",
+        "poolHeadline": "Vigor",
+        "poolSubheadline1": "Tomar a Iniciativa",
+        "poolCopy1": "Agir primeiro em um turno de ação. Se vários personagens escolherem essa opção, eles agem em ordem de Iniciativa antes de todos os outros.",
+        "poolSubheadline2": "Ação Extra",
+        "poolCopy2": "Fazer uma ação complexa física extra (ou 2 ações rápidas) em um turno de ação. Essa ação só pode ser feita depois que todos já agiram. Se vários personagens escolherem essa opção, eles agem em ordem de Iniciativa depois que todos os outros tiveram seus turnos.",
+        "poolSubheadline3": "Ignorar Ferimento",
+        "poolCopy3": "Ignorar os efeitos de 1 ferimento por 24 horas ou até a sua próxima recarga."
+      },
+      "moxieSkills": {
+        "moxieHeadline": "Perícias de Manha",
+        "deceive": "Enganação",
+        "kinesics": "Cinésica",
+        "persuade": "Persuasão",
+        "provoke": "Provocação",
+        "psi": "Psi",
+        "poolHeadline": "Manha",
+        "poolSubheadline1": "Ignorar Trauma",
+        "poolCopy1": "Ignorar os efeitos de 1 trauma por 24 horas ou até a sua próxima recarga.",
+        "poolSubheadline2": "Renovar Rep",
+        "poolCopy2": "Restaurar favores de rep na rede a um custo de 1 ponto para um favor Menor e 2 pontos para um favor Moderado. Favores Maiores não podem ser renovados desta forma.",
+        "poolSubheadline3": "Adquirir uma Pista",
+        "poolCopy3": "Ganhar uma dica ou pista coletando informações através de interações sociais, sem precisar fazer um teste.",
+        "poolSubheadline4": "Controlar Sua Infecção",
+        "poolCopy4": "Evitar fazer um Teste de Infeção quando usar um truque psi (apenas assincros).",
+        "poolSubheadline5": "Negar uma Gafe",
+        "poolCopy5": "Ignorar uma gafe social de um jogador, que o personagem não faria."
+      },
+      "flex": {
+        "flexHeadline": "Flex",
+        "poolHeadline": "Flex",
+        "poolSubheadline1": "Introduzir PNJ",
+        "poolCopy1": "Um PNJ novo ou existente entra na cena. A presença dele deve ser plausível. Você pode definir um aspecto deste PNJ: seu morfo, fidelidade faccional, uma perícia de destaque, um traço específico, etc. O MJ determina os outros detalhes.",
+        "poolSubheadline2": "Introduzir um Item",
+        "poolCopy2": "Um item previamente despercebido é adicionado à cena. A presença dele deve ser plausível. O item não pode ser ofensivo (nenhuma arma) e deve ser de Complexidade Menor (nem Raro e nem Restrito). Pode ser uma ferramenta útil, um equipamento necessário, ou até mesmo uma pista. O MJ determina sua localização na cena e a natureza de quaisquer pistas.",
+        "poolSubheadline3": "Definir o Ambiente",
+        "poolCopy3": "Você pode introduzir um fator ambiental à cena. A presença dele deve ser plausível. Ele deverá fornecer um novo detalhe que não altere drasticamente a cena. Exemplos incluem esconderijos, coberturas, distrações, abrigos ou elementos exploráveis, como uma escada ou janela.",
+        "poolSubheadline4": "Definir uma Relação",
+        "poolCopy4": "Você pode introduzir uma relação nova e plausível entre o seu personagem e um PNJ existente. Esta deve ser uma conexão distante/menor em vez de um ligação íntima/séria. Por exemplo, vocês podem ter um amigo comum, uma história compartilhada, ou rivalidade antiga mas pequena. Você pode definir os aspectos básicos, mas o MJ determina os detalhes e a atitude do PNJ em relação ao seu personagem."
+      },
+      "knowSkills": {
+        "knowHeadline": "Perícias de Saber",
+        "addfirst": "Adicionar primeira Perícia de Saber"
+      },
+      "exoticSkills": {
+        "exoticHeadline": "Perícias Exóticas",
+        "addfirst": "Adicionar primeira Perícia Exótica"
+      },
+      "additionalSkills": {
+        "additionalHeadline": "Perícias Adicionais",
+        "placeholder": "Nome da Perícia",
+        "electronics": "Eletrônica",
+        "accounting": "Contabilidade",
+        "psychology": "Psicologia",
+        "Psychosurgery": "Psicocirurgia"
+      },
+      "pool": {
+        "label": "parada",
+        "dialogHeadline": "Usar Parada",
+        "dialogCopy": "Você está prestes a usar 1 de suas paradas para receber o seguinte efeito:",
+        "infoSubheadline": "Informação",
+        "inputSubheadline": "Dados necessários",
+        "chatHeadline": "Usou uma Parada",
+        "chatEffect": "Efeito Recebido:",
+        "considerResting": "Considere usar uma ação de 'descanso'",
+        "numberWounds": "Ferimentos para Ignorar",
+        "numberTrauma": "Traumas para Ignorar",
+        "repSize": "Tamanho do Favor"
+      },
+      "addSkill": "Adicionar Perícia",
+      "chooseAptitude": "Escolher Apt"
+    },
+    "morph": {
+      "currentMorph": {
+        "headline": "Morfo Atual",
+        "sleevedLabel": "Encapado",
+        "morphPlaceholder": "Nome do morfo",
+        "morphType": {
+          "label": "Tipo",
+          "synth": "Sintético",
+          "bio": "Biológico",
+          "info": "Infomorfo"
+        },
+        "durabilityLabel": "Durabilidade",
+        "movement": {
+          "label1": "Movimento 1",
+          "label2": "Movimento 2",
+          "speed": "Velocidade",
+          "type": "tipo"
+        },
+        "movementTypes": {
+          "none": "-Selecionar-",
+          "boat": "Barca",
+          "hopper": "Pulo",
+          "hover": "Flutuação",
+          "ionic": "Iônico",
+          "microlight": "Microleve",
+          "roller": "Rolagem",
+          "rotor": "Rotor",
+          "snake": "Serpente",
+          "submarine": "Submerso",
+          "swimmer": "Nado",
+          "thrustvector": "Empuxo Vetorial",
+          "tracked": "Esteira",
+          "walker": "Marcha",
+          "wheeled": "Rodas",
+          "winged": "Asas"
+        },
+        "insightLabel": "Inspiração",
+        "moxieLabel": "Manha",
+        "vigorLabel": "Vigor",
+        "flexLabel": "Flex",
+        "morphList": {
+          "placeholder": "Novo Morfo"
+        }
+      },
+      "traitsLabel": "Traços do Morfo",
+      "wareLabel": "Ware do Morfo",
+      "noMorphTraits": "Este Morfo não possui traços",
+      "noMorphWare": "Seu Morfo é Tosco"
+    },
+    "inventory": {
+      "armorLabel": "Armadura",
+      "armorPlaceholder": "Sem Nome da Armadura",
+      "rangedLabel": "Armas de Distância",
+      "rangedPlaceholder": "Sem Nome da Arma",
+      "ccLabel": "Armas de Combate Próximo",
+      "ccPlaceholder": "Sem Nome da Arma",
+      "gearLabel": "Equipamentos",
+      "consumablesLabel": "Consumíveis",
+      "programs": {
+        "label": "Apps Carregados",
+        "copy": "Apps são preparados ao analisar a rede alvo por vulnerabilidades escrevendo trechos de código ajustados para elas. Portanto, <u>eles não podem ser facilmente encontrados ou evitados</u> e funcionam em praticamente qualquer situação. <u>Três apps do mesmo tipo podem ser usados para afetar todos os dispositivos na rede</u> ao mesmo tempo. Embora isto seja um ataque bastante óbvio, até mesmo isto leva algum tempo e um bom hacker para encontrar a fonte de tal ato malicioso.</i>"
+      },
+      "npcInventory": {
+        "quickAddRanged": "Adição Rápida de Distância",
+        "noRanged": "Clique para <label class='resource-value'>adicionar rapidamente uma arma de distância</label> ou arraste e solte-a do <label class='resource-value'>compêndio</label><i class='fas fa-atlas'></i>",
+        "quickAddMelee": "Adição Rápida de Luta",
+        "noMelee": "Clique para <label class='resource-value'>adicionar rapidamente uma arma de luta</label> ou arraste e solte-a do <label class='resource-value'>compêndio</label><i class='fas fa-atlas'></i>",
+        "quickAddArmor": "Adição Rápida de Armadura",
+        "armorEnergy": "Energética",
+        "armorKinetic": "Cinética",
+        "noArmor": "Não tem armadura",
+        "traitsAndWareHeadline": "Traços & Ware",
+        "armorAndGearHeadline": "Armadura & Equipamentos",
+        "traitsLabel": "Traços do Morfo",
+        "noTraitsCopy": "Nenhum traço de morfo presente",
+        "flawsLabel": "Falhas do Morfo",
+        "noFlawsCopy": "Nenhuma falha de morfo presente",
+        "wareLabel": "Ware",
+        "noWareCopy": "Nenhum ware instalado",
+        "gearLabel": "Equipamentos",
+        "noGearCopy": "Nenhum equipamento especial"
+      },
+      "noGear": {
+        "headline": "Nenhum equipamento presente",
+        "copy": "Você ainda não possui nenhum equipamento. <label class='resource-value'>Para adicionar equipamentos ao seu inventário, use o <i class='fas fa-atlas'></i></label>COMPÊNDIO<label class='resource-value'> ou crie novos <i class='fas fa-suitcase'></i></label>ITENS<p><i style='font-size: 12px; margin-bottom: 10px;'>Encontre estas opções no canto superior direito do Foundry ou peça para o MJ lhe fornecer itens.</i>"
+      }
+    },
+    "peripherals": {
+      "pool": {
+        "ins": "Ins",
+        "vig": "Vig",
+        "mox": "Man",
+        "flex": "Flex"
+      },
+      "table": {
+        "passengers": "Passageiros",
+        "armor": "Armadura",
+        "woundThreshold": "LF",
+        "damageDurability": "Dano/Dur",
+        "deathRating": "GD",
+        "movement": "Movimento",
+        "size": "Tamanho"
+      },
+      "modPlaceholder": "Sem modificações",
+      "skillsHeadline": "Perícias"
+    },
+    "psi": {
+      "infectionHeadline": "Tipo de Infecção",
+      "ratingLabel": "Grau de Infecção",
+      "strainPlaceholder": "Nome da Subcepa",
+      "descriptionPlaceholder": "Descreva seu monstro interior",
+      "gammaHeadline": "Truques Gama",
+      "chiHeadline": "Truques Chi",
+      "autoClose": "Fechar Detalhes Automaticamente",
+      "strain": {
+        "none": "-Selecionar-",
+        "architect": "A Arquiteta",
+        "beast": "A Besta",
+        "haunter": "A Assombração",
+        "stranger": "A Estranha",
+        "xenomorph": "A Xenomorfa",
+        "custom": "A Personalizada"
+      },
+      "effect": {
+        "physicalDamage": "Dano Físico:",
+        "takeDamage": "Receba 1d6 de dano",
+        "frenzy": "Frenesi",
+        "hallucination": "Alucinação",
+        "other": "Outro",
+        "enhancedBehaviour": {
+          "label": "Comportamento Acentuado:",
+          "arrogance": "Arrogância",
+          "curiosity": "Curiosidade",
+          "callouseness": "Frieza",
+          "ruthlessness": "Implacabilidade",
+          "aggression": "Agressão",
+          "arousal": "Excitação",
+          "gluttony": "Gula",
+          "riskTaking": "Temeridade",
+          "avoidance": "Evitação",
+          "mistrust": "Desconfiança",
+          "denial": "Negação",
+          "nihilism": "Niilismo",
+          "unsettlingMannerisms": "Maneirismos Perturbadores",
+          "deceit": "Falsidade",
+          "selfSabotage": "Autossabotagem",
+          "cruelty": "Crueldade",
+          "spite": "Rancor",
+          "nonVerbalCommunication": "Comunicação Não Verbal",
+          "cliquishness": "Exclusivismo",
+          "grooming": "Asseio",
+          "socialize": "Socialização"
+        },
+        "restrictedBehaviour": {
+          "label": "Comportamento Restrito:",
+          "relaxation": "Relaxamento",
+          "remorse": "Remorso",
+          "empathy": "Empatia",
+          "takeResponsibility": "Assumir Responsabilidade"
+        },
+        "motivation": {
+          "label": "Motivação:",
+          "hoard": "Acumular",
+          "innerWorkings": "Expor o Funcionamento Interno",
+          "create": "Criar",
+          "advancedTech": "Adquirir Tecnologia Avançada",
+          "discardTies": "Descartar Laços Emocionais",
+          "discoverUnknown": "Descobrir o Desconhecido",
+          "repurpose": "Readaptar",
+          "uncoverSecrets": "Descobrir Segredos",
+          "domination": "Dominação",
+          "noQuarter": "Sem Piedade",
+          "cannibalism": "Canibalismo",
+          "claimTerritory": "Reivindicar Território",
+          "eradicate": "Erradicar Inimigos",
+          "instillFear": "Causar Temor",
+          "stalkPrey": "Espreitar Presas",
+          "cutTies": "Cortar Laços",
+          "isolation": "Isolamento",
+          "crushHope": "Matar a Esperança",
+          "hiddenTruths": "Expor Verdades Ocultas",
+          "releaseFromMisery": "Liberar os Outros do Sofrimento",
+          "shakeConfidence": "Abalar a Confiança Coletiva",
+          "follPlans": "Frustrar Planos",
+          "manipulation": "Manipulação",
+          "testLimits": "Testar os Limites",
+          "betrayal": "Traição",
+          "covertOpponent": "Converter Oponentes",
+          "grandScheme": "Executar Grandes Esquemas",
+          "mislead": "Enganar os Outros",
+          "twistTruth": "Distorcer a Verdade",
+          "transform": "Transformar o Ambiente",
+          "control": "Controle Territorial",
+          "trueForm": "Manifestar a Forma Verdadeira",
+          "eatTheWeak": "Comer os Fracos",
+          "establishColony": "Estabelecer Colônia",
+          "hibernate": "Hibernar",
+          "molt": "Trocar de Pele",
+          "playWithPrey": "Brincar com a Presa",
+          "protectTribe": "Proteger a Tribo"
+        }
+      }
+    },
+    "sideCar": {
+      "moreToggle": "Mais",
+      "lessToggle": "Menos",
+      "currentStatus": {
+        "headline": "Modificadores Atuais",
+        "modBreakdown": "Detalhes dos Mods",
+        "generalModifiers": "Modificadores Gerais",
+        "armorModifiers": "Sobrecarga de Armadura",
+        "gearModifiers": "Sobrecarga de Equipamentos",
+        "noModifiersSubHeader": "Nenhum modificador presente",
+        "noModifiersCopy": "Sempre que você receber quaisquer modificadores negativos enquanto exploram o mundo, você vai encontrá-los aqui. Logo mais nos veremos...",
+        "statuses": {
+          "wounded": "Ferimento",
+          "woundsIgnored": "Ferimento(s) Ignorado(s)",
+          "traumatized": "Trauma",
+          "traumasIgnored": "Trauma(s) Ignorado(s)",
+          "layersOfArmor": "camadas de Armadura",
+          "somExceeded": "VA excede SOM",
+          "weaponsExceeded": "Armas demais",
+          "consumablesExceeded": "Consumíveis demais",
+          "gearExceeded": "Equipamentos demais",
+          "bulkyItem": "Item Volumoso"
+        }
+      },
+      "armor": {
+        "headline": "Armadura",
+        "noArmorSubheadline": "Nenhuma Armadura Equipada",
+        "noArmorCopy": "Você não está usando armadura",
+        "armorSubheadline": "Armadura Acumulada",
+        "energy": "Energética",
+        "kinetic": "Cinética",
+        "concealWarning": "Não é ocultável enquanto > 11",
+        "encumberanceWarning": "Incapaz de se mover enquanto > Dur",
+        "armorCountSubheadline": "Peças de Armadura ativas em você",
+        "mainArmorLabel": "Armadura Principal",
+        "additionalArmorLabel": "Armadura Adicional",
+        "cumulativeMalusLabel": "Penalidade por Acumulação",
+        "mainArmorMalusCopy": "Para cada armadura principal adicional um modificador de -20 será adicionado em todas as suas ações.",
+        "additionalArmorMalusCopy": "Armaduras adicionais podem ser usadas em camadas sem nenhum modificador. Isso ainda conta para outros modificadores de armadura.",
+        "exceedingSomLabel": "Excedendo Somática",
+        "exceedingSomCopy": "Se qualquer VA individual (cinética OU energética) exceder sua SOM, você recebe mais -20 em todas as rolagens.",
+        "armorUsageDescription": "Para ativar ou desativar armadura adicionais/diferentes, vá para a Aba Inventário. Você pode adicionar armadura arrastando & soltando-a dos compêndios ou de qualquer outra coleção de itens disponível."
+      },
+      "ranged": {
+        "headline": "Combate de Distância",
+        "noRangedSubheadline": "Nenhuma Arma Equipada"
+      },
+      "melee": {
+        "headline": "Combate Próximo",
+        "noMeleeSubheadline": "Nenhuma Arma Equipada"
+      },
+      "gear": {
+        "headline": "Equipamento Especial",
+        "noGearSubheadline": "Nenhum Equipado"
+      },
+      "consumables": {
+        "headline": "Consumíveis",
+        "noConsumablesSubheadline": "Nenhum Equipado"
+      }
+    },
+    "item": {
+      "general": {
+        "tabs": {
+          "detailsTab": "Detalhes do Item",
+          "effectsTab": "Efeitos"
+        },
+        "table": {
+          "cost": {
+            "label": "Custo",
+            "minor": "Menor",
+            "moderate": "Moderado",
+            "major": "Maior",
+            "rare": "Raro"
+          },
+          "slot": {
+            "label": "Espaço",
+            "digital": "Digital",
+            "consumable": "Consumível",
+            "accessory": "Acessório",
+            "bulky": "Volumoso",
+            "notMobile": "Não Móvel"
+          },
+          "description": "Descrição",
+          "descriptionPlaceholder": "Adicione uma descrição"
+        }
+      },
+      "armor": {
+        "table": {
+          "energy": "Energética",
+          "kinetic": "Cinética",
+          "type": {
+            "label": "Tipo de Armadura",
+            "main": "Armadura Principal",
+            "additional": "Armadura Adicional"
+          }
+        }
+      },
+      "aspect": {
+        "table": {
+          "type": {
+            "label": "Tipo Psi",
+            "gamma": "Gama",
+            "chi": "Qui",
+            "epsilon": "Épsilon"
+          },
+          "action": {
+            "label": "Ação",
+            "quick": "Rápida",
+            "task": "Tarefa",
+            "complex": "Complexa"
+          },
+          "duration": {
+            "label": "Duração",
+            "instant": "Instantânea",
+            "action": "Turnos de Ação",
+            "minutes": "Minutos",
+            "hours": "Horas",
+            "sustained": "Sustentada"
+          },
+          "modifierLabel": "Modificador de Infecção"
+        }
+      },
+      "weapon": {
+        "table": {
+          "range": "Alcance",
+          "maxAmmo": "Munição Máxima",
+          "damageValue": "VD",
+          "effectArea": "Área de Efeito",
+          "armorUsed": {
+            "label": "Armadura Utilizada",
+            "none": "Nenhuma",
+            "kinetic": "Cinética",
+            "energy": "Energética"
+          },
+          "firingMode": {
+            "label": "Modo de Disparo",
+            "ss": "TU",
+            "sa": "SA",
+            "saBF": "SA/DR",
+            "bfFA": "DR/TA",
+            "saBFfa": "SA/DR/TA"
+          },
+          "slot": {
+            "label": "Espaço",
+            "integrated": "Integrado",
+            "sidearm": "Secundária",
+            "oneHanded": "Uma Mão",
+            "twoHanded": "Duas Mãos",
+            "bulky": "Volumoso"
+          }
+        }
+      },
+      "drug": {
+        "table": {
+          "duration": "Duração",
+          "addictionModifier": "Mod de Vício",
+          "addictionType": "Tipo de Vício",
+          "applicationVectors": {
+            "headline": "Vetores de Aplicação",
+            "dermalLabel": "Dérmico",
+            "inhalationLabel": "Inalação",
+            "injectionLabel": "Injeção",
+            "oralLabel": "Oral"
+          },
+          "category": {
+            "label": "Categoria",
+            "cognitive": "Droga Cognitiva",
+            "combat": "Droga de Combate",
+            "health": "Droga de Saúde",
+            "nano": "Nanodroga",
+            "narco": "Narcoalgoritmo",
+            "petals": "Pétala",
+            "psi": "Droga Psi",
+            "rec": "Recreativa",
+            "social": "Droga Social",
+            "toxins": "Toxina",
+            "nanotox": "Nanotoxina"
+          },
+          "type": {
+            "label": "Tipo de Droga",
+            "biochem": "Bioquímica",
+            "nano": "Nano",
+            "electronic": "Eletrônica"
+          }
+        }
+      },
+      "additionalSkill": {
+        "table": {
+          "nameLabel": "Nome",
+          "valueLabel": "Valor",
+          "aptitudeLabel": "Aptidão",
+          "specLabel": "Especialização",
+          "defaultKnowLabel": "Saber: ",
+          "defaultMedicineLabel": "Medicina: ",
+          "defaultHardwareLabel": "Hardware: ",
+          "defaultPilotLabel": "Pilotagem: "
+        }
+      },
+      "program": {
+        "table": {
+          "level": {
+            "label": "Nível",
+            "intruder": "Invasor",
+            "user": "Usuário",
+            "admin": "Administrador",
+            "owner": "Proprietário"
+          }
+        }
+      },
+      "vehicle": {
+        "autoBot": "Adicionar IA",
+        "skillFieldDefault": "[área apropriada]",
+        "table": {
+          "initiative": "Inic",
+          "threatValue": "NA",
+          "durability": "DUR",
+          "movement": "Mov",
+          "skillsHeadline": "Perícias",
+          "habitat": {
+            "none": "-Selecionar-",
+            "ground": "Veículos Terrestres",
+            "air": "Aeronaves",
+            "space": "Espaçonaves",
+            "nautical": "Veículos Náuticos",
+            "aerospace": "Aeroespacial"
+          },
+          "type": {
+            "label": "Tipo",
+            "robot": "Robô",
+            "vehicle": "Veículo",
+            "morph": "Morfo",
+            "animal": "Animal Inteligente"
+          },
+          "size": {
+            "label": "Tamanho",
+            "vs": "Muito Pequeno",
+            "s": "Pequeno",
+            "m": "Médio",
+            "l": "Grande",
+            "vl": "Muito Grande"
+          }
+        }
+      },
+      "ware": {
+        "table": {
+          "type": {
+            "label": "Tipo de Ware",
+            "b": "B",
+            "bch": "BCH",
+            "bh": "BH",
+            "bhm": "BHM",
+            "bm": "BM",
+            "c": "C",
+            "ch": "CH",
+            "chn": "CHN",
+            "chm": "CHM",
+            "h": "H",
+            "hn": "HN",
+            "hmn": "HMN",
+            "n": "N",
+            "nh": "NH",
+            "mn": "MN"
+          }
+        }
+      }
+    },
+    "roll": {
+      "dialog": {
+        "generalModHeadline": "Modificadores Gerais",
+        "attackerHeadline": "Modificadores do Atacante",
+        "defenderHeadline": "Modificadores do Defensor",
+        "frayTypeHeadline": "Tipo de Evasão",
+        "dodgeRangedLabel": "Esquiva de Distância",
+        "infectionHeadline": "Infecção",
+        "autoPush": "Seleção do Auto Forçamento",
+        "baseCostLabel": "Custo base",
+        "push": {
+          "label": "Forçamento",
+          "none": "-Selecionar-",
+          "range": "Alcance",
+          "effect": "Efeito",
+          "power": "Poder",
+          "penetration": "Penetração",
+          "duration": "Duração",
+          "target": "Alvo Adicional",
+          "infectionDamage": "A Infecção te causa dano de",
+          "infectionInfluence": "A Infecção te influencia",
+          "infectionTries": "A Infecção amplia o controle",
+          "effectReceived": "Efeito recebido"
+        },
+        "ignoreInfection": "Ignorar Infecção",
+        "usePool": "Usar",
+        "globalModLabel": "Mod Global",
+        "noSpecLabel": "Sem Especialização",
+        "noPool": "Nenhuma parada restante",
+        "useThreat": "Usar Ameaça (+20)",
+        "calledShotLabel": "Ataque Preciso (-10)",
+        "title": {
+          "guns": "Teste de Tiro",
+          "melee": "Teste de Luta",
+          "reputation": "Teste de Reputação",
+          "damageRoll": "Teste de Dano",
+          "swap": "Trocar Resultado",
+          "raise": "Elevar Resultado",
+          "talentCheck": "Teste"
+        },
+        "button": {
+          "roll": "Rolar",
+          "cancel": "Cancelar",
+          "useSelection": "Usar esta Seleção"
+        },
+        "reputationMode": {
+          "headline": "Modo",
+          "trivial": "Trivial",
+          "minor": "Menor",
+          "moderate": "Moderado",
+          "major": "Maior"
+        },
+        "ranged": {
+          "attacker": {
+            "smartLinkLabel": "Ligação Inteligente (-10 se nenhuma)",
+            "superiorPosition": "Posição Vantajosa (+20)",
+            "inCoverLabel": "Encoberto (-10)",
+            "isRunningLabel": "Correndo (-20)",
+            "inMeleeLabel": "Lutando (-10)",
+            "fireMode": {
+              "label": "Modo de Disparo",
+              "single": "Tiro Único",
+              "burst": "Rajada Estreita (+1d10)",
+              "fullAuto": "Automático Estreito (+2d10)",
+              "wBurst": "Rajada Larga (+10 Acerto)",
+              "wFullAuto": "Automático Largo (+30 Acerto)",
+              "indirect": "Indireto (-20)",
+              "suppressive": "Supressão (usa 20 tiros)"
+            },
+            "aim": {
+              "label": "Pontaria",
+              "none": "Padrão",
+              "quick": "Pontaria Rápida (+10)",
+              "long": "Pontaria Longa (+30)"
+            },
+            "distance": {
+              "label": "Distância",
+              "pointBlank": "Queima-Roupa (+10)",
+              "none": "Padrão",
+              "range": "Alcance (-10)",
+              "beyond": "Além do Alcance (-20)",
+              "beyondPlus": "Além+ (-30)"
+            },
+            "visual": {
+              "label": "Penalidade Visual",
+              "none": "Nenhuma",
+              "minor": "Menor (-10)",
+              "major": "Maior (-30)",
+              "blind": "Às Cegas (-30+)"
+            }
+          },
+          "defender": {
+            "isProne": "Prostrado (-10 se estiver no alcance)",
+            "isHidden": "Escondido (-30)",
+            "size": {
+              "label": "Tamanho",
+              "xs": "Muito Pequeno (-30)",
+              "s": "Pequeno (-10)",
+              "none": "Normal",
+              "l": "Grande (+10)",
+              "xl": "Muito Grande (+30)"
+            },
+            "cover": {
+              "label": "Cobertura",
+              "none": "Nenhuma",
+              "minor": "Menor (-10)",
+              "moderate": "Moderada (-20)",
+              "major": "Maior (-30)"
+            }
+          }
+        },
+        "melee": {
+          "attacker": {
+            "numberOfTargetsLabel": "Número de alvos",
+            "numberOfTargetsMod": "(-20/alvo)",
+            "type": {
+              "label": "Tipo de Ataque",
+              "none": "Ataque Padrão",
+              "charge": "Ataque de Investida (-10 Acerto, +1d6 VD)",
+              "aggressive": "Ataque Agressivo (+10 Acerto, -10 Evasão)",
+              "aggressiveCharge": "Ataque Violento (+1d10 VD, -10 Evasão)"
+            }
+          }
+        }
+      },
+      "successType": {
+        "success": "Sucesso",
+        "greaterSuccess": "Sucesso Maior",
+        "superiorSuccess": "Sucesso Superior",
+        "criticalSuccess": "Sucesso Crítico",
+        "greaterCriticalSuccess": "Sucesso Crítico Maior",
+        "superiorCriticalSuccess": "Sucesso Crítico Superior",
+        "supremeSuccess": "Sucesso Supremo",
+        "failure": "Falha",
+        "greaterFailure": "Falha Maior",
+        "superiorFailure": "Falha Superior",
+        "criticalFailure": "Falha Crítica",
+        "greaterCriticalFailure": "Falha Crítica Maior",
+        "superiorCriticalFailure": "Falha Crítica Superior",
+        "supremeFailure": "Falha Suprema"
+      },
+      "rollType": {
+        "label": "Tipo de Rolagem",
+        "public": "Rolagem Pública",
+        "private": "Rolagem Privada do MJ",
+        "blind": "Rolagem Oculta do MJ"
+      },
+      "announce": {
+        "global": "Situacional",
+        "favor": "Modificador de Favor",
+        "specialization": "Especialização",
+        "encumberance": "Sobrecarga",
+        "wounds": "Ferimentos/Traumas",
+        "woundModifier": "Modificador de Ferimento",
+        "traumaModifier": "Modificador de Trauma",
+        "rolled": "rolou",
+        "appliedMods": "Mods Aplicados",
+        "baseValue": "Valor Base",
+        "rollTarget": "Alvo da Rolagem",
+        "infectionRaise": "Infecção elevada para",
+        "rest": {
+          "short": "Eu usei um<p/><strong>Descanso Curto<p/></strong>para recuperar alguns pontos de parada<p/>",
+          "long": "Eu usei o meu<p/><strong>Descanso Longo<p/></strong>para recuperar todas as paradas<p/>"
+        },
+        "poolUsage": {
+          "poolUsed": "Parada Usada",
+          "usePoolSubheadline": "Usar Paradas",
+          "swappedTo": "Resultado trocado para",
+          "raisedTo": "Resultado elevado para",
+          "beyondSuperior": "Você não pode aumentar seu nível de sucesso além de 'Superior'.",
+          "notDeducted": "Nenhuma parada foi usada",
+          "notEnoughPool": "Parada insuficiente",
+          "cantRaise": "Resultado não pode ser elevado",
+          "newResult": "Novo Resultado",
+          "dontSwap": "Não Trocar Dados",
+          "swapTo": "Trocar para",
+          "raiseLevel": "Elevar Nível De Sucesso",
+          "metGoal": "Você atingiu seu objetivo",
+          "raiseSuccess": "Você pode até aumentá-lo <br/>usando suas paradas...",
+          "notAvailable": "indisponível",
+          "missGoal": "Você falhou em seu objetivo",
+          "mitigateSpending": "Gaste uma parada para mitigar o resultado",
+          "dontMitigate": "Não Mitigar Falha",
+          "mitigate": "Mitigar"
+        },
+        "combat": {
+          "calledShot": "Ataque Preciso",
+          "calledShotAddition": "Role 'Sucesso Maior' ou melhor",
+          "hit": "Você acertou com sua arma",
+          "damageDone": "Seu dano causado",
+          "melee": {
+            "charge": "Investida",
+            "chargeAddition": "(+1d6VD)",
+            "agressive": "Ataque Agressivo",
+            "agressiveAddition": "(Evasão -10)",
+            "agressiveCharge": "Ataque Violento",
+            "agressiveChargeAddition": "(+1d10VD & Evasão -10)",
+            "multipleTargets": "Múltiplos Alvos"
+          },
+          "ranged": {
+            "smartLink": "Sem Ligação Inteligente",
+            "running": "Correndo",
+            "superiorPosition": "Posição Vantajosa",
+            "inMelee": "Engajado em Luta",
+            "coverAttacker": "Encoberto",
+            "aimLong": "Pontaria Longa",
+            "aimQuick": "Pontaria Rápida",
+            "sizeXS": "Alvo Muito Pequeno",
+            "sizeS": "Alvo Pequeno",
+            "sizeL": "Alvo Grande",
+            "sizeXL": "Alvo Muito Grande",
+            "rangeProne": "Prostrado ao Alcance",
+            "beyondProne": "Prostrado Além do Alcance",
+            "beyondPlusProne": "Prostrado Muito Além do Alcance",
+            "range": "Ao Alcance",
+            "beyond": "Além do Alcance",
+            "beyondPlus": "Muito Além do Alcance",
+            "pointBlank": "Queima-Roupa",
+            "defMinCover": "Alvo em Cobertura menor",
+            "defModCover": "Alvo em Cobertura moderada",
+            "defMajCover": "Alvo em Cobertura maior",
+            "visImpMin": "Visão Prejudicada Menor",
+            "visImpMaj": "Visão Prejudicada Maior",
+            "blind": "Cego",
+            "wBurst": "Rajada Larga",
+            "wFullAuto": "Automático Largo",
+            "Indirect": "Indireto",
+            "reloadNeeded": "Sua arma não tem munição suficiente. <p/><strong>Recarregue primeiro!</strong>",
+            "reloadedWeapon": "Eu recarregei minha arma",
+            "weaponFull": "Sua arma ainda está totalmente carregada."
+          }
+        }
+      }
+    },
+    "migration": {
+      "headlineStart": "<h3 class='subheader dialog'>Caro Usuário do Sistema</h3>",
+      "headlineEnd": "<h3 class='subheader dialog'>Você está pronto!</h3>",
+      "done": "<label class='resource-label'>Divirta-se combatendo a TITAN e resgatando o universo, ou fazendo o que bem entender!</i></p></label>",
+      "legacy": "<label class='resource-label'>Obrigado por jogar Eclipse Phase com o nosso sistema. Para garantir a integridade geral do arquivo nas próximas atualizações, pedimos que você migre seus dados para a estrutura mais recente, com a atualização 0.8.1.<p/><p/><b>Isto é necessário para implementar recursos ainda mais legais do que já temos (como a localização), e levará apenas alguns segundos.</b><p/><p/> Obrigado e tenha um ótimo jogo!<p><i>Nota: Por favor, note que as drogas foram refeitas. Apenas puxe-as novamente do compêndio e exclua as antigas.</i></p></label>",
+      "0861": "<label class='resource-label'><p>Atualizamos a estrutura dos itens para permitir que futuras migrações sejam acionadas somente se o seu item estiver em uma versão específica.<p/><p><b>Isso evita que fichas de personagens e itens causem problemas quando estiver acionando uma migração.</b><p/><p>Por favor, migre para esta versão o mais breve possível para nos ajudar a estabilizar os dados do seu personagem<p/> <p>Obrigado e tenha um ótimo jogo!</p></label>",
+      "09": "<label class='resource-label'><p>Animais Inteligentes e Veículos sofreram uma grande reformulação.<p/><p><b>Esta migração destina-se a atualizar todos os drones/veículos/animais inteligentes em qualquer ficha, para que sejam compatíveis com o novo sistema.</b><p/><p>Por favor, migre para esta versão o mais breve possível para aproveitar as últimas atualizações, <b>mas não se esqueça de fazer o backup de seu mundo em caso de falhas no jogo!</b><p/> <p>Obrigado e tenha um ótimo jogo!</p></label>"
+    },
+    "systemMessage": {
+      "resetRest": {
+        "title": "Reiniciar Descansos",
+        "copy": "Esta janela reinicia todos os descansos para os personagens ativos selecionados. Se um personagem não for ativamente controlado por algum jogador, ele não será exibido nessa lista. Jogadores podem mudar seu personagem ativo usando o menu do jogador na parte inferior esquerda do Foundry.",
+        "headline": "Personagens Ativos dos Jogadores"
+      }
+    }
+  }
+}

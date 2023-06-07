@@ -746,7 +746,7 @@ export default class EPactorSheet extends ActorSheet {
 
       if (!restReset && restType === "long"){
         for (let effect of actor.effects){
-          if (effect.label === "Temp Ignore Trauma" || effect.label === "Temp Ignore Wound"){
+          if (effect.name === "Temp Ignore Trauma" || effect.name === "Temp Ignore Wound"){
             let effectID = effect._id;
             actor.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
           }
@@ -754,7 +754,7 @@ export default class EPactorSheet extends ActorSheet {
       }
       else if (restReset) {
         for (let effect of actor.effects){
-          if (effect.label === "Temp Ignore Trauma" || effect.label === "Temp Ignore Wound"){
+          if (effect.name === "Temp Ignore Trauma" || effect.name === "Temp Ignore Wound"){
             let effectID = effect._id;
             actor.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
           }
@@ -926,8 +926,14 @@ export default class EPactorSheet extends ActorSheet {
     //browses through ALL effects and identifies, whether they are bound to an item or not
     for (let effectScan of allEffects){
       if (effectScan.origin){
-        
+
+        /*Woraround fromUuid. Currently not needed - just in case fromUuid changes in the future/will become deactivated during an unstable dev release
+        let Uuid = (effectScan.origin).split(".");
+        let parentItem = actor.items.get(Uuid[3]);
+        */
+      
         let parentItem = await fromUuid(effectScan.origin)
+
         if (parentItem.system.boundTo){
 
           let effUpdateData=[];

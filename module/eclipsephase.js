@@ -142,6 +142,7 @@ Hooks.once('init', async function() {
   //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
   // If you need to add Handlebars helpers, here are a few useful examples:
   Handlebars.registerHelper('concat', function() {
+
     var outStr = '';
     for (var arg in arguments) {
       if (typeof arguments[arg] != 'object') {
@@ -198,7 +199,6 @@ Hooks.once('init', async function() {
 Hooks.once("ready", async function() {
 
 //Migration script if actorSheets are changing
-
 const gameVersion = game.settings.get("eclipsephase", "migrationVersion");
 let startMigration = false
 let endMigration = false
@@ -320,10 +320,15 @@ async function migrationEnd(endMigration) {
 });
 
 //Gets chat data
-Hooks.on("renderChatLog", (app, html, data) => EPchat.addChatListeners(html));
+Hooks.on("renderChatLog", (app, html, data) => EPchat.addChatListeners(html, data));
+
+//Sets parts of the chat invisible to players
+Hooks.on("renderChatLog", (app, html, data) => EPchat.GMvision(html, data));
+Hooks.on("renderChatMessage", (app, html, data) => EPchat.GMvision(html, data));
 
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)
+
 
 /**
  Async function to open a dialog
