@@ -608,8 +608,8 @@ export async function TaskCheck({
             task.addModifier(new TaskRollModifier(announce, modValue, addition))
         }
         if (inMelee) {
-            gunsMod -= 20;
-            modValue = -20
+            gunsMod -= 10;
+            modValue = -10
             announce = "ep2e.roll.announce.combat.ranged.inMelee";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
