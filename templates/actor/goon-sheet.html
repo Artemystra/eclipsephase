@@ -10,9 +10,13 @@
                     <a class="item" data-tab="ego">Bio</a>
                     <a class="item" data-tab="skills">Skills</a>
                     <a class="item" data-tab="weapons">Inventory</a>
-                {{#if actor.vehicle}}
-                    <a class="item" data-tab="vehicles">Vehicles</a>
-                {{/if}}
+                    {{#if actor.vehicle.vehicle}}
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
+                    {{else if actor.vehicle.robot}}
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
+                    {{else if actor.vehicle.animal}}
+                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
+                    {{/if}}
                 {{#if actor.system.additionalSystems.hasPsi}}
                     <a class="item" data-tab="psi">Psi</a>
                 {{/if}}

@@ -84,6 +84,12 @@ class EPmenuLayer extends PlaceablesLayer {
                     for (let id of charSelect.resetList){
                       if (actorID === id){
                           actor.update({"system.rest.long" : false, "system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false});
+                          for (let effect of actor.effects){
+                            if (effect.name === "Temp Ignore Trauma" || effect.name === "Temp Ignore Wound"){
+                              let effectID = effect._id;
+                              actor.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
+                            }
+                          }
                       }
                     }
                   }
