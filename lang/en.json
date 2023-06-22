@@ -829,7 +829,8 @@
         "button": {
           "roll": "Roll",
           "cancel": "Cancel",
-          "useSelection": "Use this Selection"
+          "useSelection": "Use this Selection",
+          "withoutWeapon": "Roll without Weapon"
         },
         "reputationMode": {
           "headline": "Mode",
@@ -839,6 +840,9 @@
           "major": "Major"
         },
         "ranged": {
+          "weaponSelect": {
+            "headline": "Select Weapon"
+          },
           "attacker": {
             "smartLinkLabel": "Smart Link (-10 if none)",
             "superiorPosition": "Superior Position (+20)",

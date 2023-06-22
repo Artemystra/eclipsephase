@@ -822,7 +822,8 @@
         "button": {
           "roll": "Würfeln",
           "cancel": "Abbrechen",
-          "useSelection": "Auswahl bestätigen"
+          "useSelection": "Auswahl bestätigen",
+          "withoutWeapon": "Wurf ohne Waffe"
         },
         "reputationMode": {
           "headline": "Reputationsmod",
@@ -832,6 +833,9 @@
           "major": "Gross"
         },
         "ranged": {
+          "weaponSelect": {
+            "headline": "Waffenwahl"
+          },
           "attacker": {
             "smartLinkLabel": "Smart Link (-10 if none)",
             "superiorPosition": "Erhabene Position (+20)",

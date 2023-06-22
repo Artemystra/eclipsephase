@@ -475,6 +475,38 @@ export async function TaskCheck({
     //Guns check dialog
 
     if (askForOptions != optionsSettings && skillKey === "guns") {
+        let select = game.i18n.localize('ep2e.actorSheet.button.select');
+        let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
+        let weaponslist = [{"_id":0, "name": "--"+select+"--"},{"_id":1, "name": flatRollLabel}];
+        let checkWeapon = "";
+        for (let weapon of actorWhole.rangedWeapon){
+            if (weapon.system.active === true){
+                let weaponEntry = {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": weapon.system.dv}
+                weaponslist.push(weaponEntry)
+            }
+        }
+
+        
+        if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon"){
+            checkWeapon = await GetWeaponsList(weaponslist)
+            weaponID = checkWeapon.weaponSelect
+        }
+
+        if (checkWeapon.cancelled || weaponID === "0") {
+            return;
+        }
+        else{
+            for (let weapon of actorWhole.rangedWeapon){
+                if (weapon.system.active === true && weapon._id === weaponID){
+                    weaponName = weapon.name;
+                    weaponDamage = weapon.system.dv;
+                    weaponType = "ranged";
+                    rolledFrom = "rangedWeapon";
+                    currentAmmo = weapon.system.ammoMin;
+                }
+            }
+        }
+
         let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
@@ -503,6 +535,37 @@ export async function TaskCheck({
 
     //Melee skill check dialog
     else if (askForOptions != optionsSettings && skillKey === "melee") {
+        let select = game.i18n.localize('ep2e.actorSheet.button.select');
+        let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
+        let weaponslist = [{"_id":0, "name": "--"+select+"--"},{"_id":1, "name": flatRollLabel}];
+        let checkWeapon = "";
+        for (let weapon of actorWhole.ccweapon){
+            if (weapon.system.active === true){
+                let weaponEntry = {"_id":weapon._id, "name": weapon.name, "dv": weapon.system.dv}
+                weaponslist.push(weaponEntry)
+            }
+        }
+
+        
+        if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon"){
+            checkWeapon = await GetWeaponsList(weaponslist)
+            weaponID = checkWeapon.weaponSelect
+        }
+
+        if (checkWeapon.cancelled || weaponID === "0") {
+            return;
+        }
+        else{
+            for (let weapon of actorWhole.ccweapon){
+                if (weapon.system.active === true && weapon._id === weaponID){
+                    weaponName = weapon.name;
+                    weaponDamage = weapon.system.dv;
+                    weaponType = "melee";
+                    rolledFrom = "ccWeapon";
+                }
+            }
+        }
+
         let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType);
 
         if (checkOptions.cancelled) {
@@ -2344,6 +2407,41 @@ export async function TaskCheck({
             useThreat: form.useThreat ? form.useThreat.checked : false
         }
 
+    }
+
+    //Weapons list dialog constructor
+    async function GetWeaponsList(weaponslist){
+        let dialogName = new Localizer('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+        let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
+        let useButton = new Localizer ('ep2e.actorSheet.button.select');
+        let dialogType = "weaponList";
+        const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+        const html = await renderTemplate(template, {weaponslist, dialogType});
+        return new Promise(resolve => {
+            const data = {
+                title: dialogName.title,
+                content: html,
+                buttons: {
+                    cancel: {
+                        label: cancelButton.title,
+                        callback: html => resolve ({cancelled: true})
+                    },
+                    normal: {
+                        label: useButton.title,
+                        callback: html => resolve(_proGetWeaponsList(html[0].querySelector("form")))
+                    }
+                },
+                default: "normal",
+                close: () => resolve ({cancelled: true})
+            };
+            let options = {width:276}
+            new Dialog(data, options).render(true);
+        });
+    }
+    function _proGetWeaponsList(form) {
+        return {
+            weaponSelect: form.WeaponSelect.value
+        }
     }
 
     async function GetDamageRangedOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue) {

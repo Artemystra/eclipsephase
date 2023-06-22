@@ -1,11 +1,29 @@
 <form>
-    <div class="form-group listBackgroundMain">
-        <p>{{{localize "ep2e.systemMessage.resetRest.copy"}}}</p>
-    </div>
-    {{#if (gt charCount 0)}}
+    {{#if (eq dialogType "weaponList")}}
         <div class="flexrow subheader">
-            <h3 class="subheader dialog">{{localize "ep2e.systemMessage.resetRest.headline"}}</h3>
+            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.headline"}}</h3>
         </div>
+        <div class="form-group listBackgroundMain">
+            <select name="WeaponSelect" data-type="String" style="max-width: 100%;">
+                {{#select WeaponSelect}}
+                {{#each weaponslist}}
+                    {{#if dv}}
+                        {{#if ammoCur}}
+                            <option value="{{_id}}">{{name}} ({{ammoCur}}/{{ammoMax}}; {{dv}})
+                        {{else}}
+                            <option value="{{_id}}">{{name}} ({{dv}})
+                        {{/if}}
+                    {{else}}
+                        <option value="{{_id}}">{{name}}   
+                    {{/if}}
+                </option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+        {{#if (eq WeaponSelect.value "1")}}
+            <h1>Test</h1>
+        {{/if}}
         <div class="grid" style="margin-top: 0;">
             {{#each charList as |char|}}
             <div>
@@ -15,8 +33,25 @@
             {{/each}}
         </div>
     {{else}}
-        <div style="height: 190px">
-            <img src="systems/eclipsephase/resources/img/userConfiguration.webp"/>
+        <div class="form-group listBackgroundMain">
+            <p>{{{localize "ep2e.systemMessage.resetRest.copy"}}}</p>
         </div>
+        {{#if (gt charCount 0)}}
+            <div class="flexrow subheader">
+                <h3 class="subheader dialog">{{localize "ep2e.systemMessage.resetRest.headline"}}</h3>
+            </div>
+            <div class="grid" style="margin-top: 0;">
+                {{#each charList as |char|}}
+                <div>
+                    <input type="checkbox" name="{{char._id}}" checked>
+                    <label class="resource-label">{{char.name}}</label>
+                </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div style="height: 190px">
+                <img src="systems/eclipsephase/resources/img/userConfiguration.webp"/>
+            </div>
+        {{/if}}
     {{/if}}
 </form>

@@ -1120,6 +1120,7 @@ h3.subheader.dialog {
   border: none;
   align-items: center;
   background: none;
+  clip-path: none;
 }
 
 h3.subheaderMirror {

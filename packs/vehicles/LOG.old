@@ -1,3 +1,13 @@
-2023/06/18-21:45:46.880 75a0 Recovering log #20
-2023/06/18-21:45:46.887 75a0 Delete type=0 #20
-2023/06/18-21:45:46.887 75a0 Delete type=3 #19
+2023/06/22-21:05:58.884 7e34 Recovering log #32
+2023/06/22-21:05:58.896 7e34 Delete type=0 #32
+2023/06/22-21:05:58.897 7e34 Delete type=3 #31
+2023/06/22-23:39:43.511 5248 Level-0 table #36: started
+2023/06/22-23:39:43.511 5248 Level-0 table #36: 0 bytes OK
+2023/06/22-23:39:43.515 5248 Delete type=0 #34
+2023/06/22-23:39:43.526 5248 Manual compaction at level-0 from '!items!0hG5VJieUcAqD7WW' @ 72057594037927935 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at '!items!znq17lMEMESDOHco' @ 39 : 1
+2023/06/22-23:39:43.527 5248 Compacting 1@0 + 0@1 files
+2023/06/22-23:39:43.535 5248 Generated table #37@0: 39 keys, 34637 bytes
+2023/06/22-23:39:43.535 5248 Compacted 1@0 + 0@1 files => 34637 bytes
+2023/06/22-23:39:43.549 5248 compacted to: files[ 0 1 0 0 0 0 0 ]
+2023/06/22-23:39:43.549 5248 Delete type=2 #5
+2023/06/22-23:39:43.558 5248 Manual compaction at level-0 from '!items!znq17lMEMESDOHco' @ 39 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at (end)
