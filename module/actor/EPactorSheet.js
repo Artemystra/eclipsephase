@@ -227,8 +227,8 @@ export default class EPactorSheet extends ActorSheet {
         else if (itemModel.aptitude === "sav") {
           aptSelect = actorModel.aptitudes.sav.value;
         }
-        item.roll = Number(itemModel.value) + aptSelect;
-        item.specroll = Number(itemModel.value) + aptSelect + 10;
+        item.roll = (Number(itemModel.value) + aptSelect)<100 ? Number(itemModel.value) + aptSelect : 100;
+        item.specroll = ((Number(itemModel.value) + aptSelect)<100 ? Number(itemModel.value) + aptSelect : 100) + 10;
         special.push(item);
         }
         else if (item.type === 'knowSkill') {
@@ -239,8 +239,8 @@ export default class EPactorSheet extends ActorSheet {
           else if (itemModel.aptitude === "cog") {
             aptSelect = actorModel.aptitudes.cog.value;
           }
-          item.roll = Number(itemModel.value) + aptSelect;
-          item.specroll = Number(itemModel.value) + aptSelect + 10;
+          item.roll = (Number(itemModel.value) + aptSelect)<100 ? Number(itemModel.value) + aptSelect : 100;
+          item.specroll = ((Number(itemModel.value) + aptSelect)<100 ? Number(itemModel.value) + aptSelect : 100) + 10;
           know.push(item);
         }
         else if (item.type === 'trait') {

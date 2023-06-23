@@ -118,7 +118,12 @@ export default class EPnpcSheet extends ActorSheet {
           Gamma: [],
           Epsilon: []
         };
-        const vehicle = [];
+        const vehicle = {
+          robot: [],
+          vehicle: [],
+          morph: [],
+          animal: []
+        };
         const morphtrait = [];
         const morphflaw = [];
         const effects=[];
@@ -254,9 +259,37 @@ export default class EPnpcSheet extends ActorSheet {
 
           
             else if (item.type === 'vehicle') {
-                item.wt = Math.round(itemModel.dur / 5);
-                item.dr = Math.round(itemModel.dur * 2);
-                vehicle.push(item)
+              let slotType = itemModel.slotType;
+                switch (slotType){
+                  case 'vs':
+                    itemModel.slotName = "ep2e.item.vehicle.table.size.vs";
+                    break;
+                  case 's':
+                    itemModel.slotName = "ep2e.item.vehicle.table.size.s";
+                    break;
+                  case 'n':
+                    itemModel.slotName = "ep2e.item.vehicle.table.size.m";
+                    break;
+                  case 'l':
+                    itemModel.slotName = "ep2e.item.vehicle.table.size.l";
+                    break;
+                  case 'vl':
+                    itemModel.slotName = "ep2e.item.vehicle.table.size.vl";
+                    break;
+                  default:
+                    break;
+                }
+              itemModel.wt = Math.round(itemModel.dur / 5);
+              if (itemModel.type != "animal"){
+                itemModel.dr = Math.round(itemModel.dur * 2);
+              }
+              else {
+                itemModel.dr = Math.round(itemModel.dur * 1.5);
+              }
+              itemModel.luc = Math.round(itemModel.wil * 2)
+              itemModel.tt = Math.round(itemModel.luc / 5);
+              itemModel.ir = Math.round(itemModel.luc * 2);
+              vehicle[itemModel.type].push(item)
             }
             else if (item.type === 'morphTrait') {
                 morphtrait.present = true

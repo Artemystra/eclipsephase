@@ -194,7 +194,7 @@ export default class EPactor extends Actor {
         if(actorModel.type=="goon")
           value.roll = value.value?Number(value.value):aptSelect;
         else
-          value.roll = Number(value.value) + aptSelect;
+          value.roll = (Number(value.value) + aptSelect)<100 ? Number(value.value) + aptSelect : 100;
       }
     }
   }
@@ -558,9 +558,11 @@ export default class EPactor extends Actor {
   _calculateSkillValue(key, skill, data, actorType) {
     let skillData = EPactor.SKILL_DATA.find(element => element.skill == key)
     let skillValue = data.aptitudes[skillData.aptitude].value
+    let skillCap = 100 + Number(skill.capMod ? skill.capMod : 0)
+    skill.total = skill.value + skillValue * skillData.multiplier;
 
     if(actorType === 'character' || actorType === 'npc')
-      skill.derived = skill.value + skillValue * skillData.multiplier + Number(skill.mod);
+      skill.derived =  (skill.total < skillCap ? skill.total : skillCap) + Number(skill.mod);
     else
       skill.derived = skill.value + Number(skill.mod)
 
