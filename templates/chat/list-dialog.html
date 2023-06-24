@@ -3,32 +3,33 @@
         <div class="flexrow subheader">
             <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.headline"}}</h3>
         </div>
-        <div class="form-group listBackgroundMain">
-            <select name="WeaponSelect" data-type="String" style="max-width: 100%;">
-                {{#select WeaponSelect}}
-                {{#each weaponslist}}
+        <div class="grid" style="margin-bottom: 20px;">
+            {{#each weaponslist}}
+            <div style="min-height: 40px; display: flex; align-items: center;">
+                {{#if _id}}
+                <div>
+                    <input type="radio" name="WeaponSelect" value="{{_id}}" id="{{_id}}">
+                </div>
                     {{#if dv}}
                         {{#if ammoCur}}
-                            <option value="{{_id}}">{{name}} ({{ammoCur}}/{{ammoMax}}; {{dv}})
+                            <div style="display: block;">
+                                <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
+                                <div style="display: flex; align-items: center; padding-left: 10px;">
+                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter" style="margin-right: 5px; margin-left: 10px;"></i>{{dv}}
+                                </div>
+                            </div>
                         {{else}}
-                            <option value="{{_id}}">{{name}} ({{dv}})
+                        <div style="display: block;">
+                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
+                            <div style="display: flex; align-items: center; padding-left: 10px;">
+                                <i class="fa-solid fa-explosion icon-small alignCenter" style="margin-right: 5px;"></i>{{dv}}
+                            </div>
+                        </div>
                         {{/if}}
                     {{else}}
-                        <option value="{{_id}}">{{name}}   
+                        <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b></label>
                     {{/if}}
-                </option>
-                {{/each}}
-                {{/select}}
-            </select>
-        </div>
-        {{#if (eq WeaponSelect.value "1")}}
-            <h1>Test</h1>
-        {{/if}}
-        <div class="grid" style="margin-top: 0;">
-            {{#each charList as |char|}}
-            <div>
-                <input type="checkbox" name="{{char._id}}" checked>
-                <label class="resource-label">{{char.name}}</label>
+                {{/if}}
             </div>
             {{/each}}
         </div>
