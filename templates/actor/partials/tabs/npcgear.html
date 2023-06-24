@@ -48,7 +48,7 @@
         </div>
     </div>
     {{/if}}
-    {{#if actor.ccWeapon}}
+    {{#if actor.ccweapon}}
     <div class="contentBox gear">
         <div class="flexrow subheader flex-group-center">
             <h3 class="subheader flex-group-left">{{localize "ep2e.inventory.ccLabel"}}</h3>
@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="itemBackground" style="margin-bottom: 10px;">
-            {{#each actor.ccWeapon as |item id|}}
+            {{#each actor.ccweapon as |item id|}}
             <div class="item flexrow flex-group-center reveal" style="background-color: var(--pitchBorder);" data-item-id="{{item._id}}">
                 <div class="flexrow flex-group-center input-small">
                     <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image flex-group-left input-small icon-small"/>
