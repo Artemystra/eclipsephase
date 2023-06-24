@@ -480,7 +480,13 @@ export async function TaskCheck({
         let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
         let checkWeapon = "";
         for (let weapon of actorWhole.rangedWeapon){
-            if (weapon.system.active === true){
+            if (actorType === "character"){
+                if (weapon.system.active === true){
+                    let weaponEntry = {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": weapon.system.dv}
+                    weaponslist.push(weaponEntry)
+                }
+            }
+            else {
                 let weaponEntry = {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": weapon.system.dv}
                 weaponslist.push(weaponEntry)
             }
@@ -498,7 +504,7 @@ export async function TaskCheck({
         }
         else{
             for (let weapon of actorWhole.rangedWeapon){
-                if (weapon.system.active === true && weapon._id === weaponID){
+                if (weapon._id === weaponID){
                     weaponName = weapon.name;
                     weaponDamage = weapon.system.dv;
                     weaponType = "ranged";
@@ -541,7 +547,13 @@ export async function TaskCheck({
         let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
         let checkWeapon = "";
         for (let weapon of actorWhole.ccweapon){
-            if (weapon.system.active === true){
+            if (actorType === "character"){
+                if (weapon.system.active === true){
+                    let weaponEntry = {"_id":weapon._id, "name": weapon.name, "dv": weapon.system.dv}
+                    weaponslist.push(weaponEntry)
+                }
+            }
+            else {
                 let weaponEntry = {"_id":weapon._id, "name": weapon.name, "dv": weapon.system.dv}
                 weaponslist.push(weaponEntry)
             }
