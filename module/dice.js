@@ -477,7 +477,7 @@ export async function TaskCheck({
     if (askForOptions != optionsSettings && skillKey === "guns") {
         let select = game.i18n.localize('ep2e.actorSheet.button.select');
         let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
-        let weaponslist = [{"_id":0, "name": "--"+select+"--"},{"_id":1, "name": flatRollLabel}];
+        let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
         let checkWeapon = "";
         for (let weapon of actorWhole.rangedWeapon){
             if (weapon.system.active === true){
@@ -492,7 +492,8 @@ export async function TaskCheck({
             weaponID = checkWeapon.weaponSelect
         }
 
-        if (checkWeapon.cancelled || weaponID === "0") {
+
+        if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
             return;
         }
         else{
@@ -537,7 +538,7 @@ export async function TaskCheck({
     else if (askForOptions != optionsSettings && skillKey === "melee") {
         let select = game.i18n.localize('ep2e.actorSheet.button.select');
         let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
-        let weaponslist = [{"_id":0, "name": "--"+select+"--"},{"_id":1, "name": flatRollLabel}];
+        let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
         let checkWeapon = "";
         for (let weapon of actorWhole.ccweapon){
             if (weapon.system.active === true){
@@ -552,7 +553,7 @@ export async function TaskCheck({
             weaponID = checkWeapon.weaponSelect
         }
 
-        if (checkWeapon.cancelled || weaponID === "0") {
+        if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
             return;
         }
         else{
@@ -2434,7 +2435,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:276}
+            let options = {width:536}
             new Dialog(data, options).render(true);
         });
     }
@@ -2575,7 +2576,7 @@ export async function TaskCheck({
                 },
                 default: "normal"
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }
