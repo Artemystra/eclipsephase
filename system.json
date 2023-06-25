@@ -1,5 +1,6 @@
 {
   "id": "eclipsephase",
+  "background": "systems/eclipsephase/resources/img/bannerEclipsePhase.webp",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
   "version": "0.9.2",
