@@ -49,12 +49,12 @@
                 <div class="flexrow flex-group-center listBackground grid grid-6col-true" style="background-color: var(--pitchBorder); margin: 0;">
             {{/if}}
                 <div>
-                    <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
+                    <i class="fa-solid fa-heart-pulse wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
                     <input class="input-medium" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="e.g. 20"/>                              
                 </div>
                 {{#if (eq item.system.type "animal")}}
                 <div>
-                    <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
+                    <i class="fa-solid fa-brain wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
                     <input class="input-medium" type="number" name="system.luc" value="{{item.system.luc}}" placeholder="e.g. 20"/>  
                 </div>
                 {{/if}}
@@ -66,18 +66,18 @@
                 </div>
                 {{#if (eq item.system.type "animal")}}
                     <div>
-                        <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
+                        <i class="fa-regular fa-stopwatch wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
                         <input class="input-medium"type="number" name="system.init" value="{{item.system.init}}" placeholder="0"/>
                     </div>
                 {{/if}}
                 {{#if (eq item.system.type "vehicle")}}
                     <div>
-                        <i class="fa-regular fa-seat-airline wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.peripherals.table.passengers"}}</span></i>
+                        <i class="fa-regular fa-seat-airline wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.peripherals.table.passengers"}}</span></i>
                         <input class="input-medium"type="number" name="system.pass" value="{{item.system.pass}}" placeholder="0"/>
                     </div>
                 {{/if}}
                 <div>
-                    <i class="fa-regular fa-money-bill wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span></i>
+                    <i class="fa-regular fa-money-bill wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span></i>
                     <select name="system.cost" data-type="String">
                         {{#select item.system.cost}}
                         {{#each config.costTypes as |name key|}}
@@ -86,7 +86,7 @@
                     </select>
                 </div>
                 <div>
-                    <i class="fa-regular fa-ruler wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
+                    <i class="fa-regular fa-ruler wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
                     <select name="system.slotType" data-type="String">
                         {{#select item.system.slotType}}
                         {{#each config.vehicleSize as |name key|}}
@@ -136,9 +136,9 @@
                         {{#each item.system.movement as |mov key|}}
                         <div style="padding: 0 10px">
                             <span class="resource-label alignCenter" style=" min-width: 26px;">{{key}}.</span>
-                            <i class="fa-regular fa-gauge-max"></i>
+                            <i class="fa-regular fa-gauge-max awesomeIcon"></i>
                             <input class="item-standard-margin-small input-small" type="text" name="system.movement.{{key}}.speed" value="{{speed}}" placeholder="0/0" style="text-align: center"/>
-                            <i class="fa-regular fa-tags"></i>
+                            <i class="fa-regular fa-tags awesomeIcon"></i>
                             <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
                                 {{#select mov.type}}
                                 {{#each config.moveTypes as |moveType key|}}

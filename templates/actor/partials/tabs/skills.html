@@ -10,7 +10,7 @@
                         {{/if}}
                             {{#if (eq actor.type "character")}}
                             <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
-                                <i class="far fa-question-circle icon-hidden info tooltip">
+                                <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                     <div role="tooltip">
                                         <div class="tooltipTopBorder">
                                             <div class="tooltipTop"></div>
@@ -46,7 +46,7 @@
                         {{#if (eq isGM false)}}
                         <div id="droplist" class="poolDroplist" style="display: none;">
                             <div class="droplistHeader closeButton">
-                                <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark"></i>
+                                <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
                             </div>
                             <div class="droplistBackground">
                                 <label class="droplistElement resource-value poolUse" data-type="1" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline1"}}</label>
@@ -95,7 +95,7 @@
                         {{/if}}
                             {{#if (eq actor.type "character")}}
                             <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
-                            <i class="far fa-question-circle icon-hidden info tooltip">
+                            <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                 <div role="tooltip">
                                     <div class="tooltipTopBorder">
                                         <div class="tooltipTop"></div>
@@ -132,7 +132,7 @@
                         {{#if (eq isGM false)}}
                             <div id="droplist" class="poolDroplist" style="display: none;">
                                 <div class="droplistHeader closeButton">
-                                    <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark"></i>
+                                    <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
                                 </div>
                                 <div class="droplistBackground">
                                 <label class="droplistElement resource-value poolUse" data-type="1" data-pool="vig">{{localize "ep2e.skills.vigorSkills.poolSubheadline1"}}</label>
@@ -181,7 +181,7 @@
                         {{/if}}
                             {{#if (eq actor.type "character")}}
                             <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
-                            <i class="far fa-question-circle icon-hidden info tooltip">
+                            <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                 <div role="tooltip">
                                     <div class="tooltipTopBorder">
                                         <div class="tooltipTop"></div>
@@ -226,7 +226,7 @@
                         {{#if (eq isGM false)}}
                         <div id="droplist" class="poolDroplist" style="display: none;">
                                 <div class="droplistHeader closeButton">
-                                    <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark"></i>
+                                    <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
                                 </div>
                             <div class="droplistBackground">
                                 <label class="droplistElement resource-value poolUse" data-type="1" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline1"}}</label>
@@ -273,7 +273,7 @@
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.additionalSkills.additionalHeadline"}}</h3>
                         <div class="alignRight flexGrowHalf">
-                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Skill</a>
+                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> Add Skill</a>
                         </div>
                     </div>
                     <div class="listBackground edgeAbler">
@@ -283,7 +283,7 @@
                             {{#each actor.specialSkill as |item id|}}
                                 <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" style="padding-left: 0;">
                                     <span class="tooltipText">{{item.name}}</span>
-                                    <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                     <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
                                     <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                     {{#if item.system.aptitude}}
@@ -307,7 +307,7 @@
                             {{#each actor.specialSkill as |item id|}}
                                 <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" style="padding-left: 0;">
                                     <span class="tooltipText">{{item.name}}</span>
-                                    <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                    <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                     <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
                                     <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.specname}}
@@ -323,7 +323,7 @@
                     </div>
                     {{else}}
                     <div class="separator">
-                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> Add Additional Skill</a>
+                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> Add Additional Skill</a>
                     </div>
                     {{/if}}
                 </div>
@@ -337,7 +337,7 @@
                         <div class="alignRight flexGrowHalf reveal">
                         {{/if}}
                             <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
-                            <i class="far fa-question-circle icon-hidden info tooltip">
+                            <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                 <div role="tooltip">
                                     <div class="tooltipTopBorder">
                                         <div class="tooltipTop"></div>
@@ -378,7 +378,7 @@
                         {{#if (eq isGM false)}}
                         <div id="droplist" class="poolDroplist" style="display: none;">
                             <div class="droplistHeader closeButton">
-                                <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark"></i>
+                                <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
                             </div>
                             <div class="droplistBackground">
                                 <label class="droplistElement resource-value poolUse" data-type="1" data-pool="flex">{{localize "ep2e.skills.flex.poolSubheadline1"}}</label>
@@ -393,7 +393,7 @@
                         {{#if (eq actor.system.rest.restValue null)}}
                             <div class="reveal" style="padding: 5px 0px 5px 10px;">
                                 <label class="resource-value input-large" style ="font-size: 16px;">{{localize "ep2e.skills.restingMenu.headline"}}</label>
-                                <i class="far fa-question-circle icon-hidden info tooltip">
+                                <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                     <div role="tooltip">
                                         <div class="tooltipTopBorder">
                                             <div class="tooltipTop"></div>
@@ -538,14 +538,14 @@
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.knowSkills.knowHeadline"}}</h3>
                         <div class="alignRight flexGrowHalf">
-                            <div><a class="item-control item-create" title="Create item" data-type="knowSkill"><i class="fas fa-plus"></i> {{localize "ep2e.skills.addSkill"}}</a></div>
+                            <div><a class="item-control item-create" title="Create item" data-type="knowSkill"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.addSkill"}}</a></div>
                         </div>
                     </div>
                     <div class="listBackground" style="position: relative; z-index: 2;">
                         {{#each actor.knowSkill as |item id|}}
                             <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                                 <span class="tooltipText">{{item.name}}</span>
-                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
                                 <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
@@ -566,7 +566,7 @@
                     </div>
                     {{else}}
                     <div class="separator">
-                        <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> {{localize "ep2e.skills.knowSkills.addfirst"}}</a>
+                        <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.knowSkills.addfirst"}}</a>
                     </div>
                     {{/if}}
                 </div>
@@ -575,14 +575,14 @@
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.exoticSkills.exoticHeadline"}}</h3>
                         <div class="alignRight flexGrowHalf">
-                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> {{localize "ep2e.skills.addSkill"}}</a>
+                            <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.addSkill"}}</a>
                         </div>
                     </div>
                     <div class="listBackground edgeAbler">
                         {{#each actor.specialSkill as |item id|}}
                             <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="padding-left: 0;">
                                 <span class="tooltipText">{{item.name}}</span>
-                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
                                 <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
@@ -603,7 +603,7 @@
                     </div>
                     {{else}}
                     <div class="separator">
-                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus"></i> {{localize "ep2e.skills.exoticSkills.addfirst"}}</a>
+                        <a class="item-control item-create" title="Create item" data-type="specialSkill" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.exoticSkills.addfirst"}}</a>
                     </div>
                     {{/if}}
                 </div>

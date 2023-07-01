@@ -644,6 +644,9 @@
       },
       "weapon": {
         "table": {
+          "type": {
+            "label": "Type"
+          },
           "range": "Range",
           "maxAmmo": "Max Ammo",
           "damageValue": "DV",
@@ -669,6 +672,14 @@
             "oneHanded": "One Handed",
             "twoHanded": "Two Handed",
             "bulky": "Bulky"
+          },
+          "ammoUsed": {
+            "beam": "Beam Weapon",
+            "kinetic": "Kinetic Weapon",
+            "grenade": "Grenade Launcher",
+            "seeker": "Seeker Weapon",
+            "spray": "Spray Weapon",
+            "rail": "Rail Weapon"
           }
         }
       },

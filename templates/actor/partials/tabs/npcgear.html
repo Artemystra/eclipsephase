@@ -4,7 +4,7 @@
         <div class="flexrow subheader flex-group-center">
             <h3 class="subheader flex-group-left">{{localize "ep2e.inventory.rangedLabel"}}</h3>
             <div class="alignRight">
-                <a class="item-control item-create" title="Create item" data-type="rangedWeapon"><i class="fas fa-plus"></i> {{localize "ep2e.inventory.npcInventory.quickAddRanged"}}</a>
+                <a class="item-control item-create" title="Create item" data-type="rangedWeapon"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.inventory.npcInventory.quickAddRanged"}}</a>
             </div>
         </div>
         <div class="itemBackground">
@@ -23,16 +23,16 @@
                 / <h4 class="item-image flex-group-left input-small noMargin"><strong>{{item.system.ammoMax}}</strong></h4>
                 <h4 class="item-image flex-group-right input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
                 <div class="flex-group-right slideShow">
-                    <a><i class="fas fa-plus icon-small"></i></a>
-                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    <a><i class="fas fa-plus icon-small awesomeIcon"></i></a>
+                    <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
                 </div>
                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                     <div class="itemDescription shape3">
                         <input class="sheet-inline-edit" data-field="system.description" type="text" name="system.description" value="{{item.system.description}}" placeholder="No modifications"/>
                     </div>
                     <div class="flexrow flex-between item-controls">
-                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
+                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle awesomeIcon"></i></a>
+                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit awesomeIcon"></i></a>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
     <div class="contentBox gear">
         <div class="flexrow">
             <div class="separator" style=" margin-bottom: 10px; border-bottom: none;">
-                <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> {{{localize "ep2e.inventory.npcInventory.noRanged"}}}</a>
+                <a class="item-control item-create" title="Create item" data-type="rangedWeapon" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> {{{localize "ep2e.inventory.npcInventory.noRanged"}}}</a>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
         <div class="flexrow subheader flex-group-center">
             <h3 class="subheader flex-group-left">{{localize "ep2e.inventory.ccLabel"}}</h3>
             <div class="alignRight">
-                <a class="item-control item-create" title="Create item" data-type="ccWeapon"><i class="fas fa-plus"></i> {{localize "ep2e.inventory.npcInventory.quickAddMelee"}}</a>
+                <a class="item-control item-create" title="Create item" data-type="ccWeapon"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.inventory.npcInventory.quickAddMelee"}}</a>
             </div>
         </div>
         <div class="itemBackground" style="margin-bottom: 10px;">
@@ -67,8 +67,8 @@
                 <label class="flex-group-center noMargin flex-group-center"><strong>{{localize item.system.slotName}}</strong></label>
                 <h4 class="item-image flex-group-center noMargin" style="max-width: 145px;"><strong>{{item.system.dv}}</strong></h4>
                 <div class="flex-group-right slideShow" style="max-width: 115px;">
-                    <a><i class="fas fa-plus icon-small"></i></a>
-                    <a class="noShow"><i class="fas fa-minus icon-small"></i></a>
+                    <a><i class="fas fa-plus icon-small awesomeIcon"></i></a>
+                    <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
                 </div>
                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                     <div class="itemDescription shape3">
@@ -76,8 +76,8 @@
                             data-field="system.description" type="text" name="item.system.description" value="{{item.system.description}}" placeholder="No modifications"/>
                     </div>
                     <div class="flexrow flex-between item-controls">
-                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle"></i></a>
-                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit"></i></a>
+                        <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle awesomeIcon"></i></a>
+                        <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit awesomeIcon"></i></a>
                     </div>
                 </div>
             </div>
@@ -88,7 +88,7 @@
     <div class="contentBox gear weaponslist">
         <div class="flexrow">
             <div class="separator" style=" border-bottom: none;">
-                <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus"></i> {{{localize "ep2e.inventory.npcInventory.noMelee"}}}</a>
+                <a class="item-control item-create" title="Create item" data-type="ccWeapon" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> {{{localize "ep2e.inventory.npcInventory.noMelee"}}}</a>
             </div>
         </div>
     </div>
@@ -170,7 +170,7 @@
                 </div>  
                 <div class="headSpace">
                     <div class="flexrow" style="align-items: center">
-                        <i class="far fa-plus-square" style="color: var(--positive); flex: 0.05;"></i>
+                        <i class="far fa-plus-square awesomeIcon" style="color: var(--positive); flex: 0.05;"></i>
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.traitsLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
@@ -179,7 +179,7 @@
                         <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
                         </div>
                         {{/each}}
@@ -188,7 +188,7 @@
                         {{/if}}
                     </div>
                     <div class="flexrow" style="align-items: center">
-                        <i class="far fa-minus-square" style="color: var(--negative); flex: 0.05;"></i>
+                        <i class="far fa-minus-square awesomeIcon" style="color: var(--negative); flex: 0.05;"></i>
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.flawsLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
@@ -197,7 +197,7 @@
                         <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <div class="item-controls flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
                         </div>
                         {{/each}}
@@ -206,7 +206,7 @@
                         {{/if}}
                     </div>
                     <div class="flexrow" style="align-items: center">
-                        <i class="fas fa-bolt" style="color: var(--iconBlue); flex: 0.05;"></i>
+                        <i class="fas fa-bolt awesomeIcon" style="color: var(--iconBlue); flex: 0.05;"></i>
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.wareLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
@@ -215,7 +215,7 @@
                         <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <div class="flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
                         </div>
                         {{/each}}
@@ -229,7 +229,7 @@
             <div class="flexrow subheader flex-group-center">
                 <h3 class="subheader flex-group-left">{{localize "ep2e.inventory.npcInventory.armorAndGearHeadline"}}</h3>
                 <div class="alignRight reveal">
-                    <a class="item-control item-create flex-group-right" title="Create item" data-type="armor"><i class="fas fa-plus"></i> {{localize "ep2e.inventory.npcInventory.quickAddArmor"}}</a>
+                    <a class="item-control item-create flex-group-right" title="Create item" data-type="armor"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.inventory.npcInventory.quickAddArmor"}}</a>
                 </div>
             </div>
             <div class="listBackground noMargin">
@@ -251,7 +251,7 @@
                             <strong>{{item.system.kinetic}}</strong></label>
                         </div>
                         <div class="flex-group-right input-small">
-                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                            <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                         </div>
                     </div>
                     {{/each}}
@@ -263,7 +263,7 @@
                 </div>
                 <div class="headSpace">
                     <div class="flexrow" style="align-items: center">
-                        <i class="fas fa-cog" style="color: var(--inactive); flex: 0.05;"></i>
+                        <i class="fas fa-cog awesomeIcon" style="color: var(--inactive); flex: 0.05;"></i>
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.gearLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
@@ -276,7 +276,7 @@
                             font-size: 12px; flex:
                             0.4"><i>{{item.actor.slotType}}</i></label>
                             <div class="flex-group-right" style="flex: 0.2;">
-                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle"></i></a>
+                                <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
                         </div>
                         {{/each}}

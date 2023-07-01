@@ -1,12 +1,13 @@
 <div style="background-color: var(--mainBackground); padding: 10px 0 10px 0;">
     <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
-        <div>
-            <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span>
             <input class="input-xs" type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.physical.max}}/{{actor.system.physical.dr}}</span>
-    
         </div>
-        <div>
-            <i class="fa-regular fa-bandage wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.woundswt"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-regular fa-bandage awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.woundswt"}}</span>
             <input class="input-xs" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
         </div>
         {{#if (eq actor.type "character")}}
@@ -19,11 +20,11 @@
                 </div>
                 <div class="mentalHealth">
                     <div style="padding-bottom: 10px;">
-                        <i class="fa-solid fa-brain" style="font-size: 18px;"></i>
+                        <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
                         <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
                     </div>
                     <div style="padding-bottom: 10px;">
-                        <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
+                        <i class="fa-regular fa-burst wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
                         <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
                     </div>
                 </div>
@@ -31,33 +32,39 @@
                     <div class="tooltipBottom"></div>
                 </div>
             </div>
-            <i class="fa-solid fa-brain" style="font-size: 18px;"></i>
+            <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
             <span><div style="display: inline-block; min-width: 25px;" class="input-xs">{{actor.system.health.mental.value}}</div>/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
         </div>-->
-        <div>
-            <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span>
             <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
         </div>
-        <div>
-            <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-regular fa-burst awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span>
             <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
         </div>
-        <div>
-            <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span>
             <span class="resource-label alignCenter"> {{actor.system.initiative.display}}</span>
         </div>
         {{else}}
-        <div>
-            <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.iniMod"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.iniMod"}}</span>
             <input class="input-small" style="text-align: center" type="text" name="system.mods.iniMod" value="{{actor.system.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
         </div>
-        <div>
-            <i class="fa-solid fa-land-mine-on wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.threat"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-solid fa-land-mine-on awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.threat"}}</span>
             <input class="input-xs standard-height" style="text-align: center" type="text" name="system.threatLevel.current" value="{{actor.system.threatLevel.current}}" placeholder="0"/>/
             <input class="input-xs standard-height" style="text-align: center" type="text" name="system.threatLevel.total" value="{{actor.system.threatLevel.total}}" placeholder="0"/>  
         </div>
-        <div>
-            <i class="fa-solid fa-face-scream wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px; left: -20px;">{{localize "ep2e.healthbar.tooltip.stressTest"}}</span></i>
+        <div class="wantToKnowMore">
+            <i class="fa-solid fa-face-scream awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px; left: -20px;">{{localize "ep2e.healthbar.tooltip.stressTest"}}</span>
             <input class="input-medium" style="text-align: center" type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
         </div>
         {{/if}}

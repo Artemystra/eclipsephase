@@ -8,6 +8,7 @@ import  EPactorSheet from "./actor/EPactorSheet.js";
 import  EPnpcSheet from "./actor/EPnpcSheet.js";
 import  EPgoonSheet from "./actor/EPgoonSheet.js";
 import  EPgearSheet from "./item/EPgearSheet.js";
+import  EPrangedWeaponSheet from "./item/EPrangedWeaponSheet.js";
 import  EPtraitSheet  from "./item/EPtraitSheet.js";
 import  EPflawSheet from "./item/EPflawSheet.js";
 import  EPaspectSheet  from "./item/EPaspectSheet.js";
@@ -131,7 +132,8 @@ Hooks.once('init', async function() {
   Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
   Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","rangedWeapon","ccWeapon","grenade","armor","ware","drug"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPrangedWeaponSheet, {types: ["rangedWeapon"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
   Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
