@@ -1,5 +1,31 @@
 <form>
-    {{#if (eq dialogType "weaponList")}}
+    {{#if (eq dialogType "weaponCategorization")}}
+        <div class="listBackgroundMain">
+            {{{localize "ep2e.migration.093WeaponCategorizerCopy"}}}
+        </div>
+        <div class="grid grid-3col">
+            {{#each actorsInQuestion as |char|}}
+                <div>
+                    <div class="flexrow subheader">
+                        <h3 class="subheader dialog">{{char.name}}</h3>
+                    </div>
+                    {{#each char.unidentifiedWeapons as |weapon|}}
+                        <div class="grid wantToKnowMore" style="display: flex; align-items: center;">
+                            <label class="resource-label truncate trunContainer">{{weapon.name}}</label>
+                            <label class="tooltipText">{{weapon.name}}</label>
+                            <select name="{{weapon._id}}" title="{{char._id}}">
+                                <option value="beam">{{localize "ep2e.item.weapon.table.ammoUsed.beam"}}</option>
+                                <option value="kinetic">{{localize "ep2e.item.weapon.table.ammoUsed.kinetic"}}</option>
+                                <option value="seeker">{{localize "ep2e.item.weapon.table.ammoUsed.seeker"}}</option>
+                                <option value="spray">{{localize "ep2e.item.weapon.table.ammoUsed.spray"}}</option>
+                                <option value="rail">{{localize "ep2e.item.weapon.table.ammoUsed.rail"}}</option>
+                            </select>
+                        </div>
+                    {{/each}}
+                </div>
+            {{/each}}
+         </div>
+    {{else if (eq dialogType "weaponList")}}
         <div class="flexrow subheader">
             <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.headline"}}</h3>
         </div>

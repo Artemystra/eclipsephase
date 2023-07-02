@@ -182,7 +182,6 @@ eclipsephase.grenadeArmorVector = {
 eclipsephase.rangedAmmoType = {
     beam: "ep2e.item.weapon.table.ammoUsed.beam",
     kinetic: "ep2e.item.weapon.table.ammoUsed.kinetic",
-    grenade: "ep2e.item.weapon.table.ammoUsed.grenade",
     seeker: "ep2e.item.weapon.table.ammoUsed.seeker",
     spray: "ep2e.item.weapon.table.ammoUsed.spray",
     rail: "ep2e.item.weapon.table.ammoUsed.rail"
