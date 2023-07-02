@@ -357,11 +357,11 @@ async function showOptionsDialog(template, title, names) {
       content: html,
       buttons: {
         cancel: {
-          label: cancelButton,
+          label: cancelButton.title,
           callback: (html) => resolve({cancelled: true})
         },
         normal: {
-          label: rollButton,
+          label: rollButton.title,
           callback: (html) => resolve(extractFormValues(html))
         }
       },
