@@ -179,6 +179,14 @@ eclipsephase.grenadeArmorVector = {
     energy: "ep2e.item.weapon.table.armorUsed.energy"
 }
 
+eclipsephase.rangedAmmoType = {
+    beam: "ep2e.item.weapon.table.ammoUsed.beam",
+    kinetic: "ep2e.item.weapon.table.ammoUsed.kinetic",
+    seeker: "ep2e.item.weapon.table.ammoUsed.seeker",
+    spray: "ep2e.item.weapon.table.ammoUsed.spray",
+    rail: "ep2e.item.weapon.table.ammoUsed.rail"
+}
+
 eclipsephase.genders = {
     cis: "ep2e.ego.general.gender.cis",
     trans: "ep2e.ego.general.gender.trans",

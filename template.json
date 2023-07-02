@@ -1056,6 +1056,8 @@
         "buyable"
       ],
       "range": null,
+      "ammoType": "",
+      "ammoSelected": "",
       "ammoMin": 0,
       "ammoMax": null,
       "dv": null,

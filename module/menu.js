@@ -148,7 +148,7 @@ class EPmenuLayer extends PlaceablesLayer {
 
             }
 
-            //Guns skill check results
+            //selectChars results
             function _proResetPlayerList(form) {
               let resetList = [];
               for (let key of Object.entries(form)){

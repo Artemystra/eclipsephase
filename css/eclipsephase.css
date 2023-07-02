@@ -16,6 +16,7 @@
   --iconBlue: #346d8e;
   --highlight: #4098d6;
   --mainText: #d8d8d8;
+  --iconGrey: #aaaaaa;
   --inactive: #999;
   --mainBackground: #1f1f1f;
   --focusBackground: #2b2b2b;
@@ -230,6 +231,10 @@
 }
 
 /* Styles limited to eclipsephase sheets */
+.eclipsephase .awesomeIcon {
+  color: var(--iconGrey);
+}
+
 .eclipsephase .item-form {
   font-family: 'Cousine', monospace;
 }
@@ -254,6 +259,7 @@
 
 .eclipsephase .profile-img {
   min-width: 100%;
+  min-height: 339px;
   border: solid var(--pitchBorder) 5px;
   margin-top: 20px;
 }
@@ -1532,6 +1538,7 @@ ol {
 }
 
 .eclipsephase .sheet-header .profile-img-goon {
+  min-height: 340px;
   -webkit-box-flex: 0;
   -ms-flex: 0 0 100px;
   flex: 0 0 100px;
@@ -1732,6 +1739,7 @@ h3.inline {
 
 .wantToKnowMore {
   position: relative;
+  max-width: fit-content;
 }
 
 .wantToKnowMore .tooltipText {
@@ -1740,18 +1748,19 @@ h3.inline {
     transition-delay: 1s;
     visibility: hidden;
     position: absolute;
-    min-width: 140px;
+    min-width: 100px;
     width: fit-content;
     background-color: var(--focusBackground);
     color: var(--mainText);
     text-align: center;
+    text-transform: capitalize;
     padding: 5px 3px;
     border-style: solid;
     border-width: 3px;
     border-radius: 6px;
     border-color: var(--highlightBackground);
     top: -35px;
-    left: 22px;
+    left: 0px;
     z-index: 100;
 }
 

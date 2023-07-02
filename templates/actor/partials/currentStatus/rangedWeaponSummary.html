@@ -8,7 +8,7 @@
             <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
                 <div class="flexrow subheader">
                     <!--Name & Dice Roller-->
-                    <div class="flexrow flex-group-left reveal wantToKnowMore">
+                    <div class="flexrow flex-group-left reveal wantToKnowMore" style="max-width: 100%;">
                         <span class="tooltipText">{{item.name}}</span>
                         <h3 class="subheader truncate">
                             <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small" style="margin-right: 5px;"/>
@@ -37,13 +37,13 @@
                         <table>
                             <tr style="background-color: var(--accentBackground);">
                                 <td style="padding-left: 15px; max-width: 20px;">
-                                    <i class="fa-solid fa-chevron-down"></i>
+                                    <i class="fa-solid fa-chevron-down awesomeIcon"></i>
                                 </td>
                                 <td style="width: 100%;">
                                     <label class="resource-label">{{localize "ep2e.sideCar.moreToggle"}}</label>
                                 </td>
                                 <td style="padding-right: 25px; max-width: 20px;">
-                                    <i class="fa-solid fa-chevron-down"></i>
+                                    <i class="fa-solid fa-chevron-down awesomeIcon"></i>
                                 </td>
                             </tr>
                         </table>
@@ -52,13 +52,13 @@
                         <table>
                             <tr style="background-color: var(--accentBackground);">
                                 <td style="padding-left: 15px; max-width: 20px;">
-                                    <i class="fa-solid fa-chevron-up"></i>
+                                    <i class="fa-solid fa-chevron-up awesomeIcon"></i>
                                 </td>
                                 <td style="width: 100%;">
                                     <label class="resource-label">{{localize "ep2e.sideCar.lessToggle"}}</label>
                                 </td>
                                 <td style="padding-right: 25px; max-width: 20px;">
-                                    <i class="fa-solid fa-chevron-up"></i>
+                                    <i class="fa-solid fa-chevron-up awesomeIcon"></i>
                                 </td>
                             </tr>
                         </table>
@@ -66,16 +66,19 @@
                 </div>
                 <div class="item showMore noShow" data-item-id="{{item._id}}">
                     <div class="grid grid-3col">
-                        <div class="flexrow flex-group-left">
-                            <i class="fa-regular fa-crosshairs icon-small alignCenter"></i>
+                        <div class="flexrow flex-group-left wantToKnowMore">
+                            <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-small icon-space"/>
+                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
                             <label class="labelWidth-large noMargin"><strong>{{localize item.system.firingModeLabel}}</strong></label>
                         </div>
-                        <div class="flexrow flex-group-left">
-                            <i class="fa-regular fa-arrows-left-right icon-small alignCenter"></i>
+                        <div class="flexrow flex-group-left wantToKnowMore">
+                            <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}</span>
                             <label class="labelWidth-medium noMargin"><strong>{{item.system.range}}</strong></label>
                         </div>
-                        <div class="flexrow flex-group-left">
-                            <i class="fa-solid fa-explosion icon-small alignCenter"></i>
+                        <div class="flexrow flex-group-left wantToKnowMore">
+                            <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
                             <h4 class="item-image input-medium noMargin"><strong>{{item.system.dv}}</strong></h4>
                         </div>
                     </div>

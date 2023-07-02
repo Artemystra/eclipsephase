@@ -357,11 +357,11 @@ async function showOptionsDialog(template, title, names) {
       content: html,
       buttons: {
         cancel: {
-          label: cancelButton,
+          label: cancelButton.title,
           callback: (html) => resolve({cancelled: true})
         },
         normal: {
-          label: rollButton,
+          label: rollButton.title,
           callback: (html) => resolve(extractFormValues(html))
         }
       },
@@ -477,10 +477,16 @@ export async function TaskCheck({
     if (askForOptions != optionsSettings && skillKey === "guns") {
         let select = game.i18n.localize('ep2e.actorSheet.button.select');
         let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
-        let weaponslist = [{"_id":0, "name": "--"+select+"--"},{"_id":1, "name": flatRollLabel}];
+        let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
         let checkWeapon = "";
         for (let weapon of actorWhole.rangedWeapon){
-            if (weapon.system.active === true){
+            if (actorType === "character"){
+                if (weapon.system.active === true){
+                    let weaponEntry = {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": weapon.system.dv}
+                    weaponslist.push(weaponEntry)
+                }
+            }
+            else {
                 let weaponEntry = {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": weapon.system.dv}
                 weaponslist.push(weaponEntry)
             }
@@ -492,12 +498,13 @@ export async function TaskCheck({
             weaponID = checkWeapon.weaponSelect
         }
 
-        if (checkWeapon.cancelled || weaponID === "0") {
+
+        if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
             return;
         }
         else{
             for (let weapon of actorWhole.rangedWeapon){
-                if (weapon.system.active === true && weapon._id === weaponID){
+                if (weapon._id === weaponID){
                     weaponName = weapon.name;
                     weaponDamage = weapon.system.dv;
                     weaponType = "ranged";
@@ -537,10 +544,16 @@ export async function TaskCheck({
     else if (askForOptions != optionsSettings && skillKey === "melee") {
         let select = game.i18n.localize('ep2e.actorSheet.button.select');
         let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
-        let weaponslist = [{"_id":0, "name": "--"+select+"--"},{"_id":1, "name": flatRollLabel}];
+        let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
         let checkWeapon = "";
         for (let weapon of actorWhole.ccweapon){
-            if (weapon.system.active === true){
+            if (actorType === "character"){
+                if (weapon.system.active === true){
+                    let weaponEntry = {"_id":weapon._id, "name": weapon.name, "dv": weapon.system.dv}
+                    weaponslist.push(weaponEntry)
+                }
+            }
+            else {
                 let weaponEntry = {"_id":weapon._id, "name": weapon.name, "dv": weapon.system.dv}
                 weaponslist.push(weaponEntry)
             }
@@ -552,7 +565,7 @@ export async function TaskCheck({
             weaponID = checkWeapon.weaponSelect
         }
 
-        if (checkWeapon.cancelled || weaponID === "0") {
+        if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
             return;
         }
         else{
@@ -2434,7 +2447,7 @@ export async function TaskCheck({
                 default: "normal",
                 close: () => resolve ({cancelled: true})
             };
-            let options = {width:276}
+            let options = {width:536}
             new Dialog(data, options).render(true);
         });
     }
@@ -2575,7 +2588,7 @@ export async function TaskCheck({
                 },
                 default: "normal"
             };
-            let options = {width:266}
+            let options = {width:276}
             new Dialog(data, options).render(true);
         });
     }

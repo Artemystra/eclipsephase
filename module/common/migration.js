@@ -847,3 +847,137 @@ export async function migrationPre09(startMigration, endMigration){
       return {endMigration}
   }
 }
+
+export async function migrationPre093(startMigration, endMigration){
+  if (startMigration){
+      let actorsInQuestion = [];
+      for(let actor of game.actors){
+        let actorPartial = {"_id": actor._id, "name": actor.name, "unidentifiedWeapons": []}
+        let unidentifiedWeapons = actorPartial.unidentifiedWeapons
+          for(let item of actor.items){
+            const currentVersion = item.system.updated
+            const latestUpdate = "0.9.3";
+            let updated = foundry.utils.isNewerVersion(currentVersion, latestUpdate)
+            if(item.type === "rangedWeapon" && updated === false){
+              let itemID = item._id;
+              let itemName = item.name;
+              let weaponUpdate = {"_id": itemID};
+              let itemUpdate = [];
+              
+              //Migrate Energy Weapons
+              if(itemName === "Battle Laser" || item.name === "Hand Laser" || item.name === "Laser Pulser (Lethal)" || item.name === "Laser Pulser (Stun)" || item.name === "MW Agonizer (Pain)" || item.name === "MW Agonizer (Roast)" || item.name === "Particle Beam Bolter" || item.name === "Stunner"){
+                weaponUpdate["system.ammoType"] = "beam";
+                weaponUpdate["system.updated"] = latestUpdate
+              }
+
+              //Migrate Kinetic Weapons
+              else if(itemName === "Holdout" || item.name === "Medium Pistol" || item.name === "Heavy Pistol" || item.name === "Machine Pistol" || item.name === "Submachine Gun" || item.name === "Assault Rifle" || item.name === "Battle Rifle" || item.name === "Machine Gun" || item.name === "Sniper Rifle" || item.name === "Polygun Pistol" || item.name === "Polygun Rifle" || item.name === "Pult Gun - Roast" || item.name === "Pult Gun - Stun" || item.name === "Pult Rifle - Roast" || item.name === "Pult Rifle - Stun" || itemName.includes("Pult")){
+                weaponUpdate["system.ammoType"] = "kinetic";
+                weaponUpdate["system.updated"] = latestUpdate
+              }
+
+              //Migrate Seeker Weapons
+              else if(itemName === "Disposable Launcher" || item.name === "Seeker Armband" || item.name === "Seeker Pistol" || item.name === "Seeker Rifle" || item.name === "Underbarrel Seeker"){
+                weaponUpdate["system.ammoType"] = "seeker";
+                weaponUpdate["system.updated"] = latestUpdate
+              }
+
+              //Migrate Spray Weapons
+              else if(itemName === "Buzzer" || item.name === "Freezer" || item.name === "Plasma Rifle" || item.name === "Shard Pistol" || item.name === "Shredder" || item.name === "Sprayer" || item.name === "Torch" || item.name === "Vortex Ring Gun"){
+                weaponUpdate["system.ammoType"] = "spray";
+                weaponUpdate["system.updated"] = latestUpdate
+              }
+
+              //Migrate Rail Weapons
+              else if(itemName.includes("Rail")){
+                weaponUpdate["system.ammoType"] = "rail";
+                weaponUpdate["system.updated"] = latestUpdate
+              }
+              else {
+                weaponUpdate["name"] = item.name;
+                unidentifiedWeapons.push(weaponUpdate)
+              }
+
+              itemUpdate.push(weaponUpdate);
+              actor.updateEmbeddedDocuments("Item", itemUpdate);
+            }
+          }
+          
+          let listOfUnidentifiedWeapons = actorPartial.unidentifiedWeapons
+          if (listOfUnidentifiedWeapons.length){
+            actorsInQuestion.push(actorPartial)
+          }
+      }
+
+      let catalogueWeapons = await weaponCategorization(actorsInQuestion)
+
+      if(catalogueWeapons.cancelled){
+        return
+      }
+
+      let weaponUpdate = catalogueWeapons.weaponUpdateList
+
+      for (let itemPackage of weaponUpdate){
+        let updateID = itemPackage._id;
+        for(let actor of game.actors){
+          let Updater = []
+          if (actor._id === updateID){
+            Updater.push(itemPackage[0]);
+            actor.updateEmbeddedDocuments("Item", Updater);
+          }
+        }
+      }
+
+
+      game.settings.set("eclipsephase", "migrationVersion", "0.9.3");
+      endMigration = true
+      return {endMigration}
+  }
+
+  async function weaponCategorization(actorsInQuestion){
+    let resetButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
+    let dialogType = "weaponCategorization";
+    let title = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+    const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+    const html = await renderTemplate(template, {actorsInQuestion, dialogType});
+
+    
+    return new Promise(resolve => {
+        const data = {
+            title: title,
+            content: html,
+            buttons: {
+              normal: {
+                  label: resetButton,
+                  callback: html => resolve(_proWeaponCategorization(html[0].querySelector("form")))
+              }
+            },
+            default: "normal",
+            close: () => resolve ({cancelled: true})
+        };
+        let options = {width:791}
+        new Dialog(data, options).render(true);
+    });
+  }
+
+  //selectChars results
+  function _proWeaponCategorization(form) {
+    let weaponUpdateList = [];
+
+    for (let key of Object.entries(form)){
+      let updatePackage = []
+      updatePackage._id = key[1].title
+
+      let weaponUpdateItem = {"_id": key[1].name};
+      weaponUpdateItem["system.ammoType"] = key[1].value;
+      weaponUpdateItem["system.updated"] = "0.9.3"
+
+      updatePackage.push(weaponUpdateItem)
+      weaponUpdateList.push(updatePackage)
+    }
+    return {
+      weaponUpdateList
+    }
+
+}
+}

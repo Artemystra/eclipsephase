@@ -644,6 +644,9 @@
       },
       "weapon": {
         "table": {
+          "type": {
+            "label": "Typ"
+          },
           "range": "Reichw.",
           "maxAmmo": "Munition",
           "damageValue": "SW",
@@ -669,6 +672,14 @@
             "oneHanded": "Einhändig",
             "twoHanded": "Zweihändig",
             "bulky": "Sperrig"
+          },
+          "ammoUsed": {
+            "beam": "Strahlenwaffe",
+            "kinetic": "Kinetische Waffe",
+            "grenade": "Granatenwerfer",
+            "seeker": "Seeker",
+            "spray": "Sprühwaffe",
+            "rail": "Gausswaffe"
           }
         }
       },

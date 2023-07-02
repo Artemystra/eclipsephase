@@ -1,8 +1,9 @@
 {
   "id": "eclipsephase",
+  "background": "systems/eclipsephase/resources/img/bannerEclipsePhase.webp",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "compatibility": {
     "verified": "11",
     "minimum": "11"
@@ -24,6 +25,7 @@
   ],
   "packs": [
     {
+      "banner": "systems/eclipsephase/resources/img/bannerWare.webp",
       "name": "ware",
       "label": "Ware",
       "system": "eclipsephase",
@@ -33,6 +35,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerEgoTraits.webp",
       "name": "ego-traits",
       "label": "Ego Traits",
       "system": "eclipsephase",
@@ -42,6 +45,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerMorphTraits.webp",
       "name": "morph-traits",
       "label": "Morph Traits",
       "system": "eclipsephase",
@@ -51,6 +55,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerArmor.webp",
       "name": "armor",
       "label": "Armor",
       "system": "eclipsephase",
@@ -60,6 +65,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerWeapons.webp",
       "name": "weapons",
       "label": "Weapons",
       "system": "eclipsephase",
@@ -69,6 +75,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerPsiSleights.webp",
       "name": "psi-sleights",
       "label": "Psi Sleights",
       "system": "eclipsephase",
@@ -78,6 +85,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerGear.webp",
       "name": "gear",
       "label": "Gear",
       "system": "eclipsephase",
@@ -87,6 +95,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerVehicles.webp",
       "name": "vehicles",
       "label": "Vehicles",
       "system": "eclipsephase",
@@ -96,6 +105,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerAmmo.webp",
       "name": "ammo",
       "label": "Ammo",
       "system": "eclipsephase",
@@ -105,6 +115,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerApps.webp",
       "name": "apps",
       "label": "Apps",
       "system": "eclipsephase",
@@ -114,6 +125,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerDrugs.webp",
       "name": "drugs-and-toxins",
       "label": "Drugs and Toxins",
       "system": "eclipsephase",
@@ -123,6 +135,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerGrenades.webp",
       "name": "grenades",
       "label": "Grenades",
       "system": "eclipsephase",
@@ -132,6 +145,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerMeshServices.webp",
       "name": "meshservices",
       "label": "Mesh Services",
       "system": "eclipsephase",
@@ -141,6 +155,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerHomebrew.webp",
       "name": "diemens-homebrew-items",
       "label": "Diemen's Homebrew Items",
       "system": "eclipsephase",
@@ -150,6 +165,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerSampleCharacters.webp",
       "name": "samplecharacters",
       "label": "Sample Characters",
       "system": "eclipsephase",
@@ -159,6 +175,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerBots.webp",
       "name": "bots",
       "label": "Bots",
       "system": "eclipsephase",
@@ -168,6 +185,7 @@
       "flags": {}
     },
     {
+      "banner": "systems/eclipsephase/resources/img/bannerAnimals.webp",
       "name": "animals",
       "label": "Animals",
       "system": "eclipsephase",

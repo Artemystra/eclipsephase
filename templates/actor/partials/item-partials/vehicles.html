@@ -35,8 +35,8 @@
             {{/if}}
         </div>
         <div class="flexrow item-controls flex-group-center" style="max-width: 50px; min-width: 50px; height: 24px;">
-            <a class="item-control item-delete resource-label editWithLabel input-xs alignCenter" title="Delete Item"><i class="far fa-times-circle"></i></a>
-            <a class="item-control item-edit resource-label editWithLabel  input-xs alignCenter" title="Edit Item"><i class="far fa-edit"></i></a>
+            <a class="item-control item-delete resource-label editWithLabel input-xs alignCenter" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+            <a class="item-control item-edit resource-label editWithLabel  input-xs alignCenter" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
         </div>
     </div>
     <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
@@ -50,12 +50,12 @@
             <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
         {{/if}}
             <div>
-                <i class="fa-solid fa-heart-pulse wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
+                <i class="fa-solid fa-heart-pulse wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span></i>
                 <input class="input-xs sheet-inline-edit" data-field="system.curDur" type="number" name="item.system.curDur" value="{{item.system.curDur}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.dur}}/{{item.system.dr}}</span>                               
             </div>
             {{#if (eq item.system.type "animal")}}
             <div>
-                <i class="fa-solid fa-brain wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
+                <i class="fa-solid fa-brain wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span></i>
                 <input class="input-xs sheet-inline-edit" data-field="system.curLuc" type="number" name="item.system.curLuc" value="{{item.system.curLuc}}" placeholder="0"/><span class="resource-value input-small">/{{item.system.luc}}/{{item.system.ir}}</span>
             </div>
             {{/if}}
@@ -75,18 +75,18 @@
             </div>
             {{#if (eq item.system.type "animal")}}
                 <div>
-                    <i class="fa-regular fa-stopwatch wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
+                    <i class="fa-regular fa-stopwatch wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span></i>
                     <strong>{{item.system.init}}</strong> 
                 </div>
             {{/if}}
             {{#if (eq item.system.type "vehicle")}}
                 <div>
-                    <i class="fa-regular fa-seat-airline wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.peripherals.table.passengers"}}</span></i>
+                    <i class="fa-regular fa-seat-airline wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.peripherals.table.passengers"}}</span></i>
                     <input class="input-medium"type="number" name="system.pass" value="{{item.system.pass}}" placeholder="0"/>
                 </div>
             {{/if}}
             <div>
-                <i class="fa-regular fa-ruler wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
+                <i class="fa-regular fa-ruler wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
                 <span class="resource-label alignCenter" style=" min-width: 26px; width: auto;">{{localize item.system.slotName}}</span>
             </div>
         </div>
@@ -97,13 +97,13 @@
             <div>                             
             </div>
             <div>
-                <i class="fa-regular fa-bandage wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.woundswt"}}</span></i>
+                <i class="fa-regular fa-bandage wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.woundswt"}}</span></i>
                 <input class="input-xs" type="number" name="system.wounds" value="{{item.system.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.wt}})</span>
             </div>
             <div>
             </div>
             <div>
-                <i class="fa-regular fa-burst wantToKnowMore" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
+                <i class="fa-regular fa-burst wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
                 <input class="input-xs" type="number" name="system.trauma" value="{{item.system.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{item.system.tt}})</span>
             </div>
             <div>
