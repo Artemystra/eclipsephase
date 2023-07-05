@@ -22,7 +22,10 @@
   "ep2e": {
     "actorSheet": {
       "placeholders": {
-        "actorName": "Name"
+        "actorName": "Name",
+        "selectGender": "Select Gender",
+        "selectSex": "Select Sex",
+        "selectOrigin": "Select Origin"
       },
       "aptitudes": {
         "headline": "Aptitudes",

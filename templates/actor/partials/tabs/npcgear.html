@@ -176,8 +176,9 @@
                     <div class="flexrow headSpace">
                         {{#if actor.morphTrait}}
                         {{#each actor.morphTrait as |item id|}}
-                        <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                        <div class="item flexrow flex-group-center pill wantToKnowMoreFixed" data-item-id="{{item._id}}">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>
                             <div class="item-controls flex-group-right" style="flex: 0.2;">
                                 <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
@@ -194,8 +195,9 @@
                     <div class="flexrow headSpace">
                         {{#if actor.morphFlaw}}
                         {{#each actor.morphFlaw as |item id|}}
-                        <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}">
+                        <div class="item flexrow flex-group-center pill wantToKnowMoreFixed" data-item-id="{{item._id}}">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>
                             <div class="item-controls flex-group-right" style="flex: 0.2;">
                                 <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
@@ -212,8 +214,9 @@
                     <div class="flexrow headSpace">
                         {{#if actor.ware}}
                         {{#each actor.ware as |item id|}}
-                        <div class="item flexrow flex-group-center pill" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
+                        <div class="item flexrow flex-group-center pill wantToKnowMoreFixed" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>
                             <div class="flex-group-right" style="flex: 0.2;">
                                 <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
@@ -269,8 +272,9 @@
                     <div class="flexrow headSpace">
                         {{#if actor.gear}}
                         {{#each actor.gear as |item id|}}
-                        <div class="item flexrow trunContainer flex-between" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px; background-color: var(--pitchBorder); padding: 0 10px 0 10px;">
+                        <div class="item flexrow trunContainer flex-between wantToKnowMoreFixed" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px; background-color: var(--pitchBorder); padding: 0 10px 0 10px;">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                            <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>
                             <label class="flex-group-center noMargin
                             alignCenter" style="background: none;
                             font-size: 12px; flex:

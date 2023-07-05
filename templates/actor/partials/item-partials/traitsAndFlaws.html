@@ -1,9 +1,9 @@
 <div class="item flexrow" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="align-items: start;">
     <div class="item-image flexrow flex-group-center input-small" style="font-size: 22px; min-height: 36px; min-width: 40px;">
         {{#if (eq itemType "fail")}}
-        <i class="far fa-minus-square fail awesomeIcon"></i>
+        <i class="far fa-minus-square fail"></i>
         {{else if (eq itemType "success")}}
-        <i class="far fa-plus-square success awesomeIcon"></i>
+        <i class="far fa-plus-square success"></i>
         {{else if (eq itemType "ware")}}
         <img src="{{item.img}}" title="{{item.name}}" width="24" height="24" style="max-width: 24px;"/>
         {{/if}}

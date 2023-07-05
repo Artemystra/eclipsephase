@@ -27,6 +27,7 @@
   --color-border-highlight: #36aee9;
   --color-underline-header: #36aee9;
   --color-underline-active: #36aee9;
+  --color-bg-btn-minor-inactive: #414141;
 }
 
 .grid,
@@ -1742,7 +1743,12 @@ h3.inline {
   max-width: fit-content;
 }
 
-.wantToKnowMore .tooltipText {
+.wantToKnowMoreFixed {
+  position: relative;
+}
+
+.wantToKnowMore .tooltipText,
+.wantToKnowMoreFixed .tooltipText{
     opacity: 0;
     transition: opacity 1s;
     transition-delay: 1s;
@@ -1764,11 +1770,13 @@ h3.inline {
     z-index: 100;
 }
 
-.wantToKnowMore:hover .tooltipText {
+.wantToKnowMore:hover .tooltipText,
+.wantToKnowMoreFixed:hover .tooltipText {
   opacity: 1;
 }
 
-.wantToKnowMore:hover .tooltipText {
+.wantToKnowMore:hover .tooltipText,
+.wantToKnowMoreFixed:hover .tooltipText {
   visibility: visible;
 }
 
