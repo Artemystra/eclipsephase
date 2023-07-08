@@ -550,7 +550,7 @@ export default class EPactorSheet extends ActorSheet {
 
     
 
-    // Add Inventory Item
+    // Add Custom Skill Item
     html.find('.item-create').click(this._onItemCreate.bind(this));
 
     // Update Inventory Item

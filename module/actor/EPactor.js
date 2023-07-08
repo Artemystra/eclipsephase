@@ -102,10 +102,10 @@ export default class EPactor extends Actor {
     //Durability
     if(this.type === "character") {
       let morph = actorModel.bodies[actorModel.bodies.activeMorph];
-      actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0);
+      actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
       actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
-      actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type]));
-      actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max;
+      actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) ? Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) : 0;
+      actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max ? actorModel.physical.dr - actorModel.health.physical.max : 0;
       actorModel.health.death.value = actorModel.health.physical.value - actorModel.physical.dr
 
       if (actorModel.health.physical.value < actorModel.health.physical.max){
@@ -256,18 +256,22 @@ export default class EPactor extends Actor {
    if(actorModel.homebrew === true && this.type === "character"){
     //Weapon Variables
     let weaponScore = 0;
+    let weaponScoreMod = actorModel.mods.weaponScoreMod ? eval(actorModel.mods.weaponScoreMod) : 0;
     let bulkyWeaponCount = 0;
     let weaponMalus = 0;
     let weaponItems = this.items.filter(i => i.type === "rangedWeapon" || i.type === "ccWeapon");
     //Gear Variables
     let gearItems = this.items.filter(i => i.type === "gear");
     let accessoryCount = 0;
+    let accessoryCountMod = actorModel.mods.accessoryCountMod ? eval(actorModel.mods.accessoryCountMod) : 0;
     let accessoryMalus = 0;
     let bulkyCount = 0;
+    let bulkyCountMod = actorModel.mods.bulkyCountMod ? eval(actorModel.mods.bulkyCountMod) : 0;
     let bulkyMalus = 0;
     //Consumable Encumberance
     let consumableItems = this.items.filter(i => i.system.slotType === "consumable");
     let consumableCount = 0;
+    let consumableCountMod = actorModel.mods.consumableCountMod ? eval(actorModel.mods.consumableCountMod) : 0;
     let consumableMalus = 0;
     //Weapon loop
     for(let weaponCheck of weaponItems){
@@ -278,7 +282,7 @@ export default class EPactor extends Actor {
           weaponScore += 2;
         }
         else if(weaponCheck.system.active && weaponCheck.system.slotType === "twoHanded"){
-          weaponScore += 5;
+          weaponScore += 4;
         }
         else if(weaponCheck.system.active && weaponCheck.system.slotType === "bulky"){
           bulkyWeaponCount++;
@@ -306,18 +310,17 @@ export default class EPactor extends Actor {
       }
     }
     //Modification Calculator
-    if(accessoryCount > 4){
-      accessoryMalus = Math.ceil((accessoryCount-4)/4)*10;
+    if(accessoryCount + accessoryCountMod > 4){
+      accessoryMalus = Math.ceil((accessoryCount + accessoryCountMod -4)/4)*10;
     }
-    if(weaponScore > 6){
-      
-      weaponMalus = Math.ceil((weaponScore-5)/5)*10;
+    if(weaponScore + weaponScoreMod > 5){
+      weaponMalus = (Math.ceil((weaponScore + weaponScoreMod -5)/5)*10);
     }
-    if(bulkyCount >= 1 || bulkyWeaponCount >= 1){
-      bulkyMalus = (bulkyCount+bulkyWeaponCount)*20;
+    if(bulkyCount + bulkyWeaponCount + bulkyCountMod >= 1){
+      bulkyMalus = (bulkyCount + bulkyWeaponCount + bulkyCountMod)*20;
     }
-    if(consumableCount > 3){
-      consumableMalus = Math.ceil((consumableCount-3)/3)*10;
+    if(consumableCount + consumableCountMod > 3){
+      consumableMalus = Math.ceil((consumableCount + consumableCountMod -3)/3)*10;
     }
 
     actorModel.physical.totalWeaponMalus = weaponMalus;

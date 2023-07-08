@@ -258,6 +258,18 @@
   justify-content: flex-start;
 }
 
+.eclipsephase nav.sheet-tabs {
+  min-height: 50px;
+  margin: 10px 0 0 0;
+  border: none;
+}
+
+.eclipsephase .item-sheet-body{
+  min-height: fit-content;
+  background-color: var(--mainBackground);
+  padding-top: 10px;
+}
+
 .eclipsephase .profile-img {
   min-width: 100%;
   min-height: 339px;
@@ -615,7 +627,7 @@ select,
   background: transparent;
   border: none;
   height: 20px;
-  padding: 0;
+  padding-left: 5px;
 }
 
 textarea {
@@ -628,6 +640,7 @@ input[type="text"]::placeholder,
 input[type="number"]::placeholder,
 textarea::placeholder{
   color: #8a8a8a;
+  padding-left: 5px;
 }
 
 input[type="text"]:focus,
@@ -637,6 +650,7 @@ textarea:focus{
   background: var(--focusBackground);
   box-shadow: 0 0 10px var(--highlight);
   outline: none;
+  padding-left: 5px;
 }
 
 input[type="text"]:hover,
@@ -645,6 +659,7 @@ select:focus,
 textarea:focus{
   background: var(--focusBackground);
   outline: none;
+  padding-left: 5px;
 }
 
 textarea:read-only{
@@ -1109,6 +1124,7 @@ h1, h2, h3, h4 {
 h3.subheader {
   background-color: var(--accentBackground);
   clip-path: polygon(0 0, 70% 0, 100% 100%, 0% 100%);
+  min-height: 30.5px;
   padding: 0.3em 0.5em 0.2em 0.5em;
   font-weight: bold;
   border: 0;
@@ -1239,6 +1255,7 @@ h3.subheaderBlank {
 
 .input-xs {
   max-width: 25px!important;
+  padding: 0!important;
 }
 
 .input-small {
@@ -1504,7 +1521,7 @@ ol {
 
 .textAreaDescription {
   border-radius: 0;
-  flex-grow: 3!important;
+  max-height: fit-content;
 }
 
 .selectSpecApt {

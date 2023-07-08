@@ -11,9 +11,9 @@ export default class EPrangedWeaponSheet extends ItemSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       resizable: false,
-      width: 720,
-      height: 445,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      width: 750,
+      height: 475,
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".item-sheet-body", initial: "description" }]
     });
   }
 
@@ -60,10 +60,10 @@ export default class EPrangedWeaponSheet extends ItemSheet {
 
   /* -------------------------------------------- */
 
-  /** @override */
+  /** @override
   setPosition(options = {}) {
     const position = super.setPosition(options);
-    const sheetBody = this.element.find(".sheet-body");
+    const sheetBody = this.element.find(".item-sheet-body");
     const bodyHeight = position.height - 192;
     sheetBody.css("height", bodyHeight);
     return position;

@@ -12,8 +12,8 @@ export default class EPgearSheet extends ItemSheet {
       classes: ["eclipsephase", "sheet", "item"],
       resizable: false,
       width: 520,
-      height: 445,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      height: 480,
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".item-sheet-body", initial: "description" }]
     });
   }
 
@@ -60,10 +60,10 @@ export default class EPgearSheet extends ItemSheet {
 
   /* -------------------------------------------- */
 
-  /** @override */
+  /** @override 
   setPosition(options = {}) {
     const position = super.setPosition(options);
-    const sheetBody = this.element.find(".sheet-body");
+    const sheetBody = this.element.find(".item-sheet-body");
     const bodyHeight = position.height - 192;
     sheetBody.css("height", bodyHeight);
     return position;

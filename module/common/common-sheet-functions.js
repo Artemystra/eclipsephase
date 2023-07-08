@@ -26,6 +26,7 @@ export function registerEffectHandlers(html,callerobj){
           label: 'Active Effect',
           icon: '/icons/svg/mystery-man.svg'
         }]);
+        
       });
   
       html.find('.effect-edit').click(ev => {
@@ -34,9 +35,30 @@ export function registerEffectHandlers(html,callerobj){
         effect.sheet.render(true);
       });
   
-      html.find('.effect-delete').click(ev => {
+      html.find('.effect-delete').click(async ev => {
+        let askForOptions = ev.shiftKey;
+
+        if (!askForOptions){
+
         const li = $(ev.currentTarget).parents(".effect");
-        callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
+        const itemName = [li.data("itemName")] ? [li.data("itemName")] : null;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete"))+ " " +(itemName?itemName:"");
+        const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";
+        const popUpInfo = "ep2e.actorSheet.popUp.deleteAdditionalInfo";
+
+        let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
+        
+        if(popUp.confirm === true){
+          callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
+          }
+          else{
+            return
+          }
+        }
+        else {
+          callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
+        }
       });
   
 }

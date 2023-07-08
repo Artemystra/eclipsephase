@@ -10,8 +10,8 @@ export default class EPvehicleSheet extends ItemSheet {
       classes: ["eclipsephase", "sheet", "item"],
       resizable: false,
       width: 1010,
-      height: 400,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      height: 505,
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".item-sheet-body", initial: "description" }]
     });
   }
 
@@ -41,10 +41,10 @@ export default class EPvehicleSheet extends ItemSheet {
 
   /* -------------------------------------------- */
 
-  /** @override */
+  /** @override 
   setPosition(options = {}) {
     const position = super.setPosition(options);
-    const sheetBody = this.element.find(".sheet-body");
+    const sheetBody = this.element.find(".item-sheet-body");
     const bodyHeight = position.height - 192;
     sheetBody.css("height", bodyHeight);
     return position;

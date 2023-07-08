@@ -386,25 +386,7 @@ export default class EPnpcSheet extends ActorSheet {
 
         // Rollable abilities.
         html.find('.task-check').click(this._onTaskCheck.bind(this));
-
-        html.find('.effect-create').click(ev => {
-            this.actor.createEmbeddedDocuments('ActiveEffect', [{
-              label: 'Active Effect',
-              icon: '/icons/svg/mystery-man.svg'
-            }]);
-          });
-      
-          html.find('.effect-edit').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            const effect = this.actor.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
-            effect.sheet.render(true);
-          });
-      
-          html.find('.effect-delete').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            this.actor.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
-            li.slideUp(200, () => this.render(false));
-          });
+        
         // Drag events for macros.
         if (this.actor.isOwner) {
             let handler = ev => this._onDragItemStart(ev);

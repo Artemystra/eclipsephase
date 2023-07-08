@@ -395,25 +395,7 @@ export default class EPgoonSheet extends ActorSheet {
                 li.addEventListener("dragstart", handler, false);
             });
         }
-
-        html.find('.effect-create').click(ev => {
-            this.actor.createEmbeddedDocuments('ActiveEffect', [{
-              label: 'Active Effect',
-              icon: '/icons/svg/mystery-man.svg'
-            }]);
-          });
-      
-          html.find('.effect-edit').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            const effect = this.actor.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
-            effect.sheet.render(true);
-          });
-      
-          html.find('.effect-delete').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            this.actor.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
-            li.slideUp(200, () => this.render(false));
-          });
+        
         //Item Input Fields
         html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
