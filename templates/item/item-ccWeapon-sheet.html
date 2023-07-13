@@ -6,56 +6,191 @@
         </div>
     </header>
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        {{#if (ne item.system.secondaryMode true)}}
         <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
+        <div class="itemSmall wantToKnowMore toggleItem"data-path="system.secondaryMode" style="margin: 0 10px; background-color: var(--accentBackground); max-width: 55px;">
+            <i class="fas fa-plus awesomeIcon"></i>
+            <label class="tooltipText">{{localize "ep2e.item.general.tabs.addMode"}}</label>
+        </div>
+        {{else}}
+        <a class="item" data-tab="details">{{#if item.system.mode1.name}}{{localize item.system.mode1.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode1"}}{{/if}}</a>
+        <div  class="item" data-tab="details2">
+            <a>{{#if item.system.mode2.name}}{{localize item.system.mode2.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode2"}}{{/if}}</a>
+            <div class="itemSmall wantToKnowMore toggleItem"data-path="system.secondaryMode" style=" max-width: 25px; justify-content: flex-end;">
+                <a><i class="far fa-times-circle awesomeIcon" style="margin-bottom: 6px;"></i></a>
+            </div>
+        </div>
+        {{/if}}
+        <a class="item" data-tab="description">{{localize "ep2e.item.general.table.description"}}</a>
         {{#if item.showEffectsTab}}
         <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
         {{/if}}
     </nav>
     {{!-- Sheet Body --}}
 
-    <section class="item-sheet-body">
-        <div class="tab details" data-group="primary" data-tab="details">
-        <div class="flexrow flex-group-center">
-            <table>
-                <tr>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.weapon.table.damageValue"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.weapon.table.slot.label"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input class="input-large alignCenter" type="text" name="system.dv" value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
-                    </td>
-                    <td>
-                        <select name="system.slotType" data-type="String">
-                            {{#select item.system.slotType}}
-                            {{#each config.weaponTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    <td>
+    <section class="item-sheet-body" style="min-height: 245px; height: fit-content;">
+
+        <!-- Details Tab / Weapon Mode 1 Tab -->
+        <div class="tab details" data-group="primary" data-tab="details" style="padding: none;">
+            <div class="item contentBox" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="padding-bottom: 5px;">
+                <div class="flexrow">
+                    <h3 class="subheader dialog">
+                        {{#if (eq item.system.secondaryMode true)}}
+                            <label class="item-standard-margin-medium">{{localize "ep2e.item.weapon.table.weaponMode"}}:</label>
+                            <input class="alignLeft input-XXL" type="text" name="system.mode1.name" value="{{item.system.mode1.name}}" placeholder="{{localize 'ep2e.item.general.tabs.weaponMode1'}}"/>
+                        {{/if}}
+                    </h3>
+                </div>
+            </div>
+            
+            <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+                <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+                    <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                        <input class="input-xs"type="number" name="system.mode1.d10" value="{{item.system.mode1.d10}}" placeholder="0"/>
+                        <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                        <input class="input-xs"type="number" name="system.mode1.d6" value="{{item.system.mode1.d6}}" placeholder="0"/>
+                        <i class="fas fa-plus awesomeIcon"></i>
+                        <input class="input-xs"type="number" name="system.mode1.bonus" value="{{item.system.mode1.bonus}}" placeholder="0"/>
+                    </div>
+                    <div class="wantToKnowMore flexrow alignCenter">
+                        <i class="fa-regular fa-coins awesomeIcon" style="font-size: 18px;"></i>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span>
                         <select name="system.cost" data-type="String">
                             {{#select item.system.cost}}
                             {{#each config.costTypes as |name key|}}
                             <option value="{{key}}">{{localize name}}</option>
                             {{/each}} {{/select}}
                         </select>
-                    </td>
-                </tr>
-            </table>
+                    </div>
+                    <div class="wantToKnowMore flexrow alignCenter">
+                        <i class="fa-regular fa-ruler awesomeIcon" style="font-size: 18px;"></i>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.slot.label"}}</span>
+                        <select name="system.slotType" data-type="String" style="max-width: 110px;">
+                            {{#select item.system.slotType}}
+                            {{#each config.weaponTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="flexrow item" style="padding: 10px 0;">
+                <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
+                    <a class="resource-label slideShow"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.item.weapon.table.addTrait"}}</a>
+                </div>
+                <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute; top: 255px; left: 13px">
+                    <div class="grid grid-5col">
+                        {{#each item.system.mode1.traits as |item key|}}
+                            {{#if (eq item.value false)}}
+                                <div style="padding: 0 10px;">
+                                    <p><a class="toggleItem" style="min-width: 100%;" data-path="system.mode1.traits.{{key}}.value">{{localize item.name}}</a></p>
+                                </div>
+                            {{else}}
+                                <div style="padding: 0 10px;">
+                                    <p><a class="toggleItem" style="min-width: 100%; color: var(--inactive);" data-path="system.mode1.traits.{{key}}.value"><s>{{localize item.name}}</s></a></p>
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            <div class="flexrow">
+                {{#each item.system.mode1.traits as |item key|}}
+                    {{#if (eq item.value true)}}
+                        <div style="max-width: fit-content; min-width: fit-content; padding: 10px; background-color: var(--pitchBorder); margin: 0 5px 5px 0;">
+                            <a><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode1.traits.{{key}}.value"></i></a>
+                            <a class="moreInfoDialog" data-description="ep2e.rule.effect.weapon.{{key}}" data-title="{{item.name}}">
+                                <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                                <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                            </a>
+                        </div>
+                    {{/if}}
+                {{/each}}
+            </div>
         </div>
-        <p></p>
-        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
-        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
-    </div>
-    {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
 
+        <!-- Details Tab / Weapon Mode 2 Tab -->
+        <div class="tab details2" data-group="primary" data-tab="details2" style="padding: none;">
+            <div class="item contentBox" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="padding-bottom: 5px;">
+                <div class="flexrow">
+                    <h3 class="subheader dialog">
+                        {{#if (eq item.system.secondaryMode true)}}
+                            <label class="item-standard-margin-medium">{{localize "ep2e.item.weapon.table.weaponMode"}}:</label>
+                            <input class="alignLeft input-XXL" type="text" name="system.mode2.name" value="{{item.system.mode2.name}}" placeholder="{{localize 'ep2e.item.general.tabs.weaponMode2'}}"/>
+                        {{/if}}
+                    </h3>
+                </div>
+            </div>
+            
+            <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+                <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+                    <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                        <input class="input-xs"type="number" name="system.mode2.d10" value="{{item.system.mode2.d10}}" placeholder="0"/>
+                        <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                        <input class="input-xs"type="number" name="system.mode2.d6" value="{{item.system.mode2.d6}}" placeholder="0"/>
+                        <i class="fas fa-plus awesomeIcon"></i>
+                        <input class="input-xs"type="number" name="system.mode2.bonus" value="{{item.system.mode2.bonus}}" placeholder="0"/>
+                    </div>
+                    <div class="wantToKnowMore flexrow alignCenter" style="color: var(--inactive); min-height: 22,5;">
+                        <i class="fa-regular fa-coins awesomeIcon" style="font-size: 18px;"></i>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.boundTo"}}</span>
+                        <label class="capital" style="font-size: 13px; margin-left:9px">{{localize item.system.costName}}</label>
+                    </div>
+                    <div class="wantToKnowMore flexrow alignCenter" style="color: var(--inactive); min-height: 22,5;">
+                        <i class="fa-regular fa-ruler awesomeIcon" style="font-size: 18px;"></i>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.boundTo"}}</span>
+                        <label class="capital" style="font-size: 13px; margin-left:-2px; min-width: 100px;">{{localize item.system.slotName}}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="flexrow item" style="padding: 10px 0;">
+                <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
+                    <a class="resource-label slideShow"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.item.weapon.table.addTrait"}}</a>
+                </div>
+                <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute; top: 255px; left: 13px">
+                    <div class="grid grid-5col">
+                        {{#each item.system.mode2.traits as |item key|}}
+                            {{#if (eq item.value false)}}
+                                <div style="padding: 0 10px;">
+                                    <p><a class="toggleItem" style="min-width: 100%;" data-path="system.mode2.traits.{{key}}.value">{{localize item.name}}</a></p>
+                                </div>
+                            {{else}}
+                                <div style="padding: 0 10px;">
+                                    <p><a class="toggleItem" style="min-width: 100%; color: var(--inactive);" data-path="system.mode2.traits.{{key}}.value"><s>{{localize item.name}}</s></a></p>
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            <div class="flexrow">
+                {{#each item.system.mode2.traits as |item key|}}
+                    {{#if (eq item.value true)}}
+                        <div style="max-width: fit-content; min-width: fit-content; padding: 10px; background-color: var(--pitchBorder); margin: 0 5px 5px 0;">
+                            <a><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode2.traits.{{key}}.value"></i></a>
+                            <a class="moreInfoDialog" data-description="ep2e.rule.effect.weapon.{{key}}" data-title="{{item.name}}">
+                                <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                                <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                            </a>
+                        </div>
+                    {{/if}}
+                {{/each}}
+            </div>
+        </div>
+        
+        <!-- Description Tab -->
+        <div class="tab description" data-group="primary" data-tab="description" style="padding: none;">
+            <div class="textAreaDescription">
+                <textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea>
+            </div>
+        </div>
+
+        <!-- Effects Tab -->
+        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+        
     </section>
 </form>

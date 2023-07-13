@@ -8,7 +8,6 @@ import  EPactorSheet from "./actor/EPactorSheet.js";
 import  EPnpcSheet from "./actor/EPnpcSheet.js";
 import  EPgoonSheet from "./actor/EPgoonSheet.js";
 import  EPgearSheet from "./item/EPgearSheet.js";
-import  EPrangedWeaponSheet from "./item/EPrangedWeaponSheet.js";
 import  EPtraitSheet  from "./item/EPtraitSheet.js";
 import  EPflawSheet from "./item/EPflawSheet.js";
 import  EPaspectSheet  from "./item/EPaspectSheet.js";
@@ -19,7 +18,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093} from "./common/migration.js";
+import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre094} from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -132,8 +131,7 @@ Hooks.once('init', async function() {
   Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
   Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPrangedWeaponSheet, {types: ["rangedWeapon"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
   Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
@@ -210,6 +208,7 @@ let isLegacy = foundry.utils.isNewerVersion("0.8.1", gameVersion)
 let before0861 = foundry.utils.isNewerVersion("0.8.6.1", gameVersion)
 let before09 = foundry.utils.isNewerVersion("0.9", gameVersion)
 let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion)
+let before094 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -282,6 +281,25 @@ else if (before093) {
   let Migration093 = await migrationPre093(startMigration)
 
   endMigration = Migration093["endMigration"]
+
+  await migrationEnd(endMigration)
+
+}
+
+//0.9.4 Migration
+else if (before094) {
+  const messageCopy = "ep2e.migration.094"
+  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    startMigration = migration.start
+  }
+
+  let Migration094 = await migrationPre094(startMigration)
+
+  endMigration = Migration094["endMigration"]
 
   await migrationEnd(endMigration)
 

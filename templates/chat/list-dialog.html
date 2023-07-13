@@ -1,5 +1,6 @@
 <form>
     {{#if (eq dialogType "weaponCategorization")}}
+
         <div class="listBackgroundMain">
             {{{localize "ep2e.migration.093WeaponCategorizerCopy"}}}
         </div>
@@ -25,13 +26,19 @@
                 </div>
             {{/each}}
          </div>
+
     {{else if (eq dialogType "weaponList")}}
+
         <div class="flexrow subheader">
-            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.headline"}}</h3>
+            {{#if weaponslist.headline}}
+                <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline"}}</h3>
+            {{else}}
+                <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.headline"}}</h3>
+            {{/if}}
         </div>
         <div class="grid" style="margin-bottom: 20px;">
             {{#each weaponslist}}
-            <div style="min-height: 40px; display: flex; align-items: center;">
+            <div style="min-height: 40px; display: flex;">
                 {{#if _id}}
                 <div>
                     <input type="radio" name="WeaponSelect" value="{{_id}}" id="{{_id}}">
@@ -59,7 +66,9 @@
             </div>
             {{/each}}
         </div>
+
     {{else}}
+
         <div class="form-group listBackgroundMain">
             <p>{{{localize "ep2e.systemMessage.resetRest.copy"}}}</p>
         </div>

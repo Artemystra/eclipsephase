@@ -1,13 +1,12 @@
 {{!-- Effects Tab --}}
         <div class="tab effects" data-group="primary" data-tab="effects">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Active Effects</h3>
-                <div class="alignRight flexGrowHalf reveal">
-                    <div class="alignRight flexGrowHalf">
-                        <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> Add Active Effect</a>
-                    </div>
+
+            <div class="flexrow item" style="padding: 10px 0 0 0;">
+                <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
+                    <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.actorSheet.button.addNew"}}</a>
                 </div>
             </div>
+            
             <div class="itemBackground">
                 {{#each item.effects as |item id|}}
                 <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="margin-bottom: 10px;">

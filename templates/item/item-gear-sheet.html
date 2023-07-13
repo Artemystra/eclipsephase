@@ -15,7 +15,7 @@
     </nav>
     {{!-- Sheet Body --}}
 
-    <section class="item-sheet-body">
+    <section class="item-sheet-body" style="min-height: 245px; height: fit-content;">
         <div class="tab details" data-group="primary" data-tab="details">
         <div class="flexrow flex-group-center">
             <table>
@@ -49,7 +49,7 @@
         </div>
         <p></p>
         <h2>{{localize "ep2e.item.general.table.description"}}</h2>
-        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="8" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
         </div>
             {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
     </section>

@@ -34,6 +34,9 @@ export default class EPspecialSkillSheet extends ItemSheet {
     if(this?.isThreat)
       sheetData.item.isThreat=true
     sheetData.config = CONFIG.eclipsephase
+    
+    console.log("***** knowskill-sheet")
+    console.log(sheetData)
     return sheetData
   }
 

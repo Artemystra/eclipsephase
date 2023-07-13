@@ -4,14 +4,15 @@ export default class EPitem extends Item {
         super.prepareData();
         
         const brewStatus = game.settings.get("eclipsephase", "superBrew");
-        let model = this.system
+        const item = this;
+        const itemModel = item.system;
     
         // Homebrew Switch
         if (brewStatus) {
-          model.homebrew = true;
+          itemModel.homebrew = true;
         }
         else {
-          model.homebrew = false;
+          itemModel.homebrew = false;
         }
       }
 

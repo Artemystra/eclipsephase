@@ -1,6 +1,6 @@
 import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,selectWeaponMode,damageValueCalc } from "../common/common-sheet-functions.js";
 
 export default class EPgoonSheet extends ActorSheet {
 
@@ -429,7 +429,7 @@ export default class EPgoonSheet extends ActorSheet {
         return this.actor.createEmbeddedDocuments("Item", [itemData]);
     }
 
-    _onTaskCheck(event) {
+    async _onTaskCheck(event) {
         event.preventDefault();
         const element = event.currentTarget;
         const dataset = element.dataset;
@@ -440,6 +440,14 @@ export default class EPgoonSheet extends ActorSheet {
         let specNameValue = dataset.specname;
         let skillRollValue = dataset.rollvalue;
         let poolType = "Threat";
+    
+        //Weapon preparation
+        let weaponID = dataset.weaponid;
+        let weaponName = null;
+        let weaponDamage = null;
+        let weaponType = null;
+        let currentAmmo = null;
+        let maxAmmo = null;
 
         if (dataset.rolledfrom === "rangedWeapon") {
           specNameValue = actorModel.skillsVig.guns.specname;
@@ -449,6 +457,31 @@ export default class EPgoonSheet extends ActorSheet {
         if (dataset.rolledfrom === "ccWeapon") {
           specNameValue = actorModel.skillsVig.melee.specname;
           skillRollValue = actorModel.skillsVig.melee.roll;
+        }
+
+        if (dataset.rolledfrom === "ccWeapon" || dataset.rolledfrom === "rangedWeapon"){
+          let weapon = this.actor.items.get(weaponID)
+          let selectedWeaponMode = ""
+          weaponName = weapon.name;
+          weaponType = dataset.rolledFrom === "ccWeapon" ? "melee" : "ranged";
+          currentAmmo = weapon.system.ammoMin;
+          maxAmmo = weapon.system.ammoMax;
+    
+          if (weapon.system.additionalMode){
+            selectedWeaponMode = await selectWeaponMode(weapon);
+    
+            if(selectedWeaponMode.cancel){
+              return;
+            }
+            
+            weaponDamage = selectedWeaponMode.dv;
+          }
+          else{
+    
+            let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+      
+            weaponDamage = calculated.dv;
+          }
         }
 
         if (dataset.rolledfrom === "psiSleight") {
@@ -472,12 +505,12 @@ export default class EPgoonSheet extends ActorSheet {
             poolValue: threatLevel,
             poolType: poolType,
             //Weapon data
-            weaponID : dataset.weaponid,
-            weaponName : dataset.weaponname,
-            weaponDamage : dataset.roll,
-            weaponType : dataset.weapontype,
-            currentAmmo : dataset.currentammo,
-            maxAmmo : dataset.maxammo,
+            weaponID : weaponID,
+            weaponName : weaponName,
+            weaponDamage : weaponDamage,
+            weaponType : weaponType,
+            currentAmmo : currentAmmo,
+            maxAmmo : maxAmmo,
             meleeDamageMod: actorModel.mods.meleeDamageMod,
             //Psi
             sleightName : dataset.sleightname,

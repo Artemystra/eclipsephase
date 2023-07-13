@@ -267,7 +267,7 @@
 .eclipsephase .item-sheet-body{
   min-height: fit-content;
   background-color: var(--mainBackground);
-  padding-top: 10px;
+  padding: 5px 5px;
 }
 
 .eclipsephase .profile-img {
@@ -379,6 +379,10 @@
 .chat-message .resource-label {
   text-transform: uppercase;
   text-align: left;
+}
+
+.eclipsephase .capital {
+  text-transform: capitalize;
 }
 
 .whisper-to {
@@ -877,7 +881,8 @@ a:hover,
   margin: -1px -4px -1px -4px;
 }
 
-.eclipsephase .tabs .item {
+.eclipsephase .tabs .item,
+.eclipsephase .tabs .itemSmall{
   padding: 0!important;
   font-size: 16px;
   font-weight: bold;
@@ -886,6 +891,10 @@ a:hover,
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.eclipsephase .tabs .itemSmall{
+  min-height: -webkit-fill-available;
 }
 
 .eclipsephase .tabs .item.active {
@@ -1471,6 +1480,12 @@ h3.subheaderBlank {
 .labelWidth-XL {
   max-width: 180px;
   margin-right: 5px;
+}
+
+.icon-xsmall{
+  max-height: 16px!important;
+  max-width: 16px!important;
+  border: none;
 }
 
 .icon-small{
