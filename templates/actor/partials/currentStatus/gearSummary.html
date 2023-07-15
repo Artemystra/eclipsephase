@@ -6,7 +6,7 @@
         {{#each actor.gear as |item id|}}
             {{#if this.system.active}}
             <div class="item flexrow" data-item-id="{{item._id}}">
-                <div class=" flexrow flex-group-center offHand reveal wantToKnowMore">
+                <div class=" flexrow flex-group-center itemBox reveal wantToKnowMore">
                     <span class="tooltipText">{{item.name}}</span>
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                     {{#if item.system.description}}
-                    <div class="itemDescription shape3">
+                    <div class="itemDescription shape3" style="min-width: 100%;">
                         {{item.system.description}}
                     </div>
                     {{/if}}

@@ -481,7 +481,13 @@ export async function TaskCheck({
         weaponUsed.cancel = false
 
         if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon"){
-            weaponUsed = await weaponListConstructor(actorWhole, skillKey)
+            let weaponUsed = await weaponListConstructor(actorWhole, skillKey)
+        
+            console.log("This is my weaponID: ", weaponUsed)
+
+            if(weaponUsed.cancel){
+                return;
+            }
 
             weaponID = weaponUsed.weaponID
             weaponName = weaponUsed.weaponName
@@ -489,10 +495,6 @@ export async function TaskCheck({
             weaponType = weaponUsed.weaponType
             rolledFrom = weaponUsed.rolledFrom
             currentAmmo = weaponUsed.currentAmmo
-        }
-
-        if(weaponUsed.cancel){
-            return;
         }
 
         let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType);
@@ -528,17 +530,18 @@ export async function TaskCheck({
         weaponUsed.cancel = false
 
         if (rolledFrom != "rangedWeapon" && rolledFrom != "ccWeapon"){
-            weaponUsed = await weaponListConstructor(actorWhole, skillKey)
+            let weaponUsed = await weaponListConstructor(actorWhole, skillKey)
+            
+            console.log("This is my weaponUsed: ", weaponUsed)
+            if(weaponUsed.cancel){
+                return;
+            }
 
             weaponID = weaponUsed.weaponID
             weaponName = weaponUsed.weaponName
             weaponDamage = weaponUsed.weaponDamage
             weaponType = weaponUsed.weaponType
             rolledFrom = weaponUsed.rolledFrom
-        }
-
-        if(weaponUsed.cancel){
-            return;
         }
 
         let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType);

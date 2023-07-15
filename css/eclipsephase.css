@@ -460,19 +460,24 @@ a.entity-link {
   border: none;
 }
 
-.atHand {
-  outline: var(--highlight) 2px inset;
+.atHand,
+.offHand,
+.itemBox {
   background: var(--pitchBackground);
+  margin: 1px 0;
   padding-left: 5px;
   padding-right: 5px;
   min-height: 36px;
 }
 
+.atHand {
+  outline: var(--highlight) 2px inset;
+  position: relative;
+  z-index: 10;
+}
+
 .offHand {
-  background: var(--pitchBackground);
-  padding-left: 5px;
-  padding-right: 5px;
-  min-height: 36px;
+  outline: var(--highlightBackground) 2px solid;
 }
 
 .fail {
@@ -1515,6 +1520,12 @@ h3.subheaderBlank {
   display: none;
 }
 
+.showFlex {
+  display: flex!important;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .contentcenter .slideShow, 
 .contentleft .slideShow {
   max-width: 50px;
@@ -1673,6 +1684,22 @@ img {
   margin-right: 5px;
   min-height: 36px;
   padding-right: 10px;
+}
+
+.extendedPillgrid {
+  max-width: fit-content;
+  min-width: fit-content;
+  padding: 10px;
+  background-color: var(--pitchBorder);
+  margin: 0 5px 5px 0;
+}
+.extendedPillFloat {
+  max-width: fit-content;
+  min-width: fit-content;
+  padding: 5px;
+  margin: 2.5px;
+  background-color: var(--pitchBorder);
+  border-left: solid 6px var(--accentBackground);
 }
 
 .trunContainer {

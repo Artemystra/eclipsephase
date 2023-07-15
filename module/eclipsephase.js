@@ -18,7 +18,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre094} from "./common/migration.js";
+import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095} from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -169,19 +169,18 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html",
-    "systems/eclipsephase/templates/actor/partials/currentStatus/rangedWeaponSummary.html",
-    "systems/eclipsephase/templates/actor/partials/currentStatus/ccWeaponSummary.html",
+    "systems/eclipsephase/templates/actor/partials/currentStatus/weaponSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/statusSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/consumable.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gear.html",
-    "systems/eclipsephase/templates/actor/partials/item-partials/ranged-weapons.html",
-    "systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/weapons.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gamma-sleight.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html",
-    "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html"
+    "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
+    "systems/eclipsephase/templates/item/partials/weapon-mode.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -208,7 +207,7 @@ let isLegacy = foundry.utils.isNewerVersion("0.8.1", gameVersion)
 let before0861 = foundry.utils.isNewerVersion("0.8.6.1", gameVersion)
 let before09 = foundry.utils.isNewerVersion("0.9", gameVersion)
 let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion)
-let before094 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
+let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -287,8 +286,8 @@ else if (before093) {
 }
 
 //0.9.4 Migration
-else if (before094) {
-  const messageCopy = "ep2e.migration.094"
+else if (before095) {
+  const messageCopy = "ep2e.migration.095"
   let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
   
   if (migration.cancelled) {
@@ -297,9 +296,9 @@ else if (before094) {
     startMigration = migration.start
   }
 
-  let Migration094 = await migrationPre094(startMigration)
+  let Migration095 = migrationPre095(startMigration)
 
-  endMigration = Migration094["endMigration"]
+  endMigration = Migration095["endMigration"]
 
   await migrationEnd(endMigration)
 

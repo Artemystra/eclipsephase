@@ -432,14 +432,23 @@ export default class EPactor extends Actor {
   }
 
   _modificationListCreator(actorModel, actorWhole, chiMultiplier){
-    let wounds = (actorModel.physical.wounds + actorModel.mods.woundMod + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*chiMultiplier) : 0)) * 10 * actorModel.mods.woundMultiplier;
+    //Wounds + wound mods are getting calculated
+    let wounds = actorModel.physical.wounds
     let ignoreWounds = actorModel.mods.woundMod + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*chiMultiplier) : 0)
-    let trauma = (actorModel.mental.trauma + actorModel.mods.traumaMod + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*chiMultiplier) : 0)) * 10;
+    let woundsCalc = wounds + ignoreWounds > 0 ? (wounds + ignoreWounds) * -10 * actorModel.mods.woundMultiplier : 0;
+
+    //Trauma + trauma mods are getting calculated
+    let trauma = actorModel.mental.trauma;
     let ignoreTrauma = actorModel.mods.traumaMod + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*chiMultiplier) : 0)
+    let traumaCalc = trauma + ignoreTrauma > 0 ? (trauma + ignoreTrauma) * -10 : 0;
+
+    //Armor & bulky are getting calculated
     let armorEncumberance = actorModel.physical.mainArmorMalus;
     let numberOfLayers = armorEncumberance/20+1;
     let armorSomCumberance = actorModel.physical.armorSomMalus;
     let bulky = actorModel.currentStatus.bulkyModifier;
+
+    //Encumberance(Homebrew) gets calculated
     let weapon = actorModel.physical.totalWeaponMalus;
     let gear = actorModel.currentStatus.gearModifier;
     let consumable = actorModel.currentStatus.consumableModifier;
@@ -459,21 +468,9 @@ export default class EPactor extends Actor {
 
     if(wounds > 0 || trauma > 0){
       actorModel.currentStatus.generalModifier = true;
-      actorModel.currentStatus.generalModifierSum = (wounds + trauma) > 0? (wounds + trauma)*-1 : 0;
-      actorModel.currentStatus.woundModifierSum = (wounds - ignoreWounds>0 ? wounds*-1 : 0);
-      actorModel.currentStatus.traumaModifierSum = (trauma - ignoreTrauma>0 ? trauma*-1 : 0);
-    }
-    else if(actorModel.physical.wounds > 0 && actorModel.currentStatus.ignoreWound > 0){
-      actorModel.currentStatus.generalModifier = true;
-      actorModel.currentStatus.generalModifierSum = (wounds + trauma) > 0? (wounds + trauma)*-1 : 0;
-      actorModel.currentStatus.woundModifierSum = (wounds - ignoreWounds>0 ? wounds*-1 : 0);
-      actorModel.currentStatus.traumaModifierSum = (trauma - ignoreTrauma>0 ? trauma*-1 : 0);
-    }
-    else if(actorModel.mental.trauma > 0 && actorModel.currentStatus.ignoreTrauma > 0){
-      actorModel.currentStatus.generalModifier = true;
-      actorModel.currentStatus.generalModifierSum = (wounds + trauma) > 0? (wounds + trauma)*-1 : 0;
-      actorModel.currentStatus.woundModifierSum =(wounds - ignoreWounds>0 ? wounds*-1 : 0);
-      actorModel.currentStatus.traumaModifierSum = (trauma - ignoreTrauma>0 ? trauma*-1 : 0);
+      actorModel.currentStatus.woundModifierSum = woundsCalc;
+      actorModel.currentStatus.traumaModifierSum = traumaCalc;
+      actorModel.currentStatus.generalModifierSum = woundsCalc + traumaCalc;
     }
 
     if(armorEncumberance || armorSomCumberance){
@@ -494,7 +491,7 @@ export default class EPactor extends Actor {
       actorModel.currentStatus.statusPresent = true
     }
 
-    actorModel.currentStatus.currentModifiersSum = (wounds > 0 ? wounds : 0) + (trauma > 0 ? trauma : 0) + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum;
+    actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum;
   }
 
   _calculateArmor(actorModel, actorWhole, brewStatus) {

@@ -81,7 +81,7 @@ export function registerCommonHandlers(html,callerobj){
         const target = current.closest(".item").children().last();
         first.toggleClass("noShow");
         last.toggleClass("noShow");
-        target.slideToggle(200);
+        target.slideToggle(200).toggleClass("showFlex");
     });
     
     // Custom Droplists (for pools)
@@ -273,6 +273,7 @@ export async function weaponListConstructor(actor, skillKey){
   let checkWeapon = "";
   let weaponID = null;
 
+  //Weaponlist Constructor for Guns (can be combined with melee, I know, but I'm too tired...)
   if (skillKey === "guns"){
     for (let weapon of actor.rangedWeapon){
       if (actorType === "character"){
@@ -295,43 +296,48 @@ export async function weaponListConstructor(actor, skillKey){
 
     checkWeapon = await GetWeaponsList(weaponslist)
     weaponID = checkWeapon.weaponSelect
-
-
+    
     if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
       let cancel = checkWeapon.cancelled;
       return {cancel};
     }
     
     else {
-      for (let weaponObj of actor.rangedWeapon){        
-        if (weaponObj._id === weaponID){
-          let weaponName = weaponObj.name;
-          let weaponType = "ranged";
-          let rolledFrom = "rangedWeapon";
-          let currentAmmo = weaponObj.system.ammoMin;
-          let weaponDamage = weaponObj.system.mode1.dv;
-          
-          if(weaponObj.system.additionalMode){
-            let selectedWeaponMode = await selectWeaponMode(weaponObj);
+      if (weaponID === "1"){
+        let cancel = checkWeapon.cancelled;
+        return {cancel};
+      }
 
-            if(selectedWeaponMode.cancel){
-              let cancel = selectedWeaponMode.cancel
-              return {cancel};
+      else {
+        for (let weaponObj of actor.rangedWeapon){        
+          if (weaponObj._id === weaponID){
+            let weaponName = weaponObj.name;
+            let weaponType = "ranged";
+            let rolledFrom = "rangedWeapon";
+            let currentAmmo = weaponObj.system.ammoMin;
+            let weaponDamage = weaponObj.system.mode1.dv;
+            
+            if(weaponObj.system.additionalMode){
+              let selectedWeaponMode = await selectWeaponMode(weaponObj);
+  
+              if(selectedWeaponMode.cancel){
+                let cancel = selectedWeaponMode.cancel
+                return {cancel};
+              }
+              else{
+                weaponDamage = selectedWeaponMode.dv;
+              }
+  
             }
-            else{
-              
-              console.log("Weapon damage selected: ",selectedWeaponMode.dv)
-              weaponDamage = selectedWeaponMode.dv;
-            }
-
+      
+            return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo}
           }
-    
-          return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo}
         }
       }
     }
   }
   
+  //Weaponlist Constructor for Melee (can be combined with guns, I know, but I'm too tired...)
   if (skillKey === "melee"){
     let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
     let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
@@ -357,18 +363,26 @@ export async function weaponListConstructor(actor, skillKey){
         let cancel = checkWeapon.cancelled;
         return {cancel};
     }
-    else {
-      for (let weaponObj of actor.ccweapon){
-        if (weaponObj._id === weaponID){
-
-          let calculated = await damageValueCalc(weaponObj.system.mode1.d10, weaponObj.system.mode1.d6, weaponObj.system.mode1.bonus)
-
-          let weaponName = weaponObj.name;
-          let weaponDamage = calculated.dv;
-          let weaponType = "melee";
-          let rolledFrom = "ccWeapon";
     
-          return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom}
+    else {
+      if (weaponID === "1"){
+        let cancel = checkWeapon.cancelled;
+        return {cancel};
+      }
+
+      else {
+        for (let weaponObj of actor.ccweapon){
+          if (weaponObj._id === weaponID){
+
+            let calculated = await damageValueCalc(weaponObj.system.mode1.d10, weaponObj.system.mode1.d6, weaponObj.system.mode1.bonus)
+
+            let weaponName = weaponObj.name;
+            let weaponDamage = calculated.dv;
+            let weaponType = "melee";
+            let rolledFrom = "ccWeapon";
+      
+            return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom}
+          }
         }
       }
     }
@@ -484,7 +498,7 @@ function _proModeSelection(form) {
 
 export async function damageValueCalc (d10, d6, bonus){
 
-  let dv = ""
+  let dv = "ep2e.item.weapon.table.noDamage"
   let bonusValue = bonus ? " + " + bonus : "";
 
   if (d10 && d6){

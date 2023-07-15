@@ -10,11 +10,11 @@ export default class EPgearSheet extends ItemSheet {
 
     if(this.item.type === "ccWeapon"){
       this.position.width = 690;
-      this.position.height = 420;
+      this.position.height = 445;
     }
     else if(this.item.type === "rangedWeapon"){
       this.position.width = 755;
-      this.position.height = 420;
+      this.position.height = 445;
     }
     else if(this.item.type === "drug"){
       this.position.width = 520;

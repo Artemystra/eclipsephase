@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,selectWeaponMode,damageValueCalc,moreInfo } from "../common/common-sheet-functions.js";
+import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as Dice from "../dice.js";
 import itemRoll from "../item/EPitem.js";
 
@@ -250,8 +251,16 @@ export default class EPactorSheet extends ActorSheet {
           flaw.push(item);
         }
         else if (itemModel.displayCategory === 'ranged') {
+
+          let weaponAdditions = traitAndAccessoryFinder(itemModel)
+
+          itemModel.additionalSystems.mode1Traits = weaponAdditions.mode1TraitCounter
+          itemModel.additionalSystems.mode2Traits = weaponAdditions.mode2TraitCounter
+          itemModel.additionalSystems.accessories = weaponAdditions.accessoryCounter
+
           let slotType = itemModel.slotType;
-          let firingMode = itemModel.firingMode;
+          let firingMode1 = itemModel.mode1.firingMode;
+          let firingMode2 = itemModel.mode2.firingMode;
           switch (slotType){
             case 'integrated':
               itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
@@ -271,21 +280,40 @@ export default class EPactorSheet extends ActorSheet {
             default:
               break;
           }
-          switch (firingMode){
+          switch (firingMode1){
             case 'ss':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.ss";
               break;
             case 'sa':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.sa";
               break;
             case 'saBF':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.saBF";
               break;
             case 'bfFA':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.bfFA";
               break;
             case 'saBFfa':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.saBFfa";
+              break;
+            default:
+              break;
+          }
+          switch (firingMode2){
+            case 'ss':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.ss";
+              break;
+            case 'sa':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.sa";
+              break;
+            case 'saBF':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.saBF";
+              break;
+            case 'bfFA':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.bfFA";
+              break;
+            case 'saBFfa':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.saBFfa";
               break;
             default:
               break;
@@ -293,6 +321,13 @@ export default class EPactorSheet extends ActorSheet {
           rangedweapon.push(item);
         }
         else if (itemModel.displayCategory === 'ccweapon') {
+
+          let weaponAdditions = traitAndAccessoryFinder(itemModel)
+
+          itemModel.additionalSystems.mode1Traits = weaponAdditions.mode1TraitCounter
+          itemModel.additionalSystems.mode2Traits = weaponAdditions.mode2TraitCounter
+          itemModel.additionalSystems.accessories = weaponAdditions.accessoryCounter
+
           let slotType = itemModel.slotType;
             switch (slotType){
               case 'integrated':
@@ -868,7 +903,7 @@ export default class EPactorSheet extends ActorSheet {
       });
 
       //More Information Dialog
-      html.on('click', 'moreInfoDialog', moreInfo);
+      html.on('click', 'a.moreInfoDialog', moreInfo);
 
   }
 

@@ -1,6 +1,6 @@
 export default class EPitem extends Item {
 
-    prepareData() {
+    async prepareData() {
         super.prepareData();
         
         const brewStatus = game.settings.get("eclipsephase", "superBrew");

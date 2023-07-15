@@ -3,7 +3,7 @@
   "background": "systems/eclipsephase/resources/img/bannerEclipsePhase.webp",
   "title": "Eclipse Phase 2e",
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "compatibility": {
     "verified": "11",
     "minimum": "11"
@@ -36,20 +36,10 @@
     },
     {
       "banner": "systems/eclipsephase/resources/img/bannerEgoTraits.webp",
-      "name": "ego-traits",
-      "label": "Ego Traits",
+      "name": "traits",
+      "label": "Traits",
       "system": "eclipsephase",
-      "path": "packs/ego-traits.db",
-      "type": "Item",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "banner": "systems/eclipsephase/resources/img/bannerMorphTraits.webp",
-      "name": "morph-traits",
-      "label": "Morph Traits",
-      "system": "eclipsephase",
-      "path": "packs/morph-traits.db",
+      "path": "packs/traits.db",
       "type": "Item",
       "private": false,
       "flags": {}
@@ -115,16 +105,6 @@
       "flags": {}
     },
     {
-      "banner": "systems/eclipsephase/resources/img/bannerApps.webp",
-      "name": "apps",
-      "label": "Apps",
-      "system": "eclipsephase",
-      "path": "packs/apps.db",
-      "type": "Item",
-      "private": false,
-      "flags": {}
-    },
-    {
       "banner": "systems/eclipsephase/resources/img/bannerDrugs.webp",
       "name": "drugs-and-toxins",
       "label": "Drugs and Toxins",
@@ -146,10 +126,10 @@
     },
     {
       "banner": "systems/eclipsephase/resources/img/bannerMeshServices.webp",
-      "name": "meshservices",
-      "label": "Mesh Services",
+      "name": "mesh-and-apps",
+      "label": "Mesh & Apps",
       "system": "eclipsephase",
-      "path": "packs/meshservices.db",
+      "path": "packs/mesh-and-apps.db",
       "type": "Item",
       "private": false,
       "flags": {}
@@ -170,16 +150,6 @@
       "label": "Sample Characters",
       "system": "eclipsephase",
       "path": "packs/samplecharacters.db",
-      "type": "Actor",
-      "private": false,
-      "flags": {}
-    },
-    {
-      "banner": "systems/eclipsephase/resources/img/bannerBots.webp",
-      "name": "bots",
-      "label": "Bots",
-      "system": "eclipsephase",
-      "path": "packs/bots.db",
       "type": "Actor",
       "private": false,
       "flags": {}

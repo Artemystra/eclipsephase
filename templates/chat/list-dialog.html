@@ -48,14 +48,14 @@
                             <div style="display: block;">
                                 <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
                                 <div style="display: flex; align-items: center; padding-left: 10px;">
-                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{dv}}
+                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
                                 </div>
                             </div>
                         {{else}}
                         <div style="display: block;">
                             <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
                             <div style="display: flex; align-items: center; padding-left: 10px;">
-                                <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{dv}}
+                                <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
                             </div>
                         </div>
                         {{/if}}

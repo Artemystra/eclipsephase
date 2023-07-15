@@ -85,8 +85,14 @@
                 <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
                 </div>
             </div>
+            
+            <div class="itemBackground">
+                {{#each actor.rangedWeapon as |item id|}}
 
-            {{> systems/eclipsephase/templates/actor/partials/item-partials/ranged-weapons.html }}   
+                    {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=item id=id type="ranged" sheetType="PC"}}   
+                
+                {{/each}}
+            </div>
 
         </div>
         {{/if}}
@@ -97,8 +103,14 @@
                 <div class="flexrow alignRight flexGrowThreeQuarter" style="align-items: center; justify-content: flex-end;">
                 </div>
             </div>
+            
+            <div class="itemBackground">
+                {{#each actor.ccweapon as |item id|}}
 
-            {{> systems/eclipsephase/templates/actor/partials/item-partials/cc-weapons.html }}
+                    {{> systems/eclipsephase/templates/actor/partials/item-partials/weapons.html item=item id=id sheetType="PC"}}   
+                
+                {{/each}}
+            </div>
 
         </div>   
         {{/if}}

@@ -4,8 +4,39 @@
 {{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html }}
 {{!-- Current Equipment Section --}}
 <div class="contentright">
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/rangedWeaponSummary.html }}
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/ccWeaponSummary.html }}
+
+    <!-- Ranged Weapon Summary -->
+    <div class="sideCarBox rangedSideCar">
+        <div style=" margin-bottom: 20px;">
+            <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.ranged.headline"}}</label>
+        </div>
+        {{#if actor.system.additionalSystems.rangedEquipped}}
+            {{#each actor.rangedWeapon as |item id|}}
+
+                {{> systems/eclipsephase/templates/actor/partials/currentStatus/weaponSummary.html item=item id=id type="ranged"}}
+
+            {{/each}}
+        {{else}}
+        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">{{localize "ep2e.sideCar.ranged.noRangedSubheadline"}}</span></div>
+        {{/if}}
+    </div>
+    
+    <!-- CC Weapon Summary -->
+    <div class="sideCarBox ccSideCar">
+        <div style=" margin-bottom: 20px;">
+            <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.melee.headline"}}</label>
+        </div>
+        {{#if actor.system.additionalSystems.ccEquipped}}
+            {{#each actor.ccweapon as |item id|}}
+
+                {{> systems/eclipsephase/templates/actor/partials/currentStatus/weaponSummary.html item=item id=id}}
+
+            {{/each}}
+        {{else}}
+        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">{{localize "ep2e.sideCar.ranged.noRangedSubheadline"}}</span></div>
+        {{/if}}
+    </div>
+
     {{> systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html }}
     {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
 </div>
