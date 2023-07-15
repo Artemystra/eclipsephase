@@ -982,7 +982,7 @@ export async function migrationPre093(startMigration, endMigration){
 }
 }
 
-export async function migrationPre095(startMigration, endMigration){
+export function migrationPre095(startMigration, endMigration){
   
   const latestUpdate = "0.9.5";
 
