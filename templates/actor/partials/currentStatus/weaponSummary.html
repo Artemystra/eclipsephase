@@ -1,0 +1,214 @@
+
+            {{#if item.system.active}}
+            <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
+                <div class="flexrow subheader">
+                    <!--Name & Dice Roller-->
+                    <div class="flexrow flex-group-left reveal wantToKnowMore" style="max-width: 100%;">
+                        <span class="tooltipText">{{item.name}}</span>
+                        <h3 class="subheader truncate">
+                            <img src="{{item.img}}" title="{{item.name}}" class="toggle item-image input-small icon-small" style="margin-right: 5px;"/>
+                            {{#if (eq type "ranged")}}
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-key="guns" data-name="{{localize 'ep2e.skills.vigorSkills.guns'}}" data-rolledfrom="rangedWeapon" data-weaponid="{{item._id}}"/>
+                            {{else}}
+                            <img src="icons/svg/d10-grey.svg" class="toggle icon-small task-check roll-label input-small noShow" style="margin-right: 5px;" data-type="skill" data-key="melee" data-name="{{localize 'ep2e.skills.vigorSkills.melee'}}" data-rolledfrom="ccWeapon" data-weaponid="{{item._id}}"/>
+                            {{/if}}
+                            <span style="max-width: 200px; padding-right: 34px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</span>
+                        </h3>
+                    </div>
+                    <!--Ammunition Counter & Reload-->
+                    <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
+                    {{#if (eq type "ranged")}}
+                        <img src="systems/eclipsephase/resources/icons/ammo.png" class="toggle icon-small"/>
+                        
+                        <img src="systems/eclipsephase/resources/icons/reload.webp" class="toggle noShow reload icon-small rollable" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
+                        {{#if @root.isGM}}
+                            <input class="input-small sheet-inline-edit" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                        {{else}}
+                            <label class="input-xs">{{item.system.ammoMin}}</label>/
+                        {{/if}}
+                        <h4 class="item-image flex-group-left input-small noMargin">
+                            <strong>{{item.system.ammoMax}}</strong>
+                        </h4>
+                    {{/if}}
+                    </div>
+                </div>
+                <!--Weapon Details-->
+                <div class="flexrow flex-group-center slideShow" style="height: 26px; background-color: var(--accentBackground);">
+                    <a class="flexrow">
+                        <table>
+                            <tr style="background-color: var(--accentBackground);">
+                                <td style="padding-left: 8px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-down awesomeIcon"></i>
+                                </td>
+                                <td style="width: 100%;">
+                                    <label class="resource-label">{{localize "ep2e.sideCar.moreToggle"}}</label>
+                                </td>
+                                <td style="padding-right: 25px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-down awesomeIcon"></i>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
+                    <a class="noShow flexrow">
+                        <table>
+                            <tr style="background-color: var(--accentBackground);">
+                                <td style="padding-left: 8px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-up awesomeIcon"></i>
+                                </td>
+                                <td style="width: 100%;">
+                                    <label class="resource-label">{{localize "ep2e.sideCar.lessToggle"}}</label>
+                                </td>
+                                <td style="padding-right: 25px; max-width: 20px;">
+                                    <i class="fa-solid fa-chevron-up awesomeIcon"></i>
+                                </td>
+                            </tr>
+                        </table>
+                    </a>
+                </div>
+                <div class="item showMore noShow" data-item-id="{{item._id}}">
+                    <div style="min-width: 100%; border: 2px solid var(--accentBackground);">
+                        <div style="min-width: 100%;">
+                            <div class="flexrow" style="background-color: var(--focusBackground);">
+                                {{#if (eq type "ranged")}}
+                                <div class="grid grid-3col" style="min-width: 100%;">
+                                    <div class="flexrow flex-group-left wantToKnowMore" style="padding: 0 5px;">
+                                        <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-space" style="max-width: 18px;"/>
+                                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
+                                        <label class="labelWidth-large noMargin"><strong>{{localize item.system.firingModeLabel1}}</strong></label>
+                                    </div>
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-left wantToKnowMore">
+                                            <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                                            <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
+                                        </div>
+                                    </div>
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-left wantToKnowMore">
+                                            <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{item.system.mode1.range}}</span>
+                                            <label class="labelWidth-medium noMargin truncate"><strong>{{item.system.mode1.range}}</strong></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{else}}
+                                <div class="flexrow flex-group-center" style="min-width: 100%; min-height: 38px;">
+                                    <div class="flexrow flex-group-left wantToKnowMore">
+                                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                                        <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div style="min-width: 100%;">
+                                {{#if item.system.additionalSystems.mode1Traits}}
+                                    <div class="flexrow alignCenter" style="min-width: 100%; padding: 0 5px;">
+                                        <label style="max-width: fit-content;">Traits:</label>
+                                        {{#each item.system.mode1.traits as |trait key|}}
+                                            {{#if (eq trait.value true)}}
+                                                <div class="extendedPillFloat">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}">
+                                                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize trait.name}}</span>
+                                                    </a>
+                                                </div>
+                                            {{/if}}
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                            {{#if (eq item.system.additionalMode false)}}
+                            <div style="min-width: 100%;">
+                                {{#if item.system.additionalSystems.accessories}}
+                                    <div class="flexrow alignCenter" style="min-width: 100%; padding: 0 5px;">
+                                        <label style="max-width: fit-content;">Accessories:</label>
+                                        {{#each item.system.accessories as |accessory key|}}
+                                            {{#if (eq accessory.value true)}}
+                                                <div class="extendedPillFloat">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}">
+                                                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
+                                                    </a>
+                                                </div>
+                                            {{/if}}
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                            {{/if}}
+                        </div>
+                        {{#if item.system.additionalMode}}
+                        <div style="min-width: 100%;">
+                            <div class="flexrow" style="background-color: var(--focusBackground);">
+                                {{#if (eq type "ranged")}}
+                                <div class="grid grid-3col" style="min-width: 100%;">
+                                    <div class="flexrow flex-group-left wantToKnowMore" style="padding: 0 5px;">
+                                        <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-space" style="max-width: 18px;"/>
+                                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
+                                        <label class="labelWidth-large noMargin"><strong>{{localize item.system.firingModeLabel2}}</strong></label>
+                                    </div>
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-left wantToKnowMore">
+                                            <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                                            <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
+                                        </div>
+                                    </div>
+                                    <div class="flexrow flex-group-center">
+                                        <div class="flexrow flex-group-left wantToKnowMore">
+                                            <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{item.system.mode2.range}}</span>
+                                            <label class="labelWidth-medium noMargin truncate"><strong>{{item.system.mode2.range}}</strong></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{else}}
+                                <div class="flexrow flex-group-center" style="min-width: 100%; min-height: 38px;">
+                                    <div class="flexrow flex-group-left wantToKnowMore">
+                                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                                        <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div style="min-width: 100%;">
+                                {{#if item.system.additionalSystems.mode2Traits}}
+                                    <div class="flexrow alignCenter" style="min-width: 100%; padding: 0 5px;">
+                                        <label style="max-width: fit-content;">Traits:</label>
+                                        {{#each item.system.mode2.traits as |trait key|}}
+                                            {{#if (eq trait.value true)}}
+                                                <div class="extendedPillFloat">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}">
+                                                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize trait.name}}</span>
+                                                    </a>
+                                                </div>
+                                            {{/if}}
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                            <div style="min-width: 100%;">
+                                {{#if item.system.additionalSystems.accessories}}
+                                    <div class="flexrow alignCenter" style="min-width: 100%; padding: 0 5px;">
+                                        <label style="max-width: fit-content;">Accessories:</label>
+                                        {{#each item.system.accessories as |accessory key|}}
+                                            {{#if (eq accessory.value true)}}
+                                                <div class="extendedPillFloat">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}">
+                                                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
+                                                    </a>
+                                                </div>
+                                            {{/if}}
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+                
+                <!--Show/Hide Details-->
+                
+            </div>
+            {{/if}}

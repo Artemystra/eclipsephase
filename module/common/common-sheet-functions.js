@@ -1,5 +1,3 @@
-
-
 export function registerItemHandlers(html,callerobj,caller){
       // Add Inventory Item
       html.find('.item-create').click(caller._onItemCreate.bind(this));
@@ -19,13 +17,13 @@ export function registerItemHandlers(html,callerobj,caller){
     });
 }
 
-
 export function registerEffectHandlers(html,callerobj){
     html.find('.effect-create').click(ev => {
         callerobj.createEmbeddedDocuments('ActiveEffect', [{
           label: 'Active Effect',
           icon: '/icons/svg/mystery-man.svg'
         }]);
+        
       });
   
       html.find('.effect-edit').click(ev => {
@@ -34,14 +32,33 @@ export function registerEffectHandlers(html,callerobj){
         effect.sheet.render(true);
       });
   
-      html.find('.effect-delete').click(ev => {
+      html.find('.effect-delete').click(async ev => {
+        let askForOptions = ev.shiftKey;
+
+        if (!askForOptions){
+
         const li = $(ev.currentTarget).parents(".effect");
-        callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
+        const itemName = [li.data("itemName")] ? [li.data("itemName")] : null;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete"))+ " " +(itemName?itemName:"");
+        const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";
+        const popUpInfo = "ep2e.actorSheet.popUp.deleteAdditionalInfo";
+
+        let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
+        
+        if(popUp.confirm === true){
+          callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
+          }
+          else{
+            return
+          }
+        }
+        else {
+          callerobj.deleteEmbeddedDocuments('ActiveEffect', [li.data("itemId")]);
+        }
       });
   
 }
-
-
 
 export async function _tempEffectCreation(callerobj, numberOfRuns, tempEffLabel, tempEffIcon, tempEffTar, tempEffMode, tempEffVal){
   for (let i = 0; numberOfRuns > i; i++){
@@ -64,7 +81,7 @@ export function registerCommonHandlers(html,callerobj){
         const target = current.closest(".item").children().last();
         first.toggleClass("noShow");
         last.toggleClass("noShow");
-        target.slideToggle(200);
+        target.slideToggle(200).toggleClass("showFlex");
     });
     
     // Custom Droplists (for pools)
@@ -132,6 +149,8 @@ export function itemCreate(event,callerobj){
       return callerobj.createEmbeddedDocuments("Item", [itemData]);
     }
 
+//Standard Dialogs
+
 export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget) {
   let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
   let deleteButton = game.i18n.localize('ep2e.actorSheet.button.delete');
@@ -159,4 +178,338 @@ export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpIn
       let options = {width:250}
       new Dialog(data, options).render(true);
   });
+}
+
+export async function moreInfo(event){
+  const element = event.currentTarget;
+  const dataset = element.dataset;
+  const template = 'systems/eclipsephase/templates/chat/pop-up.html'
+  let dialogData = {}
+  dialogData.dialogType = "information";
+  
+  for (var item in dataset){
+      dialogData[item] = dataset[item];
+  }
+
+  let dialog = await moreInformation(template, dialogData)
+
+  async function moreInformation(template, dialogData) {
+      let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.information');
+      let closeButton = game.i18n.localize('ep2e.actorSheet.button.close');
+      let html = await renderTemplate(template, dialogData);
+    
+      return new Promise(resolve => {
+          const data = {
+              title: dialogName,
+              content: html,
+              buttons: {
+                  cancel: {
+                      label: closeButton,
+                      callback: html => resolve ({cancelled: true})
+                  }
+              },
+              default: "normal",
+              close: () => resolve ({cancelled: true})
+          };
+          let options = {width:325}
+          new Dialog(data, options).render(true);
+      });
+    }
+}
+
+//Item Toggles
+
+export function embeddedItemToggle(html, actor, allEffects){
+  html.find('.equipped.checkBox').click(async ev => {
+    const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
+    const item = actor.items.get(itemId);
+    let toggle = !item.system.active;
+    const updateData = {
+        "system.active": toggle
+    };
+    const updated = item.update(updateData);
+    
+    //handles activation/deactivation of values provided by effects inherited from items
+    let effUpdateData=[];
+    for(let effectScan of allEffects){
+  
+      if (effectScan.origin){
+        let parentItem = await fromUuid(effectScan.origin);
+  
+        if (itemId === parentItem._id){
+  
+          effUpdateData.push({
+            "_id" : effectScan._id,
+            disabled: !toggle
+          });
+  
+        }
+      }
+    }
+    actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
+  });
+}
+
+export function itemToggle(html, item){
+  html.find('.toggleItem').click(async ev => {
+    const element = ev.currentTarget;
+    const dataset = element.dataset;
+    const path = dataset.path;
+    let toggle = !eval("item." + path);
+    const updateData = {
+        [path]: toggle
+    };
+    item.update(updateData);
+  });
+}
+
+//Weapon Constructors
+
+export async function weaponListConstructor(actor, skillKey){
+  
+  let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
+  let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
+  let actorType = actor.type;
+  let checkWeapon = "";
+  let weaponID = null;
+
+  //Weaponlist Constructor for Guns (can be combined with melee, I know, but I'm too tired...)
+  if (skillKey === "guns"){
+    for (let weapon of actor.rangedWeapon){
+      if (actorType === "character"){
+          if (weapon.system.active === true){
+
+              let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+        
+              let weaponEntry = {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv}
+              weaponslist.push(weaponEntry)
+          }
+      }
+      else {
+
+          let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+  
+          let weaponEntry = {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv}
+          weaponslist.push(weaponEntry)
+      }
+    }
+
+    checkWeapon = await GetWeaponsList(weaponslist)
+    weaponID = checkWeapon.weaponSelect
+    
+    if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
+      let cancel = checkWeapon.cancelled;
+      return {cancel};
+    }
+    
+    else {
+      if (weaponID === "1"){
+        let cancel = checkWeapon.cancelled;
+        return {cancel};
+      }
+
+      else {
+        for (let weaponObj of actor.rangedWeapon){        
+          if (weaponObj._id === weaponID){
+            let weaponName = weaponObj.name;
+            let weaponType = "ranged";
+            let rolledFrom = "rangedWeapon";
+            let currentAmmo = weaponObj.system.ammoMin;
+            let weaponDamage = weaponObj.system.mode1.dv;
+            
+            if(weaponObj.system.additionalMode){
+              let selectedWeaponMode = await selectWeaponMode(weaponObj);
+  
+              if(selectedWeaponMode.cancel){
+                let cancel = selectedWeaponMode.cancel
+                return {cancel};
+              }
+              else{
+                weaponDamage = selectedWeaponMode.dv;
+              }
+  
+            }
+      
+            return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo}
+          }
+        }
+      }
+    }
+  }
+  
+  //Weaponlist Constructor for Melee (can be combined with guns, I know, but I'm too tired...)
+  if (skillKey === "melee"){
+    let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
+    let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
+    let checkWeapon = "";
+    for (let weapon of actor.ccweapon){
+        if (actorType === "character"){
+            if (weapon.system.active === true){
+                let weaponEntry = {"_id":weapon._id, "name": weapon.name, "dv": weapon.system.dv}
+                weaponslist.push(weaponEntry)
+            }
+        }
+        else {
+            let weaponEntry = {"_id":weapon._id, "name": weapon.name, "dv": weapon.system.dv}
+            weaponslist.push(weaponEntry)
+        }
+    }
+
+    
+    checkWeapon = await GetWeaponsList(weaponslist)
+    weaponID = checkWeapon.weaponSelect
+
+    if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
+        let cancel = checkWeapon.cancelled;
+        return {cancel};
+    }
+    
+    else {
+      if (weaponID === "1"){
+        let cancel = checkWeapon.cancelled;
+        return {cancel};
+      }
+
+      else {
+        for (let weaponObj of actor.ccweapon){
+          if (weaponObj._id === weaponID){
+
+            let calculated = await damageValueCalc(weaponObj.system.mode1.d10, weaponObj.system.mode1.d6, weaponObj.system.mode1.bonus)
+
+            let weaponName = weaponObj.name;
+            let weaponDamage = calculated.dv;
+            let weaponType = "melee";
+            let rolledFrom = "ccWeapon";
+      
+            return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom}
+          }
+        }
+      }
+    }
+  }
+
+  //Weapons list dialog constructor
+  async function GetWeaponsList(weaponslist){
+    let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+    let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+    let useButton = game.i18n.localize('ep2e.actorSheet.button.select');
+    let dialogType = "weaponList";
+    const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+    const html = await renderTemplate(template, {weaponslist, dialogType});
+    return new Promise(resolve => {
+        const data = {
+            title: dialogName,
+            content: html,
+            buttons: {
+                cancel: {
+                    label: cancelButton,
+                    callback: html => resolve ({cancelled: true})
+                },
+                normal: {
+                    label: useButton,
+                    callback: html => resolve(_proGetWeaponsList(html[0].querySelector("form")))
+                }
+            },
+            default: "normal",
+            close: () => resolve ({cancelled: true})
+        };
+        let options = {width:536}
+        new Dialog(data, options).render(true);
+    });
+}
+function _proGetWeaponsList(form) {
+    return {
+        weaponSelect: form.WeaponSelect.value
+    }
+}
+
+
+}
+
+export async function selectWeaponMode (weapon){
+
+  let mode1calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+  let mode2calculated = await damageValueCalc(weapon.system.mode2.d10, weapon.system.mode2.d6, weapon.system.mode2.bonus)
+
+  let weaponModes = [{"_id": 1, "name": weapon.system.mode1.name, "range": weapon.system.mode1.range, "firingModes": weapon.system.mode1.firingMode, "dv": mode1calculated.dv},{"_id": 2, "name": weapon.system.mode2.name, "range": weapon.system.mode2.range, "firingModes": weapon.system.mode2.firingMode, "dv": mode2calculated.dv}];
+  let selectedWeaponMode = await modeSelection(weaponModes);
+
+  if(selectedWeaponMode.cancelled){
+    let cancel = selectedWeaponMode.cancelled
+    return {cancel};
+  }
+
+  if(selectedWeaponMode.mode === "1"){
+    let name = weapon.system.mode1.name;
+    let range = weapon.system.mode1.range;
+    let firingMode = weapon.system.mode1.firingMode;
+    let dv = weaponModes[0].dv
+  
+    return {name, range, firingMode, dv};
+
+  }
+  
+  else {
+    let name = weapon.system.mode2.name;
+    let range = weapon.system.mode2.range;
+    let firingMode = weapon.system.mode2.firingMode;
+    let dv = weaponModes[1].dv
+  
+    return {name, range, firingMode, dv};
+
+  }
+
+  
+  async function modeSelection(weaponslist){
+    let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+    let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+    let useButton = game.i18n.localize('ep2e.actorSheet.button.select');
+    let dialogType = "weaponList";
+    weaponslist.headline = true;
+    const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+    const html = await renderTemplate(template, {weaponslist, dialogType});
+    return new Promise(resolve => {
+        const data = {
+            title: dialogName,
+            content: html,
+            buttons: {
+                cancel: {
+                    label: cancelButton,
+                    callback: html => resolve ({cancelled: true})
+                },
+                normal: {
+                    label: useButton,
+                    callback: html => resolve(_proModeSelection(html[0].querySelector("form")))
+                }
+            },
+            default: "normal",
+            close: () => resolve ({cancelled: true})
+        };
+        let options = {width:536}
+        new Dialog(data, options).render(true);
+    });
+}
+function _proModeSelection(form) {
+    return {
+        mode: form.WeaponSelect.value
+    }
+}
+}
+
+export async function damageValueCalc (d10, d6, bonus){
+
+  let dv = "ep2e.item.weapon.table.noDamage"
+  let bonusValue = bonus ? " + " + bonus : "";
+
+  if (d10 && d6){
+    dv = d10 + "d10 + " + d6 + "d6" + bonusValue;
+  }
+  else if (d10 && !d6){
+    dv = d10 + "d10" + bonusValue;
+  }
+  else if (!d10 && d6){
+    dv = d6 + "d6" + bonusValue;
+  }
+
+  return {dv};
 }

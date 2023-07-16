@@ -6,56 +6,41 @@
         </div>
     </header>
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        {{#if (ne item.system.additionalMode true)}}
         <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
+        <div class="itemSmall wantToKnowMore toggleItem"data-path="system.additionalMode" style="margin: 0 10px; background-color: var(--accentBackground); max-width: 55px;">
+            <i class="fas fa-plus awesomeIcon"></i>
+            <label class="tooltipText">{{localize "ep2e.item.general.tabs.addMode"}}</label>
+        </div>
+        {{else}}
+        <a class="item" data-tab="details">{{#if item.system.mode1.name}}{{localize item.system.mode1.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode1"}}{{/if}}</a>
+        <div  class="item" data-tab="details2">
+            <a>{{#if item.system.mode2.name}}{{localize item.system.mode2.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode2"}}{{/if}}</a>
+            <div class="itemSmall wantToKnowMore toggleItem"data-path="system.additionalMode" style=" max-width: 25px; justify-content: flex-end;">
+                <a><i class="far fa-times-circle awesomeIcon" style="margin-bottom: 6px;"></i></a>
+            </div>
+        </div>
+        {{/if}}
+        <a class="item" data-tab="description">{{localize "ep2e.item.general.table.description"}}</a>
         {{#if item.showEffectsTab}}
         <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
         {{/if}}
     </nav>
     {{!-- Sheet Body --}}
 
-    <section class="sheet-body">
-        <div class="tab details" data-group="primary" data-tab="details">
-        <div class="flexrow flex-group-center">
-            <table>
-                <tr>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.weapon.table.damageValue"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.weapon.table.slot.label"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input class="input-large alignCenter" type="text" name="system.dv" value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
-                    </td>
-                    <td>
-                        <select name="system.slotType" data-type="String">
-                            {{#select item.system.slotType}}
-                            {{#each config.weaponTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    <td>
-                        <select name="system.cost" data-type="String">
-                            {{#select item.system.cost}}
-                            {{#each config.costTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                </tr>
-            </table>
+    <section class="item-sheet-body" style="min-height: 275px; height: fit-content;">
+        
+        {{> systems/eclipsephase/templates/item/partials/weapon-mode.html item=item type="melee"}}
+        
+        <!-- Description Tab -->
+        <div class="tab description" data-group="primary" data-tab="description" style="padding: none;">
+            <div class="textAreaDescription">
+                <textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea>
+            </div>
         </div>
-        <p></p>
-        <h2>{{localize "ep2e.item.general.table.description"}}</h2>
-        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
-    </div>
-    {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
 
+        <!-- Effects Tab -->
+        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+        
     </section>
 </form>

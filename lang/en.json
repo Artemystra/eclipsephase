@@ -9,20 +9,23 @@
   "TYPES.Item.grenade" : "Grenade",
   "TYPES.Item.trait" : "Trait",
   "TYPES.Item.flaw" : "Flaw",
-  "TYPES.Item.morphtrait" : "Morph Trait",
-  "TYPES.Item.morphflaw" : "Morph Flaw",
+  "TYPES.Item.morphTrait" : "Morph Trait",
+  "TYPES.Item.morphFlaw" : "Morph Flaw",
   "TYPES.Item.ware" : "Ware",
   "TYPES.Item.aspect" : "Psi Sleight",
   "TYPES.Item.program" : "Program",
-  "TYPES.Item.specialskill" : "Special Skill",
-  "TYPES.Item.knowskill" : "Know Skill",
+  "TYPES.Item.specialSkill" : "Special Skill",
+  "TYPES.Item.knowSkill" : "Know Skill",
   "TYPES.Item.vehicle" : "Vehicle",
   "TYPES.Item.drug" : "Drug",
 
   "ep2e": {
     "actorSheet": {
       "placeholders": {
-        "actorName": "Name"
+        "actorName": "Name",
+        "selectGender": "Select Gender",
+        "selectSex": "Select Sex",
+        "selectOrigin": "Select Origin"
       },
       "aptitudes": {
         "headline": "Aptitudes",
@@ -59,6 +62,7 @@
         "confirm": "Confirm",
         "select": "Select",
         "reset": "Reset",
+        "addNew": "Add New",
         "showDetails": "Show Details",
         "hideDetails": "Hide Details"
       },
@@ -583,7 +587,10 @@
     "item": {
       "general": {
         "tabs": {
-          "detailsTab": "Item Details",
+          "detailsTab": "Details",
+          "addMode": "Add Mode",
+          "weaponMode1": "Weapon Mode 1",
+          "weaponMode2": "Weapon Mode 2",
           "effectsTab": "Effects"
         },
         "table": {
@@ -645,18 +652,23 @@
       "weapon": {
         "table": {
           "type": {
-            "label": "Type"
+            "label": "Ammo Type"
           },
+          "boundTo": "As Mode 1",
           "range": "Range",
           "maxAmmo": "Max Ammo",
           "damageValue": "DV",
+          "noDamage": "No Damage",
           "effectArea": "Effect Area",
+          "weaponMode": "Weapon Mode",
+          "addTrait": "Add Trait",
+          "addAccessory": "Add Accessory",
           "armorUsed": {
             "label": "Armor Used",
             "none": "None",
             "kinetic": "Kinetic",
             "energy": "Energy"
-            },
+          },
           "firingMode": {
             "label": "Firing Mode",
             "ss": "SS",
@@ -670,16 +682,48 @@
             "integrated": "Integrated",
             "sidearm": "Sidearm",
             "oneHanded": "One Handed",
-            "twoHanded": "Two Handed",
+            "twoHanded": "Two-Handed",
             "bulky": "Bulky"
           },
           "ammoUsed": {
-            "beam": "Beam Weapon",
-            "kinetic": "Kinetic Weapon",
-            "grenade": "Grenade Launcher",
-            "seeker": "Seeker Weapon",
-            "spray": "Spray Weapon",
-            "rail": "Rail Weapon"
+            "beam": "Energy",
+            "kinetic": "Kinetic",
+            "seeker": "Seeker",
+            "spray": "Spray",
+            "rail": "Rail"
+          },
+          "trait": {
+            "armorPiercing": "Armor Piercing",
+            "concealable": "Concealable",
+            "entangling": "Entangling",
+            "fixed": "Fixed",
+            "knockdown": "Knockdown",
+            "long": "Long",
+            "noClose": "No Close",
+            "noPointBlank": "No Point Blank",
+            "noSmartlink": "No Smartlink",
+            "pain": "Pain",
+            "shock": "Shock",
+            "singleUse": "Single Use",
+            "steady": "Steady",
+            "stun": "Stun",
+            "fragile": "Fragile",
+            "reach": "Reach",
+            "touchOnly": "Touch Only",
+            "twoHanded": "Two-Handed"
+          },
+          "accessory": {
+            "armSlide": "Arm Slide",
+            "extendedMagazine": "Extended Magazine",
+            "Gyromount": "Gyromount",
+            "imagingScope": "Imaging Scope",
+            "flashSuppressor": "Flash Suppressor",
+            "laserSight": "Laser Sight",
+            "safetySystem": "Safety System",
+            "shockSafety": "Shock Safety",
+            "silencer": "Silencer",
+            "smartlink": "Smartlink",
+            "smartMagazine": "Smart Magazine"
           }
         }
       },
@@ -852,7 +896,8 @@
         },
         "ranged": {
           "weaponSelect": {
-            "headline": "Select Weapon"
+            "headline": "Select Weapon",
+            "modeSelectionHeadline": "Select Weapon Mode"
           },
           "attacker": {
             "smartLinkLabel": "Smart Link (-10 if none)",
@@ -1035,6 +1080,44 @@
         }
       }
     },
+    "rule": {
+      "weapon": {
+        "effect": {
+          "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",
+          "blinding": "Targets must make a REF Check or be blinded for 1 action turns, +1 per failure category. While blinded you have a 50% chance of missing your attacks (if you miss a perceive test) and suffer a –30 to all other physical actions, including Fray Tests. You must make an Athletics, Free Fall, or Pilot Test to move faster than a base move or fall prone.A critical failure results in permanent blindness until repaired or they spend time in a healing vat. Anti-glare ware protects against blinding based on light.",
+          "concealable": "This item is easily hidden. You receive a +30 to Infiltrate Tests to hide this item on your person (or elsewhere).",
+          "entangling": "Targets struck by this weapon must make a REF Check or be grappled ▶205. The attacker's successes levels apply a cumulative –10 per level to this REF Check and SOM Checks to break free.",
+          "fixed": "Fixed weapons are designed to be fired from a prone or braced position, such as mounted on a bipod or hardpoint. If carried, apply a –20 modifier to attacks and consider them to have the Two-Handed trait.",
+          "fragile": "This items breaks or becomes unusable if you roll a greater failure.",
+          "knockdown": "This strike may knock even unwounded opponents off their feet. The target must make a SOM Check or be knocked prone.",
+          "noSmartlink": "This weapon is not equipped with a smartlink's targeting assistance. –10 to attack tests.",
+          "long": "Lengthy weapons are unwieldy in close combat (–30 to fire when in melee) and do not receive the +10 modifier when fired at Point-Blank range.",
+          "noClose": "This weapon cannot be fired at Point-Blank or Close range. Seeker weapons have built-in safety features that prevent them from being fired at ranges that might injure the user. Overriding this features requires a Hardware or Infosec Test.",
+          "noPointBlank": "This weapon cannot be fired at Point-Blank range.",
+          "pain": "A biomorph target struck by this weapon must make a WIL Check or take their next full action to flee, moving as far away from the pain-inflicting source as possible or to the nearest full cover they can reach on their action. Targets also suffer –20 until the end of the next turn. Targets with the Pain Tolerance (Level 1) trait receive a +30 to their WIL Check and only suffer a –10 modifier. Targets with Pain Tolerance (Level 2) are immune to this effect. Victims who are trapped in the beam or otherwise cannot avoid the pain effect are impaired (–20) until they escape.",
+          "reach": "Some weapons extend your reach, giving you a significant advantage over an opponent in melee. This applies to any weapon over half a meter long: axes, clubs, swords, shock batons, etc. Whenever you have a reach advantage over an opponent, you receive a +10 modifier for both attacking and defending. Some extra-long limbs or weapons provide a +20 bonus, as noted. For each size category by which you exceed your opponent, apply a +10 Reach modifier, up to a maximum +30.",
+          "shock": "This weapon inflicts a shock effect. When hit with a shock effect, make a SOM Check. Add your energy armor as a positive modifier. Apply a modifier for different sizes: very small –30, small –10, large +10, very large +30. Failure means you lose neuromuscular control, fall down, and are incapacitated for 1 action turn (+2 turns per failure level) and stunned for 3 minutes. Success means you are stunned for 3 action turns. To inflict shock without doing damage in melee simply requires a touch attack (+20). To inflict shock plus damage requires a regular melee attack.",
+          "singleUse": "This item can only be used once.",
+          "steady": "This weapon ignores range modifiers.",
+          "stun": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
+          "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
+          "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
+        },
+        "accessory": {
+          "armSlide": "This slide-mount can hold a one-handed weapon under your sleeve, pushing the weapon into your hand with an electronic signal or specific sequence of arm movements. You can draw the weapon and attack with a single complex action.",
+          "extendedMagazine": "This ammunition case has an enhanced capacity. Increase the weapon's ammo capacity by +50%. This is only available for firearms and seekers.",
+          "Gyromount": "This weapon harness features a gyro-stabilized weapon mount that keeps the weapon steady. Negate all modifiers from movement.",
+          "imagingScope": "Imaging scopes attach to the top of the weapon and act like specs. Scopes also bend like a periscope, allowing you to point the weapon and target around corners without leaving cover.",
+          "flashSuppressor": "This device obscures the muzzle flash on firearms, applying a –30 modifier to Perceive Tests to locate a firing weapon by its flash.",
+          "laserSight": "This underbarrel laser emits a beam that places a glowing red dot on the target to assist targeting (negating the –10 modifier for not using a smartlink or laser sight). Laser sights can also be used to paint a target for laser-guided smart ammo or seekers. Infrared and ultraviolet lasers are also available, so that the dot is only visible to characters with enhanced vision.",
+          "safetySystem": "This feature is automatically included in most weapons. A biometric (palmprint or voiceprint) or ego ID sensor is embedded in the weapon, disabling it if anyone other than an authorized user attempts to fire it.",
+          "shockSafety": "Just like a safety system, except that an unauthorized user is zapped with an electric shock, inflicting DV 1d6 and a shock effect.",
+          "silencer": "This barrel-mounted accessory reduces the sound of a firearm's discharge (they cannot be used on railguns). Apply a –30 modifier on hearing-based Perceive Tests to hear or locate the gun's firing.",
+          "smartlink": "Smartlinks are automatically included in most weapons. It connects the weapon to your mesh inserts, placing a targeting bracket in your field of vision and providing range and targeting information (negating the –10 modifier for not using a smartlink or laser sight). Smartlinks also incorporate a microcamera that allows the user to see what the weapon is pointed at, fire around corners, etc. Smartlinks also allow certain other types of weapon system control, such as changing smart ammo or programming seeker trigger conditions).",
+          "smartMagazine": "A smart magazine allows you to pick and choose what ammo round will be fired with each shot. This system leaves less room for bullets, however, so reduce the weapon's ammunition capacity by half (round up). Smart magazines can be combined with extended magazines, in which case ammo capacity is normal."
+        }
+      }
+    },
     "migration": {
       "headlineStart": "<h3 class='subheader dialog'>Dear System User</h3>",
       "headlineEnd": "<h3 class='subheader dialog'>You are all set!</h3>",
@@ -1043,7 +1126,8 @@
       "0861": "<label class='resource-label'><p>We have updated the items-structure to allow future migrations to only trigger, if your item is on a specific version.<p/><p><b>This prevents your character sheets/items from ending up broken, while you're triggering a migration.</b><p/><p>Please migrate to this version at your earliest convenience to help us stabilize your character's item-data<p/> <p>Thank you and have a great day playing!</p></label>",
       "09": "<label class='resource-label'><p>Smart Animals & Vehicles underwent a huge revamp.<p/><p><b>This migration is meant to update all drones/vehicles/smart animals on any sheet so they're compatible with the new system.</b><p/><p>Please migrate to this version at your earliest convenience to profit from the latest updates, <b>but do not forget to backup your world first in case of any game breaking bugs!</b><p/> <p>Thank you and have a great day playing!</p></label>",
       "093": "<label class='resource-label'><p>First Weapon Update.<p/><p><b>This update will prepare all player weapons for the upcoming ammunition update.</b><p/><p>Please migrate to this version at your earliest convenience to profit from the latest updates, <b>but do not forget to backup your world first in case of any game breaking bugs!</b><p/> <p>Thank you and have a great day playing!</p></label>",
-      "093WeaponCategorizerCopy": "<p>The following list of characters had ranged weapons to them, that could not be identified. Please take a moment to assign them the correct ammunition type.</p><i><p style='font-size: 11px;'>Note: You can always change their ammo type manually. This screen is purely for convenience reasons and GMs with a massive load of custom NPC weapons. If you decide to skip this screen all unidentified weapons will become 'beam'-type for the time being.</p></i>"
+      "093WeaponCategorizerCopy": "<p>The following list of characters had ranged weapons to them, that could not be identified. Please take a moment to assign them the correct ammunition type.</p><i><p style='font-size: 11px;'>Note: You can always change their ammo type manually. This screen is purely for convenience reasons and GMs with a massive load of custom NPC weapons. If you decide to skip this screen all unidentified weapons will become 'beam'-type for the time being.</p></i>",
+      "095": "<label class='resource-label'><p>Second Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a massive update to prepare your weapons items for further updates along the road. It includes:</p><p><b><ul><li>Weapons now feature traits and accessories. Edit any weapon to change their traits/accessories.</li><li>Weapons now feature up to two different weapon modes.</li><li>Rolling from a weapon with multiple modes will let you choose it's mode in a consecutive dialog.</li><li>All sheets (PC/NPC/Threat) now use the same way of displaying weapons in the inventory.</li><li>All weapon representations on sheets feature clickable traits to give better insights into weapon rules and effects.</li><li>All weapons have been updated automatically (though most of them don't feature the original description). Please feel free to double check your inventory and delete/replace all dublicated weapons and pull new weapons from the compendium.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: There is no additional functionality to weapon effects at this point (e.g. weapons that don't do damage will still trigger a damage dialog etc.). This will be fixed in a later update and before the release of v1.0. Apart from this there will be a limitation for automation especially on weapon/ammo effects on their target, as they're not automatically identified. This will not be part of any pre 1.0 update.</i></p><p>Thank you and have a great day playing!</p></label>"
     },
     "systemMessage": {
       "resetRest": {

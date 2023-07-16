@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,selectWeaponMode,damageValueCalc,moreInfo } from "../common/common-sheet-functions.js";
+import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as Dice from "../dice.js";
 import itemRoll from "../item/EPitem.js";
 
@@ -250,8 +251,16 @@ export default class EPactorSheet extends ActorSheet {
           flaw.push(item);
         }
         else if (itemModel.displayCategory === 'ranged') {
+
+          let weaponAdditions = traitAndAccessoryFinder(itemModel)
+
+          itemModel.additionalSystems.mode1Traits = weaponAdditions.mode1TraitCounter
+          itemModel.additionalSystems.mode2Traits = weaponAdditions.mode2TraitCounter
+          itemModel.additionalSystems.accessories = weaponAdditions.accessoryCounter
+
           let slotType = itemModel.slotType;
-          let firingMode = itemModel.firingMode;
+          let firingMode1 = itemModel.mode1.firingMode;
+          let firingMode2 = itemModel.mode2.firingMode;
           switch (slotType){
             case 'integrated':
               itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
@@ -271,21 +280,40 @@ export default class EPactorSheet extends ActorSheet {
             default:
               break;
           }
-          switch (firingMode){
+          switch (firingMode1){
             case 'ss':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.ss";
               break;
             case 'sa':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.sa";
               break;
             case 'saBF':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.saBF";
               break;
             case 'bfFA':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.bfFA";
               break;
             case 'saBFfa':
-              itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+              itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.saBFfa";
+              break;
+            default:
+              break;
+          }
+          switch (firingMode2){
+            case 'ss':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.ss";
+              break;
+            case 'sa':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.sa";
+              break;
+            case 'saBF':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.saBF";
+              break;
+            case 'bfFA':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.bfFA";
+              break;
+            case 'saBFfa':
+              itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.saBFfa";
               break;
             default:
               break;
@@ -293,6 +321,13 @@ export default class EPactorSheet extends ActorSheet {
           rangedweapon.push(item);
         }
         else if (itemModel.displayCategory === 'ccweapon') {
+
+          let weaponAdditions = traitAndAccessoryFinder(itemModel)
+
+          itemModel.additionalSystems.mode1Traits = weaponAdditions.mode1TraitCounter
+          itemModel.additionalSystems.mode2Traits = weaponAdditions.mode2TraitCounter
+          itemModel.additionalSystems.accessories = weaponAdditions.accessoryCounter
+
           let slotType = itemModel.slotType;
             switch (slotType){
               case 'integrated':
@@ -540,6 +575,7 @@ export default class EPactorSheet extends ActorSheet {
     super.activateListeners(html);
 
     let actor = this.actor;
+    let allEffects = this.object.effects
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -550,7 +586,7 @@ export default class EPactorSheet extends ActorSheet {
 
     
 
-    // Add Inventory Item
+    // Add Custom Skill Item
     html.find('.item-create').click(this._onItemCreate.bind(this));
 
     // Update Inventory Item
@@ -853,35 +889,7 @@ export default class EPactorSheet extends ActorSheet {
       html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
 
       //Edit Item Checkboxes
-      html.find('.equipped.checkBox').click(async ev => {
-          const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
-          const item = actor.items.get(itemId);
-          let toggle = !item.system.active;
-          const updateData = {
-              "system.active": toggle
-          };
-          const updated = item.update(updateData);
-          
-          //handles activation/deactivation of values provided by effects inherited from items
-          let allEffects = this.object.effects
-          let effUpdateData=[];
-          for(let effectScan of allEffects){
-
-            if (effectScan.origin){
-              let parentItem = await fromUuid(effectScan.origin);
-
-              if (itemId === parentItem._id){
-
-                effUpdateData.push({
-                  "_id" : effectScan._id,
-                  disabled: !toggle
-                });
-
-              }
-            }
-          }
-          actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
-      });
+      embeddedItemToggle(html, actor, allEffects);
 
       //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
@@ -893,6 +901,9 @@ export default class EPactorSheet extends ActorSheet {
       html.find(".strainSelection").change(ev => {
         actor.update({"system.subStrain.influence2.label" : "none", "system.subStrain.influence2.description" : "none", "system.subStrain.influence3.label" : "none", "system.subStrain.influence3.description" : "none", "system.subStrain.influence4.description" : "none", "system.subStrain.influence5.description" : "none", "system.subStrain.influence6.description" : "none",})
       });
+
+      //More Information Dialog
+      html.on('click', 'a.moreInfoDialog', moreInfo);
 
   }
 
@@ -987,7 +998,7 @@ export default class EPactorSheet extends ActorSheet {
    * @private
    */
 
-  _onTaskCheck(event) {
+  async _onTaskCheck(event) {
     event.preventDefault();
 
     const element = event.currentTarget;
@@ -1006,6 +1017,14 @@ export default class EPactorSheet extends ActorSheet {
     let aptType = dataset.apttype;
     const flexPool = actorModel.pools.flex.value;
     let skillPoolValue = null;
+    
+    //Weapon preparation
+    let weaponID = dataset.weaponid;
+    let weaponName = null;
+    let weaponDamage = null;
+    let weaponType = null;
+    let currentAmmo = null;
+    let maxAmmo = null;
 
     if (dataset.rolledfrom === "rangedWeapon") {
       specNameValue = actorModel.skillsVig.guns.specname;
@@ -1017,6 +1036,31 @@ export default class EPactorSheet extends ActorSheet {
       specNameValue = actorModel.skillsVig.melee.specname;
       skillRollValue = actorModel.skillsVig.melee.roll;
       poolType = "Vigor";
+    }
+
+    if (dataset.rolledfrom === "ccWeapon" || dataset.rolledfrom === "rangedWeapon"){
+      let weapon = this.actor.items.get(weaponID)
+      let selectedWeaponMode = ""
+      weaponName = weapon.name;
+      weaponType = dataset.rolledFrom === "ccWeapon" ? "melee" : "ranged";
+      currentAmmo = weapon.system.ammoMin;
+      maxAmmo = weapon.system.ammoMax;
+
+      if (weapon.system.additionalMode){
+        selectedWeaponMode = await selectWeaponMode(weapon);
+
+        if(selectedWeaponMode.cancel){
+          return;
+        }
+        
+        weaponDamage = selectedWeaponMode.dv;
+      }
+      else{
+
+        let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+  
+        weaponDamage = calculated.dv;
+      }
     }
 
     if (dataset.rolledfrom === "psiSleight") {
@@ -1078,12 +1122,12 @@ export default class EPactorSheet extends ActorSheet {
         poolValue: skillPoolValue,
         flexValue: flexPool,
         //Weapon data
-        weaponID : dataset.weaponid,
-        weaponName : dataset.weaponname,
-        weaponDamage : dataset.roll,
-        weaponType : dataset.weapontype,
-        currentAmmo : dataset.currentammo,
-        maxAmmo : dataset.maxammo,
+        weaponID : weaponID,
+        weaponName : weaponName,
+        weaponDamage : weaponDamage,
+        weaponType : weaponType,
+        currentAmmo : currentAmmo,
+        maxAmmo : maxAmmo,
         meleeDamageMod: actorModel.mods.meleeDamageMod,
         //Psi
         sleightName : dataset.sleightname,

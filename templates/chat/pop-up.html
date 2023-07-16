@@ -42,26 +42,26 @@
       {{/if}}
     {{/if}}
 
-    <!-- Bring a rule text button in the Chat (chat.js line 13 onwards)-->
+    <!-- Bring a rule text button in the Chat (common-sheet-functions.js line 183 onwards)-->
     {{#if (eq dialogType "information")}}
       <!-- if not rolled from a skill/item)-->
-      {{#if (eq rolledFrom "false")}}
+      {{#if (ne rolledfrom)}}
         <div class="contentBoxMargin">
           <div class="flexrow subheader">
-              <h3 class="subheader dialog">{{localize subtitle}}</h3>
+              <h3 class="subheader dialog">{{localize title}}</h3>
           </div>
           <div class="listBackgroundMain">
-            <p>{{localize copy}}</p>
+            <p>{{localize description}}</p>
           </div>
         </div>
       {{/if}}
       <!-- if not rolled from a skill/item)-->
-      {{#if (eq rolledFrom "psiSleight")}}
+      {{#if (eq rolledfrom "psiSleight")}}
         <div class="item" style="margin-bottom: 10px;">
             <div class="flexrow subheader">
                 <!--Name & Dice Roller-->
                 <div class="flexrow subheader flex-between">
-                  <h3 class="subheader dialog">{{localize subtitle}}</h3>
+                  <h3 class="subheader dialog">{{localize title}}</h3>
                   <div class="flexrow alignRight flexGrowQuarter" style="align-items: center; justify-content: flex-end;">
                       <i class="fa-regular fa-virus-covid icon-space awesomeIcon"></i></i>
                       <h4 class="item-image input-xs noMargin"><strong> {{resource}}</strong></h4>
@@ -82,7 +82,7 @@
                 </div>
                 <div>
                     <div class="itemDescription">
-                      {{localize copy}}
+                      {{localize description}}
                     </div>
                 </div>
             </div>

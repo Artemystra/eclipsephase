@@ -1,0 +1,169 @@
+{{#if (eq sheetType "PC")}}
+{{#if item.system.active}}
+    <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+{{else}}
+    <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+{{/if}}
+        <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked item.system.active}}>
+            <div class="flexrow flex-group-center input-small">
+                <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
+            </div>
+{{else}}
+        <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+            <div class="flexrow flex-group-center input-small" style="margin-left: 14px;">
+                <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
+            </div>
+{{/if}}
+        <div class="flexrow input-XL alignLeft wantToKnowMore">
+            <label class="input-XL truncate alignLeft">{{item.name}}</label>
+            <label class="tooltipText" style="min-width: 190px; left: -5px">{{item.name}}</label>
+        </div>
+        <label class="flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
+        <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
+            <a class="item-control item-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+            <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
+        </div>
+        <div class="flex-group-right slideShow input-xs">
+            <a><i class="fas fa-plus icon-small awesomeIcon"></i></a>
+            <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
+        </div>
+        <div class="showMore descriptionContainer">
+                <div class="flexrow alignCenter" style="min-width: 100%; min-height: 25px; background-color: var(--focusBackground);">
+                    <div style="min-width: 55px; max-width: 20px"></div>
+                    {{#if (eq item.system.additionalMode false)}}
+                    <label class="input-XL alignLeft resource-value"><strong>{{localize "ep2e.item.general.tabs.detailsTab"}}</strong></label>
+                    {{else}}
+                    <label class="input-XL alignLeft resource-value"><strong>{{#if item.system.mode1.name}}{{item.system.mode1.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode1"}}{{/if}}</strong></label>
+                    {{/if}}
+                    {{#if (eq type "ranged")}}
+                    <div class="input-large flexrow flex-group-center icon-space">
+                        <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-space" style="max-width: 18px;"/>
+                        <label><strong>{{localize item.system.firingModeLabel1}}</strong></label>
+                    </div>
+                    <div class="flexrow alignLeft wantToKnowMore" style="max-width: 90px; margin-right: 10px;">
+                        <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                        <label class="truncate input-medium"><strong>{{item.system.mode1.range}}</strong></label>
+                        <label class="tooltipText">{{item.system.mode1.range}}</label>
+                    </div>
+                    <div class="input-large flexrow flex-group-center icon-space">
+                        <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small"/>
+                        {{#if @root.isGM}}
+                            <input class="input-small sheet-inline-edit" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                        {{else}}
+                            <label class="input-xs">{{item.system.ammoMin}}</label>/
+                        {{/if}}
+                        <h4 class="item-image flex-group-left input-small noMargin">
+                            <strong>{{item.system.ammoMax}}</strong>
+                        </h4>
+                    </div>
+                    <div class="flexrow alignLeft">
+                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
+                    </div>
+                    {{else}}
+                    <div class="flexrow" style="justify-content: center;">
+                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
+                    </div>
+                    {{/if}}
+                    <div style="min-width: 75px; max-width: 20px"></div>
+                </div>
+                <div style="min-width: 100%;">
+                    {{#if item.system.additionalSystems.mode1Traits}}
+                        <div class="flexrow alignCenter" style="min-width: 100%;">
+                            <div style="min-width: 55px; max-width: 20px"></div>
+                            <label style="max-width: fit-content;">Traits:</label>
+                            {{#each item.system.mode1.traits as |trait key|}}
+                                {{#if (eq trait.value true)}}
+                                    <div class="extendedPillFloat">
+                                        <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}">
+                                            <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize trait.name}}</span>
+                                        </a>
+                                    </div>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </div>
+                {{#if (eq item.system.additionalMode false)}}
+                <div style="min-width: 100%;">
+                    {{#if item.system.additionalSystems.accessories}}
+                        <div class="flexrow alignCenter" style="min-width: 100%;">
+                            <div style="min-width: 55px; max-width: 20px"></div>
+                            <label style="max-width: fit-content;">Accessories:</label>
+                            {{#each item.system.accessories as |accessory key|}}
+                                {{#if (eq accessory.value true)}}
+                                    <div class="extendedPillFloat">
+                                        <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}">
+                                            <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
+                                        </a>
+                                    </div>
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </div>
+                {{/if}}
+                {{#if (eq item.system.additionalMode true)}}
+                <div class="flexrow alignCenter" style="min-width: 100%; min-height: 25px; background-color: var(--focusBackground); margin-top: 10px;">
+                    <div style="min-width: 55px; max-width: 20px"></div>
+                    <label class="input-XL alignLeft resource-value"><strong>{{#if item.system.mode2.name}}{{item.system.mode2.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode2"}}{{/if}}</strong></label>
+                    {{#if (eq type "ranged")}}
+                    <div class="input-large flexrow flex-group-center icon-space">
+                        <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-space" style="max-width: 18px;"/>
+                        <label><strong>{{localize item.system.firingModeLabel2}}</strong></label>
+                    </div>
+                    <div class="flexrow alignLeft wantToKnowMore" style="max-width: 90px; margin-right: 10px;">
+                        <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                        <label class="truncate input-medium"><strong>{{item.system.mode2.range}}</strong></label>
+                        <label class="tooltipText">{{item.system.mode2.range}}</label>
+                    </div>
+                    <div class="input-large flexrow flex-group-center icon-space">
+                        <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small"/>
+                        <label>as above</label>
+                    </div>
+                    <div class="flexrow alignLeft">
+                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
+                    </div>
+                    {{else}}
+                    <div class="flexrow" style="justify-content: center;">
+                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
+                    </div>
+                    {{/if}}
+                    <div style="min-width: 75px; max-width: 20px"></div>
+                </div>
+                {{#if item.system.additionalSystems.mode2Traits}}
+                    <div class="flexrow alignCenter" style="min-width: 100%;">
+                        <div style="min-width: 55px; max-width: 20px"></div>
+                        <label style="max-width: fit-content;">Traits:</label>
+                        {{#each item.system.mode2.traits as |trait key|}}
+                            {{#if (eq trait.value true)}}
+                                <div class="extendedPillFloat">
+                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}">
+                                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize trait.name}}</span>
+                                    </a>
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                {{/if}}
+                {{#if item.system.additionalSystems.accessories}}
+                    <div class="flexrow alignCenter" style="min-width: 100%;">
+                        <div style="min-width: 55px; max-width: 20px"></div>
+                        <label style="max-width: fit-content;">Accessories:</label>
+                        {{#each item.system.accessories as |accessory key|}}
+                            {{#if (eq accessory.value true)}}
+                                <div class="extendedPillFloat">
+                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}">
+                                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
+                                    </a>
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        </div>
+    </div>

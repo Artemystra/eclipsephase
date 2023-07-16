@@ -9,20 +9,23 @@
   "TYPES.Item.grenade" : "Granate",
   "TYPES.Item.trait" : "Ego-Vorteil",
   "TYPES.Item.flaw" : "Ego-Nachteil",
-  "TYPES.Item.morphtrait" : "Morph-Vorteil",
-  "TYPES.Item.morphflaw" : "Morph-Nachteil",
+  "TYPES.Item.morphTrait" : "Morph-Vorteil",
+  "TYPES.Item.morphFlaw" : "Morph-Nachteil",
   "TYPES.Item.ware" : "Körpermodifikation",
   "TYPES.Item.aspect" : "Psi-Kraft",
   "TYPES.Item.program" : "Programm",
-  "TYPES.Item.specialskill" : "Spezial-Skill",
-  "TYPES.Item.knowskill" : "Wissens-Skill",
+  "TYPES.Item.specialSkill" : "Spezial-Skill",
+  "TYPES.Item.knowSkill" : "Wissens-Skill",
   "TYPES.Item.vehicle" : "Fahrzeug",
   "TYPES.Item.drug" : "Droge",
 
   "ep2e": {
     "actorSheet": {
       "placeholders": {
-        "actorName": "Name"
+        "actorName": "Name",
+        "selectGender": "Identität Wählen",
+        "selectSex": "Geschlecht Wählen",
+        "selectOrigin": "Herkunft Wählen"
       },
       "aptitudes": {
         "headline": "Geistige Anlagen",
@@ -59,6 +62,7 @@
         "confirm": "Bestätigen",
         "select": "Auswählen",
         "reset": "Zurücksetzen",
+        "addNew": "Hinzufügen",
         "showDetails": "Mehr Details",
         "hideDetails": "Weniger Details"
       },
@@ -584,6 +588,9 @@
       "general": {
         "tabs": {
           "detailsTab": "Details",
+          "addMode": "Modus Hinzufügen",
+          "weaponMode1": "Waffenmodus 1",
+          "weaponMode2": "Waffenmodus 2",
           "effectsTab": "Effekte"
         },
         "table": {
@@ -645,12 +652,17 @@
       "weapon": {
         "table": {
           "type": {
-            "label": "Typ"
+            "label": "Munitionstyp"
           },
+          "boundTo": "Wie Modus 1",
           "range": "Reichw.",
           "maxAmmo": "Munition",
           "damageValue": "SW",
+          "noDamage": "Kein Schaden",
           "effectArea": "Wirkbereich",
+          "weaponMode": "Waffenmodus",
+          "addTrait": "Eigenschaft Hinzufügen",
+          "addAccessory": "Zubehör Hinzufügen",
           "armorUsed": {
             "label": "Widerstandsart",
             "none": "Keine",
@@ -674,12 +686,44 @@
             "bulky": "Sperrig"
           },
           "ammoUsed": {
-            "beam": "Strahlenwaffe",
-            "kinetic": "Kinetische Waffe",
-            "grenade": "Granatenwerfer",
-            "seeker": "Seeker",
-            "spray": "Sprühwaffe",
-            "rail": "Gausswaffe"
+            "beam": "Energie",
+            "kinetic": "Kinetisch",
+            "seeker": "Zielsuchend",
+            "spray": "Flüssigkeit",
+            "rail": "Magnetisch"
+          },
+          "trait": {
+            "armorPiercing": "Panzerbrechend",
+            "concealable": "Gut zu Verbergen",
+            "entangling": "Fesselnd",
+            "fixed": "Fixiert",
+            "knockdown": "Niederschlag",
+            "long": "Lang",
+            "noClose": "Reichweite Einschränkt: Nah",
+            "noPointBlank": "Reichweite Einschränkt: Point Blank",
+            "noSmartlink": "Kein Smartlink",
+            "pain": "Schmerzhaft",
+            "shock": "Schocker",
+            "singleUse": "Einweg",
+            "steady": "Stabilisiert",
+            "stun": "Betäubend",
+            "fragile": "Fragil",
+            "reach": "Weitreichend",
+            "touchOnly": "Nur Berühren",
+            "twoHanded": "Zweihändig"
+          },
+          "accessory": {
+            "armSlide": "Armschiene",
+            "extendedMagazine": "Erweitertes Magazin",
+            "Gyromount": "Gyroaufsatz",
+            "imagingScope": "Zielfernrohr",
+            "flashSuppressor": "Kompensiertes Mündungsfeuer",
+            "laserSight": "Laserpointer",
+            "safetySystem": "Sicherheits-System",
+            "shockSafety": "Shocksystem",
+            "silencer": "Schalldämpfer",
+            "smartlink": "Smartlink",
+            "smartMagazine": "Smart Magazin"
           }
         }
       },
@@ -845,7 +889,8 @@
         },
         "ranged": {
           "weaponSelect": {
-            "headline": "Waffenwahl"
+            "headline": "Waffenwahl",
+            "modeSelectionHeadline": "Waffenmodus Wählen"
           },
           "attacker": {
             "smartLinkLabel": "Smart Link (-10 if none)",
@@ -1025,6 +1070,44 @@
             "reloadedWeapon": "Waffe nachgeladen",
             "weaponFull": "Deine Waffe ist noch voll."
           }
+        }
+      }
+    },
+    "rule": {
+      "weapon": {
+        "effect": {
+          "armorPiercing": "Diese Waffe durchdringt Rüstungen. Der Angriff verursacht -1w10 Schaden, aber die Rüstung wird halbiert. Waffen und Munitionstypen, die als panzerbrechend gelten, beinhalten bereits den Schadensabzug. Zusätzliche panzerbrechende Effekte werden ignoriert.",
+          "blinding": "Die Ziele müssen einen REF-Test durchführen, ansonsten sind sie 1 Aktion lang geblendet und zusätzlich +1 pro Misserfolgsstufe. Während der Blindheit besteht eine 50%ige Chance, dass du deine Angriffe verfehlst (wenn du einen Wahrnehmungstest verfehlst), und du erleidest einen Malus von -30 auf alle anderen körperlichen Aktionen, einschließlich Ausweichen. Um schneller als die Grundbewegung zu sein oder um nicht hinzufallen, musst du einen Athletik-, Freier Fall- oder Piloten-Test ablegen. Ein kritischer Fehlschlag führt zu dauerhafter Blindheit, die erst durch Reparatur oder Aufenthalt in einer Heilungstank repariert werden kann. Anti-Glare-Ausrüstung schützt vor Blendung durch Licht.",
+          "concealable": "Dieser Gegenstand lässt sich leicht verbergen. Du erhältst einen Bonus von +30 auf Infiltrations-Tests, um diesen Gegenstand an deinem Körper (oder an anderer Stelle) zu verstecken.",
+          "entangling": "Ziele, die von dieser Waffe getroffen werden, müssen einen REF-Test durchführen, ansonsten werden sie gepackt. Jede zusätzliche Erfolgsstufe des Angreifers führt zu einem kumulativen Malus von -10 auf diesen REF-Test sowie auf den SOM-Test, um sich zu befreien.",
+          "fixed": "Feste Waffen sind dafür ausgelegt, aus einer liegenden oder abgestützten Position abgefeuert zu werden, beispielsweise montiert auf einem Zweibein oder einer Halterung. Wenn sie getragen werden, gilt ein Malus von -20 auf Angriffe, und sie gelten als zweihändig.",
+          "fragile": "Dieser Gegenstand bricht oder wird unbrauchbar, wenn du einen grösseren Fehlschlag oder schlechter würfelst.",
+          "knockdown": "Dieser Schlag kann selbst unverwundete Gegner zu Boden werfen. Das Ziel muss einen SOM-Test durchführen, ansonsten wird es niedergeworfen.",
+          "noSmartlink": "Diese Waffe ist nicht mit der Zielunterstützung eines Smartlinks ausgestattet. Das bedeutet einen Malus von -10 auf Angriffstests.",
+          "long": "Langwaffen sind in Nahkämpfen unhandlich (ein Malus von -30 beim Schießen im Nahkampf) und erhalten keinen Bonus von +10, wenn sie aus Point-Blank-Entfernung abgefeuert werden.",
+          "noClose": "Diese Waffe kann nicht aus nächster Nähe oder im Nahbereich abgefeuert werden. Sucherwaffen verfügen über eingebaute Sicherheitsvorrichtungen, die verhindern, dass sie auf Entfernungen abgefeuert werden, die dem Benutzer Schaden zufügen könnten. Das Umgehen dieser Sicherheitsvorrichtungen erfordert einen Hardware- oder Infosec-Test.",
+          "noPointBlank": "Diese Waffe kann nicht aus nächster Nähe abgefeuert werden.",
+          "pain": "Eine Person in einem Biomorph, die von dieser Waffe getroffen wird, muss einen WIL-Test durchführen. Bei einem Misserfolg muss sie ihre nächste volle Aktion dazu nutzen, zu fliehen, indem sie sich so weit wie möglich von der schmerzverursachenden Quelle entfernt oder das nächstgelegene vollständige Deckung bietet, das sie auf ihrer Aktion erreichen kann. Ziele erleiden auch bis zum Ende des nächsten Zuges einen Malus von -20. Ziele mit der Eigenschaft Schmerztoleranz (Stufe 1) erhalten einen Bonus von +30 auf ihren WIL-Test und erleiden nur einen Malus von -10. Ziele mit Schmerztoleranz (Stufe 2) sind immun gegen diesen Effekt. Opfer, die im Strahl gefangen sind oder anderweitig den Schmerzeffekt nicht vermeiden können, sind beeinträchtigt (Malus von -20), bis sie entkommen.",
+          "reach": "Einige Waffen verlängern deine Reichweite und verschaffen dir einen erheblichen Vorteil gegenüber einem Gegner im Nahkampf. Dies gilt für jede Waffe, die länger als einen halben Meter ist, wie Äxte, Keulen, Schwerter, Schockstäbe usw. Immer wenn du einen Reichweiten-Vorteil gegenüber einem Gegner hast, erhältst du einen Bonus von +10 sowohl beim Angriff als auch bei der Verteidigung. Einige besonders lange Gliedmaßen oder Waffen bieten einen Bonus von +20, wie angegeben. Für jede Größenkategorie, um die du deinen Gegner übertreffen, gilt ein Bonus von +10 auf die Reichweite, bis zu einem Maximum von +30.",
+          "shock": "Diese Waffe verursacht einen Schockeffekt. Das Opfer führt einen SOM-Test durch bei der die Energiepanzerung als positiver Modifikator gilt. Ein weiterer Modifikator wird von der Grösse des Ziels abhängig vergeben: sehr klein -30, klein -10, groß +10, sehr groß +30. Ein Misserfolg bedeutet den Verlust der neuromuskulären Kontrolle, du fällst zu Boden und bist für 1 Aktion (plus 2 pro Misserfolgsstufe) handlungsunfähig und für 3 Minuten betäubt. Ein Erfolg bedeutet, dass du für 3 Aktionen betäubt bist. Um einen Schock ohne Schaden im Nahkampf zuzufügen, genügt eine Berührung (+20). Um Schock und Schaden zuzufügen, ist ein regulärer Nahkampfangriff erforderlich.",
+          "singleUse": "Dieser Gegenstand kann nur einmal verwendet werden.",
+          "steady": "Diese Waffe ignoriert den Entfernungsmalus.",
+          "stun": "Die Ziele müssen einen SOM-Test durchführen, ansonsten sind sie für 1 Aktion betäubt (-30 auf alle körperlichen und -10 auf alle geistigen Aktionen), +1 pro Misserfolgsstufe. Die kinetische Rüstung wird als positiver Modifikator angewendet. Große Ziele erhalten einen Bonus von +30, kleine Ziele erhalten einen Malus von -30. Bei einem kritischen Fehlschlag sind sie für 1 Aktion handlungsunfähig und für 1 Minute betäubt.",
+          "touchOnly": "Dieser Nahkampfangriff erfordert lediglich eine Berührung. Du erhältst einen Bonus von +20 auf den Trefferwurf, aber es wird kein Schaden verursacht. Wenn du zusätzlich Schaden verursachen möchtest, würfle einen normalen Angriffswurf ohne jeden Bonus.",
+          "twoHanded": "Diese Waffe erfordert zwei Hände (oder eine äquivalente greifende Gliedmaße), um verwendet zu werden. Bei einhändiger Nutzung gilt ein Malus von -20 auf den Angriff."
+        },
+        "accessory": {
+          "armSlide": "Diese Schieberhalterung kann eine einhändige Waffe unter deinem Ärmel halten und die Waffe mit einem elektronischen Signal oder einer spezifischen Abfolge von Arm-Bewegungen in deine Hand schieben. Du kannst die Waffe ziehen und mit einer einzigen komplexen Aktion angreifen.",
+          "extendedMagazine": "Diese Munitionskassette verfügt über eine erhöhte Kapazität. Die Munitionskapazität der Waffe wird um +50% erhöht. Dies ist nur für Schusswaffen und Seekerwaffen verfügbar.",
+          "Gyromount": "Dieses Waffenharnisch verfügt über eine gyro-stabilisierte Waffenhalterung, die die Waffe stabil hält. Alle Modifikatoren durch Bewegung werden aufgehoben.",
+          "imagingScope": "Zielfernrohre werden oben auf der Waffe befestigt und fungieren wie Ferngläser. Das Zielfernrohr kann auch wie ein Periskop gebogen werden, sodass du die Waffe um Ecken herum ausrichten kannst, ohne Schutz zu verlassen.",
+          "flashSuppressor": "Dieses Gerät verdeckt den Mündungsblitz bei Schusswaffen und führt zu einem Malus von -30 auf Wahrnehmungstests, um eine abgefeuerte Waffe anhand ihres Blitzes zu lokalisieren.",
+          "laserSight": "Dieser Unterlauf-Laser emittiert einen Strahl, der einen leuchtenden roten Punkt auf das Ziel setzt, um die Zielerfassung zu unterstützen (hebt den -10 Modifikator auf, wenn kein Smartlink oder Laser-Zielgerät verwendet wird). Laser-Zielgeräte können auch verwendet werden, um ein Ziel für laser-gesteuerte intelligente Munition oder Sucher zu markieren. Infrarot- und Ultraviolett-Laser sind ebenfalls erhältlich, sodass der Punkt nur für Charaktere mit verbessertem Sehvermögen sichtbar ist.",
+          "safetySystem": "Diese Funktion ist automatisch in den meisten Waffen enthalten. Ein biometrischer Sensor (Handflächenabdruck oder Stimmabdruck) oder ein Ego-ID-Sensor ist in die Waffe eingebettet und deaktiviert sie, wenn jemand außer dem autorisierten Benutzer versucht, sie abzufeuern.",
+          "shockSafety": "Ähnlich wie ein Sicherheitssystem wird bei einem nicht autorisierten Benutzer eine elektrische Schockwirkung ausgelöst, die einen Schaden von 1w6 und einen Schockeffekt verursacht.",
+          "silencer": "Dieses am Lauf montierte Zubehör reduziert den Schallabgabe einer Schusswaffe (kann nicht bei Railguns verwendet werden). Es wird ein Malus von -30 auf hörbasierte Wahrnehmungstests angewendet, um das Feuern der Waffe zu hören oder ihre Position zu lokalisieren.",
+          "smartlink": "Smartlinks sind standardmäßig in den meisten Waffen enthalten. Sie verbinden die Waffe mit deinen Mesh-Einsätzen und platzieren eine Zielmarkierung in deinem Sichtfeld, während sie auch Entfernungs- und Zielerfassungsinformationen bereitstellen (hebt den -10 Modifikator auf, wenn kein Smartlink oder Laser-Zielgerät verwendet wird). Smartlinks beinhalten auch eine Mikrokamera, die es dem Benutzer ermöglicht, zu sehen, auf was die Waffe gerichtet ist, um Ecken herumzuschießen usw. Darüber hinaus ermöglichen Smartlinks die Kontrolle über bestimmte andere Arten von Waffensystemen, wie das Wechseln von intelligenter Munition oder das Programmieren von Seeker-Auslösebedingungen.",
+          "smartMagazine": "Ein Smart Magazin erlaubt es dir, für jeden Schuss die abgefeuerte Munition auszuwählen. Dieses System bietet jedoch weniger Platz für Patronen, daher wird die Munitionskapazität der Waffe um die Hälfte reduziert (aufgerundet). Smart Magazine können mit erweiterten Magazinen kombiniert werden, in diesem Fall bleibt die Munitionskapazität unverändert."
         }
       }
     },

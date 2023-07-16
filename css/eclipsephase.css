@@ -27,6 +27,7 @@
   --color-border-highlight: #36aee9;
   --color-underline-header: #36aee9;
   --color-underline-active: #36aee9;
+  --color-bg-btn-minor-inactive: #414141;
 }
 
 .grid,
@@ -257,6 +258,18 @@
   justify-content: flex-start;
 }
 
+.eclipsephase nav.sheet-tabs {
+  min-height: 50px;
+  margin: 10px 0 0 0;
+  border: none;
+}
+
+.eclipsephase .item-sheet-body{
+  min-height: fit-content;
+  background-color: var(--mainBackground);
+  padding: 5px 5px;
+}
+
 .eclipsephase .profile-img {
   min-width: 100%;
   min-height: 339px;
@@ -368,6 +381,10 @@
   text-align: left;
 }
 
+.eclipsephase .capital {
+  text-transform: capitalize;
+}
+
 .whisper-to {
   color: var(--highlight);
 }
@@ -443,19 +460,24 @@ a.entity-link {
   border: none;
 }
 
-.atHand {
-  outline: var(--highlight) 2px inset;
+.atHand,
+.offHand,
+.itemBox {
   background: var(--pitchBackground);
+  margin: 1px 0;
   padding-left: 5px;
   padding-right: 5px;
   min-height: 36px;
 }
 
+.atHand {
+  outline: var(--highlight) 2px inset;
+  position: relative;
+  z-index: 10;
+}
+
 .offHand {
-  background: var(--pitchBackground);
-  padding-left: 5px;
-  padding-right: 5px;
-  min-height: 36px;
+  outline: var(--highlightBackground) 2px solid;
 }
 
 .fail {
@@ -614,7 +636,7 @@ select,
   background: transparent;
   border: none;
   height: 20px;
-  padding: 0;
+  padding-left: 5px;
 }
 
 textarea {
@@ -627,6 +649,7 @@ input[type="text"]::placeholder,
 input[type="number"]::placeholder,
 textarea::placeholder{
   color: #8a8a8a;
+  padding-left: 5px;
 }
 
 input[type="text"]:focus,
@@ -636,6 +659,7 @@ textarea:focus{
   background: var(--focusBackground);
   box-shadow: 0 0 10px var(--highlight);
   outline: none;
+  padding-left: 5px;
 }
 
 input[type="text"]:hover,
@@ -644,6 +668,7 @@ select:focus,
 textarea:focus{
   background: var(--focusBackground);
   outline: none;
+  padding-left: 5px;
 }
 
 textarea:read-only{
@@ -861,7 +886,8 @@ a:hover,
   margin: -1px -4px -1px -4px;
 }
 
-.eclipsephase .tabs .item {
+.eclipsephase .tabs .item,
+.eclipsephase .tabs .itemSmall{
   padding: 0!important;
   font-size: 16px;
   font-weight: bold;
@@ -870,6 +896,10 @@ a:hover,
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.eclipsephase .tabs .itemSmall{
+  min-height: -webkit-fill-available;
 }
 
 .eclipsephase .tabs .item.active {
@@ -1108,6 +1138,7 @@ h1, h2, h3, h4 {
 h3.subheader {
   background-color: var(--accentBackground);
   clip-path: polygon(0 0, 70% 0, 100% 100%, 0% 100%);
+  min-height: 30.5px;
   padding: 0.3em 0.5em 0.2em 0.5em;
   font-weight: bold;
   border: 0;
@@ -1238,6 +1269,7 @@ h3.subheaderBlank {
 
 .input-xs {
   max-width: 25px!important;
+  padding: 0!important;
 }
 
 .input-small {
@@ -1276,7 +1308,7 @@ h3.subheaderBlank {
 }
 
 .item-standard-margin {
-  margin: 0 0.2em 0 0em!important;
+  margin: 0 0.2em 0 0!important;
 }
 
 .item-standard-margin {
@@ -1455,6 +1487,12 @@ h3.subheaderBlank {
   margin-right: 5px;
 }
 
+.icon-xsmall{
+  max-height: 16px!important;
+  max-width: 16px!important;
+  border: none;
+}
+
 .icon-small{
   max-height: 24px!important;
   max-width: 24px!important;
@@ -1482,6 +1520,12 @@ h3.subheaderBlank {
   display: none;
 }
 
+.showFlex {
+  display: flex!important;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .contentcenter .slideShow, 
 .contentleft .slideShow {
   max-width: 50px;
@@ -1503,7 +1547,7 @@ ol {
 
 .textAreaDescription {
   border-radius: 0;
-  flex-grow: 3!important;
+  max-height: fit-content;
 }
 
 .selectSpecApt {
@@ -1642,6 +1686,22 @@ img {
   padding-right: 10px;
 }
 
+.extendedPillgrid {
+  max-width: fit-content;
+  min-width: fit-content;
+  padding: 10px;
+  background-color: var(--pitchBorder);
+  margin: 0 5px 5px 0;
+}
+.extendedPillFloat {
+  max-width: fit-content;
+  min-width: fit-content;
+  padding: 5px;
+  margin: 2.5px;
+  background-color: var(--pitchBorder);
+  border-left: solid 6px var(--accentBackground);
+}
+
 .trunContainer {
   max-width: 100%;
 }
@@ -1742,7 +1802,12 @@ h3.inline {
   max-width: fit-content;
 }
 
-.wantToKnowMore .tooltipText {
+.wantToKnowMoreFixed {
+  position: relative;
+}
+
+.wantToKnowMore .tooltipText,
+.wantToKnowMoreFixed .tooltipText{
     opacity: 0;
     transition: opacity 1s;
     transition-delay: 1s;
@@ -1764,11 +1829,13 @@ h3.inline {
     z-index: 100;
 }
 
-.wantToKnowMore:hover .tooltipText {
+.wantToKnowMore:hover .tooltipText,
+.wantToKnowMoreFixed:hover .tooltipText {
   opacity: 1;
 }
 
-.wantToKnowMore:hover .tooltipText {
+.wantToKnowMore:hover .tooltipText,
+.wantToKnowMoreFixed:hover .tooltipText {
   visibility: visible;
 }
 

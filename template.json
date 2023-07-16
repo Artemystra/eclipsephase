@@ -1012,7 +1012,7 @@
       }
     }
   },
-  "Item": {
+  "Item": { 
     "types": [
       "gear",
       "rangedWeapon",
@@ -1033,13 +1033,14 @@
     ],
     "templates": {
       "base": {
+        "additionalSystems": {},
         "description": "",
-        "active": true
+        "active": true,
+        "displayCategory": ""
       },
       "buyable": {
         "cost": "",
-        "slotType": "",
-        "displayCategory": ""
+        "slotType": ""
       }
     },
     "gear": {
@@ -1055,14 +1056,200 @@
         "base",
         "buyable"
       ],
-      "range": null,
-      "ammoType": "",
+      "displayCategory": "ranged",
       "ammoSelected": "",
+      "ammoType": "",
       "ammoMin": 0,
       "ammoMax": null,
-      "dv": null,
-      "firingMode": "",
-      "displayCategory": "ranged"
+      "additionalMode": false,
+      "accessories": {
+        "armSlide": {
+          "name": "ep2e.item.weapon.table.accessory.armSlide",
+          "value": false
+        },
+        "extendedMagazine": {
+          "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+          "value": false
+        },
+        "Gyromount": {
+          "name": "ep2e.item.weapon.table.accessory.Gyromount",
+          "value": false
+        },
+        "imagingScope": {
+          "name": "ep2e.item.weapon.table.accessory.imagingScope",
+          "value": false
+        },
+        "flashSuppressor": {
+          "name": "ep2e.item.weapon.table.accessory.flashSuppressor",
+          "value": false
+        },
+        "laserSight": {
+          "name": "ep2e.item.weapon.table.accessory.laserSight",
+          "value": false
+        },
+        "safetySystem": {
+          "name": "ep2e.item.weapon.table.accessory.safetySystem",
+          "value": false
+        },
+        "shockSafety": {
+          "name": "ep2e.item.weapon.table.accessory.shockSafety",
+          "value": false
+        },
+        "silencer": {
+          "name": "ep2e.item.weapon.table.accessory.silencer",
+          "value": false
+        },
+        "smartlink": {
+          "name": "ep2e.item.weapon.table.accessory.smartlink",
+          "value": false
+        },
+        "smartMagazine": {
+          "name": "ep2e.item.weapon.table.accessory.smartMagazine",
+          "value": false
+        }
+      },
+      "mode1": {
+        "name": "",
+        "range": null,
+        "d10": null,
+        "d6": null,
+        "bonus": null,
+        "dv": null,
+        "firingMode": "",
+        "traits": {
+          "armorPiercing": {
+            "name": "ep2e.item.weapon.table.trait.armorPiercing",
+            "value": false
+          },
+          "concealable": {
+            "name": "ep2e.item.weapon.table.trait.concealable",
+            "value": false
+          },
+          "entangling": {
+            "name": "ep2e.item.weapon.table.trait.entangling",
+            "value": false
+          },
+          "fixed": {
+            "name": "ep2e.item.weapon.table.trait.fixed",
+            "value": false
+          },
+          "knockdown": {
+            "name": "ep2e.item.weapon.table.trait.knockdown",
+            "value": false
+          },
+          "long": {
+            "name": "ep2e.item.weapon.table.trait.long",
+            "value": false
+          },
+          "noClose": {
+            "name": "ep2e.item.weapon.table.trait.noClose",
+            "value": false
+          },
+          "noPointBlank": {
+            "name": "ep2e.item.weapon.table.trait.noPointBlank",
+            "value": false
+          },
+          "noSmartlink": {
+            "name": "ep2e.item.weapon.table.trait.noSmartlink",
+            "value": false
+          },
+          "pain": {
+            "name": "ep2e.item.weapon.table.trait.pain",
+            "value": false
+          },
+          "shock": {
+            "name": "ep2e.item.weapon.table.trait.shock",
+            "value": false
+          },
+          "singleUse": {
+            "name": "ep2e.item.weapon.table.trait.singleUse",
+            "value": false
+          },
+          "steady": {
+            "name": "ep2e.item.weapon.table.trait.steady",
+            "value": false
+          },
+          "stun": {
+            "name": "ep2e.item.weapon.table.trait.stun",
+            "value": false
+          },
+          "twoHanded": {
+            "name": "ep2e.item.weapon.table.trait.twoHanded",
+            "value": false
+          }
+        }
+      },
+      "mode2": {
+        "name": "",
+        "range": null,
+        "d10": null,
+        "d6": null,
+        "bonus": null,
+        "dv": null,
+        "firingMode": "",
+        "traits": {
+          "armorPiercing": {
+            "name": "ep2e.item.weapon.table.trait.armorPiercing",
+            "value": false
+          },
+          "concealable": {
+            "name": "ep2e.item.weapon.table.trait.concealable",
+            "value": false
+          },
+          "entangling": {
+            "name": "ep2e.item.weapon.table.trait.entangling",
+            "value": false
+          },
+          "fixed": {
+            "name": "ep2e.item.weapon.table.trait.fixed",
+            "value": false
+          },
+          "knockdown": {
+            "name": "ep2e.item.weapon.table.trait.knockdown",
+            "value": false
+          },
+          "long": {
+            "name": "ep2e.item.weapon.table.trait.long",
+            "value": false
+          },
+          "noClose": {
+            "name": "ep2e.item.weapon.table.trait.noClose",
+            "value": false
+          },
+          "noPointBlank": {
+            "name": "ep2e.item.weapon.table.trait.noPointBlank",
+            "value": false
+          },
+          "noSmartlink": {
+            "name": "ep2e.item.weapon.table.trait.noSmartlink",
+            "value": false
+          },
+          "pain": {
+            "name": "ep2e.item.weapon.table.trait.pain",
+            "value": false
+          },
+          "shock": {
+            "name": "ep2e.item.weapon.table.trait.shock",
+            "value": false
+          },
+          "singleUse": {
+            "name": "ep2e.item.weapon.table.trait.singleUse",
+            "value": false
+          },
+          "steady": {
+            "name": "ep2e.item.weapon.table.trait.steady",
+            "value": false
+          },
+          "stun": {
+            "name": "ep2e.item.weapon.table.trait.stun",
+            "value": false
+          },
+          "twoHanded": {
+            "name": "ep2e.item.weapon.table.trait.twoHanded",
+            "value": false
+          }
+        }
+      }
     },
     "grenade": {
       "templates": [
@@ -1073,15 +1260,120 @@
       "dv": null,
       "armorused":null,
       "quantity": 1,
-      "displayCategory": "consumable"
+      "displayCategory": "consumable",
+      "slotType": "consumable"
     },
     "ccWeapon": {
       "templates": [
         "base",
         "buyable"
       ],
-      "dv": null,
-      "displayCategory": "ccweapon"
+      "displayCategory": "ccweapon",
+      "additionalMode": false,
+      "accessories": {
+        "armSlide": {
+          "name": "ep2e.item.weapon.table.accessory.armSlide",
+          "value": false
+        },
+        "safetySystem": {
+          "name": "ep2e.item.weapon.table.accessory.safetySystem",
+          "value": false
+        },
+        "shockSafety": {
+          "name": "ep2e.item.weapon.table.accessory.shockSafety",
+          "value": false
+        }
+      },
+      "mode1": {
+        "name": "",
+        "d10": null,
+        "d6": null,
+        "bonus": null,
+        "dv": null,
+        "traits": {
+          "armorPiercing": {
+            "name": "ep2e.item.weapon.table.trait.armorPiercing",
+            "value": false
+          },
+          "concealable": {
+            "name": "ep2e.item.weapon.table.trait.concealable",
+            "value": false
+          },
+          "fragile": {
+            "name": "ep2e.item.weapon.table.trait.fragile",
+            "value": false
+          },
+          "pain": {
+            "name": "ep2e.item.weapon.table.trait.pain",
+            "value": false
+          },
+          "reach": {
+            "name": "ep2e.item.weapon.table.trait.reach",
+            "value": false
+          },
+          "shock": {
+            "name": "ep2e.item.weapon.table.trait.shock",
+            "value": false
+          },
+          "stun": {
+            "name": "ep2e.item.weapon.table.trait.stun",
+            "value": false
+          },
+          "touchOnly": {
+            "name": "ep2e.item.weapon.table.trait.touchOnly",
+            "value": false
+          },
+          "twoHanded": {
+            "name": "ep2e.item.weapon.table.trait.twoHanded",
+            "value": false
+          }
+        }
+      },
+      "mode2": {
+        "name": "",
+        "d10": null,
+        "d6": null,
+        "bonus": null,
+        "dv": null,
+        "traits": {
+          "armorPiercing": {
+            "name": "ep2e.item.weapon.table.trait.armorPiercing",
+            "value": false
+          },
+          "concealable": {
+            "name": "ep2e.item.weapon.table.trait.concealable",
+            "value": false
+          },
+          "fragile": {
+            "name": "ep2e.item.weapon.table.trait.fragile",
+            "value": false
+          },
+          "pain": {
+            "name": "ep2e.item.weapon.table.trait.pain",
+            "value": false
+          },
+          "reach": {
+            "name": "ep2e.item.weapon.table.trait.reach",
+            "value": false
+          },
+          "shock": {
+            "name": "ep2e.item.weapon.table.trait.shock",
+            "value": false
+          },
+          "stun": {
+            "name": "ep2e.item.weapon.table.trait.stun",
+            "value": false
+          },
+          "touchOnly": {
+            "name": "ep2e.item.weapon.table.trait.touchOnly",
+            "value": false
+          },
+          "twoHanded": {
+            "name": "ep2e.item.weapon.table.trait.twoHanded",
+            "value": false
+          }
+        }
+      }
     },
     "armor": {
       "templates": [
@@ -1107,7 +1399,8 @@
       "addictionMod": null,
       "addictionType": "",
       "quantity": 1,
-      "displayCategory": "consumable"
+      "displayCategory": "consumable",
+      "slotType": "consumable"
     },
     "trait": {
       "templates": [

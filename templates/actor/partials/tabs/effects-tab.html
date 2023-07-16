@@ -1,47 +1,62 @@
 {{!-- Effects Tab --}}
         <div class="tab effects" data-group="primary" data-tab="effects">
-            <div class="flexrow subheader">
-                <h3 class="subheader">Active Effects</h3>
-                <div class="alignRight flexGrowHalf reveal">
-                    <div class="alignRight flexGrowHalf">
-                        <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> Add Active Effect</a>
-                    </div>
+
+            <div class="flexrow item" style="padding: 10px 0 0 0;">
+                <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
+                    <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.actorSheet.button.addNew"}}</a>
                 </div>
             </div>
+            
             <div class="itemBackground">
                 {{#each item.effects as |item id|}}
-                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="margin-bottom: 10px;">
+                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="margin-bottom: 10px;">
                 
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+                    <!-- in case we need a collapsible space beneath the effects again
                     <div class="flex-group-right slideShow">
                         <a><i class="fas fa-plus icon-small awesomeIcon"></i></a>
                         <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
                     </div>
+                    -->
+                    <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
+                        <a class="item-control effect-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                        <a class="item-control effect-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
+                    </div>
+                    <!-- in case we need a collapsible space beneath the effects again
                     <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                         <div class="flexrow flex-between item-controls">
                             <a class="item-control effect-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle awesomeIcon"></i></a>
                             <a class="item-control effect-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit awesomeIcon"></i></a>
                         </div>
                     </div>
+                    -->
                 </div>
             {{/each}}
 
             <!-- needed since actor effects and item effects are saved in two separate spaces. If we just use one, the respective other will not show active effects in the list at all. -->
 
             {{#each actor.effects as |item id|}}
-                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" style="margin-bottom: 10px;">
+                <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="margin-bottom: 10px;">
                 
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+                    <!-- in case we need a collapsible space beneath the effects again
                     <div class="flex-group-right slideShow">
                         <a><i class="fas fa-plus icon-small awesomeIcon"></i></a>
                         <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
                     </div>
+                    -->
+                    <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
+                        <a class="item-control effect-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                        <a class="item-control effect-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
+                    </div>
+                    <!-- in case we need a collapsible space beneath the effects again
                     <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
                         <div class="flexrow flex-between item-controls">
                             <a class="item-control effect-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle awesomeIcon"></i></a>
                             <a class="item-control effect-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit awesomeIcon"></i></a>
                         </div>
                     </div>
+                    -->
                 </div>
             {{/each}}
         </div>

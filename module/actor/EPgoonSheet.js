@@ -1,6 +1,7 @@
 import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,selectWeaponMode,damageValueCalc,moreInfo } from "../common/common-sheet-functions.js";
+import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 
 export default class EPgoonSheet extends ActorSheet {
 
@@ -136,8 +137,17 @@ export default class EPgoonSheet extends ActorSheet {
                 features.push(item);
             }
             else if (itemModel.displayCategory === 'ranged') {
+
+              let weaponAdditions = traitAndAccessoryFinder(itemModel)
+    
+              itemModel.additionalSystems.mode1Traits = weaponAdditions.mode1TraitCounter
+              itemModel.additionalSystems.mode2Traits = weaponAdditions.mode2TraitCounter
+              itemModel.additionalSystems.accessories = weaponAdditions.accessoryCounter
+    
               let slotType = itemModel.slotType;
-              let firingMode = itemModel.firingMode;
+              let firingMode1 = itemModel.mode1.firingMode;
+              let firingMode2 = itemModel.mode2.firingMode;
+
                 switch (slotType){
                   case 'integrated':
                     itemModel.slotName = "ep2e.item.weapon.table.slot.integrated";
@@ -157,7 +167,26 @@ export default class EPgoonSheet extends ActorSheet {
                   default:
                     break;
                 }
-                switch (firingMode){
+                switch (firingMode1){
+                  case 'ss':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+                    break;
+                  case 'sa':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+                    break;
+                  case 'saBF':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+                    break;
+                  case 'bfFA':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+                    break;
+                  case 'saBFfa':
+                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+                    break;
+                  default:
+                    break;
+                }
+                switch (firingMode2){
                   case 'ss':
                     itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
                     break;
@@ -179,6 +208,13 @@ export default class EPgoonSheet extends ActorSheet {
                 rangedweapon.push(item)
             }
             else if (itemModel.displayCategory === 'ccweapon') {
+
+              let weaponAdditions = traitAndAccessoryFinder(itemModel)
+    
+              itemModel.additionalSystems.mode1Traits = weaponAdditions.mode1TraitCounter
+              itemModel.additionalSystems.mode2Traits = weaponAdditions.mode2TraitCounter
+              itemModel.additionalSystems.accessories = weaponAdditions.accessoryCounter
+    
               let slotType = itemModel.slotType;
                 switch (slotType){
                   case 'integrated':
@@ -395,30 +431,15 @@ export default class EPgoonSheet extends ActorSheet {
                 li.addEventListener("dragstart", handler, false);
             });
         }
-
-        html.find('.effect-create').click(ev => {
-            this.actor.createEmbeddedDocuments('ActiveEffect', [{
-              label: 'Active Effect',
-              icon: '/icons/svg/mystery-man.svg'
-            }]);
-          });
-      
-          html.find('.effect-edit').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            const effect = this.actor.getEmbeddedDocument('ActiveEffect',li.data("itemId"));
-            effect.sheet.render(true);
-          });
-      
-          html.find('.effect-delete').click(ev => {
-            const li = $(ev.currentTarget).parents(".item");
-            this.actor.deleteEmbeddedDocuments("ActiveEffect", [li.data("itemId")]);
-            li.slideUp(200, () => this.render(false));
-          });
+        
         //Item Input Fields
         html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
         //show on hover
         html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
+
+        //More Information Dialog
+        html.on('click', 'a.moreInfoDialog', moreInfo);
 
     }
 
@@ -447,7 +468,7 @@ export default class EPgoonSheet extends ActorSheet {
         return this.actor.createEmbeddedDocuments("Item", [itemData]);
     }
 
-    _onTaskCheck(event) {
+    async _onTaskCheck(event) {
         event.preventDefault();
         const element = event.currentTarget;
         const dataset = element.dataset;
@@ -458,6 +479,14 @@ export default class EPgoonSheet extends ActorSheet {
         let specNameValue = dataset.specname;
         let skillRollValue = dataset.rollvalue;
         let poolType = "Threat";
+    
+        //Weapon preparation
+        let weaponID = dataset.weaponid;
+        let weaponName = null;
+        let weaponDamage = null;
+        let weaponType = null;
+        let currentAmmo = null;
+        let maxAmmo = null;
 
         if (dataset.rolledfrom === "rangedWeapon") {
           specNameValue = actorModel.skillsVig.guns.specname;
@@ -467,6 +496,31 @@ export default class EPgoonSheet extends ActorSheet {
         if (dataset.rolledfrom === "ccWeapon") {
           specNameValue = actorModel.skillsVig.melee.specname;
           skillRollValue = actorModel.skillsVig.melee.roll;
+        }
+
+        if (dataset.rolledfrom === "ccWeapon" || dataset.rolledfrom === "rangedWeapon"){
+          let weapon = this.actor.items.get(weaponID)
+          let selectedWeaponMode = ""
+          weaponName = weapon.name;
+          weaponType = dataset.rolledFrom === "ccWeapon" ? "melee" : "ranged";
+          currentAmmo = weapon.system.ammoMin;
+          maxAmmo = weapon.system.ammoMax;
+    
+          if (weapon.system.additionalMode){
+            selectedWeaponMode = await selectWeaponMode(weapon);
+    
+            if(selectedWeaponMode.cancel){
+              return;
+            }
+            
+            weaponDamage = selectedWeaponMode.dv;
+          }
+          else{
+    
+            let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+      
+            weaponDamage = calculated.dv;
+          }
         }
 
         if (dataset.rolledfrom === "psiSleight") {
@@ -490,12 +544,12 @@ export default class EPgoonSheet extends ActorSheet {
             poolValue: threatLevel,
             poolType: poolType,
             //Weapon data
-            weaponID : dataset.weaponid,
-            weaponName : dataset.weaponname,
-            weaponDamage : dataset.roll,
-            weaponType : dataset.weapontype,
-            currentAmmo : dataset.currentammo,
-            maxAmmo : dataset.maxammo,
+            weaponID : weaponID,
+            weaponName : weaponName,
+            weaponDamage : weaponDamage,
+            weaponType : weaponType,
+            currentAmmo : currentAmmo,
+            maxAmmo : maxAmmo,
             meleeDamageMod: actorModel.mods.meleeDamageMod,
             //Psi
             sleightName : dataset.sleightname,

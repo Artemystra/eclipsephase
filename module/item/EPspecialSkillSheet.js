@@ -10,8 +10,8 @@ export default class EPspecialSkillSheet extends ItemSheet {
       classes: ["eclipsephase", "sheet", "item"],
       resizable: false,
       width: 600,
-      height: 130,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      height: 140,
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".item-sheet-body", initial: "description" }]
     });
   }
 
@@ -34,15 +34,18 @@ export default class EPspecialSkillSheet extends ItemSheet {
     if(this?.isThreat)
       sheetData.item.isThreat=true
     sheetData.config = CONFIG.eclipsephase
+    
+    console.log("***** knowskill-sheet")
+    console.log(sheetData)
     return sheetData
   }
 
   /* -------------------------------------------- */
 
-  /** @override */
+  /** @override 
   setPosition(options = {}) {
     const position = super.setPosition(options);
-    const sheetBody = this.element.find(".sheet-body");
+    const sheetBody = this.element.find(".item-sheet-body");
     const bodyHeight = position.height - 192;
     sheetBody.css("height", bodyHeight);
     return position;

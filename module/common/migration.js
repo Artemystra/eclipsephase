@@ -981,3 +981,299 @@ export async function migrationPre093(startMigration, endMigration){
 
 }
 }
+
+export function migrationPre095(startMigration, endMigration){
+  
+  const latestUpdate = "0.9.5";
+
+  if (startMigration){
+    for(let actor of game.actors){
+      for(let item of actor.items){
+        const currentVersion = item.system.updated
+        let updated = foundry.utils.isNewerVersion(currentVersion, latestUpdate)
+        
+        if(item.type === "rangedWeapon" && updated === false || item.type === "ccWeapon" && updated === false){
+          let itemUpdate = []
+          let itemID = item._id;
+          let traitList = item.system.description
+          let traits = traitList.split(',');
+          let dv = item.system.dv;
+          let firingMode = item.system.firingMode;
+          let range = item.system.range;
+          let number = 0;
+          let weaponUpdate = {"_id": itemID};
+          let itemName = item.name;
+          let currentVersion = item.system.updated;
+
+          //Convert Item Names
+          let nameSplit = itemName.split(" ")
+          let nameJoin = nameSplit.join("").toLowerCase()
+
+          //Delete Duplicates & Create New Items
+          if (nameJoin.includes("mwagonizer(p") || nameJoin.includes("laserpulser(s") || nameJoin.includes("pultgun-st") || nameJoin.includes("pultrifle-st")){
+
+            itemDeletion(actor, itemID);
+
+          }
+
+          //Migrate Existing Weapons
+          else if ( currentVersion != "0.9.5" ){
+          //Migrate DV
+          let d10 = 0;
+          let d6 = 0;
+          let bonus = 0;
+          
+          if(dv){         
+
+            let dvSplit = dv.split('+');
+        
+            for (let object of dvSplit){
+        
+              let converted = Number(object)
+        
+              if(object.includes("d10")){
+                let d10Split = object.split("d10")
+                let d10Join = d10Split.join("")
+                d10 = d10Join
+              }
+              else if(object.includes("d6")){
+                let d6Split = object.split("d6")
+                let d6Join = d6Split.join("")
+                d6 = d6Join
+              }  
+              else if(converted != NaN ){
+                bonus = object
+              }
+            }
+
+          }
+          
+          //Migrate Weapon Traits
+          for (let type of traits){
+
+            if (item.system.slotType === "twoHanded"){
+              weaponUpdate["system.mode1.traits.twoHanded.value"] = true;
+            }
+
+            let toSplit = traits[number].trim();
+            
+            let traitSplit = toSplit.split(' ');
+            let traitCamelCase = "";
+            let traitLength = null;
+
+            if(traitSplit){
+              traitLength = traitSplit.length
+            }
+
+            if(traitLength > 1){
+              for(let word of traitSplit){
+                traitCamelCase += word.toLowerCase()
+              }
+            }
+            else if (traitLength === 1){
+              traitCamelCase = traitSplit[0].toLowerCase()
+            }
+            
+            switch (traitCamelCase){
+              case 'armorpiercing':
+                weaponUpdate["system.mode1.traits.armorPiercing.value"] = true;
+                break;
+              case 'armor-piercing':
+                weaponUpdate["system.mode1.traits.armorPiercing.value"] = true;
+                break;
+              case 'concealable':
+                weaponUpdate["system.mode1.traits.concealable.value"] = true;
+                break;
+              case 'entangling':
+                weaponUpdate["system.mode1.traits.entangling.value"] = true;
+                break;
+              case 'fixed':
+                weaponUpdate["system.mode1.traits.fixed.value"] = true;
+                break;
+              case 'knockdown':
+                weaponUpdate["system.mode1.traits.knockdown.value"] = true;
+                break;
+              case 'long':
+                weaponUpdate["system.mode1.traits.long.value"] = true;
+                break;
+              case 'noclose':
+                weaponUpdate["system.mode1.traits.noClose.value"] = true;
+                break;
+              case 'nopointblank':
+                weaponUpdate["system.mode1.traits.noPointBlank.value"] = true;
+                break;
+              case 'nosmartlink':
+                weaponUpdate["system.mode1.traits.noSmartlink.value"] = true;
+                break;
+              case 'pain':
+                weaponUpdate["system.mode1.traits.pain.value"] = true;
+                break;
+              case 'pain(biomorphsonly)':
+                weaponUpdate["system.mode1.traits.pain.value"] = true;
+                break;
+              case 'shock':
+                weaponUpdate["system.mode1.traits.shock.value"] = true;
+                break;
+              case 'single-use':
+                weaponUpdate["system.mode1.traits.singleUse.value"] = true;
+                break;
+              case 'steady':
+                weaponUpdate["system.mode1.traits.steady.value"] = true;
+                break;
+              case 'stun':
+                weaponUpdate["system.mode1.traits.stun.value"] = true;
+                break;
+              case 'fragile':
+                weaponUpdate["system.mode1.traits.fragile.value"] = true;
+                break;
+              case 'reach':
+                weaponUpdate["system.mode1.traits.reach.value"] = true;
+                break;
+              case 'touch-only':
+                weaponUpdate["system.mode1.traits.touchOnly.value"] = true;
+                break;
+              case 'silencer':
+                weaponUpdate["system.accessories.silencer.value"] = true;
+                break;
+              default:
+                break;
+            }
+            number++
+          }
+          
+          //Migrate Ranged
+          if(item.type === "rangedWeapon"){
+            weaponUpdate["system.mode1.range"] = range;
+            weaponUpdate["system.mode1.d10"] = d10;
+            weaponUpdate["system.mode1.d6"] = d6;
+            weaponUpdate["system.mode1.bonus"] = bonus;
+            weaponUpdate["system.mode1.firingMode"] = firingMode;
+            weaponUpdate["system.updated"] = latestUpdate;
+            if (item.system.mode1.traits.noSmartlink.value === false){
+              weaponUpdate["system.accessories.smartlink.value"] = true;
+            }
+          }
+
+          //Migrate Melee
+          if(item.type === "ccWeapon"){
+            weaponUpdate["system.mode1.d10"] = d10;
+            weaponUpdate["system.mode1.d6"] = d6;
+            weaponUpdate["system.mode1.bonus"] = bonus;
+            weaponUpdate["system.updated"] = latestUpdate;
+          }
+
+          //Migrate Microwave Agonizer
+          if(nameJoin.includes("(roast)")){
+
+            weaponUpdate["name"] = "Microwave Agonizer";
+            weaponUpdate["img"] = "systems/eclipsephase/resources/icons/267_skill%20magic%20fire%20wall.png";
+            weaponUpdate["system.additionalMode"] = true;
+            weaponUpdate["system.description"] = "Originally developed for crowd control, the agonizer is also useful for repelling animals. The agonizer fires millimeter-wave beams that create an unpleasant burning sensation in skin (even through armor). Agonizers have two settings. The first is an active denial setting that causes extreme burning pain in biomorph targets, inflicting a pain effect and forcing them to move away from the beam. The second “roast” setting has the same effect as the first, but also actually burns the target. Synthmorphs are unaffected by the pain, but damaged by the roast.";
+            weaponUpdate["system.mode1.name"] = "Roast";
+            weaponUpdate["system.mode2.name"] = "Pain";
+            weaponUpdate["system.mode2.firingMode"] = "sa";
+            weaponUpdate["system.mode2.range"] = "15m";
+            weaponUpdate["system.mode2.bonus"] = 0;
+            weaponUpdate["system.mode2.d6"] = 0;
+            weaponUpdate["system.mode2.d10"] = 0;
+            weaponUpdate["system.mode2.traits.pain.value"] = true;
+      
+          }
+
+          //Migrate Laser Pulser
+          if(nameJoin.includes("(lethal)")){
+
+            weaponUpdate["name"] = "Laser Pulser";
+            weaponUpdate["img"] = "systems/eclipsephase/resources/icons/95_effect%20Slash%20damage.png";
+            weaponUpdate["system.additionalMode"] = true;
+            weaponUpdate["system.description"] = "The pulser emits focused beams of light that burn into the target and cause its outer surface to vaporize and expand, creating an explosive effect. The beam is pulsed in order to bite into the target before it is diffused. When fired in stun mode, it shoots a pulse at the target to create a ball of plasma, quickly followed by a second pulse that strikes the plasma and creates a flash-bang shockwave to stun and disorient the target and anyone next to them. Pulsers are vulnerable to atmospheric effects like dust, mist, smoke, or rain, however — the GM should reduce their effective range as appropriate. Laser pulses are invisible, but they can be seen with enhanced vision in atmosphere (or in the visual spectrum in smoky/polluted air) or in the shooter’s entoptics.";
+            weaponUpdate["system.mode1.name"] = "Lethal";
+            weaponUpdate["system.mode2.name"] = "Stun";
+            weaponUpdate["system.mode2.firingMode"] = "ss";
+            weaponUpdate["system.mode2.range"] = "100m (AoE 1m)";
+            weaponUpdate["system.mode2.bonus"] = 0;
+            weaponUpdate["system.mode2.d6"] = 1;
+            weaponUpdate["system.mode2.d10"] = 0;
+            weaponUpdate["system.mode2.traits.long.value"] = true;
+            weaponUpdate["system.mode2.traits.twoHanded.value"] = true;
+            weaponUpdate["system.mode1.traits.long.value"] = true;
+            weaponUpdate["system.mode1.traits.twoHanded.value"] = true;
+            
+          }
+
+          //Migrate Pult Gun
+          if(nameJoin.includes("pultgun-r")){
+
+            weaponUpdate["name"] = "Pult Gun";
+            weaponUpdate["img"] = "systems/eclipsephase/resources/icons/277_skill%20magic%20chain%20lightning.png";
+            weaponUpdate["system.additionalMode"] = true;
+            weaponUpdate["system.description"] = "Once created out of necessity, the pult gun is one of todays's most advanced and secure weapons. It came to be that scientists of the now Jovian Republic faced the issue of devastating station break downs, due to the usage of common kinetic firearms. While the firearms themselves had multiple safety measures and where only given out to trained personel, the fact of the mostly pre-fall station architecture posed a deathly threat to anyone who missed their tagets in just the wrong angle. The pult gun was the answer to that. It shoots a small nanite-capsule, that shields it's load on it's way to the target. After a given time the capsule breaks and releases the nanintes, that now try to crawl their target and zap it. Though if the payload 'senses' that it's not within it's target's reach, it aborts the attack and brings itself back to the gun it originates from (if possible) to reload the magazine and build a new capsule for another try.";
+            weaponUpdate["system.mode1.name"] = "Kill";
+            weaponUpdate["system.mode2.name"] = "Zap";
+            weaponUpdate["system.mode2.firingMode"] = "sa";
+            weaponUpdate["system.mode2.range"] = "40m";
+            weaponUpdate["system.mode2.bonus"] = 0;
+            weaponUpdate["system.mode2.d6"] = 0;
+            weaponUpdate["system.mode2.d10"] = 1;
+            weaponUpdate["system.mode2.traits.armorPiercing.value"] = true;
+            weaponUpdate["system.mode2.traits.shock.value"] = true;
+            
+          }
+
+          //Migrate Pult Rifle
+          if(nameJoin.includes("pultrifle-r")){
+
+            weaponUpdate["name"] = "Pult Rifle";
+            weaponUpdate["img"] = "systems/eclipsephase/resources/icons/277_skill%20magic%20chain%20lightning.png";
+            weaponUpdate["system.additionalMode"] = true;
+            weaponUpdate["system.description"] = "Similar to the Pult Gun, the Pult Rifle's main purpose is safeguarding it's user from being a deadly threat for a whole station by just being fired. This safetymeasure though lacks the 'punch' when it comes to any combat situation in more than 0g, which is why the Pult Rifle can also shoot traditional kinetic ammunition. Due to it's unique structure it is not capable of shooting anything else than standard amunition, making it always second choice if you're bound to an on-planet-mission. Yet the fact that you 'cannot miss as long as you're in space' is still worth mentioning";
+            weaponUpdate["system.mode1.name"] = "Seek";
+            weaponUpdate["system.mode2.name"] = "Destroy";
+            weaponUpdate["system.mode2.firingMode"] = "saBFfa";
+            weaponUpdate["system.mode2.range"] = "100m";
+            weaponUpdate["system.mode2.bonus"] = 2;
+            weaponUpdate["system.mode2.d6"] = 0;
+            weaponUpdate["system.mode2.d10"] = 2;
+            weaponUpdate["system.mode2.traits.long.value"] = true;
+            weaponUpdate["system.mode2.traits.twoHanded.value"] = true;
+            weaponUpdate["system.mode1.traits.long.value"] = true;
+            weaponUpdate["system.mode1.traits.twoHanded.value"] = true;
+            
+          }
+
+          //Migrate Vibroblade
+          if(nameJoin.includes("vibroblade")){
+
+            weaponUpdate["name"] = "Vibroblade";
+            weaponUpdate["img"] = "systems/eclipsephase/resources/icons/321_weapon%20swords.png";
+            weaponUpdate["system.additionalMode"] = true;
+            weaponUpdate["system.description"] = "These buzzing electronic blades vibrate at a high frequency for extra cutting ability. This has little extra effect when stabbing or slashing, but can pierce armor when carefully sawing through something.";
+            weaponUpdate["system.mode1.name"] = "Slicing";
+            weaponUpdate["system.mode2.name"] = "Sawing";
+            weaponUpdate["system.mode2.bonus"] = 0;
+            weaponUpdate["system.mode2.d6"] = 1;
+            weaponUpdate["system.mode2.d10"] = 3;
+            weaponUpdate["system.mode2.traits.armorPiercing.value"] = true;
+            weaponUpdate["system.mode1.traits.armorPiercing.value"] = true;
+            
+          }
+
+          //IMPORTANT: The item will only be updated with the first viable object. All appending objects are ignored.
+          itemUpdate.push(weaponUpdate);
+            actor.updateEmbeddedDocuments("Item", itemUpdate);
+          }
+        }
+      }
+    }
+
+    game.settings.set("eclipsephase", "migrationVersion", "0.9.5");
+    endMigration = true
+    return {endMigration}
+  }
+}
+
+//A general item deleter
+function itemDeletion(actor, itemID){
+  let itemDelete = [itemID]
+  actor.deleteEmbeddedDocuments("Item", itemDelete);
+}
