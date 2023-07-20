@@ -235,7 +235,6 @@ export function embeddedItemToggle(html, actor, allEffects){
   
       if (effectScan.origin){
         let parentItem = await fromUuid(effectScan.origin);
-  
         if (itemId === parentItem._id){
   
           effUpdateData.push({
@@ -294,8 +293,14 @@ export async function weaponListConstructor(actor, skillKey){
       }
     }
 
-    checkWeapon = await GetWeaponsList(weaponslist)
-    weaponID = checkWeapon.weaponSelect
+    console.log("This is the amount of weapons I have: ", weaponslist.length)
+    if (weaponslist.length > 2){
+      checkWeapon = await GetWeaponsList(weaponslist)
+      weaponID = checkWeapon.weaponSelect
+    }
+    else {
+      weaponID = "1";
+    }
     
     if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
       let cancel = checkWeapon.cancelled;
@@ -315,7 +320,10 @@ export async function weaponListConstructor(actor, skillKey){
             let weaponType = "ranged";
             let rolledFrom = "rangedWeapon";
             let currentAmmo = weaponObj.system.ammoMin;
-            let weaponDamage = weaponObj.system.mode1.dv;
+
+            let calculated = await damageValueCalc(weaponObj.system.mode1.d10, weaponObj.system.mode1.d6, weaponObj.system.mode1.bonus)
+
+            let weaponDamage = calculated.dv;
             
             if(weaponObj.system.additionalMode){
               let selectedWeaponMode = await selectWeaponMode(weaponObj);
@@ -355,9 +363,14 @@ export async function weaponListConstructor(actor, skillKey){
         }
     }
 
-    
-    checkWeapon = await GetWeaponsList(weaponslist)
-    weaponID = checkWeapon.weaponSelect
+    console.log("This is the amount of weapons I have: ", weaponslist.length)
+    if (weaponslist.length > 2){
+      checkWeapon = await GetWeaponsList(weaponslist)
+      weaponID = checkWeapon.weaponSelect
+    }
+    else {
+      weaponID = "1";
+    }
 
     if (checkWeapon.cancelled || weaponID === "0" || !weaponID) {
         let cancel = checkWeapon.cancelled;
@@ -499,10 +512,10 @@ function _proModeSelection(form) {
 export async function damageValueCalc (d10, d6, bonus){
 
   let dv = "ep2e.item.weapon.table.noDamage"
-  let bonusValue = bonus ? " + " + bonus : "";
+  let bonusValue = bonus ? "+"  + bonus : "";
 
   if (d10 && d6){
-    dv = d10 + "d10 + " + d6 + "d6" + bonusValue;
+    dv = d10 + "d10+" + d6 + "d6" + bonusValue;
   }
   else if (d10 && !d6){
     dv = d10 + "d10" + bonusValue;
