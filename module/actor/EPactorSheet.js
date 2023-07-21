@@ -1042,7 +1042,7 @@ export default class EPactorSheet extends ActorSheet {
       let weapon = this.actor.items.get(weaponID)
       let selectedWeaponMode = ""
       weaponName = weapon.name;
-      weaponType = dataset.rolledFrom === "ccWeapon" ? "melee" : "ranged";
+      weaponType = dataset.rolledfrom === "ccWeapon" ? "melee" : "ranged";
       currentAmmo = weapon.system.ammoMin;
       maxAmmo = weapon.system.ammoMax;
 
