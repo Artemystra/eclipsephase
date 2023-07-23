@@ -493,6 +493,10 @@ export default class EPgoonSheet extends ActorSheet {
 
         let weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
     
+        if (!weaponPrep || weaponPrep.cancel){
+          return;
+        }    
+    
         let weaponID = weaponPrep.weaponID;
         let weaponName = weaponPrep.weaponName;
         let weaponDamage = weaponPrep.weaponDamage;
