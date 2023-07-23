@@ -1,6 +1,6 @@
 import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,selectWeaponMode,damageValueCalc,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,weaponPreparation,moreInfo } from "../common/common-sheet-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 
 export default class EPnpcSheet extends ActorSheet {
@@ -474,55 +474,33 @@ export default class EPnpcSheet extends ActorSheet {
         const actorModel = this.actor.system;
         const actorWhole = this.actor;
         const threatLevel = actorModel.threatLevel.current;
+        let skillKey = dataset.key.toLowerCase();
+        let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
 
         let specNameValue = dataset.specname;
         let skillRollValue = dataset.rollvalue;
         let poolType = "Threat";
-    
-        //Weapon preparation
-        let weaponID = dataset.weaponid;
-        let weaponName = null;
-        let weaponDamage = null;
-        let weaponType = null;
-        let currentAmmo = null;
-        let maxAmmo = null;
 
-        if (dataset.rolledfrom === "rangedWeapon") {
+        if (rolledFrom === "rangedWeapon") {
           specNameValue = actorModel.skillsVig.guns.specname;
           skillRollValue = actorModel.skillsVig.guns.roll;
         }
-    
-        if (dataset.rolledfrom === "ccWeapon") {
+        else if (rolledFrom === "ccWeapon") {
           specNameValue = actorModel.skillsVig.melee.specname;
           skillRollValue = actorModel.skillsVig.melee.roll;
         }
 
-        if (dataset.rolledfrom === "ccWeapon" || dataset.rolledfrom === "rangedWeapon"){
-          let weapon = this.actor.items.get(weaponID)
-          let selectedWeaponMode = ""
-          weaponName = weapon.name;
-          weaponType = dataset.rolledFrom === "ccWeapon" ? "melee" : "ranged";
-          currentAmmo = weapon.system.ammoMin;
-          maxAmmo = weapon.system.ammoMax;
+        let weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
     
-          if (weapon.system.additionalMode){
-            selectedWeaponMode = await selectWeaponMode(weapon);
+        let weaponID = weaponPrep.weaponID;
+        let weaponName = weaponPrep.weaponName;
+        let weaponDamage = weaponPrep.weaponDamage;
+        let weaponType = weaponPrep.weaponType;
+        let currentAmmo = weaponPrep.currentAmmo;
+        let maxAmmo = weaponPrep.maxAmmo;
+        rolledFrom = weaponPrep.rolledFrom;
     
-            if(selectedWeaponMode.cancel){
-              return;
-            }
-            
-            weaponDamage = selectedWeaponMode.dv;
-          }
-          else{
-    
-            let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
-      
-            weaponDamage = calculated.dv;
-          }
-        }
-
-        if (dataset.rolledfrom === "psiSleight") {
+        if (rolledFrom === "psiSleight") {
           specNameValue = actorModel.skillsMox.psi.specname;
           skillRollValue = actorModel.skillsMox.psi.roll;
         }
@@ -532,12 +510,12 @@ export default class EPnpcSheet extends ActorSheet {
             actorData : actorModel,
             actorWhole : actorWhole,
             //Skill data
-            skillKey : dataset.key.toLowerCase(),
+            skillKey : skillKey,
             skillName : dataset.name,
             specName : specNameValue,
             rollType : dataset.type,
             skillValue : skillRollValue,
-            rolledFrom : dataset.rolledfrom,
+            rolledFrom : rolledFrom,
             //Pools
             poolValue: threatLevel,
             poolType: poolType,

@@ -264,6 +264,56 @@ export function itemToggle(html, item){
 
 //Weapon Constructors
 
+//End-to-end Weapon preparation
+export async function weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, weaponID){
+  
+  let weaponName = null;
+  let weaponDamage = null;
+  let weaponType = null;
+  let currentAmmo = null;
+  let maxAmmo = null;
+
+  if (rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
+    let weapon = actorModel.items.get(weaponID)
+    let selectedWeaponMode = ""
+    weaponName = weapon.name;
+    weaponType = rolledFrom === "ccWeapon" ? "melee" : "ranged";
+    currentAmmo = weapon.system.ammoMin;
+    maxAmmo = weapon.system.ammoMax;
+
+    if (weapon.system.additionalMode){
+      selectedWeaponMode = await selectWeaponMode(weapon);
+
+      if(selectedWeaponMode.cancel){
+        return;
+      }
+      
+      weaponDamage = selectedWeaponMode.dv;
+    }
+    else{
+
+      let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+
+      weaponDamage = calculated.dv;
+    }
+  }
+  else {
+    let weaponUsed = await weaponListConstructor(actorWhole, skillKey)
+
+    if(weaponUsed.cancel){
+        return;
+    }
+
+    weaponID = weaponUsed.weaponID
+    weaponName = weaponUsed.weaponName
+    weaponDamage = weaponUsed.weaponDamage
+    weaponType = weaponUsed.weaponType
+    rolledFrom = weaponUsed.rolledFrom ? weaponUsed.rolledFrom : null;
+    currentAmmo = weaponUsed.currentAmmo ? weaponUsed.currentAmmo : null;
+  }
+  return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, maxAmmo}
+}
+
 export async function weaponListConstructor(actor, skillKey){
   
   let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');

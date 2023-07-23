@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,selectWeaponMode,damageValueCalc,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,weaponPreparation,moreInfo } from "../common/common-sheet-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as Dice from "../dice.js";
 import itemRoll from "../item/EPitem.js";
@@ -1017,53 +1017,31 @@ export default class EPactorSheet extends ActorSheet {
     let aptType = dataset.apttype;
     const flexPool = actorModel.pools.flex.value;
     let skillPoolValue = null;
-    
-    //Weapon preparation
-    let weaponID = dataset.weaponid;
-    let weaponName = null;
-    let weaponDamage = null;
-    let weaponType = null;
-    let currentAmmo = null;
-    let maxAmmo = null;
+    let skillKey = dataset.key.toLowerCase();
+    let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
 
-    if (dataset.rolledfrom === "rangedWeapon") {
+    if (rolledFrom === "rangedWeapon") {
       specNameValue = actorModel.skillsVig.guns.specname;
       skillRollValue = actorModel.skillsVig.guns.roll;
       poolType = "Vigor";
     }
-
-    if (dataset.rolledfrom === "ccWeapon") {
+    else if (rolledFrom === "ccWeapon") {
       specNameValue = actorModel.skillsVig.melee.specname;
       skillRollValue = actorModel.skillsVig.melee.roll;
       poolType = "Vigor";
     }
 
-    if (dataset.rolledfrom === "ccWeapon" || dataset.rolledfrom === "rangedWeapon"){
-      let weapon = this.actor.items.get(weaponID)
-      let selectedWeaponMode = ""
-      weaponName = weapon.name;
-      weaponType = dataset.rolledFrom === "ccWeapon" ? "melee" : "ranged";
-      currentAmmo = weapon.system.ammoMin;
-      maxAmmo = weapon.system.ammoMax;
+    let weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
 
-      if (weapon.system.additionalMode){
-        selectedWeaponMode = await selectWeaponMode(weapon);
+    let weaponID = weaponPrep.weaponID;
+    let weaponName = weaponPrep.weaponName;
+    let weaponDamage = weaponPrep.weaponDamage;
+    let weaponType = weaponPrep.weaponType;
+    let currentAmmo = weaponPrep.currentAmmo;
+    let maxAmmo = weaponPrep.maxAmmo;
+    rolledFrom = weaponPrep.rolledFrom;
 
-        if(selectedWeaponMode.cancel){
-          return;
-        }
-        
-        weaponDamage = selectedWeaponMode.dv;
-      }
-      else{
-
-        let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
-  
-        weaponDamage = calculated.dv;
-      }
-    }
-
-    if (dataset.rolledfrom === "psiSleight") {
+    if (rolledFrom === "psiSleight") {
       specNameValue = actorModel.skillsMox.psi.specname;
       skillRollValue = actorModel.skillsMox.psi.roll;
       poolType = "Moxie";
@@ -1111,12 +1089,12 @@ export default class EPactorSheet extends ActorSheet {
         actorWhole : actorWhole,
         actorData : actorModel,
         //Skill data
-        skillKey : dataset.key.toLowerCase(),
+        skillKey : skillKey,
         skillName : dataset.name,
         specName : specNameValue,
         rollType : dataset.type,
         skillValue : skillRollValue,
-        rolledFrom : dataset.rolledfrom,
+        rolledFrom : rolledFrom,
         //Pools
         poolType: poolType,
         poolValue: skillPoolValue,
