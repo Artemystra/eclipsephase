@@ -1018,6 +1018,14 @@ export default class EPactorSheet extends ActorSheet {
     const flexPool = actorModel.pools.flex.value;
     let skillPoolValue = null;
     let skillKey = dataset.key.toLowerCase();
+    let weaponPrep = null;
+
+    let weaponID = null;
+    let weaponName = null;
+    let weaponDamage = null;
+    let weaponType = null;
+    let currentAmmo = null;
+    let maxAmmo = null;
     let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
 
     if (rolledFrom === "rangedWeapon") {
@@ -1031,19 +1039,22 @@ export default class EPactorSheet extends ActorSheet {
       poolType = "Vigor";
     }
 
-    let weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
-    
-    if (!weaponPrep || weaponPrep.cancel){
-      return;
-    }
+    if (skillKey === "guns" || skillKey === "melee"){
 
-    let weaponID = weaponPrep.weaponID;
-    let weaponName = weaponPrep.weaponName;
-    let weaponDamage = weaponPrep.weaponDamage;
-    let weaponType = weaponPrep.weaponType;
-    let currentAmmo = weaponPrep.currentAmmo;
-    let maxAmmo = weaponPrep.maxAmmo;
-    rolledFrom = weaponPrep.rolledFrom;
+      weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
+      
+      if (!weaponPrep || weaponPrep.cancel){
+        return;
+      }
+      weaponID = weaponPrep.weaponID,
+      weaponName = weaponPrep.weaponName,
+      weaponDamage = weaponPrep.weaponDamage,
+      weaponType = weaponPrep.weaponType,
+      currentAmmo = weaponPrep.currentAmmo,
+      maxAmmo = weaponPrep.maxAmmo,
+      rolledFrom = weaponPrep.rolledFrom;
+
+    }
 
     if (rolledFrom === "psiSleight") {
       specNameValue = actorModel.skillsMox.psi.specname;
