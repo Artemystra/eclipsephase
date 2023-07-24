@@ -79,8 +79,8 @@ export function registerCommonHandlers(html,callerobj){
         const first = current.children().first();
         const last = current.children().last();
         const target = current.closest(".item").children().last();
-        first.toggleClass("noShow");
-        last.toggleClass("noShow");
+        first.toggleClass("noShow").toggleClass("showFlex");
+        last.toggleClass("noShow").toggleClass("showFlex");
         target.slideToggle(200).toggleClass("showFlex");
     });
     
@@ -190,6 +190,8 @@ export async function moreInfo(event){
   for (var item in dataset){
       dialogData[item] = dataset[item];
   }
+
+  console.log("This is my dialogData: ", dialogData)
 
   let dialog = await moreInformation(template, dialogData)
 

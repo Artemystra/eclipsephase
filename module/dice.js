@@ -852,7 +852,8 @@ export async function TaskCheck({
                 }
         }
 
-    let modSkillValue = Number(skillValue) + rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
+    modValue = rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
+    let modSkillValue = Number(skillValue) + Number(modValue);
 
     //The dice roll
     for (i = numberOfTargets; i > 0; i--) {
@@ -898,6 +899,7 @@ export async function TaskCheck({
     
         message.taskName = specMod? task._taskName + " (" + specName + ")": task._taskName;
         message.taskValue = Number(task._baseValue);
+        message.modValue = Number(modValue);
         message.targetNumber = modSkillValue;
 
         message.visibility = activeRollTarget;
