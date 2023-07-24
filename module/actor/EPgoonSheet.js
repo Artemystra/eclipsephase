@@ -169,38 +169,38 @@ export default class EPgoonSheet extends ActorSheet {
                 }
                 switch (firingMode1){
                   case 'ss':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+                    itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.ss";
                     break;
                   case 'sa':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+                    itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.sa";
                     break;
                   case 'saBF':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+                    itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.saBF";
                     break;
                   case 'bfFA':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+                    itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.bfFA";
                     break;
                   case 'saBFfa':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+                    itemModel.firingModeLabel1 = "ep2e.item.weapon.table.firingMode.saBFfa";
                     break;
                   default:
                     break;
                 }
                 switch (firingMode2){
                   case 'ss':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.ss";
+                    itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.ss";
                     break;
                   case 'sa':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.sa";
+                    itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.sa";
                     break;
                   case 'saBF':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBF";
+                    itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.saBF";
                     break;
                   case 'bfFA':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.bfFA";
+                    itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.bfFA";
                     break;
                   case 'saBFfa':
-                    itemModel.firingModeLabel = "ep2e.item.weapon.table.firingMode.saBFfa";
+                    itemModel.firingModeLabel2 = "ep2e.item.weapon.table.firingMode.saBFfa";
                     break;
                   default:
                     break;
