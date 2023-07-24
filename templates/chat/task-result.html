@@ -19,10 +19,10 @@
   </div>
 
   {{#if modifiers}}
-    <div class="item">
+    <div class="item" style="cursor: pointer; background-color: var(--focusBackground); padding: 0.25em 0;">
       <div class="slideShow">
         <div class="showFlex" style="padding: 0 10px; justify-content: space-between;">
-          <label><strong>{{localize "ep2e.roll.announce.appliedMods"}}</strong></label>
+          <strong>{{localize "ep2e.roll.announce.appliedMods"}}</strong>
           {{#if (gt modValue 0)}}
            <strong style="color: var(--positive);">+{{modValue}}</strong>
           {{/if}}
@@ -31,7 +31,7 @@
           {{/if}}
         </div>
         <div class="noShow" style="padding: 0 10px; justify-content: space-between;">
-          <label><strong>{{localize "ep2e.roll.announce.appliedMods"}}</strong></label>
+          <strong>{{localize "ep2e.roll.announce.appliedMods"}}</strong>
           {{#if (gt modValue 0)}}
            <strong style="color: var(--positive);">+{{modValue}}</strong>
           {{/if}}
@@ -73,7 +73,7 @@
       </div>
     </div>
   {{/if}}
-  <table>
+  <table style="margin-top: 0">
     <tr>
       <td class="table-dice-label" style="font-size: 16px;">{{localize "ep2e.roll.announce.rollTarget"}}</td>
       <td class="table-dice-result" style="font-size: 16px;"><strong style="text-decoration: underline; text-decoration-style: double;">{{targetNumber}}</strong></td>
