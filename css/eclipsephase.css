@@ -1616,6 +1616,7 @@ ol {
 
 /* Style the collapsible content. Note: hidden by default */
 .itemDescription {
+  text-align: center;
   padding: 5px;
   background-color: var(--highlightBackground);
 }

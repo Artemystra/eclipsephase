@@ -1,4 +1,4 @@
-The first inofficial Eclipse Phase 2e system is about two years in the making and nears it's version 1.0 (A state in which the core rules are working with some convenience features where I see fit.). If you like my work and want to support me, please consider buying me a kofi (https://ko-fi.com/diemen) or just texting me here or on discord (jorra#7357) to say "thank you!". It means a lot to me!
+The first inofficial Eclipse Phase 2e system is about two years in the making and nears it's version 1.0 (A state in which the core rules are working with some convenience features where I see fit.). If you like my work and want to support me, please consider buying me a kofi (https://ko-fi.com/diemen) or just texting me here or on discord (laphaela) to say "thank you!". It means a lot to me!
 
 <h2>Most important features in overview</h2>
 <h3>Localization</h3>
@@ -35,6 +35,9 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <li>English</li>
 <li>Chinese (Simplified)</li>
 <li>German</li>
+<li>Portugese (BR)</li>
+<p>Keeping this system up to date in all of these laguages is a never ending process. Therefore every laguage but English (which the system is written in) and German (which I'm a native speaker in) will show some not correctly localized parts here and there.</p>
+<p>If you are a native speaker in any of these (or other) languages and want to support the system with your skills, feel free to contact me directly via mail or on discord (laphaela). You don't need any development skills and your help will be much appreciated by anyone who plays the system in your language!</p>
 </ol>
 
 <h3>About Localization</h3>

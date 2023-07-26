@@ -34,7 +34,7 @@
                 </div>
                 <!--Weapon Details-->
                 <div class="flexrow flex-group-center slideShow" style="height: 26px; background-color: var(--accentBackground);">
-                    <a class="flexrow">
+                    <a class="showFlex">
                         <table>
                             <tr style="background-color: var(--accentBackground);">
                                 <td style="padding-left: 8px; max-width: 20px;">
@@ -108,7 +108,7 @@
                                         {{#each item.system.mode1.traits as |trait key|}}
                                             {{#if (eq trait.value true)}}
                                                 <div class="extendedPillFloat">
-                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-rolledfrom="info">
                                                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize trait.name}}</span>
                                                     </a>
                                                 </div>
@@ -125,7 +125,7 @@
                                         {{#each item.system.accessories as |accessory key|}}
                                             {{#if (eq accessory.value true)}}
                                                 <div class="extendedPillFloat">
-                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}" data-rolledfrom="info">
                                                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
                                                     </a>
                                                 </div>
@@ -178,7 +178,7 @@
                                         {{#each item.system.mode2.traits as |trait key|}}
                                             {{#if (eq trait.value true)}}
                                                 <div class="extendedPillFloat">
-                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-rolledfrom="info">
                                                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize trait.name}}</span>
                                                     </a>
                                                 </div>
@@ -194,7 +194,7 @@
                                         {{#each item.system.accessories as |accessory key|}}
                                             {{#if (eq accessory.value true)}}
                                                 <div class="extendedPillFloat">
-                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}">
+                                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}" data-rolledfrom="info">
                                                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
                                                     </a>
                                                 </div>

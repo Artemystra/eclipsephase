@@ -359,7 +359,7 @@ async function migrationEnd(endMigration) {
 });
 
 //Gets chat data
-Hooks.on("renderChatLog", (app, html, data) => EPchat.addChatListeners(html, data));
+Hooks.on("renderChatMessage", (app, html, data) => EPchat.addChatListeners(html, data));
 
 //Sets parts of the chat invisible to players
 Hooks.on("renderChatLog", (app, html, data) => EPchat.GMvision(html, data));

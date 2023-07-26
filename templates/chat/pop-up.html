@@ -45,7 +45,7 @@
     <!-- Bring a rule text button in the Chat (common-sheet-functions.js line 183 onwards)-->
     {{#if (eq dialogType "information")}}
       <!-- if not rolled from a skill/item)-->
-      {{#if (ne rolledfrom)}}
+      {{#if (eq rolledfrom "info")}}
         <div class="contentBoxMargin">
           <div class="flexrow subheader">
               <h3 class="subheader dialog">{{localize title}}</h3>
@@ -55,7 +55,7 @@
           </div>
         </div>
       {{/if}}
-      <!-- if not rolled from a skill/item)-->
+      <!-- if rolled from a psi)-->
       {{#if (eq rolledfrom "psiSleight")}}
         <div class="item" style="margin-bottom: 10px;">
             <div class="flexrow subheader">

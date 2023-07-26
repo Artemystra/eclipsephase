@@ -1,4 +1,4 @@
-import { moreInfo } from "./common/common-sheet-functions.js";
+import { moreInfo, registerCommonHandlers } from "./common/common-sheet-functions.js";
 
 export async function GMvision(html){
     let GMvision = game.user.isGM
@@ -11,7 +11,9 @@ export async function GMvision(html){
     }
 }
 
-export async function addChatListeners(html){
+export function addChatListeners(html){
     html.on('click', 'i.moreInfo', moreInfo);
+
+    registerCommonHandlers(html);
 }
 
