@@ -18,6 +18,7 @@
   "TYPES.Item.knowSkill" : "Wissens-Skill",
   "TYPES.Item.vehicle" : "Fahrzeug",
   "TYPES.Item.drug" : "Droge",
+  "TYPES.Item.ammo" : "Munition",
 
   "ep2e": {
     "actorSheet": {
@@ -1068,7 +1069,8 @@
             "Indirect": "Indirekt",
             "reload": "Deine Waffe ist leer. <p/> <strong>Lade sie zunächst nach! </strong>",
             "reloadedWeapon": "Waffe nachgeladen",
-            "weaponFull": "Deine Waffe ist noch voll."
+            "weaponFull": "Deine Waffe ist noch voll.",
+            "noAmmoPresent": "Keine passende Munition vorhanden."
           }
         }
       }

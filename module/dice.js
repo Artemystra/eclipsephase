@@ -1,5 +1,5 @@
 import { eclipsephase } from "./config.js";
-import { weaponListConstructor } from "./common/common-sheet-functions.js"
+import { weaponListConstructor } from "./common/weapon-functions.js"
 /*
  * Path constants for dialog templates
  */

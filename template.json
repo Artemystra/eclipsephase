@@ -1029,7 +1029,8 @@
       "knowSkill",
       "vehicle",
       "drug",
-      "grenade"
+      "grenade",
+      "ammo"
     ],
     "templates": {
       "base": {
@@ -1257,7 +1258,29 @@
         "buyable"
       ],
       "areaeffect": null,
-      "dv": null,
+      "dv": {
+        "d10": null,
+        "d6": null,
+        "bonus": null
+      },
+      "armorused":null,
+      "quantity": 1,
+      "displayCategory": "consumable",
+      "slotType": "consumable"
+    },
+    "ammo": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "type": null,
+      "traits": null,
+      "areaeffect": null,
+      "dv": {
+        "d10": null,
+        "d6": null,
+        "bonus": null
+      },
       "armorused":null,
       "quantity": 1,
       "displayCategory": "consumable",

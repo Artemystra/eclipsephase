@@ -22,7 +22,7 @@ export default class EPgearSheet extends ItemSheet {
     }
     else {
       this.position.width = 520;
-      this.position.height = 485;
+      this.position.height = 415;
     }
   }
   /** @override */
@@ -76,6 +76,16 @@ export default class EPgearSheet extends ItemSheet {
   /** @override */
   activateListeners(html) {
     super.activateListeners(html);
+
+    
+    if(this.item.system.type === "seeker" || this.item.type === "grenade"){
+      this.position.width = 680;
+      this.position.height = 415;
+    }
+    else if(this.item.system.type != "seeker" && this.item.type === "ammo"){
+      this.position.width = 520;
+      this.position.height = 415;
+    }
 
     let item = this.item;
 

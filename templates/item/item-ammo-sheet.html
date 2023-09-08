@@ -1,0 +1,84 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
+        <a class="item" data-tab="description">{{localize "ep2e.item.general.table.description"}}</a>
+        {{#if item.showEffectsTab}}
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
+        {{/if}}
+    </nav>
+    {{!-- Sheet Body --}}
+
+    <section class="item-sheet-body" style="min-height: 245px; height: fit-content;">
+        <div class="tab details" data-group="primary" data-tab="details">
+            <div class="item contentBox" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="padding-bottom: 5px;">
+                <div class="flexrow">
+                    <div class="alignRight flexGrowThreeQuarter">
+
+                        <div class="flexrow alignCenter wantToKnowMore">
+                            <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-small icon-space"/>
+                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
+                            <select class="input-large" name="system.type" data-type="String">
+                                {{#select item.system.type}}
+                                {{#each config.rangedAmmoType as |name key|}}
+                                <option value="{{key}}">{{localize name}}</option>
+                                {{/each}} {{/select}}
+                            </select>                         
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {{#if (eq item.system.type "seeker")}}
+
+                {{> systems/eclipsephase/templates/item/partials/grenade-details.html item=item}}
+    
+            {{else}}
+            
+            <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+                <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+
+                    <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                        <input class="input-xs"type="number" name="system.dv.d10" value="{{item.system.dv.d10}}" placeholder="0"/>
+                        <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                        <input class="input-xs"type="number" name="system.dv.d6" value="{{item.system.dv.d6}}" placeholder="0"/>
+                        <i class="fas fa-plus awesomeIcon"></i>
+                        <input class="input-xs"type="number" name="system.dv.bonus" value="{{item.system.dv.bonus}}" placeholder="0"/>
+                    </div>
+                    <div class="flexrow flex-group-center wantToKnowMore" style="margin-right: 10px; max-width: inherit;">
+                        <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small icon-space"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.maxAmmo"}}</span>
+                        <input class="alignCenter input-xs" type="number" name="system.quantity" value="{{item.system.quantity}}" placeholder="e.g. 12"/>
+                    </div>
+                    <div class="wantToKnowMore flexrow alignRight" style="max-width: inherit;">
+                        <i class="fa-regular fa-coins awesomeIcon icon-small alignCenter" style="font-size: 18px;"></i>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span>
+                        <select name="system.cost" data-type="String" style="max-width: 100px;">
+                            {{#select item.system.cost}}
+                            {{#each config.costTypes as |name key|}}
+                            <option value="{{key}}">{{localize name}}</option>
+                            {{/each}} {{/select}}
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+            {{/if}}
+        </div>
+
+    <div class="tab description" data-group="primary" data-tab="description">
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+    </div>
+
+    {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+    </section>
+</form>

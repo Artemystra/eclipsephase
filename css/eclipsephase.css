@@ -1204,10 +1204,14 @@ h3.subheaderBlank {
 
 .alignRight {
   text-align: right!important;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .alignLeft {
   text-align: left!important;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .alignCenter {

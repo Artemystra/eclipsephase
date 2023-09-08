@@ -18,6 +18,7 @@
   "TYPES.Item.knowSkill" : "知识技能",
   "TYPES.Item.vehicle" : "载具",
   "TYPES.Item.drug" : "药物",
+  "TYPES.Item.ammo" : "Ammo",
 
   "ep2e": {
     "actorSheet": {
@@ -1006,7 +1007,8 @@
             "Indirect": "间接",
             "reloadNeeded": "你的武器弹药不足。<p/> <strong>请先装填！</strong>",
             "reloadedWeapon": "我装填了我的武器",
-            "weaponFull": "你的武器弹药已满。"
+            "weaponFull": "你的武器弹药已满。",
+            "noAmmoPresent": "No fitting ammunition present."
           }
         }
       }

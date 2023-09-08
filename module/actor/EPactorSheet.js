@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,weaponPreparation,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo } from "../common/common-sheet-functions.js";
+import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as Dice from "../dice.js";
 import itemRoll from "../item/EPitem.js";
@@ -146,6 +147,13 @@ export default class EPactorSheet extends ActorSheet {
 
     const gear = [];
     const consumable = [];
+    const ammo = {
+      beam: [],
+      kinetic: [],
+      seeker: [],
+      spray: [],
+      rail: [],
+    }
     const know = [];
     const special = [];
     const trait = [];
@@ -426,8 +434,43 @@ export default class EPactorSheet extends ActorSheet {
             }
           gear.push(item);
         }
-        else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital') {
-          itemModel.slotName = "ep2e.item.general.table.slot.consumable";
+        else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
+          switch (item.type) {
+            case 'grenade':
+            itemModel.slotName = "ep2e.item.general.table.slot.grenade";
+            break;
+            case 'ammo':
+            itemModel.slotName = "ep2e.item.general.table.slot.ammo";
+            break;
+            default:
+            itemModel.slotName = "ep2e.item.general.table.slot.consumable";
+            break;
+
+          }
+          consumable.push(item);
+        }
+        else if (item.type === 'ammo'|| item.type === 'grenade'){
+          if (item.system.active){
+            switch(item.system.type){
+              case 'beam':
+              ammo.beam.push(item);
+              break;
+              case 'kinetic':
+              ammo.kinetic.push(item);
+              break;
+              case 'seeker':
+              ammo.seeker.push(item);
+              break;
+              case 'spray':
+              ammo.spray.push(item);
+              break;
+              case 'rail':
+              ammo.rail.push(item);
+              break;
+              default:
+                break;
+            }
+          }
           consumable.push(item);
         }
         else if (item.type === 'vehicle') {
@@ -537,6 +580,7 @@ export default class EPactorSheet extends ActorSheet {
     actor.vehicle = vehicle;
     actor.activeEffects=effects;
     actor.actorType = "PC";
+    actor.ammo = ammo;
 
     // Check if sleights are present and toggle Psi Tab based on this
     if (actor.aspect.chi.length>0){
@@ -763,7 +807,7 @@ export default class EPactorSheet extends ActorSheet {
       const dataset = element.dataset;
       const brewStatus = game.settings.get("eclipsephase", "superBrew");
       const restReset = game.settings.get("eclipsephase", "restReset");
-      const actorWhole = this.actor;
+      const actorWhole = actor;
       const actorModel = this.actor.system;
       const restType = dataset.resttype;
       const curInsight = actorModel.pools.insight.value;
@@ -856,7 +900,7 @@ export default class EPactorSheet extends ActorSheet {
   });
 
   html.find('.distribute').click(async func => {
-    const actorWhole = this.actor;
+    const actorWhole = actor;
     const actorModel = this.actor.system;
     const curInsight = actorModel.pools.insight.value;
     const curVigor = actorModel.pools.vigor.value;
@@ -883,7 +927,7 @@ export default class EPactorSheet extends ActorSheet {
       html.find(".sheet-inline-edit").change(this._onSkillEdit.bind(this));
 
       //Reload Ranged Weapon Functionality
-      html.find(".reload").click(this._onReloadWeapon.bind(this));
+      reloadWeapon(html, actor);
 
       //(De)Activate morph/body bound traits/flaws/ware
       html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
@@ -1143,43 +1187,6 @@ export default class EPactorSheet extends ActorSheet {
     let field = element.dataset.field;
 
     return item.update({ [field]: element.value });
-  }
-
-  _onReloadWeapon(event) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
-    let currentAmmo = dataset.currentammo;
-    let maxAmmo = dataset.maxammo;
-    let weaponName = dataset.weaponname;
-    let weaponID = dataset.weaponid;
-    let difference = maxAmmo - currentAmmo;
-    let ammoUpdate = [];
-
-    if (difference>0){
-      currentAmmo = maxAmmo;
-      ammoUpdate.push({
-        "_id" : weaponID,
-        "system.ammoMin": currentAmmo
-      });
-
-      this.actor.updateEmbeddedDocuments("Item", ammoUpdate);
-      let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
-
-      ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-        flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
-    })
-    }
-    else {
-    let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.weaponFull");
-    ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({actor: this.actor}),
-      content: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>",
-      whisper: [game.user._id]
-    })
-    }
-
   }
 
   _onToggleReveal(event) {
