@@ -586,6 +586,7 @@
           "effectsTab": "Effects"
         },
         "table": {
+          "quantity": "Quantity",
           "cost": {
             "label": "Cost",
             "minor": "Minor",
@@ -599,7 +600,10 @@
             "consumable": "Consumable",
             "accessory": "Accessory",
             "bulky": "Bulky",
-            "notMobile": "Not Mobile"
+            "notMobile": "Not Mobile",
+            "grenade": "Grenade",
+            "ammo": "Ammunition",
+            "drug": "Drug"
           },
           "description": "Description",
           "descriptionPlaceholder": "Add a description"

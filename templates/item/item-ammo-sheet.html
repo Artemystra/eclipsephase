@@ -21,8 +21,8 @@
                     <div class="alignRight flexGrowThreeQuarter">
 
                         <div class="flexrow alignCenter wantToKnowMore">
-                            <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-small icon-space"/>
-                            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
+                            <i class="fa-regular fa-tags awesomeIcon icon-small" style="max-width: fit-content;"></i>
+                            <label class="tooltipText">{{localize "ep2e.item.weapon.table.type.label"}}</label>
                             <select class="input-large" name="system.type" data-type="String">
                                 {{#select item.system.type}}
                                 {{#each config.rangedAmmoType as |name key|}}
@@ -54,8 +54,8 @@
                         <input class="input-xs"type="number" name="system.dv.bonus" value="{{item.system.dv.bonus}}" placeholder="0"/>
                     </div>
                     <div class="flexrow flex-group-center wantToKnowMore" style="margin-right: 10px; max-width: inherit;">
-                        <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small icon-space"/>
-                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.maxAmmo"}}</span>
+                        <img src="systems/eclipsephase/resources/icons/quantity.webp" class="icon-small icon-space"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.quantity"}}</span>
                         <input class="alignCenter input-xs" type="number" name="system.quantity" value="{{item.system.quantity}}" placeholder="e.g. 12"/>
                     </div>
                     <div class="wantToKnowMore flexrow alignRight" style="max-width: inherit;">

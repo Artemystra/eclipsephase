@@ -595,6 +595,7 @@
           "effectsTab": "Effects"
         },
         "table": {
+          "quantity": "Quantity",
           "cost": {
             "label": "Cost",
             "minor": "Minor",
@@ -608,7 +609,10 @@
             "consumable": "Consumable",
             "accessory": "Accessory",
             "bulky": "Bulky",
-            "notMobile": "Not Mobile"
+            "notMobile": "Not Mobile",
+            "grenade": "Grenade",
+            "ammo": "Ammunition",
+            "drug": "Drug"
           },
           "description": "Description",
           "descriptionPlaceholder": "Add a description"
@@ -660,7 +664,7 @@
           "maxAmmo": "Max Ammo",
           "damageValue": "DV",
           "noDamage": "No Damage",
-          "effectArea": "Effect Area",
+          "effectArea": "Area-Effect Type (Radius)",
           "weaponMode": "Weapon Mode",
           "addTrait": "Add Trait",
           "addAccessory": "Add Accessory",

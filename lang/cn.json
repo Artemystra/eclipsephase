@@ -585,6 +585,7 @@
           "effectsTab": "效果"
         },
         "table": {
+          "quantity": "Quantity",
           "cost": {
             "label": "花费",
             "minor": "次级",
@@ -598,7 +599,10 @@
             "consumable": "消耗品",
             "accessory": "配件",
             "bulky": "笨重",
-            "notMobile": "不可移动"
+            "notMobile": "不可移动",
+            "grenade": "Grenade",
+            "ammo": "Ammunition",
+            "drug": "Drug"
           },
           "description": "描述",
           "descriptionPlaceholder": "添加描述"

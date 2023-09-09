@@ -13,23 +13,23 @@
                 <input class="input-xs"type="number" name="system.dv.bonus" value="{{item.system.dv.bonus}}" placeholder="0"/>
             </div> 
             <div class="flexrow alignCenter wantToKnowMore" style="margin-left: 10px;">
-                <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-small icon-space"/>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
-                <select class="input-large" name="system.armorused" data-type="String">
-                    {{#select item.system.armorused}}
+                <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small icon-space"/>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.armorUsed.label"}}</span>
+                <select class="input-large" name="system.armorUsed" data-type="String">
+                    {{#select item.system.armorUsed}}
                     {{#each config.grenadeArmorVector as |name key|}}
                     <option value="{{key}}">{{localize name}}</option>
                     {{/each}} {{/select}}
                 </select>                         
             </div>
             <div class="flexrow alignRight wantToKnowMore" style="margin-left: 20px;">
-                <i class="fa-regular fa-arrows-left-right awesomeIcon" style="font-size: 18px; max-width: 55px; flex: 0; margin-right: 5px;"></i>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}</span>
+                <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-small icon-space"/>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.effectArea"}}</span>
                 <input class="alignCenter" type="text" name="system.areaeffect" value="{{item.system.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
             </div>
             <div class="flexrow flex-group-center wantToKnowMore" style="max-width: 75px;">
-                <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small icon-space"/>
-                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.maxAmmo"}}</span>
+                <img src="systems/eclipsephase/resources/icons/quantity.webp" class="icon-small icon-space"/>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.quantity"}}</span>
                 <input class="alignCenter input-xs" type="number" name="system.quantity" value="{{item.system.quantity}}" placeholder="e.g. 12"/>
             </div>
             <div class="wantToKnowMore flexrow alignRight" style="max-width: 130px;">

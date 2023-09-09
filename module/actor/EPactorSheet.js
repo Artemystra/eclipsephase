@@ -435,6 +435,15 @@ export default class EPactorSheet extends ActorSheet {
           gear.push(item);
         }
         else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
+          if (item.type === "drug"){
+            itemModel.slotName = "ep2e.item.general.table.slot.drug";
+          }
+          else {
+            itemModel.slotName = "ep2e.item.general.table.slot.consumable";
+          }
+          consumable.push(item);
+        }
+        else if (item.type === 'ammo'|| item.type === 'grenade'){
           switch (item.type) {
             case 'grenade':
             itemModel.slotName = "ep2e.item.general.table.slot.grenade";
@@ -443,13 +452,9 @@ export default class EPactorSheet extends ActorSheet {
             itemModel.slotName = "ep2e.item.general.table.slot.ammo";
             break;
             default:
-            itemModel.slotName = "ep2e.item.general.table.slot.consumable";
             break;
-
           }
-          consumable.push(item);
-        }
-        else if (item.type === 'ammo'|| item.type === 'grenade'){
+
           if (item.system.active){
             switch(item.system.type){
               case 'beam':

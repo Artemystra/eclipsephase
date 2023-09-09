@@ -3,8 +3,9 @@
         {{#each actor.consumable as |item id|}}
             <div>
                 {{#if this.system.active}}
-                <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+                <div class="item flexrow flex-group-center atHand wantToKnowMore" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                     <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked system.active}}>
+                    <label class="tooltipText" style="min-width: 190px; left: -5px">{{item.name}}</label>
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                     <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
@@ -24,8 +25,9 @@
                     </div>
                 </div>
                 {{else}}
-                <div class="item flexrow offHand flex-group-center" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+                <div class="item flexrow offHand flex-group-center wantToKnowMore" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                     <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked system.active}}>
+                    <label class="tooltipText" style="min-width: 190px; left: -5px">{{item.name}}</label>
                     <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                     <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>

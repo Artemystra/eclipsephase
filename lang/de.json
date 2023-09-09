@@ -595,6 +595,7 @@
           "effectsTab": "Effekte"
         },
         "table": {
+          "quantity": "Anzahl",
           "cost": {
             "label": "Kosten",
             "minor": "Klein",
@@ -608,7 +609,10 @@
             "consumable": "Konsumgut",
             "accessory": "Zubehör",
             "bulky": "Sperrig",
-            "notMobile": "Nicht Mobil"
+            "notMobile": "Nicht Mobil",
+            "grenade": "Granate",
+            "ammo": "Munition",
+            "drug": "Droge"
           },
           "description": "Beschreibung",
           "descriptionPlaceholder": "Beschreibung hinzufügen"
@@ -660,7 +664,7 @@
           "maxAmmo": "Munition",
           "damageValue": "SW",
           "noDamage": "Kein Schaden",
-          "effectArea": "Wirkbereich",
+          "effectArea": "Wirkbereich (Radius)",
           "weaponMode": "Waffenmodus",
           "addTrait": "Eigenschaft Hinzufügen",
           "addAccessory": "Zubehör Hinzufügen",
