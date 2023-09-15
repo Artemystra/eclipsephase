@@ -184,9 +184,30 @@ export async function moreInfo(event){
   const template = 'systems/eclipsephase/templates/chat/pop-up.html'
   let dialogData = {}
   dialogData.dialogType = "information";
-  
-  for (var item in dataset){
-      dialogData[item] = dataset[item];
+
+  //This builds the dataset if objects are needed from the item
+  if(dataset.contructdataset){
+    let item = ""
+    for(let actor of game.actors){
+      let fetchedItem = Boolean(actor.items.get(dataset.contructdataset))
+          if(fetchedItem){
+              item = actor.items.get(dataset.contructdataset);
+      };
+    };
+    let path = eval("item." + dataset.datapath);
+
+    for (let item in path){
+      dialogData[item] = path[item];
+    }
+
+    dialogData.rolledfrom = dataset.rolledfrom;
+
+  }
+  //This uses the data provided by handlebars datasets
+  else{
+    for (let item in dataset){
+        dialogData[item] = dataset[item];
+    }
   }
 
   console.log("This is my dialogData: ", dialogData)
@@ -260,4 +281,38 @@ export function itemToggle(html, item){
     };
     item.update(updateData);
   });
+}
+
+//List dialog constructor
+export async function listSelection(objectList, dialogType, headline){
+  let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+  let useButton = game.i18n.localize('ep2e.actorSheet.button.select');
+  const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+  const html = await renderTemplate(template, {objectList, dialogType, headline});
+  return new Promise(resolve => {
+      const data = {
+          title: dialogName,
+          content: html,
+          buttons: {
+              cancel: {
+                  label: cancelButton,
+                  callback: html => resolve ({cancelled: true})
+              },
+              normal: {
+                  label: useButton,
+                  callback: html => resolve(_proListSelection(html[0].querySelector("form")))
+              }
+          },
+          default: "normal",
+          close: () => resolve ({cancelled: true})
+      };
+      let options = {width:536}
+      new Dialog(data, options).render(true);
+  });
+}
+function _proListSelection(form) {
+  return {
+      selection: form.WeaponSelect.value
+  }
 }

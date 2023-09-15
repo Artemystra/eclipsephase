@@ -110,7 +110,7 @@
         {{#each item.system.mode1.traits as |item key|}}
             {{#if (eq item.value true)}}
                 <div class="extendedPillgrid">
-                    <a><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode1.traits.{{key}}.value"></i></a>
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode1.traits.{{key}}.value"></i></a>
                     <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
@@ -149,7 +149,7 @@
         {{#each item.system.accessories as |item key|}}
             {{#if (eq item.value true)}}
                 <div class="extendedPillgrid">
-                    <a><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.accessories.{{key}}.value"></i></a>
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.accessories.{{key}}.value"></i></a>
                     <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
@@ -258,7 +258,7 @@
         {{#each item.system.mode2.traits as |item key|}}
             {{#if (eq item.value true)}}
                 <div class="extendedPillgrid">
-                    <a><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode2.traits.{{key}}.value"></i></a>
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode2.traits.{{key}}.value"></i></a>
                     <a class="moreIndfo"  data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
                         <span for="moreInfoDialog" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
@@ -297,7 +297,7 @@
         {{#each item.system.accessories as |item key|}}
             {{#if (eq item.value true)}}
                 <div class="extendedPillgrid">
-                    <a><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.accessories.{{key}}.value"></i></a>
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.accessories.{{key}}.value"></i></a>
                     <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>

@@ -1,4 +1,4 @@
-
+{{actor}}
             {{#if item.system.active}}
             <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
                 <div class="flexrow subheader">
@@ -16,19 +16,22 @@
                         </h3>
                     </div>
                     <!--Ammunition Counter & Reload-->
-                    <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
+                    <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end; flex-grow: 0.5!important;" data-item-id="{{item._id}}">
                     {{#if (eq type "ranged")}}
                         <img src="systems/eclipsephase/resources/icons/ammo.png" class="toggle icon-small"/>
                         
                         <img src="systems/eclipsephase/resources/icons/reload.webp" class="toggle noShow reload icon-small rollable" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
                         {{#if @root.isGM}}
-                            <input class="input-small sheet-inline-edit" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                            <input class="input-small sheet-inline-edit" style="min-width: 27px; padding-left: 1px;" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
                         {{else}}
                             <label class="input-xs">{{item.system.ammoMin}}</label>/
                         {{/if}}
-                        <h4 class="item-image flex-group-left input-small noMargin">
+                        <h4 class="item-image flex-group-left input-small icon-space">
                             <strong>{{item.system.ammoMax}}</strong>
                         </h4>
+                        <a class="moreInfoDialog" data-contructdataset={{item._id}} data-datapath="system.ammoSelected" data-rolledfrom="ammoInfo">
+                            <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                        </a>
                     {{/if}}
                     </div>
                 </div>

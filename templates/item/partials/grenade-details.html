@@ -3,6 +3,17 @@
     <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
         <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0;">
 
+            {{#if (eq item.system.traits.noDamage.value true)}}
+            <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                <label>{{localize "ep2e.item.weapon.table.trait.noDamage"}}</label>
+            </div>
+            {{else if (eq item.system.traits.dvHalved.value true)}}
+            <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                <label>{{localize "ep2e.item.weapon.table.trait.dvHalved"}}</label>
+            </div>
+            {{else}}
             <div class="wantToKnowMore" style="display: flex; align-items: center;">
                 <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
@@ -11,7 +22,8 @@
                 <input class="input-xs"type="number" name="system.dv.d6" value="{{item.system.dv.d6}}" placeholder="0"/>
                 <i class="fas fa-plus awesomeIcon"></i>
                 <input class="input-xs"type="number" name="system.dv.bonus" value="{{item.system.dv.bonus}}" placeholder="0"/>
-            </div> 
+            </div>
+            {{/if}}
             <div class="flexrow alignCenter wantToKnowMore" style="margin-left: 10px;">
                 <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small icon-space"/>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.armorUsed.label"}}</span>
@@ -42,7 +54,7 @@
                     {{/each}} {{/select}}
                 </select>
             </div>
-
         </div>
     </div>
 </div>
+{{> systems/eclipsephase/templates/item/partials/item-traits.html item=item}}

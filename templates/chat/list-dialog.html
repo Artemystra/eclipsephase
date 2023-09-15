@@ -30,14 +30,14 @@
     {{else if (eq dialogType "weaponList")}}
 
         <div class="flexrow subheader">
-            {{#if weaponslist.headline}}
-                <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline"}}</h3>
+            {{#if headline}}
+                <h3 class="subheader dialog">{{localize headline}}</h3>
             {{else}}
                 <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.weaponSelect.headline"}}</h3>
             {{/if}}
         </div>
         <div class="grid" style="margin-bottom: 20px;">
-            {{#each weaponslist}}
+            {{#each objectList}}
             <div style="min-height: 40px; display: flex;">
                 {{#if _id}}
                 <div>
@@ -63,6 +63,87 @@
                         <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b></label>
                     {{/if}}
                 {{/if}}
+            </div>
+            {{/each}}
+        </div>
+
+        {{else if (eq dialogType "ammoList")}}
+
+        
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.ranged.ammoSelect.headline"}}</h3>
+        </div>
+        <div class="grid" style="margin-bottom: 20px;">
+            {{#each objectList}}
+            <div style="min-height: 40px; display: flex; flex-wrap: wrap;">
+                {{#if _id}}
+                <div>
+                    <input type="radio" name="WeaponSelect" value="{{_id}}" id="{{_id}}">
+                </div>
+                    {{#if dv}}
+                        {{#if ammoCur}}
+                            <div style="display: block;">
+                                <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
+                                <div style="display: flex; align-items: center; padding-left: 10px;">
+                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
+                                </div>
+                            </div>
+                        {{else}}
+                        <div style="display: block;">
+                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
+                            <div style="display: flex; align-items: center; padding-left: 10px;">
+                                <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
+                            </div>
+                        </div>
+                        {{/if}}
+                    {{else}}
+                        <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b></label>
+                    {{/if}}
+                {{/if}}
+                <div style="display: flex; flex-wrap: wrap;">
+                    {{#each traits as |item key|}}
+                        {{#if (eq item.value true)}}
+                            {{#if (eq key "dvOnMiss")}}
+                            <div class="extendedPillgrid wantToKnowMore">
+                                <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                                {{#if item.dv.d10}}
+                                <img src="icons/svg/d10-grey.svg" class="icon-xsmall icon-space"/>
+                                <label class="input-xs icon-space">{{item.dv.d10}}</label>
+                                {{/if}}
+                                {{#if item.dv.d6}}
+                                <img src="icons/svg/d6-grey.svg" class="icon-xsmall icon-space"/>
+                                <label class="input-xs icon-space">{{item.dv.d6}}</label>
+                                {{/if}}
+                                {{#if item.dv.bonus}}
+                                <i class="fas fa-plus awesomeIcon icon-space"></i>
+                                <label class="input-xs icon-space">{{item.dv.bonus}}</label>
+                                {{/if}}
+                            </div>
+                            {{else if (eq key "indirectOrBonus")}}
+                            <div class="extendedPillgrid wantToKnowMore">
+                                <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                                <img src="systems/eclipsephase/resources/icons/246_skill%20gun%20accuracy.png" class="icon-small"/>
+                                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.skills.vigorSkills.guns"}} {{localize "ep2e.skills.skillMod"}}</span>
+                                <label class="input-small">+ {{item.skillMod}}</label>
+                            </div>
+                            {{else if (eq key "knockdown")}}
+                            <div class="extendedPillgrid wantToKnowMore">
+                                <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>                                
+                                {{#if item.radius}}
+                                <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-xsmall icon-space"/>
+                                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.radius"}}</span>
+                                <label class="input-xs alignCenter">{{item.radius}}</label>
+                                {{/if}}
+                            </div>
+                            {{else}}
+                            <div class="extendedPillgrid wantToKnowMore">
+                                <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                            </div>
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
+                </div>
             </div>
             {{/each}}
         </div>

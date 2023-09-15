@@ -320,7 +320,8 @@
         "repSize": "Size of Favor"
       },
       "addSkill": "Add Skill",
-      "chooseAptitude": "Choose Apt"
+      "chooseAptitude": "Choose Apt",
+      "skillMod": "Skill Mod"
     },
     "morph": {
       "currentMorph": {
@@ -663,8 +664,12 @@
           "range": "Range",
           "maxAmmo": "Max Ammo",
           "damageValue": "DV",
+          "damageValueModifier": "DV Modifier",
+          "noDamageValueModifier": "No Damage Modifier",
           "noDamage": "No Damage",
-          "effectArea": "Area-Effect Type (Radius)",
+          "noDamageAmmo": "No Damage (Source: Ammunition)",
+          "effectArea": "Area-Effect Type",
+          "radius": "Radius",
           "weaponMode": "Weapon Mode",
           "addTrait": "Add Trait",
           "addAccessory": "Add Accessory",
@@ -699,12 +704,19 @@
           },
           "trait": {
             "armorPiercing": "Armor Piercing",
+            "blinding": "Blinding",
+            "bioMorphsOnly": "Bonus DV on Biomorphs Only",
             "concealable": "Concealable",
+            "disablesRadio": "Disables Radio",
+            "dvHalved": "Halves Weapon DV",
+            "dvOnMiss": "DV on Miss",
             "entangling": "Entangling",
             "fixed": "Fixed",
+            "indirectOrBonus": "Indirect Shots OR",
             "knockdown": "Knockdown",
             "long": "Long",
             "noClose": "No Close",
+            "noDamage": "No Damage",
             "noPointBlank": "No Point Blank",
             "noSmartlink": "No Smartlink",
             "pain": "Pain",
@@ -712,6 +724,7 @@
             "singleUse": "Single Use",
             "steady": "Steady",
             "stun": "Stun",
+            "stunBiomorphs": "Stun (Biomorphs Only)",
             "fragile": "Fragile",
             "reach": "Reach",
             "touchOnly": "Touch Only",
@@ -904,6 +917,9 @@
             "headline": "Select Weapon",
             "modeSelectionHeadline": "Select Weapon Mode"
           },
+          "ammoSelect": {
+            "headline": "Select Ammunition"
+          },
           "attacker": {
             "smartLinkLabel": "Smart Link (-10 if none)",
             "superiorPosition": "Superior Position (+20)",
@@ -1090,12 +1106,18 @@
       "weapon": {
         "effect": {
           "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",
+          "bioMorphsOnly": "This weapon inflicts more damage to soft targets like biomorphs. They do not provide extra damage to synthmorphs or objects.",
           "blinding": "Targets must make a REF Check or be blinded for 1 action turns, +1 per failure category. While blinded you have a 50% chance of missing your attacks (if you miss a perceive test) and suffer a –30 to all other physical actions, including Fray Tests. You must make an Athletics, Free Fall, or Pilot Test to move faster than a base move or fall prone.A critical failure results in permanent blindness until repaired or they spend time in a healing vat. Anti-glare ware protects against blinding based on light.",
           "concealable": "This item is easily hidden. You receive a +30 to Infiltrate Tests to hide this item on your person (or elsewhere).",
+          "disablesRadio": "Every radio (or object that communicates with it's surroundings via antennas or similar technology) within the blast radius (50 meters) is disabled until repaired with an appropriate Hardware or Medicine: Biotech Test or a fixer nanoswarm. Every nanoswarm within range suffers DV 2d10 + 5.",
+          "dvHalved": "The weapon is made of a relatively soft, flexbile or even hollow material. While most of these weapons are designed to hurt but not kill people, sometimes the reason for hollowing a weapon out is, that it carries a toxin or drug that is injected forcefully during an encounter.",
+          "dvOnMiss": "This reactive bullet uses nanosensors to determine if it is going to miss a smartlink-tagged target and explodes in their vicinity. If the attack misses without a superior or critical failure, the target still suffers some amount of damage",
           "entangling": "Targets struck by this weapon must make a REF Check or be grappled ▶205. The attacker's successes levels apply a cumulative –10 per level to this REF Check and SOM Checks to break free.",
           "fixed": "Fixed weapons are designed to be fired from a prone or braced position, such as mounted on a bipod or hardpoint. If carried, apply a –20 modifier to attacks and consider them to have the Two-Handed trait.",
           "fragile": "This items breaks or becomes unusable if you roll a greater failure.",
+          "indirectOrBonus": "This bullet identifies a smartlink-tagged target and uses nanosensors and telemetry from previous bullets to lock on, correcting the bullet’s trajectory with surface alterations and tiny vectored nozzles. Apply it's positive modifier to hit for attacks following an aim action (cumulative with the aim modifier) or previous attacks against the same target. Homing bullets can also be used for indirect fire ▶206, though without the to-hit modifier.",
           "knockdown": "This strike may knock even unwounded opponents off their feet. The target must make a SOM Check or be knocked prone.",
+          "noDamage": "Some ammunition is soft or flexible to an extend, or designed to explode in some distance to it's target, that no damage applies at all. It's effect is diverse and reaches from an electro magnetic pulse to an attack with poisonous gas.",
           "noSmartlink": "This weapon is not equipped with a smartlink's targeting assistance. –10 to attack tests.",
           "long": "Lengthy weapons are unwieldy in close combat (–30 to fire when in melee) and do not receive the +10 modifier when fired at Point-Blank range.",
           "noClose": "This weapon cannot be fired at Point-Blank or Close range. Seeker weapons have built-in safety features that prevent them from being fired at ranges that might injure the user. Overriding this features requires a Hardware or Infosec Test.",
@@ -1106,6 +1128,7 @@
           "singleUse": "This item can only be used once.",
           "steady": "This weapon ignores range modifiers.",
           "stun": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
+          "stunBiomorphs": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
         },

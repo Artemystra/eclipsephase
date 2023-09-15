@@ -315,7 +315,8 @@
         "repSize": "Tamanho do Favor"
       },
       "addSkill": "Adicionar Perícia",
-      "chooseAptitude": "Escolher Apt"
+      "chooseAptitude": "Escolher Apt",
+      "skillMod": "Skill Mod"
     },
     "morph": {
       "currentMorph": {
@@ -651,7 +652,12 @@
           "range": "Alcance",
           "maxAmmo": "Munição Máxima",
           "damageValue": "VD",
+          "damageValueModifier": "DV Modifier",
+          "noDamageValueModifier": "No Damage Modifier",
+          "noDamage": "No Damage",
+          "noDamageAmmo": "No Damage (Source: Ammunition)",
           "effectArea": "Área de Efeito",
+          "radius": "Radius",
           "armorUsed": {
             "label": "Armadura Utilizada",
             "none": "Nenhuma",
@@ -673,6 +679,55 @@
             "oneHanded": "Uma Mão",
             "twoHanded": "Duas Mãos",
             "bulky": "Volumoso"
+          },
+          "ammoUsed": {
+            "beam": "Energy",
+            "kinetic": "Kinetic",
+            "seeker": "Seeker",
+            "spray": "Spray",
+            "rail": "Rail"
+          },
+          "trait": {
+            "armorPiercing": "Armor Piercing",
+            "blinding": "Blinding",
+            "bioMorphsOnly": "Bonus DV on Biomorphs Only",
+            "concealable": "Concealable",
+            "disablesRadio": "Disables Radio",
+            "dvHalved": "Halves Weapon DV",
+            "dvOnMiss": "DV on Miss",
+            "entangling": "Entangling",
+            "fixed": "Fixed",
+            "indirectOrBonus": "Indirect Shots OR",
+            "knockdown": "Knockdown",
+            "long": "Long",
+            "noClose": "No Close",
+            "noDamage": "No Damage",
+            "noDamageAmmo": "No Damage (Source: Ammunition)",
+            "noPointBlank": "No Point Blank",
+            "noSmartlink": "No Smartlink",
+            "pain": "Pain",
+            "shock": "Shock",
+            "singleUse": "Single Use",
+            "steady": "Steady",
+            "stun": "Stun",
+            "stunBiomorphs": "Stun (Biomorphs Only)",
+            "fragile": "Fragile",
+            "reach": "Reach",
+            "touchOnly": "Touch Only",
+            "twoHanded": "Two-Handed"
+          },
+          "accessory": {
+            "armSlide": "Arm Slide",
+            "extendedMagazine": "Extended Magazine",
+            "Gyromount": "Gyromount",
+            "imagingScope": "Imaging Scope",
+            "flashSuppressor": "Flash Suppressor",
+            "laserSight": "Laser Sight",
+            "safetySystem": "Safety System",
+            "shockSafety": "Shock Safety",
+            "silencer": "Silencer",
+            "smartlink": "Smartlink",
+            "smartMagazine": "Smart Magazine"
           }
         }
       },

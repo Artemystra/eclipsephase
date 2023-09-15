@@ -314,7 +314,8 @@
         "repSize": "Size of Favor"
       },
       "addSkill": "Add Skill",
-      "chooseAptitude": "Choose Apt"
+      "chooseAptitude": "Choose Apt",
+      "skillMod": "Skill Mod"
     },
     "morph": {
       "currentMorph": {
@@ -650,7 +651,12 @@
           "range": "Range",
           "maxAmmo": "Max Ammo",
           "damageValue": "DV",
+          "damageValueModifier": "DV Modifier",
+          "noDamageValueModifier": "No Damage Modifier",
+          "noDamage": "No Damage",
+          "noDamageAmmo": "No Damage (Source: Ammunition)",
           "effectArea": "Effect Area",
+          "radius": "Radius",
           "armorUsed": {
             "label": "Armor Used",
             "none": "None",
@@ -672,6 +678,55 @@
             "oneHanded": "One Handed",
             "twoHanded": "Two Handed",
             "bulky": "Bulky"
+          },
+          "ammoUsed": {
+            "beam": "Energy",
+            "kinetic": "Kinetic",
+            "seeker": "Seeker",
+            "spray": "Spray",
+            "rail": "Rail"
+          },
+          "trait": {
+            "armorPiercing": "Armor Piercing",
+            "blinding": "Blinding",
+            "bioMorphsOnly": "Bonus DV on Biomorphs Only",
+            "concealable": "Concealable",
+            "disablesRadio": "Disables Radio",
+            "dvHalved": "Halves Weapon DV",
+            "dvOnMiss": "DV on Miss",
+            "entangling": "Entangling",
+            "fixed": "Fixed",
+            "indirectOrBonus": "Indirect Shots OR",
+            "knockdown": "Knockdown",
+            "long": "Long",
+            "noClose": "No Close",
+            "noDamage": "No Damage",
+            "noDamageAmmo": "No Damage (Source: Ammunition)",
+            "noPointBlank": "No Point Blank",
+            "noSmartlink": "No Smartlink",
+            "pain": "Pain",
+            "shock": "Shock",
+            "singleUse": "Single Use",
+            "steady": "Steady",
+            "stun": "Stun",
+            "stunBiomorphs": "Stun (Biomorphs Only)",
+            "fragile": "Fragile",
+            "reach": "Reach",
+            "touchOnly": "Touch Only",
+            "twoHanded": "Two-Handed"
+          },
+          "accessory": {
+            "armSlide": "Arm Slide",
+            "extendedMagazine": "Extended Magazine",
+            "Gyromount": "Gyromount",
+            "imagingScope": "Imaging Scope",
+            "flashSuppressor": "Flash Suppressor",
+            "laserSight": "Laser Sight",
+            "safetySystem": "Safety System",
+            "shockSafety": "Shock Safety",
+            "silencer": "Silencer",
+            "smartlink": "Smartlink",
+            "smartMagazine": "Smart Magazine"
           }
         }
       },

@@ -1,3 +1,4 @@
+import { listSelection } from "./common-sheet-functions.js";
 //End-to-end weapon preparation
 export async function weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, weaponID){
   
@@ -27,7 +28,7 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
       }
       else{
   
-        let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+        let calculated = await damageValueCalc(weapon, weapon.system.mode1, weapon.system.mode1.traits, "weapon")
   
         weaponDamage = calculated.dv;
       }
@@ -64,7 +65,7 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
       if (actorType === "character"){
           if (weapon.system.active === true){
   
-              let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+              let calculated = await damageValueCalc(weapon, weapon.system.mode1, weapon.system.mode1.traits, "weapon")
         
               let weaponEntry = skillKey === "guns" ? {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv} : {"_id":weapon._id, "name": weapon.name, "dv": calculated.dv};
               weaponslist.push(weaponEntry)
@@ -72,7 +73,7 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
       }
       else {
   
-          let calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
+          let calculated = await damageValueCalc(weapon, weapon.system.mode1, weapon.system.mode1.traits, "weapon")
   
           let weaponEntry = skillKey === "guns" ? {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv} : {"_id":weapon._id, "name": weapon.name, "dv": calculated.dv};
           weaponslist.push(weaponEntry)
@@ -80,9 +81,8 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
     }
   
     if (weaponslist.length > 2){
-      let dialogType = "weaponList";
-      checkWeapon = await GetWeaponsList(weaponslist, dialogType)
-      weaponID = checkWeapon.weaponSelect ? checkWeapon.weaponSelect : weaponID = "0";
+      checkWeapon = await listSelection(weaponslist, "weaponList")
+      weaponID = checkWeapon.selection ? checkWeapon.selection : weaponID = "0";
     }
     else {
       weaponID = "1";
@@ -106,7 +106,7 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
             let rolledFrom = "rangedWeapon";
             let currentAmmo = weaponObj.system.ammoMin;
   
-            let calculated = await damageValueCalc(weaponObj.system.mode1.d10, weaponObj.system.mode1.d6, weaponObj.system.mode1.bonus)
+            let calculated = await damageValueCalc(weaponObj, weaponObj.system.mode1, weaponObj.system.mode1.traits, "weapon")
   
             let weaponDamage = calculated.dv;
             
@@ -127,61 +127,25 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
           }
         }
       }
-    }
-  
-    //Weapons list dialog constructor
-    async function GetWeaponsList(weaponslist, dialogType){
-      let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
-      let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
-      let useButton = game.i18n.localize('ep2e.actorSheet.button.select');
-      const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-      const html = await renderTemplate(template, {weaponslist, dialogType});
-      return new Promise(resolve => {
-          const data = {
-              title: dialogName,
-              content: html,
-              buttons: {
-                  cancel: {
-                      label: cancelButton,
-                      callback: html => resolve ({cancelled: true})
-                  },
-                  normal: {
-                      label: useButton,
-                      callback: html => resolve(_proGetWeaponsList(html[0].querySelector("form")))
-                  }
-              },
-              default: "normal",
-              close: () => resolve ({cancelled: true})
-          };
-          let options = {width:536}
-          new Dialog(data, options).render(true);
-      });
-  }
-  function _proGetWeaponsList(form) {
-      console.log("This is my Value", form.WeaponSelect.value)
-      return {
-          weaponSelect: form.WeaponSelect.value
-      }
-  }
-  
+    }  
   
   }
   
   //Select weapon mode in case of multiple available modes
-  export async function selectWeaponMode (weapon){
-  
-    let mode1calculated = await damageValueCalc(weapon.system.mode1.d10, weapon.system.mode1.d6, weapon.system.mode1.bonus)
-    let mode2calculated = await damageValueCalc(weapon.system.mode2.d10, weapon.system.mode2.d6, weapon.system.mode2.bonus)
+  async function selectWeaponMode (weapon){
+    
+    let mode1calculated = await damageValueCalc(weapon, weapon.system.mode1, weapon.system.mode1.traits, "weapon");
+    let mode2calculated = await damageValueCalc(weapon, weapon.system.mode2, weapon.system.mode2.traits, "weapon");
   
     let weaponModes = [{"_id": 1, "name": weapon.system.mode1.name, "range": weapon.system.mode1.range, "firingModes": weapon.system.mode1.firingMode, "dv": mode1calculated.dv},{"_id": 2, "name": weapon.system.mode2.name, "range": weapon.system.mode2.range, "firingModes": weapon.system.mode2.firingMode, "dv": mode2calculated.dv}];
-    let selectedWeaponMode = await modeSelection(weaponModes);
+    let selectedWeaponMode = await listSelection(weaponModes, "weaponList" , "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline");
   
     if(selectedWeaponMode.cancelled){
       let cancel = selectedWeaponMode.cancelled
       return {cancel};
     }
   
-    if(selectedWeaponMode.mode === "1"){
+    if(selectedWeaponMode.selection === "1"){
       let name = weapon.system.mode1.name;
       let range = weapon.system.mode1.range;
       let firingMode = weapon.system.mode1.firingMode;
@@ -201,57 +165,58 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
   
     }
   
-    //Mode dialog constructor
-    async function modeSelection(weaponslist){
-      let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
-      let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
-      let useButton = game.i18n.localize('ep2e.actorSheet.button.select');
-      let dialogType = "weaponList";
-      weaponslist.headline = true;
-      const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-      const html = await renderTemplate(template, {weaponslist, dialogType});
-      return new Promise(resolve => {
-          const data = {
-              title: dialogName,
-              content: html,
-              buttons: {
-                  cancel: {
-                      label: cancelButton,
-                      callback: html => resolve ({cancelled: true})
-                  },
-                  normal: {
-                      label: useButton,
-                      callback: html => resolve(_proModeSelection(html[0].querySelector("form")))
-                  }
-              },
-              default: "normal",
-              close: () => resolve ({cancelled: true})
-          };
-          let options = {width:536}
-          new Dialog(data, options).render(true);
-      });
-  }
-  function _proModeSelection(form) {
-      return {
-          mode: form.WeaponSelect.value
-      }
-  }
   }
   
   //DV calculator (this translates the three given integers into a human readable roll formula)
-  export async function damageValueCalc (d10, d6, bonus){
-  
-    let dv = "ep2e.item.weapon.table.noDamage"
-    let bonusValue = bonus ? "+"  + bonus : "";
-  
-    if (d10 && d6){
-      dv = d10 + "d10+" + d6 + "d6" + bonusValue;
+  export async function damageValueCalc (object, dvPath, traits, calcType){
+    let dv = "";
+    
+    if(calcType === "ammo"){
+      //Ammo Damage Calculation
+      console.log("BINGO IN AMMO")
+      dv = "ep2e.item.weapon.table.noDamageValueModifier"
+      const d10 = dvPath.d10
+      const d6 = dvPath.d6
+      const bonus = dvPath.bonus
+      let bonusValue = bonus ? "+"  + bonus : "";
+    
+      if (d10 && d6){
+        dv = d10 + "d10+" + d6 + "d6" + bonusValue;
+      }
+      else if (d10 && !d6){
+        dv = d10 + "d10" + bonusValue;
+      }
+      else if (!d10 && d6){
+        dv = d6 + "d6" + bonusValue;
+      }
+      
+      console.log("BINGO IN AMMO", d10, d6, bonus)
+      console.log("BINGO IN AMMO", dv)
     }
-    else if (d10 && !d6){
-      dv = d10 + "d10" + bonusValue;
-    }
-    else if (!d10 && d6){
-      dv = d6 + "d6" + bonusValue;
+    else if (calcType === "weapon"){
+      //Weapon Damage Calculation
+      const d10 = dvPath.d10
+      const d6 = dvPath.d6
+      const bonus = dvPath.bonus
+      if (!d10 && !d6 && !bonus){
+        dv = "ep2e.item.weapon.table.noDamage"
+      }
+      else if(object.system.ammoSelected.traits){
+
+      }
+      else {
+        let bonusValue = bonus ? "+"  + bonus : "";
+      
+        if (d10 && d6){
+          dv = d10 + "d10+" + d6 + "d6" + bonusValue;
+        }
+        else if (d10 && !d6){
+          dv = d10 + "d10" + bonusValue;
+        }
+        else if (!d10 && d6){
+          dv = d6 + "d6" + bonusValue;
+        }
+      }
     }
   
     return {dv};
@@ -259,7 +224,8 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
 
 //Reload Weapons
 export async function reloadWeapon(html, actor) {
-    html.find('.reload').click( event => {
+    
+    html.find('.reload').click( async event => {
         event.preventDefault();
         const element = event.currentTarget;
         const dataset = element.dataset;
@@ -267,35 +233,70 @@ export async function reloadWeapon(html, actor) {
         const weapon = actor.items.get(weaponID);
         const maxAmmo = weapon.system.ammoMax;
         const ammoType = weapon.system.ammoType;
-        const ammoSelected = weapon.system.ammoSelected
-        const loadout = actor.items.get(ammoSelected)
         const weaponName = weapon.name;
+        const ammoPresent = weapon.system.ammoSelected._id ? weapon.system.ammoSelected._id : "-"
         let currentAmmo = weapon.system.ammoMin;
         let difference = maxAmmo - currentAmmo;
         let ammoUpdate = [];
-        let ammoLoaded = Boolean(loadout);
-        let ammoPresent = ammoLoaded ? true : Boolean(actor.ammo[ammoType].length);
+        let ammoList = [];
+        let numberOfPacks = actor.ammo[ammoType] ? actor.ammo[ammoType].length : 0;
+        let ammoSelected = "";
+        let calculated = null;
+        let object = {};
 
-        console.log("Ammo is present: ", ammoPresent)
+        if (numberOfPacks >= 1){
+          if (numberOfPacks > 1){
+            for (let ammo of actor.ammo[ammoType]){
+  
+                calculated = await damageValueCalc(ammo, ammo.system.dv, ammo.system.traits, "ammo")
+                let ammoEntry = {"_id":ammo._id, "name": ammo.name, "traits": ammo.system.traits, "dv": calculated.dv}
+                console.log("This is my ammoEntry: ", ammoEntry)
+                ammoList.push(ammoEntry)
+            }
+  
+            let selectedAmmo = await listSelection(ammoList, "ammoList");
+      
+            if(selectedAmmo.cancelled){
+              let cancel = selectedAmmo.cancelled
+              return {cancel};
+            }
+  
+            ammoSelected = actor.items.get(selectedAmmo.selection)
+          }
+          else {
+            ammoSelected = actor.ammo[ammoType][0]
+          }
 
-        /*for (let weapon of actorWeapons){
-          if (actorType === "character"){
-            if (weapon.system.active === true){
-          
-                let weaponEntry = skillKey === "guns" ? {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv} : {"_id":weapon._id, "name": weapon.name, "dv": calculated.dv};
-                weaponslist.push(weaponEntry)
+          calculated = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo")
+
+          console.log("Ammo Selected? ", ammoSelected)
+          for(let trait in ammoSelected.system.traits){
+            let traitThing = ammoSelected.system.traits[trait].value
+            console.log("This is my trait: ",traitThing)
+            if(ammoSelected.system.traits[trait].value){
+              console.log("Bingo!")
+              object[trait] = ammoSelected.system.traits[trait]
             }
           }
-        }*/
 
-        if (ammoLoaded || ammoPresent){
-          if (difference>0){
+          console.log("Is object? ", Boolean(object))
+          console.log("This is my ammoSelected traits", ammoSelected.system.traits);
+          console.log("This is my object traits", object.length);
+
+          if (difference>0 || ammoPresent != ammoSelected._id){
             currentAmmo = maxAmmo;
+            console.log(Boolean(ammoPresent === ammoSelected._id))
             ammoUpdate.push({
               "_id" : weaponID,
-              "system.ammoMin": currentAmmo
+              "system.ammoMin": currentAmmo,
+              "system.ammoSelected._id": ammoSelected._id,
+              "system.ammoSelected.name": ammoSelected.name,
+              "system.ammoSelected.dvModifier": ammoSelected.system.dv,
+              "system.ammoSelected.description": ammoSelected.system.description,
+              "system.ammoSelected.dvModifier.calculated": calculated.dv,
+              "system.ammoSelected.traits": Object.keys(object).length > 0 ? object : false
             });
-      
+            console.log("This is my ammoUpdate: ", ammoUpdate)
             actor.updateEmbeddedDocuments("Item", ammoUpdate);
             let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
       
@@ -303,14 +304,14 @@ export async function reloadWeapon(html, actor) {
               speaker: ChatMessage.getSpeaker({actor: actor}),
               flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
           })
-          }
+            }
           else {
-          let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.weaponFull");
-          ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({actor: actor}),
-            content: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>",
-            whisper: [game.user._id]
-          })
+            let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.weaponFull");
+            ChatMessage.create({
+              speaker: ChatMessage.getSpeaker({actor: actor}),
+              content: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>",
+              whisper: [game.user._id]
+            })
           }
         }
         else {
@@ -322,10 +323,5 @@ export async function reloadWeapon(html, actor) {
           })
         }
 
-        /*for(let item of actor.consumable){
-          if(item.type === amunition){
-            if(test = 0){}
-          }
-        }*/
     })
   }

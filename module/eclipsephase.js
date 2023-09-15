@@ -180,7 +180,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.html",
-    "systems/eclipsephase/templates/item/partials/grenade-details.html"
+    "systems/eclipsephase/templates/item/partials/grenade-details.html",
+    "systems/eclipsephase/templates/item/partials/item-traits.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {

@@ -55,7 +55,8 @@
           </div>
         </div>
       {{/if}}
-      <!-- if rolled from a psi)-->
+      
+      <!-- if rolled from a psi sleight)-->
       {{#if (eq rolledfrom "psiSleight")}}
         <div class="item" style="margin-bottom: 10px;">
             <div class="flexrow subheader">
@@ -85,6 +86,76 @@
                       {{localize description}}
                     </div>
                 </div>
+            </div>
+        </div>
+      {{/if}}
+
+      <!-- if rolled from a ranged weapon ammunition)-->
+      {{#if (eq rolledfrom "ammoInfo")}}
+        <div class="item" style="margin-bottom: 10px;">
+            <div class="flexrow subheader">
+                <!--Name & Dice Roller-->
+                <div class="flexrow subheader flex-between">
+                  <h3 class="subheader dialog">{{localize name}}</h3>
+                </div>
+            </div>
+            <!--Ammo Details-->
+            <div>
+                <div class="flexrow flex-group-center wantToKnowMore" style="min-height: 40px; min-width: 100%; background-color: var(--pitchBorder); margin-top: -3px;">
+                    <div class="flexrow flex-group-center">
+                        <span class="tooltipText" style="left: auto;">{{localize "ep2e.item.weapon.table.damageValueModifier"}}</span>
+                        <label><i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i><strong>{{localize dvModifier.calculated}}</strong></label>
+                    </div>
+                </div>
+                <div class="itemDescription" style="display: flex; flex-wrap: wrap;">
+                  {{localize description}}
+                </div>
+                {{#if traits}}
+                <div class="flexrow">
+                  {{#each traits as |item key|}}
+                  {{#if (eq item.value true)}}
+                      {{#if (eq key "dvOnMiss")}}
+                      <div class="extendedPillgrid wantToKnowMore">
+                          <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                          <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                          {{#if item.dv.d10}}
+                          <img src="icons/svg/d10-grey.svg" class="icon-xsmall icon-space"/>
+                          <label class="input-xs icon-space">{{item.dv.d10}}</label>
+                          {{/if}}
+                          {{#if item.dv.d6}}
+                          <img src="icons/svg/d6-grey.svg" class="icon-xsmall icon-space"/>
+                          <label class="input-xs icon-space">{{item.dv.d6}}</label>
+                          {{/if}}
+                          {{#if item.dv.bonus}}
+                          <i class="fas fa-plus awesomeIcon icon-space"></i>
+                          <label class="input-xs icon-space">{{item.dv.bonus}}</label>
+                          {{/if}}
+                      </div>
+                      {{else if (eq key "indirectOrBonus")}}
+                      <div class="extendedPillgrid wantToKnowMore">
+                          <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                          <img src="systems/eclipsephase/resources/icons/246_skill%20gun%20accuracy.png" class="icon-small"/>
+                          <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.skills.vigorSkills.guns"}} {{localize "ep2e.skills.skillMod"}}</span>
+                          <label class="input-small">+ {{item.skillMod}}</label>
+                      </div>
+                      {{else if (eq key "knockdown")}}
+                      <div class="extendedPillgrid wantToKnowMore">
+                          <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>                                
+                          {{#if item.radius}}
+                          <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-xsmall icon-space"/>
+                          <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.radius"}}</span>
+                          <label class="input-xs alignCenter">{{item.radius}}</label>
+                          {{/if}}
+                      </div>
+                      {{else}}
+                      <div class="extendedPillgrid wantToKnowMore">
+                          <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                      </div>
+                      {{/if}}
+                  {{/if}}
+                  {{/each}}
+                </div>
+                {{/if}}
             </div>
         </div>
       {{/if}}
