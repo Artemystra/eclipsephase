@@ -1,0 +1,141 @@
+<form>
+
+    <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">Damage</h3>
+        </div>
+        {{#if (ne traits.noDamage.value true)}}
+            {{#if criticalModifier}}
+                {{#if (ne traits.dvHalved.value true)}}
+                    <div class="form-group listBackgroundMain alignCenter">
+                        <label>2 x ({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}</label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain alignCenter">
+                        <label>(2 x ({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}})/2</label>
+                    </div>
+                {{/if}}
+            {{else}}
+                {{#if (ne traits.dvHalved.value true)}}
+                    <div class="form-group listBackgroundMain alignCenter">
+                        <label>{{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}</label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain alignCenter">
+                        <label>({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}})/2</label>
+                    </div>
+                {{/if}}
+            {{/if}}
+        {{else}}
+            <div class="form-group listBackgroundMain alignCenter">
+                <label>{{localize weaponDamage}}</label>
+            </div>
+        {{/if}}
+    </div>
+    <div class="contentBox">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</h3>
+        </div>
+        {{#if swapPossible}}
+        <div class="form-group listBackgroundMain">
+            <div style="max-height: 105px;">
+                <label>
+                    {{#if (eq choices 1)}}
+                    <table class="radio-group">
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="radio" name="useSwap" value="none" checked>
+                            </td>
+                            <td td class="table-radio-label">
+                                {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="radio" name="useSwap" value="pool">
+                            </td>
+                            <td td class="table-radio-label">
+                                {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="radio" name="useSwap" value="flex">
+                            </td>
+                            <td td class="table-radio-label">
+                                {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})
+                            </td>
+                        </tr>
+                    </table>
+                    {{/if}}
+                    {{#if (eq choices 2)}}
+                    <table class="radio-group">
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="radio" name="useSwap" value="none" checked>
+                            </td>
+                            <td td class="table-radio-label">
+                                {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="radio" name="useSwap" value="flex">
+                            </td>
+                            <td td class="table-radio-label">
+                                {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{localize "ep2e.skills.flex.poolHeadline"}})
+                            </td>
+                        </tr>
+                    </table>
+                    {{/if}}
+                    {{#if (eq choices 3)}}
+                    <table class="radio-group">
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="radio" name="useSwap" value="none" checked>
+                            </td>
+                            <td td class="table-radio-label">
+                                {{localize "ep2e.roll.announce.poolUsage.dontSwap"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="radio" name="useSwap" value="pool">
+                            </td>
+                            <td td class="table-radio-label">
+                                {{localize "ep2e.roll.announce.poolUsage.swapTo"}} <strong> {{swipSwap}} </strong> (1 {{poolType}})
+                            </td>
+                        </tr>
+                    </table>
+                    {{/if}}
+                </label>
+            </div>
+        </div>
+        {{/if}}
+        {{#if potentialRaise}}
+            <div class="form-group listBackgroundMain">
+                <table class="radio-group">
+                    {{#if poolValue}}
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="checkbox" name="useRaise">
+                            </td>
+                            <td td class="table-radio-label">
+                                <label class="resource-label">{{localize "ep2e.roll.announce.poolUsage.raiseLevel"}} 1 {{poolType}}</label>
+                            </td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td class="table-radio-button">
+                                <input type="checkbox" name="useRaise" disabled>
+                            </td>
+                            <td td class="table-radio-label">
+                                <label class="resource-label epInactive">{{poolType}} {{localize "ep2e.roll.announce.poolUsage.notAvailable"}}</label>
+                            </td>
+                        </tr>
+                    {{/if}}
+                </table>
+            </div>
+        {{/if}}
+    </div>
+</form>

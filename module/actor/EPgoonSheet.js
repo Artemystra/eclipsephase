@@ -479,14 +479,10 @@ export default class EPgoonSheet extends ActorSheet {
         let skillKey = dataset.key.toLowerCase();
         let weaponPrep = null;
 
-        let weaponID = null;
-        let weaponName = null;
-        let weaponDamage = null;
-        let weaponType = null;
-        let currentAmmo = null;
-        let maxAmmo = null;
         let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
-
+        let weaponSelected = null;
+        console.log("** dataset ", dataset)
+        console.log("** dataset.rolledFrom ", dataset.rolledFrom)
         let specNameValue = dataset.specname;
         let skillRollValue = dataset.rollvalue;
         let poolType = "Threat";
@@ -507,14 +503,8 @@ export default class EPgoonSheet extends ActorSheet {
           if (!weaponPrep || weaponPrep.cancel){
             return;
           }
-          weaponID = weaponPrep.weaponID,
-          weaponName = weaponPrep.weaponName,
-          weaponDamage = weaponPrep.weaponDamage,
-          weaponType = weaponPrep.weaponType,
-          currentAmmo = weaponPrep.currentAmmo,
-          maxAmmo = weaponPrep.maxAmmo,
-          rolledFrom = weaponPrep.rolledFrom;
-    
+          weaponSelected = weaponPrep.selection
+          rolledFrom = weaponSelected.rolledFrom 
         }
 
 
@@ -533,13 +523,15 @@ export default class EPgoonSheet extends ActorSheet {
             poolValue: threatLevel,
             poolType: poolType,
             //Weapon data
-            weaponID : weaponID,
-            weaponName : weaponName,
-            weaponDamage : weaponDamage,
-            weaponType : weaponType,
-            currentAmmo : currentAmmo,
-            maxAmmo : maxAmmo,
+            weaponSelected : weaponSelected.weapon,
+            weaponID : weaponSelected.weaponID,
+            weaponName : weaponSelected.weaponName,
+            weaponDamage : weaponSelected.weaponDamage,
+            weaponType : weaponSelected.weaponType,
+            currentAmmo : weaponSelected.currentAmmo,
+            maxAmmo : weaponSelected.maxAmmo,
             meleeDamageMod: actorModel.mods.meleeDamageMod,
+            weaponTraits : weaponSelected.weaponTraits,
             //Psi
             sleightName : dataset.sleightname,
             sleightDescription : dataset.description,

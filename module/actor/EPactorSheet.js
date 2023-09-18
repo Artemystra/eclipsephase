@@ -1068,14 +1068,8 @@ export default class EPactorSheet extends ActorSheet {
     let skillPoolValue = null;
     let skillKey = dataset.key.toLowerCase();
     let weaponPrep = null;
-
-    let weaponID = null;
-    let weaponName = null;
-    let weaponDamage = null;
-    let weaponType = null;
-    let currentAmmo = null;
-    let maxAmmo = null;
     let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
+    let weaponSelected = null;
 
     if (rolledFrom === "rangedWeapon") {
       specNameValue = actorModel.skillsVig.guns.specname;
@@ -1095,15 +1089,11 @@ export default class EPactorSheet extends ActorSheet {
       if (!weaponPrep || weaponPrep.cancel){
         return;
       }
-      weaponID = weaponPrep.weaponID,
-      weaponName = weaponPrep.weaponName,
-      weaponDamage = weaponPrep.weaponDamage,
-      weaponType = weaponPrep.weaponType,
-      currentAmmo = weaponPrep.currentAmmo,
-      maxAmmo = weaponPrep.maxAmmo,
-      rolledFrom = weaponPrep.rolledFrom;
-
+      weaponSelected = weaponPrep.selection
+      rolledFrom = weaponSelected.rolledFrom 
     }
+
+    console.log("This is my weaponSelected on EPactorSheet: ", weaponSelected)
 
     if (rolledFrom === "psiSleight") {
       specNameValue = actorModel.skillsMox.psi.specname;
@@ -1147,7 +1137,7 @@ export default class EPactorSheet extends ActorSheet {
       default:
         break;
     }
-
+      console.log("current Ammo: ", weaponSelected.currentAmmo,)
       Dice.TaskCheck ({
         //Actor data
         actorWhole : actorWhole,
@@ -1164,13 +1154,15 @@ export default class EPactorSheet extends ActorSheet {
         poolValue: skillPoolValue,
         flexValue: flexPool,
         //Weapon data
-        weaponID : weaponID,
-        weaponName : weaponName,
-        weaponDamage : weaponDamage,
-        weaponType : weaponType,
-        currentAmmo : currentAmmo,
-        maxAmmo : maxAmmo,
+        weaponSelected : weaponSelected.weapon,
+        weaponID : weaponSelected.weaponID,
+        weaponName : weaponSelected.weaponName,
+        weaponDamage : weaponSelected.weaponDamage,
+        weaponType : weaponSelected.weaponType,
+        currentAmmo : weaponSelected.currentAmmo,
+        maxAmmo : weaponSelected.maxAmmo,
         meleeDamageMod: actorModel.mods.meleeDamageMod,
+        weaponTraits : weaponSelected.weaponTraits,
         //Psi
         sleightName : dataset.sleightname,
         sleightDescription : dataset.description,

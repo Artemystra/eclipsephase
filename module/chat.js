@@ -13,6 +13,7 @@ export async function GMvision(html){
 
 export function addChatListeners(html){
     html.on('click', 'i.moreInfo', moreInfo);
+    html.on('click', 'a.moreInfoDialog', moreInfo);
 
     registerCommonHandlers(html);
 }
