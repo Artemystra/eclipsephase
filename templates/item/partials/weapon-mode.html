@@ -109,6 +109,42 @@
     <div class="flexrow">
         {{#each item.system.mode1.traits as |item key|}}
             {{#if (eq item.value true)}}
+                {{#if (eq key "reach")}}
+                <div class="extendedPillgrid">
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.traits.{{key}}.value"></i></a>
+                    <a class="moreInfoDialog icon-space" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                    </a>
+                    <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.skills.vigorSkills.melee"}} {{localize "ep2e.skills.skillMod"}}</span>
+                        <select class="input-large" name="system.mode1.traits.reach.skillMod" style="max-width: 160px">
+                            {{#select item.skillMod}}
+                            <option value="10">+ 10</option>
+                            <option value="20">+ 20</option>
+                            <option value="30">+ 30</option>
+                            {{/select}}
+                        </select>
+                    </div>
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                        <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                    </a>
+                </div>
+                {{else if (eq key "multiShot")}}
+                <div class="extendedPillgrid">
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.traits.{{key}}.value"></i></a>
+                    <a class="moreInfoDialog icon-space" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                    </a>
+                    <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <img src="systems/eclipsephase/resources/icons/246_skill%20gun%20accuracy.png" class="icon-small"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.skills.vigorSkills.guns"}}</span>
+                        <input class="input-xs"type="number" name="system.mode1.traits.{{key}}.number" value="{{item.number}}" placeholder="0"/>
+                    </div>
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                        <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                    </a>
+                </div>
+                {{else}}
                 <div class="extendedPillgrid">
                     <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode1.traits.{{key}}.value"></i></a>
                     <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
@@ -116,6 +152,7 @@
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
                     </a>
                 </div>
+                {{/if}}
             {{/if}}
         {{/each}}
     </div>
@@ -150,7 +187,7 @@
             {{#if (eq item.value true)}}
                 <div class="extendedPillgrid">
                     <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.accessories.{{key}}.value"></i></a>
-                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
                     </a>
@@ -257,13 +294,35 @@
     <div class="flexrow">
         {{#each item.system.mode2.traits as |item key|}}
             {{#if (eq item.value true)}}
+                {{#if (eq key "reach")}}
                 <div class="extendedPillgrid">
-                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode2.traits.{{key}}.value"></i></a>
-                    <a class="moreIndfo"  data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
-                        <span for="moreInfoDialog" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.traits.{{key}}.value"></i></a>
+                    <a class="moreInfoDialog icon-space" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                    </a>
+                    <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.skills.vigorSkills.melee"}} {{localize "ep2e.skills.skillMod"}}</span>
+                        <select class="input-large" name="system.mode2.traits.reach.skillMod" style="max-width: 160px">
+                            {{#select item.skillMod}}
+                            <option value="10">+ 10</option>
+                            <option value="20">+ 20</option>
+                            <option value="30">+ 30</option>
+                            {{/select}}
+                        </select>
+                    </div>
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
                     </a>
                 </div>
+                {{else}}
+                <div class="extendedPillgrid">
+                    <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.mode1.traits.{{key}}.value"></i></a>
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                        <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                        <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                    </a>
+                </div>
+                {{/if}}
             {{/if}}
         {{/each}}
     </div>
@@ -298,7 +357,7 @@
             {{#if (eq item.value true)}}
                 <div class="extendedPillgrid">
                     <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.accessories.{{key}}.value"></i></a>
-                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
                     </a>

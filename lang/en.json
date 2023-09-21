@@ -673,6 +673,9 @@
           "weaponMode": "Weapon Mode",
           "addTrait": "Add Trait",
           "addAccessory": "Add Accessory",
+          "tooltips": {
+            "multiShoot": "Multiplier for every round fired"
+          },
           "armorUsed": {
             "label": "Armor Used",
             "none": "None",
@@ -718,6 +721,7 @@
             "noClose": "No Close",
             "noDamage": "No Damage",
             "noPointBlank": "No Point Blank",
+            "noCloseAndPointBlank": "No Close or Point Blank",
             "noSmartlink": "No Smartlink",
             "pain": "Pain",
             "shock": "Shock",
@@ -728,7 +732,12 @@
             "fragile": "Fragile",
             "reach": "Reach",
             "touchOnly": "Touch Only",
-            "twoHanded": "Two-Handed"
+            "twoHanded": "Two-Handed",
+            "selfReplenishing": "Self Replenishing",
+            "specialAmmoDrugs": "Ammunition: Chems",
+            "specialAmmoBugs": "Ammunition: Swarms",
+            "multiShot": "Multi Shot",
+            "effectRadius": "Area of Effect"
           },
           "accessory": {
             "armSlide": "Arm Slide",
@@ -926,6 +935,7 @@
             "inCoverLabel": "In Cover (-10)",
             "isRunningLabel": "Is Running (-20)",
             "inMeleeLabel": "In Melee (-10)",
+            "inMeleeLabelLong": "In Melee (-30)",
             "fireMode": {
               "label": "Fire Mode",
               "single": "Single Shot",
@@ -948,7 +958,9 @@
               "none": "Standard",
               "range": "Range (-10)",
               "beyond": "Beyond (-20)",
-              "beyondPlus": "Beyond+ (-30)"
+              "beyondPlus": "Beyond+ (-30)",
+              "ignoreMalus": "Weapon ignores range malus",
+              "ignore" : "No range modifiers"
             },
             "visual": {
               "label": "Visual Malus",
@@ -982,6 +994,16 @@
           "attacker": {
             "numberOfTargetsLabel": "Number of targets",
             "numberOfTargetsMod": "(-20/target)",
+            "sizeDifference": {
+              "label": "Reach",
+              "vms": "Very much smaller (-30)",
+              "ms": "Much smaller (-20)",
+              "s": "Smaller (-10)",
+              "none": "Equal Size" ,
+              "l": "Larger (+10)" ,
+              "ml": "Much larger (+20)" ,
+              "vml": "Very much larger (+30)" 
+            },
             "type": {
               "label": "Attack Type",
               "none": "Standard Attack",
@@ -1056,9 +1078,12 @@
           "calledShot": "Called Shot",
           "calledShotAddition": "Roll 'Greater Success' or better",
           "hit": "Hit with their weapon",
+          "breakWeapon": "Broke their weapon",
+          "singleUse": "Your single use weapon broke",
           "damageDone": "With the result",
           "additionalEffects": "Additional Effects",
           "melee": {
+            "sizeDifference": "Reach", 
             "charge": "Charging",
             "chargeAddition": "(+1d6DV)",
             "agressive": "Agressive Hit",
@@ -1107,44 +1132,47 @@
       "weapon": {
         "effect": {
           "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",
+          "armSlide": "This slide-mount can hold a one-handed weapon under your sleeve, pushing the weapon into your hand with an electronic signal or specific sequence of arm movements. You can draw the weapon and attack with a single complex action.",
           "bioMorphsOnly": "This weapon inflicts more damage to soft targets like biomorphs. They do not provide extra damage to synthmorphs or objects.",
           "blinding": "Targets must make a REF Check or be blinded for 1 action turns, +1 per failure category. While blinded you have a 50% chance of missing your attacks (if you miss a perceive test) and suffer a –30 to all other physical actions, including Fray Tests. You must make an Athletics, Free Fall, or Pilot Test to move faster than a base move or fall prone.A critical failure results in permanent blindness until repaired or they spend time in a healing vat. Anti-glare ware protects against blinding based on light.",
           "concealable": "This item is easily hidden. You receive a +30 to Infiltrate Tests to hide this item on your person (or elsewhere).",
           "disablesRadio": "Every radio (or object that communicates with it's surroundings via antennas or similar technology) within the blast radius (50 meters) is disabled until repaired with an appropriate Hardware or Medicine: Biotech Test or a fixer nanoswarm. Every nanoswarm within range suffers DV 2d10 + 5.",
           "dvHalved": "The weapon is made of a relatively soft, flexbile or even hollow material. While most of these weapons are designed to hurt but not kill people, sometimes the reason for hollowing a weapon out is, that it carries a toxin or drug that is injected forcefully during an encounter.",
           "dvOnMiss": "This reactive bullet uses nanosensors to determine if it is going to miss a smartlink-tagged target and explodes in their vicinity. If the attack misses without a superior or critical failure, the target still suffers some amount of damage",
+          "effectRadius": "The weapon effects a whole area. While it's effect diminishes at the border, it is strongest in  it's center.",
           "entangling": "Targets struck by this weapon must make a REF Check or be grappled ▶205. The attacker's successes levels apply a cumulative –10 per level to this REF Check and SOM Checks to break free.",
+          "extendedMagazine": "This ammunition case has an enhanced capacity. Increase the weapon's ammo capacity by +50%. This is only available for firearms and seekers.",
           "fixed": "Fixed weapons are designed to be fired from a prone or braced position, such as mounted on a bipod or hardpoint. If carried, apply a –20 modifier to attacks and consider them to have the Two-Handed trait.",
-          "fragile": "This items breaks or becomes unusable if you roll a greater failure.",
+          "fragile": "This items breaks or becomes unusable if you roll a greater failure or worse.",
+          "flashSuppressor": "This device obscures the muzzle flash on firearms, applying a –30 modifier to Perceive Tests to locate a firing weapon by its flash.",
+          "Gyromount": "This weapon harness features a gyro-stabilized weapon mount that keeps the weapon steady. Negate all modifiers from movement.",
+          "imagingScope": "Imaging scopes attach to the top of the weapon and act like specs. Scopes also bend like a periscope, allowing you to point the weapon and target around corners without leaving cover.",
           "indirectOrBonus": "This bullet identifies a smartlink-tagged target and uses nanosensors and telemetry from previous bullets to lock on, correcting the bullet’s trajectory with surface alterations and tiny vectored nozzles. Apply it's positive modifier to hit for attacks following an aim action (cumulative with the aim modifier) or previous attacks against the same target. Homing bullets can also be used for indirect fire ▶206, though without the to-hit modifier.",
           "knockdown": "This strike may knock even unwounded opponents off their feet. The target must make a SOM Check or be knocked prone.",
+          "laserSight": "This underbarrel laser emits a beam that places a glowing red dot on the target to assist targeting (negating the –10 modifier for not using a smartlink or laser sight). Laser sights can also be used to paint a target for laser-guided smart ammo or seekers. Infrared and ultraviolet lasers are also available, so that the dot is only visible to characters with enhanced vision.",
+          "long": "Lengthy weapons are unwieldy in close combat (–30 to fire when in melee) and do not receive the +10 modifier when fired at Point-Blank range.",
+          "multiShot": "This weapon uses more than one round/bullet per shot. Based on it's design it might be even able to hit multiple targets with one shot.",
           "noDamage": "Some weapons or ammunition are not designed to damage their targets. In case of ammunition it's soft or flexible to an extend, or designed to explode in some distance to it's target, that no damage applies at all. Their effect is diverse and reaches from an electro magnetic pulse to an attack with poisonous gas.",
           "noSmartlink": "This weapon is not equipped with a smartlink's targeting assistance. –10 to attack tests.",
-          "long": "Lengthy weapons are unwieldy in close combat (–30 to fire when in melee) and do not receive the +10 modifier when fired at Point-Blank range.",
           "noClose": "This weapon cannot be fired at Point-Blank or Close range. Seeker weapons have built-in safety features that prevent them from being fired at ranges that might injure the user. Overriding this features requires a Hardware or Infosec Test.",
           "noPointBlank": "This weapon cannot be fired at Point-Blank range.",
           "pain": "A biomorph target struck by this weapon must make a WIL Check or take their next full action to flee, moving as far away from the pain-inflicting source as possible or to the nearest full cover they can reach on their action. Targets also suffer –20 until the end of the next turn. Targets with the Pain Tolerance (Level 1) trait receive a +30 to their WIL Check and only suffer a –10 modifier. Targets with Pain Tolerance (Level 2) are immune to this effect. Victims who are trapped in the beam or otherwise cannot avoid the pain effect are impaired (–20) until they escape.",
           "reach": "Some weapons extend your reach, giving you a significant advantage over an opponent in melee. This applies to any weapon over half a meter long: axes, clubs, swords, shock batons, etc. Whenever you have a reach advantage over an opponent, you receive a +10 modifier for both attacking and defending. Some extra-long limbs or weapons provide a +20 bonus, as noted. For each size category by which you exceed your opponent, apply a +10 Reach modifier, up to a maximum +30.",
+          "safetySystem": "This feature is automatically included in most weapons. A biometric (palmprint or voiceprint) or ego ID sensor is embedded in the weapon, disabling it if anyone other than an authorized user attempts to fire it.",
+          "selfReplenishing": "This weapon features a built in Nano-Hive that replenishes it's ammunition automatically. It does not do this out of thin air though, and needs to be fed with wet stock. The rate in which the ammunition replenishes may vary by the nano-swarm built and is to the GM's disgression.",
+          "shockSafety": "Just like a safety system, except that an unauthorized user is zapped with an electric shock, inflicting DV 1d6 and a shock effect.",
           "shock": "This weapon inflicts a shock effect. When hit with a shock effect, make a SOM Check. Add your energy armor as a positive modifier. Apply a modifier for different sizes: very small –30, small –10, large +10, very large +30. Failure means you lose neuromuscular control, fall down, and are incapacitated for 1 action turn (+2 turns per failure level) and stunned for 3 minutes. Success means you are stunned for 3 action turns. To inflict shock without doing damage in melee simply requires a touch attack (+20). To inflict shock plus damage requires a regular melee attack.",
+          "silencer": "This barrel-mounted accessory reduces the sound of a firearm's discharge (they cannot be used on railguns). Apply a –30 modifier on hearing-based Perceive Tests to hear or locate the gun's firing.",
           "singleUse": "This item can only be used once.",
           "steady": "This weapon ignores range modifiers.",
+          "smartlink": "Smartlinks are automatically included in most weapons. It connects the weapon to your mesh inserts, placing a targeting bracket in your field of vision and providing range and targeting information (negating the –10 modifier for not using a smartlink or laser sight). Smartlinks also incorporate a microcamera that allows the user to see what the weapon is pointed at, fire around corners, etc. Smartlinks also allow certain other types of weapon system control, such as changing smart ammo or programming seeker trigger conditions).",
+          "smartMagazine": "A smart magazine allows you to pick and choose what ammo round will be fired with each shot. This system leaves less room for bullets, however, so reduce the weapon's ammunition capacity by half (round up). Smart magazines can be combined with extended magazines, in which case ammo capacity is normal.",
+          "specialAmmoDrugs": "The weapon shoots chemicals or drugs instead of bullets. To load it a character must have 3 or more drugs/chems in their inventory.",
+          "specialAmmoBugs": "The weapon shoots nano-swarms built inside the integrated nano-hive. The swarm can be changed while reloading the weapon.",
           "stun": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
           "stunBiomorphs": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
-        },
-        "accessory": {
-          "armSlide": "This slide-mount can hold a one-handed weapon under your sleeve, pushing the weapon into your hand with an electronic signal or specific sequence of arm movements. You can draw the weapon and attack with a single complex action.",
-          "extendedMagazine": "This ammunition case has an enhanced capacity. Increase the weapon's ammo capacity by +50%. This is only available for firearms and seekers.",
-          "Gyromount": "This weapon harness features a gyro-stabilized weapon mount that keeps the weapon steady. Negate all modifiers from movement.",
-          "imagingScope": "Imaging scopes attach to the top of the weapon and act like specs. Scopes also bend like a periscope, allowing you to point the weapon and target around corners without leaving cover.",
-          "flashSuppressor": "This device obscures the muzzle flash on firearms, applying a –30 modifier to Perceive Tests to locate a firing weapon by its flash.",
-          "laserSight": "This underbarrel laser emits a beam that places a glowing red dot on the target to assist targeting (negating the –10 modifier for not using a smartlink or laser sight). Laser sights can also be used to paint a target for laser-guided smart ammo or seekers. Infrared and ultraviolet lasers are also available, so that the dot is only visible to characters with enhanced vision.",
-          "safetySystem": "This feature is automatically included in most weapons. A biometric (palmprint or voiceprint) or ego ID sensor is embedded in the weapon, disabling it if anyone other than an authorized user attempts to fire it.",
-          "shockSafety": "Just like a safety system, except that an unauthorized user is zapped with an electric shock, inflicting DV 1d6 and a shock effect.",
-          "silencer": "This barrel-mounted accessory reduces the sound of a firearm's discharge (they cannot be used on railguns). Apply a –30 modifier on hearing-based Perceive Tests to hear or locate the gun's firing.",
-          "smartlink": "Smartlinks are automatically included in most weapons. It connects the weapon to your mesh inserts, placing a targeting bracket in your field of vision and providing range and targeting information (negating the –10 modifier for not using a smartlink or laser sight). Smartlinks also incorporate a microcamera that allows the user to see what the weapon is pointed at, fire around corners, etc. Smartlinks also allow certain other types of weapon system control, such as changing smart ammo or programming seeker trigger conditions).",
-          "smartMagazine": "A smart magazine allows you to pick and choose what ammo round will be fired with each shot. This system leaves less room for bullets, however, so reduce the weapon's ammunition capacity by half (round up). Smart magazines can be combined with extended magazines, in which case ammo capacity is normal."
         }
       }
     },
@@ -1157,7 +1185,8 @@
       "09": "<label class='resource-label'><p>Smart Animals & Vehicles underwent a huge revamp.<p/><p><b>This migration is meant to update all drones/vehicles/smart animals on any sheet so they're compatible with the new system.</b><p/><p>Please migrate to this version at your earliest convenience to profit from the latest updates, <b>but do not forget to backup your world first in case of any game breaking bugs!</b><p/> <p>Thank you and have a great day playing!</p></label>",
       "093": "<label class='resource-label'><p>First Weapon Update.<p/><p><b>This update will prepare all player weapons for the upcoming ammunition update.</b><p/><p>Please migrate to this version at your earliest convenience to profit from the latest updates, <b>but do not forget to backup your world first in case of any game breaking bugs!</b><p/> <p>Thank you and have a great day playing!</p></label>",
       "093WeaponCategorizerCopy": "<p>The following list of characters had ranged weapons to them, that could not be identified. Please take a moment to assign them the correct ammunition type.</p><i><p style='font-size: 11px;'>Note: You can always change their ammo type manually. This screen is purely for convenience reasons and GMs with a massive load of custom NPC weapons. If you decide to skip this screen all unidentified weapons will become 'beam'-type for the time being.</p></i>",
-      "095": "<label class='resource-label'><p>Second Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a massive update to prepare your weapons items for further updates along the road. It includes:</p><p><b><ul><li>Weapons now feature traits and accessories. Edit any weapon to change their traits/accessories.</li><li>Weapons now feature up to two different weapon modes.</li><li>Rolling from a weapon with multiple modes will let you choose it's mode in a consecutive dialog.</li><li>All sheets (PC/NPC/Threat) now use the same way of displaying weapons in the inventory.</li><li>All weapon representations on sheets feature clickable traits to give better insights into weapon rules and effects.</li><li>All weapons have been updated automatically (though most of them don't feature the original description). Please feel free to double check your inventory and delete/replace all dublicated weapons and pull new weapons from the compendium.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: There is no additional functionality to weapon effects at this point (e.g. weapons that don't do damage will still trigger a damage dialog etc.). This will be fixed in a later update and before the release of v1.0. Apart from this there will be a limitation for automation especially on weapon/ammo effects on their target, as they're not automatically identified. This will not be part of any pre 1.0 update.</i></p><p>Thank you and have a great day playing!</p></label>"
+      "095": "<label class='resource-label'><p>Second Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a massive update to prepare your weapons items for further updates along the road. It includes:</p><p><b><ul><li>Weapons now feature traits and accessories. Edit any weapon to change their traits/accessories.</li><li>Weapons now feature up to two different weapon modes.</li><li>Rolling from a weapon with multiple modes will let you choose it's mode in a consecutive dialog.</li><li>All sheets (PC/NPC/Threat) now use the same way of displaying weapons in the inventory.</li><li>All weapon representations on sheets feature clickable traits to give better insights into weapon rules and effects.</li><li>All weapons have been updated automatically (though most of them don't feature the original description). Please feel free to double check your inventory and delete/replace all dublicated weapons and pull new weapons from the compendium.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: There is no additional functionality to weapon effects at this point (e.g. weapons that don't do damage will still trigger a damage dialog etc.). This will be fixed in a later update and before the release of v1.0. Apart from this there will be a limitation for automation especially on weapon/ammo effects on their target, as they're not automatically identified. This will not be part of any pre 1.0 update.</i></p><p>Thank you and have a great day playing!</p></label>",
+      "098": "<label class='resource-label'><p>Third Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a minor, but important update to make all existing player/npc/goon weapons work again. It includes:</p><p><b><ul><li>Ammo traits.</li><li>Inherited ammo traits for weapons.</li><li>New weapon/ammo traits.</li><li>Automatic weapon dv modifier calculation.</li><li>A new info-button beside ammo for equipped items (in the action sideCar).</li><li>Ammunition in the Compendium was updated. Please delete old ammo and use the new ones.</li><li>Weapons now need ammunition before they can be reloaded. They will notify the player if this is the case.</li><li>All weapon/Ammo Effects are now automatically accounted for. You don't need to keep them in mind any longer.</li><li>Damage chat messages now let you know if there are any additional weapon effects to your weapons/ammo (such as 'Stun' or 'Shock').</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: At this point in time there is no ammunition/reload functionality for NPCs/Threats. This will be added before the release of v1.0..</i></p><p>Thank you and have a great day playing!</p></label>"
     },
     "systemMessage": {
       "resetRest": {

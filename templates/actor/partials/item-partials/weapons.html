@@ -94,7 +94,7 @@
                             {{#each item.system.accessories as |accessory key|}}
                                 {{#if (eq accessory.value true)}}
                                     <div class="extendedPillFloat">
-                                        <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}" data-rolledfrom="info">
+                                        <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{accessory.name}}" data-rolledfrom="info">
                                             <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
                                         </a>
                                     </div>
@@ -156,7 +156,7 @@
                         {{#each item.system.accessories as |accessory key|}}
                             {{#if (eq accessory.value true)}}
                                 <div class="extendedPillFloat">
-                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.accessory.{{key}}" data-title="{{accessory.name}}" data-rolledfrom="info">
+                                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{accessory.name}}" data-rolledfrom="info">
                                         <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content;">{{localize accessory.name}}</span>
                                     </a>
                                 </div>

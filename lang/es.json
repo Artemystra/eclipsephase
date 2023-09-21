@@ -703,6 +703,7 @@
             "noDamage": "No Damage",
             "noDamageAmmo": "No Damage (Source: Ammunition)",
             "noPointBlank": "No Point Blank",
+            "noCloseAndPointBlank": "No Close or Point Blank",
             "noSmartlink": "No Smartlink",
             "pain": "Pain",
             "shock": "Shock",
@@ -713,7 +714,12 @@
             "fragile": "Fragile",
             "reach": "Reach",
             "touchOnly": "Touch Only",
-            "twoHanded": "Two-Handed"
+            "twoHanded": "Two-Handed",
+            "selfReplenishing": "Self Replenishing",
+            "specialAmmoDrugs": "Ammunition: Chems",
+            "specialAmmoBugs": "Ammunition: Swarms",
+            "multiShot": "Multi Shot",
+            "effectRadius": "Area of Effect"
           },
           "accessory": {
             "armSlide": "Arm Slide",
@@ -889,6 +895,7 @@
             "inCoverLabel": "In Cover (-10)",
             "isRunningLabel": "Is Running (-20)",
             "inMeleeLabel": "In Melee (-10)",
+            "inMeleeLabelLong": "In Melee (-30)",
             "fireMode": {
               "label": "Fire Mode",
               "single": "Single Shot",
@@ -911,7 +918,8 @@
               "none": "Standard",
               "range": "Range (-10)",
               "beyond": "Beyond (-20)",
-              "beyondPlus": "Beyond+ (-30)"
+              "beyondPlus": "Beyond+ (-30)",
+              "ignore": "Weapon ignores range malus"
             },
             "visual": {
               "label": "Visual Malus",
@@ -945,6 +953,16 @@
           "attacker": {
             "numberOfTargetsLabel": "Number of targets",
             "numberOfTargetsMod": "(-20/target)",
+            "sizeDifference": {
+              "label": "Reach",
+              "vms": "Very much smaller (-30)",
+              "ms": "Much smaller (-20)",
+              "s": "Smaller (-10)",
+              "none": "Equal Size" ,
+              "l": "Larger (+10)" ,
+              "ml": "Much larger (+20)" ,
+              "vml": "Very much larger (+30)" 
+            },
             "type": {
               "label": "Attack Type",
               "none": "Standard Attack",
@@ -1019,8 +1037,12 @@
           "calledShot": "Called Shot",
           "calledShotAddition": "Roll 'Greater Success' or better",
           "hit": "You hit with your weapon",
+          "breakWeapon": "Broke their weapon",
+          "singleUse": "Your single use weapon broke",
           "damageDone": "Your damage done",
+          "additionalEffects": "Additional Effects",
           "melee": {
+            "sizeDifference": "Reach", 
             "charge": "Charging",
             "chargeAddition": "(+1d6DV)",
             "agressive": "Agressive Hit",

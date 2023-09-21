@@ -702,6 +702,7 @@
             "noDamage": "No Damage",
             "noDamageAmmo": "No Damage (Source: Ammunition)",
             "noPointBlank": "No Point Blank",
+            "noCloseAndPointBlank": "No Close or Point Blank",
             "noSmartlink": "No Smartlink",
             "pain": "Pain",
             "shock": "Shock",
@@ -712,7 +713,12 @@
             "fragile": "Fragile",
             "reach": "Reach",
             "touchOnly": "Touch Only",
-            "twoHanded": "Two-Handed"
+            "twoHanded": "Two-Handed",
+            "selfReplenishing": "Self Replenishing",
+            "specialAmmoDrugs": "Ammunition: Chems",
+            "specialAmmoBugs": "Ammunition: Swarms",
+            "multiShot": "Multi Shot",
+            "effectRadius": "Area of Effect"
           },
           "accessory": {
             "armSlide": "Arm Slide",
@@ -896,6 +902,7 @@
             "inCoverLabel": "掩蔽后（-10）",
             "isRunningLabel": "奔跑中（-20）",
             "inMeleeLabel": "近战中（-10）",
+            "inMeleeLabelLong": "In Melee (-30)",
             "fireMode": {
               "label": "射击模式",
               "single": "单发射击",
@@ -918,7 +925,8 @@
               "none": "标准",
               "range": "射程内（-10）",
               "beyond": "射程外（-20）",
-              "beyondPlus": "超射程外（-30）"
+              "beyondPlus": "超射程外（-30）",
+              "ignore": "Weapon ignores range malus"
             },
             "visual": {
               "label": "视觉减值",
@@ -952,6 +960,16 @@
           "attacker": {
             "numberOfTargetsLabel": "目标数量",
             "numberOfTargetsMod": "（-20/目标）",
+            "sizeDifference": {
+              "label": "Reach",
+              "vms": "Very much smaller (-30)",
+              "ms": "Much smaller (-20)",
+              "s": "Smaller (-10)",
+              "none": "Equal Size" ,
+              "l": "Larger (+10)" ,
+              "ml": "Much larger (+20)" ,
+              "vml": "Very much larger (+30)" 
+            },
             "type": {
               "label": "攻击类型",
               "none": "标准攻击",
@@ -1026,8 +1044,12 @@
           "calledShot": "预告打击",
           "calledShotAddition": "投出“1个大成功”或更好的结果",
           "hit": "你使用你的武器命中了",
+          "breakWeapon": "Broke their weapon",
+          "singleUse": "Your single use weapon broke",
           "damageDone": "你造成了伤害",
+          "additionalEffects": "Additional Effects",
           "melee": {
+            "sizeDifference": "Reach", 
             "charge": "冲锋",
             "chargeAddition": "（+1d6 DV）",
             "agressive": "侵袭攻击",

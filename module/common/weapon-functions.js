@@ -71,21 +71,24 @@ async function traitSubSetConstructor(weapon){
 
   let traitsMode1 = weapon.system.mode1.traits;
   let traitsMode2 =  weapon.system.mode2.traits;
+  let accessories = weapon.system.accessories;
   let curatedList = {};
   curatedList.mode1 = {"automatedEffects" : {}, "confirmationEffects" : {}, "additionalEffects" : {}};
   curatedList.mode2 = {"automatedEffects" : {}, "confirmationEffects" : {}, "additionalEffects" : {}};
-  let joinedTraitsMode1 = {}
-  let joinedTraitsMode2 = {}
+  let joinedEffectsMode1 = {}
+  let joinedEffectsMode2 = {}
+
+  console.log("***traits1 ",traitsMode1, " & traits 2 ",traitsMode2)
 
   //Clears the weapon's traits list of all inactive traits
   for (const key in traitsMode1){
     if (traitsMode1[key].value){
-      joinedTraitsMode1[key] = traitsMode1[key]
+      joinedEffectsMode1[key] = traitsMode1[key]
     }
   }
   for (const key in traitsMode2){
     if (traitsMode2[key].value){
-      joinedTraitsMode2[key] = traitsMode2[key]
+      joinedEffectsMode2[key] = traitsMode2[key]
     }
   }
 
@@ -93,17 +96,28 @@ async function traitSubSetConstructor(weapon){
   if (weapon.type === "rangedWeapon"){
     let ammoTraits = weapon.system.ammoSelected.traits;
     
+    //Summarizes traits (weapon & ammo) in two collections
     for (const key in ammoTraits){
       if (ammoTraits[key].value){
 
-        if(!(key in joinedTraitsMode1)){
-          joinedTraitsMode1[key] = ammoTraits[key]
+        if(!(key in joinedEffectsMode1)){
+          joinedEffectsMode1[key] = ammoTraits[key]
         }
         
-        if(!(key in joinedTraitsMode2)){
-          joinedTraitsMode2[key] = ammoTraits[key]
+        if(!(key in joinedEffectsMode2)){
+          joinedEffectsMode2[key] = ammoTraits[key]
         }
 
+      }
+    }
+    console.log("***traits1 ",joinedEffectsMode1, " & traits 2 ",joinedEffectsMode2)
+
+    //Adds acessories to both collections
+    for (const key in accessories){
+      if (accessories[key].value){
+      joinedEffectsMode1[key] = accessories[key]
+
+      joinedEffectsMode2[key] = accessories[key]
       }
     }
     
@@ -113,34 +127,34 @@ async function traitSubSetConstructor(weapon){
   let effects = {}
   
   //Effects that are automatically used and accounted for during weapon preparation (e.g. -1d10 damage)
-  for (const key in joinedTraitsMode1){
-    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartLink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady"){
-      effects[key] = joinedTraitsMode1[key]
+  for (const key in joinedEffectsMode1){
+    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartlink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady" || key === "Gyromount" || key === "laserSight" || key === "smartlink" || key === "specialAmmoBugs" || key === "specialAmmoDrugs" || key === "selfReplenishing"){
+      effects[key] = joinedEffectsMode1[key]
     }
   }
   curatedList.mode1.automatedEffects = effects
   effects = {}
 
-  for (const key in joinedTraitsMode2){
-    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartLink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady"){
-      effects[key] = joinedTraitsMode2[key]
+  for (const key in joinedEffectsMode2){
+    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartlink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady" || key === "Gyromount" || key === "laserSight" || key === "smartlink" || key === "specialAmmoBugs" || key === "specialAmmoDrugs" || key === "selfReplenishing"){
+      effects[key] = joinedEffectsMode2[key]
     }
   }
   curatedList.mode2.automatedEffects = effects
   effects = {}
 
   //Effects that need human confirmation before being applied (e.g. +1d6 damage IF the target is a biomorph)
-  for (const key in joinedTraitsMode1){
-    if(key === "bioMorphsOnly" || key === "dvOnMiss" || key === "fixed" || key === "indirectOrBonus" || key === "reach" || key === "touchOnly"){
-      effects[key] = joinedTraitsMode1[key]
+  for (const key in joinedEffectsMode1){
+    if(key === "bioMorphsOnly" || key === "dvOnMiss" || key === "fixed" || key === "indirectOrBonus" || key === "touchOnly"){
+      effects[key] = joinedEffectsMode1[key]
     }
   }
   curatedList.mode1.confirmationEffects = effects
   effects = {}
 
-  for (const key in joinedTraitsMode2){
-    if(key === "bioMorphsOnly" || key === "dvOnMiss" || key === "fixed" || key === "indirectOrBonus" || key === "reach" || key === "touchOnly"){
-      effects[key] = joinedTraitsMode2[key]
+  for (const key in joinedEffectsMode2){
+    if(key === "bioMorphsOnly" || key === "dvOnMiss" || key === "fixed" || key === "indirectOrBonus" || key === "touchOnly"){
+      effects[key] = joinedEffectsMode2[key]
     }
   }
   curatedList.mode2.confirmationEffects = effects
@@ -148,17 +162,17 @@ async function traitSubSetConstructor(weapon){
 
 
   //Effects that will effect the nature of the damage taken once the shot hit (e.g. "Shock", "Armor Piercing", "Stun" etc.)
-  for (const key in joinedTraitsMode1){
-    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown" || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage"){
-      effects[key] = joinedTraitsMode1[key]
+  for (const key in joinedEffectsMode1){
+    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
+      effects[key] = joinedEffectsMode1[key]
     }
   }
   curatedList.mode1.additionalEffects = effects
   effects = {}
 
-  for (const key in joinedTraitsMode2){
-    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown" || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage"){
-      effects[key] = joinedTraitsMode2[key]
+  for (const key in joinedEffectsMode2){
+    if(key === "blinding" || key === "disablesRadio" || key === "entagling" || key === "knockdown"|| key === "reach"  || key === "pain" || key === "shock" || key === "stun" || key === "singleUse" || key === "stunBiomorphs" || key === "armorPiercing" || key === "noDamage" || key === "imagingScope" || key === "flashSuppressor" || key === "safetySystem" || key === "shockSafety" || key === "silencer" || key === "effectRadius" || key === "multiShot"){
+      effects[key] = joinedEffectsMode2[key]
     }
   }
   curatedList.mode2.additionalEffects = effects
@@ -323,15 +337,15 @@ export async function damageValueCalc (object, dvPath, traits, calcType){
     //Weapon Damage Calculation
     else {
       console.log("***weapon ",object)
-      let d10 = dvPath.d10
-      let d6 = dvPath.d6
-      let bonus = dvPath.bonus
+      let d10 = Number(dvPath.d10);
+      let d6 = Number(dvPath.d6);
+      let bonus = Number(dvPath.bonus);
       //Ammo damage modifier
       if (object.type != "ccWeapon"){
         if (!object.system.ammoSelected.traits.bioMorphsOnly.value && !object.system.ammoSelected.traits.dvOnMiss.value){
-          d10 += object.system.ammoSelected.dvModifier.d10
-          d6 += object.system.ammoSelected.dvModifier.d6
-          bonus += object.system.ammoSelected.dvModifier.bonus
+          d10 += Number(object.system.ammoSelected.dvModifier.d10);
+          d6 += Number(object.system.ammoSelected.dvModifier.d6);
+          bonus += Number(object.system.ammoSelected.dvModifier.bonus);
         }
       }
       if (!d10 && !d6 && !bonus){
@@ -406,6 +420,9 @@ export async function reloadWeapon(html, actor) {
           }
 
           traits = ammoSelected.system.traits
+          ammoSelected.system.areaeffect ? traits["effectRadius"] = {"name" : "ep2e.item.weapon.table.trait.effectRadius", "value" : true, "radius" : ammoSelected.system.areaeffect} : null
+
+          console.log("**traitTest: ", traits)
 
           calculated = await damageValueCalc(ammoSelected, ammoSelected.system.dv, traits, "ammo")
 
@@ -431,14 +448,15 @@ export async function reloadWeapon(html, actor) {
               "system.ammoSelected.dvModifier.calculated": calculated.dv,
               "system.ammoSelected.traits": traits,
             });
-            actor.updateEmbeddedDocuments("Item", ammoUpdate);
-            let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
       
+            let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
             ChatMessage.create({
               speaker: ChatMessage.getSpeaker({actor: actor}),
               flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
-          })
-            }
+            })
+          
+            return actor.updateEmbeddedDocuments("Item", ammoUpdate);
+          }
           else {
             let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.weaponFull");
             ChatMessage.create({

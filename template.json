@@ -1187,6 +1187,23 @@
           "twoHanded": {
             "name": "ep2e.item.weapon.table.trait.twoHanded",
             "value": false
+          },
+          "selfReplenishing": {
+            "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+            "value": false            
+          },
+          "specialAmmoDrugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+            "value": false
+          },
+          "specialAmmoBugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+            "value": false
+          },
+          "multiShot": {
+            "name": "ep2e.item.weapon.table.trait.multiShot",
+            "value": false,
+            "number": null
           }
         }
       },
@@ -1258,6 +1275,23 @@
           "twoHanded": {
             "name": "ep2e.item.weapon.table.trait.twoHanded",
             "value": false
+          },
+          "selfReplenishing": {
+            "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+            "value": false            
+          },
+          "specialAmmoDrugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+            "value": false
+          },
+          "specialAmmoBugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+            "value": false
+          },
+          "multiShot": {
+            "name": "ep2e.item.weapon.table.trait.multiShot",
+            "value": false,
+            "number": null
           }
         }
       }
@@ -1433,7 +1467,8 @@
           },
           "reach": {
             "name": "ep2e.item.weapon.table.trait.reach",
-            "value": false
+            "value": false,
+            "skillMod": null
           },
           "shock": {
             "name": "ep2e.item.weapon.table.trait.shock",

@@ -2,7 +2,6 @@
 <div class="alignCenter">
 
   {{#if (eq type "damage")}}
-      
   <div class="alignCenter">
     <p>{{localize "ep2e.roll.announce.combat.hit"}} <span class="resource-value"></span></p>
 
@@ -26,11 +25,19 @@
                 <td class="table-dice-label">
                   {{localize trait.name}}
                 </td>
-                <td class="table-dice-result">
-                  <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-rolledfrom="info">
-                      <i class="fa-regular fa-circle-info" id="moreInfo"></i>
-                  </a>
-                </td>
+                {{#if (ne key "effectRadius")}}
+                  <td class="table-dice-result">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-rolledfrom="info">
+                        <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                    </a>
+                  </td>
+                {{else if (eq key "effectRadius")}}
+                  <td class="table-dice-result">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-value="{{trait.radius}}" data-rolledfrom="info">
+                        <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                    </a>
+                  </td>
+                {{/if}}
               </tr>
               {{/if}}
             {{/each}}
@@ -39,9 +46,28 @@
     {{/if}}
   {{/if}}
 
+  {{#if (eq type "weaponBreak")}}
+  <div class="alignCenter">
+    <p>{{localize copy}} <span class="resource-value"></span></p>
+
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <p><span><b>{{weaponName}}</b></span></p>
+    </div>
+  </div>
+
+  {{/if}}
+
   {{#if (eq type "reload")}}
   <div style="margin-bottom: 30px;">
-    {{{localize "ep2e.roll.announce.combat.ranged.reloadNeeded"}}}
+    <p>{{{localize "ep2e.roll.announce.combat.ranged.reloadNeeded"}}}</p>
+
+    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <p><span><b>{{weaponName}}</b></span></p>
+      {{#if ammoLoadedName}}
+        <p><span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span></p>
+      {{/if}}
+    </div>
+
   </div>
   {{/if}}
 </div>

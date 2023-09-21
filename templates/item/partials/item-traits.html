@@ -75,6 +75,21 @@
                     <i class="fa-regular fa-circle-info" id="moreInfo"></i>
                 </a>
             </div>
+            {{else if (eq key "knockdown")}}
+            <div class="extendedPillgrid">
+                <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.traits.{{key}}.value"></i></a>
+                <a class="moreInfoDialog icon-space" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                    <span for="moreInfo" style="background-color: var(--pitchBorder); min-width: fit-content; padding: 0 5px 0px 10px; border-left: 2px solid var(--accentBackground);">{{localize item.name}}</span>
+                </a>
+                <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                    <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-xsmall icon-space"/>
+                    <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.radius"}}</span>
+                    <input class="input-xs alignCenter" type="text" name="system.traits.{{key}}.radius" value="{{item.radius}}" placeholder="0m" style="margin-right: 5px"/>
+                </div>
+                <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
+                    <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                </a>
+            </div>
             {{else}}
             <div class="extendedPillgrid">
                 <a class="icon-space"><i class="far fa-times-circle awesomeIcon toggleItem"  data-path="system.traits.{{key}}.value"></i></a>

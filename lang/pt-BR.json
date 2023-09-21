@@ -704,6 +704,7 @@
             "noDamage": "No Damage",
             "noDamageAmmo": "No Damage (Source: Ammunition)",
             "noPointBlank": "No Point Blank",
+            "noCloseAndPointBlank": "No Close or Point Blank",
             "noSmartlink": "No Smartlink",
             "pain": "Pain",
             "shock": "Shock",
@@ -714,7 +715,12 @@
             "fragile": "Fragile",
             "reach": "Reach",
             "touchOnly": "Touch Only",
-            "twoHanded": "Two-Handed"
+            "twoHanded": "Two-Handed",
+            "selfReplenishing": "Self Replenishing",
+            "specialAmmoDrugs": "Ammunition: Chems",
+            "specialAmmoBugs": "Ammunition: Swarms",
+            "multiShot": "Multi Shot",
+            "effectRadius": "Area of Effect"
           },
           "accessory": {
             "armSlide": "Arm Slide",
@@ -904,6 +910,7 @@
             "inCoverLabel": "Encoberto (-10)",
             "isRunningLabel": "Correndo (-20)",
             "inMeleeLabel": "Lutando (-10)",
+            "inMeleeLabelLong": "Lutando (-30)",
             "fireMode": {
               "label": "Modo de Disparo",
               "single": "Tiro Único",
@@ -926,7 +933,8 @@
               "none": "Padrão",
               "range": "Alcance (-10)",
               "beyond": "Além do Alcance (-20)",
-              "beyondPlus": "Além+ (-30)"
+              "beyondPlus": "Além+ (-30)",
+              "ignore": "Weapon ignores range malus"
             },
             "visual": {
               "label": "Penalidade Visual",
@@ -960,6 +968,16 @@
           "attacker": {
             "numberOfTargetsLabel": "Número de alvos",
             "numberOfTargetsMod": "(-20/alvo)",
+            "sizeDifference": {
+              "label": "Reach",
+              "vms": "Very much smaller (-30)",
+              "ms": "Much smaller (-20)",
+              "s": "Smaller (-10)",
+              "none": "Equal Size" ,
+              "l": "Larger (+10)" ,
+              "ml": "Much larger (+20)" ,
+              "vml": "Very much larger (+30)" 
+            },
             "type": {
               "label": "Tipo de Ataque",
               "none": "Ataque Padrão",
@@ -1034,8 +1052,12 @@
           "calledShot": "Ataque Preciso",
           "calledShotAddition": "Role 'Sucesso Maior' ou melhor",
           "hit": "Você acertou com sua arma",
+          "breakWeapon": "Broke their weapon",
+          "singleUse": "Your single use weapon broke",
           "damageDone": "Seu dano causado",
+          "additionalEffects": "Additional Effects",
           "melee": {
+            "sizeDifference": "Reach", 
             "charge": "Investida",
             "chargeAddition": "(+1d6VD)",
             "agressive": "Ataque Agressivo",
