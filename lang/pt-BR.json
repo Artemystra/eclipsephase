@@ -681,6 +681,7 @@
             "bulky": "Volumoso"
           },
           "ammoUsed": {
+            "standardDescription": "This is standard ammunition for this weapon. To reload or load a different kind of ammunition make sure to add ammo from the compendium to your character sheet and equip it.",
             "beam": "Energy",
             "kinetic": "Kinetic",
             "seeker": "Seeker",

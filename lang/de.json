@@ -661,9 +661,9 @@
             "label": "Munitionstyp"
           },
           "boundTo": "Wie Modus 1",
-          "range": "Reichw.",
+          "range": "Reichweite",
           "maxAmmo": "Munition",
-          "damageValue": "SW",
+          "damageValue": "Schadenswert",
           "damageValueModifier": "SW Modifikator",
           "noDamageValueModifier": "Kein Schadensmodifikator",
           "noDamage": "Kein Schaden",
@@ -696,6 +696,7 @@
             "bulky": "Sperrig"
           },
           "ammoUsed": {
+            "standardDescription": "Dies ist Standardmunition für diese Waffe. Um Nachzuladen oder die Munition zu wechseln ziehe Munition von dem entsprechenden Kompendium auf deinen Bogen und rüste sie aus.",
             "beam": "Energie",
             "kinetic": "Kinetisch",
             "seeker": "Zielsuchend",

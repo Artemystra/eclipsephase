@@ -121,9 +121,14 @@ export default class EPactorSheet extends ActorSheet {
       itemModel.boundTo = currentMorph
     }
 
+    //Loading weapons with Standard Ammo
     if (item.type === "rangedWeapon"){
-      let ammoUp = item.system.ammoMax;
-      item.system.ammoMin = ammoUp;
+      if (item.system.ammoType != "seeker" && item.system.ammoType != "spray"){
+      let name = item.system.ammoType
+      let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+      item.system.ammoMin = item.system.ammoMax;
+      item.system.ammoSelected.name = capitalizedName + " (Standard)";
+      }
     }
 
     item.system.updated = game.system.version

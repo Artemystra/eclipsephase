@@ -663,7 +663,7 @@
           "boundTo": "As Mode 1",
           "range": "Range",
           "maxAmmo": "Max Ammo",
-          "damageValue": "DV",
+          "damageValue": "Damage Value",
           "damageValueModifier": "DV Modifier",
           "noDamageValueModifier": "No Damage Modifier",
           "noDamage": "No Damage",
@@ -699,6 +699,7 @@
             "bulky": "Bulky"
           },
           "ammoUsed": {
+            "standardDescription": "This is standard ammunition for this weapon. To reload or load a different kind of ammunition make sure to add ammo from the compendium to your character sheet and equip it.",
             "beam": "Energy",
             "kinetic": "Kinetic",
             "seeker": "Seeker",

@@ -1059,15 +1059,76 @@
       ],
       "displayCategory": "ranged",
       "ammoSelected": {
-        "_id": "",
+        "_id": "-",
         "name": "",
         "dvModifier": {
           "d10": null,
           "d6": null,
           "bonus": null,
-          "calculated": null
+          "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
         },
-        "traits": []
+        "traits": {
+          "armorPiercing": {
+            "name": "ep2e.item.weapon.table.trait.armorPiercing",
+            "value": false
+          },
+          "blinding": {
+            "name": "ep2e.item.weapon.table.trait.blinding",
+            "value": false
+          },
+          "bioMorphsOnly": {
+            "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+            "value": false
+          },
+          "disablesRadio": {
+            "name": "ep2e.item.weapon.table.trait.disablesRadio",
+            "value": false
+          },
+          "dvHalved": {
+            "name": "ep2e.item.weapon.table.trait.dvHalved",
+            "value": false
+          },
+          "dvOnMiss": {
+            "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+            "value": false,
+            "dv": {
+              "d10": null,
+              "d6": null,
+              "bonus": null
+            }
+          },
+          "indirectOrBonus": {
+            "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+            "value": false,
+            "skillMod": null
+          },
+          "knockdown": {
+            "name": "ep2e.item.weapon.table.trait.knockdown",
+            "value": false,
+            "radius": null
+          },
+          "noDamage": {
+            "name": "ep2e.item.weapon.table.trait.noDamage",
+            "value": false
+          },
+          "pain": {
+            "name": "ep2e.item.weapon.table.trait.pain",
+            "value": false
+          },
+          "steady": {
+            "name": "ep2e.item.weapon.table.trait.steady",
+            "value": false
+          },
+          "stunBiomorphs": {
+            "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+            "value": false
+          },
+          "shock": {
+            "name": "ep2e.item.weapon.table.trait.shock",
+            "value": false
+          }
+        },
+        "description": "ep2e.item.weapon.table.ammoUsed.standardDescription"
       },
       "ammoType": "",
       "ammoMin": 0,

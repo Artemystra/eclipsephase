@@ -1295,11 +1295,10 @@ export function migrationPre098(startMigration, endMigration){
                       "d10": null,
                       "d6": null,
                       "bonus": null,
-                      "calculated": null
+                      "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
                     }
                   },
-                  "system.ammoSelected.description": "This is legacy ammunition. Try to add new ammo through the compndium and reload this weapon.",
-                  "system.ammoSelected.dvModifier.calculated": null,
+                  "system.ammoSelected.description": "ep2e.item.weapon.table.ammoUsed.standardDescription",
                   "system.ammoSelected.traits": { 
                     "armorPiercing": {
                       "name": "ep2e.item.weapon.table.trait.armorPiercing",
