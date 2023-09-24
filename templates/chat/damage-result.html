@@ -23,17 +23,17 @@
               {{#if trait.value}}
               <tr>
                 <td class="table-dice-label">
-                  {{localize trait.name}}
+                  {{localize trait.name}}{{#if (eq key "dvOnMiss")}}<span style="font-size: 13px;"> ({{trait.calculated}})</span>{{/if}}
                 </td>
-                {{#if (ne key "effectRadius")}}
+                {{#if (eq key "effectRadius")}}
                   <td class="table-dice-result">
-                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-rolledfrom="info">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-value="{{trait.radius}}" data-rolledfrom="info">
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
                     </a>
                   </td>
-                {{else if (eq key "effectRadius")}}
+                {{else}}
                   <td class="table-dice-result">
-                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-value="{{trait.radius}}" data-rolledfrom="info">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-rolledfrom="info">
                         <i class="fa-regular fa-circle-info" id="moreInfo"></i>
                     </a>
                   </td>

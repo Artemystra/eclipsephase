@@ -710,7 +710,7 @@
             "concealable": "Gut zu Verbergen",
             "disablesRadio": "Signalstörend",
             "dvHalved": "Halbiert Waffenschaden",
-            "dvOnMiss": "SW falls daneben geschossen",
+            "dvOnMiss": "SW bei Fehlschuss",
             "entangling": "Fesselnd",
             "fixed": "Fixiert",
             "indirectOrBonus": "Indirekt schiessen oder",
@@ -729,7 +729,7 @@
             "stunBiomorphs": "Betäubend (Nur Biomorphs)",
             "fragile": "Fragil",
             "reach": "Weitreichend",
-            "touchOnly": "Nur Berühren",
+            "touchOnly": "Berührungsangriff",
             "twoHanded": "Zweihändig",
             "selfReplenishing": "Selbstauffüllend",
             "specialAmmoDrugs": "Munition: Chemikalien",
@@ -866,6 +866,7 @@
         "attackerHeadline": "Angreifer",
         "defenderHeadline": "Verteidiger",
         "frayTypeHeadline": "Ausweichen",
+        "specialEffects": "Weitere Effekte",
         "dodgeRangedLabel": "Fernkampf ausweichen",
         "infectionHeadline": "Infektion",
         "baseCostLabel": "Basiskosten",
@@ -890,6 +891,7 @@
         "noPool": "Nicht genug Pool",
         "useThreat": "Nutze Bedrohung (+20)",
         "calledShotLabel": "Gezielter Angriff (-10)",
+        "touchOnly": "Berührungsattacke (+20)",
         "title": {
           "guns": "Fernkampfprobe",
           "melee": "Nahkampfprobe",
@@ -924,6 +926,13 @@
             "isRunningLabel": "Rennt (-20)",
             "inMeleeLabel": "Im Nahkampf (-10)",
             "inMeleeLabelLong": "Im Nahkampf (-30)",
+            "weaponFixated": "Waffe fixiert (sonst -20)",
+            "targetBiomorph": "Ziel: Biomorph",
+            "ammoEffect": {
+              "label": "Munition",
+              "ammoSkillModifier": "Modifikator (+10)",
+              "ignoreIndirect": "Kein Indirektmodifikator"
+            },
             "fireMode": {
               "label": "Feuermodus",
               "single": "Einzelschuss",
@@ -931,7 +940,6 @@
               "fullAuto": "Fokussiert und Vollautomatisch (+2d10)",
               "wBurst": "Weite Salve (+10 Hit)",
               "wFullAuto": "Vollautomatischer Streuschuss (+30 Hit)",
-              "indirect": "Indirekt (-20)",
               "suppressive": "Niederhalten (verbraucht 20 Schuss)"
             },
             "aim": {
@@ -955,7 +963,8 @@
               "none": "Keiner",
               "minor": "Klein (-10)",
               "major": "Gross (-30)",
-              "blind": "Blind (-30+)"
+              "blind": "Blind (-30+)",
+              "indirect": "Indirekt (-20)"
             }
           },
           "defender": {
@@ -1078,7 +1087,8 @@
             "agressiveAddition": "(Ausweichen -10)",
             "agressiveCharge": "Rücksichtsloser Angriff",
             "agressiveChargeAddition": "(+1d10SW & Ausweichen -10)",
-            "multipleTargets": "Mehrere Ziele"
+            "multipleTargets": "Mehrere Ziele",
+            "touchOnly": "Berührungsangriff"
           },
           "ranged": {
             "smartLink": "Keine Smartgun",
@@ -1111,7 +1121,9 @@
             "reload": "Deine Waffe ist leer. <p/> <strong>Lade sie zunächst nach! </strong>",
             "reloadedWeapon": "Waffe nachgeladen",
             "weaponFull": "Deine Waffe ist noch voll.",
-            "noAmmoPresent": "Keine passende Munition vorhanden."
+            "noAmmoPresent": "Keine passende Munition vorhanden.",
+            "ammoSkillModifier": "Skillmodifikator (Munition)",
+            "weaponFixated": "Aus der Hüfte geschossen"
           }
         }
       }

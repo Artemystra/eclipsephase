@@ -875,6 +875,7 @@
         "noPool": "无剩余能力池",
         "useThreat": "使用威胁 （+20）",
         "calledShotLabel": "预告打击 (-10)",
+        "touchOnly": "Touch Attack (+20)",
         "title": {
           "guns": "枪术检定",
           "melee": "近战检定",
@@ -904,6 +905,13 @@
             "isRunningLabel": "奔跑中（-20）",
             "inMeleeLabel": "近战中（-10）",
             "inMeleeLabelLong": "In Melee (-30)",
+            "weaponFixated": "Weapon Fixated (-20 if not)",
+            "targetBiomorph": "Target: Biomorph",
+            "ammoEffect": {
+              "label": "Ammunition",
+              "ammoSkillModifier": "Modifier (+10)",
+              "ignoreIndirect": "Ignore Indirect Modifier"
+            },
             "fireMode": {
               "label": "射击模式",
               "single": "单发射击",
@@ -911,7 +919,6 @@
               "fullAuto": "窄全自动（+2d10）",
               "wBurst": "宽点射（+10命中）",
               "wFullAuto": "宽全自动（+30命中）",
-              "indirect": "间接（-20）",
               "suppressive": "压制（使用20发弹药）"
             },
             "aim": {
@@ -934,7 +941,8 @@
               "none": "无",
               "minor": "次级（-10）",
               "major": "上级（-30）",
-              "blind": "目盲（-30+）"
+              "blind": "目盲（-30+）",
+              "indirect": "间接 (-20)"
             }
           },
           "defender": {
@@ -1057,7 +1065,8 @@
             "agressiveAddition": "（回避-10）",
             "agressiveCharge": "侵袭冲锋",
             "agressiveChargeAddition": "（+1d10 DV且回避-10）",
-            "multipleTargets": "多目标"
+            "multipleTargets": "多目标",
+            "touchOnly": "Touch Only Attack"
           },
           "ranged": {
             "smartLink": "非智能枪械",
@@ -1090,7 +1099,9 @@
             "reloadNeeded": "你的武器弹药不足。<p/> <strong>请先装填！</strong>",
             "reloadedWeapon": "我装填了我的武器",
             "weaponFull": "你的武器弹药已满。",
-            "noAmmoPresent": "No fitting ammunition present."
+            "noAmmoPresent": "No fitting ammunition present.",
+            "ammoSkillModifier": "Ammo Skill Modifier",
+            "weaponFixated": "Shot from Hip"
           }
         }
       }

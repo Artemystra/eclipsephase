@@ -3,25 +3,29 @@
         <div class="flexrow subheader">
             <h3 class="subheader dialog">Damage</h3>
         </div>
-        {{#if (ne traits.noDamage.value true)}}
+        {{#if (eq weaponDamage "ep2e.item.weapon.table.noDamage")}}
+            <div class="form-group listBackgroundMain alignCenter">
+                <label>{{localize weaponDamage}}</label>
+            </div>
+        {{else if (ne traits.noDamage.value true)}}
             {{#if criticalModifier}}
                 {{#if (ne traits.dvHalved.value true)}}
                     <div class="form-group listBackgroundMain alignCenter">
-                        <label>2 x ({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}</label>
+                        <label>2 x ({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}{{#if biomorphTarget}} +1d6{{/if}}</label>
                     </div>
                 {{else}}
                     <div class="form-group listBackgroundMain alignCenter">
-                        <label>(2 x ({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}})/2</label>
+                        <label>(2 x ({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}{{#if biomorphTarget}} +1d6{{/if}})/2</label>
                     </div>
                 {{/if}}
             {{else}}
                 {{#if (ne traits.dvHalved.value true)}}
                     <div class="form-group listBackgroundMain alignCenter">
-                        <label>{{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}</label>
+                        <label>{{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}{{#if biomorphTarget}} +1d6{{/if}}</label>
                     </div>
                 {{else}}
                     <div class="form-group listBackgroundMain alignCenter">
-                        <label>({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}})/2</label>
+                        <label>({{weaponDamage}}{{#if modeDamage}} {{modeDamage}}{{/if}}{{#if successModifier}} {{successModifier}}{{/if}}{{#if meleeDamageMod}} {{meleeDamageMod}}{{/if}}{{#if biomorphTarget}} +1d6{{/if}})/2</label>
                     </div>
                 {{/if}}
             {{/if}}

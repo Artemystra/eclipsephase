@@ -531,7 +531,7 @@ export default class EPgoonSheet extends ActorSheet {
             currentAmmo : weaponSelected.currentAmmo,
             maxAmmo : weaponSelected.maxAmmo,
             meleeDamageMod: actorModel.mods.meleeDamageMod,
-            weaponTraits : weaponSelected.weaponTraits,
+            weaponTraits : weaponSelected ? weaponSelected.weaponTraits : null,
             //Psi
             sleightName : dataset.sleightname,
             sleightDescription : dataset.description,

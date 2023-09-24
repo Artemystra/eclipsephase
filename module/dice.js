@@ -1,5 +1,5 @@
 import { eclipsephase } from "./config.js";
-import { weaponListConstructor } from "./common/weapon-functions.js"
+import { damageValueCalc } from "./common/weapon-functions.js"
 /*
  * Path constants for dialog templates
  */
@@ -447,11 +447,16 @@ export async function TaskCheck({
     superiorPosition = false,
     calledShot = false,
     inMelee = false,
+    ammoEffect = null,
+    weaponFixated = false,
+    biomorphTarget = false,
     gunsMod = 0,
     //Melee
     numberOfTargets = 1,
     meleeMod = 0,
     meleeDamageMod = null,
+    sizeDifference = "",
+    touchOnly = false,
     //Weapon Data
     weaponSelected = null,
     weaponName = null,
@@ -463,7 +468,6 @@ export async function TaskCheck({
     ammoUpdate = [],
     successType = false,
     attackMode = "",
-    sizeDifference = "",
     weaponTraits = {},
     //Psi
     sleightName = "",
@@ -481,8 +485,8 @@ export async function TaskCheck({
     //Guns check dialog
 
     if (askForOptions != optionsSettings && skillKey === "guns") {
-
-        let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType, weaponTraits.automatedEffects);
+        
+        let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType, weaponTraits, rolledFrom);
 
         if (checkOptions.cancelled) {
             return;
@@ -490,6 +494,9 @@ export async function TaskCheck({
 
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
+        ammoEffect = checkOptions.ammoEffect
+        weaponFixated = checkOptions.weaponFixated
+        biomorphTarget = checkOptions.biomorphTarget
         aim = checkOptions.aim;
         size = checkOptions.size;
         range = checkOptions.range;
@@ -511,13 +518,14 @@ export async function TaskCheck({
     //Melee skill check dialog
     else if (askForOptions != optionsSettings && skillKey === "melee") {
 
-        let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType, weaponTraits.automatedEffects);
+        let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType, weaponTraits, rolledFrom);
 
         if (checkOptions.cancelled) {
             return;
         }
         attackMode = checkOptions.attackMode;
-        sizeDifference = checkOptions.sizeDifference
+        sizeDifference = checkOptions.sizeDifference;
+        touchOnly = checkOptions.touchOnly;
         numberOfTargets = checkOptions.numberOfTargets;
         globalMod = checkOptions.globalMod;
         activeRollTarget = checkOptions.activeRollMode;
@@ -572,8 +580,13 @@ export async function TaskCheck({
         }
 
         if (sizeDifference){
-            console.log("** reach: ", weaponTraits.additionalEffects.reach ? weaponTraits.additionalEffects.reach.skillMod : 0)
-            meleeMod += Number(sizeDifference != "none" ? sizeDifference : 0) + Number(weaponTraits.additionalEffects.reach ? weaponTraits.additionalEffects.reach.skillMod : 0);
+            if(rolledFrom === "ccWeapon"){
+                console.log("** reach: ", weaponTraits.additionalEffects.reach ? weaponTraits.additionalEffects.reach.skillMod : 0)
+                meleeMod += Number(sizeDifference != "none" ? sizeDifference : 0) + Number(weaponTraits.additionalEffects.reach ? weaponTraits.additionalEffects.reach.skillMod : 0);
+            }
+            else{
+                meleeMod += Number(sizeDifference != "none" ? sizeDifference : 0)
+            }
 
             if(meleeMod >30){
                 meleeMod = 30;
@@ -589,7 +602,7 @@ export async function TaskCheck({
 
         if (calledShot) {
             meleeMod -= 10;
-            modValue = -10
+            modValue = -10;
             addition = "ep2e.roll.announce.combat.calledShotAddition";
             announce = "ep2e.roll.announce.combat.calledShot";
             task.addModifier(new TaskRollModifier(announce, modValue, addition))
@@ -599,6 +612,14 @@ export async function TaskCheck({
             meleeMod -= numberOfTargets ? (numberOfTargets-1)*20 : 0;
             modValue = 0 - (numberOfTargets-1)*20
             announce = "ep2e.roll.announce.combat.melee.multipleTargets";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+        
+        if (touchOnly) {
+            meleeMod += 20;
+            modValue = +20;
+            weaponDamage = "ep2e.item.weapon.table.noDamage";
+            announce = "ep2e.roll.announce.combat.melee.touchOnly";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
     }
@@ -771,6 +792,12 @@ export async function TaskCheck({
             announce = "ep2e.roll.announce.combat.ranged.blind";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
+        else if (attackMode === "indirect" && ammoEffect != "ignoreIndirect") {
+            gunsMod -= 20;
+            modValue = -20
+            announce = "ep2e.roll.announce.combat.ranged.indirect";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
 
         if (attackMode === "wBurst") {
             gunsMod += 10;
@@ -784,11 +811,21 @@ export async function TaskCheck({
             announce = "ep2e.roll.announce.combat.ranged.wFullAuto";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
-        else if (attackMode === "indirect") {
-            gunsMod -= 20;
-            modValue = -20
-            announce = "ep2e.roll.announce.combat.ranged.indirect";
+
+        if (ammoEffect === "ammoSkillModifier"){
+            gunsMod += 10;
+            modValue = 10
+            announce = "ep2e.roll.announce.combat.ranged.ammoSkillModifier";
             task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+
+        if (rolledFrom === "rangedweappn"){
+            if (!weaponFixated && weaponTraits.confirmationEffects.fixed){
+                gunsMod -= 20;
+                modValue = -20
+                announce = "ep2e.roll.announce.combat.ranged.weaponFixated";
+                task.addModifier(new TaskRollModifier(announce, modValue))
+            }
         }
     }
 
@@ -1629,15 +1666,14 @@ export async function TaskCheck({
                     })
                 }
 
+                //If test succeeded
                 if(successType){
-                    console.log("BINGO!!! After successType: ", successName)
                     switch (successName) {
                         case 'Greater Success':
                             successModifier = "+ 1d6";
                             potentialRaise = true;
                             break;
                         case 'greatSuc' :
-                            console.log("BINGO greatSuc")
                             successModifier = "+ 1d6";
                             potentialRaise = true;
                             break;
@@ -1645,7 +1681,6 @@ export async function TaskCheck({
                             successModifier = "+ 2d6";
                             break;
                         case 'subSuc':
-                            console.log("BINGO subSuc")
                             successModifier = "+ 2d6";
                             break;
                         case 'Critical Success':
@@ -1674,7 +1709,7 @@ export async function TaskCheck({
 
                     //Weapon damage dialog
                     if (weaponType === "ranged" && swapPossible || weaponType === "ranged" && potentialRaise || weaponType === "melee" && swapPossible || weaponType === "melee" && potentialRaise){
-                        let checkOptions = await GetDamageOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, weaponTraits.automatedEffects, meleeDamageMod);
+                        let checkOptions = await GetDamageOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, weaponTraits.automatedEffects, meleeDamageMod, biomorphTarget);
     
                         if (checkOptions.cancelled) {
                             return;
@@ -1685,9 +1720,7 @@ export async function TaskCheck({
                 }
 
                 let poolRAM = poolType;
-                console.log("usedSwipSwap shortly before the switch: ", usedSwipSwap)
                 if (usedSwipSwap === "pool" || usedSwipSwap === "flex") {
-                    console.log("BINGO!!!")
                     if (swipSwap > 33 && swipSwap < 66){
                         successModifier = "+ 1d6";
                         successName = "Greater Success";
@@ -1889,10 +1922,11 @@ export async function TaskCheck({
                       })
                   }
               }
+              
             //Damage Chat Message Constructor
             if(weaponDamage && successType){
-                
-                let intermediateRollFormula =  weaponDamage + modeDamage + successModifier + (meleeDamageMod ? meleeDamageMod : "");
+                console.log("*9*", biomorphTarget)
+                let intermediateRollFormula =  weaponDamage + modeDamage + (meleeDamageMod ? meleeDamageMod : "") + (biomorphTarget ? " + 1d6" : "") + successModifier;
                 let rollFormula = null
 
                 if (criticalModifier && !weaponTraits.automatedEffects.dvHalved) {
@@ -1907,6 +1941,7 @@ export async function TaskCheck({
                 else {
                     rollFormula = "ceil((" + criticalModifier + (intermediateRollFormula) + ")/2)";
                 }
+                
                 //The message is built
                 message = {}
                 
@@ -1916,6 +1951,9 @@ export async function TaskCheck({
 
                 //Weapon traits are added
                 message.weaponTraits = weaponTraits.additionalEffects;
+                if (biomorphTarget){
+                    message.weaponTraits["bioMorphsOnly"] = weaponTraits.confirmationEffects["bioMorphsOnly"]
+                }
 
                 //Weapon Traits object gets deleted, if it's empty
                 if (!Object.keys(message.weaponTraits).length > 0){
@@ -1943,6 +1981,36 @@ export async function TaskCheck({
                         content: html
                     })
                 }
+            }
+            else if (!successType && successName === "Fail" && weaponTraits.automatedEffects.dvOnMiss){
+                let damageCalc = await damageValueCalc(null,  weaponTraits.automatedEffects.dvOnMiss.dv, null, "ammo")
+                rollFormula = damageCalc.dv
+
+                //The message is built
+                message = {}
+                                
+                message.type = "damage";
+                message.weaponName = weaponName;
+                message.ammoLoadedName = rolledFrom === "rangedWeapon" ? weaponSelected.system.ammoSelected.name : null
+
+                //Weapon traits are added
+                message.weaponTraits = weaponTraits.additionalEffects
+                message.weaponTraits["dvOnMiss"] = weaponTraits.automatedEffects["dvOnMiss"]
+                message.weaponTraits.dvOnMiss["calculated"] = rollFormula
+
+                console.log("*7* ", message.weaponTraits)
+
+                html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+
+                let roll = await new Roll(rollFormula).evaluate({async: true});
+                let label = html;
+
+                roll.toMessage({
+                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    flavor: label
+                },{
+                    rollMode: rollModeSelection
+                });
             }
                     
         }
@@ -2080,13 +2148,29 @@ export async function TaskCheck({
     //Swap Preparation
     async function swapPreparator(evaluatedRoll, modSkillValue, successType, swapPossible, severeConsequences, severityLevel, severityFlavor, swipSwap, successName, poolValue, flexValue){
         swipSwap = await swapDice(evaluatedRoll);
-        console.log("This is my successName: ", successName)
         if (swipSwap <= modSkillValue && swipSwap > evaluatedRoll && poolValue && successName != "Supreme Fail" || swipSwap <= modSkillValue && swipSwap > evaluatedRoll && flexValue && successName != "Supreme Fail") {
             swapPossible = true;
         }
         if (swipSwap <= modSkillValue && !successType && poolValue && successName != "Supreme Fail" || swipSwap <= modSkillValue && !successType && flexValue && successName != "Supreme Fail") {
             swapPossible = true;
         }
+        /*To Be Continued 
+        if (successName === "Greater Fail" && poolValue && swipSwap > modSkillValue && !successName.includes("Critical")|| successName === "Superior Fail" && flexValue && swipSwap > modSkillValue && !successName.includes("Critical")){
+            console.log("*4* Bingo! This is a greater OR superior fail with a modSkillValue of ", evaluatedRoll, " and a swipSwap of ", swipSwap, " which would be a normal fail.")
+            if (swipSwap > 66){
+                swapPossible = true
+                severeConsequences = true
+                severityLevel = 0
+                console.log("This means you can swap to a normal fail")
+            }
+            else if (swipSwap > 33 && swipSwap < 66){
+                swapPossible = true
+                severeConsequences = true
+                severityLevel = 1
+                console.log("This means you can ONLY swap to a Greater fail")
+            }
+        }
+        */
         if (successName === "Supreme Fail" || swipSwap > modSkillValue && !successType && poolValue || swipSwap > modSkillValue && !successType && flexValue) {
             severeConsequences = true;
             swapPossible = false;
@@ -2324,12 +2408,13 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetMeleeTaskOptions(specName, poolType, poolValue, actorType, traits) {
+    async function GetMeleeTaskOptions(specName, poolType, poolValue, actorType, traits, rolledFrom) {
+        console.log("*8* ", traits.confirmationEffects)
         let dialogName = new Localizer ('ep2e.roll.dialog.title.melee');
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/melee-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, traits});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, traits, rolledFrom});
 
         return new Promise(resolve => {
             const data = {
@@ -2364,19 +2449,23 @@ export async function TaskCheck({
             usePool: form.usePool ? form.usePool.checked : false,
             useThreat: form.useThreat ? form.useThreat.checked : false,
             calledShot: form.CalledShot.checked,
-            sizeDifference: form.SizeDifference.value
+            sizeDifference: form.SizeDifference.value,
+            touchOnly: form.TouchOnly ? form.TouchOnly.checked : false,
         }
 
     }
 
     //Guns check dialog constructor
-    async function GetGunsTaskOptions(specName, poolType, poolValue, actorType, traits) {
-        console.log("***gunsDialog ", traits)
+    async function GetGunsTaskOptions(specName, poolType, poolValue, actorType, traits, rolledFrom) {
+        let specialEffects = null;
+        if(rolledFrom === "rangedWeapon"){
+            specialEffects = Object.keys(traits.confirmationEffects).length
+        }
         let dialogName = new Localizer ('ep2e.roll.dialog.title.guns');
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/gun-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, traits});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, traits, specialEffects});
 
         return new Promise(resolve => {
             const data = {
@@ -2418,6 +2507,9 @@ export async function TaskCheck({
             superiorPosition: form.SupPosition.checked,
             calledShot: form.CalledShot.checked,
             inMelee: form.Melee.checked,
+            ammoEffect: form.AmmoEffect ? form.AmmoEffect.value : false,
+            weaponFixated: form.WeaponFixated ? form.WeaponFixated.checked : false,
+            biomorphTarget: form.BiomorphTarget ? form.BiomorphTarget.checked : false,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
             usePool: form.usePool ? form.usePool.checked : false,
             useThreat: form.useThreat ? form.useThreat.checked : false
@@ -2425,7 +2517,7 @@ export async function TaskCheck({
 
     }
 
-    async function GetDamageOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, traits, meleeDamageMod) {
+    async function GetDamageOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, traits, meleeDamageMod, biomorphTarget) {
         let groupName = "useSwap";
         let choices = 0;
         if (poolValue && flexValue && swapPossible){
@@ -2441,7 +2533,7 @@ export async function TaskCheck({
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/damage-dialog.html";
-        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, traits, groupName, choices, meleeDamageMod});
+        const html = await renderTemplate(template, {weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, traits, groupName, choices, meleeDamageMod, biomorphTarget});
         return new Promise(resolve => {
             const data = {
                 title: weaponName[0].toUpperCase() + weaponName.slice(1) + " " + dialogName.title,

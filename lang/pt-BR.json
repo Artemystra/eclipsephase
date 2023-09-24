@@ -883,6 +883,7 @@
         "noPool": "Nenhuma parada restante",
         "useThreat": "Usar Ameaça (+20)",
         "calledShotLabel": "Ataque Preciso (-10)",
+        "touchOnly": "Touch Attack (+20)",
         "title": {
           "guns": "Teste de Tiro",
           "melee": "Teste de Luta",
@@ -912,6 +913,13 @@
             "isRunningLabel": "Correndo (-20)",
             "inMeleeLabel": "Lutando (-10)",
             "inMeleeLabelLong": "Lutando (-30)",
+            "weaponFixated": "Weapon Fixated (-20 if not)",
+            "targetBiomorph": "Target: Biomorph",
+            "ammoEffect": {
+              "label": "Ammunition",
+              "ammoSkillModifier": "Modifier (+10)",
+              "ignoreIndirect": "Ignore Indirect Modifier"
+            },
             "fireMode": {
               "label": "Modo de Disparo",
               "single": "Tiro Único",
@@ -919,7 +927,6 @@
               "fullAuto": "Automático Estreito (+2d10)",
               "wBurst": "Rajada Larga (+10 Acerto)",
               "wFullAuto": "Automático Largo (+30 Acerto)",
-              "indirect": "Indireto (-20)",
               "suppressive": "Supressão (usa 20 tiros)"
             },
             "aim": {
@@ -942,7 +949,8 @@
               "none": "Nenhuma",
               "minor": "Menor (-10)",
               "major": "Maior (-30)",
-              "blind": "Às Cegas (-30+)"
+              "blind": "Às Cegas (-30+)",
+              "indirect": "Indireto (-20)"
             }
           },
           "defender": {
@@ -1065,7 +1073,8 @@
             "agressiveAddition": "(Evasão -10)",
             "agressiveCharge": "Ataque Violento",
             "agressiveChargeAddition": "(+1d10VD & Evasão -10)",
-            "multipleTargets": "Múltiplos Alvos"
+            "multipleTargets": "Múltiplos Alvos",
+            "touchOnly": "Touch Only Attack"
           },
           "ranged": {
             "smartLink": "Sem Ligação Inteligente",
@@ -1098,7 +1107,9 @@
             "reloadNeeded": "Sua arma não tem munição suficiente. <p/><strong>Recarregue primeiro!</strong>",
             "reloadedWeapon": "Eu recarregei minha arma",
             "weaponFull": "Sua arma ainda está totalmente carregada.",
-            "noAmmoPresent": "No fitting ammunition present."
+            "noAmmoPresent": "No fitting ammunition present.",
+            "ammoSkillModifier": "Ammo Skill Modifier",
+            "weaponFixated": "Shot from Hip"
           }
         }
       }

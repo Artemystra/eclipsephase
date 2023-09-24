@@ -15,6 +15,7 @@
   --warning: #ce8532;
   --iconBlue: #346d8e;
   --highlight: #4098d6;
+  --complementary1: #57245d;
   --mainText: #d8d8d8;
   --iconGrey: #aaaaaa;
   --inactive: #999;
@@ -1402,6 +1403,10 @@ h3.subheaderBlank {
 
 .flexrow.subheader.colorV1{
   border-bottom: solid var(--pitchBorder) 3px;
+}
+
+.flexrow.subheader.colorV2{
+  border-bottom: solid var(--complementary1) 3px;
 }
 
 .listBackground {

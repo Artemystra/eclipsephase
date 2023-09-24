@@ -732,7 +732,7 @@
             "stunBiomorphs": "Stun (Biomorphs Only)",
             "fragile": "Fragile",
             "reach": "Reach",
-            "touchOnly": "Touch Only",
+            "touchOnly": "Touch Only Attack",
             "twoHanded": "Two-Handed",
             "selfReplenishing": "Self Replenishing",
             "specialAmmoDrugs": "Ammunition: Chems",
@@ -875,6 +875,7 @@
         "attackerHeadline": "Attacker Modifiers",
         "defenderHeadline": "Defender Modifiers",
         "frayTypeHeadline": "Fray Type",
+        "specialEffects": "Special Effects",
         "dodgeRangedLabel": "Dodge Ranged",
         "infectionHeadline": "Infection",
         "autoPush": "Auto Push Selection",
@@ -900,6 +901,7 @@
         "noPool": "No pool left",
         "useThreat": "Use Threat (+20)",
         "calledShotLabel": "Called Shot (-10)",
+        "touchOnly": "Touch Attack (+20)",
         "title": {
           "guns": "Guns Check",
           "melee": "Melee Check",
@@ -937,6 +939,13 @@
             "isRunningLabel": "Is Running (-20)",
             "inMeleeLabel": "In Melee (-10)",
             "inMeleeLabelLong": "In Melee (-30)",
+            "weaponFixated": "Weapon Fixated (-20 if not)",
+            "targetBiomorph": "Target: Biomorph",
+            "ammoEffect": {
+              "label": "Ammunition",
+              "ammoSkillModifier": "Modifier (+10)",
+              "ignoreIndirect": "Ignore Indirect Modifier"
+            },
             "fireMode": {
               "label": "Fire Mode",
               "single": "Single Shot",
@@ -944,7 +953,6 @@
               "fullAuto": "Narrow Full Auto (+2d10)",
               "wBurst": "Wide Burst (+10 Hit)",
               "wFullAuto": "Wide Full Auto (+30 Hit)",
-              "indirect": "Indirect (-20)",
               "suppressive": "Suppressive (uses 20 rounds)"
             },
             "aim": {
@@ -968,7 +976,8 @@
               "none": "None",
               "minor": "Minor (-10)",
               "major": "Major (-30)",
-              "blind": "Blind (-30+)"
+              "blind": "Blind (-30+)",
+              "indirect": "Indirect (-20)"
             }
           },
           "defender": {
@@ -1091,7 +1100,8 @@
             "agressiveAddition": "(Fray -10)",
             "agressiveCharge": "Ruthless Attack",
             "agressiveChargeAddition": "(+1d10DV & Fray -10)",
-            "multipleTargets": "Multiple Targets"
+            "multipleTargets": "Multiple Targets",
+            "touchOnly": "Touch Only Attack"
           },
           "ranged": {
             "smartLink": "No Smartgun",
@@ -1124,7 +1134,9 @@
             "reloadNeeded": "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
             "reloadedWeapon": "I reloaded my weapon",
             "weaponFull": "Your weapon is still fully loaded.",
-            "noAmmoPresent": "No fitting ammunition present."
+            "noAmmoPresent": "No fitting ammunition present.",
+            "ammoSkillModifier": "Ammo Skill Modifier",
+            "weaponFixated": "Shot from Hip"
           }
         }
       }

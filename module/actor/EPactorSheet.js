@@ -1142,7 +1142,6 @@ export default class EPactorSheet extends ActorSheet {
       default:
         break;
     }
-      console.log("current Ammo: ", weaponSelected.currentAmmo,)
       Dice.TaskCheck ({
         //Actor data
         actorWhole : actorWhole,
@@ -1159,15 +1158,15 @@ export default class EPactorSheet extends ActorSheet {
         poolValue: skillPoolValue,
         flexValue: flexPool,
         //Weapon data
-        weaponSelected : weaponSelected.weapon,
-        weaponID : weaponSelected.weaponID,
-        weaponName : weaponSelected.weaponName,
-        weaponDamage : weaponSelected.weaponDamage,
-        weaponType : weaponSelected.weaponType,
-        currentAmmo : weaponSelected.currentAmmo,
-        maxAmmo : weaponSelected.maxAmmo,
+        weaponSelected : weaponSelected ? weaponSelected.weapon : null,
+        weaponID : weaponSelected ? weaponSelected.weaponID : null,
+        weaponName : weaponSelected ? weaponSelected.weaponName : null,
+        weaponDamage : weaponSelected ? weaponSelected.weaponDamage : null,
+        weaponType : weaponSelected ? weaponSelected.weaponType : null,
+        currentAmmo : weaponSelected ? weaponSelected.currentAmmo : null,
+        maxAmmo : weaponSelected ? weaponSelected.maxAmmo : null,
         meleeDamageMod: actorModel.mods.meleeDamageMod,
-        weaponTraits : weaponSelected.weaponTraits,
+        weaponTraits : weaponSelected ? weaponSelected.weaponTraits : null,
         //Psi
         sleightName : dataset.sleightname,
         sleightDescription : dataset.description,

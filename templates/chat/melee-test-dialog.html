@@ -99,6 +99,17 @@
                     <option value="aggressiveCharge">{{localize "ep2e.roll.dialog.melee.attacker.type.aggressiveCharge"}}</option>
                 </select>
             </div>
+            {{#if (eq traits.confirmationEffects.touchOnly.value true)}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="TouchOnly" id="touchOnly">
+                    <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
+                </div>
+            {{else if (ne rolledFrom "ccWeapon")}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="TouchOnly" id="touchOnly">
+                    <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
+                </div>
+            {{/if}}
         </div>
     </div>
 </form>

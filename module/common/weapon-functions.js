@@ -128,7 +128,7 @@ async function traitSubSetConstructor(weapon){
   
   //Effects that are automatically used and accounted for during weapon preparation (e.g. -1d10 damage)
   for (const key in joinedEffectsMode1){
-    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartlink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady" || key === "Gyromount" || key === "laserSight" || key === "smartlink" || key === "specialAmmoBugs" || key === "specialAmmoDrugs" || key === "selfReplenishing"){
+    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartlink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady" || key === "Gyromount" || key === "laserSight" || key === "smartlink" || key === "specialAmmoBugs" || key === "specialAmmoDrugs" || key === "selfReplenishing" || key === "dvOnMiss" ){
       effects[key] = joinedEffectsMode1[key]
     }
   }
@@ -136,7 +136,7 @@ async function traitSubSetConstructor(weapon){
   effects = {}
 
   for (const key in joinedEffectsMode2){
-    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartlink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady" || key === "Gyromount" || key === "laserSight" || key === "smartlink" || key === "specialAmmoBugs" || key === "specialAmmoDrugs" || key === "selfReplenishing"){
+    if(key === "dvHalved" || key === "fragile" || key === "noDamage" || key === "noSmartlink" || key === "long" || key === "noClose" || key === "noPointBlank" || key === "singleUse" || key === "steady" || key === "Gyromount" || key === "laserSight" || key === "smartlink" || key === "specialAmmoBugs" || key === "specialAmmoDrugs" || key === "selfReplenishing" || key === "dvOnMiss" ){
       effects[key] = joinedEffectsMode2[key]
     }
   }
@@ -145,7 +145,7 @@ async function traitSubSetConstructor(weapon){
 
   //Effects that need human confirmation before being applied (e.g. +1d6 damage IF the target is a biomorph)
   for (const key in joinedEffectsMode1){
-    if(key === "bioMorphsOnly" || key === "dvOnMiss" || key === "fixed" || key === "indirectOrBonus" || key === "touchOnly"){
+    if(key === "bioMorphsOnly" || key === "fixed" || key === "indirectOrBonus" || key === "touchOnly"){
       effects[key] = joinedEffectsMode1[key]
     }
   }
@@ -153,7 +153,7 @@ async function traitSubSetConstructor(weapon){
   effects = {}
 
   for (const key in joinedEffectsMode2){
-    if(key === "bioMorphsOnly" || key === "dvOnMiss" || key === "fixed" || key === "indirectOrBonus" || key === "touchOnly"){
+    if(key === "bioMorphsOnly" || key === "fixed" || key === "indirectOrBonus" || key === "touchOnly"){
       effects[key] = joinedEffectsMode2[key]
     }
   }
