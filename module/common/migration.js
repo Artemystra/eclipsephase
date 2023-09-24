@@ -1365,7 +1365,7 @@ export function migrationPre098(startMigration, endMigration){
           }
       }
     }
-    game.settings.set("eclipsephase", "migrationVersion", "0.9.7");
+    game.settings.set("eclipsephase", "migrationVersion", "0.9.8");
     endMigration = true
     return {endMigration}
   }
