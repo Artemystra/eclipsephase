@@ -158,7 +158,7 @@ export default class EPactorSheet extends ActorSheet {
       seeker: [],
       spray: [],
       rail: [],
-    }
+    };
     const know = [];
     const special = [];
     const trait = [];

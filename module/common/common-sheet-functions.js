@@ -184,6 +184,7 @@ export async function moreInfo(event){
   const template = 'systems/eclipsephase/templates/chat/pop-up.html'
   let dialogData = {}
   dialogData.dialogType = "information";
+  console.log("**dialogData: ", dialogData)
 
   //This builds the dataset if objects are needed from the item
   if(dataset.contructdataset){

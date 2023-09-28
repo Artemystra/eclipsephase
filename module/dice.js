@@ -748,10 +748,12 @@ export async function TaskCheck({
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
         else if (range === "pointBlank" || range === "pointBlank" && prone){
-            gunsMod += 10;
-            modValue = 10
-            announce = "ep2e.roll.announce.combat.ranged.pointBlank";
-            task.addModifier(new TaskRollModifier(announce, modValue))
+            if (!weaponTraits.automatedEffects.long){
+                gunsMod += 10;
+                modValue = 10
+                announce = "ep2e.roll.announce.combat.ranged.pointBlank";
+                task.addModifier(new TaskRollModifier(announce, modValue))
+            }
         }
 
 
@@ -819,7 +821,7 @@ export async function TaskCheck({
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
-        if (rolledFrom === "rangedweappn"){
+        if (rolledFrom === "rangedWeapon"){
             if (!weaponFixated && weaponTraits.confirmationEffects.fixed){
                 gunsMod -= 20;
                 modValue = -20

@@ -82,6 +82,16 @@ export default class EPnpcSheet extends ActorSheet {
       async _onDropItemCreate(item){
       
         item.system.updated = game.system.version
+
+        //Loading weapons with Standard Ammo
+        if (item.type === "rangedWeapon"){
+          if (item.system.ammoType != "seeker" && item.system.ammoType != "spray"){
+          let name = item.system.ammoType
+          let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+          item.system.ammoMin = item.system.ammoMax;
+          item.system.ammoSelected.name = capitalizedName + " (Standard)";
+          }
+        }
   
         // Create the owned item as normal
         return super._onDropItemCreate(item)
@@ -104,6 +114,14 @@ export default class EPnpcSheet extends ActorSheet {
 
         // Initialize containers.
         const gear = [];
+        const consumable = [];
+        const ammo = {
+          beam: [],
+          kinetic: [],
+          seeker: [],
+          spray: [],
+          rail: [],
+        };
         const features = [];
         const special = [];
         const rangedweapon = [];
@@ -136,8 +154,44 @@ export default class EPnpcSheet extends ActorSheet {
           let itemModel = item.system
             item.img = item.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (itemModel.displayCategory === 'gear') {
+            if (itemModel.displayCategory === 'gear' || item.type === 'ammo'|| item.type === 'grenade') {
                 gear.push(item);
+            }
+            // Append to ammunition
+            else if (item.type === 'ammo'|| item.type === 'grenade'){
+              switch (item.type) {
+                case 'grenade':
+                itemModel.slotName = "ep2e.item.general.table.slot.grenade";
+                break;
+                case 'ammo':
+                itemModel.slotName = "ep2e.item.general.table.slot.ammo";
+                break;
+                default:
+                break;
+              }
+    
+              if (item.system.active){
+                switch(item.system.type){
+                  case 'beam':
+                  ammo.beam.push(item);
+                  break;
+                  case 'kinetic':
+                  ammo.kinetic.push(item);
+                  break;
+                  case 'seeker':
+                  ammo.seeker.push(item);
+                  break;
+                  case 'spray':
+                  ammo.spray.push(item);
+                  break;
+                  case 'rail':
+                  ammo.rail.push(item);
+                  break;
+                  default:
+                    break;
+                }
+              }
+              consumable.push(item);
             }
             // Append to features.
             else if (item.type === 'feature') {
@@ -383,6 +437,7 @@ export default class EPnpcSheet extends ActorSheet {
         actor.morphFlaw = morphflaw;
         actor.specialSkill = special;
         actor.activeEffects = effects;
+        actor.ammo = ammo;
 
         // Check if sleights are present and toggle Psi Tab based on this
         if (actor.aspect.chi.length>0){
@@ -447,6 +502,9 @@ export default class EPnpcSheet extends ActorSheet {
         
         //More Information Dialog
         html.on('click', 'a.moreInfoDialog', moreInfo);
+        
+        //Reload Ranged Weapon Functionality
+        reloadWeapon(html, actor);
 
     }
 

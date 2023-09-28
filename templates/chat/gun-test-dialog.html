@@ -129,7 +129,11 @@
                 <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.distance.label"}}:</label>
                     {{#if (ne traits.automatedEffects.steady.value true)}}
                     <select class="input-largePlus" name="Range">
+                        {{#if (ne traits.automatedEffects.long.value true)}}
                         <option value="pointBlank">{{localize "ep2e.roll.dialog.ranged.attacker.distance.pointBlank"}}</option>
+                        {{else}}
+                        <option value="pointBlank">{{localize "ep2e.roll.announce.combat.ranged.pointBlank"}}</option>
+                        {{/if}}
                         <option selected="none" value="none">{{localize "ep2e.roll.dialog.ranged.attacker.distance.none"}}</option>
                         <option value="range">{{localize "ep2e.roll.dialog.ranged.attacker.distance.range"}}</option>
                         <option value="beyond">{{localize "ep2e.roll.dialog.ranged.attacker.distance.beyond"}}</option>

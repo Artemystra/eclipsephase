@@ -1,9 +1,9 @@
 {{#if (eq sheetType "PC")}}
-{{#if item.system.active}}
-    <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-{{else}}
-    <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-{{/if}}
+    {{#if item.system.active}}
+        <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+    {{else}}
+        <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+    {{/if}}
         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked item.system.active}}>
             <div class="flexrow flex-group-center input-small">
                 <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
@@ -18,6 +18,27 @@
             <label class="input-XL truncate alignLeft">{{item.name}}</label>
             <label class="tooltipText" style="min-width: 190px; left: -5px">{{item.name}}</label>
         </div>
+        {{#if (ne sheetType "PC")}}
+        <!--Ammunition Counter & Reload-->
+        <div class="flexrow alignRight" style="align-items: center; justify-content: flex-end; flex-grow: 0.5!important;" data-item-id="{{item._id}}">
+            {{#if (eq type "ranged")}}
+                <img src="systems/eclipsephase/resources/icons/ammo.png" class="toggle icon-small"/>
+                
+                <img src="systems/eclipsephase/resources/icons/reload.webp" class="toggle noShow reload icon-small rollable" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
+                {{#if @root.isGM}}
+                    <input class="input-small sheet-inline-edit" style="min-width: 27px; padding-left: 1px;" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                {{else}}
+                    <label class="input-xs">{{item.system.ammoMin}}</label>/
+                {{/if}}
+                <h4 class="item-image flex-group-left input-small icon-space">
+                    <strong>{{item.system.ammoMax}}</strong>
+                </h4>
+                <a class="moreInfoDialog" data-contructdataset={{item._id}} data-datapath="system.ammoSelected" data-rolledfrom="ammoInfo">
+                    <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                </a>
+            {{/if}}
+        </div>
+        {{/if}}
         <label class="flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
         <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
             <a class="item-control item-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
