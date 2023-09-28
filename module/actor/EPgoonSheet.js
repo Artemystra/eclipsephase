@@ -148,7 +148,7 @@ export default class EPgoonSheet extends ActorSheet {
 
             item.img = item.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (itemModel.displayCategory === 'gear' || item.type === 'ammo'|| item.type === 'grenade') {
+            if (itemModel.displayCategory === 'gear') {
                 gear.push(item);
             }
             // Append to ammunition

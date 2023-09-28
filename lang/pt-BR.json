@@ -398,7 +398,9 @@
         "wareLabel": "Ware",
         "noWareCopy": "Nenhum ware instalado",
         "gearLabel": "Equipamentos",
-        "noGearCopy": "Nenhum equipamento especial"
+        "noGearCopy": "Nenhum equipamento especial",
+        "ammunitionLabel": "Ammunition",
+        "noAmmunitionCopy": "No ammunition"
       },
       "noGear": {
         "headline": "Nenhum equipamento presente",

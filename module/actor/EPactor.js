@@ -68,6 +68,17 @@ export default class EPactor extends Actor {
         break;
       }
     }
+
+    //Determin whether any ammunition is present
+    let ammoCount = 0;
+    for (let item of items){
+      if (item.type === "ammo")
+      ammoCount++
+    }
+    if (ammoCount > 0){
+      actorModel.additionalSystems.hasAmmo = true;
+    }
+
     //Prepares information what type of psi a character uses
     for(let psiTypeCheck of items){
       if (psiTypeCheck.type === "aspect"){

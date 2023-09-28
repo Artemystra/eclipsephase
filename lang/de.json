@@ -403,7 +403,9 @@
         "wareLabel": "Mods",
         "noWareCopy": "Keine Mods installiert",
         "gearLabel": "Spezialausrüstung",
-        "noGearCopy": "Keine Spezialausrüstung"
+        "noGearCopy": "Keine Spezialausrüstung",
+        "ammunitionLabel": "Ammunition",
+        "noAmmunitionCopy": "No ammunition"
       },
       "noGear": {
         "headline": "Keine Ausrüstung vorhanden",

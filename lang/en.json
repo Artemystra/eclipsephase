@@ -403,7 +403,9 @@
         "wareLabel": "Ware",
         "noWareCopy": "No ware installed",
         "gearLabel": "Gear",
-        "noGearCopy": "No special gear"
+        "noGearCopy": "No special gear",
+        "ammunitionLabel": "Ammunition",
+        "noAmmunitionCopy": "No ammunition"
       },
       "noGear": {
         "headline": "No Gear Present",

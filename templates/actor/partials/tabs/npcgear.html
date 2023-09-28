@@ -238,7 +238,7 @@
                             <label class="flex-group-center noMargin
                             alignCenter" style="background: none;
                             font-size: 12px; flex:
-                            0.4"><i>{{item.actor.slotType}}</i></label>
+                            0.4"><i>{{item.system.slotType}}</i></label>
                             <div class="flex-group-right" style="flex: 0.2;">
                                 <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
@@ -248,6 +248,27 @@
                         <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noGearCopy"}}</label>
                         {{/if}}
                     </div>
+                    <div class="flexrow flex-group-center">
+                        <img src="systems/eclipsephase/resources/icons/ammo.png" style="max-width: 20px; padding-bottom: 3px;"/>
+                        <label class="resource-label">{{localize "ep2e.inventory.npcInventory.ammunitionLabel"}}:</label>
+                    </div>
+                    {{#if actor.system.additionalSystems.hasAmmo}}
+                    <div class="flexrow headSpace">
+                        {{#each actor.ammo as |category key|}}
+                            {{#each category as |item key|}}
+                            <div class="item flexrow flex-between wantToKnowMoreFixed pill" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px;">
+                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                <h4 class="tooltipText" style="min-width: 170px;"><strong>{{item.name}}</strong></h4>
+                                <div class="flex-group-right" style="flex: 0.2;">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                                </div>
+                            </div>
+                            {{/each}}
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noAmmunitionCopy"}}</label>
+                    {{/if}}
                 </div>
             </div>
         </div>

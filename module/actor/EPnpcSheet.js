@@ -154,7 +154,7 @@ export default class EPnpcSheet extends ActorSheet {
           let itemModel = item.system
             item.img = item.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (itemModel.displayCategory === 'gear' || item.type === 'ammo'|| item.type === 'grenade') {
+            if (itemModel.displayCategory === 'gear') {
                 gear.push(item);
             }
             // Append to ammunition

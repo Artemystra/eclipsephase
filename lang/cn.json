@@ -396,7 +396,9 @@
         "wareLabel": "插件",
         "noWareCopy": "没有安装插件",
         "gearLabel": "装备",
-        "noGearCopy": "没有特殊装备"
+        "noGearCopy": "没有特殊装备",
+        "ammunitionLabel": "Ammunition",
+        "noAmmunitionCopy": "No ammunition"
       },
       "noGear": {
         "headline": "没有可展示的装备",
