@@ -477,8 +477,6 @@ export async function TaskCheck({
     sleightInfection = ""
     } = {}) {
 
-    console.log("This is weaponTraits in dice.js: ", weaponTraits)
-
     //Task Roll created
     let task = new TaskRoll (skillName, skillValue);
 
@@ -581,7 +579,6 @@ export async function TaskCheck({
 
         if (sizeDifference){
             if(rolledFrom === "ccWeapon"){
-                console.log("** reach: ", weaponTraits.additionalEffects.reach ? weaponTraits.additionalEffects.reach.skillMod : 0)
                 meleeMod += Number(sizeDifference != "none" ? sizeDifference : 0) + Number(weaponTraits.additionalEffects.reach ? weaponTraits.additionalEffects.reach.skillMod : 0);
             }
             else{
@@ -1610,7 +1607,6 @@ export async function TaskCheck({
                         flexValue = swapCheckData["flexValue"];
                         poolValue = swapCheckData["poolValue"];
                         usedSwipSwap = swapCheckData["usedPoolType"];
-                        console.log("This is my swapCheckData: ", swapCheckData)
                     } 
                 }
 
@@ -1927,7 +1923,6 @@ export async function TaskCheck({
               
             //Damage Chat Message Constructor
             if(weaponDamage && successType){
-                console.log("*9*", biomorphTarget)
                 let intermediateRollFormula =  weaponDamage + modeDamage + (meleeDamageMod ? meleeDamageMod : "") + (biomorphTarget ? " + 1d6" : "") + successModifier;
                 let rollFormula = null
 
@@ -1999,8 +1994,6 @@ export async function TaskCheck({
                 message.weaponTraits = weaponTraits.additionalEffects
                 message.weaponTraits["dvOnMiss"] = weaponTraits.automatedEffects["dvOnMiss"]
                 message.weaponTraits.dvOnMiss["calculated"] = rollFormula
-
-                console.log("*7* ", message.weaponTraits)
 
                 html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
 
@@ -2251,7 +2244,6 @@ export async function TaskCheck({
         }
 
         poolUpdater(poolUpdate, poolType);
-        console.log("Used SwipSwap in swap Checker: ", usedPoolType)
         return {successType, swapPossible, successMessage, successName, flexValue, poolValue, usedPoolType};
     }
 
@@ -2411,7 +2403,6 @@ export async function TaskCheck({
 
     //Skill check dialog constructor
     async function GetMeleeTaskOptions(specName, poolType, poolValue, actorType, traits, rolledFrom) {
-        console.log("*8* ", traits.confirmationEffects)
         let dialogName = new Localizer ('ep2e.roll.dialog.title.melee');
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');

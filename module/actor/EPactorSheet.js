@@ -158,6 +158,7 @@ export default class EPactorSheet extends ActorSheet {
       seeker: [],
       spray: [],
       rail: [],
+      drug: []
     };
     const know = [];
     const special = [];
@@ -220,6 +221,11 @@ export default class EPactorSheet extends ActorSheet {
       let itemModel = item.system;
 
       item.img = item.img || DEFAULT_TOKEN;
+      //Sort drugs into ammo as well
+      if (item.type === "drug"){
+
+      }
+
       // Append to features.
       if (item.type === 'specialSkill') {
         let aptSelect = 0;
@@ -442,6 +448,7 @@ export default class EPactorSheet extends ActorSheet {
         else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
           if (item.type === "drug"){
             itemModel.slotName = "ep2e.item.general.table.slot.drug";
+            ammo.drug.push(item);
           }
           else {
             itemModel.slotName = "ep2e.item.general.table.slot.consumable";
@@ -971,9 +978,6 @@ export default class EPactorSheet extends ActorSheet {
     const itemID = event.currentTarget.closest(".item").dataset.itemId;
     const item = this.actor.items.get(itemID);
 
-    console.log("this is item ", item);
-
-
     await item.roll();
 
   }
@@ -1097,8 +1101,6 @@ export default class EPactorSheet extends ActorSheet {
       weaponSelected = weaponPrep.selection
       rolledFrom = weaponSelected.rolledFrom 
     }
-
-    console.log("This is my weaponSelected on EPactorSheet: ", weaponSelected)
 
     if (rolledFrom === "psiSleight") {
       specNameValue = actorModel.skillsMox.psi.specname;

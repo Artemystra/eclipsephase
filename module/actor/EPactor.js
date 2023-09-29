@@ -72,7 +72,7 @@ export default class EPactor extends Actor {
     //Determin whether any ammunition is present
     let ammoCount = 0;
     for (let item of items){
-      if (item.type === "ammo")
+      if (item.type === "ammo" || item.type === "drug")
       ammoCount++
     }
     if (ammoCount > 0){

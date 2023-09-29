@@ -184,7 +184,7 @@ export async function moreInfo(event){
   const template = 'systems/eclipsephase/templates/chat/pop-up.html'
   let dialogData = {}
   dialogData.dialogType = "information";
-  console.log("**dialogData: ", dialogData)
+  console.log("**", dialogData)
 
   //This builds the dataset if objects are needed from the item
   if(dataset.contructdataset){
@@ -210,8 +210,6 @@ export async function moreInfo(event){
         dialogData[item] = dataset[item];
     }
   }
-
-  console.log("This is my dialogData: ", dialogData)
 
   let dialog = await moreInformation(template, dialogData)
 

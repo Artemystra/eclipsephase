@@ -1291,12 +1291,10 @@ export function migrationPre098(startMigration, endMigration){
                   "system.ammoSelected._id": "-",
                   "system.ammoSelected.name": capitalizedName + " (Standard)",
                   "system.ammoSelected.dvModifier": {
-                    "dvModifier": {
-                      "d10": null,
-                      "d6": null,
-                      "bonus": null,
-                      "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
-                    }
+                    "d10": null,
+                    "d6": null,
+                    "bonus": null,
+                    "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
                   },
                   "system.ammoSelected.description": "ep2e.item.weapon.table.ammoUsed.standardDescription",
                   "system.ammoSelected.traits": { 

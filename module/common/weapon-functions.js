@@ -78,8 +78,6 @@ async function traitSubSetConstructor(weapon){
   let joinedEffectsMode1 = {}
   let joinedEffectsMode2 = {}
 
-  console.log("***traits1 ",traitsMode1, " & traits 2 ",traitsMode2)
-
   //Clears the weapon's traits list of all inactive traits
   for (const key in traitsMode1){
     if (traitsMode1[key].value){
@@ -110,7 +108,6 @@ async function traitSubSetConstructor(weapon){
 
       }
     }
-    console.log("***traits1 ",joinedEffectsMode1, " & traits 2 ",joinedEffectsMode2)
 
     //Adds acessories to both collections
     for (const key in accessories){
@@ -313,9 +310,9 @@ export async function damageValueCalc (object, dvPath, traits, calcType){
   if(calcType === "ammo"){
     //Ammo Damage Calculation
     dv = "ep2e.item.weapon.table.noDamageValueModifier"
-    const d10 = dvPath.d10
-    const d6 = dvPath.d6
-    const bonus = dvPath.bonus
+    const d10 = object.type != "drug" ? dvPath.d10 : 0;
+    const d6 = object.type != "drug" ? dvPath.d6 : 0;
+    const bonus = object.type != "drug" ? dvPath.bonus : 0;
     let bonusValue = bonus ? "+"  + bonus : "";
   
     if (d10 && d6){
@@ -336,7 +333,6 @@ export async function damageValueCalc (object, dvPath, traits, calcType){
     }
     //Weapon Damage Calculation
     else {
-      console.log("***weapon ",object)
       let d10 = Number(dvPath.d10);
       let d6 = Number(dvPath.d6);
       let bonus = Number(dvPath.bonus);
@@ -378,31 +374,39 @@ export async function reloadWeapon(html, actor) {
     
     html.find('.reload').click( async event => {
         event.preventDefault();
+        const ammoRules = game.settings.get("eclipsephase", "ammoRules");
         const element = event.currentTarget;
         const dataset = element.dataset;
         const weaponID = dataset.weaponid;
         const weapon = actor.items.get(weaponID);
         const maxAmmo = weapon.system.ammoMax;
-        const ammoType = weapon.system.ammoType;
         const weaponName = weapon.name;
+        const selfReplenishing = weapon.system.mode1.traits.selfReplenishing.value;
+        const usesDrugs = weapon.system.mode1.traits.specialAmmoDrugs.value;
+        const ammoType = usesDrugs ? "drug" : weapon.system.ammoType;
         const ammoPresent = weapon.system.ammoSelected._id ? weapon.system.ammoSelected._id : "-"
         let currentAmmo = weapon.system.ammoMin;
         let difference = maxAmmo - currentAmmo;
         let ammoUpdate = [];
+        let weaponUpdate = [];
         let ammoList = [];
-        let numberOfPacks = actor.ammo[ammoType] ? actor.ammo[ammoType].length : 0;
+        let numberOfPacks = (actor.ammo[ammoType] ? actor.ammo[ammoType].length : 0);
         let ammoSelected = "";
         let calculated = null;
         let traits = null;
+        let dv = "";
 
-        if (numberOfPacks >= 1){
+        //Checks whether fitting ammo is present at all
+        if (numberOfPacks >= 1 || selfReplenishing){
+          //Creates a list of all applicable ammo available
           if (numberOfPacks > 1){
             for (let ammo of actor.ammo[ammoType]){
-
-                traits = ammo.system.traits
   
                 calculated = await damageValueCalc(ammo, ammo.system.dv, traits, "ammo")
-                let ammoEntry = {"_id":ammo._id, "name": ammo.name, "traits": traits, "dv": calculated.dv}
+                traits = ammoType != "drug" ? ammo.system.traits : {};
+                dv = ammoType != "drug" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
+
+                let ammoEntry = {"_id":ammo._id, "name": ammo.name, "traits": traits, "dv": dv}
                 ammoList.push(ammoEntry)
             }
   
@@ -414,39 +418,24 @@ export async function reloadWeapon(html, actor) {
             }
   
             ammoSelected = actor.items.get(selectedAmmo.selection);
+            let calc = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo");
+            dv = ammoType != "drug" ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
           }
+          //Just uses the only fitting ammo pack available
           else {
             ammoSelected = actor.ammo[ammoType][0];
+            let calc = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo");
+            dv = ammoType != "drug" && !selfReplenishing ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
           }
 
-          traits = ammoSelected.system.traits
-          ammoSelected.system.areaeffect ? traits["effectRadius"] = {"name" : "ep2e.item.weapon.table.trait.effectRadius", "value" : true, "radius" : ammoSelected.system.areaeffect} : null
-
-          console.log("**traitTest: ", traits)
-
-          calculated = await damageValueCalc(ammoSelected, ammoSelected.system.dv, traits, "ammo")
-
-          if (difference>0 || ammoPresent != ammoSelected._id){
-            ammoUpdate.push({
-              "_id" : weaponID,
-              "system.ammoSelected.traits": {},
-            });
-            actor.updateEmbeddedDocuments("Item", ammoUpdate);
-          }
-
-          if (difference>0 || ammoPresent != ammoSelected._id){
+          
+          //Refills the weapon if selfReplenishing 'true' & no other swarm was selected
+          if (selfReplenishing && numberOfPacks <= 1){
             currentAmmo = maxAmmo;
 
-
-            ammoUpdate.push({
+            weaponUpdate.push({
               "_id" : weaponID,
-              "system.ammoMin": currentAmmo,
-              "system.ammoSelected._id": ammoSelected._id,
-              "system.ammoSelected.name": ammoSelected.name,
-              "system.ammoSelected.dvModifier": ammoSelected.system.dv,
-              "system.ammoSelected.description": ammoSelected.system.description,
-              "system.ammoSelected.dvModifier.calculated": calculated.dv,
-              "system.ammoSelected.traits": traits,
+              "system.ammoMin": currentAmmo
             });
       
             let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
@@ -455,7 +444,85 @@ export async function reloadWeapon(html, actor) {
               flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
             })
           
-            return actor.updateEmbeddedDocuments("Item", ammoUpdate);
+            return actor.updateEmbeddedDocuments("Item", weaponUpdate);
+          }
+
+          traits = ammoSelected.system.traits
+          ammoSelected.system.areaeffect ? traits["effectRadius"] = {"name" : "ep2e.item.weapon.table.trait.effectRadius", "value" : true, "radius" : ammoSelected.system.areaeffect} : null
+
+          calculated = await damageValueCalc(ammoSelected, ammoSelected.system.dv, traits, "ammo")
+
+          if (difference>0 || ammoPresent != ammoSelected._id){
+            weaponUpdate.push({
+              "_id" : weaponID,
+              "system.ammoSelected.traits": {},
+            });
+            await actor.updateEmbeddedDocuments("Item", weaponUpdate);
+          }
+          weaponUpdate = []
+          //Automatic ammo deduction (based on the setting chosen in eclipsephase.js)
+          //Survival mode (deduction/deletion)
+          if (ammoRules === "survival" && actor.type === "character"){
+            if (difference>0 || ammoPresent != ammoSelected._id){
+              let quantity = Number(ammoSelected.system.quantity) - 1;
+              if(quantity >= 1){
+                ammoUpdate.push({
+                  "_id" : ammoSelected._id,
+                  "system.quantity": quantity,
+                });
+                await actor.updateEmbeddedDocuments("Item", ammoUpdate);
+              }
+              else{
+                ammoUpdate.push({
+                  "_id" : ammoSelected._id
+                });
+                await actor.deleteEmbeddedDocuments("Item", [ammoSelected._id])
+              }
+            }
+          }
+
+          //Grenades only mode (deduction/deletion)
+          if (ammoRules === "grenadesOnly" && actor.type === "character"){
+            if(ammoSelected.system.type === "seeker" || ammoSelected.type === "drug" ){
+              if (difference>0 || ammoPresent != ammoSelected._id){
+                let quantity = Number(ammoSelected.system.quantity) - 1;
+                if(quantity >= 1){
+                  ammoUpdate.push({
+                    "_id" : ammoSelected._id,
+                    "system.quantity": quantity,
+                  });
+                  await actor.updateEmbeddedDocuments("Item", ammoUpdate);
+                }
+                else{
+                  ammoUpdate.push({
+                    "_id" : ammoSelected._id
+                  });
+                  await actor.deleteEmbeddedDocuments("Item", [ammoSelected._id])
+                }
+              }
+            }
+          }
+
+          if (difference>0 || ammoPresent != ammoSelected._id){
+            currentAmmo = maxAmmo;
+
+            weaponUpdate.push({
+              "_id" : weaponID,
+              "system.ammoMin": currentAmmo,
+              "system.ammoSelected._id": ammoSelected._id,
+              "system.ammoSelected.name": ammoSelected.name,
+              "system.ammoSelected.dvModifier": ammoType != "drug" ? ammoSelected.system.dv : {"d10": 0, "d6" : 0, "bonus" : 0},
+              "system.ammoSelected.description": ammoSelected.system.description,
+              "system.ammoSelected.dvModifier.calculated": dv,
+              "system.ammoSelected.traits": ammoType != "drug" ? traits : {}
+            });
+      
+            let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
+            ChatMessage.create({
+              speaker: ChatMessage.getSpeaker({actor: actor}),
+              flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
+            })
+            return actor.updateEmbeddedDocuments("Item", weaponUpdate);
           }
           else {
             let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.weaponFull");

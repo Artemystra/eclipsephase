@@ -10,7 +10,6 @@ export default class EPnpcSheet extends ActorSheet {
       super(...args);
 
       const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
-      console.log(this);
       if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
         this.position.height = 340;
         this.position.width = 800;
@@ -121,6 +120,7 @@ export default class EPnpcSheet extends ActorSheet {
           seeker: [],
           spray: [],
           rail: [],
+          drug: []
         };
         const features = [];
         const special = [];

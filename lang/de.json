@@ -1,4 +1,49 @@
 {
+  "SETTINGS":{
+    "ammoRules": {
+      "name": "Munitionsregeln",
+      "hint": "Entscheidet wie Munitionsitems in Spielerinventaren beim nachladen behandelt werden. Standard: Munitionsitems sind unendlich und werden niemals reduziert/gelöscht. Überleben: Nachladen löscht/reduziert die entsprechenden Munitionsitems. Nur Granaten: Nur Spezialmunition (z.B. Granaten/Drogen) werden beim nachladen reduziert/gelöscht.",
+      "default": "Standard",
+      "survival": "Überleben",
+      "grenadesOnly": "Nur Granaten"
+    },
+    "effectPanel": {
+      "name": "Active Effect Tab",
+      "hint": "Aktiviert Active Effect Tabs für Spielleiter:innen"
+    },
+    "gmMenu": {
+      "name": "SL Menü",
+      "hint": "Zeigt das SL-Menü auf der linken Seite (nur für Spielleiter:innen)"
+    },
+    "hideNPCs": {
+      "name": "NPC/Bedrohungen-Werte verbergen",
+      "hint": "Maskiert NPC/Bedrohungs-Charakterblätter wenn aktiviert. Spieler:innen sehen nur einen limitierten Bogen mit Bild und Kurzbeschreibung."
+    },
+    "migrationVersion": {
+      "name": "Migrationsversion",
+      "hint": "Markiert die letze gültige Migrationsversion. (WARNUNG: Diesen Wert nur ändern wenn du weisst, was er bedeutet. Kann das System kaputt machen.)"
+    },
+    "restReset": {
+      "name": "Temporäre Bonus zurücksetzen",
+      "hint": "Setzt alle temporären Bonus (wie Wunden ignorieren) zurück sobald IRGENDEINE Rast-Aktion (kurz ODER lang) vorgenommen wird. Temporäre Effekte bleiben bis zu einer langen Rast erhalten, wenn dies deaktiviert wurde."
+    },
+    "showDamageOptions": {
+      "name": "Schadensdialoge zeigen",
+      "hint": "Diese Option aktivieren um Schadensdialoge beim würfeln von Charaktersheets zu zeigen."
+    },
+    "showEverything": {
+      "name": "Spieler:innencharaktere offenbaren",
+      "hint": "Erlaubt es allen Spieler:innen die Charakterwerte der anderen Spieler:innencharaktere zu sehen. Zeigt stattdessen nur ein limitiertes Charakterblatt mit Bildern und Beschreibungen wenn die Funktion deaktiviert ist."
+    },
+    "showTaskOptions": {
+      "name": "Skill Dialoge zeigen",
+      "hint": "Zeigt standardmässig einen Würfeldialog, wenn ein Skill geürfelt wird."
+    },
+    "superBrew": {
+      "name": "Diemen's Spezialbräu",
+      "hint": "Macht Dinge die Diemen in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
+    }
+  },
   "TYPES.Actor.character" : "Spielercharakter",
   "TYPES.Actor.npc" : "Nichtspielercharakter",
   "TYPES.Actor.goon" : "Bedrohung",

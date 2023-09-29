@@ -10,7 +10,6 @@ export default class EPgoonSheet extends ActorSheet {
       super(...args);
       
       const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
-      console.log(this);
       if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
         this.position.height = 340;
         this.position.width = 800;
@@ -114,6 +113,7 @@ export default class EPgoonSheet extends ActorSheet {
           seeker: [],
           spray: [],
           rail: [],
+          drug: []
         };
         const features = [];
         const special = [];
@@ -539,8 +539,6 @@ export default class EPgoonSheet extends ActorSheet {
 
         let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
         let weaponSelected = null;
-        console.log("** dataset ", dataset)
-        console.log("** dataset.rolledFrom ", dataset.rolledFrom)
         let specNameValue = dataset.specname;
         let skillRollValue = dataset.rollvalue;
         let poolType = "Threat";

@@ -1,4 +1,49 @@
 {
+  "SETTINGS":{
+    "ammoRules": {
+      "name": "Ammunition Rules",
+      "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
+      "default": "Default",
+      "survival": "Survival",
+      "grenadesOnly": "Grenades Only"
+    },
+    "effectPanel": {
+      "name": "Enable Effect Panel",
+      "hint": "Enable the Effect Panel on Actors (for GMs)"
+    },
+    "gmMenu": {
+      "name": "Enable GM Menu",
+      "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
+    },
+    "hideNPCs": {
+      "name": "Always Hide NPC/Threat Stats",
+      "hint": "If activated, shows a 'limited'-sheet for all NPCs & Threats to everyone instead of showing all details and values"
+    },
+    "migrationVersion": {
+      "name": "Migration Version",
+      "hint": "Marks the last time this system was migrated. (WARNING: Don't change this value unless you know what it is for! Can break your system.)"
+    },
+    "restReset": {
+      "name": "Reset Temporary Bonuses",
+      "hint": "If activated ANY rest (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long rests reset them."
+    },
+    "showDamageOptions": {
+      "name": "Default Show Damage Dialog",
+      "hint": "Check this option to show the damage-dialog per default when clicking any damage roll icon on the character sheet"
+    },
+    "showEverything": {
+      "name": "Always Reveal Player Stats",
+      "hint": "Always show playercharacter details/stats to everyone with at least 'limited' permissions. If deactivated, shows a 'limited'-sheet of all player characters to everyone (not only the GM and owner of given character)"
+    },
+    "showTaskOptions": {
+      "name": "Default Show Skill Modifier Dialog",
+      "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
+    },
+    "superBrew": {
+      "name": "Diemen's Special Brew",
+      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+    }
+  },
   "TYPES.Actor.character" : "Player Character",
   "TYPES.Actor.npc" : "Non-Player Character",
   "TYPES.Actor.goon" : "Threat",

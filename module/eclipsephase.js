@@ -24,8 +24,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
     config: true,
     scope: "client",
-    name: "Default Show Skill Modifier Dialog",
-    hint: "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet",
+    name: "SETTINGS.showTaskOptions.name",
+    hint: "SETTINGS.showTaskOptions.hint",
     type: Boolean,
     default: true
   });
@@ -33,8 +33,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "showDamageOptions", {
     config: true,
     scope: "client",
-    name: "Default Show Damage Dialog",
-    hint: "Check this option to show the damage-dialog per default when clicking any damage roll icon on the character sheet",
+    name: "SETTINGS.showDamageOptions.name",
+    hint: "SETTINGS.showDamageOptions.hint",
     type: Boolean,
     default: true
   });
@@ -42,8 +42,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "showEverything", {
     config: true,
     scope: "world",
-    name: "Always Reveal Player Stats",
-    hint: 'Always show playercharacter details/stats to everyone with at least "limited" permissions. If deactivated, shows a "limited"-sheet of all player characters to everyone (not only the GM and owner of given character)',
+    name: "SETTINGS.showEverything.name",
+    hint: 'SETTINGS.showEverything.hint',
     type: Boolean,
     default: false
   });
@@ -51,17 +51,32 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "restReset", {
     config: true,
     scope: "world",
-    name: "Reset Temporary Bonuses",
-    hint: 'If activated ANY rest (short an long) will reset all temporary bonuses like "ignore wound" or "ignore trauma". Keep this deactivated so only long rests reset them.',
+    name: "SETTINGS.restReset.name",
+    hint: 'SETTINGS.restReset.hint',
     type: Boolean,
     default: false
+  });
+
+   // Register initiative rule
+   game.settings.register("eclipsephase", "ammoRules", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.ammoRules.name",
+    hint: "SETTINGS.ammoRules.hint",
+    type: String,
+    default: "default",
+    choices: {
+      "default": "SETTINGS.ammoRules.default",
+      "survival": "SETTINGS.ammoRules.survival",
+      "grenadesOnly": "SETTINGS.ammoRules.grenadesOnly"
+    },
   });
 
   game.settings.register("eclipsephase", "hideNPCs", {
     config: true,
     scope: "world",
-    name: "Always Hide NPC/Threat Stats",
-    hint: 'If activated, shows a "limited"-sheet of all NPCs & Threats to everyone instead of showing all details and values',
+    name: "SETTINGS.hideNPCs.name",
+    hint: 'SETTINGS.hideNPCs.hint',
     type: Boolean,
     default: true
   });
@@ -69,8 +84,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "effectPanel", {
     config: true,
     scope: "world",
-    name: "Enable Effect Panel",
-    hint: 'Enable the Effect Panel on Actors',
+    name: "SETTINGS.effectPanel.name",
+    hint: 'SETTINGS.effectPanel.hint',
     type: Boolean,
     default: false
   });
@@ -78,8 +93,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "GMmenu", {
     config: true,
     scope: "world",
-    name: "Enable GM Menu",
-    hint: 'Shows special GM menu on the lefthand side of the game canvas (marked in blue)',
+    name: "SETTINGS.gmMenu.name",
+    hint: 'SETTINGS.gmMenu.hint',
     type: Boolean,
     default: true
   });
@@ -87,8 +102,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "migrationVersion", {
     config: true,
     scope: "world",
-    name: "Migration Version",
-    hint: "Marks the last time this system was migrated. (WARNING: Don't change this value unless you know what it is for! Can break your system.)",
+    name: "SETTINGS.migrationVersion.name",
+    hint: "SETTINGS.migrationVersion.hint",
     type: String,
     default: "0.8.0.1"
   });
@@ -96,8 +111,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "superBrew", {
     config: true,
     scope: "world",
-    name: "Diemen's Special Brew",
-    hint: "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!",
+    name: "SETTINGS.superBrew.name",
+    hint: "SETTINGS.superBrew.hint",
     type: Boolean,
     default: false
   });
