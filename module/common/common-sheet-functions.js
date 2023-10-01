@@ -147,6 +147,22 @@ export function itemCreate(event,callerobj){
       return callerobj.createEmbeddedDocuments("Item", [itemData]);
 }
 
+export async function itemReduction(actor, itemID, itemQuantity){
+  let quantity = Number(itemQuantity) - 1;
+  let ammoUpdate = [];
+
+  if(quantity >= 1){
+    ammoUpdate.push({
+      "_id" : itemID,
+      "system.quantity": quantity,
+    });
+    await actor.updateEmbeddedDocuments("Item", ammoUpdate);
+  }
+  else{
+    await actor.deleteEmbeddedDocuments("Item", [itemID])
+  }
+}
+
 //Standard Dialogs
 
 export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget) {
@@ -184,26 +200,19 @@ export async function moreInfo(event){
   const template = 'systems/eclipsephase/templates/chat/pop-up.html'
   let dialogData = {}
   dialogData.dialogType = "information";
-  console.log("**", dialogData)
 
-  //This builds the dataset if objects are needed from the item
-  if(dataset.contructdataset){
-    let item = ""
-    for(let actor of game.actors){
-      let fetchedItem = Boolean(actor.items.get(dataset.contructdataset))
-          if(fetchedItem){
-              item = actor.items.get(dataset.contructdataset);
-      };
-    };
+  //This builds the dataset if objects are needed from the item (I'm not entirely sure why item is needed, but a smarter me figured this out at some point in time...)
+  if(dataset.uuid){
+    let item = await fromUuid(dataset.uuid);
     let path = eval("item." + dataset.datapath);
 
     for (let item in path){
       dialogData[item] = path[item];
     }
-
+    
     dialogData.rolledfrom = dataset.rolledfrom;
-
   }
+  
   //This uses the data provided by handlebars datasets
   else{
     for (let item in dataset){

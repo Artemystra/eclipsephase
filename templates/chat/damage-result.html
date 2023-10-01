@@ -6,9 +6,9 @@
     <p>{{localize "ep2e.roll.announce.combat.hit"}} <span class="resource-value"></span></p>
 
     <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
-      <p><span><b>{{weaponName}}</b></span></p>
+      <span><b>{{weaponName}}</b></span><br>
       {{#if ammoLoadedName}}
-        <p><span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span></p>
+        <span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span>
       {{/if}}
     </div>
 
@@ -50,24 +50,24 @@
   <div class="alignCenter">
     <p>{{localize copy}} <span class="resource-value"></span></p>
 
-    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
-      <p><span><b>{{weaponName}}</b></span></p>
+    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <span><b>{{weaponName}}</b></span>
     </div>
   </div>
-
   {{/if}}
 
   {{#if (eq type "reload")}}
   <div style="margin-bottom: 30px;">
-    <p>{{{localize "ep2e.roll.announce.combat.ranged.reloadNeeded"}}}</p>
+    <p>{{{localize copy}}}</p>
 
-    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
-      <p><span><b>{{weaponName}}</b></span></p>
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <span><b>{{weaponName}}</b></span><br>
       {{#if ammoLoadedName}}
-        <p><span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span></p>
+        <span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span>
       {{/if}}
     </div>
-
   </div>
   {{/if}}
+
+
 </div>

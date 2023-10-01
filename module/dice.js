@@ -753,7 +753,6 @@ export async function TaskCheck({
             }
         }
 
-
         if (coverDefender === "minor") {
             gunsMod -= 10;
             modValue = -10
@@ -791,7 +790,7 @@ export async function TaskCheck({
             announce = "ep2e.roll.announce.combat.ranged.blind";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
-        else if (attackMode === "indirect" && ammoEffect != "ignoreIndirect") {
+        else if (visualImpairment === "indirect" && ammoEffect != "ignoreIndirect") {
             gunsMod -= 20;
             modValue = -20
             announce = "ep2e.roll.announce.combat.ranged.indirect";
@@ -2014,6 +2013,7 @@ export async function TaskCheck({
                 message = {}
                 
                 message.type = "reload";
+                message.copy = "ep2e.roll.announce.combat.ranged.reloadNeeded";
                 message.weaponName = weaponName;
                 message.ammoLoadedName = rolledFrom === "rangedWeapon" ? weaponSelected.system.ammoSelected.name : null
 

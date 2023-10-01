@@ -1037,7 +1037,8 @@
         "additionalSystems": {},
         "description": "",
         "active": true,
-        "displayCategory": ""
+        "displayCategory": "",
+        "updated": ""
       },
       "buyable": {
         "cost": "",

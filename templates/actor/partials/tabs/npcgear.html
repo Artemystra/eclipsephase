@@ -122,13 +122,13 @@
             </div>
         </div>
         <div class="grid grid-2col">
-            <div class="listBackground noMargin">
+            <div class="contentBox">
                 <div class="flexrow subheader flex-group-center">
                     <h3 class="subheader flex-group-left" style="flex-grow: 1.5;">{{localize "ep2e.inventory.npcInventory.traitsAndWareHeadline"}}</h3>
                     <div class="alignRight reveal">
                     </div>
                 </div>  
-                <div class="headSpace">
+                <div class="listBackground noMargin">
                     <div class="flexrow" style="align-items: center">
                         <i class="far fa-plus-square awesomeIcon" style="color: var(--positive); flex: 0.05;"></i>
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.traitsLabel"}}:</label>
@@ -255,15 +255,17 @@
                     {{#if actor.system.additionalSystems.hasAmmo}}
                     <div class="flexrow headSpace">
                         {{#each actor.ammo as |category key|}}
-                            {{#each category as |item key|}}
-                            <div class="item flexrow flex-between wantToKnowMoreFixed pill" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px;">
-                                <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
-                                <h4 class="tooltipText" style="min-width: 170px;"><strong>{{item.name}}</strong></h4>
-                                <div class="flex-group-right" style="flex: 0.2;">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                            {{#if (ne key "chemical")}}
+                                {{#each category as |item key|}}
+                                <div class="item flexrow flex-group-center wantToKnowMoreFixed pill" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px;">
+                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                    <h4 class="tooltipText" style="min-width: 170px;"><strong>{{item.name}}</strong></h4>
+                                    <div class="flex-group-right" style="flex: 0.2;">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                                    </div>
                                 </div>
-                            </div>
-                            {{/each}}
+                                {{/each}}
+                            {{/if}}
                         {{/each}}
                     </div>
                     {{else}}

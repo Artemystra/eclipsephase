@@ -496,6 +496,7 @@
         "other": "Outro",
         "enhancedBehaviour": {
           "label": "Comportamento Acentuado:",
+          "none": "none",
           "arrogance": "Arrogância",
           "curiosity": "Curiosidade",
           "callouseness": "Frieza",
@@ -520,6 +521,7 @@
         },
         "restrictedBehaviour": {
           "label": "Comportamento Restrito:",
+          "none": "none",
           "relaxation": "Relaxamento",
           "remorse": "Remorso",
           "empathy": "Empatia",
@@ -527,6 +529,7 @@
         },
         "motivation": {
           "label": "Motivação:",
+          "none": "none",
           "hoard": "Acumular",
           "innerWorkings": "Expor o Funcionamento Interno",
           "create": "Criar",
@@ -729,7 +732,7 @@
           },
           "ammoUsed": {
             "standardDescription": "This is standard ammunition for this weapon. To reload or load a different kind of ammunition make sure to add ammo from the compendium to your character sheet and equip it.",
-            "beam": "Energy",
+            "beam": "Beam",
             "kinetic": "Kinetic",
             "seeker": "Seeker",
             "spray": "Spray",
@@ -1150,7 +1153,7 @@
             "blind": "Cego",
             "wBurst": "Rajada Larga",
             "wFullAuto": "Automático Largo",
-            "Indirect": "Indireto",
+            "indirect": "Indireto",
             "reloadNeeded": "Sua arma não tem munição suficiente. <p/><strong>Recarregue primeiro!</strong>",
             "reloadedWeapon": "Eu recarregei minha arma",
             "weaponFull": "Sua arma ainda está totalmente carregada.",

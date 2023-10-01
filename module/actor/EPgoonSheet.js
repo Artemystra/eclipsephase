@@ -113,7 +113,7 @@ export default class EPgoonSheet extends ActorSheet {
           seeker: [],
           spray: [],
           rail: [],
-          drug: []
+          chemical: []
         };
         const features = [];
         const special = [];
@@ -143,12 +143,12 @@ export default class EPgoonSheet extends ActorSheet {
 
         // Iterate through items, allocating to containers
         // let totalWeight = 0;
-        for (let item of sheetData.items) {
+        for (let item of sheetData.actor.items) {
             let itemModel = item.system
 
             item.img = item.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (itemModel.displayCategory === 'gear') {
+            if (itemModel.displayCategory === 'gear' && item.type != "drug") {
                 gear.push(item);
             }
             // Append to ammunition
@@ -187,9 +187,15 @@ export default class EPgoonSheet extends ActorSheet {
               }
               consumable.push(item);
             }
-            // Append to features.
-            else if (item.type === 'feature') {
-                features.push(item);
+            else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "ammo") {
+              if (item.type === "drug"){
+                itemModel.slotName = "ep2e.item.general.table.slot.drug";
+                ammo.chemical.push(item);
+              }
+              else {
+                itemModel.slotName = "ep2e.item.general.table.slot.consumable";
+              }
+              gear.push(item);
             }
             else if (itemModel.displayCategory === 'ranged') {
 

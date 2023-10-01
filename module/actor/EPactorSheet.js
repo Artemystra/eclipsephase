@@ -158,7 +158,7 @@ export default class EPactorSheet extends ActorSheet {
       seeker: [],
       spray: [],
       rail: [],
-      drug: []
+      chemical: []
     };
     const know = [];
     const special = [];
@@ -217,7 +217,7 @@ export default class EPactorSheet extends ActorSheet {
       const morph = [];
 
     // Iterate through items, allocating to containers
-    for (let item of sheetData.items) {
+    for (let item of sheetData.actor.items) {
       let itemModel = item.system;
 
       item.img = item.img || DEFAULT_TOKEN;
@@ -448,7 +448,9 @@ export default class EPactorSheet extends ActorSheet {
         else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
           if (item.type === "drug"){
             itemModel.slotName = "ep2e.item.general.table.slot.drug";
-            ammo.drug.push(item);
+            if (item.system.active){
+              ammo.chemical.push(item);
+            }
           }
           else {
             itemModel.slotName = "ep2e.item.general.table.slot.consumable";

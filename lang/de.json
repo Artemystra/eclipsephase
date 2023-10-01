@@ -501,6 +501,7 @@
         "other": "Andere",
         "enhancedBehaviour": {
           "label": "Verstärktes Verhalten:",
+          "none": "Keines",
           "arrogance": "Arroganz",
           "curiosity": "Neugier",
           "callouseness": "Gefühllosigkeit",
@@ -525,6 +526,7 @@
         },
         "restrictedBehaviour": {
           "label": "Eingeschränktes Verhalten:",
+          "none": "Keines",
           "relaxation": "Entspannung",
           "remorse": "Reue",
           "empathy": "Empathie",
@@ -532,6 +534,7 @@
         },
         "motivation": {
           "label": "Motivation:",
+          "none": "Keine",
           "hoard": "Horten",
           "innerWorkings": "Innenleben freilegen",
           "create": "Bauen",
@@ -744,7 +747,7 @@
           },
           "ammoUsed": {
             "standardDescription": "Dies ist Standardmunition für diese Waffe. Um Nachzuladen oder die Munition zu wechseln ziehe Munition von dem entsprechenden Kompendium auf deinen Bogen und rüste sie aus.",
-            "beam": "Energie",
+            "beam": "Laser",
             "kinetic": "Kinetisch",
             "seeker": "Zielsuchend",
             "spray": "Flüssigkeit",
@@ -1164,7 +1167,7 @@
             "blind": "Blind",
             "wBurst": "Weite Salve",
             "wFullAuto": "Vollautomatischer Streuschuss",
-            "Indirect": "Indirekt",
+            "indirect": "Indirekt",
             "reload": "Deine Waffe ist leer. <p/> <strong>Lade sie zunächst nach! </strong>",
             "reloadedWeapon": "Waffe nachgeladen",
             "weaponFull": "Deine Waffe ist noch voll.",
@@ -1196,7 +1199,7 @@
           "imagingScope": "Zielfernrohre werden oben auf der Waffe befestigt und fungieren wie Ferngläser. Das Zielfernrohr kann auch wie ein Periskop gebogen werden, sodass du die Waffe um Ecken herum ausrichten kannst, ohne Schutz zu verlassen.",
           "indirectOrBonus": "Diese Munition identifiziert Ziele die mit einem Smartlink-Tag versehen sind und versucht weitere Schüsse in ihrer Flugbahn dem Zielpunkt anzunähern. Schüsse die nach einer 'Zielen'-Aktion abgegeben werden erhalten den positiven Zielmodifikator der zusätzlich auf den Bonus durch das Zielen gilt. Die Munition ist auch in der Lage dazu den Malus durch indirektes Schiessen auszugleichen, dann jedoch bekommt sie keinen weiteren Zielbonus mehr.",
           "knockdown": "Dieser Schlag kann selbst unverwundete Gegner zu Boden werfen. Das Ziel muss einen SOM-Test durchführen, ansonsten wird es niedergeworfen.",
-          "noDamage": "Einige Waffen oder Munitionsarten sind nicht dafür designed um Gegnern direkt zu schaden. Im Fall von Munition ist sie so weich oder explodiert in weiter Entfernung zu ihrem eigentlichen Ziel, dass sie keinen zusätzlichen Schaden verursacht. Ihre Funktion ist vielfältiger Natur und kann von einem elektronischen Impuls- bis hin zu einer Attacke mit Giftgas reichen.",
+          "noDamage": "Einige Waffen oder Munitionsarten sind nicht darauf ausgelegt um Zielen direkt zu schaden. Im Fall von Munition ist sie so weich oder explodiert in weiter Entfernung zu ihrem eigentlichen Ziel, dass sie keinen zusätzlichen Schaden verursacht. Ihre Funktion ist vielfältiger Natur und kann von einem elektronischen Impuls- bis hin zu einer Attacke mit Giftgas reichen.",
           "noSmartlink": "Diese Waffe ist nicht mit der Zielunterstützung eines Smartlinks ausgestattet. Das bedeutet einen Malus von -10 auf Angriffstests.",
           "laserSight": "Dieser Unterlauf-Laser emittiert einen Strahl, der einen leuchtenden roten Punkt auf das Ziel setzt, um die Zielerfassung zu unterstützen (hebt den -10 Modifikator auf, wenn kein Smartlink oder Laser-Zielgerät verwendet wird). Laser-Zielgeräte können auch verwendet werden, um ein Ziel für laser-gesteuerte intelligente Munition oder Sucher zu markieren. Infrarot- und Ultraviolett-Laser sind ebenfalls erhältlich, sodass der Punkt nur für Charaktere mit verbessertem Sehvermögen sichtbar ist.",
           "long": "Langwaffen sind in Nahkämpfen unhandlich (ein Malus von -30 beim Schießen im Nahkampf) und erhalten keinen Bonus von +10, wenn sie aus Point-Blank-Entfernung abgefeuert werden.",

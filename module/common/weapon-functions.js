@@ -1,4 +1,4 @@
-import { listSelection } from "./common-sheet-functions.js";
+import { itemReduction, listSelection } from "./common-sheet-functions.js";
 //End-to-end weapon preparation
 export async function weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, weaponID){
   
@@ -383,11 +383,11 @@ export async function reloadWeapon(html, actor) {
         const weaponName = weapon.name;
         const selfReplenishing = weapon.system.mode1.traits.selfReplenishing.value;
         const usesDrugs = weapon.system.mode1.traits.specialAmmoDrugs.value;
-        const ammoType = usesDrugs ? "drug" : weapon.system.ammoType;
+        const ammoType = usesDrugs ? "chemical" : weapon.system.ammoType;
         const ammoPresent = weapon.system.ammoSelected._id ? weapon.system.ammoSelected._id : "-"
+        const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html';
         let currentAmmo = weapon.system.ammoMin;
         let difference = maxAmmo - currentAmmo;
-        let ammoUpdate = [];
         let weaponUpdate = [];
         let ammoList = [];
         let numberOfPacks = (actor.ammo[ammoType] ? actor.ammo[ammoType].length : 0);
@@ -403,8 +403,8 @@ export async function reloadWeapon(html, actor) {
             for (let ammo of actor.ammo[ammoType]){
   
                 calculated = await damageValueCalc(ammo, ammo.system.dv, traits, "ammo")
-                traits = ammoType != "drug" ? ammo.system.traits : {};
-                dv = ammoType != "drug" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
+                traits = ammoType != "chemical" ? ammo.system.traits : {};
+                dv = ammoType != "chemical" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
 
                 let ammoEntry = {"_id":ammo._id, "name": ammo.name, "traits": traits, "dv": dv}
                 ammoList.push(ammoEntry)
@@ -419,13 +419,13 @@ export async function reloadWeapon(html, actor) {
   
             ammoSelected = actor.items.get(selectedAmmo.selection);
             let calc = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo");
-            dv = ammoType != "drug" ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
+            dv = ammoType != "chemical" ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
           }
           //Just uses the only fitting ammo pack available
           else {
             ammoSelected = actor.ammo[ammoType][0];
             let calc = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo");
-            dv = ammoType != "drug" && !selfReplenishing ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
+            dv = ammoType != "chemical" && !selfReplenishing ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
           }
 
           
@@ -459,46 +459,20 @@ export async function reloadWeapon(html, actor) {
             });
             await actor.updateEmbeddedDocuments("Item", weaponUpdate);
           }
-          weaponUpdate = []
+
           //Automatic ammo deduction (based on the setting chosen in eclipsephase.js)
           //Survival mode (deduction/deletion)
           if (ammoRules === "survival" && actor.type === "character"){
             if (difference>0 || ammoPresent != ammoSelected._id){
-              let quantity = Number(ammoSelected.system.quantity) - 1;
-              if(quantity >= 1){
-                ammoUpdate.push({
-                  "_id" : ammoSelected._id,
-                  "system.quantity": quantity,
-                });
-                await actor.updateEmbeddedDocuments("Item", ammoUpdate);
-              }
-              else{
-                ammoUpdate.push({
-                  "_id" : ammoSelected._id
-                });
-                await actor.deleteEmbeddedDocuments("Item", [ammoSelected._id])
-              }
+              await itemReduction(actor, ammoSelected._id, ammoSelected.system.quantity)
             }
           }
 
           //Grenades only mode (deduction/deletion)
           if (ammoRules === "grenadesOnly" && actor.type === "character"){
-            if(ammoSelected.system.type === "seeker" || ammoSelected.type === "drug" ){
+            if(ammoSelected.system.type === "seeker" || ammoSelected.type === "chemical" ){
               if (difference>0 || ammoPresent != ammoSelected._id){
-                let quantity = Number(ammoSelected.system.quantity) - 1;
-                if(quantity >= 1){
-                  ammoUpdate.push({
-                    "_id" : ammoSelected._id,
-                    "system.quantity": quantity,
-                  });
-                  await actor.updateEmbeddedDocuments("Item", ammoUpdate);
-                }
-                else{
-                  ammoUpdate.push({
-                    "_id" : ammoSelected._id
-                  });
-                  await actor.deleteEmbeddedDocuments("Item", [ammoSelected._id])
-                }
+                await itemReduction(actor, ammoSelected._id, ammoSelected.system.quantity)
               }
             }
           }
@@ -511,35 +485,61 @@ export async function reloadWeapon(html, actor) {
               "system.ammoMin": currentAmmo,
               "system.ammoSelected._id": ammoSelected._id,
               "system.ammoSelected.name": ammoSelected.name,
-              "system.ammoSelected.dvModifier": ammoType != "drug" ? ammoSelected.system.dv : {"d10": 0, "d6" : 0, "bonus" : 0},
+              "system.ammoSelected.dvModifier": ammoType != "chemical" ? ammoSelected.system.dv : {"d10": 0, "d6" : 0, "bonus" : 0},
               "system.ammoSelected.description": ammoSelected.system.description,
               "system.ammoSelected.dvModifier.calculated": dv,
-              "system.ammoSelected.traits": ammoType != "drug" ? traits : {}
+              "system.ammoSelected.traits": ammoType != "chemical" ? traits : {}
             });
-      
-            let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
+            
+            let message = {};
+            message.type = "reload";
+            message.copy = "ep2e.roll.announce.combat.ranged.reloadedWeapon";
+            message.weaponName = weaponName;
+            message.ammoLoadedName = ammoSelected.name
+            
+            html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+
             ChatMessage.create({
-              speaker: ChatMessage.getSpeaker({actor: actor}),
-              flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
+                speaker: ChatMessage.getSpeaker({actor: actor}),
+                content: html
             })
+
             return actor.updateEmbeddedDocuments("Item", weaponUpdate);
           }
           else {
-            let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.weaponFull");
+
+            let message = {};
+            message.type = "reload";
+            message.copy = "ep2e.roll.announce.combat.ranged.weaponFull";
+            message.weaponName = weaponName;
+            message.ammoLoadedName = null
+            
+            html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+
             ChatMessage.create({
-              speaker: ChatMessage.getSpeaker({actor: actor}),
-              content: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>",
-              whisper: [game.user._id]
+                speaker: ChatMessage.getSpeaker({actor: actor}),
+                content: html,
+                whisper: [game.user._id]
             })
+
           }
         }
         else {
-          let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.noAmmoPresent");
+
+          let message = {};
+          message.type = "reload";
+          message.copy = "ep2e.roll.announce.combat.ranged.noAmmoPresent";
+          message.weaponName = weaponName;
+          message.ammoLoadedName = ammoType[0].toUpperCase() + ammoType.slice(1)
+          
+          html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+
           ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({actor: actor}),
-            content: "<center>" + message + "<p><strong>(" + ammoType + ")</strong></center><p/>",
-            whisper: [game.user._id]
+              speaker: ChatMessage.getSpeaker({actor: actor}),
+              content: html,
+              whisper: [game.user._id]
           })
+
         }
 
     })
