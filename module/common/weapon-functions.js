@@ -422,7 +422,7 @@ export async function reloadWeapon(html, actor) {
             dv = ammoType != "chemical" ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
           }
           //Just uses the only fitting ammo pack available
-          else {
+          else if (!selfReplenishing){
             ammoSelected = actor.ammo[ammoType][0];
             let calc = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo");
             dv = ammoType != "chemical" && !selfReplenishing ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";

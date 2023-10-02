@@ -916,7 +916,7 @@ export async function TaskCheck({
         }
 
     modValue = rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
-    let modSkillValue = Number(skillValue) + Number(modValue);
+    let modSkillValue = (Number(skillValue) + Number(modValue))>0 ? Number(skillValue) + Number(modValue) : 0;
 
     //The dice roll
     for (i = numberOfTargets; i > 0; i--) {

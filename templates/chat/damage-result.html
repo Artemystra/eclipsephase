@@ -22,8 +22,19 @@
             {{#each weaponTraits as |trait key|}}
               {{#if trait.value}}
               <tr>
-                <td class="table-dice-label">
-                  {{localize trait.name}}{{#if (eq key "dvOnMiss")}}<span style="font-size: 13px;"> ({{trait.calculated}})</span>{{/if}}
+                <td class="table-dice-label" style="display: flex;">
+                  {{localize trait.name}}
+                  {{#if (eq key "dvOnMiss")}}
+                    <span style="font-size: 13px;"> ({{trait.calculated}})</span>
+                  {{else if (eq key "knockdown")}}
+                    {{#if trait.radius}}
+                      <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-xsmall icon-space" style="margin-left: 5px;"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.radius"}}</span>
+                        <span style="font-size: 13px;"> {{trait.radius}}</span>
+                      </div>
+                    {{/if}}
+                  {{/if}}
                 </td>
                 {{#if (eq key "effectRadius")}}
                   <td class="table-dice-result">
