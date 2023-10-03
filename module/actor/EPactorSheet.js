@@ -158,7 +158,8 @@ export default class EPactorSheet extends ActorSheet {
       seeker: [],
       spray: [],
       rail: [],
-      chemical: []
+      chemical: [],
+      swarm: []
     };
     const know = [];
     const special = [];
@@ -481,7 +482,12 @@ export default class EPactorSheet extends ActorSheet {
               ammo.seeker.push(item);
               break;
               case 'spray':
-              ammo.spray.push(item);
+                if(item.system.traits.nanoSwarm){
+                  ammo.swarm.push(item);
+                }
+                else{
+                  ammo.spray.push(item);
+                }
               break;
               case 'rail':
               ammo.rail.push(item);

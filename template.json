@@ -1457,6 +1457,10 @@
           "value": false,
           "radius": null
         },
+        "nanoSwarm": {
+          "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+          "value": false
+        },
         "noDamage": {
           "name": "ep2e.item.weapon.table.trait.noDamage",
           "value": false

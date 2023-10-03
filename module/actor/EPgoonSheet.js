@@ -113,7 +113,8 @@ export default class EPgoonSheet extends ActorSheet {
           seeker: [],
           spray: [],
           rail: [],
-          chemical: []
+          chemical: [],
+          swarm: []
         };
         const features = [];
         const special = [];
@@ -176,7 +177,12 @@ export default class EPgoonSheet extends ActorSheet {
                   ammo.seeker.push(item);
                   break;
                   case 'spray':
-                  ammo.spray.push(item);
+                    if(item.system.traits.nanoSwarm){
+                      ammo.swarm.push(item);
+                    }
+                    else{
+                      ammo.spray.push(item);
+                    }
                   break;
                   case 'rail':
                   ammo.rail.push(item);

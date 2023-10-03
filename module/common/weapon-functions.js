@@ -383,14 +383,15 @@ export async function reloadWeapon(html, actor) {
         const weaponName = weapon.name;
         const selfReplenishing = weapon.system.mode1.traits.selfReplenishing.value;
         const usesDrugs = weapon.system.mode1.traits.specialAmmoDrugs.value;
-        const ammoType = usesDrugs ? "chemical" : weapon.system.ammoType;
+        const usesBugs = weapon.system.mode1.traits.specialAmmoBugs.value;
+        const ammoType = usesDrugs ? "chemical" : (usesBugs ? "swarm" : weapon.system.ammoType);
         const ammoPresent = weapon.system.ammoSelected._id ? weapon.system.ammoSelected._id : "-"
         const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html';
         let currentAmmo = weapon.system.ammoMin;
         let difference = maxAmmo - currentAmmo;
         let weaponUpdate = [];
         let ammoList = [];
-        let numberOfPacks = (actor.ammo[ammoType] ? actor.ammo[ammoType].length : 0);
+        let numberOfPacks = actor.ammo[ammoType] ? actor.ammo[ammoType].length : 0;
         let ammoSelected = "";
         let calculated = null;
         let traits = null;
@@ -399,7 +400,12 @@ export async function reloadWeapon(html, actor) {
         //Checks whether fitting ammo is present at all
         if (numberOfPacks >= 1 || selfReplenishing){
           //Creates a list of all applicable ammo available
-          if (numberOfPacks > 1){
+          if (numberOfPacks > 1 || selfReplenishing && numberOfPacks >= 1){
+              if (selfReplenishing){
+                let ammoName = "ep2e.item.weapon.table.selfReplenish"
+                let ammoEntry = {"_id":weapon.system.ammoSelected._id, "name": ammoName, "traits": weapon.system.ammoSelected.traits, "dv": weapon.system.ammoSelected.dvModifier.calculated}
+                ammoList.push(ammoEntry)
+              }
             for (let ammo of actor.ammo[ammoType]){
   
                 calculated = await damageValueCalc(ammo, ammo.system.dv, traits, "ammo")
@@ -430,7 +436,7 @@ export async function reloadWeapon(html, actor) {
 
           
           //Refills the weapon if selfReplenishing 'true' & no other swarm was selected
-          if (selfReplenishing && numberOfPacks <= 1){
+          if (selfReplenishing && numberOfPacks < 1){
             currentAmmo = maxAmmo;
 
             weaponUpdate.push({
