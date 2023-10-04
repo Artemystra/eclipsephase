@@ -18,14 +18,14 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095} from "./common/migration.js";
+import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098} from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
     config: true,
     scope: "client",
-    name: "Default Show Skill Modifier Dialog",
-    hint: "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet",
+    name: "SETTINGS.showTaskOptions.name",
+    hint: "SETTINGS.showTaskOptions.hint",
     type: Boolean,
     default: true
   });
@@ -33,8 +33,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "showDamageOptions", {
     config: true,
     scope: "client",
-    name: "Default Show Damage Dialog",
-    hint: "Check this option to show the damage-dialog per default when clicking any damage roll icon on the character sheet",
+    name: "SETTINGS.showDamageOptions.name",
+    hint: "SETTINGS.showDamageOptions.hint",
     type: Boolean,
     default: true
   });
@@ -42,8 +42,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "showEverything", {
     config: true,
     scope: "world",
-    name: "Always Reveal Player Stats",
-    hint: 'Always show playercharacter details/stats to everyone with at least "limited" permissions. If deactivated, shows a "limited"-sheet of all player characters to everyone (not only the GM and owner of given character)',
+    name: "SETTINGS.showEverything.name",
+    hint: 'SETTINGS.showEverything.hint',
     type: Boolean,
     default: false
   });
@@ -51,17 +51,32 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "restReset", {
     config: true,
     scope: "world",
-    name: "Reset Temporary Bonuses",
-    hint: 'If activated ANY rest (short an long) will reset all temporary bonuses like "ignore wound" or "ignore trauma". Keep this deactivated so only long rests reset them.',
+    name: "SETTINGS.restReset.name",
+    hint: 'SETTINGS.restReset.hint',
     type: Boolean,
     default: false
+  });
+
+   // Register initiative rule
+   game.settings.register("eclipsephase", "ammoRules", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.ammoRules.name",
+    hint: "SETTINGS.ammoRules.hint",
+    type: String,
+    default: "default",
+    choices: {
+      "default": "SETTINGS.ammoRules.default",
+      "survival": "SETTINGS.ammoRules.survival",
+      "grenadesOnly": "SETTINGS.ammoRules.grenadesOnly"
+    },
   });
 
   game.settings.register("eclipsephase", "hideNPCs", {
     config: true,
     scope: "world",
-    name: "Always Hide NPC/Threat Stats",
-    hint: 'If activated, shows a "limited"-sheet of all NPCs & Threats to everyone instead of showing all details and values',
+    name: "SETTINGS.hideNPCs.name",
+    hint: 'SETTINGS.hideNPCs.hint',
     type: Boolean,
     default: true
   });
@@ -69,8 +84,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "effectPanel", {
     config: true,
     scope: "world",
-    name: "Enable Effect Panel",
-    hint: 'Enable the Effect Panel on Actors',
+    name: "SETTINGS.effectPanel.name",
+    hint: 'SETTINGS.effectPanel.hint',
     type: Boolean,
     default: false
   });
@@ -78,8 +93,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "GMmenu", {
     config: true,
     scope: "world",
-    name: "Enable GM Menu",
-    hint: 'Shows special GM menu on the lefthand side of the game canvas (marked in blue)',
+    name: "SETTINGS.gmMenu.name",
+    hint: 'SETTINGS.gmMenu.hint',
     type: Boolean,
     default: true
   });
@@ -87,8 +102,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "migrationVersion", {
     config: true,
     scope: "world",
-    name: "Migration Version",
-    hint: "Marks the last time this system was migrated. (WARNING: Don't change this value unless you know what it is for! Can break your system.)",
+    name: "SETTINGS.migrationVersion.name",
+    hint: "SETTINGS.migrationVersion.hint",
     type: String,
     default: "0.8.0.1"
   });
@@ -96,8 +111,8 @@ function registerSystemSettings() {
   game.settings.register("eclipsephase", "superBrew", {
     config: true,
     scope: "world",
-    name: "Diemen's Special Brew",
-    hint: "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!",
+    name: "SETTINGS.superBrew.name",
+    hint: "SETTINGS.superBrew.hint",
     type: Boolean,
     default: false
   });
@@ -131,14 +146,13 @@ Hooks.once('init', async function() {
   Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
   Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
   Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPknowSkillSheet, {types: ["knowSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPspecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPvehicleSheet, {types: ["vehicle"], makeDefault: true });
-
   //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
   // If you need to add Handlebars helpers, here are a few useful examples:
   Handlebars.registerHelper('concat', function() {
@@ -180,7 +194,9 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
-    "systems/eclipsephase/templates/item/partials/weapon-mode.html"
+    "systems/eclipsephase/templates/item/partials/weapon-mode.html",
+    "systems/eclipsephase/templates/item/partials/grenade-details.html",
+    "systems/eclipsephase/templates/item/partials/item-traits.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -208,6 +224,7 @@ let before0861 = foundry.utils.isNewerVersion("0.8.6.1", gameVersion)
 let before09 = foundry.utils.isNewerVersion("0.9", gameVersion)
 let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion)
 let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
+let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -299,6 +316,25 @@ else if (before095) {
   let Migration095 = migrationPre095(startMigration)
 
   endMigration = Migration095["endMigration"]
+
+  await migrationEnd(endMigration)
+
+}
+
+//0.9.8 Migration
+else if (before098) {
+  const messageCopy = "ep2e.migration.098"
+  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    startMigration = migration.start
+  }
+
+  let Migration098 = migrationPre098(startMigration)
+
+  endMigration = Migration098["endMigration"]
 
   await migrationEnd(endMigration)
 

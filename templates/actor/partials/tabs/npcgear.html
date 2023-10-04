@@ -122,13 +122,13 @@
             </div>
         </div>
         <div class="grid grid-2col">
-            <div class="listBackground noMargin">
+            <div class="contentBox">
                 <div class="flexrow subheader flex-group-center">
                     <h3 class="subheader flex-group-left" style="flex-grow: 1.5;">{{localize "ep2e.inventory.npcInventory.traitsAndWareHeadline"}}</h3>
                     <div class="alignRight reveal">
                     </div>
                 </div>  
-                <div class="headSpace">
+                <div class="listBackground noMargin">
                     <div class="flexrow" style="align-items: center">
                         <i class="far fa-plus-square awesomeIcon" style="color: var(--positive); flex: 0.05;"></i>
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.traitsLabel"}}:</label>
@@ -213,7 +213,7 @@
                             flex-group-center noMargin">{{localize "ep2e.inventory.npcInventory.armorKinetic"}}:
                             <strong>{{item.system.kinetic}}</strong></label>
                         </div>
-                        <div class="flex-group-right input-small">
+                        <div class="flex-group-center input-small" style="padding-left: 5px;">
                             <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                         </div>
                     </div>
@@ -238,7 +238,7 @@
                             <label class="flex-group-center noMargin
                             alignCenter" style="background: none;
                             font-size: 12px; flex:
-                            0.4"><i>{{item.actor.slotType}}</i></label>
+                            0.4"><i>{{item.system.slotType}}</i></label>
                             <div class="flex-group-right" style="flex: 0.2;">
                                 <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                             </div>
@@ -248,6 +248,29 @@
                         <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noGearCopy"}}</label>
                         {{/if}}
                     </div>
+                    <div class="flexrow flex-group-center">
+                        <img src="systems/eclipsephase/resources/icons/ammo.png" style="max-width: 20px; padding-bottom: 3px;"/>
+                        <label class="resource-label">{{localize "ep2e.inventory.npcInventory.ammunitionLabel"}}:</label>
+                    </div>
+                    {{#if actor.system.additionalSystems.hasAmmo}}
+                    <div class="flexrow headSpace">
+                        {{#each actor.ammo as |category key|}}
+                            {{#if (ne key "chemical")}}
+                                {{#each category as |item key|}}
+                                <div class="item flexrow flex-group-center wantToKnowMoreFixed pill" data-item-id="{{item._id}}" style="align-items: center; min-height: 36px;">
+                                    <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
+                                    <h4 class="tooltipText" style="min-width: 170px;"><strong>{{item.name}}</strong></h4>
+                                    <div class="flex-group-right" style="flex: 0.2;">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                                    </div>
+                                </div>
+                                {{/each}}
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <label class="resource-value" style="height: 30px;">{{localize "ep2e.inventory.npcInventory.noAmmunitionCopy"}}</label>
+                    {{/if}}
                 </div>
             </div>
         </div>

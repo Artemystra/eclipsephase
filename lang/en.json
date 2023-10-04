@@ -1,4 +1,49 @@
 {
+  "SETTINGS":{
+    "ammoRules": {
+      "name": "Ammunition Rules",
+      "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
+      "default": "Default",
+      "survival": "Survival",
+      "grenadesOnly": "Grenades Only"
+    },
+    "effectPanel": {
+      "name": "Enable Effect Panel",
+      "hint": "Enable the Effect Panel on Actors (for GMs)"
+    },
+    "gmMenu": {
+      "name": "Enable GM Menu",
+      "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
+    },
+    "hideNPCs": {
+      "name": "Always Hide NPC/Threat Stats",
+      "hint": "If activated, shows a 'limited'-sheet for all NPCs & Threats to everyone instead of showing all details and values"
+    },
+    "migrationVersion": {
+      "name": "Migration Version",
+      "hint": "Marks the last time this system was migrated. (WARNING: Don't change this value unless you know what it is for! Can break your system.)"
+    },
+    "restReset": {
+      "name": "Reset Temporary Bonuses",
+      "hint": "If activated ANY rest (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long rests reset them."
+    },
+    "showDamageOptions": {
+      "name": "Default Show Damage Dialog",
+      "hint": "Check this option to show the damage-dialog per default when clicking any damage roll icon on the character sheet"
+    },
+    "showEverything": {
+      "name": "Always Reveal Player Stats",
+      "hint": "Always show playercharacter details/stats to everyone with at least 'limited' permissions. If deactivated, shows a 'limited'-sheet of all player characters to everyone (not only the GM and owner of given character)"
+    },
+    "showTaskOptions": {
+      "name": "Default Show Skill Modifier Dialog",
+      "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
+    },
+    "superBrew": {
+      "name": "Diemen's Special Brew",
+      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+    }
+  },
   "TYPES.Actor.character" : "Player Character",
   "TYPES.Actor.npc" : "Non-Player Character",
   "TYPES.Actor.goon" : "Threat",
@@ -18,6 +63,7 @@
   "TYPES.Item.knowSkill" : "Know Skill",
   "TYPES.Item.vehicle" : "Vehicle",
   "TYPES.Item.drug" : "Drug",
+  "TYPES.Item.ammo" : "Ammo",
 
   "ep2e": {
     "actorSheet": {
@@ -319,7 +365,8 @@
         "repSize": "Size of Favor"
       },
       "addSkill": "Add Skill",
-      "chooseAptitude": "Choose Apt"
+      "chooseAptitude": "Choose Apt",
+      "skillMod": "Skill Mod"
     },
     "morph": {
       "currentMorph": {
@@ -401,7 +448,9 @@
         "wareLabel": "Ware",
         "noWareCopy": "No ware installed",
         "gearLabel": "Gear",
-        "noGearCopy": "No special gear"
+        "noGearCopy": "No special gear",
+        "ammunitionLabel": "Ammunition",
+        "noAmmunitionCopy": "No ammunition"
       },
       "noGear": {
         "headline": "No Gear Present",
@@ -452,6 +501,7 @@
         "other": "Other",
         "enhancedBehaviour": {
           "label": "Enhanced Bahaviour:",
+          "none": "none",
           "arrogance": "Arrogance",
           "curiosity": "Curiosity",
           "callouseness": "Callouseness",
@@ -476,6 +526,7 @@
         },
         "restrictedBehaviour": {
           "label": "Restricted Bahaviour:",
+          "none": "none",
           "relaxation": "Relaxation",
           "remorse": "Remorse",
           "empathy": "Empathy",
@@ -483,6 +534,7 @@
         },
         "motivation": {
           "label": "Motivation:",
+          "none": "none",
           "hoard": "Hoard",
           "innerWorkings": "Expose Inner Workings",
           "create": "Create",
@@ -594,6 +646,7 @@
           "effectsTab": "Effects"
         },
         "table": {
+          "quantity": "Quantity",
           "cost": {
             "label": "Cost",
             "minor": "Minor",
@@ -607,7 +660,10 @@
             "consumable": "Consumable",
             "accessory": "Accessory",
             "bulky": "Bulky",
-            "notMobile": "Not Mobile"
+            "notMobile": "Not Mobile",
+            "grenade": "Grenade",
+            "ammo": "Ammunition",
+            "drug": "Drug"
           },
           "description": "Description",
           "descriptionPlaceholder": "Add a description"
@@ -657,12 +713,20 @@
           "boundTo": "As Mode 1",
           "range": "Range",
           "maxAmmo": "Max Ammo",
-          "damageValue": "DV",
+          "damageValue": "Damage Value",
+          "damageValueModifier": "DV Modifier",
+          "noDamageValueModifier": "No Damage Modifier",
+          "selfReplenish": "Replenish current swarm",
           "noDamage": "No Damage",
-          "effectArea": "Effect Area",
+          "noDamageAmmo": "No Damage (Ammo)",
+          "effectArea": "Area-Effect Type",
+          "radius": "Radius",
           "weaponMode": "Weapon Mode",
           "addTrait": "Add Trait",
           "addAccessory": "Add Accessory",
+          "tooltips": {
+            "multiShoot": "Multiplier for every round fired"
+          },
           "armorUsed": {
             "label": "Armor Used",
             "none": "None",
@@ -686,7 +750,8 @@
             "bulky": "Bulky"
           },
           "ammoUsed": {
-            "beam": "Energy",
+            "standardDescription": "This is standard ammunition for this weapon. To reload or load a different kind of ammunition make sure to add ammo from the compendium to your character sheet and equip it.",
+            "beam": "Beam",
             "kinetic": "Kinetic",
             "seeker": "Seeker",
             "spray": "Spray",
@@ -694,23 +759,38 @@
           },
           "trait": {
             "armorPiercing": "Armor Piercing",
+            "blinding": "Blinding",
+            "bioMorphsOnly": "Bonus DV on Biomorphs Only",
             "concealable": "Concealable",
+            "disablesRadio": "Disables Radio",
+            "dvHalved": "Halves Weapon DV",
+            "dvOnMiss": "DV on Miss",
             "entangling": "Entangling",
             "fixed": "Fixed",
+            "indirectOrBonus": "Indirect Shots OR",
             "knockdown": "Knockdown",
             "long": "Long",
+            "nanoSwarm": "Nano Swarm",
             "noClose": "No Close",
+            "noDamage": "No Damage",
             "noPointBlank": "No Point Blank",
+            "noCloseAndPointBlank": "No Close or Point Blank",
             "noSmartlink": "No Smartlink",
             "pain": "Pain",
             "shock": "Shock",
             "singleUse": "Single Use",
             "steady": "Steady",
             "stun": "Stun",
+            "stunBiomorphs": "Stun (Biomorphs Only)",
             "fragile": "Fragile",
             "reach": "Reach",
-            "touchOnly": "Touch Only",
-            "twoHanded": "Two-Handed"
+            "touchOnly": "Touch Only Attack",
+            "twoHanded": "Two-Handed",
+            "selfReplenishing": "Self Replenishing",
+            "specialAmmoDrugs": "Ammunition: Chems",
+            "specialAmmoBugs": "Ammunition: Swarms",
+            "multiShot": "Multi Shot",
+            "effectRadius": "Area of Effect"
           },
           "accessory": {
             "armSlide": "Arm Slide",
@@ -847,6 +927,7 @@
         "attackerHeadline": "Attacker Modifiers",
         "defenderHeadline": "Defender Modifiers",
         "frayTypeHeadline": "Fray Type",
+        "specialEffects": "Special Effects",
         "dodgeRangedLabel": "Dodge Ranged",
         "infectionHeadline": "Infection",
         "autoPush": "Auto Push Selection",
@@ -872,6 +953,7 @@
         "noPool": "No pool left",
         "useThreat": "Use Threat (+20)",
         "calledShotLabel": "Called Shot (-10)",
+        "touchOnly": "Touch Attack (+20)",
         "title": {
           "guns": "Guns Check",
           "melee": "Melee Check",
@@ -899,12 +981,23 @@
             "headline": "Select Weapon",
             "modeSelectionHeadline": "Select Weapon Mode"
           },
+          "ammoSelect": {
+            "headline": "Select Ammunition"
+          },
           "attacker": {
             "smartLinkLabel": "Smart Link (-10 if none)",
             "superiorPosition": "Superior Position (+20)",
             "inCoverLabel": "In Cover (-10)",
             "isRunningLabel": "Is Running (-20)",
             "inMeleeLabel": "In Melee (-10)",
+            "inMeleeLabelLong": "In Melee (-30)",
+            "weaponFixated": "Weapon Fixated (-20 if not)",
+            "targetBiomorph": "Target: Biomorph",
+            "ammoEffect": {
+              "label": "Ammunition",
+              "ammoSkillModifier": "Modifier (+10)",
+              "ignoreIndirect": "Ignore Indirect Modifier"
+            },
             "fireMode": {
               "label": "Fire Mode",
               "single": "Single Shot",
@@ -912,7 +1005,6 @@
               "fullAuto": "Narrow Full Auto (+2d10)",
               "wBurst": "Wide Burst (+10 Hit)",
               "wFullAuto": "Wide Full Auto (+30 Hit)",
-              "indirect": "Indirect (-20)",
               "suppressive": "Suppressive (uses 20 rounds)"
             },
             "aim": {
@@ -927,14 +1019,17 @@
               "none": "Standard",
               "range": "Range (-10)",
               "beyond": "Beyond (-20)",
-              "beyondPlus": "Beyond+ (-30)"
+              "beyondPlus": "Beyond+ (-30)",
+              "ignoreMalus": "Weapon ignores range malus",
+              "ignore" : "No range modifiers"
             },
             "visual": {
               "label": "Visual Malus",
               "none": "None",
               "minor": "Minor (-10)",
               "major": "Major (-30)",
-              "blind": "Blind (-30+)"
+              "blind": "Blind (-30+)",
+              "indirect": "Indirect (-20)"
             }
           },
           "defender": {
@@ -961,6 +1056,16 @@
           "attacker": {
             "numberOfTargetsLabel": "Number of targets",
             "numberOfTargetsMod": "(-20/target)",
+            "sizeDifference": {
+              "label": "Reach",
+              "vms": "Very much smaller (-30)",
+              "ms": "Much smaller (-20)",
+              "s": "Smaller (-10)",
+              "none": "Equal Size" ,
+              "l": "Larger (+10)" ,
+              "ml": "Much larger (+20)" ,
+              "vml": "Very much larger (+30)" 
+            },
             "type": {
               "label": "Attack Type",
               "none": "Standard Attack",
@@ -1034,16 +1139,21 @@
         "combat": {
           "calledShot": "Called Shot",
           "calledShotAddition": "Roll 'Greater Success' or better",
-          "hit": "You hit with your weapon",
-          "damageDone": "Your damage done",
+          "hit": "Hit with their weapon",
+          "breakWeapon": "Broke their weapon",
+          "singleUse": "Your single use weapon broke",
+          "damageDone": "With the result",
+          "additionalEffects": "Additional Effects",
           "melee": {
+            "sizeDifference": "Reach", 
             "charge": "Charging",
             "chargeAddition": "(+1d6DV)",
             "agressive": "Agressive Hit",
             "agressiveAddition": "(Fray -10)",
             "agressiveCharge": "Ruthless Attack",
             "agressiveChargeAddition": "(+1d10DV & Fray -10)",
-            "multipleTargets": "Multiple Targets"
+            "multipleTargets": "Multiple Targets",
+            "touchOnly": "Touch Only Attack"
           },
           "ranged": {
             "smartLink": "No Smartgun",
@@ -1072,10 +1182,13 @@
             "blind": "Blind",
             "wBurst": "Wide Burst",
             "wFullAuto": "Wide Full Auto",
-            "Indirect": "Indirect",
+            "indirect": "Indirect",
             "reloadNeeded": "Your weapon has insuficient ammunition. <p/> <strong>Please reload first! </strong>",
             "reloadedWeapon": "I reloaded my weapon",
-            "weaponFull": "Your weapon is still fully loaded."
+            "weaponFull": "Your weapon is still fully loaded.",
+            "noAmmoPresent": "No fitting ammunition present.",
+            "ammoSkillModifier": "Ammo Skill Modifier",
+            "weaponFixated": "Shot from Hip"
           }
         }
       }
@@ -1084,37 +1197,48 @@
       "weapon": {
         "effect": {
           "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",
+          "armSlide": "This slide-mount can hold a one-handed weapon under your sleeve, pushing the weapon into your hand with an electronic signal or specific sequence of arm movements. You can draw the weapon and attack with a single complex action.",
+          "bioMorphsOnly": "This weapon inflicts more damage to soft targets like biomorphs. They do not provide extra damage to synthmorphs or objects.",
           "blinding": "Targets must make a REF Check or be blinded for 1 action turns, +1 per failure category. While blinded you have a 50% chance of missing your attacks (if you miss a perceive test) and suffer a –30 to all other physical actions, including Fray Tests. You must make an Athletics, Free Fall, or Pilot Test to move faster than a base move or fall prone.A critical failure results in permanent blindness until repaired or they spend time in a healing vat. Anti-glare ware protects against blinding based on light.",
           "concealable": "This item is easily hidden. You receive a +30 to Infiltrate Tests to hide this item on your person (or elsewhere).",
+          "disablesRadio": "Every radio (or object that communicates with it's surroundings via antennas or similar technology) within the blast radius (50 meters) is disabled until repaired with an appropriate Hardware or Medicine: Biotech Test or a fixer nanoswarm. Every nanoswarm within range suffers DV 2d10 + 5.",
+          "dvHalved": "The weapon is made of a relatively soft, flexbile or even hollow material. While most of these weapons are designed to hurt but not kill people, sometimes the reason for hollowing a weapon out is, that it carries a toxin or drug that is injected forcefully during an encounter.",
+          "dvOnMiss": "This reactive bullet uses nanosensors to determine if it is going to miss a smartlink-tagged target and explodes in their vicinity. If the attack misses without a superior or critical failure, the target still suffers some amount of damage",
+          "effectRadius": "The weapon effects a whole area. While it's effect diminishes at the border, it is strongest in  it's center.",
           "entangling": "Targets struck by this weapon must make a REF Check or be grappled ▶205. The attacker's successes levels apply a cumulative –10 per level to this REF Check and SOM Checks to break free.",
+          "extendedMagazine": "This ammunition case has an enhanced capacity. Increase the weapon's ammo capacity by +50%. This is only available for firearms and seekers.",
           "fixed": "Fixed weapons are designed to be fired from a prone or braced position, such as mounted on a bipod or hardpoint. If carried, apply a –20 modifier to attacks and consider them to have the Two-Handed trait.",
-          "fragile": "This items breaks or becomes unusable if you roll a greater failure.",
+          "fragile": "This items breaks or becomes unusable if you roll a greater failure or worse.",
+          "flashSuppressor": "This device obscures the muzzle flash on firearms, applying a –30 modifier to Perceive Tests to locate a firing weapon by its flash.",
+          "Gyromount": "This weapon harness features a gyro-stabilized weapon mount that keeps the weapon steady. Negate all modifiers from movement.",
+          "imagingScope": "Imaging scopes attach to the top of the weapon and act like specs. Scopes also bend like a periscope, allowing you to point the weapon and target around corners without leaving cover.",
+          "indirectOrBonus": "This bullet identifies a smartlink-tagged target and uses nanosensors and telemetry from previous bullets to lock on, correcting the bullet’s trajectory with surface alterations and tiny vectored nozzles. Apply it's positive modifier to hit for attacks following an aim action (cumulative with the aim modifier) or previous attacks against the same target. Homing bullets can also be used for indirect fire ▶206, though without the to-hit modifier.",
           "knockdown": "This strike may knock even unwounded opponents off their feet. The target must make a SOM Check or be knocked prone.",
-          "noSmartlink": "This weapon is not equipped with a smartlink's targeting assistance. –10 to attack tests.",
+          "laserSight": "This underbarrel laser emits a beam that places a glowing red dot on the target to assist targeting (negating the –10 modifier for not using a smartlink or laser sight). Laser sights can also be used to paint a target for laser-guided smart ammo or seekers. Infrared and ultraviolet lasers are also available, so that the dot is only visible to characters with enhanced vision.",
           "long": "Lengthy weapons are unwieldy in close combat (–30 to fire when in melee) and do not receive the +10 modifier when fired at Point-Blank range.",
+          "multiShot": "This weapon uses more than one round/bullet per shot. Based on it's design it might be even able to hit multiple targets with one shot.",
+          "nanoSwarm": "Nanobots, short for nanorobots, are tiny machines that are designed to operate at the nanoscale, which is on the order of nanometers. These incredibly small devices are composed of nanoscale components, such as molecules or nanomaterials, and have the ability to perform various tasks at the molecular or cellular level.",
+          "noDamage": "Some weapons or ammunition are not designed to damage their targets. In case of ammunition it's soft or flexible to an extend, or designed to explode in some distance to it's target, that no damage applies at all. Their effect is diverse and reaches from an electro magnetic pulse to an attack with poisonous gas.",
+          "noSmartlink": "This weapon is not equipped with a smartlink's targeting assistance. –10 to attack tests.",
           "noClose": "This weapon cannot be fired at Point-Blank or Close range. Seeker weapons have built-in safety features that prevent them from being fired at ranges that might injure the user. Overriding this features requires a Hardware or Infosec Test.",
           "noPointBlank": "This weapon cannot be fired at Point-Blank range.",
           "pain": "A biomorph target struck by this weapon must make a WIL Check or take their next full action to flee, moving as far away from the pain-inflicting source as possible or to the nearest full cover they can reach on their action. Targets also suffer –20 until the end of the next turn. Targets with the Pain Tolerance (Level 1) trait receive a +30 to their WIL Check and only suffer a –10 modifier. Targets with Pain Tolerance (Level 2) are immune to this effect. Victims who are trapped in the beam or otherwise cannot avoid the pain effect are impaired (–20) until they escape.",
           "reach": "Some weapons extend your reach, giving you a significant advantage over an opponent in melee. This applies to any weapon over half a meter long: axes, clubs, swords, shock batons, etc. Whenever you have a reach advantage over an opponent, you receive a +10 modifier for both attacking and defending. Some extra-long limbs or weapons provide a +20 bonus, as noted. For each size category by which you exceed your opponent, apply a +10 Reach modifier, up to a maximum +30.",
+          "safetySystem": "This feature is automatically included in most weapons. A biometric (palmprint or voiceprint) or ego ID sensor is embedded in the weapon, disabling it if anyone other than an authorized user attempts to fire it.",
+          "selfReplenishing": "This weapon features a built in Nano-Hive that replenishes it's ammunition automatically. It does not do this out of thin air though, and needs to be fed with wet stock. The rate in which the ammunition replenishes may vary by the nano-swarm built and is to the GM's disgression.",
+          "shockSafety": "Just like a safety system, except that an unauthorized user is zapped with an electric shock, inflicting DV 1d6 and a shock effect.",
           "shock": "This weapon inflicts a shock effect. When hit with a shock effect, make a SOM Check. Add your energy armor as a positive modifier. Apply a modifier for different sizes: very small –30, small –10, large +10, very large +30. Failure means you lose neuromuscular control, fall down, and are incapacitated for 1 action turn (+2 turns per failure level) and stunned for 3 minutes. Success means you are stunned for 3 action turns. To inflict shock without doing damage in melee simply requires a touch attack (+20). To inflict shock plus damage requires a regular melee attack.",
+          "silencer": "This barrel-mounted accessory reduces the sound of a firearm's discharge (they cannot be used on railguns). Apply a –30 modifier on hearing-based Perceive Tests to hear or locate the gun's firing.",
           "singleUse": "This item can only be used once.",
           "steady": "This weapon ignores range modifiers.",
+          "smartlink": "Smartlinks are automatically included in most weapons. It connects the weapon to your mesh inserts, placing a targeting bracket in your field of vision and providing range and targeting information (negating the –10 modifier for not using a smartlink or laser sight). Smartlinks also incorporate a microcamera that allows the user to see what the weapon is pointed at, fire around corners, etc. Smartlinks also allow certain other types of weapon system control, such as changing smart ammo or programming seeker trigger conditions).",
+          "smartMagazine": "A smart magazine allows you to pick and choose what ammo round will be fired with each shot. This system leaves less room for bullets, however, so reduce the weapon's ammunition capacity by half (round up). Smart magazines can be combined with extended magazines, in which case ammo capacity is normal.",
+          "specialAmmoDrugs": "The weapon shoots chemicals or drugs instead of bullets. To load it a character must have 3 or more drugs/chems in their inventory.",
+          "specialAmmoBugs": "The weapon shoots nano-swarms built inside the integrated nano-hive. The swarm can be changed while reloading the weapon.",
           "stun": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
+          "stunBiomorphs": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
-        },
-        "accessory": {
-          "armSlide": "This slide-mount can hold a one-handed weapon under your sleeve, pushing the weapon into your hand with an electronic signal or specific sequence of arm movements. You can draw the weapon and attack with a single complex action.",
-          "extendedMagazine": "This ammunition case has an enhanced capacity. Increase the weapon's ammo capacity by +50%. This is only available for firearms and seekers.",
-          "Gyromount": "This weapon harness features a gyro-stabilized weapon mount that keeps the weapon steady. Negate all modifiers from movement.",
-          "imagingScope": "Imaging scopes attach to the top of the weapon and act like specs. Scopes also bend like a periscope, allowing you to point the weapon and target around corners without leaving cover.",
-          "flashSuppressor": "This device obscures the muzzle flash on firearms, applying a –30 modifier to Perceive Tests to locate a firing weapon by its flash.",
-          "laserSight": "This underbarrel laser emits a beam that places a glowing red dot on the target to assist targeting (negating the –10 modifier for not using a smartlink or laser sight). Laser sights can also be used to paint a target for laser-guided smart ammo or seekers. Infrared and ultraviolet lasers are also available, so that the dot is only visible to characters with enhanced vision.",
-          "safetySystem": "This feature is automatically included in most weapons. A biometric (palmprint or voiceprint) or ego ID sensor is embedded in the weapon, disabling it if anyone other than an authorized user attempts to fire it.",
-          "shockSafety": "Just like a safety system, except that an unauthorized user is zapped with an electric shock, inflicting DV 1d6 and a shock effect.",
-          "silencer": "This barrel-mounted accessory reduces the sound of a firearm's discharge (they cannot be used on railguns). Apply a –30 modifier on hearing-based Perceive Tests to hear or locate the gun's firing.",
-          "smartlink": "Smartlinks are automatically included in most weapons. It connects the weapon to your mesh inserts, placing a targeting bracket in your field of vision and providing range and targeting information (negating the –10 modifier for not using a smartlink or laser sight). Smartlinks also incorporate a microcamera that allows the user to see what the weapon is pointed at, fire around corners, etc. Smartlinks also allow certain other types of weapon system control, such as changing smart ammo or programming seeker trigger conditions).",
-          "smartMagazine": "A smart magazine allows you to pick and choose what ammo round will be fired with each shot. This system leaves less room for bullets, however, so reduce the weapon's ammunition capacity by half (round up). Smart magazines can be combined with extended magazines, in which case ammo capacity is normal."
         }
       }
     },
@@ -1127,7 +1251,8 @@
       "09": "<label class='resource-label'><p>Smart Animals & Vehicles underwent a huge revamp.<p/><p><b>This migration is meant to update all drones/vehicles/smart animals on any sheet so they're compatible with the new system.</b><p/><p>Please migrate to this version at your earliest convenience to profit from the latest updates, <b>but do not forget to backup your world first in case of any game breaking bugs!</b><p/> <p>Thank you and have a great day playing!</p></label>",
       "093": "<label class='resource-label'><p>First Weapon Update.<p/><p><b>This update will prepare all player weapons for the upcoming ammunition update.</b><p/><p>Please migrate to this version at your earliest convenience to profit from the latest updates, <b>but do not forget to backup your world first in case of any game breaking bugs!</b><p/> <p>Thank you and have a great day playing!</p></label>",
       "093WeaponCategorizerCopy": "<p>The following list of characters had ranged weapons to them, that could not be identified. Please take a moment to assign them the correct ammunition type.</p><i><p style='font-size: 11px;'>Note: You can always change their ammo type manually. This screen is purely for convenience reasons and GMs with a massive load of custom NPC weapons. If you decide to skip this screen all unidentified weapons will become 'beam'-type for the time being.</p></i>",
-      "095": "<label class='resource-label'><p>Second Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a massive update to prepare your weapons items for further updates along the road. It includes:</p><p><b><ul><li>Weapons now feature traits and accessories. Edit any weapon to change their traits/accessories.</li><li>Weapons now feature up to two different weapon modes.</li><li>Rolling from a weapon with multiple modes will let you choose it's mode in a consecutive dialog.</li><li>All sheets (PC/NPC/Threat) now use the same way of displaying weapons in the inventory.</li><li>All weapon representations on sheets feature clickable traits to give better insights into weapon rules and effects.</li><li>All weapons have been updated automatically (though most of them don't feature the original description). Please feel free to double check your inventory and delete/replace all dublicated weapons and pull new weapons from the compendium.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: There is no additional functionality to weapon effects at this point (e.g. weapons that don't do damage will still trigger a damage dialog etc.). This will be fixed in a later update and before the release of v1.0. Apart from this there will be a limitation for automation especially on weapon/ammo effects on their target, as they're not automatically identified. This will not be part of any pre 1.0 update.</i></p><p>Thank you and have a great day playing!</p></label>"
+      "095": "<label class='resource-label'><p>Second Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a massive update to prepare your weapons items for further updates along the road. It includes:</p><p><b><ul><li>Weapons now feature traits and accessories. Edit any weapon to change their traits/accessories.</li><li>Weapons now feature up to two different weapon modes.</li><li>Rolling from a weapon with multiple modes will let you choose it's mode in a consecutive dialog.</li><li>All sheets (PC/NPC/Threat) now use the same way of displaying weapons in the inventory.</li><li>All weapon representations on sheets feature clickable traits to give better insights into weapon rules and effects.</li><li>All weapons have been updated automatically (though most of them don't feature the original description). Please feel free to double check your inventory and delete/replace all dublicated weapons and pull new weapons from the compendium.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: There is no additional functionality to weapon effects at this point (e.g. weapons that don't do damage will still trigger a damage dialog etc.). This will be fixed in a later update and before the release of v1.0. Apart from this there will be a limitation for automation especially on weapon/ammo effects on their target, as they're not automatically identified. This will not be part of any pre 1.0 update.</i></p><p>Thank you and have a great day playing!</p></label>",
+      "098": "<label class='resource-label'><p>Third Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a major update introducting auto calculating weapon AND ammo traits. It includes:</p><p><b><ul><li>Weapon & Ammo traits (Ammo traits are inherited by reloading).</li><li>Automatic weapon dv modifier calculation.</li><li>A new info-button aside the rounds display (in the sideCar for PCs in the inventory for NPCs/Threats).</li><li>Updated ammunition in the compendium. It now holds: Standard, Special(Kinetic), Seeker and Swarm ammunition. Old ammunition will no longer work. Just replace it with the new items.</li><li>Weapons now need ammunition before they can be reloaded. The character will be notified if they try to reload without fitting ammo in their inventory.</li><li>Damage chat messages now let you know if there are any additional weapon effects to your weapons/ammo (such as 'Stun' or 'Shock').</li><li>There is a special mechanic in place if you're using nano swarm guns. Due to their nature they're capable of just replenishing your swarms instead of requiring you to reload from inventory every time.</li><li>Introduced three ammunition rule sets: Standard, Survival and Grenades only. GMs find them together with a description in the general System preferences.</li><li>All weapons but seekers, sprayers and buzzers come with standard ammunition loaded. It is important to note that sprayers do not load normal ammunition but instead using chemicals and drugs due to their nature and the rules.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: I may revisit the UX for reloading NPC/Threat weapons before 1.0 release, but I have no concrete idea how to make this easier as of yet. Please provide any feedback you might have on this.</i></p><p>Thank you and have a great day playing!</p></label>"
     },
     "systemMessage": {
       "resetRest": {

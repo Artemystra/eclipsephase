@@ -15,6 +15,7 @@
   --warning: #ce8532;
   --iconBlue: #346d8e;
   --highlight: #4098d6;
+  --complementary1: #57245d;
   --mainText: #d8d8d8;
   --iconGrey: #aaaaaa;
   --inactive: #999;
@@ -1204,10 +1205,14 @@ h3.subheaderBlank {
 
 .alignRight {
   text-align: right!important;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .alignLeft {
   text-align: left!important;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .alignCenter {
@@ -1398,6 +1403,10 @@ h3.subheaderBlank {
 
 .flexrow.subheader.colorV1{
   border-bottom: solid var(--pitchBorder) 3px;
+}
+
+.flexrow.subheader.colorV2{
+  border-bottom: solid var(--complementary1) 3px;
 }
 
 .listBackground {
@@ -1690,9 +1699,12 @@ img {
 .extendedPillgrid {
   max-width: fit-content;
   min-width: fit-content;
+  max-height: 35px;
   padding: 10px;
   background-color: var(--pitchBorder);
   margin: 0 5px 5px 0;
+  display: flex;
+  align-items: center;
 }
 .extendedPillFloat {
   max-width: fit-content;
@@ -1934,6 +1946,15 @@ h3.inline {
   top: 0px;
   right: 0px;
   max-width: 70%;
+}
+
+.traitsDroplist {
+  background-color: var(--pitchBorder); 
+  padding: 0 10px; 
+  position: fixed;
+  z-index: 100;
+  top: 250px;
+  margin-right: 14px
 }
 
 .droplistBackground,

@@ -1,6 +1,7 @@
 import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,weaponPreparation,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo } from "../common/common-sheet-functions.js";
+import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 
 export default class EPgoonSheet extends ActorSheet {
@@ -9,7 +10,6 @@ export default class EPgoonSheet extends ActorSheet {
       super(...args);
       
       const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
-      console.log(this);
       if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
         this.position.height = 340;
         this.position.width = 800;
@@ -84,6 +84,16 @@ export default class EPgoonSheet extends ActorSheet {
       
       item.system.updated = game.system.version
 
+      //Loading weapons with Standard Ammo
+      if (item.type === "rangedWeapon"){
+        if (item.system.ammoType != "seeker" && !item.system.mode1.traits.specialAmmoDrugs.value && !item.system.mode1.traits.specialAmmoBugs.value){
+        let name = item.system.ammoType
+        let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+        item.system.ammoMin = item.system.ammoMax;
+        item.system.ammoSelected.name = capitalizedName + " (Standard)";
+        }
+      }
+
       // Create the owned item as normal
       return super._onDropItemCreate(item)
 
@@ -96,6 +106,16 @@ export default class EPgoonSheet extends ActorSheet {
 
         // Initialize containers.
         const gear = [];
+        const consumable = [];
+        const ammo = {
+          beam: [],
+          kinetic: [],
+          seeker: [],
+          spray: [],
+          rail: [],
+          chemical: [],
+          swarm: []
+        };
         const features = [];
         const special = [];
         const rangedweapon = [];
@@ -124,17 +144,64 @@ export default class EPgoonSheet extends ActorSheet {
 
         // Iterate through items, allocating to containers
         // let totalWeight = 0;
-        for (let item of sheetData.items) {
+        for (let item of sheetData.actor.items) {
             let itemModel = item.system
 
             item.img = item.img || DEFAULT_TOKEN;
             // Append to gear.
-            if (itemModel.displayCategory === 'gear') {
+            if (itemModel.displayCategory === 'gear' && item.type != "drug") {
                 gear.push(item);
+            }
+            // Append to ammunition
+            else if (item.type === 'ammo'|| item.type === 'grenade'){
+              switch (item.type) {
+                case 'grenade':
+                itemModel.slotName = "ep2e.item.general.table.slot.grenade";
+                break;
+                case 'ammo':
+                itemModel.slotName = "ep2e.item.general.table.slot.ammo";
+                break;
+                default:
+                break;
               }
-            // Append to features.
-            else if (item.type === 'feature') {
-                features.push(item);
+    
+              if (item.system.active){
+                switch(item.system.type){
+                  case 'beam':
+                  ammo.beam.push(item);
+                  break;
+                  case 'kinetic':
+                  ammo.kinetic.push(item);
+                  break;
+                  case 'seeker':
+                  ammo.seeker.push(item);
+                  break;
+                  case 'spray':
+                    if(item.system.traits.nanoSwarm.value){
+                      ammo.swarm.push(item);
+                    }
+                    else{
+                      ammo.spray.push(item);
+                    }
+                  break;
+                  case 'rail':
+                  ammo.rail.push(item);
+                  break;
+                  default:
+                    break;
+                }
+              }
+              consumable.push(item);
+            }
+            else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "ammo") {
+              if (item.type === "drug"){
+                itemModel.slotName = "ep2e.item.general.table.slot.drug";
+                ammo.chemical.push(item);
+              }
+              else {
+                itemModel.slotName = "ep2e.item.general.table.slot.consumable";
+              }
+              gear.push(item);
             }
             else if (itemModel.displayCategory === 'ranged') {
 
@@ -376,6 +443,7 @@ export default class EPgoonSheet extends ActorSheet {
         actor.morphTrait = morphTrait;
         actor.morphFlaw = morphFlaw;
         actor.activeEffects = effects;
+        actor.ammo = ammo;
 
         // Check if sleights are present and toggle Psi Tab based on this
         if (actor.aspect.chi.length>0){
@@ -441,6 +509,9 @@ export default class EPgoonSheet extends ActorSheet {
         //More Information Dialog
         html.on('click', 'a.moreInfoDialog', moreInfo);
 
+      //Reload Ranged Weapon Functionality
+      reloadWeapon(html, actor);
+
     }
 
     _onItemCreate(event) {
@@ -478,14 +549,8 @@ export default class EPgoonSheet extends ActorSheet {
         let skillKey = dataset.key.toLowerCase();
         let weaponPrep = null;
 
-        let weaponID = null;
-        let weaponName = null;
-        let weaponDamage = null;
-        let weaponType = null;
-        let currentAmmo = null;
-        let maxAmmo = null;
         let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
-
+        let weaponSelected = null;
         let specNameValue = dataset.specname;
         let skillRollValue = dataset.rollvalue;
         let poolType = "Threat";
@@ -506,14 +571,8 @@ export default class EPgoonSheet extends ActorSheet {
           if (!weaponPrep || weaponPrep.cancel){
             return;
           }
-          weaponID = weaponPrep.weaponID,
-          weaponName = weaponPrep.weaponName,
-          weaponDamage = weaponPrep.weaponDamage,
-          weaponType = weaponPrep.weaponType,
-          currentAmmo = weaponPrep.currentAmmo,
-          maxAmmo = weaponPrep.maxAmmo,
-          rolledFrom = weaponPrep.rolledFrom;
-    
+          weaponSelected = weaponPrep.selection
+          rolledFrom = weaponSelected.rolledFrom 
         }
 
 
@@ -532,13 +591,15 @@ export default class EPgoonSheet extends ActorSheet {
             poolValue: threatLevel,
             poolType: poolType,
             //Weapon data
-            weaponID : weaponID,
-            weaponName : weaponName,
-            weaponDamage : weaponDamage,
-            weaponType : weaponType,
-            currentAmmo : currentAmmo,
-            maxAmmo : maxAmmo,
+            weaponSelected : weaponSelected ? weaponSelected.weapon : null,
+            weaponID : weaponSelected ? weaponSelected.weaponID : null,
+            weaponName : weaponSelected ? weaponSelected.weaponName : null,
+            weaponDamage : weaponSelected ? weaponSelected.weaponDamage : null,
+            weaponType : weaponSelected ? weaponSelected.weaponType : null,
+            currentAmmo : weaponSelected ? weaponSelected.currentAmmo : null,
+            maxAmmo : weaponSelected ? weaponSelected.maxAmmo : null,
             meleeDamageMod: actorModel.mods.meleeDamageMod,
+            weaponTraits : weaponSelected ? weaponSelected.weaponTraits : null,
             //Psi
             sleightName : dataset.sleightname,
             sleightDescription : dataset.description,

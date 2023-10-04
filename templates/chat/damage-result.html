@@ -2,13 +2,83 @@
 <div class="alignCenter">
 
   {{#if (eq type "damage")}}
-      {{localize "ep2e.roll.announce.combat.hit"}} (<strong>{{weaponName}}</strong>)<p>
-      {{localize "ep2e.roll.announce.combat.damageDone"}}<p>
+  <div class="alignCenter">
+    <p>{{localize "ep2e.roll.announce.combat.hit"}} <span class="resource-value"></span></p>
+
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <span><b>{{weaponName}}</b></span><br>
+      {{#if ammoLoadedName}}
+        <span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span>
+      {{/if}}
+    </div>
+
+    {{#if weaponTraits}}
+      <div class="item" style="cursor: pointer; background-color: var(--focusBackground); padding: 0.25em 0;">
+        <div class="showFlex" style="padding: 0 10px; justify-content: space-between;">
+          <strong>{{localize "ep2e.roll.announce.combat.additionalEffects"}}</strong>
+        </div>
+        <div>
+          <table>
+            {{#each weaponTraits as |trait key|}}
+              {{#if trait.value}}
+              <tr>
+                <td class="table-dice-label" style="display: flex;">
+                  {{localize trait.name}}
+                  {{#if (eq key "dvOnMiss")}}
+                    <span style="font-size: 13px;"> ({{trait.calculated}})</span>
+                  {{else if (eq key "knockdown")}}
+                    {{#if trait.radius}}
+                      <div class="wantToKnowMore" style="display: flex; align-items: center;">
+                        <img src="systems/eclipsephase/resources/icons/radius.webp" class="icon-xsmall icon-space" style="margin-left: 5px;"/>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.radius"}}</span>
+                        <span style="font-size: 13px;"> {{trait.radius}}</span>
+                      </div>
+                    {{/if}}
+                  {{/if}}
+                </td>
+                {{#if (eq key "effectRadius")}}
+                  <td class="table-dice-result">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-value="{{trait.radius}}" data-rolledfrom="info">
+                        <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                    </a>
+                  </td>
+                {{else}}
+                  <td class="table-dice-result">
+                    <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{trait.name}}" data-rolledfrom="info">
+                        <i class="fa-regular fa-circle-info" id="moreInfo"></i>
+                    </a>
+                  </td>
+                {{/if}}
+              </tr>
+              {{/if}}
+            {{/each}}
+          </table>
+        </div>
+    {{/if}}
+  {{/if}}
+
+  {{#if (eq type "weaponBreak")}}
+  <div class="alignCenter">
+    <p>{{localize copy}} <span class="resource-value"></span></p>
+
+    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <span><b>{{weaponName}}</b></span>
+    </div>
+  </div>
   {{/if}}
 
   {{#if (eq type "reload")}}
   <div style="margin-bottom: 30px;">
-    {{{localize "ep2e.roll.announce.combat.ranged.reloadNeeded"}}}
+    <p>{{{localize copy}}}</p>
+
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <span><b>{{weaponName}}</b></span><br>
+      {{#if ammoLoadedName}}
+        <span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span>
+      {{/if}}
+    </div>
   </div>
   {{/if}}
+
+
 </div>

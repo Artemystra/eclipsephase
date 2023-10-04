@@ -25,6 +25,7 @@ The first inofficial Eclipse Phase 2e system is about two years in the making an
 <h3>Disclaimers</h3>
 <ul>
 <li><a href="#personal">Personal</a></li>
+<li><a href="#contribution">Contribution</a></li>
 <li><a href="#legal">Legal</a></li>
 </ul>
 
@@ -199,9 +200,23 @@ system.skillsVig.melee.mod = affects the skilltotal of given skill. Also affects
 <h3>Personal</h3>
 <p>Please keep in mind, that this system is build from ground up using a boilerplate and coded by one person who is totally new to coding in general. While I had some great help in the past (looking at you, Will) most of the code is done by myself and not very coherent nor well documented (though I'm trying my best). If not otherwise noted, this system will keep updating constantly, but please feel free to reach out with your own ideas if you like. I really hope that you like the system and that you're going to enjoy many meaningful hours of fun with your friends & players all around the world!</p>
 
+<h3>Contribution</h3>
+<p>Starting this system for my own campaign only it has grown to a far more mature EP2e system in time. This leads to many convenience features not yet or only partially integrated. While I appreciate every comment and feature request or discussion around how to best tackle a particular problem believe it to be a good practice to reach out to me before you start sending me pull requests, even if the intend may be noble. If you want to participate to this project please keep the following in mind:</p>
+
+<p>
+<ul>
+<li>Please do never send a pull request into the master branch. This branch is my own campaign and testing live branch. You're free to use it for your own campaign but be aware that the master branch might break from time to time, leaving your system unplayable for an unforseeable period.</li>
+<li>Please reach out before you're investing a massive amount of time into a new feature. As it happens this system is still very work in progress and it might well be that there's a specific reason why I have not already tackled a specific functionality. The best thing to do is just ping me on discord (laphaela) and shortly chat with me about your idea</li>
+<li>A feature backlog exists. I'm keeping a more or less up to date trello board with smaller and bigger task to streamline work. If you want to contribute and have no idea about what you can do, just ping me via discord (laphaela) and we figure it out</li>
+<li>If you happen to have already invested time into a project do not fret. Of course I love to see your work and am happy to merge it into my current working branch. The typical branch I'm messing with is the development branch, so if you want to show me your work, please consider sending a pull request there. You're also quite welcome to reach out via discord (laphaela)</li>
+</ul>
+</p>
+
+<p>Please do not take these words in any defensive or otherwise gatekeeping way. I love to see any contribution to the system as is and would love to incorporate your work into the existing code. We just saw some pull requests in the past that didn't make it into the code as the solution people worked on was already in development without them knowing about it. I'm looking forward to you reaching out!</p>
+
 <h3>Legal</h3>
 <p>This is the first, unofficial Foundry VTT system for Eclipse Phase 2nd Edition. All official logos, icons or other trademarks are intellectual property of Posthuman Studios, LLC (https://eclipsephase.com) and used with their permission.</p>
 
 <p>Rules and non-registered trademarks are published under (CC) BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/3.0/). This is also true for any additions made or code written by the developer (me)</p>
 
-<p>All of this was built on the Boilerplate System of FoundryVTT which was distributed for mingling around in it. Thanks, Atropos for this! (https://gitlab.com/foundrynet/worldbuilding)</p>
+<p>All of this was built on the Boilerplate System of FoundryVTT which was distributed for mingling around in it. Thanks, Atropos for this! (https://gitlab.com/foundrynet/worldbuilding)</p><h3>Legal</h3>

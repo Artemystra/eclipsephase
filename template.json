@@ -1029,14 +1029,16 @@
       "knowSkill",
       "vehicle",
       "drug",
-      "grenade"
+      "grenade",
+      "ammo"
     ],
     "templates": {
       "base": {
         "additionalSystems": {},
         "description": "",
         "active": true,
-        "displayCategory": ""
+        "displayCategory": "",
+        "updated": ""
       },
       "buyable": {
         "cost": "",
@@ -1057,7 +1059,78 @@
         "buyable"
       ],
       "displayCategory": "ranged",
-      "ammoSelected": "",
+      "ammoSelected": {
+        "_id": "-",
+        "name": "",
+        "dvModifier": {
+          "d10": null,
+          "d6": null,
+          "bonus": null,
+          "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
+        },
+        "traits": {
+          "armorPiercing": {
+            "name": "ep2e.item.weapon.table.trait.armorPiercing",
+            "value": false
+          },
+          "blinding": {
+            "name": "ep2e.item.weapon.table.trait.blinding",
+            "value": false
+          },
+          "bioMorphsOnly": {
+            "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+            "value": false
+          },
+          "disablesRadio": {
+            "name": "ep2e.item.weapon.table.trait.disablesRadio",
+            "value": false
+          },
+          "dvHalved": {
+            "name": "ep2e.item.weapon.table.trait.dvHalved",
+            "value": false
+          },
+          "dvOnMiss": {
+            "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+            "value": false,
+            "dv": {
+              "d10": null,
+              "d6": null,
+              "bonus": null
+            }
+          },
+          "indirectOrBonus": {
+            "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+            "value": false,
+            "skillMod": null
+          },
+          "knockdown": {
+            "name": "ep2e.item.weapon.table.trait.knockdown",
+            "value": false,
+            "radius": null
+          },
+          "noDamage": {
+            "name": "ep2e.item.weapon.table.trait.noDamage",
+            "value": false
+          },
+          "pain": {
+            "name": "ep2e.item.weapon.table.trait.pain",
+            "value": false
+          },
+          "steady": {
+            "name": "ep2e.item.weapon.table.trait.steady",
+            "value": false
+          },
+          "stunBiomorphs": {
+            "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+            "value": false
+          },
+          "shock": {
+            "name": "ep2e.item.weapon.table.trait.shock",
+            "value": false
+          }
+        },
+        "description": "ep2e.item.weapon.table.ammoUsed.standardDescription"
+      },
       "ammoType": "",
       "ammoMin": 0,
       "ammoMax": null,
@@ -1176,6 +1249,23 @@
           "twoHanded": {
             "name": "ep2e.item.weapon.table.trait.twoHanded",
             "value": false
+          },
+          "selfReplenishing": {
+            "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+            "value": false            
+          },
+          "specialAmmoDrugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+            "value": false
+          },
+          "specialAmmoBugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+            "value": false
+          },
+          "multiShot": {
+            "name": "ep2e.item.weapon.table.trait.multiShot",
+            "value": false,
+            "number": null
           }
         }
       },
@@ -1247,6 +1337,23 @@
           "twoHanded": {
             "name": "ep2e.item.weapon.table.trait.twoHanded",
             "value": false
+          },
+          "selfReplenishing": {
+            "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+            "value": false            
+          },
+          "specialAmmoDrugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+            "value": false
+          },
+          "specialAmmoBugs": {
+            "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+            "value": false
+          },
+          "multiShot": {
+            "name": "ep2e.item.weapon.table.trait.multiShot",
+            "value": false,
+            "number": null
           }
         }
       }
@@ -1257,7 +1364,124 @@
         "buyable"
       ],
       "areaeffect": null,
-      "dv": null,
+      "dv": {
+        "d10": null,
+        "d6": null,
+        "bonus": null
+      },
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "blinding": {
+          "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+          "value": false
+        },
+        "disablesRadio": {
+          "name": "ep2e.item.weapon.table.accessory.Gyromount",
+          "value": false
+        },
+        "knockdown": {
+          "name": "ep2e.item.weapon.table.trait.knockdown",
+          "value": false,
+          "radius": null
+        },
+        "noDamage": {
+          "name": "ep2e.item.weapon.table.trait.noDamage",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        }
+      },
+      "armorused":null,
+      "quantity": 1,
+      "displayCategory": "consumable",
+      "slotType": "consumable"
+    },
+    "ammo": {
+      "templates": [
+        "base",
+        "buyable"
+      ],
+      "type": null,
+      "areaeffect": null,
+      "dv": {
+        "d10": null,
+        "d6": null,
+        "bonus": null
+      },
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "blinding": {
+          "name": "ep2e.item.weapon.table.trait.blinding",
+          "value": false
+        },
+        "bioMorphsOnly": {
+          "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+          "value": false
+        },
+        "disablesRadio": {
+          "name": "ep2e.item.weapon.table.trait.disablesRadio",
+          "value": false
+        },
+        "dvHalved": {
+          "name": "ep2e.item.weapon.table.trait.dvHalved",
+          "value": false
+        },
+        "dvOnMiss": {
+          "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+          "value": false,
+          "dv": {
+            "d10": null,
+            "d6": null,
+            "bonus": null
+          }
+        },
+        "indirectOrBonus": {
+          "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+          "value": false,
+          "skillMod": null
+        },
+        "knockdown": {
+          "name": "ep2e.item.weapon.table.trait.knockdown",
+          "value": false,
+          "radius": null
+        },
+        "nanoSwarm": {
+          "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+          "value": false
+        },
+        "noDamage": {
+          "name": "ep2e.item.weapon.table.trait.noDamage",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "steady": {
+          "name": "ep2e.item.weapon.table.trait.steady",
+          "value": false
+        },
+        "stunBiomorphs": {
+          "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        }
+      },
       "armorused":null,
       "quantity": 1,
       "displayCategory": "consumable",
@@ -1309,7 +1533,8 @@
           },
           "reach": {
             "name": "ep2e.item.weapon.table.trait.reach",
-            "value": false
+            "value": false,
+            "skillMod": null
           },
           "shock": {
             "name": "ep2e.item.weapon.table.trait.shock",

@@ -25,8 +25,8 @@
                 </div>
                 {{#if specName}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="useSpec">
-                    <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
+                    <input type="checkbox" name="useSpec" id="spec">
+                    <label class="resource-label" for="spec">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
                 </div>
                 {{else}}
                 <div class="form-group listBackgroundMain">
@@ -37,8 +37,8 @@
                 {{#if (eq actorType "character")}}
                     {{#if poolValue}}
                     <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="usePool">
-                        <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}} (+20)</label>
+                        <input type="checkbox" name="usePool" id="pool">
+                        <label class="resource-label" for="pool">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}} (+20)</label>
                     </div>
                     {{else}}
                     <div class="form-group listBackgroundMain">
@@ -49,8 +49,8 @@
                 {{else}}
                     {{#if poolValue}}
                     <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useThreat">
-                        <label class="resource-label">{{localize "ep2e.roll.dialog.useThreat"}}</label>
+                        <input type="checkbox" name="useThreat" id="threat">
+                        <label class="resource-label" for="threat">{{localize "ep2e.roll.dialog.useThreat"}}</label>
                     </div>
                     {{else}}
                     <div class="form-group listBackgroundMain">
@@ -78,13 +78,32 @@
             </div>
         </div>
         <div>
+            {{#if (ne traits.automatedEffects.noSmartlink.value true)}}
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" checked name="Smartlink">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.ranged.attacker.smartLinkLabel"}}</label>
+                <input type="checkbox" checked name="Smartlink" id="smartlink">
+                <label class="resource-label" for="smartlink">{{localize "ep2e.roll.dialog.ranged.attacker.smartLinkLabel"}}</label>
             </div>
+            {{else}}
+                {{#if (eq traits.automatedEffects.smartlink.value true)}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" checked name="Smartlink" id="smartlink">
+                    <label class="resource-label" for="smartlink">{{localize "ep2e.roll.dialog.ranged.attacker.smartLinkLabel"}}</label>
+                </div>
+                {{else if (eq traits.automatedEffects.laserSight.value true)}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" checked name="Smartlink" id="smartlink">
+                    <label class="resource-label" for="smartlink">{{localize "ep2e.item.weapon.table.accessory.laserSight"}}</label>
+                </div>
+                {{else}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" disabled name="Smartlink" id="smartlink">
+                    <label class="resource-label epInactive" for="smartlink">{{localize "ep2e.item.weapon.table.trait.noSmartlink"}}</label>
+                </div>
+                {{/if}}
+            {{/if}}
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="SupPosition">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.ranged.attacker.superiorPosition"}}</label>
+                <input type="checkbox" name="SupPosition"  id="supposition">
+                <label class="resource-label" for="supposition">{{localize "ep2e.roll.dialog.ranged.attacker.superiorPosition"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
                 <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.label"}}:</label>
@@ -94,7 +113,6 @@
                     <option value="fullAuto">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.fullAuto"}}</option>
                     <option value="wBurst">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wBurst"}}</option>
                     <option value="wFullAuto">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.wFullAuto"}}</option>
-                    <option value="indirect">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.indirect"}}</option>
                     <option value="suppressive">{{localize "ep2e.roll.dialog.ranged.attacker.fireMode.suppressive"}}</option>
                 </select>
             </div>
@@ -107,33 +125,74 @@
                 </select>
             </div>
             <div class="form-group listBackgroundMain">
+                {{#if (ne traits.automatedEffects.noClose.value true)}}
                 <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.distance.label"}}:</label>
-                <select class="input-largePlus" name="Range">
-                    <option value="pointBlank">{{localize "ep2e.roll.dialog.ranged.attacker.distance.pointBlank"}}</option>
-                    <option selected="none" value="none">{{localize "ep2e.roll.dialog.ranged.attacker.distance.none"}}</option>
-                    <option value="range">{{localize "ep2e.roll.dialog.ranged.attacker.distance.range"}}</option>
-                    <option value="beyond">{{localize "ep2e.roll.dialog.ranged.attacker.distance.beyond"}}</option>
-                    <option value="beyond+">{{localize "ep2e.roll.dialog.ranged.attacker.distance.beyondPlus"}}</option>
-                </select>
+                    {{#if (ne traits.automatedEffects.steady.value true)}}
+                    <select class="input-largePlus" name="Range">
+                        {{#if (ne traits.automatedEffects.long.value true)}}
+                        <option value="pointBlank">{{localize "ep2e.roll.dialog.ranged.attacker.distance.pointBlank"}}</option>
+                        {{else}}
+                        <option value="pointBlank">{{localize "ep2e.roll.announce.combat.ranged.pointBlank"}}</option>
+                        {{/if}}
+                        <option selected="none" value="none">{{localize "ep2e.roll.dialog.ranged.attacker.distance.none"}}</option>
+                        <option value="range">{{localize "ep2e.roll.dialog.ranged.attacker.distance.range"}}</option>
+                        <option value="beyond">{{localize "ep2e.roll.dialog.ranged.attacker.distance.beyond"}}</option>
+                        <option value="beyond+">{{localize "ep2e.roll.dialog.ranged.attacker.distance.beyondPlus"}}</option>
+                    </select>
+                    {{else}}
+                    <select class="input-largePlus" name="Range">
+                        {{#if (ne traits.automatedEffects.long.value true)}}
+                            {{#if (ne traits.automatedEffects.noPointBlank.value true)}}
+                            <option value="pointBlank">{{localize "ep2e.roll.dialog.ranged.attacker.distance.pointBlank"}}</option>
+                            {{else}}
+                            <option disabled value="pointBlank">{{localize "ep2e.item.weapon.table.trait.noPointBlank"}}</option>
+                            {{/if}}
+                        {{else}}
+                            <option value="pointBlank">{{localize "ep2e.roll.announce.combat.ranged.pointBlank"}}</option>
+                        {{/if}}
+                        <option selected="none" value="none">{{localize "ep2e.roll.dialog.ranged.attacker.distance.none"}}</option>
+                        <option value="none" disabled="disabled">{{localize "ep2e.roll.dialog.ranged.attacker.distance.ignoreMalus"}}</option>
+                    </select>
+                    {{/if}}
+                {{else}}
+                    {{#if (ne traits.automatedEffects.steady.value true)}}
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.distance.label"}}:</label>
+                    <select class="input-largePlus" name="Range">
+                        <option disabled value="pointBlank">{{localize "ep2e.item.weapon.table.trait.noCloseAndPointBlank"}}</option>
+                        <option selected="range" value="range">{{localize "ep2e.roll.dialog.ranged.attacker.distance.range"}}</option>
+                        <option value="beyond">{{localize "ep2e.roll.dialog.ranged.attacker.distance.beyond"}}</option>
+                        <option value="beyond+">{{localize "ep2e.roll.dialog.ranged.attacker.distance.beyondPlus"}}</option>
+                    </select>
+                    {{else}}
+                    <label class="resource-labelDialog epInactive">{{localize "ep2e.roll.dialog.ranged.attacker.distance.ignore"}}</label>
+                    {{/if}}
+                {{/if}}
             </div>
         </div>
         <div>
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="CalledShot">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>
+                <input type="checkbox" name="CalledShot" id="calledshot">
+                <label class="resource-label" for="calledshot">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="AttackerCover">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.ranged.attacker.inCoverLabel"}}</label>
+                <input type="checkbox" name="AttackerCover" id="attackercover">
+                <label class="resource-label" for="attackercover">{{localize "ep2e.roll.dialog.ranged.attacker.inCoverLabel"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="Running">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.ranged.attacker.isRunningLabel"}}</label>
+                <input type="checkbox" name="Running" id="runs">
+                <label class="resource-label" for="runs">{{localize "ep2e.roll.dialog.ranged.attacker.isRunningLabel"}}</label>
             </div>
+            {{#if (ne traits.automatedEffects.long.value true)}}
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="Melee">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.ranged.attacker.inMeleeLabel"}}</label>
+                <input type="checkbox" name="Melee" id="melee">
+                <label class="resource-label" for="melee">{{localize "ep2e.roll.dialog.ranged.attacker.inMeleeLabel"}}</label>
             </div>
+            {{else}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="Melee" id="melee">
+                <label class="resource-label" for="melee">{{localize "ep2e.roll.dialog.ranged.attacker.inMeleeLabelLong"}}</label>
+            </div>
+            {{/if}}
             <div class="form-group listBackgroundMain">
                 <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.visual.label"}}:</label>
                 <select class="input-large" name="VisualImpair">
@@ -141,6 +200,7 @@
                     <option value="minor">{{localize "ep2e.roll.dialog.ranged.attacker.visual.minor"}}</option>
                     <option value="major">{{localize "ep2e.roll.dialog.ranged.attacker.visual.major"}}</option>
                     <option value="blind">{{localize "ep2e.roll.dialog.ranged.attacker.visual.blind"}}</option>
+                    <option value="indirect">{{localize "ep2e.roll.dialog.ranged.attacker.visual.indirect"}}</option>
                 </select>
             </div>
         </div>
@@ -165,13 +225,48 @@
                 </select>
             </div>
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="DefenderProne">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.ranged.defender.isProne"}}</label>
+                <input type="checkbox" name="DefenderProne" id="prone">
+                <label class="resource-label" for="prone">{{localize "ep2e.roll.dialog.ranged.defender.isProne"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="DefenderHidden">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.ranged.defender.isHidden"}}</label>
+                <input type="checkbox" name="DefenderHidden" id="hidden">
+                <label class="resource-label" for="hidden">{{localize "ep2e.roll.dialog.ranged.defender.isHidden"}}</label>
             </div>
         </div>
     </div>
+    {{#if (gt specialEffects 0)}}
+    <div class="grid grid-4col-dialogue">
+        <div class="dialogWrapperCenter">
+            <div class="flexrow subheader colorV2">
+                <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.specialEffects"}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-4col-dialogue" style="margin-top: 0;">
+        <div class="dialogWrapperCenter grid" style="margin-top: 0;">
+            {{#if (eq traits.confirmationEffects.bioMorphsOnly.value true)}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="BiomorphTarget" id="biomorph">
+                <label class="resource-label" for="biomorph">{{localize "ep2e.roll.dialog.ranged.attacker.targetBiomorph"}}</label>
+            </div>
+            {{/if}}
+            {{#if (eq traits.confirmationEffects.indirectOrBonus.value true)}}
+                <div class="form-group listBackgroundMain">
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ranged.attacker.ammoEffect.label"}}</label>
+                    <select name="AmmoEffect" class="input-largePlus">
+                        <option value="ammoSkillModifier">{{localize "ep2e.roll.dialog.ranged.attacker.ammoEffect.ammoSkillModifier"}}</option>
+                        <option value="ignoreIndirect">{{localize "ep2e.roll.dialog.ranged.attacker.ammoEffect.ignoreIndirect"}}</option>
+                    </select>
+                </div>
+            {{/if}}
+            {{#if (eq traits.confirmationEffects.fixed.value true)}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="WeaponFixated" id="fixated">
+                    <label class="resource-label" for="fixated">{{localize "ep2e.roll.dialog.ranged.attacker.weaponFixated"}}</label>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+    {{/if}}
 </form>
+

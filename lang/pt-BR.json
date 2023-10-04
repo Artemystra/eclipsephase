@@ -1,4 +1,49 @@
 {
+  "SETTINGS":{
+    "ammoRules": {
+      "name": "Ammunition Rules",
+      "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
+      "default": "Default",
+      "survival": "Survival",
+      "grenadesOnly": "Grenades Only"
+    },
+    "effectPanel": {
+      "name": "Enable Effect Panel",
+      "hint": "Enable the Effect Panel on Actors (for GMs)"
+    },
+    "gmMenu": {
+      "name": "Enable GM Menu",
+      "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
+    },
+    "hideNPCs": {
+      "name": "Always Hide NPC/Threat Stats",
+      "hint": "If activated, shows a 'limited'-sheet for all NPCs & Threats to everyone instead of showing all details and values"
+    },
+    "migrationVersion": {
+      "name": "Migration Version",
+      "hint": "Marks the last time this system was migrated. (WARNING: Don't change this value unless you know what it is for! Can break your system.)"
+    },
+    "restReset": {
+      "name": "Reset Temporary Bonuses",
+      "hint": "If activated ANY rest (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long rests reset them."
+    },
+    "showDamageOptions": {
+      "name": "Default Show Damage Dialog",
+      "hint": "Check this option to show the damage-dialog per default when clicking any damage roll icon on the character sheet"
+    },
+    "showEverything": {
+      "name": "Always Reveal Player Stats",
+      "hint": "Always show playercharacter details/stats to everyone with at least 'limited' permissions. If deactivated, shows a 'limited'-sheet of all player characters to everyone (not only the GM and owner of given character)"
+    },
+    "showTaskOptions": {
+      "name": "Default Show Skill Modifier Dialog",
+      "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
+    },
+    "superBrew": {
+      "name": "Diemen's Special Brew",
+      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+    }
+  },
   "TYPES.Actor.character": "Personagem do Jogador",
   "TYPES.Actor.npc": "Personagem Não Jogador",
   "TYPES.Actor.goon": "Ameaça",
@@ -18,6 +63,7 @@
   "TYPES.Item.knowSkill": "Perícia de Saber",
   "TYPES.Item.vehicle": "Veículo",
   "TYPES.Item.drug": "Droga",
+  "TYPES.Item.ammo" : "Ammo",
   "ep2e": {
     "actorSheet": {
       "placeholders": {
@@ -314,7 +360,8 @@
         "repSize": "Tamanho do Favor"
       },
       "addSkill": "Adicionar Perícia",
-      "chooseAptitude": "Escolher Apt"
+      "chooseAptitude": "Escolher Apt",
+      "skillMod": "Skill Mod"
     },
     "morph": {
       "currentMorph": {
@@ -396,7 +443,9 @@
         "wareLabel": "Ware",
         "noWareCopy": "Nenhum ware instalado",
         "gearLabel": "Equipamentos",
-        "noGearCopy": "Nenhum equipamento especial"
+        "noGearCopy": "Nenhum equipamento especial",
+        "ammunitionLabel": "Ammunition",
+        "noAmmunitionCopy": "No ammunition"
       },
       "noGear": {
         "headline": "Nenhum equipamento presente",
@@ -447,6 +496,7 @@
         "other": "Outro",
         "enhancedBehaviour": {
           "label": "Comportamento Acentuado:",
+          "none": "none",
           "arrogance": "Arrogância",
           "curiosity": "Curiosidade",
           "callouseness": "Frieza",
@@ -471,6 +521,7 @@
         },
         "restrictedBehaviour": {
           "label": "Comportamento Restrito:",
+          "none": "none",
           "relaxation": "Relaxamento",
           "remorse": "Remorso",
           "empathy": "Empatia",
@@ -478,6 +529,7 @@
         },
         "motivation": {
           "label": "Motivação:",
+          "none": "none",
           "hoard": "Acumular",
           "innerWorkings": "Expor o Funcionamento Interno",
           "create": "Criar",
@@ -586,6 +638,7 @@
           "effectsTab": "Efeitos"
         },
         "table": {
+          "quantity": "Quantity",
           "cost": {
             "label": "Custo",
             "minor": "Menor",
@@ -599,7 +652,10 @@
             "consumable": "Consumível",
             "accessory": "Acessório",
             "bulky": "Volumoso",
-            "notMobile": "Não Móvel"
+            "notMobile": "Não Móvel",
+            "grenade": "Grenade",
+            "ammo": "Ammunition",
+            "drug": "Drug"
           },
           "description": "Descrição",
           "descriptionPlaceholder": "Adicione uma descrição"
@@ -646,7 +702,13 @@
           "range": "Alcance",
           "maxAmmo": "Munição Máxima",
           "damageValue": "VD",
+          "damageValueModifier": "DV Modifier",
+          "noDamageValueModifier": "No Damage Modifier",
+          "selfReplenish": "Replenish current swarm",
+          "noDamage": "No Damage",
+          "noDamageAmmo": "No Damage (Source: Ammunition)",
           "effectArea": "Área de Efeito",
+          "radius": "Radius",
           "armorUsed": {
             "label": "Armadura Utilizada",
             "none": "Nenhuma",
@@ -668,6 +730,63 @@
             "oneHanded": "Uma Mão",
             "twoHanded": "Duas Mãos",
             "bulky": "Volumoso"
+          },
+          "ammoUsed": {
+            "standardDescription": "This is standard ammunition for this weapon. To reload or load a different kind of ammunition make sure to add ammo from the compendium to your character sheet and equip it.",
+            "beam": "Beam",
+            "kinetic": "Kinetic",
+            "seeker": "Seeker",
+            "spray": "Spray",
+            "rail": "Rail"
+          },
+          "trait": {
+            "armorPiercing": "Armor Piercing",
+            "blinding": "Blinding",
+            "bioMorphsOnly": "Bonus DV on Biomorphs Only",
+            "concealable": "Concealable",
+            "disablesRadio": "Disables Radio",
+            "dvHalved": "Halves Weapon DV",
+            "dvOnMiss": "DV on Miss",
+            "entangling": "Entangling",
+            "fixed": "Fixed",
+            "indirectOrBonus": "Indirect Shots OR",
+            "knockdown": "Knockdown",
+            "long": "Long",
+            "nanoSwarm": "Nano Swarm",
+            "noClose": "No Close",
+            "noDamage": "No Damage",
+            "noDamageAmmo": "No Damage (Source: Ammunition)",
+            "noPointBlank": "No Point Blank",
+            "noCloseAndPointBlank": "No Close or Point Blank",
+            "noSmartlink": "No Smartlink",
+            "pain": "Pain",
+            "shock": "Shock",
+            "singleUse": "Single Use",
+            "steady": "Steady",
+            "stun": "Stun",
+            "stunBiomorphs": "Stun (Biomorphs Only)",
+            "fragile": "Fragile",
+            "reach": "Reach",
+            "touchOnly": "Touch Only",
+            "twoHanded": "Two-Handed",
+            "selfReplenishing": "Self Replenishing",
+            "specialAmmoDrugs": "Ammunition: Chems",
+            "specialAmmoBugs": "Ammunition: Swarms",
+            "multiShot": "Multi Shot",
+            "effectRadius": "Area of Effect"
+          },
+          "accessory": {
+            "armSlide": "Arm Slide",
+            "extendedMagazine": "Extended Magazine",
+            "Gyromount": "Gyromount",
+            "imagingScope": "Imaging Scope",
+            "flashSuppressor": "Flash Suppressor",
+            "laserSight": "Laser Sight",
+            "safetySystem": "Safety System",
+            "shockSafety": "Shock Safety",
+            "silencer": "Silencer",
+            "smartlink": "Smartlink",
+            "smartMagazine": "Smart Magazine"
           }
         }
       },
@@ -816,6 +935,7 @@
         "noPool": "Nenhuma parada restante",
         "useThreat": "Usar Ameaça (+20)",
         "calledShotLabel": "Ataque Preciso (-10)",
+        "touchOnly": "Touch Attack (+20)",
         "title": {
           "guns": "Teste de Tiro",
           "melee": "Teste de Luta",
@@ -844,6 +964,14 @@
             "inCoverLabel": "Encoberto (-10)",
             "isRunningLabel": "Correndo (-20)",
             "inMeleeLabel": "Lutando (-10)",
+            "inMeleeLabelLong": "Lutando (-30)",
+            "weaponFixated": "Weapon Fixated (-20 if not)",
+            "targetBiomorph": "Target: Biomorph",
+            "ammoEffect": {
+              "label": "Ammunition",
+              "ammoSkillModifier": "Modifier (+10)",
+              "ignoreIndirect": "Ignore Indirect Modifier"
+            },
             "fireMode": {
               "label": "Modo de Disparo",
               "single": "Tiro Único",
@@ -851,7 +979,6 @@
               "fullAuto": "Automático Estreito (+2d10)",
               "wBurst": "Rajada Larga (+10 Acerto)",
               "wFullAuto": "Automático Largo (+30 Acerto)",
-              "indirect": "Indireto (-20)",
               "suppressive": "Supressão (usa 20 tiros)"
             },
             "aim": {
@@ -866,14 +993,16 @@
               "none": "Padrão",
               "range": "Alcance (-10)",
               "beyond": "Além do Alcance (-20)",
-              "beyondPlus": "Além+ (-30)"
+              "beyondPlus": "Além+ (-30)",
+              "ignore": "Weapon ignores range malus"
             },
             "visual": {
               "label": "Penalidade Visual",
               "none": "Nenhuma",
               "minor": "Menor (-10)",
               "major": "Maior (-30)",
-              "blind": "Às Cegas (-30+)"
+              "blind": "Às Cegas (-30+)",
+              "indirect": "Indireto (-20)"
             }
           },
           "defender": {
@@ -900,6 +1029,16 @@
           "attacker": {
             "numberOfTargetsLabel": "Número de alvos",
             "numberOfTargetsMod": "(-20/alvo)",
+            "sizeDifference": {
+              "label": "Reach",
+              "vms": "Very much smaller (-30)",
+              "ms": "Much smaller (-20)",
+              "s": "Smaller (-10)",
+              "none": "Equal Size" ,
+              "l": "Larger (+10)" ,
+              "ml": "Much larger (+20)" ,
+              "vml": "Very much larger (+30)" 
+            },
             "type": {
               "label": "Tipo de Ataque",
               "none": "Ataque Padrão",
@@ -974,15 +1113,20 @@
           "calledShot": "Ataque Preciso",
           "calledShotAddition": "Role 'Sucesso Maior' ou melhor",
           "hit": "Você acertou com sua arma",
+          "breakWeapon": "Broke their weapon",
+          "singleUse": "Your single use weapon broke",
           "damageDone": "Seu dano causado",
+          "additionalEffects": "Additional Effects",
           "melee": {
+            "sizeDifference": "Reach", 
             "charge": "Investida",
             "chargeAddition": "(+1d6VD)",
             "agressive": "Ataque Agressivo",
             "agressiveAddition": "(Evasão -10)",
             "agressiveCharge": "Ataque Violento",
             "agressiveChargeAddition": "(+1d10VD & Evasão -10)",
-            "multipleTargets": "Múltiplos Alvos"
+            "multipleTargets": "Múltiplos Alvos",
+            "touchOnly": "Touch Only Attack"
           },
           "ranged": {
             "smartLink": "Sem Ligação Inteligente",
@@ -1011,10 +1155,13 @@
             "blind": "Cego",
             "wBurst": "Rajada Larga",
             "wFullAuto": "Automático Largo",
-            "Indirect": "Indireto",
+            "indirect": "Indireto",
             "reloadNeeded": "Sua arma não tem munição suficiente. <p/><strong>Recarregue primeiro!</strong>",
             "reloadedWeapon": "Eu recarregei minha arma",
-            "weaponFull": "Sua arma ainda está totalmente carregada."
+            "weaponFull": "Sua arma ainda está totalmente carregada.",
+            "noAmmoPresent": "No fitting ammunition present.",
+            "ammoSkillModifier": "Ammo Skill Modifier",
+            "weaponFixated": "Shot from Hip"
           }
         }
       }

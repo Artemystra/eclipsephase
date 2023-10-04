@@ -14,68 +14,18 @@
     </nav>
     {{!-- Sheet Body --}}
 
-    <section class="item-sheet-body" style="min-height: 245px; height: fit-content;">
-        <div class="tab details" data-group="primary" data-tab="details">
+    <section class="item-sheet-body" style="min-height: 240px; height: fit-content;">
+        <div class="tab details" data-group="primary" data-tab="details" style="margin-top: 25px;">
 
-        <div class="flexrow flex-group-center">
-            <table>
-                <tr>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.weapon.table.effectArea"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.weapon.table.damageValue"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.weapon.table.armorUsed.label"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.general.table.slot.label"}}</label>
-                    </td>
-                    <td>
-                        <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input class="input-large alignCenter" type="text" name="system.areaeffect" value="{{item.system.areaeffect}}" placeholder="e.g. Unifrom (50m)"/>
-                    </td>
-                    <td>
-                        <input class="input-large alignCenter" type="text" name="system.dv" value="{{item.system.dv}}" placeholder="e.g. 1d10+1"/>
-                    </td>
-                    <td>
-                        <select name="system.armorused" data-type="String">
-                            {{#select item.system.armorused}}
-                            {{#each config.grenadeArmorVector as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    <td>
-                        <select name="system.slotType" data-type="String">
-                            {{#select item.system.slotType}}
-                            {{#each config.gearTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                    <td>
-                        <select name="system.cost" data-type="String">
-                            {{#select item.system.cost}}
-                            {{#each config.costTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
-                        </select>
-                    </td>
-                </tr>
-            </table>
+        {{> systems/eclipsephase/templates/item/partials/grenade-details.html item=item itemType="grenade"}}
+
         </div>
-    </div>
 
-    <div class="tab description" data-group="primary" data-tab="description">
-        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
-    </div>
-
-    {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
-</section>
+        <div class="tab description" data-group="primary" data-tab="description">
+            <div class="textAreaDescription"><textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+        </div>
+        
+        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+        
+    </section>
 </form>

@@ -16,8 +16,8 @@
                 </div>
                 {{#if specName}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="useSpec">
-                    <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
+                    <input type="checkbox" name="useSpec" id="spec">
+                    <label class="resource-label" for="spec">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
                 </div>
                 {{else}}
                 <div class="form-group listBackgroundMain">
@@ -28,8 +28,8 @@
                 {{#if (eq actorType "character")}}
                     {{#if poolValue}}
                     <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="usePool">
-                        <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}} (+20)</label>
+                        <input type="checkbox" name="usePool" id="pool">
+                        <label class="resource-label" for="pool">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}} (+20)</label>
                     </div>
                     {{else}}
                     <div class="form-group listBackgroundMain">
@@ -40,8 +40,8 @@
                 {{else}}
                     {{#if poolValue}}
                     <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useThreat">
-                        <label class="resource-label">{{localize "ep2e.roll.dialog.useThreat"}}</label>
+                        <input type="checkbox" name="useThreat" id="threat">
+                        <label class="resource-label" for="threat">{{localize "ep2e.roll.dialog.useThreat"}}</label>
                     </div>
                     {{else}}
                     <div class="form-group listBackgroundMain">
@@ -70,8 +70,20 @@
         </div>
         <div>
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="CalledShot">
-                <label class="resource-label">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>
+                <input type="checkbox" name="CalledShot" id="calledshot">
+                <label class="resource-label" for="calledshot">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>
+            </div>
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.label"}}</label>
+                <select class="input-large" name="SizeDifference" style="max-width: 160px">
+                    <option value=-30>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.vms"}}</option>
+                    <option value=-20>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.ms"}}</option>
+                    <option value=-10>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.s"}}</option>
+                    <option selected value="none">{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.none"}}</option>
+                    <option value=10>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.l"}}</option>
+                    <option value=20>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.ml"}}</option>
+                    <option value=30>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.vml"}}</option>
+                </select>
             </div>
             <div class="form-group listBackgroundMain">
                 <label class="resource-labelDialog" style="min-width: 180px;">{{localize "ep2e.roll.dialog.melee.attacker.numberOfTargetsLabel"}}</label>
@@ -87,6 +99,17 @@
                     <option value="aggressiveCharge">{{localize "ep2e.roll.dialog.melee.attacker.type.aggressiveCharge"}}</option>
                 </select>
             </div>
+            {{#if (eq traits.confirmationEffects.touchOnly.value true)}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="TouchOnly" id="touchOnly">
+                    <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
+                </div>
+            {{else if (ne rolledFrom "ccWeapon")}}
+                <div class="form-group listBackgroundMain">
+                    <input type="checkbox" name="TouchOnly" id="touchOnly">
+                    <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
+                </div>
+            {{/if}}
         </div>
     </div>
 </form>

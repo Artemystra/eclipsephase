@@ -1272,6 +1272,103 @@ export function migrationPre095(startMigration, endMigration){
   }
 }
 
+export function migrationPre098(startMigration, endMigration){
+
+  const latestUpdate = "0.9.8";
+
+  if (startMigration){        
+    for (let actor of game.actors){
+      for (let item of actor.items){
+          const currentVersion = item.system.updated
+          let updated = foundry.utils.isNewerVersion(currentVersion, latestUpdate)
+          if (item.type === "rangedWeapon" && updated === false){
+              let weaponUpdate = []
+              let name = item.system.ammoType
+              let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+              weaponUpdate.push({
+                  "_id": item._id,
+                  "system.updated": latestUpdate,
+                  "system.ammoSelected._id": "-",
+                  "system.ammoSelected.name": capitalizedName + " (Standard)",
+                  "system.ammoSelected.dvModifier": {
+                    "d10": null,
+                    "d6": null,
+                    "bonus": null,
+                    "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
+                  },
+                  "system.ammoSelected.description": "ep2e.item.weapon.table.ammoUsed.standardDescription",
+                  "system.ammoSelected.traits": { 
+                    "armorPiercing": {
+                      "name": "ep2e.item.weapon.table.trait.armorPiercing",
+                      "value": false
+                    },
+                    "blinding": {
+                      "name": "ep2e.item.weapon.table.trait.blinding",
+                      "value": false
+                    },
+                    "bioMorphsOnly": {
+                      "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+                      "value": false
+                    },
+                    "disablesRadio": {
+                      "name": "ep2e.item.weapon.table.trait.disablesRadio",
+                      "value": false
+                    },
+                    "dvHalved": {
+                      "name": "ep2e.item.weapon.table.trait.dvHalved",
+                      "value": false
+                    },
+                    "dvOnMiss": {
+                      "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+                      "value": false,
+                      "dv": {
+                        "d10": null,
+                        "d6": null,
+                        "bonus": null
+                      }
+                    },
+                    "indirectOrBonus": {
+                      "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+                      "value": false,
+                      "skillMod": null
+                    },
+                    "knockdown": {
+                      "name": "ep2e.item.weapon.table.trait.knockdown",
+                      "value": false,
+                      "radius": null
+                    },
+                    "noDamage": {
+                      "name": "ep2e.item.weapon.table.trait.noDamage",
+                      "value": false
+                    },
+                    "pain": {
+                      "name": "ep2e.item.weapon.table.trait.pain",
+                      "value": false
+                    },
+                    "steady": {
+                      "name": "ep2e.item.weapon.table.trait.steady",
+                      "value": false
+                    },
+                    "stunBiomorphs": {
+                      "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+                      "value": false
+                    },
+                    "shock": {
+                      "name": "ep2e.item.weapon.table.trait.shock",
+                      "value": false
+                    }
+                  }
+              })
+              actor.updateEmbeddedDocuments("Item", weaponUpdate)
+          }
+      }
+    }
+    game.settings.set("eclipsephase", "migrationVersion", "0.9.8");
+    endMigration = true
+    return {endMigration}
+  }
+}
+
 //A general item deleter
 function itemDeletion(actor, itemID){
   let itemDelete = [itemID]
