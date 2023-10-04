@@ -1677,7 +1677,7 @@ export async function TaskCheck({
                         case 'Superior Success':
                             successModifier = "+ 2d6";
                             break;
-                        case 'subSuc':
+                        case 'supSuc':
                             successModifier = "+ 2d6";
                             break;
                         case 'Critical Success':
