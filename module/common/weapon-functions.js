@@ -422,7 +422,14 @@ export async function reloadWeapon(html, actor) {
               let cancel = selectedAmmo.cancelled
               return {cancel};
             }
-  
+            
+            if(selectedAmmo.selection === weapon.system.ammoSelected._id && selfReplenishing){
+
+              await selfReplenish (actor, maxAmmo, weaponID, weaponName, weapon, difference, WEAPON_DAMAGE_OUTPUT);
+
+              return;
+            }
+
             ammoSelected = actor.items.get(selectedAmmo.selection);
             let calc = await damageValueCalc(ammoSelected, ammoSelected.system.dv, ammoSelected.system.traits, "ammo");
             dv = ammoType != "chemical" ? calc.dv : "ep2e.item.weapon.table.noDamageValueModifier";
@@ -437,20 +444,10 @@ export async function reloadWeapon(html, actor) {
           
           //Refills the weapon if selfReplenishing 'true' & no other swarm was selected
           if (selfReplenishing && numberOfPacks < 1){
-            currentAmmo = maxAmmo;
 
-            weaponUpdate.push({
-              "_id" : weaponID,
-              "system.ammoMin": currentAmmo
-            });
-      
-            let message = game.i18n.localize("ep2e.roll.announce.combat.ranged.reloadedWeapon");
-            ChatMessage.create({
-              speaker: ChatMessage.getSpeaker({actor: actor}),
-              flavor: "<center>" + message + "<p><strong>(" + weaponName + ")</strong></center><p/>"
-            })
-          
-            return actor.updateEmbeddedDocuments("Item", weaponUpdate);
+            await selfReplenish (actor, maxAmmo, weaponID, weaponName, weapon, difference, WEAPON_DAMAGE_OUTPUT);
+
+            return;
           }
 
           traits = ammoSelected.system.traits
@@ -549,4 +546,50 @@ export async function reloadWeapon(html, actor) {
         }
 
     })
+  }
+
+  //Reloading self replenishing weapons
+  async function selfReplenish (actor, maxAmmo, weaponID, weaponName, weapon, difference, htmlTemplate){
+    let weaponUpdate = [];
+    if (difference > 0){
+      let currentAmmo = maxAmmo;
+
+      weaponUpdate.push({
+        "_id" : weaponID,
+        "system.ammoMin": currentAmmo
+      });
+  
+      let message = {};
+      message.type = "reload";
+      message.copy = "ep2e.roll.announce.combat.ranged.reloadedWeapon";
+      message.weaponName = weaponName;
+      message.ammoLoadedName = weapon.system.ammoSelected.name
+      
+      let html = await renderTemplate(htmlTemplate, message)
+
+      ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: actor}),
+          content: html
+      })
+
+      return actor.updateEmbeddedDocuments("Item", weaponUpdate);
+    }
+    else{
+
+      let message = {};
+      message.type = "reload";
+      message.copy = "ep2e.roll.announce.combat.ranged.weaponFull";
+      message.weaponName = weaponName;
+      message.ammoLoadedName = null
+      
+      let html = await renderTemplate(htmlTemplate, message)
+
+      ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: actor}),
+          content: html,
+          whisper: [game.user._id]
+      })
+
+      return;
+    }
   }

@@ -84,7 +84,7 @@ export default class EPnpcSheet extends ActorSheet {
 
         //Loading weapons with Standard Ammo
         if (item.type === "rangedWeapon"){
-          if (item.system.ammoType != "seeker" && item.system.ammoType != "spray"){
+          if (item.system.ammoType != "seeker" && !item.system.mode1.traits.specialAmmoDrugs.value && !item.system.mode1.traits.specialAmmoBugs.value){
           let name = item.system.ammoType
           let capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
           item.system.ammoMin = item.system.ammoMax;
@@ -183,7 +183,7 @@ export default class EPnpcSheet extends ActorSheet {
                   ammo.seeker.push(item);
                   break;
                   case 'spray':
-                    if(item.system.traits.nanoSwarm){
+                    if(item.system.traits.nanoSwarm.value){
                       ammo.swarm.push(item);
                     }
                     else{
