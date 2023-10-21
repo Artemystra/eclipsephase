@@ -2619,6 +2619,9 @@ export async function TaskCheck({
         else if (poolValue && !flexValue && swapPossible){
             choices = 3;
         }
+        else if (poolValue && flexValue && !swapPossible){
+            choices = 4;
+        }
         let dialogName = new Localizer ('ep2e.roll.dialog.title.raise');
         let useSelection = new Localizer ('ep2e.roll.dialog.button.useSelection');
         const template = "systems/eclipsephase/templates/chat/raise-dialog.html";
