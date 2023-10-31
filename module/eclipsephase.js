@@ -194,6 +194,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
+    "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.html",
     "systems/eclipsephase/templates/item/partials/grenade-details.html",
     "systems/eclipsephase/templates/item/partials/item-traits.html"
