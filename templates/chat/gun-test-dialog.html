@@ -18,64 +18,7 @@
     </div>
     <div class="grid grid-4col" style="margin-top: 0;">
         <div>
-            <div class="contentBoxMargin">
-                <div class="form-group listBackgroundMain">
-                    <label class="resource-labelDialog" style="min-width: 140px;">{{localize "ep2e.roll.dialog.globalModLabel"}}</label>
-                    <input type="number" name="GlobalMod" placeholder="e.g. -20" />
-                </div>
-                {{#if specName}}
-                <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="useSpec" id="spec">
-                    <label class="resource-label" for="spec">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
-                </div>
-                {{else}}
-                <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="useSpec" disabled>
-                    <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noSpecLabel"}}</label>
-                </div>
-                {{/if}}
-                {{#if (eq actorType "character")}}
-                    {{#if poolValue}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="usePool" id="pool">
-                        <label class="resource-label" for="pool">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}} (+20)</label>
-                    </div>
-                    {{else}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="usePool" disabled>
-                        <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
-                    </div>
-                    {{/if}}
-                {{else}}
-                    {{#if poolValue}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useThreat" id="threat">
-                        <label class="resource-label" for="threat">{{localize "ep2e.roll.dialog.useThreat"}}</label>
-                    </div>
-                    {{else}}
-                    <div class="form-group listBackgroundMain">
-                        <input type="checkbox" name="useThreat" disabled>
-                        <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
-                    </div>
-                    {{/if}}
-                {{/if}}
-            </div>
-            <div class="contentBoxMargin">
-                <div class="flexrow subheader">
-                    <h3 class="subheader dialog">{{localize "ep2e.roll.rollType.label"}}</h3>
-                </div>
-                <div class="form-group listBackgroundMain">
-                    <select name="RollMode">
-                        <option value="public">{{localize "ep2e.roll.rollType.public"}}</option>
-                        {{#if (eq taskType "psi")}}
-                            <option value="private" selected>{{localize "ep2e.roll.rollType.private"}}</option>
-                        {{else}}
-                            <option value="private">{{localize "ep2e.roll.rollType.private"}}</option>
-                        {{/if}}
-                        <option value="blind">{{localize "ep2e.roll.rollType.blind"}}</option>
-                    </select>
-                </div>
-            </div>
+            {{> systems/eclipsephase/templates/chat/partials/general-modifiers.html }}
         </div>
         <div>
             {{#if (ne traits.automatedEffects.noSmartlink.value true)}}

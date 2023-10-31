@@ -416,6 +416,7 @@ export async function TaskCheck({
     poolValue = 0,
     flexValue = 0,
     usePool = null,
+    useFlex = null,
     useThreat = null,
     poolUpdate = 0,
     usedSwipSwap = null,
@@ -484,7 +485,7 @@ export async function TaskCheck({
 
     if (askForOptions != optionsSettings && skillKey === "guns") {
         
-        let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, actorType, weaponTraits, rolledFrom);
+        let checkOptions = await GetGunsTaskOptions(specName, poolType, poolValue, flexValue, actorType, weaponTraits, rolledFrom);
 
         if (checkOptions.cancelled) {
             return;
@@ -510,13 +511,14 @@ export async function TaskCheck({
         inMelee = checkOptions.inMelee;
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
+        useFlex = checkOptions.useFlex;
         useThreat = checkOptions.useThreat;
     }
 
     //Melee skill check dialog
     else if (askForOptions != optionsSettings && skillKey === "melee") {
 
-        let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, actorType, weaponTraits, rolledFrom);
+        let checkOptions = await GetMeleeTaskOptions(specName, poolType, poolValue, flexValue,  actorType, weaponTraits, rolledFrom);
 
         if (checkOptions.cancelled) {
             return;
@@ -530,13 +532,14 @@ export async function TaskCheck({
         calledShot = checkOptions.calledShot;
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
+        useFlex = checkOptions.useFlex;
         useThreat = checkOptions.useThreat;
     }
 
     //Default skill check dialog
     else if (askForOptions != optionsSettings) {
         let taskType = skillKey
-        let checkOptions = await GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType, sleightInfection, rolledFrom);
+        let checkOptions = await GetTaskOptions(skillName, specName, poolType, poolValue, flexValue,  actorType, taskType, sleightInfection, rolledFrom);
 
         if (checkOptions.cancelled) {
             return;
@@ -550,6 +553,7 @@ export async function TaskCheck({
         aspectBase = checkOptions.aspects
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
+        useFlex = checkOptions.useFlex;
         useThreat = checkOptions.useThreat;
     }
 
@@ -591,10 +595,13 @@ export async function TaskCheck({
             if(meleeMod < -30){
                 meleeMod = -30;
             }
+
             
-            modValue = meleeMod;
-            announce = "ep2e.roll.announce.combat.melee.sizeDifference";
-            task.addModifier(new TaskRollModifier(announce, modValue))
+            if (meleeMod != 0){
+                modValue = meleeMod;
+                announce = "ep2e.roll.announce.combat.melee.sizeDifference";
+                task.addModifier(new TaskRollModifier(announce, modValue))
+            }
         }
 
         if (calledShot) {
@@ -867,14 +874,21 @@ export async function TaskCheck({
             announce = "ep2e.roll.announce.specialization"
             task.addModifier(new TaskRollModifier(announce, specMod))
         }
+
+        console.log("My usePool value", usePool)
+        console.log("My useFlex value", useFlex)
+        console.log("My useThreat value", useThreat)
         //Checks if pool used
-        if (usePool || useThreat){
+        if (usePool || useThreat || useFlex){
             poolMod = 20;
             poolValue -= 1*numberOfTargets;
-            poolUpdate = poolValue;
+            flexValue -= 1*numberOfTargets;
+            poolUpdate = usePool || useThreat ? poolValue : flexValue;
+            console.log("This is my poolUpdate ", poolUpdate)
+            let poolUsed = usePool || useThreat ? poolType : "Flex";
             //Determine pool to be updated
-            await poolUpdater(poolUpdate,poolType);
-            task.addModifier(new TaskRollModifier(poolType+":", poolMod))
+            await poolUpdater(poolUpdate,poolUsed);
+            task.addModifier(new TaskRollModifier(poolUsed, poolMod))
         }
         
         if (globalMod){
@@ -2124,6 +2138,7 @@ export async function TaskCheck({
 
     //Update Pools
     async function poolUpdater(poolUpdate, poolType){
+        console.log("This is my poolType", poolType)
         switch (poolType) {
             case 'Insight':
                 return actorWhole.update({"system.pools.insight.value" : poolUpdate});
@@ -2134,6 +2149,7 @@ export async function TaskCheck({
             case 'Threat':
                 return actorWhole.update({"system.threatLevel.current" : poolUpdate});
             case 'Flex':
+                console.log("BINGO!")
                 return actorWhole.update({"system.pools.flex.value" : poolUpdate});
             default:
                 break;
@@ -2357,12 +2373,12 @@ export async function TaskCheck({
     }
 
     //Skill check dialog constructor
-    async function GetTaskOptions(skillName, specName, poolType, poolValue, actorType, taskType, sleightInfection, rolledFrom) {
+    async function GetTaskOptions(skillName, specName, poolType, poolValue, flexValue, actorType, taskType, sleightInfection, rolledFrom) {
         let dialogName = new Localizer ('ep2e.roll.dialog.title.talentCheck');
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/skill-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, taskType, sleightInfection, rolledFrom});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, flexValue, actorType, taskType, sleightInfection, rolledFrom});
 
         return new Promise(resolve => {
             const data = {
@@ -2396,18 +2412,19 @@ export async function TaskCheck({
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.checked : false,
+            usePool: form.usePool ? form.usePool.value != "on" ? form.usePool.value === "pool" ? true : false : form.usePool.checked : false,
+            useFlex: form.useFlex ? form.useFlex.checked : form.usePool ? form.usePool.value != "on" ? form.usePool.value === "flex" ? true : false : false: false,
             useThreat: form.useThreat ? form.useThreat.checked : false
         }
     }
 
     //Skill check dialog constructor
-    async function GetMeleeTaskOptions(specName, poolType, poolValue, actorType, traits, rolledFrom) {
+    async function GetMeleeTaskOptions(specName, poolType, poolValue, flexValue, actorType, traits, rolledFrom) {
         let dialogName = new Localizer ('ep2e.roll.dialog.title.melee');
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/melee-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, traits, rolledFrom});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, flexValue, actorType, traits, rolledFrom});
 
         return new Promise(resolve => {
             const data = {
@@ -2439,7 +2456,8 @@ export async function TaskCheck({
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.checked : false,
+            usePool: form.usePool ? form.usePool.value != "on" ? form.usePool.value === "pool" ? true : false : form.usePool.checked : false,
+            useFlex: form.useFlex ? form.useFlex.checked : form.usePool ? form.usePool.value != "on" ? form.usePool.value === "flex" ? true : false : false: false,
             useThreat: form.useThreat ? form.useThreat.checked : false,
             calledShot: form.CalledShot.checked,
             sizeDifference: form.SizeDifference.value,
@@ -2449,7 +2467,7 @@ export async function TaskCheck({
     }
 
     //Guns check dialog constructor
-    async function GetGunsTaskOptions(specName, poolType, poolValue, actorType, traits, rolledFrom) {
+    async function GetGunsTaskOptions(specName, poolType, poolValue, flexValue, actorType, traits, rolledFrom) {
         let specialEffects = null;
         if(rolledFrom === "rangedWeapon"){
             specialEffects = Object.keys(traits.confirmationEffects).length
@@ -2458,7 +2476,7 @@ export async function TaskCheck({
         let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
         let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
         const template = "systems/eclipsephase/templates/chat/gun-test-dialog.html";
-        const html = await renderTemplate(template, {specName, poolType, poolValue, actorType, traits, specialEffects});
+        const html = await renderTemplate(template, {specName, poolType, poolValue, flexValue, actorType, traits, specialEffects});
 
         return new Promise(resolve => {
             const data = {
@@ -2504,7 +2522,8 @@ export async function TaskCheck({
             weaponFixated: form.WeaponFixated ? form.WeaponFixated.checked : false,
             biomorphTarget: form.BiomorphTarget ? form.BiomorphTarget.checked : false,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.checked : false,
+            usePool: form.usePool ? form.usePool.value != "on" ? form.usePool.value === "pool" ? true : false : form.usePool.checked : false,
+            useFlex: form.useFlex ? form.useFlex.checked : form.usePool ? form.usePool.value != "on" ? form.usePool.value === "flex" ? true : false : false: false,
             useThreat: form.useThreat ? form.useThreat.checked : false
         }
 
