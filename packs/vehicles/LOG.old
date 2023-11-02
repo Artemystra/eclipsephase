@@ -1,7 +1,7 @@
-2023/11/02-12:00:25.117439 310dd9000 Recovering log #586
-2023/11/02-12:00:25.117856 310dd9000 Delete type=0 #586
-2023/11/02-12:00:25.117890 310dd9000 Delete type=3 #584
-2023/11/02-12:00:51.871264 311e5a000 Level-0 table #591: started
-2023/11/02-12:00:51.871293 311e5a000 Level-0 table #591: 0 bytes OK
-2023/11/02-12:00:51.871397 311e5a000 Delete type=0 #589
-2023/11/02-12:00:51.871500 311e5a000 Manual compaction at level-0 from '!items!0hG5VJieUcAqD7WW' @ 72057594037927935 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at (end)
+2023/11/02-18:48:35.202507 3126dc000 Recovering log #593
+2023/11/02-18:48:35.203229 3126dc000 Delete type=3 #592
+2023/11/02-18:48:35.203340 3126dc000 Delete type=0 #593
+2023/11/02-23:05:59.261538 30cdd7000 Level-0 table #597: started
+2023/11/02-23:05:59.261552 30cdd7000 Level-0 table #597: 0 bytes OK
+2023/11/02-23:05:59.261784 30cdd7000 Delete type=0 #595
+2023/11/02-23:05:59.262217 30cdd7000 Manual compaction at level-0 from '!items!0hG5VJieUcAqD7WW' @ 72057594037927935 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at (end)

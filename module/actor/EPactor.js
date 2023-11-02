@@ -217,9 +217,8 @@ export default class EPactor extends Actor {
   }
 
   _calculateInitiative(actorModel, chiMultiplier) {
-    actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value +
-      actorModel.aptitudes.int.value) / 5) + eval(actorModel.mods.iniMod) + (actorModel.mods.iniChiMod ? (eval(actorModel.mods.iniChiMod)*chiMultiplier) : 0)
-    actorModel.initiative.display = "1d6 + " + actorModel.initiative.value
+    actorModel.initiative.value = Math.round((actorModel.aptitudes.ref.value + actorModel.aptitudes.int.value) / 5) + eval(actorModel.mods.iniMod) + (actorModel.mods.iniChiMod ? (eval(actorModel.mods.iniChiMod)*chiMultiplier) : 0) + eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0)
+    actorModel.initiative.display = "1d6 + " + (actorModel.initiative.value - eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0))
   }
 
   _calculateMentalHealth(actorModel, chiMultiplier) {

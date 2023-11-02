@@ -1371,6 +1371,20 @@ export function migrationPre098(startMigration, endMigration){
   }
 }
 
+export function migrationPre0985(startMigration, endMigration){
+
+  const latestUpdate = "0.9.8.5";
+
+  if (startMigration){        
+    for(let actors of game.actors){
+      actors.update({"system.mods.iniMod" : 0});
+    }
+    game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+    endMigration = true
+    return {endMigration}
+  }
+}
+
 //A general item deleter
 function itemDeletion(actor, itemID){
   let itemDelete = [itemID]

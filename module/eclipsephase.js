@@ -18,7 +18,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098} from "./common/migration.js";
+import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098, migrationPre0985} from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -227,6 +227,7 @@ let before09 = foundry.utils.isNewerVersion("0.9", gameVersion)
 let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion)
 let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
 let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion)
+let before0985 = foundry.utils.isNewerVersion("0.9.8.5", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -328,6 +329,23 @@ if (before098) {
   let Migration098 = migrationPre098(startMigration)
 
   endMigration = Migration098["endMigration"]
+}
+
+//0.9.8.5 Migration
+if (before0985) {
+  endMigration = false
+  const messageCopy = "ep2e.migration.0985"
+  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    startMigration = migration.start
+  }
+
+  let Migration0985 = migrationPre0985(startMigration)
+
+  endMigration = Migration0985["endMigration"]
 }
 
 if(endMigration){

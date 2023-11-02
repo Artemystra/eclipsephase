@@ -401,6 +401,7 @@ export async function TaskCheck({
     rolledFrom = "",
     announce = "",
     usedRaise = null,
+    usedFlexRaise = null,
     //Results
     success = false,
     critical = false,
@@ -875,16 +876,12 @@ export async function TaskCheck({
             task.addModifier(new TaskRollModifier(announce, specMod))
         }
 
-        console.log("My usePool value", usePool)
-        console.log("My useFlex value", useFlex)
-        console.log("My useThreat value", useThreat)
         //Checks if pool used
         if (usePool || useThreat || useFlex){
             poolMod = 20;
             poolValue -= 1*numberOfTargets;
             flexValue -= 1*numberOfTargets;
             poolUpdate = usePool || useThreat ? poolValue : flexValue;
-            console.log("This is my poolUpdate ", poolUpdate)
             let poolUsed = usePool || useThreat ? poolType : "Flex";
             //Determine pool to be updated
             await poolUpdater(poolUpdate,poolUsed);
@@ -1102,12 +1099,13 @@ export async function TaskCheck({
             
             if (successType &&  poolValue > 0 && potentialRaise || successType &&  poolValue > 0 && swapPossible || successType &&  flexValue > 0 && potentialRaise || successType &&  flexValue > 0 && swapPossible){
                 
-                let checkOptions = await GetRaiseOptions(successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType);
+                let checkOptions = await GetRaiseOptions(successMessage, swipSwap, swapPossible, potentialRaise, poolValue, flexValue, actorType, poolType);
 
                 if (checkOptions.cancelled) {
                     return;
                 }
                 usedRaise = checkOptions.raise;
+                usedFlexRaise = checkOptions.flexRaise;
                 usedSwipSwap = checkOptions.swap;
             }
 
@@ -1165,7 +1163,7 @@ export async function TaskCheck({
 
             if (rollModeSelection === "gmroll"){
 
-                  if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+                  if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success" || usedFlexRaise && flexValue && successName != "Superior Success" && successName != "Superior Critical Success"){
 
                     switch (successName){
                         case 'Success':
@@ -1191,16 +1189,16 @@ export async function TaskCheck({
                     }
     
                     poolType = poolRAM;
-    
-                    poolValue--;
-                    poolUpdate = poolValue;
+                    
+                    poolUpdate = usedRaise ? poolValue-1 : flexValue-1;
+                    let poolUsed = usedRaise ? poolType : "Flex";
 
                     message = {}
         
                     message.resultText = successMessage;
                     
                     message.type = "usedRaise";
-                    message.poolName = await poolName(poolType);
+                    message.poolName = await poolName(poolUsed);
     
                     html = await renderTemplate(POOL_USAGE_OUTPUT, message)
     
@@ -1208,8 +1206,8 @@ export async function TaskCheck({
                         content: html,
                         whisper: ChatMessage.getWhisperRecipients("GM")
                     });
-    
-                    poolUpdater(poolUpdate, poolType)
+
+                    poolUpdater(poolUpdate, poolUsed)
                 }
     
                 else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
@@ -1245,7 +1243,7 @@ export async function TaskCheck({
                 }
             }
             else {
-                if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+                if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success" || usedFlexRaise && flexValue && successName != "Superior Success" && successName != "Superior Critical Success"){
 
                     switch (successName){
                         case 'Success':
@@ -1271,16 +1269,16 @@ export async function TaskCheck({
                     }
     
                     poolType = poolRAM;
-    
-                    poolValue--;
-                    poolUpdate = poolValue;
+
+                    poolUpdate = usedRaise ? poolValue-1 : flexValue-1;
+                    let poolUsed = usedRaise ? poolType : "Flex";
 
                     message = {}
         
                     message.resultText = successMessage;
                     
                     message.type = "usedRaise";
-                    message.poolName = await poolName(poolType);
+                    message.poolName = await poolName(poolUsed);
     
                     html = await renderTemplate(POOL_USAGE_OUTPUT, message)
     
@@ -1288,8 +1286,8 @@ export async function TaskCheck({
                         speaker: ChatMessage.getSpeaker({actor: this.actor}),
                         flavor: html
                     })
-    
-                    poolUpdater(poolUpdate, poolType)
+
+                    poolUpdater(poolUpdate, poolUsed)
                 }
     
                 else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
@@ -1774,7 +1772,7 @@ export async function TaskCheck({
 
                 if (rollModeSelection === "gmroll"){
 
-                    if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+                    if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success" || usedFlexRaise && flexValue && successName != "Superior Success" && successName != "Superior Critical Success"){
                         successModifier += "+ 1d6";
                         switch (successName) {
                             case 'Success':
@@ -1800,9 +1798,9 @@ export async function TaskCheck({
                         }
       
                       poolType = poolRAM;
-      
-                      poolValue--;
-                      poolUpdate = poolValue;
+
+                      poolUpdate = usedRaise ? poolValue-1 : flexValue-1;
+                      let poolUsed = usedRaise ? poolType : "Flex";
 
                       message = {}
           
@@ -1817,8 +1815,8 @@ export async function TaskCheck({
                           content: html,
                           whisper: ChatMessage.getWhisperRecipients("GM")
                       });
-      
-                      poolUpdater(poolUpdate, poolType)
+
+                      poolUpdater(poolUpdate, poolUsed)
                   }
       
                   else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
@@ -1854,7 +1852,7 @@ export async function TaskCheck({
                   }
               }
               else {
-                  if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success"){
+                  if(usedRaise && poolValue && successName != "Superior Success" && successName != "Superior Critical Success" || usedFlexRaise && flexValue && successName != "Superior Success" && successName != "Superior Critical Success"){
                     successModifier += "+ 1d6";
                     switch (successName) {
                         case 'Success':
@@ -1880,9 +1878,9 @@ export async function TaskCheck({
                     }
       
                       poolType = poolRAM;
-      
-                      poolValue--;
-                      poolUpdate = poolValue;
+                      
+                      poolUpdate = usedRaise ? poolValue-1 : flexValue-1;
+                      let poolUsed = usedRaise ? poolType : "Flex";
 
                       message = {}
           
@@ -1897,8 +1895,8 @@ export async function TaskCheck({
                           speaker: ChatMessage.getSpeaker({actor: this.actor}),
                           flavor: html
                       })
-      
-                      poolUpdater(poolUpdate, poolType)
+
+                      poolUpdater(poolUpdate, poolUsed)
                   }
       
                   else if (usedRaise && successName === "Superior Success" || usedRaise && successName === "Superior Critical Success"){
@@ -2138,7 +2136,7 @@ export async function TaskCheck({
 
     //Update Pools
     async function poolUpdater(poolUpdate, poolType){
-        console.log("This is my poolType", poolType)
+        
         switch (poolType) {
             case 'Insight':
                 return actorWhole.update({"system.pools.insight.value" : poolUpdate});
@@ -2149,7 +2147,6 @@ export async function TaskCheck({
             case 'Threat':
                 return actorWhole.update({"system.threatLevel.current" : poolUpdate});
             case 'Flex':
-                console.log("BINGO!")
                 return actorWhole.update({"system.pools.flex.value" : poolUpdate});
             default:
                 break;
@@ -2625,7 +2622,7 @@ export async function TaskCheck({
         }
     }
 
-    async function GetRaiseOptions(successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType) {
+    async function GetRaiseOptions(successMessage, swipSwap, swapPossible, potentialRaise, poolValue, flexValue, actorType, poolType) {
 
         let choices = 0;
 
@@ -2638,13 +2635,11 @@ export async function TaskCheck({
         else if (poolValue && !flexValue && swapPossible){
             choices = 3;
         }
-        else if (poolValue && flexValue && !swapPossible){
-            choices = 4;
-        }
+
         let dialogName = new Localizer ('ep2e.roll.dialog.title.raise');
         let useSelection = new Localizer ('ep2e.roll.dialog.button.useSelection');
         const template = "systems/eclipsephase/templates/chat/raise-dialog.html";
-        const html = await renderTemplate(template, {successMessage, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, choices});
+        const html = await renderTemplate(template, {successMessage, swipSwap, swapPossible, potentialRaise, poolValue, flexValue, actorType, poolType, choices});
         return new Promise(resolve => {
             const data = {
                 title: dialogName.title,
@@ -2665,7 +2660,8 @@ export async function TaskCheck({
     function _proRaiseOptions(form) {
         return {
             swap: form.useSwap ? form.useSwap.value : false,
-            raise: form.useRaise ? form.useRaise.checked : false
+            raise: form.useRaise ? form.useRaise.value != "on" ? form.useRaise.value === "pool" ? true : false : form.useRaise.checked : false,
+            flexRaise: form.useFlexRaise ? form.useFlexRaise.checked : form.useRaise ? form.useRaise.value != "on" ? form.useRaise.value === "flex" ? true : false : false: false,
         }
     }
 }

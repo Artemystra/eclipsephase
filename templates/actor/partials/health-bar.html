@@ -54,7 +54,8 @@
         <div class="wantToKnowMore">
             <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.iniMod"}}</span>
-            <input class="input-small" style="text-align: center" type="text" name="system.mods.iniMod" value="{{actor.system.mods.iniMod}}" data-dtype="Number" placeholder="0"/>
+            <span class="resource-label">{{actor.system.initiative.display}} + </span>
+            <input class="input-xs" style="text-align: center" type="text" name="system.mods.manualIniMod" value="{{actor.system.mods.manualIniMod}}" data-dtype="Number" placeholder="0"/>
         </div>
         <div class="wantToKnowMore">
             <i class="fa-solid fa-land-mine-on awesomeIcon" style="font-size: 18px;"></i>
