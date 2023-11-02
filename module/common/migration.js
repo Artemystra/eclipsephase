@@ -909,23 +909,25 @@ export async function migrationPre093(startMigration, endMigration){
           }
       }
 
-      let catalogueWeapons = await weaponCategorization(actorsInQuestion)
+      if(actorsInQuestion.length){
+        let catalogueWeapons = await weaponCategorization(actorsInQuestion)
 
-      if(catalogueWeapons.cancelled){
-        return
-      }
-
-      let weaponUpdate = catalogueWeapons.weaponUpdateList
-
-      for (let itemPackage of weaponUpdate){
-        let updateID = itemPackage._id;
-        for(let actor of game.actors){
-          let Updater = []
-          if (actor._id === updateID){
-            Updater.push(itemPackage[0]);
-            actor.updateEmbeddedDocuments("Item", Updater);
-          }
+        if(catalogueWeapons.cancelled){
+          return
         }
+  
+        let weaponUpdate = catalogueWeapons.weaponUpdateList
+  
+        for (let itemPackage of weaponUpdate){
+          let updateID = itemPackage._id;
+          for(let actor of game.actors){
+            let Updater = []
+            if (actor._id === updateID){
+              Updater.push(itemPackage[0]);
+              actor.updateEmbeddedDocuments("Item", Updater);
+            }
+          }
+        } 
       }
 
 
