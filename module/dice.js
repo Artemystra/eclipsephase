@@ -1725,6 +1725,7 @@ export async function TaskCheck({
                         }
                         usedRaise = checkOptions.raise;
                         usedSwipSwap = checkOptions.swap;
+                        usedFlexRaise = checkOptions.flexRaise;
                     }
                 }
 
@@ -2566,8 +2567,9 @@ export async function TaskCheck({
     }
     function _proDamageRollOptions(form) {
         return {
-            swap: form.useSwap ? form.useSwap.value : null,
-            raise: form.useRaise ? form.useRaise.checked : false
+            swap: form.useSwap ? form.useSwap.value : false,
+            raise: form.useRaise ? form.useRaise.value != "on" ? form.useRaise.value === "pool" ? true : false : form.useRaise.checked : false,
+            flexRaise: form.useFlexRaise ? form.useFlexRaise.checked : form.useRaise ? form.useRaise.value != "on" ? form.useRaise.value === "flex" ? true : false : false: false,
         }
     }
 
