@@ -18,7 +18,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098} from "./common/migration.js";
+import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098, migrationPre0985} from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -105,7 +105,7 @@ function registerSystemSettings() {
     name: "SETTINGS.migrationVersion.name",
     hint: "SETTINGS.migrationVersion.hint",
     type: String,
-    default: "0.8.0.1"
+    default: "newInstall"
   });
 
   game.settings.register("eclipsephase", "superBrew", {
@@ -194,6 +194,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
+    "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.html",
     "systems/eclipsephase/templates/item/partials/grenade-details.html",
     "systems/eclipsephase/templates/item/partials/item-traits.html"
@@ -215,6 +216,7 @@ Hooks.once("ready", async function() {
 
 //Migration script if actorSheets are changing
 const gameVersion = game.settings.get("eclipsephase", "migrationVersion");
+gameVersion === "newInstall" ? game.settings.set("eclipsephase", "migrationVersion", game.system.version) : console.log("Last Migration:", gameVersion, "\n" + "System Version:", game.system.version)
 let startMigration = false
 let endMigration = false
 const currentVersion = game.system.version
@@ -225,6 +227,7 @@ let before09 = foundry.utils.isNewerVersion("0.9", gameVersion)
 let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion)
 let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
 let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion)
+let before0985 = foundry.utils.isNewerVersion("0.9.8.5", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -243,11 +246,10 @@ if (isLegacy){
   let Migration0861 = await migrationPre0861(startMigration)
 
   endMigration = Migration0861["endMigration"]
-
-  await migrationEnd(endMigration)
 }
 //0.8.6.1 Migration
-else if (before0861) {
+if (before0861) {
+  endMigration = false
   const messageCopy = "ep2e.migration.0861"
   let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
   
@@ -260,12 +262,10 @@ else if (before0861) {
   let Migration0861 = await migrationPre0861(startMigration)
 
   endMigration = Migration0861["endMigration"]
-
-  await migrationEnd(endMigration)
-
 }
 //0.9 Migration
-else if (before09) {
+if (before09) {
+  endMigration = false
   const messageCopy = "ep2e.migration.09"
   let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
   
@@ -278,13 +278,11 @@ else if (before09) {
   let Migration09 = await migrationPre09(startMigration)
 
   endMigration = Migration09["endMigration"]
-
-  await migrationEnd(endMigration)
-
 }
 
 //0.9.3 Migration
-else if (before093) {
+if (before093) {
+  endMigration = false
   const messageCopy = "ep2e.migration.093"
   let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
   
@@ -297,13 +295,11 @@ else if (before093) {
   let Migration093 = await migrationPre093(startMigration)
 
   endMigration = Migration093["endMigration"]
-
-  await migrationEnd(endMigration)
-
 }
 
 //0.9.4 Migration
-else if (before095) {
+if (before095) {
+  endMigration = false
   const messageCopy = "ep2e.migration.095"
   let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
   
@@ -316,13 +312,11 @@ else if (before095) {
   let Migration095 = migrationPre095(startMigration)
 
   endMigration = Migration095["endMigration"]
-
-  await migrationEnd(endMigration)
-
 }
 
 //0.9.8 Migration
-else if (before098) {
+if (before098) {
+  endMigration = false
   const messageCopy = "ep2e.migration.098"
   let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
   
@@ -335,10 +329,30 @@ else if (before098) {
   let Migration098 = migrationPre098(startMigration)
 
   endMigration = Migration098["endMigration"]
-
-  await migrationEnd(endMigration)
-
 }
+
+//0.9.8.5 Migration
+if (before0985) {
+  endMigration = false
+  const messageCopy = "ep2e.migration.0985"
+  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    startMigration = migration.start
+  }
+
+  let Migration0985 = migrationPre0985(startMigration)
+
+  endMigration = Migration0985["endMigration"]
+}
+
+if(endMigration){
+  await migrationEnd(endMigration)
+}
+
+console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
 async function migrationStart(endMigration, messageHeadline, messageCopy) {
   const template = "systems/eclipsephase/templates/chat/migration-dialog.html";

@@ -909,23 +909,25 @@ export async function migrationPre093(startMigration, endMigration){
           }
       }
 
-      let catalogueWeapons = await weaponCategorization(actorsInQuestion)
+      if(actorsInQuestion.length){
+        let catalogueWeapons = await weaponCategorization(actorsInQuestion)
 
-      if(catalogueWeapons.cancelled){
-        return
-      }
-
-      let weaponUpdate = catalogueWeapons.weaponUpdateList
-
-      for (let itemPackage of weaponUpdate){
-        let updateID = itemPackage._id;
-        for(let actor of game.actors){
-          let Updater = []
-          if (actor._id === updateID){
-            Updater.push(itemPackage[0]);
-            actor.updateEmbeddedDocuments("Item", Updater);
-          }
+        if(catalogueWeapons.cancelled){
+          return
         }
+  
+        let weaponUpdate = catalogueWeapons.weaponUpdateList
+  
+        for (let itemPackage of weaponUpdate){
+          let updateID = itemPackage._id;
+          for(let actor of game.actors){
+            let Updater = []
+            if (actor._id === updateID){
+              Updater.push(itemPackage[0]);
+              actor.updateEmbeddedDocuments("Item", Updater);
+            }
+          }
+        } 
       }
 
 
@@ -1364,6 +1366,20 @@ export function migrationPre098(startMigration, endMigration){
       }
     }
     game.settings.set("eclipsephase", "migrationVersion", "0.9.8");
+    endMigration = true
+    return {endMigration}
+  }
+}
+
+export function migrationPre0985(startMigration, endMigration){
+
+  const latestUpdate = "0.9.8.5";
+
+  if (startMigration){        
+    for(let actors of game.actors){
+      actors.update({"system.mods.iniMod" : 0});
+    }
+    game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
     endMigration = true
     return {endMigration}
   }

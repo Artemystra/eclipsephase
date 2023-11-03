@@ -86,29 +86,35 @@
         </div>
         {{/if}}
         {{#if potentialRaise}}
-            <div class="form-group listBackgroundMain">
-                <table class="radio-group">
-                    {{#if poolValue}}
-                        <tr>
-                            <td class="table-radio-button">
-                                <input type="checkbox" name="useRaise">
-                            </td>
-                            <td td class="table-radio-label">
-                                <label class="resource-label">{{localize "ep2e.roll.announce.poolUsage.raiseLevel"}} 1 {{poolType}}</label>
-                            </td>
-                        </tr>
-                        {{else}}
-                        <tr>
-                            <td class="table-radio-button">
-                                <input type="checkbox" name="useRaise" disabled>
-                            </td>
-                            <td td class="table-radio-label">
-                                <label class="resource-label epInactive">{{poolType}} {{localize "ep2e.roll.announce.poolUsage.notAvailable"}}</label>
-                            </td>
-                        </tr>
-                    {{/if}}
-                </table>
-            </div>
+            {{#if poolValue}}
+                {{#if flexValue}}
+                    <div class="form-group listBackgroundMain">
+                        <label class="resource-label" style="padding-left: 10px;">{{localize "ep2e.roll.announce.poolUsage.raiseLevel"}}</label>
+                        <select name="useRaise" class="input-large">
+                            <option value=false>{{localize "ep2e.roll.dialog.push.none"}}</option>
+                            <option value="pool">1 {{poolType}}</option>
+                            <option value="flex">1 {{localize "ep2e.skills.flex.flexHeadline"}}</option>
+                        </select>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useRaise" style="padding-left: 10px;">
+                        <label class="resource-label">{{localize "ep2e.roll.announce.poolUsage.raiseLevel"}} 1 {{poolType}}</label>
+                    </div>
+                {{/if}}
+            {{else}}
+                {{#if flexValue}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useFlexRaise" style="padding-left: 10px;">
+                        <label class="resource-label">{{localize "ep2e.roll.announce.poolUsage.raiseLevel"}} 1 {{localize "ep2e.skills.flex.flexHeadline"}}</label>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <input type="checkbox" name="useRaise" disabled>
+                        <label class="resource-label epInactive" style="padding-left: 10px;">{{localize "ep2e.roll.dialog.noPool"}}</label>
+                    </div>
+                {{/if}}
+            {{/if}}
         {{/if}}
     </div>
 </form>
