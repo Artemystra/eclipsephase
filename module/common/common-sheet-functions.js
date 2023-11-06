@@ -163,6 +163,49 @@ export async function itemReduction(actor, itemID, itemQuantity){
   }
 }
 
+export async function healthBarChange(actor, html){
+  const actorModel = actor.system
+
+  const physicalHealthBarContainer = html.find("#physicalHealthBarContainer")
+  const physicalDeathBarContainer = html.find("#physicalDeathBarContainer")
+  const physicalHealthBar = html.find("#physicalHealthBar")
+  const physicalDeathBar = html.find("#physicalDeathBar")
+  const healthBarValue = actorModel.physical.relativePhysicalDamage;
+  const deathBarValue = actorModel.physical.relativeDeathDamage;
+
+  let mentalStressBar = null
+  let mentalInsanityBar = null
+  let stressBarValue = 0
+  let insanityBarValue = 0
+
+  if(actor.type === "character"){
+    mentalStressBar = html.find("#mentalStressBar")
+    mentalInsanityBar = html.find("#mentalInsanityBar")
+    stressBarValue = actorModel.mental.relativeStressDamage;
+    insanityBarValue = actorModel.mental.relativeInsanityDamage;
+  }
+
+  physicalHealthBarContainer[0].style.width = actorModel.physical.relativeDurabilityContainer + "%";
+  physicalDeathBarContainer[0].style.width = actorModel.physical.relativeDeathContainer + "%";
+  for(let i = 0 ; i <= healthBarValue ; i++){
+    physicalHealthBar[0].style.width = i + "%";
+  }
+  if(actor.type === "character"){
+    for(let i = 0 ; i <= stressBarValue ; i++){
+      mentalStressBar[0].style.width = i + "%";
+    }
+  }
+  await new Promise(resolve => setTimeout(resolve, 750));
+  for(let i = 0 ; i <= deathBarValue ; i++){
+    physicalDeathBar[0].style.width = i + "%";
+  }
+  if(actor.type === "character"){
+    for(let i = 0 ; i <= insanityBarValue ; i++){
+      mentalInsanityBar[0].style.width = i + "%";
+    }
+  }
+}
+
 //Standard Dialogs
 
 export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget) {

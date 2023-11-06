@@ -1,6 +1,6 @@
 import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo, healthBarChange } from "../common/common-sheet-functions.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 
@@ -509,8 +509,10 @@ export default class EPgoonSheet extends ActorSheet {
         //More Information Dialog
         html.on('click', 'a.moreInfoDialog', moreInfo);
 
-      //Reload Ranged Weapon Functionality
-      reloadWeapon(html, actor);
+        //Reload Ranged Weapon Functionality
+        reloadWeapon(html, actor);
+        
+        healthBarChange(actor, html);
 
     }
 

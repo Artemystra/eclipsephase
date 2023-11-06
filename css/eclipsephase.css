@@ -13,6 +13,10 @@
   --negative: #db2a2a;
   --positive: #2bb42b;
   --warning: #ce8532;
+  --mentalHealth: rgb(120, 45, 171);
+  --physicalHealth: #a72727;
+  --insanity: rgb(72, 22, 108);
+  --death: #711616;
   --iconBlue: #346d8e;
   --highlight: #4098d6;
   --complementary1: #57245d;
@@ -1426,6 +1430,11 @@ h3.subheaderBlank {
   background-color: var(--pitchBorder);
 }
 
+.listBackground.health{
+  padding: 5px 1.8em;
+  column-gap: 35px;
+}
+
 .itemBackground {
   background: var(--mainBackground);
   padding: 10px 0.5em 10px 0.5em;
@@ -1725,6 +1734,13 @@ h3.inline {
   font-weight: bold;
 }
 
+h3.health {
+  font-size: 16px;
+  margin-bottom: 10px;
+  height: 30px;
+  font-weight: bold;
+}
+
 /*Tooltips shown on hover*/
 .tooltip {
   position: relative;
@@ -1759,8 +1775,8 @@ h3.inline {
   display: block;
   text-align: left;
   position: absolute;
-  top: -67px;
-  left: -8px;
+  top: -13px;
+  left: -23px;
   z-index: 100;
   color: var(--mainText);
 }
@@ -1777,7 +1793,10 @@ h3.inline {
 }
 
 .tooltipTop,
-.tooltipBottom{
+.tooltipBottom,
+.healthtipTop,
+.healthtipOverTheTop,
+.healthtipBottom{
   min-height: 35px;
   background-color: var(--focusBackground);
 }
@@ -1804,10 +1823,97 @@ h3.inline {
   clip-path: polygon(0 0, 100% 0, 100% 30%, 95% 70%, 63% 70%, 60% 100%, 5% 100%, 0 46%);
 }
 
-.tooltipBottomBorder{
+.tooltipBottomBorder,
+.healthtipBottomBorder{
   padding: 0 0.25em 0.25em 0.25em;
   margin-top: -15px;
   clip-path: polygon(0 0, 100% 0, 100% 30%, 95% 70%, 63% 70%, 60% 100%, 5% 100%, 0 46%);
+}
+
+.healthtipTopBorder,
+.healthtipBottomBorder,
+.healthtipOverTheTopBorder{
+  position: relative;
+  z-index: 10;
+  background-color: var(--pitchBorder);
+}
+
+.healthtipOverTheTop,
+.healthtipOverTheTopBorder{
+  padding: 10px 20px;
+  align-items: center;
+}
+
+.healthtipOverTheTopBorder{
+  padding: 0.25em 0.25em 0 0.25em;
+  margin-bottom: -4px;
+  max-width: 56%;
+  z-index: 11;
+}
+
+.healthtipTop,
+.healthtipTopBorder{
+  clip-path: polygon(0 0, 90% 0%, 110% 100%, 0% 100%);
+  padding: 10px 20px;
+  align-items: center;
+}
+
+.healthtipTopBorder{
+  padding: 0.25em 0.25em 0 0.25em;
+  margin-bottom: -5px;
+}
+
+#mentalHealthBar,
+#physicalHealthBar,
+#physicalDeathBar,
+#mentalStressBar,
+#mentalInsanityBar,
+.healthBarBackground{
+  position: absolute;
+  z-index: 2;
+  width: 0%;
+  max-width: f;
+  height: 15px;
+  background-color: var(--mentalHealth);
+}
+
+#physicalHealthBar{
+  background-color: var(--physicalHealth);
+}
+
+#physicalDeathBar{
+  background-color: var(--death);
+}
+
+#mentalStressBar{
+  background-color: var(--mentalHealth);
+}
+
+#mentalInsanityBar{
+  background-color: var(--insanity);
+}
+
+#mentalHealthBar,
+#physicalHealthBar,
+#physicalDeathBar,
+#mentalStressBar,
+#mentalInsanityBar{
+  transition: width 1s;
+}
+
+.healthBarBackground{
+  width: 100%;
+  z-index: 1;
+  background-color: var(--mainBackground);
+}
+
+.healthBarContainer{
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  padding: 0px 5px;
 }
 
 .wantToKnowMore {
@@ -1859,9 +1965,7 @@ h3.inline {
 .restInfo,
 .information,
 .armorValue,
-.currentStatus,
-.mentalHealth,
-.physicalHealth{
+.currentStatus{
   max-height: 400px;
   overflow: auto;
   background-repeat: no-repeat;
@@ -1872,9 +1976,16 @@ h3.inline {
   border-right: solid 0.25em var(--mainBackground);
 }
 
-.mentalHealth{
+.mentalHealth,
+.physicalHealth{
   max-height: 200px;
   padding: 5px 0em 2em 1.5em;
+  overflow: auto;
+  background-repeat: no-repeat;
+  background-size: 100px 100px;
+  background-color: var(--focusBackground);
+  border-left: solid 0.25em var(--pitchBorder);
+  border-right: solid 0.25em var(--pitchBorder);
 }
 .physicalHealth{
   max-height: 200px;

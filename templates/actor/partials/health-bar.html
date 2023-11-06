@@ -1,60 +1,94 @@
 <div style="background-color: var(--mainBackground); padding: 10px 0 10px 0;">
-    <div class="flexrow flex-group-center listBackground grid grid-5col" style="background-color: var(--pitchBorder); margin: 0;">
-        <div class="wantToKnowMore">
-            <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
-            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.durdr"}}</span>
-            <input class="input-xs" type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.physical.max}}/{{actor.system.physical.dr}}</span>
-        </div>
-        <div class="wantToKnowMore">
-            <i class="fa-regular fa-bandage awesomeIcon" style="font-size: 18px;"></i>
-            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.woundswt"}}</span>
-            <input class="input-xs" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
+    <div class="flexrow flex-group-center listBackground health grid grid-4col" style="background-color: var(--pitchBorder); margin: 0;">
+        <!-- Physical Health Overlay -->
+        <div class="tooltip" style="z-index: 19;">
+            <div role="healthOverlay">
+                <div class="healthtipOverTheTopBorder">
+                    <div class="healthtipOverTheTop">
+                    </div>
+                </div>
+                <div class="healthtipTopBorder">
+                    <div class="healthtipTop">
+                        <h3 class="health" style="min-width: 100%;">Körperliche Gesundheit</h3>
+                    </div>
+                </div>
+                <div class="physicalHealth">
+                    <div style="padding-bottom: 10px;">
+                        <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
+                        <input class="input-xs" type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.physical.max}}/{{actor.system.physical.dr}}</span>
+                    </div>
+                    <div style="padding-bottom: 10px;">
+                        <i class="fa-regular fa-bandage awesomeIcon" style="font-size: 18px;"></i>
+                        <input class="input-xs" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
+                    </div>
+                </div>
+                <div class="healthtipBottomBorder">
+                    <div class="tooltipBottom"></div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; position: inherit; z-index: 130;">
+                <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
+                <div class="healthBarContainer" id="physicalHealthBarContainer">
+                    <div id="physicalHealthBar"></div>
+                    <div class="healthBarBackground"></div>
+                </div>
+                <div class="healthBarContainer" id="physicalDeathBarContainer">
+                    <div id="physicalDeathBar"></div>
+                    <div class="healthBarBackground"></div>
+                </div>
+            </div>
         </div>
         {{#if (eq actor.type "character")}}
-        <!--<div class="tooltip">
+        <!-- Mental Health Overlay -->
+        <div class="tooltip"  style="z-index: 20;">
             <div role="healthOverlay">
-                <div class="tooltipTopBorder">
-                    <div class="tooltipTop">
-                        <h3 class="inline" style="max-width: 210;">Geistige Gesundheit</h3>
+                <div class="healthtipOverTheTopBorder">
+                    <div class="healthtipOverTheTop">
+                    </div>
+                </div>
+                <div class="healthtipTopBorder">
+                    <div class="healthtipTop">
+                        <h3 class="health" style="min-width: 100%;">Geistige Gesundheit</h3>
                     </div>
                 </div>
                 <div class="mentalHealth">
                     <div style="padding-bottom: 10px;">
                         <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
-                        <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
+                        <input class="input-xs stressDamage" id="stressDamage" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
                     </div>
                     <div style="padding-bottom: 10px;">
                         <i class="fa-regular fa-burst wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
                         <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
                     </div>
                 </div>
-                <div class="tooltipBottomBorder">
+                <div class="healthtipBottomBorder">
                     <div class="tooltipBottom"></div>
                 </div>
             </div>
-            <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
-            <span><div style="display: inline-block; min-width: 25px;" class="input-xs">{{actor.system.health.mental.value}}</div>/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
-        </div>-->
-        <div class="wantToKnowMore">
-            <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
-            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.stressluc"}}</span>
-            <input class="input-xs" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
+            <div style="display: flex; align-items: center; position: inherit; z-index: 130;">
+                <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
+                <div class="healthBarContainer" id="mentalStressBarContainer">
+                    <div id="mentalStressBar"></div>
+                    <div class="healthBarBackground"></div>
+                </div>
+                <div class="healthBarContainer" id="mentalInsanityBarContainer">
+                    <div id="mentalInsanityBar"></div>
+                    <div class="healthBarBackground"></div>
+                </div>
+            </div>
         </div>
-        <div class="wantToKnowMore">
-            <i class="fa-regular fa-burst awesomeIcon" style="font-size: 18px;"></i>
-            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span>
-            <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
-        </div>
-        <div class="wantToKnowMore">
+        <!-- Initiative -->
+        <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none;">
             <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span>
-            <span class="resource-label alignCenter"> {{actor.system.initiative.display}}</span>
+            <span class="resource-label alignCenter" style="margin-left: 5px;">{{actor.system.initiative.display}}</span>
         </div>
+
         {{else}}
-        <div class="wantToKnowMore">
+        <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none;">
             <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.iniMod"}}</span>
-            <span class="resource-label">{{actor.system.initiative.display}} + </span>
+            <span class="resource-label" style="margin-left: 5px;">{{actor.system.initiative.display}} + </span>
             <input class="input-xs" style="text-align: center" type="text" name="system.mods.manualIniMod" value="{{actor.system.mods.manualIniMod}}" data-dtype="Number" placeholder="0"/>
         </div>
         <div class="wantToKnowMore">
