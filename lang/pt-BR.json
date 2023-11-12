@@ -123,6 +123,24 @@
     },
     "healthbar": {
       "tooltip": {
+        "physical": {
+          "headline": "Physical Fitness",
+          "dur": "Durability Damage",
+          "durDescription": "Durability defines how many bruises, cuts and wholes",
+          "dr": "Death Rating",
+          "drDescription": "Death Rating",
+          "wt": "Wound Threshold",
+          "wtDescription": "Wound Threshold"
+        },
+        "mental": {
+          "headline": "Mental Fitness",
+          "str": "Stress",
+          "strDescription": "Your mental stress. To much and you might go insane.",
+          "ir": "Insanity Rating",
+          "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
+          "tt": "Trauma Threshold",
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma."
+        },
         "durdr": "Dur/GD",
         "woundswt": "Ferimentos/(LF)",
         "stressluc": "Estresse/Luc",

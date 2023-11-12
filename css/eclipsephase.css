@@ -712,6 +712,11 @@ input [class="rightField"]::placeholder{
   text-align: right!important;
 }
 
+input [class="healthPanel"]{
+  height: 20px!important;
+  max-width: 20px!important;
+}
+
 input[name="useSwap"],
 input[name="useMitigate"]{
   margin: 0px 6px 5px 8px!important;
@@ -1916,6 +1921,10 @@ h3.health {
   padding: 0px 5px;
 }
 
+.healthOverlayRow{
+  padding-bottom: 10px;
+}
+
 .wantToKnowMore {
   position: relative;
   max-width: fit-content;
@@ -1978,17 +1987,13 @@ h3.health {
 
 .mentalHealth,
 .physicalHealth{
-  max-height: 200px;
-  padding: 5px 0em 2em 1.5em;
+  padding: 5px 1.5em 2em 1.5em;
   overflow: auto;
   background-repeat: no-repeat;
   background-size: 100px 100px;
   background-color: var(--focusBackground);
   border-left: solid 0.25em var(--pitchBorder);
   border-right: solid 0.25em var(--pitchBorder);
-}
-.physicalHealth{
-  max-height: 200px;
 }
 
 .currentStatus{

@@ -128,6 +128,25 @@
     },
     "healthbar": {
       "tooltip": {
+        "physical": {
+          "headline": "Physische Gesundheit",
+          "dmg": "Schaden",
+          "dur": "Ausdauer",
+          "durDescription": "Ausdauer gibt Auskunft darüber wie viele blaue Flecken, Schnitte und Löcher der Körper verkraften kann.",
+          "dr": "Death Rating",
+          "drDescription": "Kurz bevor der Körper jenseits aller Rettung ist, liegst du gebrochen am Boden und harrst der Dinge die da kommen.",
+          "wt": "Wound Threshold",
+          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious."
+        },
+        "mental": {
+          "headline": "Geistige Gesundheit",
+          "str": "Stress",
+          "strDescription": "Your mental stress. To much and you might go insane.",
+          "ir": "Insanity Rating",
+          "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
+          "tt": "Trauma Threshold",
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma."
+        },
         "durdr": "Aus/Tr",
         "woundswt": "Wunden/(WG)",
         "stressluc": "Stress/Kla",

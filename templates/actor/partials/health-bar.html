@@ -9,17 +9,25 @@
                 </div>
                 <div class="healthtipTopBorder">
                     <div class="healthtipTop">
-                        <h3 class="health" style="min-width: 100%;">Körperliche Gesundheit</h3>
+                        <h3 class="health" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.physical.headline"}}</h3>
                     </div>
                 </div>
+                <!--Here goes the content-->
                 <div class="physicalHealth">
-                    <div style="padding-bottom: 10px;">
-                        <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
-                        <input class="input-xs" type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.physical.max}}/{{actor.system.physical.dr}}</span>
+                    <div class="healthOverlayRow">
+                        <input class="healthPanel" type="number" id="receivePhysicalDamage" placeholder="0"/>
+                        <button class="epStandard" id="takePhysicalDamage">Take Damage</button>
                     </div>
-                    <div style="padding-bottom: 10px;">
+                    <div  class="healthOverlayRow">
+                        <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
+                        <input class="healthPanel" type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.physical.max}}/{{actor.system.physical.dr}}</span>
+                    </div>
+                    <div class="healthOverlayRow">
                         <i class="fa-regular fa-bandage awesomeIcon" style="font-size: 18px;"></i>
-                        <input class="input-xs" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
+                        <input class="healthPanel" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
+                    </div>
+                    <div class="healthOverlayRow">
+                        <button class="epStandard" id="healDamage">Heal Body</button>
                     </div>
                 </div>
                 <div class="healthtipBottomBorder">
@@ -48,15 +56,16 @@
                 </div>
                 <div class="healthtipTopBorder">
                     <div class="healthtipTop">
-                        <h3 class="health" style="min-width: 100%;">Geistige Gesundheit</h3>
+                        <h3 class="health" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.mental.headline"}}</h3>
                     </div>
                 </div>
+                <!--Here goes the content-->
                 <div class="mentalHealth">
-                    <div style="padding-bottom: 10px;">
+                    <div class="healthOverlayRow">
                         <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
                         <input class="input-xs stressDamage" id="stressDamage" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
                     </div>
-                    <div style="padding-bottom: 10px;">
+                    <div class="healthOverlayRow">
                         <i class="fa-regular fa-burst wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
                         <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
                     </div>
@@ -78,14 +87,14 @@
             </div>
         </div>
         <!-- Initiative -->
-        <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none;">
+        <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none; z-index: 21;">
             <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span>
             <span class="resource-label alignCenter" style="margin-left: 5px;">{{actor.system.initiative.display}}</span>
         </div>
 
         {{else}}
-        <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none;">
+        <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none; z-index: 21;">
             <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.iniMod"}}</span>
             <span class="resource-label" style="margin-left: 5px;">{{actor.system.initiative.display}} + </span>

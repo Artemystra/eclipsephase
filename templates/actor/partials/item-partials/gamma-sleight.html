@@ -50,14 +50,14 @@
                 </a>
             </div>
             <div class="item showMore noShow" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-                <div class="grid" style="justify-items: center">
-                    <div class="flexrow flex-group-left">
-                        <i class="fa-regular fa-chevrons-right icon-space awesomeIcon"></i>
-                        <label class="labelWidth-large noMargin"><strong>{{localize item.system.actionName}}</strong></label>
+                <div class="flexrow flex-group-center" style="min-width: 100%; min-height: 30px;">
+                    <div class="flexrow flex-group-center">
+                        <i class="fa-regular fa-chevrons-right icon-space awesomeIcon" style="max-width: fit-content;"></i>
+                        <label class="noMargin" style="max-width: fit-content;"><strong>{{localize item.system.actionName}}</strong></label>
                     </div>
-                    <div class="flexrow flex-group-left">
-                        <i class="fa-regular fa-clock-rotate-left icon-space awesomeIcon"></i>
-                        <label class="labelWidth-medium noMargin"><strong> {{localize item.system.durationName}}</strong></label>
+                    <div class="flexrow flex-group-center">
+                        <i class="fa-regular fa-clock-rotate-left icon-space awesomeIcon" style="max-width: fit-content;"></i>
+                        <label class="noMargin" style="max-width: fit-content"><strong> {{localize item.system.durationName}}</strong></label>
                     </div>
                 </div>
                 {{#if item.system.description}}
@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 {{/if}}
-                <div class="flexrow flex-between item-controls">
+                <div class="flexrow flex-between item-controls" style="min-width: 100%;">
                     <a class="item-control item-delete resource-label editWithLabel" title="Delete Item"> {{localize "ep2e.actorSheet.button.delete"}} <i class="far fa-times-circle awesomeIcon"></i></a>
                     <a class="item-control item-edit resource-label editWithLabel alignRight" title="Edit Item"> {{localize "ep2e.actorSheet.button.edit"}} <i class="far fa-edit awesomeIcon"></i></a>
                 </div>

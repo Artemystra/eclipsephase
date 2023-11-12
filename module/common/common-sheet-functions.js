@@ -206,6 +206,17 @@ export async function healthBarChange(actor, html){
   }
 }
 
+export function takeDamage(actor, html){
+  html.find("#takePhysicalDamage").click(async ev=> {
+      let inputValue = html.find("#receivePhysicalDamage")[0].valueAsNumber
+      console.log(inputValue)
+      if(inputValue >= 1){
+        console.log(html.find("#receiveDamage"))
+      }
+    }
+  )
+}
+
 //Standard Dialogs
 
 export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget) {

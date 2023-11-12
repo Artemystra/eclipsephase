@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo, healthBarChange } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo, healthBarChange, takeDamage } from "../common/common-sheet-functions.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as Dice from "../dice.js";
@@ -971,6 +971,10 @@ export default class EPactorSheet extends ActorSheet {
         actor.update({"system.subStrain.influence2.label" : "none", "system.subStrain.influence2.description" : "none", "system.subStrain.influence3.label" : "none", "system.subStrain.influence3.description" : "none", "system.subStrain.influence4.description" : "none", "system.subStrain.influence5.description" : "none", "system.subStrain.influence6.description" : "none",})
       });
 
+      //Take damage
+      html.find("#takeDamage").click(takeDamage(actor, html));
+      
+      //Calculate the healthBar
       healthBarChange(actor, html);
 
       //More Information Dialog

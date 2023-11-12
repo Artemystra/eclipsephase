@@ -13,15 +13,21 @@
                         {{/if}}
                     </div>
                     <div class="slideShow flexrow" style="padding: 0 10px; max-width: max-content; min-width: max-content; align-items: center; min-height: 28px;">
-                        <span>{{localize "ep2e.actorSheet.button.showDetails"}} <i class="fas fa-plus icon-small awesomeIcon"></i></span>
-                        <span class="noShow">{{localize "ep2e.actorSheet.button.hideDetails"}} <i class="fas fa-minus icon-small awesomeIcon"></i></span>
+                        <span class="showFlex"><span class="icon-space">{{localize "ep2e.actorSheet.button.showDetails"}}</span> <i class="fas fa-plus icon-small awesomeIcon"></i></span>
+                        <span class="noShow"><span class="icon-space">{{localize "ep2e.actorSheet.button.hideDetails"}}</span> <i class="fas fa-minus icon-small awesomeIcon"></i></span>
                     </div>
                 </div>
                 <div class="listBackground noMargin item noShow showMore">
-                    <div class="flexrow grid">
+                    <div class="flexrow grid" style="min-width: 100%;">
                         <ol>
                             <li class="skills"><input type="text" name="system.psiStrain.name" class="psiFormElement" value="{{actor.system.psiStrain.name}}" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}"/></li>
-                            <li><textarea class="description" name="system.psiStrain.description" rows="22" cols="60" placeholder="{{localize 'ep2e.psi.descriptionPlaceholder'}}">{{actor.system.psiStrain.description}}</textarea></li>
+                            <li><div style="max-height: 415px; overflow-y: scroll;">{{editor
+                                actor.system.psiStrain.description
+                                target="system.psiStrain.description"
+                                button=true
+                                owner=owner
+                                editable=this.options.editable
+                            }}</div></li>
                             <li style="display: flex; align-items: center; margin-top: 20px;"><input class="checkBox" name="system.additionalSystems.psiAutoClose" data-dtype="Boolean" type="checkbox" {{checked actor.system.additionalSystems.psiAutoClose}}/>{{localize "ep2e.psi.autoClose"}}</li>
                         </ol>
                         <ol>
@@ -45,15 +51,21 @@
                         {{/if}}
                     </div>
                     <div class="slideShow flexrow" style="padding: 0 10px; max-width: max-content; min-width: max-content; align-items: center; min-height: 28px;">
-                        <span>{{localize "ep2e.actorSheet.button.showDetails"}} <i class="fas fa-plus icon-small awesomeIcon"></i></span>
-                        <span class="noShow">{{localize "ep2e.actorSheet.button.hideDetails"}} <i class="fas fa-minus icon-small awesomeIcon"></i></span>
+                        <span class="noShow"><span class="icon-space">{{localize "ep2e.actorSheet.button.showDetails"}}</span> <i class="fas fa-plus icon-small awesomeIcon"></i></span>
+                        <span class="showFlex"><span class="icon-space">{{localize "ep2e.actorSheet.button.hideDetails"}}</span> <i class="fas fa-minus icon-small awesomeIcon"></i></span>
                     </div>
                 </div>
-                <div class="listBackground noMargin item">
-                    <div class="flexrow grid">
+                <div class="listBackground noMargin item noShow showMore showFlex">
+                    <div class="flexrow grid" style="min-width: 100%;">
                         <ol>
                             <li class="skills"><input type="text" name="system.psiStrain.name" class="psiFormElement" value="{{actor.system.psiStrain.name}}" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}"/></li>
-                            <li><textarea class="description" name="system.psiStrain.description" rows="22" cols="60" placeholder="{{localize 'ep2e.psi.descriptionPlaceholder'}}">{{actor.system.psiStrain.description}}</textarea></li>
+                            <li><div style="max-height: 415px; overflow-y: scroll;">{{editor
+                                actor.system.psiStrain.description
+                                target="system.psiStrain.description"
+                                button=true
+                                owner=owner
+                                editable=this.options.editable
+                            }}</div></li>
                             <li style="display: flex; align-items: center; margin-top: 20px;"><input class="checkBox" name="system.additionalSystems.psiAutoClose" data-dtype="Boolean" type="checkbox" {{checked actor.system.additionalSystems.psiAutoClose}}/>{{localize "ep2e.psi.autoClose"}}</li>
                         </ol>
                         <ol>
