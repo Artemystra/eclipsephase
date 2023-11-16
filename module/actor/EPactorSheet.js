@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo, healthBarChange, takeDamage } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo, healthBarChange} from "../common/common-sheet-functions.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as Dice from "../dice.js";
@@ -970,11 +970,10 @@ export default class EPactorSheet extends ActorSheet {
       html.find(".strainSelection").change(ev => {
         actor.update({"system.subStrain.influence2.label" : "none", "system.subStrain.influence2.description" : "none", "system.subStrain.influence3.label" : "none", "system.subStrain.influence3.description" : "none", "system.subStrain.influence4.description" : "none", "system.subStrain.influence5.description" : "none", "system.subStrain.influence6.description" : "none",})
       });
-
-      //Take damage
-      html.find("#takeDamage").click(takeDamage(actor, html));
       
       //Calculate the healthBar
+      html.find(".healthPanelNoSubmit").change(this.autoSubmitPrevention.bind(this))
+
       healthBarChange(actor, html);
 
       //More Information Dialog
@@ -987,6 +986,10 @@ export default class EPactorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
+
+  async autoSubmitPrevention(event, options) {
+    super._onSubmit(event, { ...options, preventRender: true });
+  }
 
   async _postToChat(event) {
     const itemID = event.currentTarget.closest(".item").dataset.itemId;

@@ -164,58 +164,217 @@ export async function itemReduction(actor, itemID, itemQuantity){
 }
 
 export async function healthBarChange(actor, html){
-  const actorModel = actor.system
+  const actorModel = actor.system;
 
-  const physicalHealthBarContainer = html.find("#physicalHealthBarContainer")
-  const physicalDeathBarContainer = html.find("#physicalDeathBarContainer")
-  const physicalHealthBar = html.find("#physicalHealthBar")
-  const physicalDeathBar = html.find("#physicalDeathBar")
+  //Physical Variable Definition
+  const physicalHealthBarContainer = html.find("#physicalHealthBarContainer");
+  const physicalDeathBarContainer = html.find("#physicalDeathBarContainer");
+  const physicalHealthBar = html.find("#physicalHealthBar");
+  const physicalDeathBar = html.find("#physicalDeathBar");
   const healthBarValue = actorModel.physical.relativePhysicalDamage;
   const deathBarValue = actorModel.physical.relativeDeathDamage;
+  const oldHealthBarValue = actorModel.physical.oldHealthBarValue ? actorModel.physical.oldHealthBarValue : 0;
+  const oldDeathBarValue = actorModel.physical.oldDeathBarValue ? actorModel.physical.oldDeathBarValue : 0;
+  const currentWounds = actor.system.physical.wounds;
+  const woundThreshold = actor.system.physical.wt;
+  const physicalHealthTarget = "system.health.physical.value";
+  const woundTarget = "system.physical.wounds";
+  const currentPhysicalDamage = actor.system.health.physical.value;
+  const receivePhysicalDamage = html.find("#receivePhysicalDamage");
+  const maxPhysicalHealth = actor.system.health.physical.max + actor.system.health.death.max;
 
-  let mentalStressBar = null
-  let mentalInsanityBar = null
-  let stressBarValue = 0
-  let insanityBarValue = 0
-
-  if(actor.type === "character"){
-    mentalStressBar = html.find("#mentalStressBar")
-    mentalInsanityBar = html.find("#mentalInsanityBar")
-    stressBarValue = actorModel.mental.relativeStressDamage;
-    insanityBarValue = actorModel.mental.relativeInsanityDamage;
-  }
-
+  //Physical Container Definition (Depends on Body type chosen)
   physicalHealthBarContainer[0].style.width = actorModel.physical.relativeDurabilityContainer + "%";
   physicalDeathBarContainer[0].style.width = actorModel.physical.relativeDeathContainer + "%";
-  for(let i = 0 ; i <= healthBarValue ; i++){
-    physicalHealthBar[0].style.width = i + "%";
+
+  //Mental Variable Definition
+  const currentMentalDamage = Number(actor.system.health.mental.value);
+  const receiveMentalDamage = html.find("#receiveMentalDamage");
+  const mentalStressBar = html.find("#mentalStressBar");
+  const mentalInsanityBar = html.find("#mentalInsanityBar");
+  const stressBarValue = actorModel.mental.relativeStressDamage;
+  const insanityBarValue = actorModel.mental.relativeInsanityDamage;
+  const currentTrauma = actor.system.mental.trauma;
+  const traumaThreshold = actor.system.mental.tt;
+  const mentalHealthTarget = "system.health.mental.value";
+  const traumaTarget = "system.mental.trauma";
+  const oldStressBarValue = actorModel.mental.oldStressBarValue ? Number(actorModel.mental.oldStressBarValue) : 0;
+  const oldInsanityBarValue = actorModel.mental.oldInsanityBarValue ? Number(actorModel.mental.oldInsanityBarValue) : 0;
+  const maxMentalHealth = actor.system.health.mental.max + actor.system.health.insanity.max;
+
+  //Physical health bar animation
+  //Physical damage Animation
+  if(oldHealthBarValue < healthBarValue && oldHealthBarValue != 0 || oldDeathBarValue < deathBarValue && oldDeathBarValue != 0){
+    console.log("Physical barUp triggered")
+    barUp(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
+
   }
+  //Physical Heal Animation
+  else if (oldHealthBarValue > healthBarValue || oldDeathBarValue > deathBarValue){
+    console.log("Physical Bar Down triggered")
+    physicalHealthBar[0].style.width = oldHealthBarValue + "%";
+    physicalDeathBar[0].style.width = oldDeathBarValue + "%";
+    barDown(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
+
+  }
+  //No change/Open sheet
+  else if (oldHealthBarValue === 0){
+    console.log("No Animation for Physical triggered")
+    physicalHealthBar[0].style.width = healthBarValue + "%";
+    physicalDeathBar[0].style.width = deathBarValue + "%";
+  }
+  let stopper = false
+  //Mental health bar animation
   if(actor.type === "character"){
-    for(let i = 0 ; i <= stressBarValue ; i++){
-      mentalStressBar[0].style.width = i + "%";
+    //Mental damage Animation
+    if(oldStressBarValue < stressBarValue && oldStressBarValue != 0 || oldInsanityBarValue < insanityBarValue && oldInsanityBarValue != 0){
+      console.log("Mental barUp triggered")
+      barUp(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
+
+    }
+    //Mental Heal Animation
+    else if (oldStressBarValue > stressBarValue && oldStressBarValue != 0 || oldInsanityBarValue > insanityBarValue && oldStressBarValue != 0){
+      console.log("Mental Bar Down triggered")
+      stopper = true
+      mentalStressBar[0].style.width = oldStressBarValue + "%";
+      mentalInsanityBar[0].style.width = oldInsanityBarValue + "%";
+      barDown(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
+  
+    }
+    //No Change/Open Sheet
+    else if (oldStressBarValue === 0 && stopper === false){
+      console.log("No Animation for Mental triggered")
+      mentalStressBar[0].style.width = stressBarValue + "%";
+      mentalInsanityBar[0].style.width = insanityBarValue + "%";
     }
   }
-  await new Promise(resolve => setTimeout(resolve, 750));
-  for(let i = 0 ; i <= deathBarValue ; i++){
-    physicalDeathBar[0].style.width = i + "%";
+
+  //Take Physical Damage
+  html.find("#takePhysicalDamage").click(takeDamage.bind("physical" ,receivePhysicalDamage, currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "physical", maxPhysicalHealth));
+
+  //Take Mental Damage
+  html.find("#takeMentalDamage").click(takeDamage.bind("mental", receiveMentalDamage, currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "mental", maxMentalHealth));
+
+  //Heal full
+  html.find("#healMentalDamageFull").click(healDamage.bind("mentalHeal", receiveMentalDamage, currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "full", "mental"));
+  html.find("#healPhysicalDamageFull").click(healDamage.bind("physicalHeal" ,receivePhysicalDamage, currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "full", "physical"));
+}
+
+async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth) {
+    
+  let inputValue = Number(receiveDamage[0].value) < maxHealth ? Number(receiveDamage[0].value) : maxHealth;
+
+  let oldDamageBarTarget = ""
+  let oldOverBarTarget = ""
+
+  if(barTarget === "mental"){
+    oldDamageBarTarget = "system.mental.oldStressBarValue"
+    oldOverBarTarget = "system.mental.oldInsanityBarValue"
   }
-  if(actor.type === "character"){
-    for(let i = 0 ; i <= insanityBarValue ; i++){
-      mentalInsanityBar[0].style.width = i + "%";
-    }
+  else if(barTarget === "physical"){
+    oldDamageBarTarget = "system.physical.oldHealthBarValue"
+    oldOverBarTarget = "system.physical.oldDeathBarValue"
+  }
+  
+  if(inputValue >= 1 && oldDamageBarTarget != "" && oldOverBarTarget != ""){
+    bar = bar >= 1 ? bar : 1;
+    let newDamage = eval(inputValue + currentDamage) > maxHealth ? maxHealth : eval(inputValue + currentDamage);
+    let newModifier = Math.floor(inputValue/threshold) + currentModifier
+    
+    return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier,[oldDamageBarTarget] : bar,[oldOverBarTarget] : overBar})
+
   }
 }
 
-export function takeDamage(actor, html){
-  html.find("#takePhysicalDamage").click(async ev=> {
-      let inputValue = html.find("#receivePhysicalDamage")[0].valueAsNumber
-      console.log(inputValue)
-      if(inputValue >= 1){
-        console.log(html.find("#receiveDamage"))
-      }
-    }
-  )
+async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, healType, healTarget) {
+  let inputValue = null;
+  let newDamage = currentDamage - currentDamage;
+  let newModifier = currentModifier;
+  let oldDamageBarTarget = ""
+  let oldOverBarTarget = ""
+
+  if(healTarget === "mental"){
+    oldDamageBarTarget = "system.mental.oldStressBarValue"
+    oldOverBarTarget = "system.mental.oldInsanityBarValue"
+  }
+  else if(healTarget === "physical"){
+    oldDamageBarTarget = "system.physical.oldHealthBarValue"
+    oldOverBarTarget = "system.physical.oldDeathBarValue"
+  }
+
+  if (healType === "partial"){
+    
+    
+  }
+  else if (healType === "full"){
+    newModifier = 0;
+  }
+  
+  console.log("This is the type of newDamage:", typeof(newDamage))
+  console.log("Sag mir mal was damageTarget ist:", damageTarget, "und was ist dann newDamage?", newDamage)
+  return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier, [oldDamageBarTarget] : bar, [oldOverBarTarget] : overBar})
+
 }
+
+  async function barUp (bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType){
+    console.log("**BarUp")
+    console.log("oldBar %:", oldBarValue, "newBar %:", barValue)
+    console.log("oldOverBar %:", oldOverBarValue, "newOverBar %:", overBarValue)
+
+    let oldDamageBarTarget = ""
+    let oldOverBarTarget = ""
+  
+    if(barType === "mental"){
+      oldDamageBarTarget = "system.mental.oldStressBarValue"
+      oldOverBarTarget = "system.mental.oldInsanityBarValue"
+    }
+    else if(barType === "physical"){
+      oldDamageBarTarget = "system.physical.oldHealthBarValue"
+      oldOverBarTarget = "system.physical.oldDeathBarValue"
+    }
+
+    for(let i = oldBarValue ; i <= barValue ; i++){
+      await new Promise(resolve => setTimeout(resolve, 7));
+      bar[0].style.width = i + "%";
+    }
+    for(let i = oldOverBarValue ; i <= overBarValue ; i++){
+      await new Promise(resolve => setTimeout(resolve, 7));
+      overBar[0].style.width = i + "%";
+    }
+    await new Promise(resolve => setTimeout(resolve, 10));
+    return actor.update({[oldDamageBarTarget] : 0, [oldOverBarTarget] : 0})
+  }
+
+  async function barDown (bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType){
+    console.log("**BarDown")
+    console.log("The oldBarValue:", oldBarValue, "needs to go down to the newBarValue:", barValue, "of the bar:", bar)
+    console.log("The oldBarValue:", oldOverBarValue, "needs to go down to the newBarValue:", overBarValue, "of the bar:", overBar)
+
+    let oldDamageBarTarget = ""
+    let oldOverBarTarget = ""
+  
+    if(barType === "mental"){
+      oldDamageBarTarget = "system.mental.oldStressBarValue"
+      oldOverBarTarget = "system.mental.oldInsanityBarValue"
+    }
+    else if(barType === "physical"){
+      oldDamageBarTarget = "system.physical.oldHealthBarValue"
+      oldOverBarTarget = "system.physical.oldDeathBarValue"
+    }
+    
+    for(let i = oldOverBarValue ; i >= overBarValue ; i--){
+      console.log("Over-Damage left:", i)
+      await new Promise(resolve => setTimeout(resolve, 7));
+      overBar[0].style.width = i + "%";
+    }
+    for(let i = oldBarValue ; i >= barValue ; i--){
+      console.log("Damage left:", i)
+      await new Promise(resolve => setTimeout(resolve, 7));
+      bar[0].style.width = i + "%";
+    } 
+    await new Promise(resolve => setTimeout(resolve, 10));
+    return actor.update({[oldDamageBarTarget] : 0, [oldOverBarTarget] : 0})
+  }
 
 //Standard Dialogs
 

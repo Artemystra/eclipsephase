@@ -9,25 +9,55 @@
                 </div>
                 <div class="healthtipTopBorder">
                     <div class="healthtipTop">
-                        <h3 class="health" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.physical.headline"}}</h3>
+                        <div class="healthOverlayRow" style="padding-bottom: 0;">
+                            <input type="healthPanel" class="healthPanelNoSubmit" max="{{actor.system.physical.dr}}" id="receivePhysicalDamage" placeholder="0"/>
+                            <button class="epStandard" id="takePhysicalDamage">{{localize "ep2e.healthbar.tooltip.physical.takeDamage"}}</button>
+                        </div>
                     </div>
                 </div>
                 <!--Here goes the content-->
                 <div class="physicalHealth">
-                    <div class="healthOverlayRow">
-                        <input class="healthPanel" type="number" id="receivePhysicalDamage" placeholder="0"/>
-                        <button class="epStandard" id="takePhysicalDamage">Take Damage</button>
-                    </div>
+                    <h3 class="healthSubheadline" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.physical.damageThresholdsSubheadline"}}</h3>
                     <div  class="healthOverlayRow">
-                        <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
-                        <input class="healthPanel" type="number" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.physical.max}}/{{actor.system.physical.dr}}</span>
+                        <div class="healthOverlayItem">
+                            <input type="healthPanel" onFocus="this.select()" name="system.health.physical.value" value="{{actor.system.health.physical.value}}" max="{{actor.system.physical.dr}}" data-dtype="Number" placeholder="0"/>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.physical.curDmg"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanel">{{actor.system.health.physical.max}}</div>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.physical.dur"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanel">{{actor.system.physical.dr}}</div>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.physical.dr"}}
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="healthSubheadline" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.physical.woundsSubheadline"}}</h3>
+                    <div class="healthOverlayRow">
+                        <div class="healthOverlayItem">
+                            <input type="healthPanel" onFocus="this.select()" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.physical.curWounds"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanel">{{actor.system.physical.wt}}</div>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.physical.wt"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanelInvisible"></div>
+                        </div>
                     </div>
                     <div class="healthOverlayRow">
-                        <i class="fa-regular fa-bandage awesomeIcon" style="font-size: 18px;"></i>
-                        <input class="healthPanel" type="number" name="system.physical.wounds" value="{{actor.system.physical.wounds}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.physical.wt}})</span>
-                    </div>
-                    <div class="healthOverlayRow">
-                        <button class="epStandard" id="healDamage">Heal Body</button>
+                        <button class="epStandard" id="healPhysicalDamageFull">{{localize "ep2e.healthbar.tooltip.physical.healFull"}}</button>
                     </div>
                 </div>
                 <div class="healthtipBottomBorder">
@@ -56,18 +86,55 @@
                 </div>
                 <div class="healthtipTopBorder">
                     <div class="healthtipTop">
-                        <h3 class="health" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.mental.headline"}}</h3>
+                        <div  class="healthOverlayRow" style="padding-bottom: 0;">
+                            <input type="healthPanel" class="healthPanelNoSubmit" id="receiveMentalDamage" placeholder="0"/>
+                            <button class="epStandard" id="takeMentalDamage">{{localize "ep2e.healthbar.tooltip.mental.takeDamage"}}</button>
+                        </div>
                     </div>
                 </div>
                 <!--Here goes the content-->
                 <div class="mentalHealth">
+                    <h3 class="healthSubheadline" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.mental.stressThresholdsSubheadline"}}</h3>
+                    <div  class="healthOverlayRow">
+                        <div class="healthOverlayItem">
+                            <input class="stressDamage" onFocus="this.select()" type="healthPanel" name="system.health.mental.value" value="{{actor.system.health.mental.value}}"  data-dtype="Number" placeholder="0"/>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.mental.curStr"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanel">{{actor.system.health.mental.max}}</div>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.mental.luc"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanel">{{actor.system.mental.ir}}</div>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.mental.ir"}}
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="healthSubheadline" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.mental.traumaSubheadline"}}</h3>
                     <div class="healthOverlayRow">
-                        <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
-                        <input class="input-xs stressDamage" id="stressDamage" type="number" name="system.health.mental.value" value="{{actor.system.health.mental.value}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">/{{actor.system.health.mental.max}}/{{actor.system.mental.ir}}</span>
+                        <div class="healthOverlayItem">
+                            <input type="healthPanel" onFocus="this.select()" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.mental.curTrauma"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanel">{{actor.system.mental.tt}}</div>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.mental.tt"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanelInvisible"></div>
+                        </div>
                     </div>
                     <div class="healthOverlayRow">
-                        <i class="fa-regular fa-burst wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.traumatt"}}</span></i>
-                        <input class="input-xs" type="number" name="system.mental.trauma" value="{{actor.system.mental.trauma}}" data-dtype="Number" placeholder="0"/><span class="resource-value input-small">({{actor.system.mental.tt}})</span>
+                        <button class="epStandard" id="healMentalDamageFull">{{localize "ep2e.healthbar.tooltip.mental.healFull"}}</button>
                     </div>
                 </div>
                 <div class="healthtipBottomBorder">

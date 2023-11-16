@@ -130,21 +130,33 @@
       "tooltip": {
         "physical": {
           "headline": "Physical Fitness",
-          "dur": "Durability Damage",
+          "damageThresholdsSubheadline": "Damage Thresholds",
+          "woundsSubheadline": "Wound Monitor",
+          "curDmg": "Current Damage",
+          "dur": "Durability",
           "durDescription": "Durability defines how many bruises, cuts and wholes one can compensate for.",
           "dr": "Death Rating",
           "drDescription": "Not much time before the body is beyond repair, you are cowering on death's doorstep. That is here.",
+          "curWounds": "Current Wounds",
           "wt": "Wound Threshold",
-          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious."
+          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious.",
+          "takeDamage": "Take Physical Damage",
+          "healFull": "Heal Body"
         },
         "mental": {
           "headline": "Mental Fitness",
-          "str": "Stress",
-          "strDescription": "Your mental stress. To much and you might go insane.",
+          "stressThresholdsSubheadline": "Stress Thresholds",
+          "traumaSubheadline": "Trauma Monitor",
+          "curStr": "Current Stress",
+          "luc": "Lucidity",
+          "lucDescription": "Your mental stress. To much and you might go insane.",
           "ir": "Insanity Rating",
           "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
+          "curTrauma": "Current Trauma",
           "tt": "Trauma Threshold",
-          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma."
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma.",
+          "takeDamage": "Take Mental Damage",
+          "healFull": "Heal Mind"
         },
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",

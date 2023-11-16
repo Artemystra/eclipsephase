@@ -518,8 +518,15 @@ export default class EPnpcSheet extends ActorSheet {
         //Reload Ranged Weapon Functionality
         reloadWeapon(html, actor);
         
+        //Calculate the healthBar
+        html.find(".healthPanelNoSubmit").change(this.autoSubmitPrevention.bind(this))
+
         healthBarChange(actor, html);
 
+    }
+
+    async autoSubmitPrevention(event, options) {
+      super._onSubmit(event, { ...options, preventRender: true });
     }
 
     _onItemCreate(event) {

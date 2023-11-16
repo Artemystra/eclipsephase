@@ -676,6 +676,52 @@ textarea:focus{
   padding-left: 5px;
 }
 
+input[type="healthPanel"],
+.healthPanel,
+.healthPanelInvisible{
+  font-size: 18px;
+  color: var(--mainText);
+  text-align: center;
+  margin-right: 10px;
+  background: var(--mainBackground);
+  outline: none;
+  border: none;
+  height: 35px;
+  max-width: 75px;
+}
+
+.healthPanel,
+.healthPanelInvisible,
+.healthOverlayLabel{
+  background-color: var(--focusBackground);
+  border: solid 2px var(--pitchBorder);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 75px;
+}
+
+.healthOverlayLabel{
+  padding: 5px;
+  font-size: 10px;
+  max-width: 75px;
+  min-height: 36px;
+  background-color: var(--pitchBorder);
+  text-align: center;
+  height: auto;
+}
+
+.healthPanelInvisible{
+  opacity: 0;
+}
+
+.healthOverlayRow{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 10px;
+}
+
 textarea:read-only{
   color: var(--inactive);
 }
@@ -710,11 +756,6 @@ input [class="rightField"],
 input [class="rightField"]:focus,
 input [class="rightField"]::placeholder{
   text-align: right!important;
-}
-
-input [class="healthPanel"]{
-  height: 20px!important;
-  max-width: 20px!important;
 }
 
 input[name="useSwap"],
@@ -1739,11 +1780,18 @@ h3.inline {
   font-weight: bold;
 }
 
-h3.health {
-  font-size: 16px;
-  margin-bottom: 10px;
-  height: 30px;
+h3.health,
+h3.healthSubheadline {
+  font-size: 14px;
+  margin: 5px 0 10px 0;
+  height: 20px;
   font-weight: bold;
+  font-weight: bold;
+  border: none
+}
+
+h3.healthSubheadline {
+  border-bottom: solid 2px var(--iconGrey);
 }
 
 /*Tooltips shown on hover*/
@@ -1756,6 +1804,11 @@ h3.health {
 .tooltip div[role=healthOverlay]{
   display: none;
   opacity: 0;
+}
+
+.tooltip div[role=healthOverlay] button{
+  min-height: 25px;
+  margin-right: 10px;
 }
 
 .tooltip:hover div[role=tooltip] {
@@ -1858,7 +1911,7 @@ h3.health {
 
 .healthtipTop,
 .healthtipTopBorder{
-  clip-path: polygon(0 0, 90% 0%, 110% 100%, 0% 100%);
+  clip-path: polygon(0 0, 95% 0%, 110% 100%, 0% 100%);
   padding: 10px 20px;
   align-items: center;
 }
@@ -1898,14 +1951,6 @@ h3.health {
   background-color: var(--insanity);
 }
 
-#mentalHealthBar,
-#physicalHealthBar,
-#physicalDeathBar,
-#mentalStressBar,
-#mentalInsanityBar{
-  transition: width 1s;
-}
-
 .healthBarBackground{
   width: 100%;
   z-index: 1;
@@ -1919,10 +1964,6 @@ h3.health {
   width: 100%;
   max-width: 100%;
   padding: 0px 5px;
-}
-
-.healthOverlayRow{
-  padding-bottom: 10px;
 }
 
 .wantToKnowMore {
