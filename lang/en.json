@@ -165,7 +165,8 @@
         "initiative": "Initiative",
         "threat": "Threat",
         "stressTest": "Stress Test",
-        "iniMod": "Ini Mod"
+        "iniMod": "Ini Mod",
+        "rezPoints": "Rez Points"
       }
     },
     "ego": {

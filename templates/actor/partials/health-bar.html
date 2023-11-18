@@ -159,6 +159,12 @@
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.initiative"}}</span>
             <span class="resource-label alignCenter" style="margin-left: 5px;">{{actor.system.initiative.display}}</span>
         </div>
+        <!-- Rez Points -->
+        <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none; z-index: 21;">
+            <i class="fa-regular fa-circle-up awesomeIcon icon-space" style="font-size: 18px;"></i>
+            <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.rezPoints"}}</span>
+            <input class="input-medium" style="text-align: center" type="number" name="system.rezPoints.value" value="{{actor.system.rezPoints.value}}" placeholder="e.g 10"/>
+        </div>
 
         {{else}}
         <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none; z-index: 21;">

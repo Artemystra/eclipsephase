@@ -165,6 +165,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
 
 export async function healthBarChange(actor, html){
   const actorModel = actor.system;
+  const barModifier = actorModel.health.barModifier
+  
+  console.log("This is barModifier on top of the function:", barModifier)
 
   //Physical Variable Definition
   const physicalHealthBarContainer = html.find("#physicalHealthBarContainer");
@@ -204,13 +207,13 @@ export async function healthBarChange(actor, html){
 
   //Physical health bar animation
   //Physical damage Animation
-  if(oldHealthBarValue < healthBarValue && oldHealthBarValue != 0 || oldDeathBarValue < deathBarValue && oldDeathBarValue != 0){
+  if(barModifier === "physicalUp"){
     console.log("Physical barUp triggered")
     barUp(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
 
   }
   //Physical Heal Animation
-  else if (oldHealthBarValue > healthBarValue || oldDeathBarValue > deathBarValue){
+  else if (barModifier === "physicalDown"){
     console.log("Physical Bar Down triggered")
     physicalHealthBar[0].style.width = oldHealthBarValue + "%";
     physicalDeathBar[0].style.width = oldDeathBarValue + "%";
@@ -218,32 +221,35 @@ export async function healthBarChange(actor, html){
 
   }
   //No change/Open sheet
-  else if (oldHealthBarValue === 0){
+  else{
     console.log("No Animation for Physical triggered")
+    console.log("The healthbar has a value of:",healthBarValue)
+    console.log("The deathbar has a value of:",deathBarValue)
     physicalHealthBar[0].style.width = healthBarValue + "%";
     physicalDeathBar[0].style.width = deathBarValue + "%";
   }
-  let stopper = false
+
   //Mental health bar animation
   if(actor.type === "character"){
     //Mental damage Animation
-    if(oldStressBarValue < stressBarValue && oldStressBarValue != 0 || oldInsanityBarValue < insanityBarValue && oldInsanityBarValue != 0){
+    if(barModifier === "mentalUp"){
       console.log("Mental barUp triggered")
       barUp(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
 
     }
     //Mental Heal Animation
-    else if (oldStressBarValue > stressBarValue && oldStressBarValue != 0 || oldInsanityBarValue > insanityBarValue && oldStressBarValue != 0){
+    else if (barModifier === "mentalDown"){
       console.log("Mental Bar Down triggered")
-      stopper = true
       mentalStressBar[0].style.width = oldStressBarValue + "%";
       mentalInsanityBar[0].style.width = oldInsanityBarValue + "%";
       barDown(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
   
     }
     //No Change/Open Sheet
-    else if (oldStressBarValue === 0 && stopper === false){
+    else{
       console.log("No Animation for Mental triggered")
+      console.log("The stressbar has a value of:",stressBarValue)
+      console.log("The insanitybar has a value of:",insanityBarValue)
       mentalStressBar[0].style.width = stressBarValue + "%";
       mentalInsanityBar[0].style.width = insanityBarValue + "%";
     }
@@ -267,39 +273,51 @@ async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentMo
   let oldDamageBarTarget = ""
   let oldOverBarTarget = ""
 
+  const barModifierTarget = "system.health.barModifier"
+  let barModifier = ""
+
   if(barTarget === "mental"){
     oldDamageBarTarget = "system.mental.oldStressBarValue"
     oldOverBarTarget = "system.mental.oldInsanityBarValue"
+    barModifier = "mentalUp"
   }
   else if(barTarget === "physical"){
     oldDamageBarTarget = "system.physical.oldHealthBarValue"
     oldOverBarTarget = "system.physical.oldDeathBarValue"
+    barModifier = "physicalUp"
   }
   
   if(inputValue >= 1 && oldDamageBarTarget != "" && oldOverBarTarget != ""){
     bar = bar >= 1 ? bar : 1;
-    let newDamage = eval(inputValue + currentDamage) > maxHealth ? maxHealth : eval(inputValue + currentDamage);
-    let newModifier = Math.floor(inputValue/threshold) + currentModifier
-    
-    return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier,[oldDamageBarTarget] : bar,[oldOverBarTarget] : overBar})
+    let newDamage = eval(inputValue + currentDamage) >= maxHealth ? maxHealth : eval(inputValue + currentDamage);
+    let newModifier = Math.floor(inputValue/threshold) + currentModifier;
+    console.log("This newDamage is a:", typeof(newDamage));
+    console.log("It's value is:",newDamage);
+    console.log("The oldDamageBar is:", bar, "The oldOverBar is:", overBar)
+    return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier,[oldDamageBarTarget] : bar,[oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
 
   }
 }
 
 async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, healType, healTarget) {
   let inputValue = null;
-  let newDamage = currentDamage - currentDamage;
+  let newDamage = 0;
   let newModifier = currentModifier;
   let oldDamageBarTarget = ""
   let oldOverBarTarget = ""
 
+  const barModifierTarget = "system.health.barModifier"
+  let barModifier = ""
+
   if(healTarget === "mental"){
     oldDamageBarTarget = "system.mental.oldStressBarValue"
     oldOverBarTarget = "system.mental.oldInsanityBarValue"
+    barModifier = "mentalDown"
   }
   else if(healTarget === "physical"){
     oldDamageBarTarget = "system.physical.oldHealthBarValue"
     oldOverBarTarget = "system.physical.oldDeathBarValue"
+    barModifier = "physicalDown"
   }
 
   if (healType === "partial"){
@@ -310,9 +328,9 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
     newModifier = 0;
   }
   
-  console.log("This is the type of newDamage:", typeof(newDamage))
-  console.log("Sag mir mal was damageTarget ist:", damageTarget, "und was ist dann newDamage?", newDamage)
-  return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier, [oldDamageBarTarget] : bar, [oldOverBarTarget] : overBar})
+  console.log("This is barModifier inside healDamage:", barModifier)
+  console.log("oldDamageBar:", bar, "oldOverBar:", overBar)
+  return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier, [oldDamageBarTarget] : bar, [oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
 
 }
 
@@ -320,18 +338,6 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
     console.log("**BarUp")
     console.log("oldBar %:", oldBarValue, "newBar %:", barValue)
     console.log("oldOverBar %:", oldOverBarValue, "newOverBar %:", overBarValue)
-
-    let oldDamageBarTarget = ""
-    let oldOverBarTarget = ""
-  
-    if(barType === "mental"){
-      oldDamageBarTarget = "system.mental.oldStressBarValue"
-      oldOverBarTarget = "system.mental.oldInsanityBarValue"
-    }
-    else if(barType === "physical"){
-      oldDamageBarTarget = "system.physical.oldHealthBarValue"
-      oldOverBarTarget = "system.physical.oldDeathBarValue"
-    }
 
     for(let i = oldBarValue ; i <= barValue ; i++){
       await new Promise(resolve => setTimeout(resolve, 7));
@@ -342,7 +348,7 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
       overBar[0].style.width = i + "%";
     }
     await new Promise(resolve => setTimeout(resolve, 10));
-    return actor.update({[oldDamageBarTarget] : 0, [oldOverBarTarget] : 0})
+    return actor.update({["system.health.barModifier"] : "none"})
   }
 
   async function barDown (bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType){
@@ -350,18 +356,6 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
     console.log("The oldBarValue:", oldBarValue, "needs to go down to the newBarValue:", barValue, "of the bar:", bar)
     console.log("The oldBarValue:", oldOverBarValue, "needs to go down to the newBarValue:", overBarValue, "of the bar:", overBar)
 
-    let oldDamageBarTarget = ""
-    let oldOverBarTarget = ""
-  
-    if(barType === "mental"){
-      oldDamageBarTarget = "system.mental.oldStressBarValue"
-      oldOverBarTarget = "system.mental.oldInsanityBarValue"
-    }
-    else if(barType === "physical"){
-      oldDamageBarTarget = "system.physical.oldHealthBarValue"
-      oldOverBarTarget = "system.physical.oldDeathBarValue"
-    }
-    
     for(let i = oldOverBarValue ; i >= overBarValue ; i--){
       console.log("Over-Damage left:", i)
       await new Promise(resolve => setTimeout(resolve, 7));
@@ -373,7 +367,7 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
       bar[0].style.width = i + "%";
     } 
     await new Promise(resolve => setTimeout(resolve, 10));
-    return actor.update({[oldDamageBarTarget] : 0, [oldOverBarTarget] : 0})
+    return actor.update({"system.health.barModifier" : "none"})
   }
 
 //Standard Dialogs
