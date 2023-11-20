@@ -140,8 +140,7 @@
           "curWounds": "Current Wounds",
           "wt": "Wound Threshold",
           "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious.",
-          "takeDamage": "Take Physical Damage",
-          "healFull": "Heal Body"
+          "takeDamage": "Take Physical Damage"
         },
         "mental": {
           "headline": "Mental Fitness",
@@ -155,8 +154,21 @@
           "curTrauma": "Current Trauma",
           "tt": "Trauma Threshold",
           "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma.",
-          "takeDamage": "Take Mental Damage",
-          "healFull": "Heal Mind"
+          "takeDamage": "Take Mental Damage"
+        },
+        "heal": {
+          "bodyFull":{
+            "bio": "Full Heal",
+            "synth": "Full Repair",
+            "info": "Full Defragmentation"
+          },
+          "bodyPartial": {
+            "bio": "Roll Heal",
+            "synth": "Roll Repair",
+            "info": "Roll Defrag"
+          },
+          "mindFull": "Heal Full",
+          "mindPartial": "Roll Heal"
         },
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",
@@ -1146,6 +1158,28 @@
           "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
           "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
         },
+        "heal": {
+          "full": {
+            "bodyHeal": "I completely healed my morph",
+            "bodyRepair": "I completely repaired my morph",
+            "bodyDefrag": "I completely defragmented my morph",
+            "mindHeal": "My mind is calm and sound again",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          },
+          "partial": {
+            "bodyHeal": "I healed my morph",
+            "bodyRepair": "I repaired my morph",
+            "bodyDefrag": "I defragmented my morph",
+            "mindHeal": "I calmed my mind",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          }
+        },
         "poolUsage": {
           "poolUsed": "Pool Used",
           "usePoolSubheadline": "Use Pools",
@@ -1220,6 +1254,14 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip"
+          },
+          "damage": {
+            "physicalDamage": "My morph took damage",
+            "mentalDamage": "My mind slips",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma"
           }
         }
       }

@@ -166,8 +166,6 @@ export async function itemReduction(actor, itemID, itemQuantity){
 export async function healthBarChange(actor, html){
   const actorModel = actor.system;
   const barModifier = actorModel.health.barModifier
-  
-  console.log("This is barModifier on top of the function:", barModifier)
 
   //Physical Variable Definition
   const physicalHealthBarContainer = html.find("#physicalHealthBarContainer");
@@ -208,13 +206,11 @@ export async function healthBarChange(actor, html){
   //Physical health bar animation
   //Physical damage Animation
   if(barModifier === "physicalUp"){
-    console.log("Physical barUp triggered")
     barUp(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
 
   }
   //Physical Heal Animation
   else if (barModifier === "physicalDown"){
-    console.log("Physical Bar Down triggered")
     physicalHealthBar[0].style.width = oldHealthBarValue + "%";
     physicalDeathBar[0].style.width = oldDeathBarValue + "%";
     barDown(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
@@ -222,9 +218,6 @@ export async function healthBarChange(actor, html){
   }
   //No change/Open sheet
   else{
-    console.log("No Animation for Physical triggered")
-    console.log("The healthbar has a value of:",healthBarValue)
-    console.log("The deathbar has a value of:",deathBarValue)
     physicalHealthBar[0].style.width = healthBarValue + "%";
     physicalDeathBar[0].style.width = deathBarValue + "%";
   }
@@ -233,13 +226,11 @@ export async function healthBarChange(actor, html){
   if(actor.type === "character"){
     //Mental damage Animation
     if(barModifier === "mentalUp"){
-      console.log("Mental barUp triggered")
       barUp(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
 
     }
     //Mental Heal Animation
     else if (barModifier === "mentalDown"){
-      console.log("Mental Bar Down triggered")
       mentalStressBar[0].style.width = oldStressBarValue + "%";
       mentalInsanityBar[0].style.width = oldInsanityBarValue + "%";
       barDown(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
@@ -247,9 +238,6 @@ export async function healthBarChange(actor, html){
     }
     //No Change/Open Sheet
     else{
-      console.log("No Animation for Mental triggered")
-      console.log("The stressbar has a value of:",stressBarValue)
-      console.log("The insanitybar has a value of:",insanityBarValue)
       mentalStressBar[0].style.width = stressBarValue + "%";
       mentalInsanityBar[0].style.width = insanityBarValue + "%";
     }
@@ -276,24 +264,43 @@ async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentMo
   const barModifierTarget = "system.health.barModifier"
   let barModifier = ""
 
+  let message = {};
+
   if(barTarget === "mental"){
     oldDamageBarTarget = "system.mental.oldStressBarValue"
     oldOverBarTarget = "system.mental.oldInsanityBarValue"
     barModifier = "mentalUp"
+    message.title = "ep2e.roll.announce.combat.damage.mentalDamage";
+    message.damageType = "ep2e.roll.announce.combat.damage.stress";
+    message.modifierType = "ep2e.roll.announce.combat.damage.trauma";
   }
   else if(barTarget === "physical"){
     oldDamageBarTarget = "system.physical.oldHealthBarValue"
     oldOverBarTarget = "system.physical.oldDeathBarValue"
     barModifier = "physicalUp"
+    message.title = "ep2e.roll.announce.combat.damage.physicalDamage";
+    message.damageType = "ep2e.roll.announce.combat.damage.damage";
+    message.modifierType = "ep2e.roll.announce.combat.damage.wounds";
   }
   
   if(inputValue >= 1 && oldDamageBarTarget != "" && oldOverBarTarget != ""){
     bar = bar >= 1 ? bar : 1;
     let newDamage = eval(inputValue + currentDamage) >= maxHealth ? maxHealth : eval(inputValue + currentDamage);
     let newModifier = Math.floor(inputValue/threshold) + currentModifier;
-    console.log("This newDamage is a:", typeof(newDamage));
-    console.log("It's value is:",newDamage);
-    console.log("The oldDamageBar is:", bar, "The oldOverBar is:", overBar)
+  
+    if(actor.type === "character"){
+
+      message.damageValue = inputValue;
+      message.modifierValue = Math.floor(inputValue/threshold);
+
+      let html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message)
+
+      ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+          flavor: html
+      })
+    }
+
     return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier,[oldDamageBarTarget] : bar,[oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
 
   }
@@ -303,41 +310,100 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
   let inputValue = null;
   let newDamage = 0;
   let newModifier = currentModifier;
-  let oldDamageBarTarget = ""
-  let oldOverBarTarget = ""
+  let oldDamageBarTarget = "";
+  let oldOverBarTarget = "";
+  let message = {};
 
-  const barModifierTarget = "system.health.barModifier"
+  const barModifierTarget = "system.health.barModifier";
   let barModifier = ""
 
   if(healTarget === "mental"){
-    oldDamageBarTarget = "system.mental.oldStressBarValue"
-    oldOverBarTarget = "system.mental.oldInsanityBarValue"
+    oldDamageBarTarget = "system.mental.oldStressBarValue";
+    oldOverBarTarget = "system.mental.oldInsanityBarValue";
     barModifier = "mentalDown"
   }
   else if(healTarget === "physical"){
-    oldDamageBarTarget = "system.physical.oldHealthBarValue"
-    oldOverBarTarget = "system.physical.oldDeathBarValue"
-    barModifier = "physicalDown"
+    oldDamageBarTarget = "system.physical.oldHealthBarValue";
+    oldOverBarTarget = "system.physical.oldDeathBarValue";
+    barModifier = "physicalDown";
   }
 
   if (healType === "partial"){
     
+
+    if (healTarget === "physical"){
+      switch (actor.system.bodyType.value){
+        case 'bio':
+          message.title = "ep2e.roll.announce.heal.partial.bodyHeal";
+        break;
+        case 'synth':
+          message.title = "ep2e.roll.announce.heal.partial.bodyRepair";
+        break;
+        case 'info':
+          message.title = "ep2e.roll.announce.heal.partial.bodyDefrag";
+        break;
+        default:
+        break;
+      }
+      message.damageType = "ep2e.roll.announce.heal.full.damage";
+      message.modifierType = "ep2e.roll.announce.heal.full.wounds";
+    }
+    else {
+      message.title = "ep2e.roll.announce.heal.partial.mindHeal";
+      message.damageType = "ep2e.roll.announce.heal.full.stress";
+      message.modifierType = "ep2e.roll.announce.heal.full.trauma";
+    }
+
+    message.damageValue = currentDamage;
+    message.modifierValue = currentModifier;
     
   }
   else if (healType === "full"){
     newModifier = 0;
+
+    if (healTarget === "physical"){
+      switch (actor.system.bodyType.value){
+        case 'bio':
+          message.title = "ep2e.roll.announce.heal.full.bodyHeal";
+        break;
+        case 'synth':
+          message.title = "ep2e.roll.announce.heal.full.bodyRepair";
+        break;
+        case 'info':
+          message.title = "ep2e.roll.announce.heal.full.bodyDefrag";
+        break;
+        default:
+        break;
+      }
+      message.damageType = "ep2e.roll.announce.heal.full.damage";
+      message.modifierType = "ep2e.roll.announce.heal.full.wounds";
+    }
+    else {
+      message.title = "ep2e.roll.announce.heal.full.mindHeal";
+      message.damageType = "ep2e.roll.announce.heal.full.stress";
+      message.modifierType = "ep2e.roll.announce.heal.full.trauma";
+    }
+
+    message.damageValue = currentDamage;
+    message.modifierValue = currentModifier;
+    
   }
   
-  console.log("This is barModifier inside healDamage:", barModifier)
-  console.log("oldDamageBar:", bar, "oldOverBar:", overBar)
+  if(actor.type === "character"){
+
+    let html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message)
+
+    ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+        flavor: html
+    })
+  }
+
   return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier, [oldDamageBarTarget] : bar, [oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
 
 }
 
   async function barUp (bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType){
-    console.log("**BarUp")
-    console.log("oldBar %:", oldBarValue, "newBar %:", barValue)
-    console.log("oldOverBar %:", oldOverBarValue, "newOverBar %:", overBarValue)
 
     for(let i = oldBarValue ; i <= barValue ; i++){
       await new Promise(resolve => setTimeout(resolve, 7));
@@ -352,17 +418,12 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
   }
 
   async function barDown (bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType){
-    console.log("**BarDown")
-    console.log("The oldBarValue:", oldBarValue, "needs to go down to the newBarValue:", barValue, "of the bar:", bar)
-    console.log("The oldBarValue:", oldOverBarValue, "needs to go down to the newBarValue:", overBarValue, "of the bar:", overBar)
 
     for(let i = oldOverBarValue ; i >= overBarValue ; i--){
-      console.log("Over-Damage left:", i)
       await new Promise(resolve => setTimeout(resolve, 7));
       overBar[0].style.width = i + "%";
     }
     for(let i = oldBarValue ; i >= barValue ; i--){
-      console.log("Damage left:", i)
       await new Promise(resolve => setTimeout(resolve, 7));
       bar[0].style.width = i + "%";
     } 

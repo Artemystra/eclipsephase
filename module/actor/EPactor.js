@@ -214,6 +214,7 @@ export default class EPactor extends Actor {
         actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) ? Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) : 0;
         actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max ? actorModel.physical.dr - actorModel.health.physical.max : 0;
         actorModel.health.death.value = actorModel.health.physical.value - actorModel.physical.dr
+        actorModel.bodyType.value = morph.type;
   
         if (actorModel.health.physical.value < actorModel.health.physical.max){
           actorModel.health.death.value = 0

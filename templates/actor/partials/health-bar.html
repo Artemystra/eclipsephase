@@ -56,9 +56,29 @@
                             <div class="healthPanelInvisible"></div>
                         </div>
                     </div>
-                    <div class="healthOverlayRow">
-                        <button class="epStandard" id="healPhysicalDamageFull">{{localize "ep2e.healthbar.tooltip.physical.healFull"}}</button>
+                    {{#if (eq actor.type "character")}}
+                        {{#if (eq actor.system.bodyType.value "bio")}}
+                        <div class="healthOverlayRow" style="margin-top: 20px; padding-bottom: 0;">
+                            <button class="epTextlink" id="healPhysicalDamageFull" style="max-width: 50%; margin-right: 10px;">{{localize "ep2e.healthbar.tooltip.heal.bodyFull.bio"}}</button>
+                            <button class="epStandard" id="healPhysicalDamagePartial" style="max-width: 50%;">{{localize "ep2e.healthbar.tooltip.heal.bodyPartial.bio"}}</button>
+                        </div>
+                        {{else if (eq actor.system.bodyType.value "synth")}}
+                        <div class="healthOverlayRow" style="margin-top: 20px; padding-bottom: 0;">
+                            <button class="epTextlink" id="healPhysicalDamageFull" style="max-width: 50%; margin-right: 10px;">{{localize "ep2e.healthbar.tooltip.heal.bodyFull.synth"}}</button>
+                            <button class="epStandard" id="healPhysicalDamagePartial" style="max-width: 50%;">{{localize "ep2e.healthbar.tooltip.heal.bodyPartial.synth"}}</button>
+                        </div>
+                        {{else if (eq actor.system.bodyType.value "info")}}
+                        <div class="healthOverlayRow" style="margin-top: 20px; padding-bottom: 0;">
+                            <button class="epTextlink" id="healPhysicalDamageFull" style="max-width: 50%; margin-right: 10px;">{{localize "ep2e.healthbar.tooltip.heal.bodyFull.info"}}</button>
+                            <button class="epStandard" id="healPhysicalDamagePartial" style="max-width: 50%;">{{localize "ep2e.healthbar.tooltip.heal.bodyPartial.info"}}</button>
+                        </div>
+                        {{/if}}
+                    {{else}}
+                    <div class="healthOverlayRow" style="margin-top: 20px; padding-bottom: 0;">
+                        <button class="epTextlink" id="healPhysicalDamageFull" style="max-width: 50%; margin-right: 10px;">{{localize "ep2e.healthbar.tooltip.heal.bodyFull.bio"}}</button>
+                        <button class="epStandard" id="healPhysicalDamagePartial" style="max-width: 50%;">{{localize "ep2e.healthbar.tooltip.heal.bodyPartial.bio"}}</button>
                     </div>
+                    {{/if}}
                 </div>
                 <div class="healthtipBottomBorder">
                     <div class="tooltipBottom"></div>
@@ -133,8 +153,9 @@
                             <div class="healthPanelInvisible"></div>
                         </div>
                     </div>
-                    <div class="healthOverlayRow">
-                        <button class="epStandard" id="healMentalDamageFull">{{localize "ep2e.healthbar.tooltip.mental.healFull"}}</button>
+                    <div class="healthOverlayRow" style="margin-top: 20px; padding-bottom: 0;">
+                        <button class="epTextlink" id="healMentalDamageFull" style="max-width: 50%; margin-right: 10px;">{{localize "ep2e.healthbar.tooltip.heal.mindFull"}}</button>
+                        <button class="epStandard" id="healMentalDamagePartial" style="max-width: 50%;">{{localize "ep2e.healthbar.tooltip.heal.mindPartial"}}</button>
                     </div>
                 </div>
                 <div class="healthtipBottomBorder">

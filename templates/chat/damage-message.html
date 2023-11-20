@@ -1,0 +1,27 @@
+
+<div class="alignCenter">
+
+    <p>{{localize title}}</p>
+  
+    <p></p><div class="grid" style="margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+            {{#if damageValue}}
+                <div class="flexrow flex-group-center">
+                    <span>{{localize damageType}}</span>
+                </div>
+                <div class="flexrow flex-group-center">
+                    <span>{{damageValue}}</span>
+                </div>
+            {{/if}}
+            {{#if modifierValue}}
+                <div class="flexrow flex-group-center">
+                    <span>{{localize modifierType}}</span>
+                </div>
+                <div class="flexrow flex-group-center">
+                    <span>{{modifierValue}}</span>
+                </div>   
+            {{/if}} 
+        </div>
+    </div>
+</div>
+  
+  

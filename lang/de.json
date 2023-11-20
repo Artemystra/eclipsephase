@@ -130,22 +130,44 @@
       "tooltip": {
         "physical": {
           "headline": "Physische Gesundheit",
-          "dmg": "Schaden",
+          "damageThresholdsSubheadline": "Schadensschwellen",
+          "woundsSubheadline": "Wundmonitor",
+          "curDmg": "Schaden Aktuell",
           "dur": "Ausdauer",
           "durDescription": "Ausdauer gibt Auskunft darüber wie viele blaue Flecken, Schnitte und Löcher der Körper verkraften kann.",
-          "dr": "Death Rating",
+          "dr": "Todes- Schwelle",
           "drDescription": "Kurz bevor der Körper jenseits aller Rettung ist, liegst du gebrochen am Boden und harrst der Dinge die da kommen.",
-          "wt": "Wound Threshold",
-          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious."
+          "wt": "Wund- Schwelle",
+          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious.",
+          "takeDamage": "Physischer Schaden"
         },
         "mental": {
           "headline": "Geistige Gesundheit",
-          "str": "Stress",
-          "strDescription": "Your mental stress. To much and you might go insane.",
-          "ir": "Insanity Rating",
+          "stressThresholdsSubheadline": "Stressschwellen",
+          "traumaSubheadline": "Traumamonitor",
+          "curStr": "Stress Aktuell",
+          "luc": "Luzidität",
+          "lucDescription": "Your mental stress. To much and you might go insane.",
+          "ir": "Wahn- Schwelle",
           "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
-          "tt": "Trauma Threshold",
-          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma."
+          "curTrauma": "Trauma Aktuell",
+          "tt": "Trauma- Schwelle",
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma.",
+          "takeDamage": "Mentaler Schaden"
+        },
+        "heal": {
+          "bodyFull":{
+            "bio": "Voll Heilen",
+            "synth": "Voll Reparieren",
+            "info": "Voll Defragmentieren"
+          },
+          "bodyPartial": {
+            "bio": "Heil Wurf",
+            "synth": "Reparatur Wurf",
+            "info": "Defrag Wurf"
+          },
+          "mindFull": "Voll Heilen",
+          "mindPartial": "Heil Wurf"
         },
         "durdr": "Aus/Tr",
         "woundswt": "Wunden/(WG)",
@@ -1121,6 +1143,28 @@
           "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
           "long": "Ich habe meine<p/><strong>lange Rast<p/></strong>um zu regenerieren<p/>"
         },
+        "heal": {
+          "full": {
+            "bodyHeal": "Mein Morph ist komplett geheilt",
+            "bodyRepair": "Mein Morph ist komplett repariert",
+            "bodyDefrag": "Mein Morph ist komplett defragmentiert",
+            "mindHeal": "Mein Geist ist wieder ruhig und heil",
+            "damage": "Schaden",
+            "wounds": "Wunde(n)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          },
+          "partial": {
+            "bodyHeal": "Mein Morph wurde geheilt",
+            "bodyRepair": "Mein Morph wurde repariert",
+            "bodyDefrag": "Mein Morph wurde defragmentiert",
+            "mindHeal": "Mein Geist wird ruhiger",
+            "damage": "Schaden",
+            "wounds": "Wunde(n)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          }
+        },
         "poolUsage": {
           "poolUsed": "Pool genutzt",
           "usePoolSubheadline": "Pools nutzen",
@@ -1195,6 +1239,14 @@
             "noAmmoPresent": "Keine passende Munition vorhanden.",
             "ammoSkillModifier": "Skillmodifikator (Munition)",
             "weaponFixated": "Aus der Hüfte geschossen"
+          },
+          "damage": {
+            "physicalDamage": "Mein Morph wurde beschädigt",
+            "mentalDamage": "Mein Verstand erleidet Stress",
+            "damage": "Schaden",
+            "wounds": "Wunde(n)",
+            "stress": "Stress",
+            "trauma": "Trauma"
           }
         }
       }

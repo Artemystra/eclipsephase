@@ -1806,9 +1806,23 @@ h3.healthSubheadline {
   opacity: 0;
 }
 
-.tooltip div[role=healthOverlay] button{
+button.epStandard{
   min-height: 25px;
   margin-right: 10px;
+}
+
+button.epTextlink{
+  background: none;
+  border: none;
+  font-size: 12px;
+  text-align: center;
+  padding: 1px;
+  margin: 3px
+}
+
+button.epTextlink:hover{
+  box-shadow: none;
+  text-decoration: underline;
 }
 
 .tooltip:hover div[role=tooltip] {
