@@ -137,6 +137,7 @@
           "durDescription": "Ausdauer gibt Auskunft darüber wie viele blaue Flecken, Schnitte und Löcher der Körper verkraften kann.",
           "dr": "Todes- Schwelle",
           "drDescription": "Kurz bevor der Körper jenseits aller Rettung ist, liegst du gebrochen am Boden und harrst der Dinge die da kommen.",
+          "curWounds": "Wunden Aktuell",
           "wt": "Wund- Schwelle",
           "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious.",
           "takeDamage": "Physischer Schaden"

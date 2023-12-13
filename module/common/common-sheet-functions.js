@@ -163,6 +163,8 @@ export async function itemReduction(actor, itemID, itemQuantity){
   }
 }
 
+//Character Healing & Damage
+//Animate health bars on character sheet reload
 export async function healthBarChange(actor, html){
   const actorModel = actor.system;
   const barModifier = actorModel.health.barModifier
@@ -249,50 +251,279 @@ export async function healthBarChange(actor, html){
   //Take Mental Damage
   html.find("#takeMentalDamage").click(takeDamage.bind("mental", receiveMentalDamage, currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "mental", maxMentalHealth));
 
-  //Heal full
-  html.find("#healMentalDamageFull").click(healDamage.bind("mentalHeal", receiveMentalDamage, currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "full", "mental"));
-  html.find("#healPhysicalDamageFull").click(healDamage.bind("physicalHeal" ,receivePhysicalDamage, currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "full", "physical"));
+  //Mental Heal Full
+  html.find("#healMentalDamageFull").click(healDamage.bind("mentalHeal", currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "full", "mental"));
+
+  //Physical Heal Full
+  html.find("#healPhysicalDamageFull").click(healDamage.bind("physicalHeal", currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "full", "physical"));
+
+  //Mental Heal Partial
+  html.find("#healMentalDamagePartial").click(healDamage.bind("mentalHeal", currentMentalDamage, stressBarValue, insanityBarValue, currentTrauma, traumaThreshold, mentalHealthTarget, traumaTarget, actor, "partial", "mental"));
+
+  //Physical Heal Partial
+  html.find("#healPhysicalDamagePartial").click(healDamage.bind("physicalHeal", currentPhysicalDamage, healthBarValue, deathBarValue, currentWounds, woundThreshold, physicalHealthTarget, woundTarget, actor, "partial", "physical"));
 }
 
-async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth) {
+  //Take Damage through character sheet
+  async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth) {
+      
+    let inputValue = Number(receiveDamage[0].value) < maxHealth ? Number(receiveDamage[0].value) : maxHealth;
+
+    let oldDamageBarTarget = ""
+    let oldOverBarTarget = ""
+
+    const barModifierTarget = "system.health.barModifier"
+    let barModifier = ""
+
+    let message = {};
+
+    if(barTarget === "mental"){
+      oldDamageBarTarget = "system.mental.oldStressBarValue"
+      oldOverBarTarget = "system.mental.oldInsanityBarValue"
+      barModifier = "mentalUp"
+      message.title = "ep2e.roll.announce.combat.damage.mentalDamage";
+      message.damageType = "ep2e.roll.announce.combat.damage.stress";
+      message.modifierType = "ep2e.roll.announce.combat.damage.trauma";
+    }
+    else if(barTarget === "physical"){
+      oldDamageBarTarget = "system.physical.oldHealthBarValue"
+      oldOverBarTarget = "system.physical.oldDeathBarValue"
+      barModifier = "physicalUp"
+      message.title = "ep2e.roll.announce.combat.damage.physicalDamage";
+      message.damageType = "ep2e.roll.announce.combat.damage.damage";
+      message.modifierType = "ep2e.roll.announce.combat.damage.wounds";
+    }
     
-  let inputValue = Number(receiveDamage[0].value) < maxHealth ? Number(receiveDamage[0].value) : maxHealth;
+    if(inputValue >= 1 && oldDamageBarTarget != "" && oldOverBarTarget != ""){
+      bar = bar >= 1 ? bar : 1;
+      let newDamage = eval(inputValue + currentDamage) >= maxHealth ? maxHealth : eval(inputValue + currentDamage);
+      let newModifier = Math.floor(inputValue/threshold) + currentModifier;
+    
+      if(actor.type === "character"){
 
-  let oldDamageBarTarget = ""
-  let oldOverBarTarget = ""
+        message.damageValue = inputValue;
+        message.modifierValue = Math.floor(inputValue/threshold);
 
-  const barModifierTarget = "system.health.barModifier"
-  let barModifier = ""
+        let html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message)
 
-  let message = {};
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: html
+        })
+      }
 
-  if(barTarget === "mental"){
-    oldDamageBarTarget = "system.mental.oldStressBarValue"
-    oldOverBarTarget = "system.mental.oldInsanityBarValue"
-    barModifier = "mentalUp"
-    message.title = "ep2e.roll.announce.combat.damage.mentalDamage";
-    message.damageType = "ep2e.roll.announce.combat.damage.stress";
-    message.modifierType = "ep2e.roll.announce.combat.damage.trauma";
+      return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier,[oldDamageBarTarget] : bar,[oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
+
+    }
   }
-  else if(barTarget === "physical"){
-    oldDamageBarTarget = "system.physical.oldHealthBarValue"
-    oldOverBarTarget = "system.physical.oldDeathBarValue"
-    barModifier = "physicalUp"
-    message.title = "ep2e.roll.announce.combat.damage.physicalDamage";
-    message.damageType = "ep2e.roll.announce.combat.damage.damage";
-    message.modifierType = "ep2e.roll.announce.combat.damage.wounds";
-  }
-  
-  if(inputValue >= 1 && oldDamageBarTarget != "" && oldOverBarTarget != ""){
-    bar = bar >= 1 ? bar : 1;
-    let newDamage = eval(inputValue + currentDamage) >= maxHealth ? maxHealth : eval(inputValue + currentDamage);
-    let newModifier = Math.floor(inputValue/threshold) + currentModifier;
-  
+
+  //Heal damage through character sheet
+  async function healDamage (currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, healType, healTarget) {
+
+    let newDamage = 0;
+    let newModifier = currentModifier;
+    let oldDamageBarTarget = "";
+    let oldOverBarTarget = "";
+    let message = {};
+    message.totalDamage = currentDamage + currentModifier;
+    //Dialog args
+    const dialog = 'systems/eclipsephase/templates/chat/pop-up.html';
+    const dialogType = "healDamage";
+    let enhancements = {};
+    let enhancementsCount = 0;
+    let hoursPassed = 0;
+
+    for (let enhancement in actor.system.additionalSystems.healing){
+      enhancements[enhancement] = true
+      enhancementsCount++
+    }
+
+    const barModifierTarget = "system.health.barModifier";
+    let barModifier = ""
+
+    if(healTarget === "mental"){
+      oldDamageBarTarget = "system.mental.oldStressBarValue";
+      oldOverBarTarget = "system.mental.oldInsanityBarValue";
+      barModifier = "mentalDown"
+    }
+    else if(healTarget === "physical"){
+      oldDamageBarTarget = "system.physical.oldHealthBarValue";
+      oldOverBarTarget = "system.physical.oldDeathBarValue";
+      barModifier = "physicalDown";
+    }
+
+    if(message.totalDamage > 0){
+      if (healType === "partial"){
+        let msg;
+        let healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount)
+        
+        if (healFormula.cancelled){
+          return;
+        }
+
+        let healRoll = [];
+        let damageCount = currentDamage
+        let woundCount = currentModifier
+        let repetition = 0;
+        let html = null;
+        if(damageCount > 0 && (healFormula.heal).length > 0){
+          for (hoursPassed ; hoursPassed <= healFormula.duration ; hoursPassed++){
+
+            
+            if(repetition >= (healFormula.heal).length){
+              break;
+            }
+
+            if(damageCount > 0 && healFormula.heal[repetition].cycle === hoursPassed + 1){
+              
+              let rollFormula = healFormula.heal[repetition].roll;
+              
+              let arrayItem = await new Roll(rollFormula).evaluate({async: true})
+              healRoll.push(arrayItem)
+    
+              damageCount = damageCount - healRoll[repetition]._total > 0 ? damageCount - healRoll[repetition]._total: 0;
+              repetition++
+    
+            }
+            else if (damageCount === 0){
+              break;
+            }
+          }
+        }
+
+        if(healTarget === "physical"){
+          message.weeksValue = Math.floor(hoursPassed/168);
+          message.daysValue = Math.floor((hoursPassed-message.weeksValue*168)/24);
+          message.hoursValue = (hoursPassed-message.weeksValue*168) % 24;
+        }
+        if(healTarget === "mental"){
+          message.weeksValue = Math.floor(hoursPassed/7);
+          message.daysValue = Math.floor((hoursPassed-message.weeksValue*7));
+        }
+
+        let rollCount = repetition;
+        let woundHealing = 0
+        repetition = 0;
+
+        if((healFormula.wound).length > 0 && woundCount > 0 && healFormula.wound[repetition].cycle + hoursPassed < healFormula.duration){
+          for (woundHealing ; woundHealing <= healFormula.duration - hoursPassed ; woundHealing++ ){
+
+            if(repetition >= (healFormula.wound).length || healFormula.wound[repetition].cycle + hoursPassed > healFormula.duration){
+              break;
+            }
+
+            if(healFormula.wound[repetition].cycle === woundHealing){
+              woundCount = woundCount - healFormula.wound[repetition].heal > 0 ? woundCount - healFormula.wound[repetition].heal : 0;
+              repetition++
+            }
+    
+            if(woundCount === 0){
+              break;
+            }
+          }
+        }
+
+        hoursPassed += woundHealing
+        message.roll = true
+        message.rollTimes = "ep2e.roll.announce.heal.partial.rollTimes"
+        message.rollLength = rollCount
+        message.title = "ep2e.roll.announce.heal.partial.rollCopy"
+        message.weeksLabel = "ep2e.roll.announce.heal.partial.weeks"
+        message.daysLabel = "ep2e.roll.announce.heal.partial.days"
+        message.hoursLabel = "ep2e.roll.announce.heal.partial.hours"
+
+        html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message);
+        
+        if (healRoll.length > 0){
+          let rollMode = CONST.DICE_ROLL_MODES.BLIND
+          msg = await joinDiceRollMessage(healRoll, {
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            flavor: html
+          }, {rollMode});
+    
+          if (game.dice3d){
+            game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+          } 
+        }     
+
+        newDamage = damageCount;
+        newModifier = woundCount;
+
+        if (healTarget === "physical"){
+          switch (actor.system.bodyType.value){
+            case 'bio':
+              message.title = "ep2e.roll.announce.heal.partial.bodyHeal";
+            break;
+            case 'synth':
+              message.title = "ep2e.roll.announce.heal.partial.bodyRepair";
+            break;
+            case 'info':
+              message.title = "ep2e.roll.announce.heal.partial.bodyDefrag";
+            break;
+            default:
+            break;
+          }
+          message.weeksValue = Math.floor(hoursPassed/168);
+          message.daysValue = Math.floor((hoursPassed-message.weeksValue*168)/24);
+          message.hoursValue = (hoursPassed-message.weeksValue*168) % 24;
+          message.damageType = "ep2e.roll.announce.heal.full.damage";
+          message.modifierType = "ep2e.roll.announce.heal.full.wounds";
+        }
+        else {
+          message.weeksValue = Math.floor(hoursPassed/7);
+          message.daysValue = Math.floor((hoursPassed-message.weeksValue*7));
+          message.hoursValue = false;
+          message.title = "ep2e.roll.announce.heal.partial.mindHeal";
+          message.damageType = "ep2e.roll.announce.heal.full.stress";
+          message.modifierType = "ep2e.roll.announce.heal.full.trauma";
+        }
+
+        message.damageValue = newDamage > 0 ? currentDamage - damageCount : currentDamage;
+        message.modifierValue = newModifier > 0 ? currentModifier - woundCount : currentModifier;
+        
+      }
+      else if (healType === "full"){
+        newModifier = 0;
+
+        if (healTarget === "physical"){
+          switch (actor.system.bodyType.value){
+            case 'bio':
+              message.title = "ep2e.roll.announce.heal.full.bodyHeal";
+            break;
+            case 'synth':
+              message.title = "ep2e.roll.announce.heal.full.bodyRepair";
+            break;
+            case 'info':
+              message.title = "ep2e.roll.announce.heal.full.bodyDefrag";
+            break;
+            default:
+            break;
+          }
+          message.damageType = "ep2e.roll.announce.heal.full.damage";
+          message.modifierType = "ep2e.roll.announce.heal.full.wounds";
+        }
+        else {
+          message.title = "ep2e.roll.announce.heal.full.mindHeal";
+          message.damageType = "ep2e.roll.announce.heal.full.stress";
+          message.modifierType = "ep2e.roll.announce.heal.full.trauma";
+        }
+
+        message.damageValue = currentDamage;
+        message.modifierValue = currentModifier;
+        
+      }
+      
+      message.roll = false;
+      if (message.weeksValue || message.daysValue || message.hoursValue){
+        message.timeframe = true;
+        message.timeframeLabel = "ep2e.roll.announce.heal.partial.timeframeLabel"
+      }
+    }
+    else{
+      message.title = "ep2e.roll.announce.heal.partial.fullCopy";
+    }
+
     if(actor.type === "character"){
-
-      message.damageValue = inputValue;
-      message.modifierValue = Math.floor(inputValue/threshold);
-
       let html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message)
 
       ChatMessage.create({
@@ -300,109 +531,22 @@ async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentMo
           flavor: html
       })
     }
+    else if(actor.type != "character"){
+      let html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message)
 
-    return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier,[oldDamageBarTarget] : bar,[oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
-
-  }
-}
-
-async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, healType, healTarget) {
-  let inputValue = null;
-  let newDamage = 0;
-  let newModifier = currentModifier;
-  let oldDamageBarTarget = "";
-  let oldOverBarTarget = "";
-  let message = {};
-
-  const barModifierTarget = "system.health.barModifier";
-  let barModifier = ""
-
-  if(healTarget === "mental"){
-    oldDamageBarTarget = "system.mental.oldStressBarValue";
-    oldOverBarTarget = "system.mental.oldInsanityBarValue";
-    barModifier = "mentalDown"
-  }
-  else if(healTarget === "physical"){
-    oldDamageBarTarget = "system.physical.oldHealthBarValue";
-    oldOverBarTarget = "system.physical.oldDeathBarValue";
-    barModifier = "physicalDown";
-  }
-
-  if (healType === "partial"){
-    
-
-    if (healTarget === "physical"){
-      switch (actor.system.bodyType.value){
-        case 'bio':
-          message.title = "ep2e.roll.announce.heal.partial.bodyHeal";
-        break;
-        case 'synth':
-          message.title = "ep2e.roll.announce.heal.partial.bodyRepair";
-        break;
-        case 'info':
-          message.title = "ep2e.roll.announce.heal.partial.bodyDefrag";
-        break;
-        default:
-        break;
-      }
-      message.damageType = "ep2e.roll.announce.heal.full.damage";
-      message.modifierType = "ep2e.roll.announce.heal.full.wounds";
-    }
-    else {
-      message.title = "ep2e.roll.announce.heal.partial.mindHeal";
-      message.damageType = "ep2e.roll.announce.heal.full.stress";
-      message.modifierType = "ep2e.roll.announce.heal.full.trauma";
+      ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({actor: this.actor}),
+          flavor: html,
+          whisper: ChatMessage.getWhisperRecipients("GM")
+      })
     }
 
-    message.damageValue = currentDamage;
-    message.modifierValue = currentModifier;
-    
-  }
-  else if (healType === "full"){
-    newModifier = 0;
+    return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier, [oldDamageBarTarget] : bar, [oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
 
-    if (healTarget === "physical"){
-      switch (actor.system.bodyType.value){
-        case 'bio':
-          message.title = "ep2e.roll.announce.heal.full.bodyHeal";
-        break;
-        case 'synth':
-          message.title = "ep2e.roll.announce.heal.full.bodyRepair";
-        break;
-        case 'info':
-          message.title = "ep2e.roll.announce.heal.full.bodyDefrag";
-        break;
-        default:
-        break;
-      }
-      message.damageType = "ep2e.roll.announce.heal.full.damage";
-      message.modifierType = "ep2e.roll.announce.heal.full.wounds";
-    }
-    else {
-      message.title = "ep2e.roll.announce.heal.full.mindHeal";
-      message.damageType = "ep2e.roll.announce.heal.full.stress";
-      message.modifierType = "ep2e.roll.announce.heal.full.trauma";
-    }
-
-    message.damageValue = currentDamage;
-    message.modifierValue = currentModifier;
-    
-  }
-  
-  if(actor.type === "character"){
-
-    let html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message)
-
-    ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({actor: this.actor}),
-        flavor: html
-    })
   }
 
-  return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier, [oldDamageBarTarget] : bar, [oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
-
-}
-
+  //Bar animation
+  //Animate bar going up (e.g. taking damage)
   async function barUp (bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType){
 
     for(let i = oldBarValue ; i <= barValue ; i++){
@@ -417,6 +561,7 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
     return actor.update({["system.health.barModifier"] : "none"})
   }
 
+  //Animate bar going down (e.g. healing)
   async function barDown (bar, overBar, oldBarValue, oldOverBarValue, barValue, overBarValue, actor, barType){
 
     for(let i = oldOverBarValue ; i >= overBarValue ; i--){
@@ -429,6 +574,118 @@ async function healDamage (receiveHeal, currentDamage, bar, overBar, currentModi
     } 
     await new Promise(resolve => setTimeout(resolve, 10));
     return actor.update({"system.health.barModifier" : "none"})
+  }
+
+  //Special Dialogs
+
+  async function healingDialog(dialog, type, dialogType, enhancements, enhancementsCount) {
+    let dialogName = game.i18n.localize('ep2e.skills.pool.dialogHeadline');
+    let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+    let confirmButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
+    const html = await renderTemplate(dialog, {type, dialogType, enhancements, enhancementsCount});
+
+    return new Promise(resolve => {
+        const data = {
+            title: dialogName,
+            content: html,
+            buttons: {
+                cancel: {
+                    label: cancelButton,
+                    callback: html => resolve ({cancelled: true})
+                },
+                normal: {
+                    label: confirmButton,
+                    callback: html => resolve(_healingResult(html[0].querySelector("form"), enhancements, type))
+                }
+            },
+            default: "normal",
+            close: () => resolve ({cancelled: true})
+        };
+        let options = {width:315}
+        new Dialog(data, options).render(true);
+    });
+  }
+
+  //Healing configurator
+  function _healingResult(form, enhancements, type) {
+    let addition;
+    let durationMultiplier;
+    let duration;
+    let circumstances;
+    let healingBasis;
+    let healingAddition;
+    let healCycle = [];
+    let woundCycle = [];
+    if (type === "physical"){
+      addition = form.addition.value
+      durationMultiplier = form.durationMultiplier.value;
+      duration = form.duration.value === "weeks" ? durationMultiplier * 168 : form.duration.value === "days" ? durationMultiplier * 24 : durationMultiplier * 1;
+      circumstances = form.circumstances.value === "harsh" ? 3 : form.circumstances.value === "poor" ? 2 : 1;
+      healingBasis = enhancements.medichines === true ? {"dice" : "1d10", "timeframe" : 1 * circumstances, "woundCycle" : 24 * circumstances} : enhancements.biomods === true ? {"dice" : "1d10", "timeframe" : 12 * circumstances, "woundCycle" : 72 * circumstances} : {"dice" : "1d10", "timeframe" : 24 * circumstances, "woundCycle" : 168 * circumstances}
+      healingAddition = addition === "tank" ? {"dice" : "2d10", "timeframe" : 1, "woundCycle" : 2, "limit" : false} : addition === "spray" ? {"dice" : "1d10", "timeframe" : 1, "woundCycle" : false, "limit" : 12} : addition === "fixers" ? {"dice" : "1d10", "timeframe" : 1, "woundCycle" : 24, "limit" : 140} : addition === "meds" ? {"dice" : "1d10", "timeframe" : 1, "woundCycle" : 24, "limit" : 24}: false; 
+      let limit = healingAddition.limit ? healingAddition.limit : duration;
+
+      for(let arrayConstructor = 0 ; arrayConstructor <= duration + 1 ; arrayConstructor++){
+        
+        if(arrayConstructor > 0){
+          if(healingAddition && Number.isInteger(arrayConstructor / healingBasis.timeframe) && arrayConstructor <= limit){
+            healCycle.push({"cycle" : arrayConstructor, "roll" : healingBasis.dice + " + " + healingAddition.dice});
+          }
+          else if(healingAddition && !Number.isInteger(arrayConstructor / healingBasis.timeframe) && arrayConstructor <= limit){
+            healCycle.push({"cycle" : arrayConstructor, "roll" : healingAddition.dice});
+          }
+          else if(Number.isInteger(arrayConstructor / healingBasis.timeframe)){
+            healCycle.push({"cycle" : arrayConstructor, "roll" : healingBasis.dice});
+          }
+
+          if(healingAddition && Number.isInteger(arrayConstructor / healingAddition.woundCycle) && Number.isInteger(arrayConstructor / healingBasis.woundCycle) && arrayConstructor <= limit){
+            woundCycle.push({"cycle" : arrayConstructor, "heal" : 2, "limit" : limit});
+          }
+          else if(healingAddition && Number.isInteger(arrayConstructor / healingAddition.woundCycle) && arrayConstructor <= limit){
+            woundCycle.push({"cycle" : arrayConstructor, "heal" : 1, "limit" : limit});
+          }
+          else if(Number.isInteger(arrayConstructor / healingBasis.woundCycle)){
+            woundCycle.push({"cycle" : arrayConstructor, "heal" : 1, "limit" : false});
+          }
+        }
+      }
+
+      return {
+          duration : duration,
+          heal : healCycle,
+          wound : woundCycle
+      }
+    }
+    if (type === "mental"){
+      addition = form.addition.checked
+      durationMultiplier = form.durationMultiplier.value;
+      duration = form.duration.value === "weeks" ? durationMultiplier * 7 : durationMultiplier * 1;
+
+      for(let arrayConstructor = 0 ; arrayConstructor <= duration + 1 ; arrayConstructor++){
+        
+        if(arrayConstructor > 0){
+          if(addition){
+            healCycle.push({"cycle" : arrayConstructor, "roll" : "1d6"});
+          }
+          else if(Number.isInteger(arrayConstructor / 7) && !addition){
+            healCycle.push({"cycle" : arrayConstructor, "roll" : "1d6"});
+          }
+
+          if(Number.isInteger(arrayConstructor / 7) && addition){
+            woundCycle.push({"cycle" : arrayConstructor, "heal" : 1, "limit" : false});
+          }
+          else if(Number.isInteger(arrayConstructor / 30) && addition){
+            woundCycle.push({"cycle" : arrayConstructor, "heal" : 1, "limit" : false});
+          }
+        }
+      }
+
+      return {
+          duration : duration,
+          heal : healCycle,
+          wound : woundCycle
+      }
+    }
   }
 
 //Standard Dialogs
@@ -590,5 +847,31 @@ export async function listSelection(objectList, dialogType, headline){
 function _proListSelection(form) {
   return {
       selection: form.WeaponSelect.value
+  }
+}
+
+//Joins multiple consecutive dice rolls into one Message
+async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create=true}={}) {
+  for ( const roll of rollsArray ) {
+      if ( !roll._evaluated ) await roll.evaluate({async: true});
+  }
+
+  // Prepare chat data
+  messageData = foundry.utils.mergeObject({
+      user: game.user.id,
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      sound: CONFIG.sounds.dice
+  }, messageData);
+  messageData.rolls = rollsArray;
+
+  // Either create the message or just return the chat data
+  const cls = getDocumentClass("ChatMessage");
+  const msg = new cls(messageData);
+
+  // Either create or return the data
+  if ( create ) return cls.create(msg.toObject(), { rollMode });
+  else {
+      if ( rollMode ) msg.applyRollMode(rollMode);
+      return msg.toObject();
   }
 }

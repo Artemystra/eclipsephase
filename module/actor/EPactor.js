@@ -91,6 +91,10 @@ export default class EPactor extends Actor {
       }
     }
 
+    this._calculatePhysicalHealth(actorModel, chiMultiplier);
+    this._calculateArmor(actorModel, actorWhole, brewStatus);
+    this._calculateInitiative(actorModel, chiMultiplier);
+
     if (this.type === "character"){    
       this._calculateMentalHealth(actorModel, chiMultiplier)
       this._calculateHomebrewEncumberance(actorModel);
@@ -101,10 +105,6 @@ export default class EPactor extends Actor {
     if (this.type === "npc" || this.type === "character"){
       this._minimumInfection(actorModel, gammaCount, chiCount);
     }
-    this._calculatePhysicalHealth(actorModel, chiMultiplier);
-    this._calculateArmor(actorModel, actorWhole, brewStatus);
-    this._calculateInitiative(actorModel, chiMultiplier);
-
 
     // Aptitudes
     for (let [key, aptitude] of Object.entries(actorModel.aptitudes)) {
@@ -540,7 +540,7 @@ export default class EPactor extends Actor {
       actorModel.currentStatus.traumaModifierSum = traumaCalc;
       actorModel.currentStatus.generalModifierSum = woundsCalc + traumaCalc;
     }
-
+    
     if(armorEncumberance || armorSomCumberance){
       actorModel.currentStatus.armorModifier = true;
       actorModel.currentStatus.armorLayerSum = numberOfLayers

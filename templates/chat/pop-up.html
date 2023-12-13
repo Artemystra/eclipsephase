@@ -1,5 +1,85 @@
 <form>
   <div class="alignCenter">
+
+    <!-- heal damage partially from health bar (common-sheet-functions.js healDamage())-->
+    {{#if (eq dialogType "healDamage")}}
+      <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.heal.infoSubheadline"}}</h3>
+        </div>
+        <div class="listBackgroundMain">
+          {{#if (eq type "physical")}}
+            <p>{{localize "ep2e.roll.dialog.heal.infoCopyPhysical"}}</p>
+            <div class="listBackgroundPitch flexrow alignLeft">
+              {{#if (gt enhancementsCount 0)}}
+                <span class="resource-value" style="min-width: 100%;"><strong>{{localize "ep2e.roll.dialog.heal.enhancementsLabel"}}:</strong></span> 
+                <ul>
+                {{#each enhancements as |value key|}}
+                  <li>{{key}}</li>
+                {{/each}}
+                </ul>
+              {{else}}
+                {{localize "ep2e.roll.dialog.heal.noBiomods"}}
+              {{/if}} 
+            </div>
+          {{else if (eq type "mental")}}
+            <p>{{{localize "ep2e.roll.dialog.heal.infoCopyMental"}}}</p>
+          {{/if}}
+        </div>
+      </div>
+        <div class="contentBoxMargin">
+          <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.skills.pool.inputSubheadline"}}</h3>
+          </div>
+          <div class="listBackgroundMain">
+            <div class="form-group listBackgroundMain alignLeft">
+            {{#if (eq type "physical")}}
+            <div class="flexrow" style="align-items: center; min-width: 100%;">
+              <label class="resource-label">{{localize "ep2e.roll.dialog.heal.additions.label"}}:</label>
+              <select name="addition" class="alignLeft input-largePlus">
+                  <option value="none">{{localize "ep2e.roll.dialog.heal.additions.none"}}</option>
+                  <option value="meds">{{localize "ep2e.roll.dialog.heal.additions.meds"}} (+1d10)</option>
+                  <option value="fixers">{{localize "ep2e.roll.dialog.heal.additions.fixers"}} (+1d10)</option>
+                  <option value="spray">{{localize "ep2e.roll.dialog.heal.additions.spray"}} (+1d10)</option>
+                  <option value="tank">{{localize "ep2e.roll.dialog.heal.additions.tank"}} (+2d10)</option>
+              </select>
+            </div>
+            <div class="flexrow" style="align-items: center; min-width: 100%;">
+              <label class="resource-label">{{localize "ep2e.roll.dialog.heal.timeframe.label"}}:</label>
+              <input class="input-small alignCenter" type="number" name="durationMultiplier" placeholder="1" />
+              <select name="duration" class="alignLeft input-large">
+                  <option value="hours">{{localize "ep2e.roll.dialog.heal.timeframe.hours"}}</option>
+                  <option value="days">{{localize "ep2e.roll.dialog.heal.timeframe.days"}}</option>
+                  <option value="weeks">{{localize "ep2e.roll.dialog.heal.timeframe.weeks"}}</option>
+              </select>
+            </div>
+            <div class="flexrow" style="align-items: center; min-width: 100%;">
+              <label class="resource-label">{{localize "ep2e.roll.dialog.heal.circumstances.label"}}:</label>
+              <select name="circumstances" class="alignLeft input-largePlus">
+                  <option value="none">{{localize "ep2e.roll.dialog.heal.circumstances.none"}}</option>
+                  <option value="poor">{{localize "ep2e.roll.dialog.heal.circumstances.poor"}} (x 2)</option>
+                  <option value="harsh">{{localize "ep2e.roll.dialog.heal.circumstances.harsh"}} (x 3)</option>
+              </select>
+            </div>
+            {{/if}}
+            {{#if (eq type "mental")}}
+            <div class="flexrow" style="align-items: center; min-width: 100%;">
+              <input name="addition" type="checkbox" checked id="therapy" style="margin: 5px 10px 5px 0px"/>
+              <label class="resource-label" for="therapy">{{localize "ep2e.roll.dialog.heal.additions.therapy"}}</label>
+            </div>
+            <div class="flexrow" style="align-items: center; min-width: 100%;">
+              <label class="resource-label">{{localize "ep2e.roll.dialog.heal.timeframe.label"}}:</label>
+              <input class="input-small alignCenter" type="number" name="durationMultiplier" placeholder="1" />
+              <select name="duration" class="alignLeft input-large">
+                  <option value="days">{{localize "ep2e.roll.dialog.heal.timeframe.days"}}</option>
+                  <option value="weeks">{{localize "ep2e.roll.dialog.heal.timeframe.weeks"}}</option>
+              </select>
+            </div>
+            {{/if}}
+            </div>
+          </div>
+        </div>
+    {{/if}}
       
     <!-- Use pool directly from actor sheet (EPactorSheet.js line 1056 onwards)-->
     {{#if (eq dialogType "poolUsage")}}
