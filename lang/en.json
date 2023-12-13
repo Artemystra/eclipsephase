@@ -1209,10 +1209,10 @@
             "rollCopy": "I rolled for healing:",
             "rollTimes": " times",
             "timeframeLabel": "Timeframe",
-            "weeks": "weeks",
-            "days": "days",
-            "hours": "hours",
-            "fullCopy": "Your health is full",
+            "weeks": "week(s)",
+            "days": "day(s)",
+            "hours": "hour(s)",
+            "fullCopy": "My health is full",
             "notEnoughTime": "I did not have enough time to heal"
           }
         },

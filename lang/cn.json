@@ -1098,6 +1098,36 @@
           "short": "我使用一次<p/><strong>短填充<p/></strong>恢复了部分能力池<p/>",
           "long": "我使用我的<p/><strong>长填充<p/></strong>恢复了全部能力池<p/>"
         },
+        "heal": {
+          "full": {
+            "bodyHeal": "I completely healed my morph",
+            "bodyRepair": "I completely repaired my morph",
+            "bodyDefrag": "I completely defragmented my morph",
+            "mindHeal": "My mind is calm and sound again",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          },
+          "partial": {
+            "bodyHeal": "I healed my morph",
+            "bodyRepair": "I repaired my morph",
+            "bodyDefrag": "I defragmented my morph",
+            "mindHeal": "I calmed my mind",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma",
+            "rollCopy": "I rolled for healing:",
+            "rollTimes": " times",
+            "timeframeLabel": "Timeframe",
+            "weeks": "week(s)",
+            "days": "day(s)",
+            "hours": "hour(s)",
+            "fullCopy": "My health is full",
+            "notEnoughTime": "I did not have enough time to heal"
+          }
+        },
         "poolUsage": {
           "poolUsed": "已使用能力池",
           "usePoolSubheadline": "使用能力池",

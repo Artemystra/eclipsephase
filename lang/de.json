@@ -1163,7 +1163,15 @@
             "damage": "Schaden",
             "wounds": "Wunde(n)",
             "stress": "Stress",
-            "trauma": "Trauma"
+            "trauma": "Trauma",
+            "rollCopy": "Ich habe Heilung gewürfelt:",
+            "rollTimes": " Mal",
+            "timeframeLabel": "Zeitfenster",
+            "weeks": "Woche(n)",
+            "days": "Tag(e)",
+            "hours": "Stunde(n)",
+            "fullCopy": "Mein Leben ist noch voll",
+            "notEnoughTime": "Ich habe nicht genug Zeit zum heilen gehabt"
           }
         },
         "poolUsage": {
