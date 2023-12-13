@@ -324,8 +324,11 @@ export async function healthBarChange(actor, html){
     let newModifier = currentModifier;
     let oldDamageBarTarget = "";
     let oldOverBarTarget = "";
+    let damageCount = currentDamage
+    let woundCount = currentModifier
     let message = {};
     message.totalDamage = currentDamage + currentModifier;
+
     //Dialog args
     const dialog = 'systems/eclipsephase/templates/chat/pop-up.html';
     const dialogType = "healDamage";
@@ -362,8 +365,6 @@ export async function healthBarChange(actor, html){
         }
 
         let healRoll = [];
-        let damageCount = currentDamage
-        let woundCount = currentModifier
         let repetition = 0;
         let html = null;
         if(damageCount > 0 && (healFormula.heal).length > 0){
@@ -405,20 +406,27 @@ export async function healthBarChange(actor, html){
         let woundHealing = 0
         repetition = 0;
 
-        if((healFormula.wound).length > 0 && woundCount > 0 && healFormula.wound[repetition].cycle + hoursPassed < healFormula.duration){
-          for (woundHealing ; woundHealing <= healFormula.duration - hoursPassed ; woundHealing++ ){
-
-            if(repetition >= (healFormula.wound).length || healFormula.wound[repetition].cycle + hoursPassed > healFormula.duration){
-              break;
-            }
-
-            if(healFormula.wound[repetition].cycle === woundHealing){
-              woundCount = woundCount - healFormula.wound[repetition].heal > 0 ? woundCount - healFormula.wound[repetition].heal : 0;
-              repetition++
-            }
-    
-            if(woundCount === 0){
-              break;
+        if((healFormula.wound).length > 0 && woundCount > 0){
+          if(healFormula.wound[repetition].cycle + hoursPassed <= healFormula.duration){
+            for (woundHealing ; woundHealing <= healFormula.duration - hoursPassed ; woundHealing++ ){
+  
+              if(repetition >= (healFormula.wound).length || healFormula.wound[repetition].cycle + hoursPassed > healFormula.duration){
+                hoursPassed--;
+                break;
+              }
+  
+              if(healFormula.wound[repetition].cycle === woundHealing){
+                woundCount = woundCount - healFormula.wound[repetition].heal > 0 ? woundCount - healFormula.wound[repetition].heal : 0;
+                repetition++
+              }
+      
+              if(woundCount === 0){
+                break;
+              }
+  
+              if(woundCount != 0 && woundHealing === healFormula.duration - hoursPassed && repetition === (healFormula.wound).length){
+                break;
+              }
             }
           }
         }
@@ -521,6 +529,11 @@ export async function healthBarChange(actor, html){
     }
     else{
       message.title = "ep2e.roll.announce.heal.partial.fullCopy";
+    }
+
+    if(currentDamage === damageCount && currentModifier === woundCount && message.totalDamage > 0){
+      message.title = "ep2e.roll.announce.heal.partial.notEnoughTime";
+      message.totalDamage = 0;
     }
 
     if(actor.type === "character"){
