@@ -1103,6 +1103,34 @@
               "aggressiveCharge": "Rücksichtsloser Angriff (+1d10 SW, - 10 Ausweichen)"
             }
           }
+        },
+        "heal": {
+          "infoSubheadline": "Heilungswurf Info",
+          "infoCopyPhysical": "Die Anzahl der Würfel die zum heilen eines Morphs zur Verfügung steht hängt von der eingebauten Ware, etwaiger Medizin oder benutzter Gerätschaft sowie den Umständen der Heilung ab. Frag deine SL nach diesen Faktoren und füll das Formular entsprechend aus.",
+          "infoCopyMental": "Den Geist zu heilen ist keine leichte Aufgabe. Vor allem dann, wenn man es auf sich allein gestellt und ohne professionelle Hilfe versucht. Frag deine SL nach der zur Verfügung stehenden Zeitspanne und entscheide dich ob du es mit therapeutischer Unterstützung oder allein versuchen willst, ehe du würfelst.<p><span style='font-size: 12px; font-style: italic'>Es ist zu beachten, dass etwaige Psychochirurgiewürfe durch Dritte unabhänging von diesem Heilungswurf zu unternehmen sind.</span",
+          "enhancementsLabel": "Körperverbesserungen",
+          "noBiomods": "Keine Biomods installiert",
+          "additions": {
+            "label": "Zusätze",
+            "none": "Keine",
+            "meds": "Meds nutzen",
+            "fixers": "Fixers nutzen",
+            "spray": "Heilspray nutzen",
+            "tank": "Vat Tank nutzen",
+            "therapy": "Mit therapeutischer Betreuung heilen"
+          },
+          "timeframe": {
+            "label": "Zeitfenster",
+            "hours": "Stunde(n)",
+            "days": "Tag(e)",
+            "weeks": "Woche(n)"
+          },
+          "circumstances": {
+            "label": "Umstände",
+            "none": "Normal",
+            "poor": "Schlecht",
+            "harsh": "Hart"
+          }
         }
       },
       "successType": {

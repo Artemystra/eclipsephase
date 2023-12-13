@@ -1065,6 +1065,34 @@
               "aggressiveCharge": "Ataque Violento (+1d10 VD, -10 Evasão)"
             }
           }
+        },
+        "heal": {
+          "infoSubheadline": "Healing Information",
+          "infoCopyPhysical": "Healing a morph uses a number of dice based on the ware, medicine/devices used and circumstances you are in. Ask your GM about these factors and fill out the form below accordingly.",
+          "infoCopyMental": "Healing your mind is a difficult task. Even more so if you try to do it without professional help. Ask your GM about the timeframe and decide whether to go with a professional or by your own and start healing.<p><span style='font-size: 12px; font-style: italic'>Please note, that any necessary psychosurgery rolls need to be done seperately by the third party.</span",
+          "enhancementsLabel": "Body Enhancements",
+          "noBiomods": "Body has no biomods installed",
+          "additions": {
+            "label": "Additions",
+            "none": "None",
+            "meds": "Use Meds",
+            "fixers": "Use Fixers",
+            "spray": "Use Healing Spray",
+            "tank": "Vat Tank",
+            "therapy": "Healing in Therapy"
+          },
+          "timeframe": {
+            "label": "Timeframe",
+            "hours": "Hour(s)",
+            "days": "Day(s)",
+            "weeks": "Week(s)"
+          },
+          "circumstances": {
+            "label": "Circumstances",
+            "none": "Normal",
+            "poor": "Poor",
+            "harsh": "Harsh"
+          }
         }
       },
       "successType": {
