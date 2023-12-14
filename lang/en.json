@@ -128,6 +128,48 @@
     },
     "healthbar": {
       "tooltip": {
+        "physical": {
+          "headline": "Physical Fitness",
+          "damageThresholdsSubheadline": "Damage Thresholds",
+          "woundsSubheadline": "Wound Monitor",
+          "curDmg": "Current Damage",
+          "dur": "Durability",
+          "durDescription": "Durability defines how many bruises, cuts and wholes one can compensate for.",
+          "dr": "Death Rating",
+          "drDescription": "Not much time before the body is beyond repair, you are cowering on death's doorstep. That is here.",
+          "curWounds": "Current Wounds",
+          "wt": "Wound Threshold",
+          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious.",
+          "takeDamage": "Take Physical Damage"
+        },
+        "mental": {
+          "headline": "Mental Fitness",
+          "stressThresholdsSubheadline": "Stress Thresholds",
+          "traumaSubheadline": "Trauma Monitor",
+          "curStr": "Current Stress",
+          "luc": "Lucidity",
+          "lucDescription": "Your mental stress. To much and you might go insane.",
+          "ir": "Insanity Rating",
+          "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
+          "curTrauma": "Current Trauma",
+          "tt": "Trauma Threshold",
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma.",
+          "takeDamage": "Take Mental Damage"
+        },
+        "heal": {
+          "bodyFull":{
+            "bio": "Full Heal",
+            "synth": "Full Repair",
+            "info": "Full Defragmentation"
+          },
+          "bodyPartial": {
+            "bio": "Roll Heal",
+            "synth": "Roll Repair",
+            "info": "Roll Defrag"
+          },
+          "mindFull": "Heal Full",
+          "mindPartial": "Roll Heal"
+        },
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",
         "stressluc": "Stress/Luc",
@@ -135,7 +177,8 @@
         "initiative": "Initiative",
         "threat": "Threat",
         "stressTest": "Stress Test",
-        "iniMod": "Ini Mod"
+        "iniMod": "Ini Mod",
+        "rezPoints": "Rez Points"
       }
     },
     "ego": {
@@ -1074,6 +1117,34 @@
               "aggressiveCharge": "Ruthless Attack(+1d10 DV, - 10 Fray)"
             }
           }
+        },
+        "heal": {
+          "infoSubheadline": "Healing Information",
+          "infoCopyPhysical": "Healing a morph uses a number of dice based on the ware, medicine/devices used and circumstances you are in. Ask your GM about these factors and fill out the form below accordingly.",
+          "infoCopyMental": "Healing your mind is a difficult task. Even more so if you try to do it without professional help. Ask your GM about the timeframe and decide whether to go with a professional or by your own and start healing.<p><span style='font-size: 12px; font-style: italic'>Please note, that any necessary psychosurgery rolls need to be done seperately by the third party.</span",
+          "enhancementsLabel": "Body Enhancements",
+          "noBiomods": "Body has no biomods installed",
+          "additions": {
+            "label": "Additions",
+            "none": "None",
+            "meds": "Use Meds",
+            "fixers": "Use Fixers",
+            "spray": "Use Healing Spray",
+            "tank": "Vat Tank",
+            "therapy": "Healing in Therapy"
+          },
+          "timeframe": {
+            "label": "Timeframe",
+            "hours": "Hour(s)",
+            "days": "Day(s)",
+            "weeks": "Week(s)"
+          },
+          "circumstances": {
+            "label": "Circumstances",
+            "none": "Normal",
+            "poor": "Poor",
+            "harsh": "Harsh"
+          }
         }
       },
       "successType": {
@@ -1114,6 +1185,36 @@
         "rest": {
           "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
           "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+        },
+        "heal": {
+          "full": {
+            "bodyHeal": "I completely healed my morph",
+            "bodyRepair": "I completely repaired my morph",
+            "bodyDefrag": "I completely defragmented my morph",
+            "mindHeal": "My mind is calm and sound again",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          },
+          "partial": {
+            "bodyHeal": "I healed my morph",
+            "bodyRepair": "I repaired my morph",
+            "bodyDefrag": "I defragmented my morph",
+            "mindHeal": "I calmed my mind",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma",
+            "rollCopy": "I rolled for healing:",
+            "rollTimes": " times",
+            "timeframeLabel": "Timeframe",
+            "weeks": "week(s)",
+            "days": "day(s)",
+            "hours": "hour(s)",
+            "fullCopy": "My health is full",
+            "notEnoughTime": "I did not have enough time to heal"
+          }
         },
         "poolUsage": {
           "poolUsed": "Pool Used",
@@ -1189,6 +1290,14 @@
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
             "weaponFixated": "Shot from Hip"
+          },
+          "damage": {
+            "physicalDamage": "My morph took damage",
+            "mentalDamage": "My mind slips",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma"
           }
         }
       }
@@ -1253,7 +1362,8 @@
       "093WeaponCategorizerCopy": "<p>The following list of characters had ranged weapons to them, that could not be identified. Please take a moment to assign them the correct ammunition type.</p><i><p style='font-size: 11px;'>Note: You can always change their ammo type manually. This screen is purely for convenience reasons and GMs with a massive load of custom NPC weapons. If you decide to skip this screen all unidentified weapons will become 'beam'-type for the time being.</p></i>",
       "095": "<label class='resource-label'><p>Second Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a massive update to prepare your weapons items for further updates along the road. It includes:</p><p><b><ul><li>Weapons now feature traits and accessories. Edit any weapon to change their traits/accessories.</li><li>Weapons now feature up to two different weapon modes.</li><li>Rolling from a weapon with multiple modes will let you choose it's mode in a consecutive dialog.</li><li>All sheets (PC/NPC/Threat) now use the same way of displaying weapons in the inventory.</li><li>All weapon representations on sheets feature clickable traits to give better insights into weapon rules and effects.</li><li>All weapons have been updated automatically (though most of them don't feature the original description). Please feel free to double check your inventory and delete/replace all dublicated weapons and pull new weapons from the compendium.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: There is no additional functionality to weapon effects at this point (e.g. weapons that don't do damage will still trigger a damage dialog etc.). This will be fixed in a later update and before the release of v1.0. Apart from this there will be a limitation for automation especially on weapon/ammo effects on their target, as they're not automatically identified. This will not be part of any pre 1.0 update.</i></p><p>Thank you and have a great day playing!</p></label>",
       "098": "<label class='resource-label'><p>Third Weapon Update.<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p>This is a major update introducting auto calculating weapon AND ammo traits. It includes:</p><p><b><ul><li>Weapon & Ammo traits (Ammo traits are inherited by reloading).</li><li>Automatic weapon dv modifier calculation.</li><li>A new info-button aside the rounds display (in the sideCar for PCs in the inventory for NPCs/Threats).</li><li>Updated ammunition in the compendium. It now holds: Standard, Special(Kinetic), Seeker and Swarm ammunition. Old ammunition will no longer work. Just replace it with the new items.</li><li>Weapons now need ammunition before they can be reloaded. The character will be notified if they try to reload without fitting ammo in their inventory.</li><li>Damage chat messages now let you know if there are any additional weapon effects to your weapons/ammo (such as 'Stun' or 'Shock').</li><li>There is a special mechanic in place if you're using nano swarm guns. Due to their nature they're capable of just replenishing your swarms instead of requiring you to reload from inventory every time.</li><li>Introduced three ammunition rule sets: Standard, Survival and Grenades only. GMs find them together with a description in the general System preferences.</li><li>All weapons but seekers, sprayers and buzzers come with standard ammunition loaded. It is important to note that sprayers do not load normal ammunition but instead using chemicals and drugs due to their nature and the rules.</li></ul></b><p/><p style='font-size: 11px; line-height: 115%'><i>Note: I may revisit the UX for reloading NPC/Threat weapons before 1.0 release, but I have no concrete idea how to make this easier as of yet. Please provide any feedback you might have on this.</i></p><p>Thank you and have a great day playing!</p></label>",
-      "0985": "<span class='resource-label' style='flex: 100%'><p>NPC/Threat Initiative Update<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a minor update with a major effect:</b></p><p>In the past NPCs & Threats had a input field in their health bar indicating that the ini mod will go there. This has been updated to be more specific. While the initiative is calculated based on the aptitudes & ware/traits/active effects of your npc/threat, you're now able to put in an additional modifier by hand. <b>Please note that any npcs/threats you designed that used this old input field now need to be revisited, as their manual modifier was reset to 0!</b> We hope that this gives more clarity on how this particular modifier is meant to be used.<p>Thank you and have a great day playing!</p></span>"
+      "0985": "<span class='resource-label' style='flex: 100%'><p>NPC/Threat Initiative Update<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a minor update with a major effect:</b></p><p>In the past NPCs & Threats had a input field in their health bar indicating that the ini mod will go there. This has been updated to be more specific. While the initiative is calculated based on the aptitudes & ware/traits/active effects of your npc/threat, you're now able to put in an additional modifier by hand. <b>Please note that any npcs/threats you designed that used this old input field now need to be revisited, as their manual modifier was reset to 0!</b> We hope that this gives more clarity on how this particular modifier is meant to be used.<p>Thank you and have a great day playing!</p></span>",
+      "099": "<span class='resource-label' style='flex: 100%'><p>Healing Update<p/><p><b>IMPORTANT: Biomods & medichines now add active effects to let character sheets know that they're added. In order for automatic healing calculation to work properly, you might want to replace BIOMODS and MEDICHINES for all important (player)-characters. They will NOT be updated automatically</b><p/><p>Thank you and have a great day playing!</p></span>"
     },
     "systemMessage": {
       "resetRest": {

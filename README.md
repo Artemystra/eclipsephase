@@ -219,4 +219,4 @@ system.skillsVig.melee.mod = affects the skilltotal of given skill. Also affects
 
 <p>Rules and non-registered trademarks are published under (CC) BY-NC-SA (https://creativecommons.org/licenses/by-nc-sa/3.0/). This is also true for any additions made or code written by the developer (me)</p>
 
-<p>All of this was built on the Boilerplate System of FoundryVTT which was distributed for mingling around in it. Thanks, Atropos for this! (https://gitlab.com/foundrynet/worldbuilding)</p><h3>Legal</h3>
+<p>All of this was built on the Boilerplate System of FoundryVTT which was distributed for mingling around in it. Thanks, Atropos for this! (https://gitlab.com/foundrynet/worldbuilding)</p>

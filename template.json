@@ -26,21 +26,26 @@
         },
         "health":{
           "physical": {
-            "value": null,
+            "value": 0,
             "max": 0
           },
           "mental": {
-            "value": null,
+            "value": 0,
             "max": 0
           },
           "death": {
-            "value": null,
+            "value": 0,
             "max": 0
           },
           "insanity": {
-            "value": null,
+            "value": 0,
             "max": 0
           }
+        },
+        "rezPoints": {
+          "value": 0,
+          "spent": 0,
+          "display": 0
         },
         "mods": {
           "globalMod": null,

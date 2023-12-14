@@ -1,6 +1,6 @@
 import * as Dice from "../dice.js"
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo, healthBarChange } from "../common/common-sheet-functions.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 
@@ -517,7 +517,16 @@ export default class EPnpcSheet extends ActorSheet {
         
         //Reload Ranged Weapon Functionality
         reloadWeapon(html, actor);
+        
+        //Calculate the healthBar
+        html.find(".healthPanelNoSubmit").change(this.autoSubmitPrevention.bind(this))
 
+        healthBarChange(actor, html);
+
+    }
+
+    async autoSubmitPrevention(event, options) {
+      super._onSubmit(event, { ...options, preventRender: true });
     }
 
     _onItemCreate(event) {

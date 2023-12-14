@@ -128,6 +128,48 @@
     },
     "healthbar": {
       "tooltip": {
+        "physical": {
+          "headline": "Physische Gesundheit",
+          "damageThresholdsSubheadline": "Schadensschwellen",
+          "woundsSubheadline": "Wundmonitor",
+          "curDmg": "Schaden Aktuell",
+          "dur": "Ausdauer",
+          "durDescription": "Ausdauer gibt Auskunft darüber wie viele blaue Flecken, Schnitte und Löcher der Körper verkraften kann.",
+          "dr": "Todes- Schwelle",
+          "drDescription": "Kurz bevor der Körper jenseits aller Rettung ist, liegst du gebrochen am Boden und harrst der Dinge die da kommen.",
+          "curWounds": "Wunden Aktuell",
+          "wt": "Wund- Schwelle",
+          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious.",
+          "takeDamage": "Physischer Schaden"
+        },
+        "mental": {
+          "headline": "Geistige Gesundheit",
+          "stressThresholdsSubheadline": "Stressschwellen",
+          "traumaSubheadline": "Traumamonitor",
+          "curStr": "Stress Aktuell",
+          "luc": "Luzidität",
+          "lucDescription": "Your mental stress. To much and you might go insane.",
+          "ir": "Wahn- Schwelle",
+          "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
+          "curTrauma": "Trauma Aktuell",
+          "tt": "Trauma- Schwelle",
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma.",
+          "takeDamage": "Mentaler Schaden"
+        },
+        "heal": {
+          "bodyFull":{
+            "bio": "Voll Heilen",
+            "synth": "Voll Reparieren",
+            "info": "Voll Defragmentieren"
+          },
+          "bodyPartial": {
+            "bio": "Heil Wurf",
+            "synth": "Reparatur Wurf",
+            "info": "Defrag Wurf"
+          },
+          "mindFull": "Voll Heilen",
+          "mindPartial": "Heil Wurf"
+        },
         "durdr": "Aus/Tr",
         "woundswt": "Wunden/(WG)",
         "stressluc": "Stress/Kla",
@@ -1061,6 +1103,34 @@
               "aggressiveCharge": "Rücksichtsloser Angriff (+1d10 SW, - 10 Ausweichen)"
             }
           }
+        },
+        "heal": {
+          "infoSubheadline": "Heilungswurf Info",
+          "infoCopyPhysical": "Die Anzahl der Würfel die zum heilen eines Morphs zur Verfügung steht hängt von der eingebauten Ware, etwaiger Medizin oder benutzter Gerätschaft sowie den Umständen der Heilung ab. Frag deine SL nach diesen Faktoren und füll das Formular entsprechend aus.",
+          "infoCopyMental": "Den Geist zu heilen ist keine leichte Aufgabe. Vor allem dann, wenn man es auf sich allein gestellt und ohne professionelle Hilfe versucht. Frag deine SL nach der zur Verfügung stehenden Zeitspanne und entscheide dich ob du es mit therapeutischer Unterstützung oder allein versuchen willst, ehe du würfelst.<p><span style='font-size: 12px; font-style: italic'>Es ist zu beachten, dass etwaige Psychochirurgiewürfe durch Dritte unabhänging von diesem Heilungswurf zu unternehmen sind.</span",
+          "enhancementsLabel": "Körperverbesserungen",
+          "noBiomods": "Keine Biomods installiert",
+          "additions": {
+            "label": "Zusätze",
+            "none": "Keine",
+            "meds": "Meds nutzen",
+            "fixers": "Fixers nutzen",
+            "spray": "Heilspray nutzen",
+            "tank": "Vat Tank nutzen",
+            "therapy": "Mit therapeutischer Betreuung heilen"
+          },
+          "timeframe": {
+            "label": "Zeitfenster",
+            "hours": "Stunde(n)",
+            "days": "Tag(e)",
+            "weeks": "Woche(n)"
+          },
+          "circumstances": {
+            "label": "Umstände",
+            "none": "Normal",
+            "poor": "Schlecht",
+            "harsh": "Hart"
+          }
         }
       },
       "successType": {
@@ -1101,6 +1171,36 @@
         "rest": {
           "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
           "long": "Ich habe meine<p/><strong>lange Rast<p/></strong>um zu regenerieren<p/>"
+        },
+        "heal": {
+          "full": {
+            "bodyHeal": "Mein Morph ist komplett geheilt",
+            "bodyRepair": "Mein Morph ist komplett repariert",
+            "bodyDefrag": "Mein Morph ist komplett defragmentiert",
+            "mindHeal": "Mein Geist ist wieder ruhig und heil",
+            "damage": "Schaden",
+            "wounds": "Wunde(n)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          },
+          "partial": {
+            "bodyHeal": "Mein Morph wurde geheilt",
+            "bodyRepair": "Mein Morph wurde repariert",
+            "bodyDefrag": "Mein Morph wurde defragmentiert",
+            "mindHeal": "Mein Geist wird ruhiger",
+            "damage": "Schaden",
+            "wounds": "Wunde(n)",
+            "stress": "Stress",
+            "trauma": "Trauma",
+            "rollCopy": "Ich habe Heilung gewürfelt:",
+            "rollTimes": " Mal",
+            "timeframeLabel": "Zeitfenster",
+            "weeks": "Woche(n)",
+            "days": "Tag(e)",
+            "hours": "Stunde(n)",
+            "fullCopy": "Mein Leben ist noch voll",
+            "notEnoughTime": "Ich habe nicht genug Zeit zum heilen gehabt"
+          }
         },
         "poolUsage": {
           "poolUsed": "Pool genutzt",
@@ -1176,6 +1276,14 @@
             "noAmmoPresent": "Keine passende Munition vorhanden.",
             "ammoSkillModifier": "Skillmodifikator (Munition)",
             "weaponFixated": "Aus der Hüfte geschossen"
+          },
+          "damage": {
+            "physicalDamage": "Mein Morph wurde beschädigt",
+            "mentalDamage": "Mein Verstand erleidet Stress",
+            "damage": "Schaden",
+            "wounds": "Wunde(n)",
+            "stress": "Stress",
+            "trauma": "Trauma"
           }
         }
       }

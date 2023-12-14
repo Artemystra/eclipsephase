@@ -123,6 +123,24 @@
     },
     "healthbar": {
       "tooltip": {
+        "physical": {
+          "headline": "Physical Fitness",
+          "dur": "Durability Damage",
+          "durDescription": "Durability defines how many bruises, cuts and wholes",
+          "dr": "Death Rating",
+          "drDescription": "Death Rating",
+          "wt": "Wound Threshold",
+          "wtDescription": "Wound Threshold"
+        },
+        "mental": {
+          "headline": "Mental Fitness",
+          "str": "Stress",
+          "strDescription": "Your mental stress. To much and you might go insane.",
+          "ir": "Insanity Rating",
+          "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
+          "tt": "Trauma Threshold",
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma."
+        },
         "durdr": "Dur/GD",
         "woundswt": "Ferimentos/(LF)",
         "stressluc": "Estresse/Luc",
@@ -1047,6 +1065,34 @@
               "aggressiveCharge": "Ataque Violento (+1d10 VD, -10 Evasão)"
             }
           }
+        },
+        "heal": {
+          "infoSubheadline": "Healing Information",
+          "infoCopyPhysical": "Healing a morph uses a number of dice based on the ware, medicine/devices used and circumstances you are in. Ask your GM about these factors and fill out the form below accordingly.",
+          "infoCopyMental": "Healing your mind is a difficult task. Even more so if you try to do it without professional help. Ask your GM about the timeframe and decide whether to go with a professional or by your own and start healing.<p><span style='font-size: 12px; font-style: italic'>Please note, that any necessary psychosurgery rolls need to be done seperately by the third party.</span",
+          "enhancementsLabel": "Body Enhancements",
+          "noBiomods": "Body has no biomods installed",
+          "additions": {
+            "label": "Additions",
+            "none": "None",
+            "meds": "Use Meds",
+            "fixers": "Use Fixers",
+            "spray": "Use Healing Spray",
+            "tank": "Vat Tank",
+            "therapy": "Healing in Therapy"
+          },
+          "timeframe": {
+            "label": "Timeframe",
+            "hours": "Hour(s)",
+            "days": "Day(s)",
+            "weeks": "Week(s)"
+          },
+          "circumstances": {
+            "label": "Circumstances",
+            "none": "Normal",
+            "poor": "Poor",
+            "harsh": "Harsh"
+          }
         }
       },
       "successType": {
@@ -1087,6 +1133,36 @@
         "rest": {
           "short": "Eu usei um<p/><strong>Descanso Curto<p/></strong>para recuperar alguns pontos de parada<p/>",
           "long": "Eu usei o meu<p/><strong>Descanso Longo<p/></strong>para recuperar todas as paradas<p/>"
+        },
+        "heal": {
+          "full": {
+            "bodyHeal": "I completely healed my morph",
+            "bodyRepair": "I completely repaired my morph",
+            "bodyDefrag": "I completely defragmented my morph",
+            "mindHeal": "My mind is calm and sound again",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma"
+          },
+          "partial": {
+            "bodyHeal": "I healed my morph",
+            "bodyRepair": "I repaired my morph",
+            "bodyDefrag": "I defragmented my morph",
+            "mindHeal": "I calmed my mind",
+            "damage": "Damage",
+            "wounds": "Wound(s)",
+            "stress": "Stress",
+            "trauma": "Trauma",
+            "rollCopy": "I rolled for healing:",
+            "rollTimes": " times",
+            "timeframeLabel": "Timeframe",
+            "weeks": "week(s)",
+            "days": "day(s)",
+            "hours": "hour(s)",
+            "fullCopy": "My health is full",
+            "notEnoughTime": "I did not have enough time to heal"
+          }
         },
         "poolUsage": {
           "poolUsed": "Parada Usada",

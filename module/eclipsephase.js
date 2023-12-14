@@ -228,6 +228,7 @@ let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion)
 let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
 let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion)
 let before0985 = foundry.utils.isNewerVersion("0.9.8.5", gameVersion)
+let before099 = foundry.utils.isNewerVersion("0.9.9", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -348,6 +349,21 @@ if (before0985) {
   endMigration = Migration0985["endMigration"]
 }
 
+//0.9.9 Migration
+if (before099) {
+  endMigration = false
+  const messageCopy = "ep2e.migration.099"
+  let migration = await informationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    game.settings.set("eclipsephase", "migrationVersion", "0.9.9");
+  }
+
+  endMigration = false
+}
+
 if(endMigration){
   await migrationEnd(endMigration)
 }
@@ -379,6 +395,29 @@ async function migrationStart(endMigration, messageHeadline, messageCopy) {
       new Dialog(data, options).render(true);
   });
 }
+
+async function informationStart(endMigration, messageHeadline, messageCopy) {
+  const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
+  const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+
+  return new Promise(resolve => {
+      const data = {
+          title: "Migration Needed",
+          content: html,
+          buttons: {
+              normal: {
+                  label: "Close",
+                  callback: html => resolve ({start: true})
+              }
+          },
+          default: "normal",
+          close: () => resolve ({cancelled: true})
+      };
+      let options = {width:600}
+      new Dialog(data, options).render(true);
+  });
+}
+
 
 async function migrationEnd(endMigration) {
   const messageHeadline = "ep2e.migration.headlineEnd"
