@@ -531,7 +531,7 @@ export async function healthBarChange(actor, html){
       message.title = "ep2e.roll.announce.heal.partial.fullCopy";
     }
 
-    if(currentDamage === damageCount && currentModifier === woundCount && message.totalDamage > 0){
+    if(currentDamage === damageCount && currentModifier === woundCount && message.totalDamage > 0 && healType != "full"){
       message.title = "ep2e.roll.announce.heal.partial.notEnoughTime";
       message.totalDamage = 0;
     }
