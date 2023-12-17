@@ -62,7 +62,7 @@
             <div class="listBackground" style="background-color: var(--accentBackground);">
                 <div class="grid grid-3col">
                     <div>
-                        <input class="input-xl" type="text" name="system.bodies.morph1.name" value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
+                        <input class="input-xl" type="text" onFocus="this.select()" name="system.bodies.morph1.name" value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}:</label>
@@ -75,7 +75,7 @@
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}:</label>
-                        <input class="input-small item-standard-margin-medium" style="text-align: center" type="number" name="system.bodies.morph1.dur" value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
+                        <input class="input-small item-standard-margin-medium" onFocus="this.select()" style="text-align: center" type="number" name="system.bodies.morph1.dur" value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
                     </div>
                 </div>
                 <div class="grid grid-3col">

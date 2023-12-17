@@ -90,6 +90,15 @@ function registerSystemSettings() {
     default: false
   });
 
+  game.settings.register("eclipsephase", "editAll", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.editAll.name",
+    hint: 'SETTINGS.editAll.hint',
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register("eclipsephase", "GMmenu", {
     config: true,
     scope: "world",

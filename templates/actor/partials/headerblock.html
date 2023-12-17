@@ -12,7 +12,7 @@
             title="{{actor.name}}"/>
         </div>
         <div class="centerBackground" style="position: absolute; top: 0px; right: 0px; background-color: var(--highlightBackground); width: 240px; padding: 16px 0px 0px 22px; box-shadow: 0 5px var(--pitchBorder); height: 48px;">
-            <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.actorName'}}" style="width: auto; font-size: 17px; text-shadow: 0 0 5px #161616"/>
+            <input name="name" type="text" onFocus="this.select()" value="{{actor.name}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.actorName'}}" style="width: auto; font-size: 17px; text-shadow: 0 0 5px #161616"/>
         </div>
     </div>
     <div class="contentBox" style="background-color: var(--pitchBorder);">
@@ -26,7 +26,7 @@
                     <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
                     <label class="toggle roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
-                <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+                <input class="input-small" type="number" onFocus="this.select()" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
             </div>
             {{/each}}
         </div>
@@ -43,7 +43,7 @@
             title="{{actor.name}}"/>
         </div>
         <div class="centerBackground" style="position: absolute; top: -28px; right: 0px; background-color: var(--highlightBackground); width: 240px; padding: 16px 0px 0px 22px; box-shadow: 0 5px var(--pitchBorder); height: 48px;">
-            <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.actorName'}}" style="width: auto; font-size: 17px; text-shadow: 0 0 5px #161616"/>
+            <input name="name" type="text" onFocus="this.select()" value="{{actor.name}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.actorName'}}" style="width: auto; font-size: 17px; text-shadow: 0 0 5px #161616"/>
         </div>
     </div>
     <div class="contentBox" style="background-color: var(--pitchBorder); min-height: 111px;">
@@ -59,7 +59,7 @@
                     <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
                     <label class="toggle roll-label task-check noShow" data-type="aptitude" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
-                <input class="input-small" type="number" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+                <input class="input-small" type="number" onFocus="this.select()" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
             </div>
             {{/each}}
         </div>

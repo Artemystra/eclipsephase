@@ -417,18 +417,13 @@ export async function TaskCheck({
     poolValue = 0,
     flexValue = 0,
     usePool = null,
-    useFlex = null,
-    useThreat = null,
     poolUpdate = 0,
-    usedSwipSwap = null,
-    usedMitigate = false,
     //Roll
     rollType = "",
     rollModeSelection = null,
     activeRollTarget = "",
     globalMod = null,
     rollFormula = "1d100",
-    woundsMod = null,
     modValue = null,
     addition = "",
     //Psi
@@ -452,10 +447,8 @@ export async function TaskCheck({
     ammoEffect = null,
     weaponFixated = false,
     biomorphTarget = false,
-    gunsMod = 0,
     //Melee
     numberOfTargets = 1,
-    meleeMod = 0,
     meleeDamageMod = null,
     sizeDifference = "",
     touchOnly = false,
@@ -468,7 +461,6 @@ export async function TaskCheck({
     currentAmmo = "",
     updateAmmo = "",
     ammoUpdate = [],
-    successType = false,
     attackMode = "",
     weaponTraits = {},
     //Psi
@@ -478,9 +470,6 @@ export async function TaskCheck({
     sleightDuration = "",
     sleightInfection = ""
     } = {}) {
-
-    //Task Roll created
-    let task = new TaskRoll (skillName, skillValue);
 
     //Guns check dialog
 
@@ -512,8 +501,6 @@ export async function TaskCheck({
         inMelee = checkOptions.inMelee;
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
-        useFlex = checkOptions.useFlex;
-        useThreat = checkOptions.useThreat;
     }
 
     //Melee skill check dialog
@@ -533,8 +520,6 @@ export async function TaskCheck({
         calledShot = checkOptions.calledShot;
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
-        useFlex = checkOptions.useFlex;
-        useThreat = checkOptions.useThreat;
     }
 
     //Default skill check dialog
@@ -554,9 +539,19 @@ export async function TaskCheck({
         aspectBase = checkOptions.aspects
         useSpecialization = checkOptions.useSpecialization;
         usePool = checkOptions.usePool;
-        useFlex = checkOptions.useFlex;
-        useThreat = checkOptions.useThreat;
     }
+
+
+    for (i = numberOfTargets; i > 0; i--) {
+
+    //Task Roll created
+    let task = new TaskRoll (skillName, skillValue);
+    let gunsMod = 0;
+    let meleeMod = 0;
+    let woundsMod = 0;
+    let successType = false;
+    let usedSwipSwap = null;
+    let usedMitigate = false;
 
     //Melee Combat
 
@@ -877,15 +872,28 @@ export async function TaskCheck({
         }
 
         //Checks if pool used
-        if (usePool || useThreat || useFlex){
+        if (usePool === "pool" && poolValue > 0 || usePool === "flex" && flexValue > 0){
             poolMod = 20;
-            poolValue -= 1*numberOfTargets;
-            flexValue -= 1*numberOfTargets;
-            poolUpdate = usePool || useThreat ? poolValue : flexValue;
-            let poolUsed = usePool || useThreat ? poolType : "Flex";
+            usePool === "pool" ? poolValue -= 1 : flexValue -= 1;
+            poolUpdate = usePool === "pool" ? poolValue : flexValue;
+            let poolUsed = usePool === "pool" ? poolType : "Flex";
             //Determine pool to be updated
             await poolUpdater(poolUpdate,poolUsed);
             task.addModifier(new TaskRollModifier(poolUsed, poolMod))
+        }
+        else if (usePool === "pool" && poolValue <= 0 || usePool === "flex" && flexValue <= 0){
+            let message = {}
+            
+            message.type = "cantAddModifier";
+            message.poolName = await poolName(poolType);
+
+            let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+            
+            ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({actor: this.actor}),
+                content: html,
+                whisper: [game.user._id]
+            })
         }
         
         if (globalMod){
@@ -895,13 +903,13 @@ export async function TaskCheck({
         }
 
         if (totalEncumberance){
-            modValue = -(totalEncumberance);
+            modValue = 0 - (totalEncumberance);
             announce = "ep2e.roll.announce.encumberance"
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
 
         if (woundsTotal){
-            modValue = -(woundsTotal);
+            modValue = 0 - (woundsTotal);
             announce = "ep2e.roll.announce.wounds"
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
@@ -925,12 +933,43 @@ export async function TaskCheck({
                     infectionMod = 100;
                 }
         }
+    
+    let modValueThreshold = rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
 
-    modValue = rollMod + Number(gunsMod) + Number(meleeMod) + specMod + poolMod - totalEncumberance;
+    if(usePool === "poolIgnore" && poolValue > 0 || usePool === "flexIgnore" && flexValue > 0){
+        modValue = 0;
+        usePool === "poolIgnore" ? poolValue -= 1 : flexValue -= 1;
+        poolUpdate = usePool === "poolIgnore" ? poolValue : flexValue;
+        let poolUsed = usePool === "poolIgnore" ? poolType : "Flex";
+        //Determine pool to be updated
+        await poolUpdater(poolUpdate,poolUsed);
+        actorWhole.update({"system.additionalSystem.ignoreModifiers" : false});
+    }
+    else if (usePool === "poolIgnore" && poolValue <= 0 || usePool === "flexIgnore" && flexValue <= 0){
+        let message = {}
+        
+        message.type = "cantIgnore";
+        message.poolName = await poolName(poolType);
+
+        let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+        
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            content: html,
+            whisper: [game.user._id]
+        })
+
+        modValue = modValueThreshold
+    }
+    else{
+        modValue = modValueThreshold
+    }
+
     let modSkillValue = (Number(skillValue) + Number(modValue))>0 ? Number(skillValue) + Number(modValue) : 0;
 
+
     //The dice roll
-    for (i = numberOfTargets; i > 0; i--) {
+
         let roll = await new Roll(rollFormula).evaluate({async: true});
 
         //Success check
@@ -951,6 +990,7 @@ export async function TaskCheck({
         successMessage = successContent["successMessage"];
         successClass = successContent["successClass"];
         successName = successContent["successName"];
+        successType = successContent["successType"];
 
         //Visibility toggler
         if (activeRollTarget === "" || activeRollTarget === "public") {
@@ -984,6 +1024,7 @@ export async function TaskCheck({
         message.sleightAction = sleightAction ? sleightAction : null;
         message.sleightInfection = sleightInfection ? sleightInfection : null;
         message.infection = infectionMod ? infectionMod : null;
+        usePool === "poolIgnore" || usePool === "flexIgnore" ? message.ignoreModifiers = true : message.ignoreModifiers = false;
     
         message.modifiers = []
         if(task._modifiers.length > 0) {
@@ -1359,6 +1400,7 @@ export async function TaskCheck({
             successMessage = successContent["successMessage"];
             successClass = successContent["successClass"];
             successName = successContent["successName"];
+            successType = successContent["successType"];
 
             if (successClass === "fail"){
                 successClass = "success"
@@ -2056,6 +2098,7 @@ export async function TaskCheck({
 
     //Success Translation
     async function successTranslation(success,critical,autoSuccess,autoFail,doubleSuperior,superior){
+        let successType = false;
 
         if (autoFail) {
             successMessage = await successLabel("autoFail");
@@ -2122,7 +2165,7 @@ export async function TaskCheck({
             successName = "Fail";
         }
 
-        return {successMessage, successClass, successName};
+        return {successMessage, successClass, successName, successType};
     }
 
     //SwipSwap Dice
@@ -2410,9 +2453,7 @@ export async function TaskCheck({
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.value != "on" ? form.usePool.value === "pool" ? true : false : form.usePool.checked : false,
-            useFlex: form.useFlex ? form.useFlex.checked : form.usePool ? form.usePool.value != "on" ? form.usePool.value === "flex" ? true : false : false: false,
-            useThreat: form.useThreat ? form.useThreat.checked : false
+            usePool: form.usePool.value
         }
     }
 
@@ -2454,9 +2495,7 @@ export async function TaskCheck({
             globalMod: form.GlobalMod.value ? parseInt(form.GlobalMod.value) : 0,
             activeRollMode: form.RollMode.value,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.value != "on" ? form.usePool.value === "pool" ? true : false : form.usePool.checked : false,
-            useFlex: form.useFlex ? form.useFlex.checked : form.usePool ? form.usePool.value != "on" ? form.usePool.value === "flex" ? true : false : false: false,
-            useThreat: form.useThreat ? form.useThreat.checked : false,
+            usePool: form.usePool.value,
             calledShot: form.CalledShot.checked,
             sizeDifference: form.SizeDifference.value,
             touchOnly: form.TouchOnly ? form.TouchOnly.checked : false,
@@ -2520,14 +2559,14 @@ export async function TaskCheck({
             weaponFixated: form.WeaponFixated ? form.WeaponFixated.checked : false,
             biomorphTarget: form.BiomorphTarget ? form.BiomorphTarget.checked : false,
             useSpecialization: form.useSpec ? form.useSpec.checked : false,
-            usePool: form.usePool ? form.usePool.value != "on" ? form.usePool.value === "pool" ? true : false : form.usePool.checked : false,
-            useFlex: form.useFlex ? form.useFlex.checked : form.usePool ? form.usePool.value != "on" ? form.usePool.value === "flex" ? true : false : false: false,
-            useThreat: form.useThreat ? form.useThreat.checked : false
+            usePool: form.usePool.value
         }
 
     }
 
     async function GetDamageOptions(weaponName, weaponDamage, modeDamage, successModifier, criticalModifier, successName, swipSwap, swapPossible, potentialRaise, poolValue, actorType, poolType, flexValue, traits, meleeDamageMod, biomorphTarget) {
+        console.log("this is my poolValue", poolValue, poolType)
+        console.log("this is my flexValue", flexValue, poolType)
         let groupName = "useSwap";
         let choices = 0;
         if (poolValue && flexValue && swapPossible){

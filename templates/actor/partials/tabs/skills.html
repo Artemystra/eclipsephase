@@ -9,7 +9,7 @@
                         <div class="alignRight flexGrowHalf reveal">
                         {{/if}}
                             {{#if (eq actor.type "character")}}
-                            <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
+                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
                                 <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                     <div role="tooltip">
                                         <div class="tooltipTopBorder">
@@ -37,23 +37,28 @@
                                     </div>
                                 </i>
                             {{#if isGM}}
-                                <input class="input-xs" type="number" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
+                                <input class="input-xs" type="number" onFocus="this.select()" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
                             {{else}}
-                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.insight.value}}{{actor.system.pools.insight.value}}{{else}}0{{/if}}</label>
+                                {{#if (eq actor.system.editAll false)}}
+                                <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.insight.value}}{{actor.system.pools.insight.value}}{{else}}0{{/if}}</label>
+                                {{else}}
+                                <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
+                                {{/if}}
                             {{/if}}
-                            <span class="resource-value">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>{{/if}}
+                            <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>{{/if}}
+                            <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
-                        <div id="droplist" class="poolDroplist" style="display: none;">
-                            <div class="droplistHeader closeButton">
-                                <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
+                            <div id="droplist" class="poolDroplist" style="display: none;">
+                                <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
+                                    <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
+                                </div>
+                                <div class="droplistBackground">
+                                    <label class="droplistElement resource-value poolUse" data-type="1" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline1"}}</label>
+                                    <label class="droplistElement resource-value poolUse" data-type="2" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline2"}}</label>
+                                    <label class="droplistElement resource-value poolUse" data-type="3" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline3"}}</label>
+                                </div>
                             </div>
-                            <div class="droplistBackground">
-                                <label class="droplistElement resource-value poolUse" data-type="1" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline1"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="2" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline2"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="3" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline3"}}</label>
-                            </div>
-                        </div>
                         {{/if}}
                     </div>
                     <div class="listBackground edgeAbler">
@@ -61,7 +66,7 @@
                             {{#each actor.system.skillsIns as |skill key|}}
                             <div class="flexrow flex-group-center reveal skill">
                                 <span class="resource-label input-large">{{localize skill.name}}</span>
-                                <input class=" input-xs" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <input class=" input-xs" onFocus="this.select()" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <span class=" resource-value input-xs">{{numberFormat skill.derived decimals=0}}</span>
                                     <!-- <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Insight" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
@@ -74,7 +79,7 @@
                             {{#each actor.system.skillsIns as |skill key|}}
                             <div class="flexrow flex-group-center reveal skill">
                                 <span class="resource-label input-large">{{localize skill.name}}</span>
-                                <input class=" input-xs" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <input class=" input-xs" onFocus="this.select()" type="number" name="system.skillsIns.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                     <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}"  data-specname="{{specname}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
@@ -94,7 +99,7 @@
                         <div class="alignRight flexGrowHalf reveal">
                         {{/if}}
                             {{#if (eq actor.type "character")}}
-                            <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
+                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
                             <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                 <div role="tooltip">
                                     <div class="tooltipTopBorder">
@@ -123,16 +128,20 @@
                             </i>
                             {{#if isGM}}
                                 <input class="input-xs -small" type="number"  name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/> 
-                            {{else}}
-                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.vigor.value}}{{actor.system.pools.vigor.value}}{{else}}0{{/if}}</label>
-                            {{/if}}
-                            <span class="resource-value">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
-                            {{/if}}
+                                {{else}}
+                                    {{#if (eq actor.system.editAll false)}}
+                                    <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.vigor.value}}{{actor.system.pools.vigor.value}}{{else}}0{{/if}}</label>
+                                    {{else}}
+                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/>
+                                    {{/if}}
+                                {{/if}}
+                                <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>{{/if}}
+                                <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
                             <div id="droplist" class="poolDroplist" style="display: none;">
-                                <div class="droplistHeader closeButton">
-                                    <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
+                                <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
+                                    <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
                                 </div>
                                 <div class="droplistBackground">
                                 <label class="droplistElement resource-value poolUse" data-type="1" data-pool="vig">{{localize "ep2e.skills.vigorSkills.poolSubheadline1"}}</label>
@@ -147,7 +156,7 @@
                             {{#each actor.system.skillsVig as |skill key|}}
                             <div class="flexrow flex-group-center reveal skill">
                                 <span class="resource-label input-large">{{localize skill.name}}</span>
-                                <input class=" input-xs" type="number" name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <input class=" input-xs" onFocus="this.select()" type="number" name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <span class="resource-value input-xs">{{numberFormat skill.derived decimals=0}}</span>
                                     <!-- <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Vigor" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
@@ -160,7 +169,7 @@
                             {{#each actor.system.skillsVig as |skill key|}}
                             <div class="flexrow flex-group-center reveal skill">
                                 <span class="resource-label input-large">{{localize skill.name}}</span>
-                                <input class=" input-xs" type="number" name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <input class=" input-xs" onFocus="this.select()" type="number" name="system.skillsVig.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                     <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
@@ -180,7 +189,7 @@
                         <div class="alignRight flexGrowHalf reveal">
                         {{/if}}
                             {{#if (eq actor.type "character")}}
-                            <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
+                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
                             <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                 <div role="tooltip">
                                     <div class="tooltipTopBorder">
@@ -217,17 +226,21 @@
                             </i>
                             {{#if isGM}}
                                 <input class="input-xs -small" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
-                            {{else}}
-                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.moxie.value}}{{actor.system.pools.moxie.value}}{{else}}0{{/if}}</label>
-                            {{/if}}
-                            <span class="resource-value">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
-                            {{/if}}
+                                {{else}}
+                                    {{#if (eq actor.system.editAll false)}}
+                                    <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.moxie.value}}{{actor.system.pools.moxie.value}}{{else}}0{{/if}}</label>
+                                    {{else}}
+                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
+                                    {{/if}}
+                                {{/if}}
+                                <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>{{/if}}
+                                <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
                         <div id="droplist" class="poolDroplist" style="display: none;">
-                                <div class="droplistHeader closeButton">
-                                    <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
-                                </div>
+                            <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
+                                <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
+                            </div>
                             <div class="droplistBackground">
                                 <label class="droplistElement resource-value poolUse" data-type="1" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline1"}}</label>
                                 <label class="droplistElement resource-value poolUse" data-type="2" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline2"}}</label>
@@ -243,7 +256,7 @@
                             {{#each actor.system.skillsMox as |skill key|}}
                             <div class="flexrow flex-group-center reveal skill">
                                 <span class="resource-label input-large">{{localize skill.name}}</span>
-                                <input class=" input-xs" type="number" name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <input class=" input-xs" onFocus="this.select()" type="number" name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <span class="resource-value input-xs">{{numberFormat skill.derived decimals=0}}</span>
                                     <!-- <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-rollvalue="{{skill.roll}}" data-specname="{{specname}}" data-pooltype="Moxie" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/> -->
@@ -256,7 +269,7 @@
                             {{#each actor.system.skillsMox as |skill key|}}
                             <div class="flexrow flex-group-center reveal skill">
                                 <span class="resource-label input-large">{{localize skill.name}}</span>
-                                <input class=" input-xs" type="number" name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                                <input class=" input-xs" onFocus="this.select()" type="number" name="system.skillsMox.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                                 <div class="flexrow flex-group-center" style="max-width: 40px;">
                                     <label class="roll-label toggle"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
                                     <img data-type="skill" data-key="{{key}}" data-name="{{localize skill.name}}" data-specname="{{specname}}" data-rollvalue="{{skill.roll}}" src="icons/svg/d10-grey.svg" class="toggle icon-dice noShow roll-label task-check"/>
@@ -285,7 +298,7 @@
                                     <span class="tooltipText">{{item.name}}</span>
                                     <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                     <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
-                                    <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                    <input class="input-xs sheet-inline-edit" data-field="system.value" onFocus="this.select()" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                     {{#if item.system.aptitude}}
                                         <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
                                     {{#if item.system.specname}}
@@ -309,7 +322,7 @@
                                     <span class="tooltipText">{{item.name}}</span>
                                     <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                     <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
-                                    <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                    <input class="input-xs sheet-inline-edit" data-field="system.value" onFocus="this.select()" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.specname}}
                                     <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large">{{item.system.specname}}</label>
                                 {{else}}
@@ -336,7 +349,7 @@
                         {{else}}
                         <div class="alignRight flexGrowHalf reveal">
                         {{/if}}
-                            <label class="resource-label labelWidth-medium">{{localize "ep2e.skills.pool.label"}} </label>
+                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
                             <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
                                 <div role="tooltip">
                                     <div class="tooltipTopBorder">
@@ -370,15 +383,20 @@
                             </i>
                             {{#if isGM}}
                                 <input class="input-xs -small" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
-                            {{else}}
-                                <label class="resource-label alignCenter" style="min-width: 25px;">{{#if actor.system.pools.flex.value}}{{actor.system.pools.flex.value}}{{else}}0{{/if}}</label>
-                            {{/if}}
-                            <span class="resource-value">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
+                                {{else}}
+                                    {{#if (eq actor.system.editAll false)}}
+                                    <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.flex.value}}{{actor.system.pools.flex.value}}{{else}}0{{/if}}</label>
+                                    {{else}}
+                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
+                                    {{/if}}
+                                {{/if}}
+                                <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
+                                <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
                         <div id="droplist" class="poolDroplist" style="display: none;">
-                            <div class="droplistHeader closeButton">
-                                <label class="resource-value" style="margin-right: 10px">{{localize "ep2e.actorSheet.button.close"}}</label> <i class="fa-solid fa-xmark awesomeIcon"></i>
+                            <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
+                                <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
                             </div>
                             <div class="droplistBackground">
                                 <label class="droplistElement resource-value poolUse" data-type="1" data-pool="flex">{{localize "ep2e.skills.flex.poolSubheadline1"}}</label>
@@ -547,7 +565,7 @@
                                 <span class="tooltipText">{{item.name}}</span>
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
-                                <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                <input class="input-xs sheet-inline-edit" data-field="system.value" onFocus="this.select()" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
                                     <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
                                 {{#if item.system.specname}}
@@ -584,7 +602,7 @@
                                 <span class="tooltipText">{{item.name}}</span>
                                 <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
                                 <label class="resource-label item-control item-edit hoverable truncate wantToKnowMore" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
-                                <input class="input-xs sheet-inline-edit" data-field="system.value" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                                <input class="input-xs sheet-inline-edit" data-field="system.value" onFocus="this.select()" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
                                 {{#if item.system.aptitude}}
                                     <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
                                 {{#if item.system.specname}}

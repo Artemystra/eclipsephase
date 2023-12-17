@@ -11,6 +11,10 @@
       "name": "Active Effect Tab",
       "hint": "Aktiviert Active Effect Tabs für Spielleiter:innen"
     },
+    "editAll": {
+      "name": "Keine Editiereinschränkungen",
+      "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Rast mit ein."
+    },
     "gmMenu": {
       "name": "SL Menü",
       "hint": "Zeigt das SL-Menü auf der linken Seite (nur für Spielleiter:innen)"
@@ -1211,6 +1215,8 @@
           "notDeducted": "Kein Pool genutzt",
           "notEnoughPool": "Pool zu gering",
           "cantRaise": "Ergebnis kann nicht verbessert werden",
+          "cantAddModifier": "+20 Modifikator kann nicht angerechnet werden",
+          "cantIgnore": "Modifikatoren werden nicht ignoriert",
           "newResult": "Neues Ergebnis",
           "dontSwap": "Ergebnis nicht drehen",
           "swapTo": "Drehen zu",

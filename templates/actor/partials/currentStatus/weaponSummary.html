@@ -22,9 +22,13 @@
                         
                         <img src="systems/eclipsephase/resources/icons/reload.webp" class="toggle noShow reload icon-small rollable" data-weaponname="{{item.name}}"  data-currentammo="{{item.system.ammoMin}}" data-maxammo="{{item.system.ammoMax}}" data-weaponid="{{item._id}}"/>
                         {{#if @root.isGM}}
-                            <input class="input-small sheet-inline-edit" style="min-width: 27px; padding-left: 1px;" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                            <input class="input-small sheet-inline-edit" onFocus="this.select()" style="min-width: 27px; padding-left: 1px;" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
                         {{else}}
+                            {{#if (eq @root.actor.system.editAll false)}}
                             <label class="input-xs">{{item.system.ammoMin}}</label>/
+                            {{else}}
+                            <input class="input-small sheet-inline-edit" onFocus="this.select()" style="min-width: 27px; padding-left: 1px;" data-field="system.ammoMin" type="number" name="item.system.ammoMin" value="{{item.system.ammoMin}}" placeholder="0"/>/
+                            {{/if}}
                         {{/if}}
                         <h4 class="item-image flex-group-left input-small icon-space">
                             <strong>{{item.system.ammoMax}}</strong>

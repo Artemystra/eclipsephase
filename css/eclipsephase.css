@@ -2113,7 +2113,7 @@ button.epTextlink:hover{
 
 .poolDroplist {
   position: absolute;
-  z-index: 300;
+  z-index: 9;
   top: 0px;
   right: 0px;
   max-width: 70%;

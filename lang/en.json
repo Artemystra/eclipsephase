@@ -11,6 +11,10 @@
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
     },
+    "editAll": {
+      "name": "No edit restrictions",
+      "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -405,7 +409,8 @@
         "considerResting": "Consider using a 'rest'-action",
         "numberWounds": "Wounds to Ignore",
         "numberTrauma": "Trauma to Ignore",
-        "repSize": "Size of Favor"
+        "repSize": "Size of Favor",
+        "ignoreModifiers": "Ignore All Modifiers"
       },
       "addSkill": "Add Skill",
       "chooseAptitude": "Choose Apt",
@@ -991,10 +996,11 @@
         },
         "ignoreInfection": "Ignore Infection",
         "usePool": "Use",
+        "modifier": "Modifier",
         "globalModLabel": "Global Mod",
         "noSpecLabel": "No Specialization",
         "noPool": "No pool left",
-        "useThreat": "Use Threat (+20)",
+        "useThreat": "Use Threat",
         "calledShotLabel": "Called Shot (-10)",
         "touchOnly": "Touch Attack (+20)",
         "title": {
@@ -1225,6 +1231,8 @@
           "notDeducted": "No pool has been used",
           "notEnoughPool": "Not enough pool",
           "cantRaise": "Result cannot be raised",
+          "cantAddModifier": "+20 modifier cannot be applied",
+          "cantIgnore": "Modifiers cannot be ignored",
           "newResult": "New Result",
           "dontSwap": "Don't Swap Dice",
           "swapTo": "Swap to",
