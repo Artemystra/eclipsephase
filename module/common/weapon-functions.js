@@ -502,10 +502,19 @@ export async function reloadWeapon(html, actor) {
             
             html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
 
-            ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({actor: actor}),
-                content: html
-            })
+            if(actor.type === "charachter"){
+              ChatMessage.create({
+                  speaker: ChatMessage.getSpeaker({actor: actor}),
+                  content: html
+              })
+            }
+            else{
+              ChatMessage.create({
+                  speaker: ChatMessage.getSpeaker({actor: actor}),
+                  content: html,
+                  whisper: ChatMessage.getWhisperRecipients("GM")
+              })
+            }
 
             return actor.updateEmbeddedDocuments("Item", weaponUpdate);
           }

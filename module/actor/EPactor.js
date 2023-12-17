@@ -45,17 +45,13 @@ export default class EPactor extends Actor {
       }
     }
     actorModel.mods.psiMultiplier = chiMultiplier
-
-    const brewStatus = game.settings.get("eclipsephase", "superBrew");
     actorModel.currentStatus = [];
 
     // Homebrew Switch
-    if (brewStatus) {
-      actorModel.homebrew = true;
-    }
-    else {
-      actorModel.homebrew = false;
-    }
+    actorModel.homebrew = game.settings.get("eclipsephase", "superBrew");
+
+    // Trust Mode
+    actorModel.editAll = game.settings.get("eclipsephase", "editAll");
 
     if (game.user.isGM){
 
@@ -92,7 +88,7 @@ export default class EPactor extends Actor {
     }
 
     this._calculatePhysicalHealth(actorModel, chiMultiplier);
-    this._calculateArmor(actorModel, actorWhole, brewStatus);
+    this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel, chiMultiplier);
 
     if (this.type === "character"){    
@@ -562,7 +558,7 @@ export default class EPactor extends Actor {
     actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum;
   }
 
-  _calculateArmor(actorModel, actorWhole, brewStatus) {
+  _calculateArmor(actorModel, actorWhole) {
     let energyTotal = 0;
     let kineticTotal = 0;
     let mainArmorAmount = 0;
@@ -605,7 +601,7 @@ export default class EPactor extends Actor {
     }
 
     //Homebrew for SOM armor malus
-    if (actorWhole.type === "character" && armorSomCheck > actorSom && brewStatus){
+    if (actorWhole.type === "character" && armorSomCheck > actorSom && actorModel.homebrew){
       actorModel.physical.armorSomMalus = 20;
     }
     else if (actorWhole.type === "character" && armorSomCheck > actorSom && mainArmorAmount > 1){

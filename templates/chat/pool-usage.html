@@ -30,6 +30,20 @@
   </div>
   {{/if}}
 
+  {{#if (eq type "cantIgnore")}}
+  <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+    {{localize "ep2e.roll.announce.poolUsage.notEnoughPool"}} (<strong>{{localize poolName}}</strong>)<br>
+    {{localize "ep2e.roll.announce.poolUsage.cantIgnore"}}<p>
+  </div>
+  {{/if}}
+
+  {{#if (eq type "cantAddModifier")}}
+  <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
+    {{localize "ep2e.roll.announce.poolUsage.notEnoughPool"}} (<strong>{{localize poolName}}</strong>)<br>
+    {{localize "ep2e.roll.announce.poolUsage.cantAddModifier"}}<p>
+  </div>
+  {{/if}}
+
   {{#if (eq type "mitigate")}}
   <div style="margin: 0 0 20px 0; padding: 25px 10px; background-color: var(--mainBackground); align-items: center; justify-content: center;">
     {{localize "ep2e.roll.announce.poolUsage.poolUsed"}} (<strong>{{localize poolName}}</strong>)<p>

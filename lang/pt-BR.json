@@ -11,6 +11,10 @@
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
     },
+    "editAll": {
+      "name": "No edit restrictions",
+      "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -1173,6 +1177,8 @@
           "notDeducted": "Nenhuma parada foi usada",
           "notEnoughPool": "Parada insuficiente",
           "cantRaise": "Resultado não pode ser elevado",
+          "cantAddModifier": "+20 modifier cannot be applied",
+          "cantIgnore": "Modifiers cannot be ignored",
           "newResult": "Novo Resultado",
           "dontSwap": "Não Trocar Dados",
           "swapTo": "Trocar para",

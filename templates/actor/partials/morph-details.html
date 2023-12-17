@@ -1,11 +1,11 @@
 <div>
     <div class="grid grid-3col" style="padding: 0 8px 0 8px;">
         <div>
-            <input type="text" style="max-width: 240px;" name="system.bodies.{{morph.key}}.name" value="{{morph.name}}" placeholder="{{localize 'ep2e.morph.currentMorph.morphPlaceholder'}}"/>
+            <input type="text" style="max-width: 240px;" onFocus="this.select()" name="system.bodies.{{morph.key}}.name" value="{{morph.name}}" placeholder="{{localize 'ep2e.morph.currentMorph.morphPlaceholder'}}"/>
         </div>
         <div>
             <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
-            <select style="max-width: 125px;" class="selectSpecApt" name="system.bodies.{{morph.key}}.type" data-type="String">
+            <select style="max-width: 100px;" class="selectSpecApt" name="system.bodies.{{morph.key}}.type" data-type="String">
                 {{#select morph.morph.type}}
                 {{#each config.bodyTypes as |bodyType key|}}
                 <option value="{{key}}">{{localize bodyType}}</option>

@@ -11,6 +11,10 @@
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
     },
+    "editAll": {
+      "name": "No edit restrictions",
+      "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -1165,6 +1169,8 @@
           "notDeducted": "不使用能力池",
           "notEnoughPool": "能力池不足",
           "cantRaise": "结果无法提升",
+          "cantAddModifier": "+20 modifier cannot be applied",
+          "cantIgnore": "Modifiers cannot be ignored",
           "newResult": "新的结果",
           "dontSwap": "不颠倒骰子",
           "swapTo": "颠倒为",

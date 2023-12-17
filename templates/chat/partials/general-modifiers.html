@@ -18,42 +18,60 @@
         {{#if poolValue}}
             {{#if flexValue}}
                 <div class="form-group listBackgroundMain">
-                    <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}} (+20)</label>
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</label>
                     <select name="usePool" class="input-large">
                         <option value=false>{{localize "ep2e.roll.dialog.push.none"}}</option>
-                        <option value="pool">{{poolType}}</option>
-                        <option value="flex">{{localize "ep2e.skills.flex.flexHeadline"}}</option>
+                        <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{poolType}})</option>
+                        <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}} ({{poolType}})</option>
+                        <option value="flex">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{localize "ep2e.skills.flex.flexHeadline"}})</option>
+                        <option value="flexIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}} ({{localize "ep2e.skills.flex.flexHeadline"}})</option>
                     </select>
                 </div>
             {{else}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="usePool">
-                    <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}} (+20)</label>
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.usePool"}} {{poolType}}</label>
+                    <select name="usePool" class="input-large">
+                        <option value=false>{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
+                        <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
+                    </select>
                 </div>
             {{/if}}
         {{else}}
             {{#if flexValue}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="useFlex">
-                    <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} {{localize "ep2e.skills.flex.flexHeadline"}} (+20)</label>
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.usePool"}} {{localize "ep2e.skills.flex.flexHeadline"}}</label>
+                    <select name="usePool" class="input-large">
+                        <option value=false>{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        <option value="flex">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
+                        <option value="flexIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
+                    </select>
                 </div>
             {{else}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="usePool" disabled>
-                    <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.noPool"}}</label>
+                    <select name="usePool" class="input-large" disabled>
+                        <option value=false>{{localize "ep2e.roll.dialog.push.none"}}</option>
+                    </select>
                 </div>
             {{/if}}
         {{/if}}
     {{else}}
         {{#if poolValue}}
         <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="useThreat">
-            <label class="resource-label">{{localize "ep2e.roll.dialog.useThreat"}}</label>
+            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.useThreat"}}</label>
+            <select name="usePool" class="input-large">
+                <option value=false>{{localize "ep2e.roll.dialog.push.none"}}</option>
+                <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
+                <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
+            </select>
         </div>
         {{else}}
         <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="useThreat" disabled>
-            <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
+            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.noPool"}}</label>
+            <select name="usePool" class="input-large" disabled>
+                <option value=false>{{localize "ep2e.roll.dialog.push.none"}}</option>
+            </select>
         </div>
         {{/if}}
     {{/if}}
