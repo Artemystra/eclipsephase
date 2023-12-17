@@ -478,6 +478,12 @@
                                         <button class="restReset">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
                                     </div>
                                 </div>
+                            {{else if (eq actor.system.editAll true)}}
+                                <div class="flex-group-center" style="margin-bottom: 0px;">
+                                    <div style="display: inline-block;">
+                                        <button class="restReset">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
+                                    </div>
+                                </div>
                             {{/if}}
                         {{/if}}
                         {{#if actor.system.rest.restValue}}

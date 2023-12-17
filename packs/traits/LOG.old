@@ -1,7 +1,3 @@
-2023/12/17-11:55:55.200627 31025d000 Recovering log #387
-2023/12/17-11:55:55.201028 31025d000 Delete type=0 #387
-2023/12/17-11:55:55.201060 31025d000 Delete type=3 #386
-2023/12/17-16:00:41.139834 3112de000 Level-0 table #391: started
-2023/12/17-16:00:41.139848 3112de000 Level-0 table #391: 0 bytes OK
-2023/12/17-16:00:41.139923 3112de000 Delete type=0 #389
-2023/12/17-16:00:41.141720 3112de000 Manual compaction at level-0 from '!folders!Es3WvUjXY25y2KZ4' @ 72057594037927935 : 1 .. '!items.effects!ycrStUCKyWXMjmaa.M1lL6SKomXueX3uO' @ 0 : 0; will stop at (end)
+2023/12/17-16:00:43.883476 30f25f000 Recovering log #390
+2023/12/17-16:00:43.883948 30f25f000 Delete type=0 #390
+2023/12/17-16:00:43.883985 30f25f000 Delete type=3 #388
