@@ -18,7 +18,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098, migrationPre0985} from "./common/migration.js";
+import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098, migrationPre0985, migrationPre0992} from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -225,10 +225,10 @@ Hooks.once("ready", async function() {
 
 //Migration script if actorSheets are changing
 const gameVersion = game.settings.get("eclipsephase", "migrationVersion");
-gameVersion === "newInstall" ? game.settings.set("eclipsephase", "migrationVersion", game.system.version) : console.log("Last Migration:", gameVersion, "\n" + "System Version:", game.system.version)
+const currentVersion = game.system.version
+gameVersion === "newInstall" ? game.settings.set("eclipsephase", "migrationVersion", currentVersion) : console.log("Last Migration:", gameVersion, "\n" + "System Version:", game.system.version)
 let startMigration = false
 let endMigration = false
-const currentVersion = game.system.version
 const messageHeadline = "ep2e.migration.headlineStart"
 let isLegacy = foundry.utils.isNewerVersion("0.8.1", gameVersion)
 let before0861 = foundry.utils.isNewerVersion("0.8.6.1", gameVersion)
@@ -238,6 +238,7 @@ let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
 let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion)
 let before0985 = foundry.utils.isNewerVersion("0.9.8.5", gameVersion)
 let before099 = foundry.utils.isNewerVersion("0.9.9", gameVersion)
+let before0992 = foundry.utils.isNewerVersion("0.9.9.2", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -371,6 +372,23 @@ if (before099) {
   }
 
   endMigration = false
+}
+
+//0.9.9.2 Migration
+if (before0992) {
+  endMigration = false
+  const messageCopy = "ep2e.migration.0992"
+  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    startMigration = migration.start
+  }
+
+  let Migration0992 = migrationPre0992(startMigration)
+
+  endMigration = Migration0992["endMigration"]
 }
 
 if(endMigration){

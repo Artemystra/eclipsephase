@@ -85,14 +85,13 @@
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label>  
-                        <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="system.bodies.morph1.movement" value="{{actor.system.bodies.morph1.movement}}" placeholder="0/0"/>
+                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement1.base" value="{{actor.system.bodies.morph1.movement1.base}}" placeholder="0"/>/
+                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement1.full" value="{{actor.system.bodies.morph1.movement1.full}}" placeholder="0"/>
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
-                        <select class="selectSpecApt
-                                    item-standard-margin input-large"
-                                name="system.bodies.morph1.movetype" data-type="String" selected="Walker">
-                            {{#select actor.system.bodies.morph1.movetype}}
+                        <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movement1.type" data-type="String" selected="Walker">
+                            {{#select actor.system.bodies.morph1.movement1.type}}
                             {{#each config.moveTypes as |moveType key|}}
                                 <option value="{{key}}">{{localize moveType}}</option>
                             {{/each}}
@@ -106,12 +105,13 @@
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label> 
-                        <input class="input-medium item-standard-margin-medium" style="text-align: center" type="text" name="system.bodies.morph1.movement2" value="{{actor.system.bodies.morph1.movement2}}" placeholder="0/0"/>  
+                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement2.base" value="{{actor.system.bodies.morph1.movement2.base}}" placeholder="0"/>/
+                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement2.full" value="{{actor.system.bodies.morph1.movement2.full}}" placeholder="0"/>
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
-                        <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movetype2" data-type="String">
-                            {{#select actor.system.bodies.morph1.movetype2}}
+                        <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movement2.type" data-type="String">
+                            {{#select actor.system.bodies.morph1.movement2.type}}
                             {{#each config.moveTypes as |moveType key|}}
                                 <option value="{{key}}">{{localize moveType}}</option>
                             {{/each}}

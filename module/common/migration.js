@@ -1385,6 +1385,84 @@ export function migrationPre0985(startMigration, endMigration){
   }
 }
 
+//Morph Movement Migration into the new integer system
+export function migrationPre0992(startMigration, endMigration){
+
+  const latestUpdate = "0.9.9.2";
+  if (startMigration){        
+    for(let actor of game.actors){
+      let update = {}
+      if(actor.type === "character"){
+        let morphs = "actor.system.bodies"
+        for(let morphNumber = 1; morphNumber <= 6; morphNumber++){
+          let morphPath = morphs + ".morph" + morphNumber;
+          for (let movNumber = 1; movNumber <= 3; movNumber++){
+            let morphMovement;
+            let movType;
+            if(movNumber === 1){
+              morphMovement = eval(morphPath + ".movement");
+              movType = eval(morphPath + ".movetype");
+            }
+            else {
+              morphMovement = eval(morphPath + ".movement" + movNumber);
+              movType = eval(morphPath + ".movetype" + movNumber);
+            }
+            if(morphMovement){
+              let movSpeed = morphMovement;
+              let movSplit = movSpeed.split('/');
+
+              let updatePath = "system.bodies.morph" + morphNumber + ".movement" + movNumber
+              update[updatePath + ".base"] = movSplit[0];
+              update[updatePath + ".full"] = movSplit[1];
+              update[updatePath + ".type"] = movType;
+
+              console.log("This is movSplit", movSplit)
+              console.log("Actor name:",actor.name)
+              console.log("Morph name:", eval("actor.system.bodies.morph" + morphNumber + ".name"))
+              console.log("movement" + movNumber + ":", morphMovement)
+            }
+            else{
+              break;
+            }
+          }
+        }
+      }
+      else{
+        let morphPath = "actor.system.bodies.morph1"
+        for (let movNumber = 1; movNumber <= 3; movNumber++){
+          let morphMovement;
+          let movType;
+          if(movNumber === 1){
+            morphMovement = eval(morphPath + ".movement");
+            movType = eval(morphPath + ".movetype");
+          }
+          else {
+            morphMovement = eval(morphPath + ".movement" + movNumber);
+            movType = eval(morphPath + ".movetype" + movNumber);
+          }
+          if(morphMovement){
+            let movSpeed = morphMovement;
+            let movSplit = movSpeed.split('/');
+
+            let updatePath = "system.bodies.morph1.movement" + movNumber
+            update[updatePath + ".base"] = movSplit[0];
+            update[updatePath + ".full"] = movSplit[1];
+            update[updatePath + ".type"] = movType;
+          }
+          else{
+            break;
+          }
+        }
+
+      }
+      actor.update(update)
+    }
+    game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+    endMigration = true
+    return {endMigration}
+  }
+}
+
 //A general item deleter
 function itemDeletion(actor, itemID){
   let itemDelete = [itemID]

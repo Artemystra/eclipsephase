@@ -289,12 +289,21 @@
           "moxie": null,
           "vigor": null,
           "flex": null,
-          "movement": null,
-          "movetype": null,
-          "movement2": null,
-          "movetype2": null,
-          "movement3": null,
-          "movetype3": null,
+          "movement1": {
+            "type": null,
+            "base": null,
+            "full": null
+          },
+          "movement2": {
+            "type": null,
+            "base": null,
+            "full": null
+          },
+          "movement3": {
+            "type": null,
+            "base": null,
+            "full": null
+          },
           "description": ""
         } 
       },  
