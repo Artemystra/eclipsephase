@@ -1127,7 +1127,11 @@
             "label": "Zeitfenster",
             "hours": "Stunde(n)",
             "days": "Tag(e)",
-            "weeks": "Woche(n)"
+            "weeks": "Woche(n)",
+            "hour": "Stunde",
+            "day": "Tag",
+            "week": "Woche",
+            "duration": "Dauer"
           },
           "circumstances": {
             "label": "Umstände",

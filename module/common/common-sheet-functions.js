@@ -622,7 +622,7 @@ export async function healthBarChange(actor, html){
   //Healing configurator
   function _healingResult(form, enhancements, type) {
     let addition;
-    let durationMultiplier;
+    let durationMultiplier = form.durationMultiplier.value ? durationMultiplier : 1;
     let duration;
     let circumstances;
     let healingBasis;
@@ -631,7 +631,6 @@ export async function healthBarChange(actor, html){
     let woundCycle = [];
     if (type === "physical"){
       addition = form.addition.value
-      durationMultiplier = form.durationMultiplier.value;
       duration = form.duration.value === "weeks" ? durationMultiplier * 168 : form.duration.value === "days" ? durationMultiplier * 24 : durationMultiplier * 1;
       circumstances = form.circumstances.value === "harsh" ? 3 : form.circumstances.value === "poor" ? 2 : 1;
       healingBasis = enhancements.medichines === true ? {"dice" : "1d10", "timeframe" : 1 * circumstances, "woundCycle" : 24 * circumstances} : enhancements.biomods === true ? {"dice" : "1d10", "timeframe" : 12 * circumstances, "woundCycle" : 72 * circumstances} : {"dice" : "1d10", "timeframe" : 24 * circumstances, "woundCycle" : 168 * circumstances}
@@ -671,7 +670,6 @@ export async function healthBarChange(actor, html){
     }
     if (type === "mental"){
       addition = form.addition.checked
-      durationMultiplier = form.durationMultiplier.value;
       duration = form.duration.value === "weeks" ? durationMultiplier * 7 : durationMultiplier * 1;
 
       for(let arrayConstructor = 0 ; arrayConstructor <= duration + 1 ; arrayConstructor++){

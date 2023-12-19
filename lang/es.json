@@ -1074,7 +1074,11 @@
             "label": "Timeframe",
             "hours": "Hour(s)",
             "days": "Day(s)",
-            "weeks": "Week(s)"
+            "weeks": "Week(s)",
+            "hour": "Hour",
+            "day": "Day",
+            "week": "Week",
+            "duration": "Duration"
           },
           "circumstances": {
             "label": "Circumstances",
