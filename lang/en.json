@@ -1223,7 +1223,8 @@
             "days": "day(s)",
             "hours": "hour(s)",
             "fullCopy": "My health is full",
-            "notEnoughTime": "I did not have enough time to heal"
+            "notEnoughTime": "I did not have enough time to heal",
+            "minimumTimeframe": "Minimum timeframe to heal"
           }
         },
         "poolUsage": {

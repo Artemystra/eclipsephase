@@ -1207,7 +1207,8 @@
             "days": "Tag(e)",
             "hours": "Stunde(n)",
             "fullCopy": "Mein Leben ist noch voll",
-            "notEnoughTime": "Ich habe nicht genug Zeit zum heilen gehabt"
+            "notEnoughTime": "Ich habe nicht genug Zeit zum heilen gehabt",
+            "minimumTimeframe": "Minimales Zeitfenster um zu heilen"
           }
         },
         "poolUsage": {

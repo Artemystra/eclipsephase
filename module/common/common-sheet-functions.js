@@ -326,6 +326,7 @@ export async function healthBarChange(actor, html){
     let oldOverBarTarget = "";
     let damageCount = currentDamage
     let woundCount = currentModifier
+    let healFormula;
     let message = {};
     message.totalDamage = currentDamage + currentModifier;
 
@@ -345,11 +346,29 @@ export async function healthBarChange(actor, html){
     let barModifier = ""
 
     if(healTarget === "mental"){
+      message.title = "ep2e.roll.announce.heal.full.mindHeal";
+      message.damageType = "ep2e.roll.announce.heal.full.stress";
+      message.modifierType = "ep2e.roll.announce.heal.full.trauma";
       oldDamageBarTarget = "system.mental.oldStressBarValue";
       oldOverBarTarget = "system.mental.oldInsanityBarValue";
       barModifier = "mentalDown"
     }
     else if(healTarget === "physical"){
+      switch (actor.system.bodyType.value){
+        case 'bio':
+          message.title = "ep2e.roll.announce.heal.full.bodyHeal";
+        break;
+        case 'synth':
+          message.title = "ep2e.roll.announce.heal.full.bodyRepair";
+        break;
+        case 'info':
+          message.title = "ep2e.roll.announce.heal.full.bodyDefrag";
+        break;
+        default:
+        break;
+      }
+      message.damageType = "ep2e.roll.announce.heal.full.damage";
+      message.modifierType = "ep2e.roll.announce.heal.full.wounds";
       oldDamageBarTarget = "system.physical.oldHealthBarValue";
       oldOverBarTarget = "system.physical.oldDeathBarValue";
       barModifier = "physicalDown";
@@ -358,7 +377,7 @@ export async function healthBarChange(actor, html){
     if(message.totalDamage > 0){
       if (healType === "partial"){
         let msg;
-        let healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount)
+        healFormula = await healingDialog(dialog, healTarget, dialogType, enhancements, enhancementsCount)
         
         if (healFormula.cancelled){
           return;
@@ -368,14 +387,16 @@ export async function healthBarChange(actor, html){
         let repetition = 0;
         let html = null;
         if(damageCount > 0 && (healFormula.heal).length > 0){
-          for (hoursPassed ; hoursPassed <= healFormula.duration ; hoursPassed++){
+          for (let i = 1 ; i <= healFormula.duration; i++){
 
-            
+            hoursPassed++
+
             if(repetition >= (healFormula.heal).length){
-              break;
+              hoursPassed--
+              break
             }
 
-            if(damageCount > 0 && healFormula.heal[repetition].cycle === hoursPassed + 1){
+            if(damageCount > 0 && healFormula.heal[repetition].cycle === hoursPassed){
               
               let rollFormula = healFormula.heal[repetition].roll;
               
@@ -386,12 +407,16 @@ export async function healthBarChange(actor, html){
               repetition++
     
             }
-            else if (damageCount === 0){
+
+            if(damageCount === 0){
               break;
             }
+
           }
         }
-
+        if(hoursPassed > healFormula.duration){
+          hoursPassed--
+        }
         if(healTarget === "physical"){
           message.weeksValue = Math.floor(hoursPassed/168);
           message.daysValue = Math.floor((hoursPassed-message.weeksValue*168)/24);
@@ -405,11 +430,9 @@ export async function healthBarChange(actor, html){
         let rollCount = repetition;
         let woundHealing = 0
         repetition = 0;
-
         if((healFormula.wound).length > 0 && woundCount > 0){
           if(healFormula.wound[repetition].cycle + hoursPassed <= healFormula.duration){
             for (woundHealing ; woundHealing <= healFormula.duration - hoursPassed ; woundHealing++ ){
-  
               if(repetition >= (healFormula.wound).length || healFormula.wound[repetition].cycle + hoursPassed > healFormula.duration){
                 hoursPassed--;
                 break;
@@ -458,32 +481,14 @@ export async function healthBarChange(actor, html){
         newModifier = woundCount;
 
         if (healTarget === "physical"){
-          switch (actor.system.bodyType.value){
-            case 'bio':
-              message.title = "ep2e.roll.announce.heal.partial.bodyHeal";
-            break;
-            case 'synth':
-              message.title = "ep2e.roll.announce.heal.partial.bodyRepair";
-            break;
-            case 'info':
-              message.title = "ep2e.roll.announce.heal.partial.bodyDefrag";
-            break;
-            default:
-            break;
-          }
           message.weeksValue = Math.floor(hoursPassed/168);
           message.daysValue = Math.floor((hoursPassed-message.weeksValue*168)/24);
           message.hoursValue = (hoursPassed-message.weeksValue*168) % 24;
-          message.damageType = "ep2e.roll.announce.heal.full.damage";
-          message.modifierType = "ep2e.roll.announce.heal.full.wounds";
         }
         else {
           message.weeksValue = Math.floor(hoursPassed/7);
           message.daysValue = Math.floor((hoursPassed-message.weeksValue*7));
           message.hoursValue = false;
-          message.title = "ep2e.roll.announce.heal.partial.mindHeal";
-          message.damageType = "ep2e.roll.announce.heal.full.stress";
-          message.modifierType = "ep2e.roll.announce.heal.full.trauma";
         }
 
         message.damageValue = newDamage > 0 ? currentDamage - damageCount : currentDamage;
@@ -492,29 +497,6 @@ export async function healthBarChange(actor, html){
       }
       else if (healType === "full"){
         newModifier = 0;
-
-        if (healTarget === "physical"){
-          switch (actor.system.bodyType.value){
-            case 'bio':
-              message.title = "ep2e.roll.announce.heal.full.bodyHeal";
-            break;
-            case 'synth':
-              message.title = "ep2e.roll.announce.heal.full.bodyRepair";
-            break;
-            case 'info':
-              message.title = "ep2e.roll.announce.heal.full.bodyDefrag";
-            break;
-            default:
-            break;
-          }
-          message.damageType = "ep2e.roll.announce.heal.full.damage";
-          message.modifierType = "ep2e.roll.announce.heal.full.wounds";
-        }
-        else {
-          message.title = "ep2e.roll.announce.heal.full.mindHeal";
-          message.damageType = "ep2e.roll.announce.heal.full.stress";
-          message.modifierType = "ep2e.roll.announce.heal.full.trauma";
-        }
 
         message.damageValue = currentDamage;
         message.modifierValue = currentModifier;
@@ -533,6 +515,26 @@ export async function healthBarChange(actor, html){
 
     if(currentDamage === damageCount && currentModifier === woundCount && message.totalDamage > 0 && healType != "full"){
       message.title = "ep2e.roll.announce.heal.partial.notEnoughTime";
+      message.subheader = "ep2e.roll.announce.heal.partial.minimumTimeframe";
+      let hoursPassedHealth = healFormula.minimumHealingCycles.health;
+      let hoursPassedWounds = healFormula.minimumHealingCycles.modifier;
+      if (healTarget === "physical"){
+        message.weeksValueHealth = Math.floor(hoursPassedHealth/168);
+        message.daysValueHealth = Math.floor((hoursPassedHealth-message.weeksValueHealth*168)/24);
+        message.hoursValueHealth = (hoursPassedHealth-message.weeksValueHealth*168) % 24;
+        message.weeksValueWounds = Math.floor(hoursPassedWounds/168);
+        message.daysValueWounds = Math.floor((hoursPassedWounds-message.weeksValueWounds*168)/24);
+        message.hoursValueWounds = (hoursPassedWounds-message.weeksValueWounds*168) % 24;
+      }
+      else {
+        message.weeksValueHealth = Math.floor(hoursPassedHealth/7);
+        message.daysValueHealth = Math.floor((hoursPassedHealth-message.weeksValueHealth*7));
+        message.hoursValueHealth = false;
+        message.weeksValueWounds = Math.floor(hoursPassedWounds/7);
+        message.daysValueWounds = Math.floor((hoursPassedWounds-message.weeksValueWounds*7));
+        message.hoursValueWounds = false;
+      }
+      message.noTime = true;
       message.totalDamage = 0;
     }
 
@@ -622,7 +624,7 @@ export async function healthBarChange(actor, html){
   //Healing configurator
   function _healingResult(form, enhancements, type) {
     let addition;
-    let durationMultiplier = form.durationMultiplier.value ? durationMultiplier : 1;
+    let durationMultiplier = form.durationMultiplier.value ? form.durationMultiplier.value : 1;
     let duration;
     let circumstances;
     let healingBasis;
@@ -662,10 +664,15 @@ export async function healthBarChange(actor, html){
         }
       }
 
+      let minimumHealingCycles = {};
+      minimumHealingCycles.health = healingAddition ? healingAddition.timeframe < healingBasis.timeframe ? healingAddition.timeframe : healingBasis.timeframe : healingBasis.timeframe;
+      minimumHealingCycles.modifier = healingAddition ? healingAddition.woundCycle < healingBasis.woundCycle ? healingAddition.woundCycle : healingBasis.woundCycle : healingBasis.woundCycle;
+
       return {
           duration : duration,
           heal : healCycle,
-          wound : woundCycle
+          wound : woundCycle,
+          minimumHealingCycles : minimumHealingCycles
       }
     }
     if (type === "mental"){
@@ -691,10 +698,15 @@ export async function healthBarChange(actor, html){
         }
       }
 
+      let minimumHealingCycles = {};
+      minimumHealingCycles.health = addition ? 1 : 7;
+      minimumHealingCycles.modifier = addition ? 7 : 30;
+
       return {
           duration : duration,
           heal : healCycle,
-          wound : woundCycle
+          wound : woundCycle,
+          minimumHealingCycles : minimumHealingCycles
       }
     }
   }
