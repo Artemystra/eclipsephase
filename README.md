@@ -3,10 +3,10 @@ The first inofficial Eclipse Phase 2e system for Foundry is happy to announce it
 The time and energy I put into this project is happily given and does not demand any pay nor tribute. Though if you like my work and want to emotially support me, while going thorough all states of mental illness (described in the Eclipse Phase core rules) please consider: 
 
 Writing something nice
-<img src="https://war-klar.de/PicShare/GitHub/discordLogo.webp"/>
+<a href="https://discordapp.com/users/186786554230996993"><img src="https://war-klar.de/PicShare/GitHub/discordLogo.webp"/></a>
 
 Buying me a kofi
-<img src="https://war-klar.de/PicShare/GitHub/kofiLogo.webp"/>
+<a href="https://ko-fi.com/diemen"><img src="https://war-klar.de/PicShare/GitHub/kofiLogo.webp"/></a>
 
 
 <h2>Most important features in overview</h2>
