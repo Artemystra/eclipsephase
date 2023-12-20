@@ -1,4 +1,28 @@
-The first inofficial Eclipse Phase 2e system is about two years in the making and nears it's version 1.0 (A state in which the core rules are working with some convenience features where I see fit.). If you like my work and want to support me, please consider buying me a kofi (https://ko-fi.com/diemen) or just texting me here or on discord (laphaela) to say "thank you!". It means a lot to me!
+The first inofficial Eclipse Phase 2e system for Foundry is happy to announce it's bump to version 1.0 - just three years after I started to learn how to code (so we're both ready for Kindergarten now <3 ). The current system is in a state in which the core rules are working while I have also implemented some convenience features (e.g. automatic ammo count) where I see fit. 
+<p><p/>
+The time and energy I put into this project is happily given and does not demand any pay nor tribute. Though if you like my work and want to emotially support me, while going thorough all states of mental illness (described in the Eclipse Phase core rules) please consider buying me a kofi 
+<div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'>
+    <div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>
+        Writing something nice
+    </div>
+    <a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'>
+        <div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'>
+            <img src="https://war-klar.de/PicShare/GitHub/discordLogo.png" style='max-height:25px; margin-right: 15px'/> 
+            Discord
+        </div>
+    </a>
+</div>
+<div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'>
+    <div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>
+        Buying me a kofi
+    </div>
+    <a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'>
+        <div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'>
+            <img src="https://war-klar.de/PicShare/GitHub/kofiLogo.png" style='max-height:25px; margin-right: 15px'/> 
+            Ko-fi
+        </div>
+    </a>
+</div>
 
 <h2>Most important features in overview</h2>
 <h3>Localization</h3>

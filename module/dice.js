@@ -1464,15 +1464,15 @@ export async function TaskCheck({
                     else if (result > 1 && result <=3) {   
                         psiLabel = eval("actorData.subStrain.influence" + result + ".label");
                         psiCopy = eval("actorData.subStrain.influence" + result + ".description");
-                        if(psiLabel === "restrictedBehaviour" && actorData.subStrain.label != "architect"){
+                        if(psiLabel === "restrictedBehaviour" && actorData.subStrain.label === "architect"){
                             message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
                             message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.relaxation";
                         }
-                        else if(psiLabel === "restrictedBehaviour" && actorData.subStrain.label != "haunter"){
+                        else if(psiLabel === "restrictedBehaviour" && actorData.subStrain.label === "haunter"){
                             message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
                             message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.empathy";
                         }
-                        else if(actorData.subStrain.label != "xenomorph"){
+                        else if(actorData.subStrain.label === "xenomorph"){
                             message.influenceLabel = eval("eclipsephase.psiStrainLabels.enhancedBehaviour");
                             message.influenceCopy = "ep2e.psi.effect." + psiLabel + "." + psiCopy; 
                         }
