@@ -4,11 +4,11 @@ The time and energy I put into this project is happily given and does not demand
 
 Writing something nice
 <br>
-<a href="https://discordapp.com/users/186786554230996993" target="#"><img src="https://war-klar.de/PicShare/GitHub/discordLogo.webp"/></a>
+<a href="https://discordapp.com/users/186786554230996993"  target="_blank" rel="noopener noreferrer"><img src="https://war-klar.de/PicShare/GitHub/discordLogo.webp"/></a>
 
 Buying me a kofi
 <br>
-<a href="https://ko-fi.com/diemen" target="#"><img src="https://war-klar.de/PicShare/GitHub/kofiLogo.webp"/></a>
+<a href="https://ko-fi.com/diemen"  target="_blank" rel="noopener noreferrer"><img src="https://war-klar.de/PicShare/GitHub/kofiLogo.webp"/></a>
 
 
 <h2>Most important features in overview</h2>
