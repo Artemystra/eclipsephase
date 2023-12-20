@@ -65,6 +65,42 @@
                 {{/if}}
             </div>
         {{/if}}
+    {{else if (eq noTime true)}}
+    <div style="margin: 30px 0 20px 0; padding: 15px 0 25px 0; background-color: var(--mainBackground);">
+        <p style="font-size: 12px;">
+            {{localize subheader}}
+        </p>
+        <div class="grid">
+            <div class="flexrow flex-group-center">
+                <span>{{localize damageType}}</span>
+            </div>
+            <div>
+                {{#if (gt weeksValueHealth 0)}}
+                    <p style="margin: 0px;">{{weeksValueHealth}} {{localize weeksLabel}}</p>
+                {{/if}}
+                {{#if (gt daysValueHealth 0)}}
+                    <p style="margin: 0px;">{{daysValueHealth}} {{localize daysLabel}}</p>
+                {{/if}}
+                {{#if (gt hoursValueHealth 0)}}
+                    <p style="margin: 0px;">{{hoursValueHealth}} {{localize hoursLabel}}</p>
+                {{/if}}
+            </div>
+            <div class="flexrow flex-group-center">
+                <span>{{localize modifierType}}</span>
+            </div>
+            <div>
+                {{#if (gt weeksValueWounds 0)}}
+                    <p style="margin: 0px;">{{weeksValueWounds}} {{localize weeksLabel}}</p>
+                {{/if}}
+                {{#if (gt daysValueWounds 0)}}
+                    <p style="margin: 0px;">{{daysValueWounds}} {{localize daysLabel}}</p>
+                {{/if}}
+                {{#if (gt hoursValueWounds 0)}}
+                    <p style="margin: 0px;">{{hoursValueWounds}} {{localize hoursLabel}}</p>
+                {{/if}}
+            </div>  
+        </div>
+    </div>
     {{/if}}
 </div>
   

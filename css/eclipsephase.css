@@ -605,6 +605,7 @@ input[type="date"]::placeholder,
 input[type="time"]::placeholder, 
 input[type="search"]::placeholder {
   color: var(--inactive);
+  padding-left: 0px!important;
 }
 
 input[type="text"]::-ms-input-placeholder, 
@@ -614,6 +615,7 @@ input[type="date"]::-ms-input-placeholder,
 input[type="time"]::-ms-input-placeholder, 
 input[type="search"]::-ms-input-placeholder {
   color: var(--inactive);
+  padding-left: 0px!important;
 }
 
 input[type="text"], 

@@ -1074,7 +1074,11 @@
             "label": "Timeframe",
             "hours": "Hour(s)",
             "days": "Day(s)",
-            "weeks": "Week(s)"
+            "weeks": "Week(s)",
+            "hour": "Hour",
+            "day": "Day",
+            "week": "Week",
+            "duration": "Duration"
           },
           "circumstances": {
             "label": "Circumstances",
@@ -1150,7 +1154,8 @@
             "days": "day(s)",
             "hours": "hour(s)",
             "fullCopy": "My health is full",
-            "notEnoughTime": "I did not have enough time to heal"
+            "notEnoughTime": "I did not have enough time to heal",
+            "minimumTimeframe": "Minimum timeframe to heal"
           }
         },
         "poolUsage": {
