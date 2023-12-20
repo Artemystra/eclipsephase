@@ -92,6 +92,8 @@ export default class EPactor extends Actor {
     this._calculateInitiative(actorModel, chiMultiplier);
 
     if (this.type === "character"){    
+      let morph = actorModel.bodies[actorModel.bodies.activeMorph]
+      actorModel.additionalSystems.movementBase = morph.movement1 ? morph.movement1.base : 0;
       this._calculateMentalHealth(actorModel, chiMultiplier)
       this._calculateHomebrewEncumberance(actorModel);
       this._calculateSideCart(actorModel, items);
@@ -100,6 +102,9 @@ export default class EPactor extends Actor {
     }
     if (this.type === "npc" || this.type === "character"){
       this._minimumInfection(actorModel, gammaCount, chiCount);
+    }
+    if (this.type === "npc" || this.type === "goon"){
+      actorModel.additionalSystems.movementBase = actorModel.bodies.morph1.movement1 ? actorModel.bodies.morph1.movement1.base : 0;
     }
 
     // Aptitudes
