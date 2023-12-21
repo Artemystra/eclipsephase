@@ -466,7 +466,7 @@ export async function healthBarChange(actor, html){
         html = await renderTemplate('systems/eclipsephase/templates/chat/damage-message.html', message);
         
         if (healRoll.length > 0){
-          let rollMode = CONST.DICE_ROLL_MODES.BLIND
+          let rollMode = CONST.DICE_ROLL_MODES.SELF
           msg = await joinDiceRollMessage(healRoll, {
             speaker: ChatMessage.getSpeaker({actor: this.actor}),
             flavor: html
