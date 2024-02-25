@@ -282,6 +282,10 @@
   margin-top: 20px;
 }
 
+.eclipsephase.reset-rest-all-dialog .form-group-stacked {
+  text-align: right;
+}
+
 .morph-img{
   margin: -10px 0 10px 10px;
   max-width: 210px;

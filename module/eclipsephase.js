@@ -218,6 +218,11 @@ Hooks.once('init', async function() {
     return '> ' + JSON.stringify(obj)
   })
 
+  // Helper to set checked attribute on checkboxes within template
+  Handlebars.registerHelper("checkedIf", function (condition) {
+    return (condition) ? "checked" : "";
+  });
+
   registerSystemSettings();
 });
 
