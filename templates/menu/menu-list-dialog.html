@@ -1,0 +1,28 @@
+<form class="eclipsephase reset-rest-all-dialog">
+  <div class="form-group listBackgroundMain">
+    <p>{{{localize "ep2e.systemMessage.resetRest.copy"}}}</p>
+  </div>
+  {{#if (gt charCount 0)}}
+  <div class="flexrow subheader">
+    <h3 class="subheader dialog">{{localize "ep2e.systemMessage.resetRest.headline"}}</h3>
+  </div>
+  <div class="form-group-stacked">
+    <div class="checkbox-label">
+      <label class="checkbox">{{localize "OWNERSHIP.AllPlayers"}}</label>
+      <input type="checkbox" id="resetRestSelectAll">
+    </div>
+    <div class="grid" style="margin-top: 0;">
+      {{#each charList as |char|}}
+      <div>
+        <label>{{char.actor.name}}</label>
+        <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor._id}}" {{checkedIf char.ownedByPlayer}}>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{else}}
+  <div style="height: 190px">
+    <img src="systems/eclipsephase/resources/img/userConfiguration.webp"/>
+  </div>
+  {{/if}}
+</form>

@@ -66,7 +66,7 @@ class EPmenuLayer extends PlaceablesLayer {
             html
               .find('.ep-menu.ep-restore-rest')
               .click(async event => {
-                let charList = await identifyChars()
+                let charList = getActorsWithOwners()
 
                 let charCount = charList.length
 
@@ -101,50 +101,60 @@ class EPmenuLayer extends PlaceablesLayer {
               let resetButton = game.i18n.localize('ep2e.actorSheet.button.reset');
               let closeButton = game.i18n.localize('ep2e.actorSheet.button.close');
               let title = game.i18n.localize('ep2e.systemMessage.resetRest.title');
-              const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+              const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
               const html = await renderTemplate(template, {charList, charCount});
 
-              
               if(charCount > 0){
-              return new Promise(resolve => {
-                  const data = {
-                      title: title,
-                      content: html,
-                      buttons: {
-                        cancel: {
-                          label: cancelButton,
-                          callback: html => resolve ({cancelled: true})
+                return new Promise(resolve => {
+                    const data = {
+                        title: title,
+                        content: html,
+                        buttons: {
+                          cancel: {
+                            label: cancelButton,
+                            callback: html => resolve ({cancelled: true})
+                          },
+                          normal: {
+                              label: resetButton,
+                              callback: html => resolve(_proResetPlayerList(html[0].querySelector("form")))
+                          }
                         },
-                        normal: {
-                            label: resetButton,
-                            callback: html => resolve(_proResetPlayerList(html[0].querySelector("form")))
-                        }
-                      },
-                      default: "normal",
-                      close: () => resolve ({cancelled: true})
-                  };
-                  let options = {width:536}
-                  new Dialog(data, options).render(true);
-              });
-            }
-            else{
-              return new Promise(resolve => {
-                  const data = {
-                      title: title,
-                      content: html,
-                      buttons: {
-                        cancel: {
-                          label: closeButton,
-                          callback: html => resolve ({cancelled: true})
-                        }
-                      },
-                      default: "normal",
-                      close: () => resolve ({cancelled: true})
-                  };
-                  let options = {width:536}
-                  new Dialog(data, options).render(true);
-              });
-            }
+                        default: "normal",
+                        render: (html) => {
+                          const selectAllCheckbox = html.find('#resetRestSelectAll');
+                          selectAllCheckbox.on('change', (e) => {
+                            checkAllCharacters(html, (! e.target.checked));
+                          });
+                          const charCheckBoxes = getCharacterCheckboxes(html);
+                          charCheckBoxes.on('change', (e) => {
+                            const checkedBoxes = charCheckBoxes.toArray().reduce((cnt, el) => (cnt + el.checked), 0);
+                            selectAllCheckbox.get(0).checked = (charCheckBoxes.length === checkedBoxes);
+                          });
+                        },
+                        close: () => resolve ({cancelled: true})
+                    };
+                    let options = {width:536}
+                    new Dialog(data, options).render(true);
+                });
+              }
+              else{
+                return new Promise(resolve => {
+                    const data = {
+                        title: title,
+                        content: html,
+                        buttons: {
+                          cancel: {
+                            label: closeButton,
+                            callback: html => resolve ({cancelled: true})
+                          }
+                        },
+                        default: "normal",
+                        close: () => resolve ({cancelled: true})
+                    };
+                    let options = {width:536}
+                    new Dialog(data, options).render(true);
+                });
+              }
 
             }
 
@@ -162,25 +172,52 @@ class EPmenuLayer extends PlaceablesLayer {
 
           }
 
-            async function identifyChars() {
-              let ownedChars = [];
-              let charIDs = [];
-              for (let u of game.users){
-                  if (u.character){
-                      charIDs.push(u.character._id);
-                  }
+          /**
+           * Gets Actors that are player characters and which user (player) they are assigned to, if any.
+           *
+           * @returns {Array<{actor: Actor, ownedByPlayer: User}>}
+           */
+          function getActorsWithOwners() {
+            const playerCharacterActors = [];
+            const characterUsers = [];
+            for (const user of game.users){
+              if (user.character){
+                characterUsers.push({ user, charId: user.character._id } );
               }
-    
-              for (let a of game.actors){
-                  for (let o of charIDs){
-                      if (a._id === o){
-                        ownedChars.push(a);
-                      }
-                  }
-              }
-              return ownedChars
             }
+            for (const a of game.actors){
+              if (a.type === "character") {
+                const ownedByPlayer = characterUsers.find((characterUser) => (characterUser.charId === a._id));
+                playerCharacterActors.push({actor: a, ownedByPlayer: ownedByPlayer?.user});
+              }
+            }
+            return playerCharacterActors;
           }
 
-          
-}
+          /**
+           * Checks Actor checkboxes in form, either the ones that are active, or all of them.
+           *
+           * @param html {jQuery}
+           * @param activeOnly {boolean}
+           */
+          function checkAllCharacters(html, activeOnly) {
+            getCharacterCheckboxes(html).each((idx, el) => {
+              if (! activeOnly || ( !! el.getAttribute('data-owner-id'))) {
+                el.checked = true;
+              } else {
+                el.checked = false;
+              }
+            });
+          }
+
+          /**
+           * Gets the jQuery list of checkboxes for the Actors in the form.
+           *
+           * @param html {jQuery}
+           * @returns {jQuery}
+           */
+          function getCharacterCheckboxes(html) {
+            return html.find('input[data-checkbox-type="player-character"][data-owner-id]');
+          }
+        }
+    }
