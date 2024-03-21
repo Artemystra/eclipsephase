@@ -110,12 +110,14 @@ eclipsephase.aptitudes = {
     ref: "ep2e.actorSheet.aptitudes.ref",
     sav: "ep2e.actorSheet.aptitudes.sav",
     som: "ep2e.actorSheet.aptitudes.som",
-    wil: "ep2e.actorSheet.aptitudes.wil"
+    wil: "ep2e.actorSheet.aptitudes.wil",
+    soft: "ep2e.actorSheet.aptitudes.soft"
 }
 
 eclipsephase.knowAptitudes = {
     cog: "ep2e.actorSheet.aptitudes.cog",
-    int: "ep2e.actorSheet.aptitudes.int"
+    int: "ep2e.actorSheet.aptitudes.int",
+    soft: "ep2e.actorSheet.aptitudes.soft"
 }
 
 eclipsephase.vehicleSize = {

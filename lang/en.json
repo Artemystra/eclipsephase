@@ -90,7 +90,8 @@
         "ref": "Reflexes",
         "sav": "Savvy",
         "som": "Somatics",
-        "wil": "Willpower"
+        "wil": "Willpower",
+        "soft": "Skillsoft"
       },
       "leftTabs": {
         "egoTab": "Ego",
@@ -1383,7 +1384,10 @@
       "resetRest": {
         "title": "Reset Rest",
         "copy": "This dialog resets ALL rest for the selected characters. If a character is actively controlled by a player, it will be selected by default. Check the All players box to select all characters or uncheck it to select only the active characters.",
-        "headline": "Player Characters"
+        "checkBoxLabelAll": "Toggle All Characters",
+        "headline": "Player Characters",
+        "activeCharacters": "Active Characters",
+        "otherCharacters": "Other Characters"
       }
     }
   }

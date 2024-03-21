@@ -158,6 +158,9 @@ export default class EPactor extends Actor {
       else if (value.aptitude === "sav") {
         aptSelect = actorModel.aptitudes.sav.value;
       }
+      else if (value.aptitude === "soft") {
+        aptSelect = 0;
+      }
       if(key === 'specialSkill' || key === 'knowSkill'){
         if(actorModel.type=="goon")
           value.roll = value.value?Number(value.value):aptSelect;

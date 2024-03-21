@@ -409,6 +409,12 @@
   margin-top: 8px;
 }
 
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .eclipsephase .resource-section-label {
   text-transform: uppercase;
   text-align: center;
@@ -1611,8 +1617,12 @@ h3.subheaderBlank {
   text-align: left;
 }
 
-ol {
+.eclipsephase ol {
   list-style-type: none;
+}
+
+.sheet .editor-content ol {
+  list-style-type: decimal;
 }
 
 .textAreaDescription {

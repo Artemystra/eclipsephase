@@ -67,10 +67,14 @@ class EPmenuLayer extends PlaceablesLayer {
               .find('.ep-menu.ep-restore-rest')
               .click(async event => {
                 let charList = getActorsWithOwners()
+                console.log("charList var")
+                console.log(charList)
+                console.log("Active Player Characters")
+                console.log(charList[0])
+                console.log("Other Player Characters")
+                console.log(charList[1])
 
-                let charCount = charList.length
-
-                let charSelect = await selectChars(charList, charCount)
+                let charSelect = await selectChars(charList)
 
                 if(charSelect.cancelled){
                   return
@@ -96,15 +100,19 @@ class EPmenuLayer extends PlaceablesLayer {
                 }
             })
 
-            async function selectChars(charList, charCount){
+            async function selectChars(charList){
               let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
               let resetButton = game.i18n.localize('ep2e.actorSheet.button.reset');
               let closeButton = game.i18n.localize('ep2e.actorSheet.button.close');
               let title = game.i18n.localize('ep2e.systemMessage.resetRest.title');
+              const activeChars = charList[0];
+              const otherChars = charList[1];
+              const activeCharsCount = charList[0].length;
+              const otherCharsCount = charList[1].length;
               const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
-              const html = await renderTemplate(template, {charList, charCount});
+              const html = await renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount});
 
-              if(charCount > 0){
+              if(activeCharsCount + otherCharsCount > 0){
                 return new Promise(resolve => {
                     const data = {
                         title: title,
@@ -123,6 +131,7 @@ class EPmenuLayer extends PlaceablesLayer {
                         render: (html) => {
                           const selectAllCheckbox = html.find('#resetRestSelectAll');
                           selectAllCheckbox.on('change', (e) => {
+                            console.log("This is e:", e)
                             checkAllCharacters(html, (! e.target.checked));
                           });
                           const charCheckBoxes = getCharacterCheckboxes(html);
@@ -179,6 +188,7 @@ class EPmenuLayer extends PlaceablesLayer {
            */
           function getActorsWithOwners() {
             const playerCharacterActors = [];
+            const activePlayerCharacterActors = [];
             const characterUsers = [];
             for (const user of game.users){
               if (user.character){
@@ -186,12 +196,17 @@ class EPmenuLayer extends PlaceablesLayer {
               }
             }
             for (const a of game.actors){
-              if (a.type === "character") {
+              if (a.type === "character"){
                 const ownedByPlayer = characterUsers.find((characterUser) => (characterUser.charId === a._id));
-                playerCharacterActors.push({actor: a, ownedByPlayer: ownedByPlayer?.user});
+                if (ownedByPlayer){
+                  activePlayerCharacterActors.push({actor: a, ownedByPlayer: ownedByPlayer.user});
+                }
+                else {
+                  playerCharacterActors.push({actor: a, ownedByPlayer: false});
+                }
               }
             }
-            return playerCharacterActors;
+            return [activePlayerCharacterActors, playerCharacterActors];
           }
 
           /**
@@ -201,8 +216,12 @@ class EPmenuLayer extends PlaceablesLayer {
            * @param activeOnly {boolean}
            */
           function checkAllCharacters(html, activeOnly) {
+            console.log("This is active Only:", activeOnly)
+            console.log("This is html:", html)
             getCharacterCheckboxes(html).each((idx, el) => {
-              if (! activeOnly || ( !! el.getAttribute('data-owner-id'))) {
+              console.log("This is my el Element:", el)
+              if (! activeOnly /*|| ( !! el.getAttribute('data-owner-id'))*/) {
+                console.log("Ping! My data-owner-id is:", el.getAttribute('data-owner-id'))
                 el.checked = true;
               } else {
                 el.checked = false;
