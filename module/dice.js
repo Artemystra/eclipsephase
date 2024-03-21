@@ -470,6 +470,8 @@ export async function TaskCheck({
     sleightDuration = "",
     sleightInfection = ""
     } = {}) {
+    
+    console.log("This is where it all starts!")
 
     //Guns check dialog
 

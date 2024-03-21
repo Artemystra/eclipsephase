@@ -90,7 +90,8 @@
         "ref": "Reflexes",
         "sav": "Savvy",
         "som": "Somatics",
-        "wil": "Willpower"
+        "wil": "Willpower",
+        "soft": "Skillsoft"
       },
       "leftTabs": {
         "egoTab": "Ego",
@@ -1382,8 +1383,11 @@
     "systemMessage": {
       "resetRest": {
         "title": "Reset Rest",
-        "copy": "This dialog resets ALL rest for the selected, active characters. If a character is not actively controlled by any player, it will not show in this list. Players can change their active character by using the player menu in the lower left of foundry.",
-        "headline": "Active Player Characters"
+        "copy": "This dialog resets ALL rest for the selected characters. If a character is actively controlled by a player, it will be selected by default. Check the All players box to select all characters or uncheck it to select only the active characters.",
+        "checkBoxLabelAll": "Toggle All Characters",
+        "headline": "Player Characters",
+        "activeCharacters": "Active Characters",
+        "otherCharacters": "Other Characters"
       }
     }
   }

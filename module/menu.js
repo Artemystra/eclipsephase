@@ -66,11 +66,15 @@ class EPmenuLayer extends PlaceablesLayer {
             html
               .find('.ep-menu.ep-restore-rest')
               .click(async event => {
-                let charList = await identifyChars()
+                let charList = getActorsWithOwners()
+                console.log("charList var")
+                console.log(charList)
+                console.log("Active Player Characters")
+                console.log(charList[0])
+                console.log("Other Player Characters")
+                console.log(charList[1])
 
-                let charCount = charList.length
-
-                let charSelect = await selectChars(charList, charCount)
+                let charSelect = await selectChars(charList)
 
                 if(charSelect.cancelled){
                   return
@@ -96,55 +100,70 @@ class EPmenuLayer extends PlaceablesLayer {
                 }
             })
 
-            async function selectChars(charList, charCount){
+            async function selectChars(charList){
               let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
               let resetButton = game.i18n.localize('ep2e.actorSheet.button.reset');
               let closeButton = game.i18n.localize('ep2e.actorSheet.button.close');
               let title = game.i18n.localize('ep2e.systemMessage.resetRest.title');
-              const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-              const html = await renderTemplate(template, {charList, charCount});
+              const activeChars = charList[0];
+              const otherChars = charList[1];
+              const activeCharsCount = charList[0].length;
+              const otherCharsCount = charList[1].length;
+              const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
+              const html = await renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount});
 
-              
-              if(charCount > 0){
-              return new Promise(resolve => {
-                  const data = {
-                      title: title,
-                      content: html,
-                      buttons: {
-                        cancel: {
-                          label: cancelButton,
-                          callback: html => resolve ({cancelled: true})
+              if(activeCharsCount + otherCharsCount > 0){
+                return new Promise(resolve => {
+                    const data = {
+                        title: title,
+                        content: html,
+                        buttons: {
+                          cancel: {
+                            label: cancelButton,
+                            callback: html => resolve ({cancelled: true})
+                          },
+                          normal: {
+                              label: resetButton,
+                              callback: html => resolve(_proResetPlayerList(html[0].querySelector("form")))
+                          }
                         },
-                        normal: {
-                            label: resetButton,
-                            callback: html => resolve(_proResetPlayerList(html[0].querySelector("form")))
-                        }
-                      },
-                      default: "normal",
-                      close: () => resolve ({cancelled: true})
-                  };
-                  let options = {width:536}
-                  new Dialog(data, options).render(true);
-              });
-            }
-            else{
-              return new Promise(resolve => {
-                  const data = {
-                      title: title,
-                      content: html,
-                      buttons: {
-                        cancel: {
-                          label: closeButton,
-                          callback: html => resolve ({cancelled: true})
-                        }
-                      },
-                      default: "normal",
-                      close: () => resolve ({cancelled: true})
-                  };
-                  let options = {width:536}
-                  new Dialog(data, options).render(true);
-              });
-            }
+                        default: "normal",
+                        render: (html) => {
+                          const selectAllCheckbox = html.find('#resetRestSelectAll');
+                          selectAllCheckbox.on('change', (e) => {
+                            console.log("This is e:", e)
+                            checkAllCharacters(html, (! e.target.checked));
+                          });
+                          const charCheckBoxes = getCharacterCheckboxes(html);
+                          charCheckBoxes.on('change', (e) => {
+                            const checkedBoxes = charCheckBoxes.toArray().reduce((cnt, el) => (cnt + el.checked), 0);
+                            selectAllCheckbox.get(0).checked = (charCheckBoxes.length === checkedBoxes);
+                          });
+                        },
+                        close: () => resolve ({cancelled: true})
+                    };
+                    let options = {width:536}
+                    new Dialog(data, options).render(true);
+                });
+              }
+              else{
+                return new Promise(resolve => {
+                    const data = {
+                        title: title,
+                        content: html,
+                        buttons: {
+                          cancel: {
+                            label: closeButton,
+                            callback: html => resolve ({cancelled: true})
+                          }
+                        },
+                        default: "normal",
+                        close: () => resolve ({cancelled: true})
+                    };
+                    let options = {width:536}
+                    new Dialog(data, options).render(true);
+                });
+              }
 
             }
 
@@ -162,25 +181,62 @@ class EPmenuLayer extends PlaceablesLayer {
 
           }
 
-            async function identifyChars() {
-              let ownedChars = [];
-              let charIDs = [];
-              for (let u of game.users){
-                  if (u.character){
-                      charIDs.push(u.character._id);
-                  }
+          /**
+           * Gets Actors that are player characters and which user (player) they are assigned to, if any.
+           *
+           * @returns {Array<{actor: Actor, ownedByPlayer: User}>}
+           */
+          function getActorsWithOwners() {
+            const playerCharacterActors = [];
+            const activePlayerCharacterActors = [];
+            const characterUsers = [];
+            for (const user of game.users){
+              if (user.character){
+                characterUsers.push({ user, charId: user.character._id } );
               }
-    
-              for (let a of game.actors){
-                  for (let o of charIDs){
-                      if (a._id === o){
-                        ownedChars.push(a);
-                      }
-                  }
-              }
-              return ownedChars
             }
+            for (const a of game.actors){
+              if (a.type === "character"){
+                const ownedByPlayer = characterUsers.find((characterUser) => (characterUser.charId === a._id));
+                if (ownedByPlayer){
+                  activePlayerCharacterActors.push({actor: a, ownedByPlayer: ownedByPlayer.user});
+                }
+                else {
+                  playerCharacterActors.push({actor: a, ownedByPlayer: false});
+                }
+              }
+            }
+            return [activePlayerCharacterActors, playerCharacterActors];
           }
 
-          
-}
+          /**
+           * Checks Actor checkboxes in form, either the ones that are active, or all of them.
+           *
+           * @param html {jQuery}
+           * @param activeOnly {boolean}
+           */
+          function checkAllCharacters(html, activeOnly) {
+            console.log("This is active Only:", activeOnly)
+            console.log("This is html:", html)
+            getCharacterCheckboxes(html).each((idx, el) => {
+              console.log("This is my el Element:", el)
+              if (! activeOnly /*|| ( !! el.getAttribute('data-owner-id'))*/) {
+                console.log("Ping! My data-owner-id is:", el.getAttribute('data-owner-id'))
+                el.checked = true;
+              } else {
+                el.checked = false;
+              }
+            });
+          }
+
+          /**
+           * Gets the jQuery list of checkboxes for the Actors in the form.
+           *
+           * @param html {jQuery}
+           * @returns {jQuery}
+           */
+          function getCharacterCheckboxes(html) {
+            return html.find('input[data-checkbox-type="player-character"][data-owner-id]');
+          }
+        }
+    }

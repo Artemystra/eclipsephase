@@ -86,7 +86,8 @@
         "ref": "Reflexos",
         "sav": "Sagacidade",
         "som": "Somática",
-        "wil": "Vontade"
+        "wil": "Vontade",
+        "soft": "Skillsoft"
       },
       "leftTabs": {
         "egoTab": "Ego",
@@ -1253,6 +1254,55 @@
         }
       }
     },
+    "rule": {
+      "weapon": {
+        "effect": {
+          "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",
+          "armSlide": "This slide-mount can hold a one-handed weapon under your sleeve, pushing the weapon into your hand with an electronic signal or specific sequence of arm movements. You can draw the weapon and attack with a single complex action.",
+          "bioMorphsOnly": "This weapon inflicts more damage to soft targets like biomorphs. They do not provide extra damage to synthmorphs or objects.",
+          "blinding": "Targets must make a REF Check or be blinded for 1 action turns, +1 per failure category. While blinded you have a 50% chance of missing your attacks (if you miss a perceive test) and suffer a –30 to all other physical actions, including Fray Tests. You must make an Athletics, Free Fall, or Pilot Test to move faster than a base move or fall prone.A critical failure results in permanent blindness until repaired or they spend time in a healing vat. Anti-glare ware protects against blinding based on light.",
+          "concealable": "This item is easily hidden. You receive a +30 to Infiltrate Tests to hide this item on your person (or elsewhere).",
+          "disablesRadio": "Every radio (or object that communicates with it's surroundings via antennas or similar technology) within the blast radius (50 meters) is disabled until repaired with an appropriate Hardware or Medicine: Biotech Test or a fixer nanoswarm. Every nanoswarm within range suffers DV 2d10 + 5.",
+          "dvHalved": "The weapon is made of a relatively soft, flexbile or even hollow material. While most of these weapons are designed to hurt but not kill people, sometimes the reason for hollowing a weapon out is, that it carries a toxin or drug that is injected forcefully during an encounter.",
+          "dvOnMiss": "This reactive bullet uses nanosensors to determine if it is going to miss a smartlink-tagged target and explodes in their vicinity. If the attack misses without a superior or critical failure, the target still suffers some amount of damage",
+          "effectRadius": "The weapon effects a whole area. While it's effect diminishes at the border, it is strongest in  it's center.",
+          "entangling": "Targets struck by this weapon must make a REF Check or be grappled ▶205. The attacker's successes levels apply a cumulative –10 per level to this REF Check and SOM Checks to break free.",
+          "extendedMagazine": "This ammunition case has an enhanced capacity. Increase the weapon's ammo capacity by +50%. This is only available for firearms and seekers.",
+          "fixed": "Fixed weapons are designed to be fired from a prone or braced position, such as mounted on a bipod or hardpoint. If carried, apply a –20 modifier to attacks and consider them to have the Two-Handed trait.",
+          "fragile": "This items breaks or becomes unusable if you roll a greater failure or worse.",
+          "flashSuppressor": "This device obscures the muzzle flash on firearms, applying a –30 modifier to Perceive Tests to locate a firing weapon by its flash.",
+          "Gyromount": "This weapon harness features a gyro-stabilized weapon mount that keeps the weapon steady. Negate all modifiers from movement.",
+          "imagingScope": "Imaging scopes attach to the top of the weapon and act like specs. Scopes also bend like a periscope, allowing you to point the weapon and target around corners without leaving cover.",
+          "indirectOrBonus": "This bullet identifies a smartlink-tagged target and uses nanosensors and telemetry from previous bullets to lock on, correcting the bullet’s trajectory with surface alterations and tiny vectored nozzles. Apply it's positive modifier to hit for attacks following an aim action (cumulative with the aim modifier) or previous attacks against the same target. Homing bullets can also be used for indirect fire ▶206, though without the to-hit modifier.",
+          "knockdown": "This strike may knock even unwounded opponents off their feet. The target must make a SOM Check or be knocked prone.",
+          "laserSight": "This underbarrel laser emits a beam that places a glowing red dot on the target to assist targeting (negating the –10 modifier for not using a smartlink or laser sight). Laser sights can also be used to paint a target for laser-guided smart ammo or seekers. Infrared and ultraviolet lasers are also available, so that the dot is only visible to characters with enhanced vision.",
+          "long": "Lengthy weapons are unwieldy in close combat (–30 to fire when in melee) and do not receive the +10 modifier when fired at Point-Blank range.",
+          "multiShot": "This weapon uses more than one round/bullet per shot. Based on it's design it might be even able to hit multiple targets with one shot.",
+          "nanoSwarm": "Nanobots, short for nanorobots, are tiny machines that are designed to operate at the nanoscale, which is on the order of nanometers. These incredibly small devices are composed of nanoscale components, such as molecules or nanomaterials, and have the ability to perform various tasks at the molecular or cellular level.",
+          "noDamage": "Some weapons or ammunition are not designed to damage their targets. In case of ammunition it's soft or flexible to an extend, or designed to explode in some distance to it's target, that no damage applies at all. Their effect is diverse and reaches from an electro magnetic pulse to an attack with poisonous gas.",
+          "noSmartlink": "This weapon is not equipped with a smartlink's targeting assistance. –10 to attack tests.",
+          "noClose": "This weapon cannot be fired at Point-Blank or Close range. Seeker weapons have built-in safety features that prevent them from being fired at ranges that might injure the user. Overriding this features requires a Hardware or Infosec Test.",
+          "noPointBlank": "This weapon cannot be fired at Point-Blank range.",
+          "pain": "A biomorph target struck by this weapon must make a WIL Check or take their next full action to flee, moving as far away from the pain-inflicting source as possible or to the nearest full cover they can reach on their action. Targets also suffer –20 until the end of the next turn. Targets with the Pain Tolerance (Level 1) trait receive a +30 to their WIL Check and only suffer a –10 modifier. Targets with Pain Tolerance (Level 2) are immune to this effect. Victims who are trapped in the beam or otherwise cannot avoid the pain effect are impaired (–20) until they escape.",
+          "reach": "Some weapons extend your reach, giving you a significant advantage over an opponent in melee. This applies to any weapon over half a meter long: axes, clubs, swords, shock batons, etc. Whenever you have a reach advantage over an opponent, you receive a +10 modifier for both attacking and defending. Some extra-long limbs or weapons provide a +20 bonus, as noted. For each size category by which you exceed your opponent, apply a +10 Reach modifier, up to a maximum +30.",
+          "safetySystem": "This feature is automatically included in most weapons. A biometric (palmprint or voiceprint) or ego ID sensor is embedded in the weapon, disabling it if anyone other than an authorized user attempts to fire it.",
+          "selfReplenishing": "This weapon features a built in Nano-Hive that replenishes it's ammunition automatically. It does not do this out of thin air though, and needs to be fed with wet stock. The rate in which the ammunition replenishes may vary by the nano-swarm built and is to the GM's disgression.",
+          "shockSafety": "Just like a safety system, except that an unauthorized user is zapped with an electric shock, inflicting DV 1d6 and a shock effect.",
+          "shock": "This weapon inflicts a shock effect. When hit with a shock effect, make a SOM Check. Add your energy armor as a positive modifier. Apply a modifier for different sizes: very small –30, small –10, large +10, very large +30. Failure means you lose neuromuscular control, fall down, and are incapacitated for 1 action turn (+2 turns per failure level) and stunned for 3 minutes. Success means you are stunned for 3 action turns. To inflict shock without doing damage in melee simply requires a touch attack (+20). To inflict shock plus damage requires a regular melee attack.",
+          "silencer": "This barrel-mounted accessory reduces the sound of a firearm's discharge (they cannot be used on railguns). Apply a –30 modifier on hearing-based Perceive Tests to hear or locate the gun's firing.",
+          "singleUse": "This item can only be used once.",
+          "steady": "This weapon ignores range modifiers.",
+          "smartlink": "Smartlinks are automatically included in most weapons. It connects the weapon to your mesh inserts, placing a targeting bracket in your field of vision and providing range and targeting information (negating the –10 modifier for not using a smartlink or laser sight). Smartlinks also incorporate a microcamera that allows the user to see what the weapon is pointed at, fire around corners, etc. Smartlinks also allow certain other types of weapon system control, such as changing smart ammo or programming seeker trigger conditions).",
+          "smartMagazine": "A smart magazine allows you to pick and choose what ammo round will be fired with each shot. This system leaves less room for bullets, however, so reduce the weapon's ammunition capacity by half (round up). Smart magazines can be combined with extended magazines, in which case ammo capacity is normal.",
+          "specialAmmoDrugs": "The weapon shoots chemicals or drugs instead of bullets. To load it a character must have 3 or more drugs/chems in their inventory.",
+          "specialAmmoBugs": "The weapon shoots nano-swarms built inside the integrated nano-hive. The swarm can be changed while reloading the weapon.",
+          "stun": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
+          "stunBiomorphs": "Targets must make a SOM Check or be stunned (-30 to all physical & -10 to all mental actions) for 1 action turn, +1 per failure level. Apply kinetic armor as a positive modifier. Large targets receive a +30, small targets receive a –30 modifier. On a critical failure, they are incapacitated for 1 action turn and stunned for 1 minute.",
+          "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
+          "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
+        }
+      }
+    },
     "migration": {
       "headlineStart": "<h3 class='subheader dialog'>Caro Usuário do Sistema</h3>",
       "headlineEnd": "<h3 class='subheader dialog'>Você está pronto!</h3>",
@@ -1263,9 +1313,12 @@
     },
     "systemMessage": {
       "resetRest": {
-        "title": "Reiniciar Descansos",
-        "copy": "Esta janela reinicia todos os descansos para os personagens ativos selecionados. Se um personagem não for ativamente controlado por algum jogador, ele não será exibido nessa lista. Jogadores podem mudar seu personagem ativo usando o menu do jogador na parte inferior esquerda do Foundry.",
-        "headline": "Personagens Ativos dos Jogadores"
+        "title": "Reset Rest",
+        "copy": "This dialog resets ALL rest for the selected, active characters. If a character is not actively controlled by any player, it will not show in this list. Players can change their active character by using the player menu in the lower left of foundry.",
+        "checkBoxLabelAll": "Toggle All Characters",
+        "headline": "Player Characters",
+        "activeCharacters": "Active Characters",
+        "otherCharacters": "Other Characters"
       }
     }
   }
