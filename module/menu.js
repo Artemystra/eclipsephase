@@ -67,12 +67,6 @@ class EPmenuLayer extends PlaceablesLayer {
               .find('.ep-menu.ep-restore-rest')
               .click(async event => {
                 let charList = getActorsWithOwners()
-                console.log("charList var")
-                console.log(charList)
-                console.log("Active Player Characters")
-                console.log(charList[0])
-                console.log("Other Player Characters")
-                console.log(charList[1])
 
                 let charSelect = await selectChars(charList)
 
@@ -131,7 +125,6 @@ class EPmenuLayer extends PlaceablesLayer {
                         render: (html) => {
                           const selectAllCheckbox = html.find('#resetRestSelectAll');
                           selectAllCheckbox.on('change', (e) => {
-                            console.log("This is e:", e)
                             checkAllCharacters(html, (! e.target.checked));
                           });
                           const charCheckBoxes = getCharacterCheckboxes(html);
@@ -216,12 +209,8 @@ class EPmenuLayer extends PlaceablesLayer {
            * @param activeOnly {boolean}
            */
           function checkAllCharacters(html, activeOnly) {
-            console.log("This is active Only:", activeOnly)
-            console.log("This is html:", html)
             getCharacterCheckboxes(html).each((idx, el) => {
-              console.log("This is my el Element:", el)
               if (! activeOnly /*|| ( !! el.getAttribute('data-owner-id'))*/) {
-                console.log("Ping! My data-owner-id is:", el.getAttribute('data-owner-id'))
                 el.checked = true;
               } else {
                 el.checked = false;
