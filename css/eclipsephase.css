@@ -1625,6 +1625,11 @@ h3.subheaderBlank {
   list-style-type: decimal;
 }
 
+.journal-sheet article ol {
+  list-style-type: decimal;
+  padding: 0 0 0 2.5em!important;
+}
+
 .textAreaDescription {
   border-radius: 0;
   max-height: fit-content;
