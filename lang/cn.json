@@ -1230,6 +1230,7 @@
             "defMinCover": "目标位于次级掩蔽",
             "defModCover": "目标位于中级掩蔽",
             "defMajCover": "目标位于上级掩蔽",
+            "defHidden": "Target is Hidden",
             "visImpMin": "次级视觉衰弱",
             "visImpMaj": "上级视觉衰弱",
             "blind": "目盲",
@@ -1241,7 +1242,8 @@
             "weaponFull": "你的武器弹药已满。",
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
-            "weaponFixated": "Shot from Hip"
+            "weaponFixated": "Shot from Hip",
+            "fray": "Fray Ranged"
           }
         }
       }

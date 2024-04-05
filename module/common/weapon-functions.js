@@ -68,7 +68,7 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
 
 //Constructs a subset of active traits
 async function traitSubSetConstructor(weapon){
-
+  console.log("My weapon:", weapon.system)
   let traitsMode1 = weapon.system.mode1.traits;
   let traitsMode2 =  weapon.system.mode2.traits;
   let accessories = weapon.system.accessories;

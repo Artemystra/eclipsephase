@@ -552,74 +552,29 @@ export default class EPgoonSheet extends ActorSheet {
         event.preventDefault();
         const element = event.currentTarget;
         const dataset = element.dataset;
-        const actorModel = this.actor.system;
         const actorWhole = this.actor;
-        const threatLevel = actorModel.threatLevel.current;
-        let skillKey = dataset.key.toLowerCase();
+        const actorModel = this.actor.system;
+        const flexPool = actorModel.pools.flex.value;
+        let skillKey = dataset.key ? dataset.key.toLowerCase() : null;
         let weaponPrep = null;
-
         let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
         let weaponSelected = null;
-        let specNameValue = dataset.specname;
-        let skillRollValue = dataset.rollvalue;
-        let poolType = "Threat";
+        const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 
-        if (rolledFrom === "rangedWeapon") {
-          specNameValue = actorModel.skillsVig.guns.specname;
-          skillRollValue = actorModel.skillsVig.guns.roll;
-        }
-        else if (rolledFrom === "ccWeapon") {
-          specNameValue = actorModel.skillsVig.melee.specname;
-          skillRollValue = actorModel.skillsVig.melee.roll;
-        }
-
-        if (skillKey === "guns" || skillKey === "melee"){
-    
-          weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
-          
-          if (!weaponPrep || weaponPrep.cancel){
-            return;
+        if(dataset.type === 'skill' && !rolledFrom) {
+          if (skillKey === "guns" || skillKey === "melee"){
+        
+            weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
+            
+            if (!weaponPrep || weaponPrep.cancel){
+              return;
+            }
+            weaponSelected = weaponPrep.selection
+            rolledFrom = weaponSelected.rolledFrom 
           }
-          weaponSelected = weaponPrep.selection
-          rolledFrom = weaponSelected.rolledFrom 
+          this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
         }
 
-
-        Dice.TaskCheck ({
-            //Actor data
-            actorData : actorModel,
-            actorWhole : actorWhole,
-            //Skill data
-            skillKey : skillKey,
-            skillName : dataset.name,
-            specName : specNameValue,
-            rollType : dataset.type,
-            skillValue : skillRollValue,
-            rolledFrom : rolledFrom,
-            //Pools
-            poolValue: threatLevel,
-            poolType: poolType,
-            //Weapon data
-            weaponSelected : weaponSelected ? weaponSelected.weapon : null,
-            weaponID : weaponSelected ? weaponSelected.weaponID : null,
-            weaponName : weaponSelected ? weaponSelected.weaponName : null,
-            weaponDamage : weaponSelected ? weaponSelected.weaponDamage : null,
-            weaponType : weaponSelected ? weaponSelected.weaponType : null,
-            currentAmmo : weaponSelected ? weaponSelected.currentAmmo : null,
-            maxAmmo : weaponSelected ? weaponSelected.maxAmmo : null,
-            meleeDamageMod: actorModel.mods.meleeDamageMod,
-            weaponTraits : weaponSelected ? weaponSelected.weaponTraits : null,
-            //Psi
-            sleightName : dataset.sleightname,
-            sleightDescription : dataset.description,
-            sleightAction : dataset.action,
-            sleightDuration : dataset.duration,
-            sleightInfection : dataset.infection,
-            //System Options
-            askForOptions : event.shiftKey,
-            optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
-            brewStatus: game.settings.get("eclipsephase", "superBrew")
-        });
     }
 
     _onSkillEdit(event) {
@@ -641,6 +596,11 @@ export default class EPgoonSheet extends ActorSheet {
         $.each(revealer, function (index, value){
           $(value).toggleClass("noShow");
         })
+    }
+
+    
+    _onRollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom) {
+      Dice.RollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom)
     }
 
 }

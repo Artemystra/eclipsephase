@@ -998,7 +998,7 @@
           "damageRoll": "Schadenswurf",
           "swap": "Ergebnis Drehen",
           "raise": "Ergebnis Verbessern",
-          "talentCheck": "Probe"
+          "talentCheck": "Skillprobe"
         },
         "button": {
           "roll": "Würfeln",
@@ -1276,6 +1276,7 @@
             "defMinCover": "Ziel in geringer Deckung",
             "defModCover": "Ziel in moderater Deckung",
             "defMajCover": "Ziel in Volldeckung",
+            "defHidden": "Ziel ist versteckt",
             "visImpMin": "Leichte Sichterschwernis",
             "visImpMaj": "Schwere Sichterschwernis",
             "blind": "Blind",
@@ -1287,7 +1288,8 @@
             "weaponFull": "Deine Waffe ist noch voll.",
             "noAmmoPresent": "Keine passende Munition vorhanden.",
             "ammoSkillModifier": "Skillmodifikator (Munition)",
-            "weaponFixated": "Aus der Hüfte geschossen"
+            "weaponFixated": "Aus der Hüfte geschossen",
+            "fray": "Schuss Ausweichen"
           },
           "damage": {
             "physicalDamage": "Mein Morph wurde beschädigt",

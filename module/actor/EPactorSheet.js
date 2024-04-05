@@ -1080,87 +1080,98 @@ export default class EPactorSheet extends ActorSheet {
     const dataset = element.dataset;
     const actorWhole = this.actor;
     const actorModel = this.actor.system;
-
-    if(dataset.type === 'rep') {
-      this._onRepRoll(dataset, actorModel)
-      return
-    }
-
     let specNameValue = dataset.specname;
     let skillRollValue = dataset.rollvalue;
     let poolType = dataset.pooltype;
     let aptType = dataset.apttype;
     const flexPool = actorModel.pools.flex.value;
     let skillPoolValue = null;
-    let skillKey = dataset.key.toLowerCase();
+    let skillKey = dataset.key ? dataset.key.toLowerCase() : null;
     let weaponPrep = null;
     let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
     let weaponSelected = null;
+    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 
-    if (rolledFrom === "rangedWeapon") {
-      specNameValue = actorModel.skillsVig.guns.specname;
-      skillRollValue = actorModel.skillsVig.guns.roll;
-      poolType = "Vigor";
-    }
-    else if (rolledFrom === "ccWeapon") {
-      specNameValue = actorModel.skillsVig.melee.specname;
-      skillRollValue = actorModel.skillsVig.melee.roll;
-      poolType = "Vigor";
-    }
-
-    if (skillKey === "guns" || skillKey === "melee"){
-
-      weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
-      
-      if (!weaponPrep || weaponPrep.cancel){
-        return;
+    if(dataset.type === 'skill' && !rolledFrom) {
+      if (skillKey === "guns" || skillKey === "melee"){
+    
+        weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
+        
+        if (!weaponPrep || weaponPrep.cancel){
+          return;
+        }
+        weaponSelected = weaponPrep.selection
+        rolledFrom = weaponSelected.rolledFrom 
       }
-      weaponSelected = weaponPrep.selection
-      rolledFrom = weaponSelected.rolledFrom 
+      this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }
 
-    if (rolledFrom === "psiSleight") {
-      specNameValue = actorModel.skillsMox.psi.specname;
-      skillRollValue = actorModel.skillsMox.psi.roll;
-      poolType = "Moxie";
-    }
-
-    switch (aptType) {
-      case 'int':
-        poolType = "Insight"
-        break;
-      case 'cog':
-        poolType = "Insight"
-        break;
-      case 'ref':
-        poolType = "Vigor"
-        break;
-      case 'som':
-        poolType = "Vigor"
-        break;
-      case 'wil':
-        poolType = "Moxie"
-        break;
-      case 'sav':
-        poolType = "Moxie"
-        break;
-      default:
-        break;
-    }
-
-    switch (poolType) {
-      case 'Insight':
-        skillPoolValue = actorModel.pools.insight.value;
-        break;
-      case 'Vigor':
-        skillPoolValue = actorModel.pools.vigor.value;
-        break;
-      case 'Moxie':
-        skillPoolValue = actorModel.pools.moxie.value;
-        break;
-      default:
-        break;
-    }
+    else {
+  
+      if (rolledFrom === "rangedWeapon") {
+        specNameValue = actorModel.skillsVig.guns.specname;
+        skillRollValue = actorModel.skillsVig.guns.roll;
+        poolType = "Vigor";
+      }
+      else if (rolledFrom === "ccWeapon") {
+        specNameValue = actorModel.skillsVig.melee.specname;
+        skillRollValue = actorModel.skillsVig.melee.roll;
+        poolType = "Vigor";
+      }
+  
+      if (skillKey === "guns" || skillKey === "melee"){
+  
+        weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
+        
+        if (!weaponPrep || weaponPrep.cancel){
+          return;
+        }
+        weaponSelected = weaponPrep.selection
+        rolledFrom = weaponSelected.rolledFrom 
+      }
+  
+      if (rolledFrom === "psiSleight") {
+        specNameValue = actorModel.skillsMox.psi.specname;
+        skillRollValue = actorModel.skillsMox.psi.roll;
+        poolType = "Moxie";
+      }
+  
+      switch (aptType) {
+        case 'int':
+          poolType = "Insight"
+          break;
+        case 'cog':
+          poolType = "Insight"
+          break;
+        case 'ref':
+          poolType = "Vigor"
+          break;
+        case 'som':
+          poolType = "Vigor"
+          break;
+        case 'wil':
+          poolType = "Moxie"
+          break;
+        case 'sav':
+          poolType = "Moxie"
+          break;
+        default:
+          break;
+      }
+  
+      switch (poolType) {
+        case 'Insight':
+          skillPoolValue = actorModel.pools.insight.value;
+          break;
+        case 'Vigor':
+          skillPoolValue = actorModel.pools.vigor.value;
+          break;
+        case 'Moxie':
+          skillPoolValue = actorModel.pools.moxie.value;
+          break;
+        default:
+          break;
+      }
       Dice.TaskCheck ({
         //Actor data
         actorWhole : actorWhole,
@@ -1198,6 +1209,8 @@ export default class EPactorSheet extends ActorSheet {
         brewStatus: game.settings.get("eclipsephase", "superBrew")
       });
     }
+    
+    }
 
   _onSkillEdit(event) {
     event.preventDefault();
@@ -1219,9 +1232,9 @@ export default class EPactorSheet extends ActorSheet {
       $(value).toggleClass("noShow");
     })
   }
-
-  _onRepRoll(dataset, actorModel) {
-    Dice.ReputationRoll(dataset, actorModel)
+  
+  _onRollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom) {
+    Dice.RollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom)
   }
 }
 

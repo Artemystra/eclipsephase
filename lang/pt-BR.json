@@ -1238,6 +1238,7 @@
             "defMinCover": "Alvo em Cobertura menor",
             "defModCover": "Alvo em Cobertura moderada",
             "defMajCover": "Alvo em Cobertura maior",
+            "defHidden": "Target is Hidden",
             "visImpMin": "Visão Prejudicada Menor",
             "visImpMaj": "Visão Prejudicada Maior",
             "blind": "Cego",
@@ -1249,7 +1250,8 @@
             "weaponFull": "Sua arma ainda está totalmente carregada.",
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
-            "weaponFixated": "Shot from Hip"
+            "weaponFixated": "Shot from Hip",
+            "fray": "Fray Ranged"
           }
         }
       }

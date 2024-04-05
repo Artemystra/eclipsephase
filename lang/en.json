@@ -1011,7 +1011,7 @@
           "damageRoll": "Damage Check",
           "swap": "Swap Result",
           "raise": "Raise Result",
-          "talentCheck": "Check"
+          "talentCheck": "Skill Check"
         },
         "button": {
           "roll": "Roll",
@@ -1292,6 +1292,7 @@
             "defMinCover": "Target in minor Cover",
             "defModCover": "Target in moderate Cover",
             "defMajCover": "Target in major Cover",
+            "defHidden": "Target is Hidden",
             "visImpMin": "Minor Visual Impairment",
             "visImpMaj": "Major Visual Impaired",
             "blind": "Blind",
@@ -1303,7 +1304,8 @@
             "weaponFull": "Your weapon is still fully loaded.",
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
-            "weaponFixated": "Shot from Hip"
+            "weaponFixated": "Shot from Hip",
+            "fray": "Fray Ranged"
           },
           "damage": {
             "physicalDamage": "My morph took damage",
