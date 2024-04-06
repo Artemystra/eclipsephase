@@ -1080,19 +1080,34 @@ export default class EPactorSheet extends ActorSheet {
     const dataset = element.dataset;
     const actorWhole = this.actor;
     const actorModel = this.actor.system;
-    let specNameValue = dataset.specname;
-    let skillRollValue = dataset.rollvalue;
-    let poolType = dataset.pooltype;
-    let aptType = dataset.apttype;
-    const flexPool = actorModel.pools.flex.value;
-    let skillPoolValue = null;
     let skillKey = dataset.key ? dataset.key.toLowerCase() : null;
     let weaponPrep = null;
     let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
     let weaponSelected = null;
     const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 
-    if(dataset.type === 'skill' && !rolledFrom) {
+    if(dataset.type === 'skill') {
+
+      if (rolledFrom === "psiSleight") {
+        skillKey = "psi";
+        dataset.rollvalue = actorModel.skillsMox.psi.roll;
+        dataset.specname = actorModel.skillsMox.psi.specname;
+        dataset.pooltype = "Moxie";
+      }
+
+      if (rolledFrom === "rangedWeapon") {
+        skillKey = "guns";
+        dataset.rollvalue = actorModel.skillsVig.guns.roll;
+        dataset.specname = actorModel.skillsVig.guns.specname;
+        dataset.pooltype = "Vigor";
+      }
+      else if (rolledFrom === "ccWeapon") {
+        skillKey = "melee";
+        dataset.rollvalue = actorModel.skillsVig.melee.roll;
+        dataset.specname = actorModel.skillsVig.melee.specname;
+        dataset.pooltype = "Vigor";
+      }
+
       if (skillKey === "guns" || skillKey === "melee"){
     
         weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
@@ -1101,113 +1116,9 @@ export default class EPactorSheet extends ActorSheet {
           return;
         }
         weaponSelected = weaponPrep.selection
-        rolledFrom = weaponSelected.rolledFrom 
+        rolledFrom = weaponSelected.rolledFrom
       }
       this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
-    }
-
-    else {
-  
-      if (rolledFrom === "rangedWeapon") {
-        specNameValue = actorModel.skillsVig.guns.specname;
-        skillRollValue = actorModel.skillsVig.guns.roll;
-        poolType = "Vigor";
-      }
-      else if (rolledFrom === "ccWeapon") {
-        specNameValue = actorModel.skillsVig.melee.specname;
-        skillRollValue = actorModel.skillsVig.melee.roll;
-        poolType = "Vigor";
-      }
-  
-      if (skillKey === "guns" || skillKey === "melee"){
-  
-        weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
-        
-        if (!weaponPrep || weaponPrep.cancel){
-          return;
-        }
-        weaponSelected = weaponPrep.selection
-        rolledFrom = weaponSelected.rolledFrom 
-      }
-  
-      if (rolledFrom === "psiSleight") {
-        specNameValue = actorModel.skillsMox.psi.specname;
-        skillRollValue = actorModel.skillsMox.psi.roll;
-        poolType = "Moxie";
-      }
-  
-      switch (aptType) {
-        case 'int':
-          poolType = "Insight"
-          break;
-        case 'cog':
-          poolType = "Insight"
-          break;
-        case 'ref':
-          poolType = "Vigor"
-          break;
-        case 'som':
-          poolType = "Vigor"
-          break;
-        case 'wil':
-          poolType = "Moxie"
-          break;
-        case 'sav':
-          poolType = "Moxie"
-          break;
-        default:
-          break;
-      }
-  
-      switch (poolType) {
-        case 'Insight':
-          skillPoolValue = actorModel.pools.insight.value;
-          break;
-        case 'Vigor':
-          skillPoolValue = actorModel.pools.vigor.value;
-          break;
-        case 'Moxie':
-          skillPoolValue = actorModel.pools.moxie.value;
-          break;
-        default:
-          break;
-      }
-      Dice.TaskCheck ({
-        //Actor data
-        actorWhole : actorWhole,
-        actorData : actorModel,
-        //Skill data
-        skillKey : skillKey,
-        skillName : dataset.name,
-        specName : specNameValue,
-        rollType : dataset.type,
-        skillValue : skillRollValue,
-        rolledFrom : rolledFrom,
-        //Pools
-        poolType: poolType,
-        poolValue: skillPoolValue,
-        flexValue: flexPool,
-        //Weapon data
-        weaponSelected : weaponSelected ? weaponSelected.weapon : null,
-        weaponID : weaponSelected ? weaponSelected.weaponID : null,
-        weaponName : weaponSelected ? weaponSelected.weaponName : null,
-        weaponDamage : weaponSelected ? weaponSelected.weaponDamage : null,
-        weaponType : weaponSelected ? weaponSelected.weaponType : null,
-        currentAmmo : weaponSelected ? weaponSelected.currentAmmo : null,
-        maxAmmo : weaponSelected ? weaponSelected.maxAmmo : null,
-        meleeDamageMod: actorModel.mods.meleeDamageMod,
-        weaponTraits : weaponSelected ? weaponSelected.weaponTraits : null,
-        //Psi
-        sleightName : dataset.sleightname,
-        sleightDescription : dataset.description,
-        sleightAction : dataset.action,
-        sleightDuration : dataset.duration,
-        sleightInfection : dataset.infection,
-        //System Options
-        askForOptions : event.shiftKey,
-        optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
-        brewStatus: game.settings.get("eclipsephase", "superBrew")
-      });
     }
     
     }
@@ -1233,8 +1144,8 @@ export default class EPactorSheet extends ActorSheet {
     })
   }
   
-  _onRollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom) {
-    Dice.RollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom)
+  _onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
+    Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
   }
 }
 

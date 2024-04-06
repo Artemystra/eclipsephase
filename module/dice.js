@@ -1,5 +1,6 @@
 import { eclipsephase } from "./config.js";
 import { damageValueCalc } from "./common/weapon-functions.js"
+import  * as pools  from "./pools.js";
 /*
  * Path constants for dialog templates
  */
@@ -16,36 +17,36 @@ const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.
  * Task result constants
  */
 export const TASK_RESULT = {
-  CRITICAL_SUCCESS: 0,
-  SUCCESS_TWO: 1,
-  SUCCESS_ONE: 2,
-  SUCCESS: 3,
-  CRITICAL_FAILURE: 4,
-  FAILURE_TWO: 5,
-  FAILURE_ONE: 6,
-  FAILURE: 7,
-  AUTOFAIL : 8,
-  AUTOSUCCESS : 9
+    FAILURE_TWO: 0,
+    FAILURE_ONE: 1,
+    FAILURE: 2,
+    SUCCESS: 3,
+    SUCCESS_ONE: 4,
+    SUCCESS_TWO: 5,
+    CRITICAL_FAILURE: 6,
+    CRITICAL_SUCCESS: 7,
+    AUTOFAIL : 8,
+    AUTOSUCCESS : 9
 }
 
-const TASK_RESULT_TEXT = {
-  0: { class: 'success', text: 'ep2e.roll.successType.criticalSuccess' },
-  1: { class: 'success', text: 'ep2e.roll.successType.superiorSuccess' },
-  2: { class: 'success', text: 'ep2e.roll.successType.greaterSuccess' },
+export const TASK_RESULT_TEXT = {
+  0: { class: 'fail', text: 'ep2e.roll.successType.superiorFailure' },
+  1: { class: 'fail', text: 'ep2e.roll.successType.greaterFailure' },
+  2: { class: 'fail', text: 'ep2e.roll.successType.failure' },
   3: { class: 'success', text: 'ep2e.roll.successType.success' },
-  4: { class: 'fail', text: 'ep2e.roll.successType.criticalFailure' },
-  5: { class: 'fail', text: 'ep2e.roll.successType.superiorFailure' },
-  6: { class: 'fail', text: 'ep2e.roll.successType.greaterFailure' },
-  7: { class: 'fail', text: 'ep2e.roll.successType.failure' },
+  4: { class: 'success', text: 'ep2e.roll.successType.greaterSuccess' },
+  5: { class: 'success', text: 'ep2e.roll.successType.superiorSuccess' },
+  6: { class: 'fail', text: 'ep2e.roll.successType.criticalFailure' },
+  7: { class: 'success', text: 'ep2e.roll.successType.criticalSuccess' },
   8: { class: 'fail', text: 'ep2e.roll.successType.supremeFailure' },
   9: { class: 'success', text: 'ep2e.roll.successType.supremeSuccess' }
 }
 
 const POOL_SUM = {
-    INS: { poolType: "Insight", skillPoolValue: "actorModel.pools.insight.value", updatePoolPath: "system.pools.insight.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
-    VIG: { poolType: "Vigor", skillPoolValue: "actorModel.pools.vigor.value", updatePoolPath: "system.pools.vigor.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
-    MOX: { poolType: "Moxie", skillPoolValue: "actorModel.pools.moxie.value", updatePoolPath: "system.pools.moxie.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
-    THR: { poolType: "Threat", skillPoolValue: "actorModel.threatLevel.current", updatePoolPath: "system.threatLevel.current", poolUsageCount: 0 },
+    INS: { poolType: "ep2e.skills.insightSkills.poolHeadline", skillPoolValue: "actorModel.pools.insight.value", updatePoolPath: "system.pools.insight.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
+    VIG: { poolType: "ep2e.skills.vigorSkills.poolHeadline", skillPoolValue: "actorModel.pools.vigor.value", updatePoolPath: "system.pools.vigor.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
+    MOX: { poolType: "ep2e.skills.moxieSkills.poolHeadline", skillPoolValue: "actorModel.pools.moxie.value", updatePoolPath: "system.pools.moxie.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
+    THR: { poolType: "ep2e.healthbar.tooltip.threat", skillPoolValue: "actorModel.threatLevel.current", updatePoolPath: "system.threatLevel.current", poolUsageCount: 0 },
 }
 
 async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
@@ -153,6 +154,49 @@ function setRollVisibility(activeRollTarget){
 }
 
 /**
+ * Checks the rolled value against the target number and returns the result
+ * @param {Number} value - The rolled value
+ * @param {Number} target - The target number
+ * @param {Number} result - The result of the roll
+ * @returns 
+ */
+export function rollCalc(value, target){
+    
+    let result
+
+    if(value <= target) {   // success results
+        if(value % 11 === 0 && value !== 99)
+          result = TASK_RESULT.CRITICAL_SUCCESS
+        else if (value === 99)
+        result = TASK_RESULT.AUTOFAIL
+        else if (value === 100)
+        result = TASK_RESULT.AUTOSUCCESS
+        else if(value > 66)
+          result = TASK_RESULT.SUCCESS_TWO
+        else if(value > 33)
+          result = TASK_RESULT.SUCCESS_ONE
+        else
+          result = TASK_RESULT.SUCCESS
+      }
+      else {                  // failure results
+        if(value % 11 === 0 && value !== 99)
+          result = TASK_RESULT.CRITICAL_FAILURE
+        else if (value === 99)
+          result = TASK_RESULT.AUTOFAIL
+        else if (value === 100)
+          result = TASK_RESULT.AUTOSUCCESS
+        else if(value < 33)
+          result = TASK_RESULT.FAILURE_TWO
+        else if(value < 66)
+          result = TASK_RESULT.FAILURE_ONE
+        else
+          result = TASK_RESULT.FAILURE
+      }
+
+      return result
+}
+
+/**
  * Localize a title string
  */
 export class Localizer{
@@ -168,9 +212,9 @@ export class Localizer{
  * TaskRoll holds all of the intermediate and calculated values for a single roll.
  */
 export class TaskRoll {
-  constructor(taskName, baseValue) {
+  constructor(taskName, baseValue, rangedFray) {
     this._taskName = taskName
-    this._baseValue = baseValue ? parseInt(baseValue) : 0
+    this._baseValue = rangedFray ? baseValue/2 : baseValue ? parseInt(baseValue) : 0
     this._modifierValue = null
     this._modifiers = []
     this._roll = null
@@ -288,32 +332,8 @@ export class TaskRoll {
 
     let target = this.totalTargetNumber
     let value = this.diceRollValue
-    let result
 
-    if(value <= target) {   // success results
-      if(value % 11 === 0 && value !== 99)
-        result = TASK_RESULT.CRITICAL_SUCCESS
-      else if(value > 66)
-        result = TASK_RESULT.SUCCESS_TWO
-      else if(value > 33)
-        result = TASK_RESULT.SUCCESS_ONE
-      else
-        result = TASK_RESULT.SUCCESS
-    }
-    else {                  // failure results
-      if(value % 11 === 0 && value !== 99)
-        result = TASK_RESULT.CRITICAL_FAILURE
-      else if (value === 99)
-        result = TASK_RESULT.AUTOFAIL
-      else if (value === 100)
-        result = TASK_RESULT.AUTOSUCCESS
-      else if(value < 33)
-        result = TASK_RESULT.FAILURE_TWO
-      else if(value < 66)
-        result = TASK_RESULT.FAILURE_ONE
-      else
-        result = TASK_RESULT.FAILURE
-    }
+    let result = rollCalc(value, target)
 
     this._result = result
   }
@@ -327,7 +347,7 @@ export class TaskRoll {
 
     let resultText = TASK_RESULT_TEXT[this._result]
 
-    
+    data.rollResult = this.diceRollValue
     data.rollMode = setRollVisibility(RollMode)
     data.visibility = RollMode
     data.resultClass = resultText.class
@@ -342,7 +362,7 @@ export class TaskRoll {
     if(this.modifiers.length > 0) {
       for(let mod of this.modifiers) {
         if(mod.value !== 0)
-          data.modifiers.push({text: mod.text, value: mod.formattedValue})
+          data.modifiers.push({text: mod.text, value: mod.formattedValue, comment: mod.comment})
       }
     }
 
@@ -375,6 +395,7 @@ export class TaskRollModifier {
    * @type {Number}
    */
   get value() {
+    console.log("This is my value: ", this._value)
     return this._value
   }
 
@@ -383,6 +404,7 @@ export class TaskRollModifier {
    * @type {String}
    */
   get comment() {
+    console.log("This is my comment: ", this._comment)
     return this._comment
   }
 
@@ -404,57 +426,6 @@ export class TaskRollModifier {
 
 
 /**
- * Perform a roll against the selected reputation network score (on the
- * selected id). Output the results to the chat log.
- *
- * FIXME - Most of this function can be abstracted when(/if) other task
- * types are converted.
- */
-export async function ReputationRoll(dataset, actorModel, actorWhole, systemOptions) {
-  let id = actorModel.ego.idSelected
-  let rep = actorModel.ego.ids[id].rep[dataset.name]
-  let repName = dataset.name
-  let repValue = parseInt(rep.value || 0)
-  let names = ['favorMod', 'globalMod', 'RollMode']
-
-  let values = await showOptionsDialog(REPUTATION_TASK_DIALOG,
-    'Reputation Roll', names)
-
-  if(values.cancelled)
-    return
-
-  let favor_mod = parseInt(values['favorMod']) || 0
-  let global_mod = parseInt(values['globalMod']) || 0
-  let RollMode = values['RollMode']
-
-  let task = new TaskRoll(`${dataset.name}`, repValue, pool)
-
-  if(global_mod !== 0)
-    task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', global_mod))
-
-  if(favor_mod !== 0)
-    task.addModifier(new TaskRollModifier('ep2e.roll.announce.favor', favor_mod))
-
-  applyHealthModifiers(actorModel, task)
-
-  await task.performRoll()
-
-  let outputData = task.outputData(RollMode)
-  let html = await renderTemplate(TASK_RESULT_OUTPUT, outputData)
-
-  let msg = task.roll.toMessage({
-    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    flavor: html
-    },{
-        rollMode: outputData.visibility
-    });
-
-    if (game.dice3d){
-        await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
-    }
-}
-
-/**
  * Performs a roll against any given skill or aptitude. Prints it's result 
  * into the chat for further usage.
  * @param {Object} dataset 
@@ -465,13 +436,12 @@ export async function ReputationRoll(dataset, actorModel, actorWhole, systemOpti
  */
 
 export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
-    console.log("This is my actorModel.pools: ", actorModel.pools)
+    let proceed
     let options = {}
     let specName = dataset.specname || "";
     let roll = defineRoll(dataset)
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type)
-
-    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole.type)
+    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole.type, weaponSelected ? weaponSelected.weaponTraits : null)
     
     if(values.cancelled)
         return
@@ -482,10 +452,10 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
     console.log("This is my options: ", options)
 
-    let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue)
+    let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
 
     if(options.usePool)
-        updatePool(options, pool, task, actorWhole)
+        pool.update(options, pool, task, actorWhole)
     
     if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
         addTaskModifiers(actorModel, options, task, roll.type, rolledFrom, weaponSelected)
@@ -496,6 +466,16 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
     console.log("This is my outputData: ", outputData)
     let html = await renderTemplate(TASK_RESULT_OUTPUT, outputData)
+
+    let alternatives = await pools.outcomeAlternatives(outputData, pool)
+
+    console.log("My alternatives: ", alternatives)
+
+    if(rolledFrom === "rangedWeapon")
+       proceed = await checkAmmo(actorWhole, weaponSelected, options.attackMode)
+
+    if(proceed === "cancel")
+        return
 
     let msg = task.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -509,108 +489,57 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     }
 }
 
-
-/** 
- * Updates the pool value of the actor based on the options selected in the dialog
- * @param {Object} options - The options selected in the dialog
- * @param {Object} task - The task object that will be rolled
- * @param {Object} actorWhole - The actor object data is being pulled from
-*/
-
-async function updatePool(options, pool, task, actorWhole){
-    
-    let poolValue
-    let poolPath
-    let poolType
-
-    if (options.usePool === "pool" || options.usePool === "poolIgnore"){
-        poolValue = pool.skillPoolValue
-        poolPath = pool.updatePoolPath
-        poolType = pool.poolType
-    }
-    else if (options.usePool === "flex" || options.usePool === "flexIgnore"){
-        poolValue = pool.flexPoolValue
-        poolPath = pool.updateFlexPath
-        poolType = "Flex"
-    }
-
-    //Checks if pool used
-    if (poolValue > 0){
-        let poolMod = 20;
-        let updateTarget = poolPath;
-        let poolUpdate = poolValue - 1;
-        let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + poolType;
-        //Determine pool to be updated
-        actorWhole.update({[updateTarget] : poolUpdate});
-
-        if(options.usePool === "pool" || options.usePool === "flex")
-            task.addModifier(new TaskRollModifier(message, poolMod))
-    }
-    else if (poolValue <= 0){
-        let message = {}
-        
-        message.type = "cantAddModifier";
-        message.poolName = await poolName(poolType);
-
-        let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
-        
-        ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            content: html,
-            whisper: [game.user._id]
-        })
-    }
-}
-
-
 /**
  * Generic dialog presenter
  * @param {string} template - Path to the html template for this dialog
  * @param {string} title - What to display in the title bar
  * @param {string[]} names - List of element ids to get values from
  */
-async function showOptionsDialog(rollData, rollType, specName, pool, actorType) {
-  const html = await renderTemplate(rollData.template, {specName, pool, actorType, rollType})
+async function showOptionsDialog(rollData, rollType, specName, pool, actorType, traits) {
 
-  function extractFormValues(html) {
+    let specialEffects
+    if(traits)
+        specialEffects = Object.keys(traits.confirmationEffects).length
+
+    const html = await renderTemplate(rollData.template, {specName, pool, actorType, rollType, traits, specialEffects})
+
+    function extractFormValues(html) {
     let form = html[0].querySelector("form")
 
     let values = {}
 
-    console.log(rollData.names["RangedFray"])
-
     for(let name of rollData.names)
-    if (form[name] === undefined){
-        values[name] = null
-    }
-    else
-    values[name] = form[name].value === "on" ? form[name].checked : form[name].value;
+        if (form[name] === undefined){
+            values[name] = null
+        }
+        else
+            values[name] = form[name].value === "on" ? form[name].checked : form[name].value;
 
-    return values
-  }
+        return values
+    }
 
   return new Promise((resolve, reject) => {
     let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
     let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
     const data = {
-      title: rollData.title,
-      content: html,
-      buttons: {
-        cancel: {
-          label: cancelButton.title,
-          callback: (html) => resolve({cancelled: true})
+        title: rollData.title,
+        content: html,
+        buttons: {
+            cancel: {
+                label: cancelButton.title,
+                callback: (html) => resolve({cancelled: true})
+            },
+            normal: {
+                label: rollButton.title,
+                callback: (html) => resolve(extractFormValues(html))
+            }
         },
-        normal: {
-          label: rollButton.title,
-          callback: (html) => resolve(extractFormValues(html))
-        }
-      },
-      default: 'normal',
-      close: () => resolve({cancelled: true})
+        default: 'normal',
+        close: () => resolve({cancelled: true})
     }
     let options = rollData.templateSize
     new Dialog(data, options).render(true);
-  })
+    })
 }
 
 /**
@@ -626,12 +555,12 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
     let weaponTraits = weaponSelected ? weaponSelected.weaponTraits : null
     let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
     let trauma = 10*parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0)
+    
+    if(options.rangedFray)
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
 
     if(options.globalMod)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', eval(options.globalMod)))
-
-    if(options.rangedFray)
-        task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', "Skill Value Halved"))
 
     if(options.useSpec === true)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.specialization', 10))
@@ -874,7 +803,6 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
         announce = "ep2e.roll.announce.combat.ranged.ammoSkillModifier";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-
     if (rolledFrom === "rangedWeapon"){
         if (!options.weaponFixated && weaponTraits.confirmationEffects.fixed){
             modValue = -20
@@ -885,8 +813,62 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
 
 }
 
+async function checkAmmo(actorWhole, weaponSelected, attackMode){
 
+    let updateAmmo
+    let ammoUpdate = [] 
+    const multiShot = Number(weaponSelected.weaponTraits.additionalEffects.multiShot ? weaponSelected.weaponTraits.additionalEffects.multiShot.number : 1)
 
+    if (attackMode === "single") {
+        updateAmmo = weaponSelected.currentAmmo - (1 * multiShot);
+    }
+    else if (attackMode === "burst") {
+        updateAmmo = weaponSelected.currentAmmo - (3 * multiShot);
+    }
+    else if (attackMode === "fullAuto"){
+        updateAmmo = weaponSelected.currentAmmo - (10 * multiShot);
+    }
+    else if (attackMode === "wBurst") {
+        updateAmmo = weaponSelected.currentAmmo - (3 * multiShot);
+    }
+    else if (attackMode === "wFullAuto") {
+        updateAmmo = weaponSelected.currentAmmo - (10 * multiShot);
+    }
+    else if (attackMode === "suppressive") {
+        updateAmmo = weaponSelected.currentAmmo - (20 * multiShot);
+    }
+    //Rolls only if the weapon has enough amunition & updates the ammo accordingly
+    if (updateAmmo>=0){
+    
+        ammoUpdate.push({
+            "_id" : weaponSelected.weaponID,
+            "system.ammoMin": updateAmmo
+        });
+    
+        //This updates the items ammunition
+        actorWhole.updateEmbeddedDocuments("Item", ammoUpdate);
+    }
+    
+    else {
+    
+        let message = {}
+        console.log("This is my weaponSelected: ", weaponSelected)
+        message.type = "reload";
+        message.copy = "ep2e.roll.announce.combat.ranged.reloadNeeded";
+        message.weaponName = weaponSelected.weaponName;
+        message.ammoLoadedName = weaponSelected.weapon.system.ammoSelected.name
+    
+        let html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+    
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor: actorWhole}),
+            content: html,
+            whisper: [game.user._id]
+        })
+
+        return "cancel"
+    }
+}
 
 
 

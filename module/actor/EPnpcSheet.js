@@ -549,19 +549,39 @@ export default class EPnpcSheet extends ActorSheet {
 
     async _onTaskCheck(event) {
         event.preventDefault();
-        event.preventDefault();
+
         const element = event.currentTarget;
         const dataset = element.dataset;
         const actorWhole = this.actor;
         const actorModel = this.actor.system;
-        const flexPool = actorModel.pools.flex.value;
         let skillKey = dataset.key ? dataset.key.toLowerCase() : null;
         let weaponPrep = null;
         let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
         let weaponSelected = null;
         const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
-
-        if(dataset.type === 'skill' && !rolledFrom) {
+    
+        if(dataset.type === 'skill') {
+    
+          if (rolledFrom === "psiSleight") {
+            skillKey = "psi";
+            dataset.rollvalue = actorModel.skillsMox.psi.roll;
+            dataset.specname = actorModel.skillsMox.psi.specname;
+            dataset.pooltype = "Moxie";
+          }
+    
+          if (rolledFrom === "rangedWeapon") {
+            skillKey = "guns";
+            dataset.rollvalue = actorModel.skillsVig.guns.roll;
+            dataset.specname = actorModel.skillsVig.guns.specname;
+            dataset.pooltype = "Vigor";
+          }
+          else if (rolledFrom === "ccWeapon") {
+            skillKey = "melee";
+            dataset.rollvalue = actorModel.skillsVig.melee.roll;
+            dataset.specname = actorModel.skillsVig.melee.specname;
+            dataset.pooltype = "Vigor";
+          }
+    
           if (skillKey === "guns" || skillKey === "melee"){
         
             weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
@@ -570,11 +590,11 @@ export default class EPnpcSheet extends ActorSheet {
               return;
             }
             weaponSelected = weaponPrep.selection
-            rolledFrom = weaponSelected.rolledFrom 
           }
-          this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
+          this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, weaponSelected.rolledFrom)
         }
-    }
+        
+        }
 
     _onSkillEdit(event) {
         event.preventDefault();
@@ -597,8 +617,8 @@ export default class EPnpcSheet extends ActorSheet {
         })
     }
     
-    _onRollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom) {
-      Dice.RollCheck(dataset, actorModel, systemOptions, weaponSelected, rolledFrom)
+    _onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
+      Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }
 
 }
