@@ -591,8 +591,9 @@ export default class EPgoonSheet extends ActorSheet {
               return;
             }
             weaponSelected = weaponPrep.selection
+            rolledFrom = weaponSelected.rolledFrom
           }
-          this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, weaponSelected.rolledFrom)
+          this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
         }
         
         }

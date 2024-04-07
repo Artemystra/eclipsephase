@@ -411,7 +411,14 @@
         "numberWounds": "Wounds to Ignore",
         "numberTrauma": "Trauma to Ignore",
         "repSize": "Size of Favor",
-        "ignoreModifiers": "Ignore All Modifiers"
+        "ignoreModifiers": "Ignore All Modifiers",
+        "use": {
+          "insight": "Use Insight",
+          "vigor": "Use Vigor",
+          "moxie": "Use Moxie",
+          "threat": "Use Threat",
+          "flex": "Use Flex"
+        }
       },
       "addSkill": "Add Skill",
       "chooseAptitude": "Choose Apt",

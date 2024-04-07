@@ -814,6 +814,16 @@ a.content-link, a.inline-roll {
   color: var(--mainText);
 }
 
+
+.chatPoolButton {
+  max-width: 45%;
+}
+
+.threatButton{
+  max-width: 100%;
+
+}
+
 .prosemirror menu .pm-dropdown ul {
   background: var(--highlightBackground);
   border: none;

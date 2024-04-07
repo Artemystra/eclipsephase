@@ -1,6 +1,38 @@
 import { eclipsephase } from "./config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT, TASK_RESULT_TEXT } from "./dice.js";
 
+const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
+
+/**
+ * 
+ * @param {Object} data 
+ */
+export async function usePoolFromChat(data){
+    const dataset = data.currentTarget.dataset;
+    console.log("dataset: ", dataset)
+    const pool = {skillPoolValue: dataset.skillpoolvalue ? parseInt(dataset.skillpoolvalue) : 0, flexPoolValue: dataset.flexpoolvalue ? parseInt(dataset.flexpoolvalue) : 0, updatePoolPath : dataset.updatepoolpath ? dataset.updatepoolpath : "", updateFlexPath : dataset.updateflexpath ? dataset.updateflexpath : "", poolType: dataset.pooltype ? dataset.pooltype : ""}
+    const options = {usePool: dataset.usepool}
+    const actor = game.actors.get(dataset.actorid)
+
+    update(options, pool, null, actor)
+
+    let message = {}
+          
+    message.resultText = dataset.resulttext;
+    
+    message.type = dataset.usagetype;
+    message.newResult = dataset.newresult ? parseInt(dataset.newresult) : false;
+    message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
+
+    let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+
+    ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({actor: actor}),
+        flavor: html
+    })
+
+}
+
 /** 
  * Updates the pool value of the actor based on the options selected in the dialog
  * @param {Object} options - The options selected in the dialog
@@ -8,7 +40,6 @@ import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT, TASK_RESULT_TEXT } f
  * @param {Object} actorWhole - The actor object data is being pulled from
 */
 export async function update(options, pool, task, actorWhole){
-    
     let poolValue
     let poolPath
     let poolType
@@ -33,7 +64,7 @@ export async function update(options, pool, task, actorWhole){
         //Determine pool to be updated
         actorWhole.update({[updateTarget] : poolUpdate});
 
-        if(options.usePool === "pool" || options.usePool === "flex")
+        if(options.usePool === "pool" && task || options.usePool === "flex" && task)
             task.addModifier(new TaskRollModifier(message, poolMod))
     }
     else if (poolValue <= 0){
@@ -45,46 +76,70 @@ export async function update(options, pool, task, actorWhole){
         let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
         
         ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            speaker: ChatMessage.getSpeaker({actor: actorWhole}),
             content: html,
             whisper: [game.user._id]
         })
     }
 }
 
+/**
+ * Analyses the outcome of the roll and determines whether swapping, upgrading or mitigating is the best course of action
+ * @param {Object} outputData - The data from the roll
+ * @param {Object} pool - The pool object bound to the roll
+ * @returns - An object containing the outcome of the analysis
+ */
 export async function outcomeAlternatives(outputData, pool){
-    let swap = {options: {possible: false, upgrade: false, mitigate: false}} 
-    swap.value = eval(await swapDice(outputData.rollResult));
-    swap.result =  rollCalc(swap.value, outputData.targetNumber)
-    swap.originalResult = rollCalc(outputData.rollResult, outputData.targetNumber)
-    swap.resultClass = TASK_RESULT_TEXT[swap.result].class
-    swap.resultText = TASK_RESULT_TEXT[swap.result].text
-    swap.pools = pool
-    swap.pools.available = Boolean(swap.pools.skillPoolValue + swap.pools.flexPoolValue > 0) 
+    let obj = {options: {swap: false, upgrade: false, mitigate: false}} 
+    obj.value = await swapDice(outputData.rollResult);
+    obj.result =  rollCalc(obj.value, outputData.targetNumber)
+    obj.originalResult = rollCalc(outputData.rollResult, outputData.targetNumber)
+    obj.resultClass = TASK_RESULT_TEXT[obj.result].class
+    obj.resultText = TASK_RESULT_TEXT[obj.result].text
+    obj.pools = pool
+    obj.pools.available = Boolean(obj.pools.skillPoolValue + obj.pools.flexPoolValue > 0) 
 
     if(outputData.resultClass === "success"){
-        console.log("swap-result > original-result: ", (swap.result > swap.originalResult), "swap.result + 1 < 6: ", ((swap.originalResult + 1) < 6), "swap.pools.available: ", swap.pools.available)
-        if(swap.resultClass === "success" && (swap.result > swap.originalResult) && swap.pools.available)
-            swap.options["possible"] = true
+        console.log("swap-result > original-result: ", (obj.result > obj.originalResult), "obj.result + 1 < 6: ", ((obj.originalResult + 1) < 6), "obj.pools.available: ", obj.pools.available)
+        if(obj.resultClass === "success" && (obj.result > obj.originalResult) && obj.pools.available)
+            obj.options["swap"] = true
         
-        if(((swap.originalResult + 1) < 6)  && swap.pools.available)
-            swap.options["upgrade"] = true
+        else if(((obj.originalResult + 1) < 6)  && obj.pools.available){
+            obj.options["upgrade"] = true
+            obj["resultText"] = TASK_RESULT_TEXT[(obj.originalResult+1)].text
+         }   
         
+        else if(obj.resultClass === "success" && obj.originalResult === 5 && obj.pools.available)
+            obj.options["swap"] = true
     }
-    else if(outputData.class === "fail"){
+    else if(outputData.resultClass === "fail"){
+        
+        if((obj.result > obj.originalResult) && obj.pools.available)
+            obj.options["swap"] = true
+        
+        else if(((obj.originalResult + 1) < 3)  && obj.pools.available){
+            obj.options["mitigate"] = true
+            obj["resultText"] = TASK_RESULT_TEXT[(obj.originalResult+1)].text
+        }
+
+        else if(outputData.rollResult % 11 === 0 && obj.pools.available){
+            obj["resultText"] = TASK_RESULT_TEXT[0].text
+            obj.options["mitigate"] = true
+        }
+
+        else if(obj.originalResult === 0 && (obj.value > obj.rollResult) && obj.pools.available)
+            obj.options["swap"] = true
 
     }
 
-    return swap
+    return obj
 }
 
 //SwipSwap Dice
 async function swapDice(str){
     if (str<10){
-        return str + "0"
+        return eval(str + "0")
     }
     let string = str.toString()
-    let first = string[0];
-    let last = string[1];
-    return last+first;
+    return parseInt(string[1] + string[0]);
 }

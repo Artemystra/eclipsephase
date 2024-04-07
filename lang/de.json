@@ -409,7 +409,14 @@
       "considerResting": "Du kannst ihn mit einer 'Ausruhen'-Aktion wieder füllen",
       "numberWounds": "Anzahl Wunden zu ignorieren",
       "numberTrauma": "Anzahl Trauma zu ignorieren",
-      "repSize": "Größe des Gefallens"
+      "repSize": "Größe des Gefallens",
+      "use": {
+        "insight": "Insight Nutzen",
+        "vigor": "Vigor Nutzen",
+        "moxie": "Moxie Nutzen",
+        "threat": "Threat Nutzen",
+        "flex": "Flex Nutzen"
+      }
       },
       "addSkill": "Skill",
       "chooseAptitude": "Anlage Wählen",

@@ -379,7 +379,14 @@
         "considerResting": "Consider using a 'rest'-action",
         "numberWounds": "Wounds to Ignore",
         "numberTrauma": "Trauma to Ignore",
-        "repSize": "Size of Favor"
+        "repSize": "Size of Favor",
+        "use": {
+          "insight": "Use Insight",
+          "vigor": "Use Vigor",
+          "moxie": "Use Moxie",
+          "threat": "Use Threat",
+          "flex": "Use Flex"
+        }
       },
       "addSkill": "Add Skill",
       "chooseAptitude": "Choose Apt",

@@ -380,7 +380,14 @@
         "considerResting": "Considere usar uma ação de 'descanso'",
         "numberWounds": "Ferimentos para Ignorar",
         "numberTrauma": "Traumas para Ignorar",
-        "repSize": "Tamanho do Favor"
+        "repSize": "Tamanho do Favor",
+        "use": {
+          "insight": "Use Insight",
+          "vigor": "Use Vigor",
+          "moxie": "Use Moxie",
+          "threat": "Use Threat",
+          "flex": "Use Flex"
+        }
       },
       "addSkill": "Adicionar Perícia",
       "chooseAptitude": "Escolher Apt",

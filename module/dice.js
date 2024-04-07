@@ -43,10 +43,10 @@ export const TASK_RESULT_TEXT = {
 }
 
 const POOL_SUM = {
-    INS: { poolType: "ep2e.skills.insightSkills.poolHeadline", skillPoolValue: "actorModel.pools.insight.value", updatePoolPath: "system.pools.insight.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
-    VIG: { poolType: "ep2e.skills.vigorSkills.poolHeadline", skillPoolValue: "actorModel.pools.vigor.value", updatePoolPath: "system.pools.vigor.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
-    MOX: { poolType: "ep2e.skills.moxieSkills.poolHeadline", skillPoolValue: "actorModel.pools.moxie.value", updatePoolPath: "system.pools.moxie.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
-    THR: { poolType: "ep2e.healthbar.tooltip.threat", skillPoolValue: "actorModel.threatLevel.current", updatePoolPath: "system.threatLevel.current", poolUsageCount: 0 },
+    INS: { poolType: "ep2e.skills.insightSkills.poolHeadline", useMessage: "ep2e.skills.pool.use.insight", skillPoolValue: "actorModel.pools.insight.value", updatePoolPath: "system.pools.insight.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
+    VIG: { poolType: "ep2e.skills.vigorSkills.poolHeadline", useMessage: "ep2e.skills.pool.use.vigor", skillPoolValue: "actorModel.pools.vigor.value", updatePoolPath: "system.pools.vigor.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
+    MOX: { poolType: "ep2e.skills.moxieSkills.poolHeadline", useMessage: "ep2e.skills.pool.use.moxie", skillPoolValue: "actorModel.pools.moxie.value", updatePoolPath: "system.pools.moxie.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
+    THR: { poolType: "ep2e.healthbar.tooltip.threat", useMessage: "ep2e.skills.pool.use.threat", skillPoolValue: "actorModel.threatLevel.current", updatePoolPath: "system.threatLevel.current", flexPoolValue: 0, poolUsageCount: 0 },
 }
 
 async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
@@ -102,7 +102,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
         }
     }
     console.log("This is my pool: ", pool)
-    let calcPool = {poolType: pool.poolType, skillPoolValue: eval(pool.skillPoolValue), updatePoolPath: pool.updatePoolPath, flexPoolValue: eval(pool.flexPoolValue), updateFlexPath: pool.updateFlexPath, poolUsageCount: pool.poolUsageCount}
+    let calcPool = {poolType: pool.poolType, useMessage: pool.useMessage, skillPoolValue: eval(pool.skillPoolValue), updatePoolPath: pool.updatePoolPath, flexPoolValue: eval(pool.flexPoolValue), updateFlexPath: pool.updateFlexPath, poolUsageCount: pool.poolUsageCount}
 
     return calcPool
 }
@@ -342,10 +342,14 @@ export class TaskRoll {
   /**
    * Format all of the output data so the output partial understands it.
    */
-  outputData(RollMode) {
+  outputData(RollMode, actorWhole, pool) {
     let data = {}
 
     let resultText = TASK_RESULT_TEXT[this._result]
+
+    data.actor = actorWhole
+
+    data.pools = pool
 
     data.rollResult = this.diceRollValue
     data.rollMode = setRollVisibility(RollMode)
@@ -455,21 +459,21 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
 
     if(options.usePool)
-        pool.update(options, pool, task, actorWhole)
+        pool.update(options.usePool, pool, task, actorWhole)
     
     if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
         addTaskModifiers(actorModel, options, task, roll.type, rolledFrom, weaponSelected)
     
     await task.performRoll()
 
-    let outputData = task.outputData(options.rollMode)
+    let outputData = task.outputData(options.rollMode, actorWhole, pool)
+
+    outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
 
     console.log("This is my outputData: ", outputData)
     let html = await renderTemplate(TASK_RESULT_OUTPUT, outputData)
 
-    let alternatives = await pools.outcomeAlternatives(outputData, pool)
-
-    console.log("My alternatives: ", alternatives)
+    console.log("My alternatives: ", outputData.alternatives)
 
     if(rolledFrom === "rangedWeapon")
        proceed = await checkAmmo(actorWhole, weaponSelected, options.attackMode)

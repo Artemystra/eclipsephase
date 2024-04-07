@@ -14,8 +14,83 @@
     <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.announce.infectionRaise"}} <strong>{{infection}}</strong></h5><p>
   {{/if}}
 
-  <p></p><div style="display: flex; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground); align-items: center; justify-content: center;">
-    <span class="{{resultClass}}">{{localize resultText}}</span> <p>
+  <p></p><div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
+    <span class="{{resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize resultText}}</span> <p>
+      <div class="item poolButtons" style="min-width: 100%; cursor: pointer; background-color: var(--mainBackground);" data-ownerid={{actor._id}}>
+        {{#if alternatives.options.swap}}
+        <div class="slideShow">
+          <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
+            <strong>Swap Result <i class="fa-solid fa-rotate"></i></strong>
+          </div>
+        </div>
+        <div class="showMore noShow">
+          <div style="display: flex; min-width: 100%; justify-content: space-between; padding: 10px 10px;">
+            {{#if (eq actor.type "character")}}
+              {{#if (gt pools.skillPoolValue 0)}}
+                <button class="chatPoolButton usePool" data-actorid="{{actor._id}}" data-usepool="pool" data-usagetype="swapped" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}">{{localize pools.useMessage}}</button>
+              {{else}}
+                <button class="chatPoolButton" disabled>{{localize pools.useMessage}}</button>
+              {{/if}}
+              {{#if (gt pools.flexPoolValue 0)}}
+                <button class="chatPoolButton usePool" data-actorid="{{actor._id}}" data-usepool="flex" data-usagetype="swapped" data-updateflexpath="{{pools.updateFlexPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-flexpoolvalue="{{pools.flexPoolValue}}">{{localize "ep2e.skills.pool.use.flex"}}</button>
+              {{else}}
+                <button class="chatPoolButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
+              {{/if}}
+            {{else}}
+                <button class="chatPoolButton threatButton usePool" data-actorid="{{actor._id}}" data-usepool="pool" data-usagetype="swapped" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}" data-newresult="{{alternatives.result}}">{{localize pools.useMessage}}</button>
+            {{/if}}
+          </div>
+        </div>
+        {{else if alternatives.options.upgrade}}
+        <div class="slideShow">
+          <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
+            <strong>Upgrade Result <i class="fa-regular fa-circle-up"></i></strong>
+          </div>
+        </div>
+        <div class="showMore noShow">
+          <div style="display: flex; min-width: 100%; justify-content: space-between; padding: 10px 10px;">
+            {{#if (eq actor.type "character")}}
+              {{#if (gt pools.skillPoolValue 0)}}
+                <button class="chatPoolButton usePool" data-actorid="{{actor._id}}" data-usepool="pool" data-usagetype="upgraded" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}">{{localize pools.useMessage}}</button>
+              {{else}}
+                <button class="chatPoolButton" disabled>{{localize pools.useMessage}}</button>
+              {{/if}}
+              {{#if (gt pools.flexPoolValue 0)}}
+                <button class="chatPoolButton usePool" data-actorid="{{actor._id}}" data-usepool="flex" data-usagetype="upgraded" data-updateflexpath="{{pools.updateFlexPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-flexpoolvalue="{{pools.flexPoolValue}}">{{localize "ep2e.skills.pool.use.flex"}}</button>
+              {{else}}
+                <button class="chatPoolButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
+              {{/if}}
+            {{else}}
+                <button class="chatPoolButton threatButton usePool" data-actorid="{{actor._id}}" data-usepool="pool" data-usagetype="upgraded" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}">{{localize pools.useMessage}}</button>
+            {{/if}}
+          </div>
+        </div>
+        {{else if alternatives.options.mitigate}}
+        <div class="slideShow">
+          <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
+            <strong>Mitigate Result <i class="fa-solid fa-bolt"></i></strong>
+          </div>
+        </div>
+        <div class="showMore noShow">
+          <div style="display: flex; min-width: 100%; justify-content: space-between; padding: 10px 10px;">
+            {{#if (eq actor.type "character")}}
+              {{#if (gt pools.skillPoolValue 0)}}
+                <button class="chatPoolButton usePool" data-actorid="{{actor._id}}" data-usepool="pool" data-usagetype="mitigated" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}">{{localize pools.useMessage}}</button>
+              {{else}}
+                <button class="chatPoolButton" disabled>{{localize pools.useMessage}}</button>
+              {{/if}}
+              {{#if (gt pools.flexPoolValue 0)}}
+                <button class="chatPoolButton usePool" data-actorid="{{actor._id}}" data-usepool="flex" data-usagetype="mitigated" data-updateflexpath="{{pools.updateFlexPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-flexpoolvalue="{{pools.flexPoolValue}}">{{localize "ep2e.skills.pool.use.flex"}}</button>
+              {{else}}
+                <button class="chatPoolButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
+              {{/if}}
+            {{else}}
+                <button class="chatPoolButton threatButton usePool" data-actorid="{{actor._id}}" data-usepool="pool" data-usagetype="mitigated" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}">{{localize pools.useMessage}}</button>
+            {{/if}}
+          </div>
+        </div>
+        {{/if}}
+      </div>
   </div>
 
   {{#if modifiers}}

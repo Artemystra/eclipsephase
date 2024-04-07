@@ -378,7 +378,14 @@
         "considerResting": "考虑使用“休息”动作",
         "numberWounds": "忽视的损伤数",
         "numberTrauma": "忽视的创伤数",
-        "repSize": "支援等级"
+        "repSize": "支援等级",
+        "use": {
+          "insight": "Use Insight",
+          "vigor": "Use Vigor",
+          "moxie": "Use Moxie",
+          "threat": "Use Threat",
+          "flex": "Use Flex"
+        }
       },
       "addSkill": "添加技能",
       "chooseAptitude": "选择属性",
