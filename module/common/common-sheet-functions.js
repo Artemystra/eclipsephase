@@ -81,6 +81,14 @@ export function registerCommonHandlers(html,callerobj){
         last.toggleClass("noShow").toggleClass("showFlex");
         target.slideToggle(200).toggleClass("showFlex");
     });
+
+    
+    //Auto-close parent item
+    html.find(".autoClose").click(ev => {
+      const current = $(ev.currentTarget);
+      const parent = current.closest(".showMore").toggleClass("showFlex").toggleClass("noShow");
+      parent.slideToggle(200);
+  });
     
     // Custom Droplists (for pools)
     

@@ -105,35 +105,36 @@
 </div>
 {{/if}}
 {{#if (eq rollType "psi")}}
-<div class="contentBoxMargin">
-    <div class="flexrow subheader">
-        <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.infectionHeadline"}}</h3>
-    </div>
-    {{#if (eq rolledFrom "psiSleight")}}
-    <div class="form-group listBackgroundMain">
-        <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.baseCostLabel"}}</label>
-        <input type="number" name="aspectNumber" placeholder="0" value="{{sleightInfection}}" disabled/>
-    </div>
-    {{else}}
-    <div class="form-group listBackgroundMain">
-        <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.baseCostLabel"}}</label>
-        <input type="number" name="aspectNumber" placeholder="0"/>
-    </div>
-    {{/if}}
-    <div class="form-group listBackgroundMain">
-        <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.push.label"}}</label>
-        <select name="push">
-            <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
-            <option value="range">{{localize "ep2e.roll.dialog.push.range"}}</option>
-            <option value="effect">{{localize "ep2e.roll.dialog.push.effect"}}</option>
-            <option value="power">{{localize "ep2e.roll.dialog.push.power"}}</option>
-            <option value="penetration">{{localize "ep2e.roll.dialog.push.penetration"}}</option>
-            <option value="duration">{{localize "ep2e.roll.dialog.push.duration"}}</option>
-            <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
-        </select>
-    </div>
-    {{#if (eq actorType "character")}}
-        {{#if poolValue}}
+    {{#if (ne actorType "goon")}}
+    <div class="contentBoxMargin">
+        <div class="flexrow subheader">
+            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.infectionHeadline"}}</h3>
+        </div>
+        {{#if (eq rolledFrom "psiSleight")}}
+        {{log rollData}}
+        <div class="form-group listBackgroundMain">
+            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.baseCostLabel"}}</label>
+            <input type="number" name="aspectNumber" placeholder="0" value="{{rollData.sleight.infection}}" disabled/>
+        </div>
+        {{else}}
+        <div class="form-group listBackgroundMain">
+            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.baseCostLabel"}}</label>
+            <input type="number" name="aspectNumber" placeholder="0"/>
+        </div>
+        {{/if}}
+        <div class="form-group listBackgroundMain">
+            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.push.label"}}</label>
+            <select name="push">
+                <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                <option value="range">{{localize "ep2e.roll.dialog.push.range"}}</option>
+                <option value="effect">{{localize "ep2e.roll.dialog.push.effect"}}</option>
+                <option value="power">{{localize "ep2e.roll.dialog.push.power"}}</option>
+                <option value="penetration">{{localize "ep2e.roll.dialog.push.penetration"}}</option>
+                <option value="duration">{{localize "ep2e.roll.dialog.push.duration"}}</option>
+                <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
+            </select>
+        </div>
+        {{#if pool.skillPoolValue}}
         <div class="form-group listBackgroundMain">
             <input type="checkbox" name="ignoreInfection">
             <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ignoreInfection"}}<br>(1 {{localize pool.poolType}})</label>
@@ -144,20 +145,8 @@
             <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
         </div>
         {{/if}}
-    {{else if (eq actorType "npc")}}
-        {{#if poolValue}}
-        <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="ignoreInfection">
-            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ignoreInfection"}}<br>(1 {{localize pool.poolType}})</label>
-        </div>
-        {{else}}
-        <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="ignoreInfection" disabled>
-            <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
-        </div>
-        {{/if}}
+    </div>
     {{/if}}
-</div>
 {{/if}}
 <div class="contentBoxMargin">
     <div class="flexrow subheader">

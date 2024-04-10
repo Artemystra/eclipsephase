@@ -1,4 +1,4 @@
-import * as Dice from "../dice.js"
+import * as Dice from "../rolls/dice.js"
 import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo, healthBarChange } from "../common/common-sheet-functions.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";

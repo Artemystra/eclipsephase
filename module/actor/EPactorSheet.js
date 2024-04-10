@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo, healthBarChange} from "../common/common-sheet-functions.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
-import * as Dice from "../dice.js";
+import * as Dice from "../rolls/dice.js";
 import itemRoll from "../item/EPitem.js";
 
 
@@ -1118,6 +1118,7 @@ export default class EPactorSheet extends ActorSheet {
         weaponSelected = weaponPrep.selection
         rolledFrom = weaponSelected.rolledFrom
       }
+
       this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }
     

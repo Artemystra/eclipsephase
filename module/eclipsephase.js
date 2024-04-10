@@ -1,6 +1,6 @@
 // Import Modules
 // const util = require('util');
-import * as EPchat from "./chat.js";
+import * as EPchat from "./rolls/chat.js";
 import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
