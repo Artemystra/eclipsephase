@@ -819,6 +819,11 @@ a.content-link, a.inline-roll {
   max-width: 45%;
 }
 
+.chatActionButton {
+  max-width: 85%;
+  margin: 10px 0;
+}
+
 .threatButton{
   max-width: 100%;
 

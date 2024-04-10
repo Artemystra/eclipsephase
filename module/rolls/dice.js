@@ -2,17 +2,17 @@ import { eclipsephase } from "../config.js";
 import { damageValueCalc } from "../common/weapon-functions.js"
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
+
 /*
  * Path constants for dialog templates
  */
-const REPUTATION_TASK_DIALOG = 'systems/eclipsephase/templates/chat/rep-test-dialog.html'
-const TASK_CHECK_DIALOG_TEMPLATE = "systems/eclipsephase/templates/chat/skill-test-dialog.html"
-const GUNS_TASK_DIALOG = "systems/eclipsephase/templates/chat/gun-test-dialog.html"
-const MELEE_TASK_DIALOG = "systems/eclipsephase/templates/chat/melee-test-dialog.html"
-const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
-const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
-const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
-const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
+export const TASK_CHECK_DIALOG_TEMPLATE = "systems/eclipsephase/templates/chat/skill-test-dialog.html"
+export const GUNS_TASK_DIALOG = "systems/eclipsephase/templates/chat/gun-test-dialog.html"
+export const MELEE_TASK_DIALOG = "systems/eclipsephase/templates/chat/melee-test-dialog.html"
+export const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-result.html'
+export const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
+export const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
+export const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
 
 /*
  * Task result constants
@@ -110,7 +110,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
 function defineRoll(dataset, actorWhole){
     
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'aspectNumber', 'push', 'ignoreInfection', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode']
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'ignoreInfection', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode']
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -127,7 +127,6 @@ function defineRoll(dataset, actorWhole){
             sleight.description = sleightItem.system.description
             sleight.action = sleightItem.system.actionName
             sleight.duration = sleightItem.system.durationName
-            sleight.infection = sleightItem.system.infection
             }
           break;
         case 'guns':
@@ -348,18 +347,20 @@ export class TaskRoll {
   /**
    * Format all of the output data so the output partial understands it.
    */
-  outputData(RollMode, actorWhole, pool, sleight, rolledFrom) {
+  outputData(options, actorWhole, pool, sleight, rolledFrom) {
     let data = {}
 
     let resultText = TASK_RESULT_TEXT[this._result]
 
+    data.userID = game.user._id
     data.actor = actorWhole
     data.rolledFrom = rolledFrom
+    data.options = options
 
     data.pools = pool
 
     data.rollResult = this.diceRollValue
-    data.rollMode = setRollVisibility(RollMode)
+    data.rollMode = options ? setRollVisibility(options.rollMode) : false
     data.resultClass = resultText.class
     data.resultText = resultText.text
 
@@ -468,14 +469,14 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         pools.update(options.usePool, pool, task, actorWhole)
 
     if(roll.type === "psi")
-        psi.infectionUpdate(actorWhole, options, pool)
+        options.totalInfection = await psi.infectionUpdate(actorWhole, options, pool)
     
     if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
         addTaskModifiers(actorModel, options, task, roll.type, rolledFrom, weaponSelected)
     
     await task.performRoll()
 
-    let outputData = task.outputData(options.rollMode, actorWhole, pool, roll.sleight, rolledFrom)
+    let outputData = task.outputData(options, actorWhole, pool, roll.sleight, rolledFrom)
 
     outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
 
@@ -499,8 +500,8 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
     }
 
-    if (!outputData.alternatives.options.available && outputData.taskName === "Psi")
-        psi.rollPsiEffect()
+    if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon")
+        psi.rollPsiEffect(actorWhole, game.user._id, options.push)
 }
 
 /**

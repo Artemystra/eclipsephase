@@ -997,9 +997,9 @@
           "penetration": "Penetration",
           "duration": "Duration",
           "target": "Additional Target",
-          "infectionDamage": "The Infection damages you for",
+          "infectionDamage": "The Infection damages you",
           "infectionInfluence": "The Infection influences you",
-          "infectionTries": "The Infection fastens it's grip",
+          "infectionTries": "The Infection tries to take over",
           "effectReceived": "Effect received"
         },
         "ignoreInfection": "Ignore Infection",
@@ -1323,6 +1323,9 @@
             "trauma": "Trauma"
           }
         }
+      },
+      "psi": {
+        "rollButtonLabel": "Roll Psi Infection"
       }
     },
     "rule": {

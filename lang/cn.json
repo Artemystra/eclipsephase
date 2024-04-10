@@ -1253,6 +1253,9 @@
             "fray": "Fray Ranged"
           }
         }
+      },
+      "psi": {
+        "rollButtonLabel": "Determine Infection Effect"
       }
     },
     "rule": {

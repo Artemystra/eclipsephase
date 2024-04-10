@@ -987,7 +987,7 @@
           "target": "Zusätzliches Ziel",
           "infectionDamage": "Die Infektion schadet dir",
           "infectionInfluence": "Die Infektion nimmt Einfluss",
-          "infectionTries": "Die Infektion wird stärker",
+          "infectionTries": "Die Infektion rebelliert",
           "effectReceived": "Effekt erhalten"
         },
         "ignoreInfection": "Infektion ignorieren",
@@ -1307,6 +1307,9 @@
             "trauma": "Trauma"
           }
         }
+      },
+      "psi": {
+        "rollButtonLabel": "Psi-Infektion Würfeln"
       }
     },
     "rule": {
