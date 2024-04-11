@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT} from "./dice.js";
+import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat} from "./dice.js";
 import * as pools from "./pools.js";
 import { gmList } from "./chat.js";
 
@@ -8,8 +8,7 @@ export function preparePsi(data){
     const dataset = data.currentTarget.dataset;
     const actorWhole = game.actors.get(dataset.actorid);
     const psiOwner = dataset.userid
-    const push = dataset.psipush
-
+    const push = dataset.psipush === "false" ? false : dataset.psipush;
     rollPsiEffect(actorWhole, psiOwner, push)
 }
 
@@ -41,7 +40,10 @@ export async function rollPsiEffect(actorWhole, psiOwner, push){
 
     const actorModel = actorWhole.system;
     const recipientList = gmList();
-    recipientList.push(psiOwner)
+    if(!recipientList.includes(psiOwner))
+        recipientList.push(psiOwner)
+
+    const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionTries");
 
     let infectionMod = actorModel.psiStrain.infection;
     let physicalDamageRoll = null;
@@ -49,42 +51,33 @@ export async function rollPsiEffect(actorWhole, psiOwner, push){
     let woundUpdate = actorWhole.system.physical.wounds;
     let death = actorWhole.system.health.death.max + actorWhole.system.health.physical.max
     let woundThreshold = actorWhole.system.physical.wt
-    let d6 = {total: null};
+    let d6 = {}
 
     //Success check of the virus
-    let task = new TaskRoll("Psi Virus", infectionMod, false)
+    let task = new TaskRoll(game.i18n.localize("ep2e.roll.dialog.push.infectionTakeover"), infectionMod, false)
 
     await task.performRoll()
 
     let outputData = task.outputData(false, actorWhole, false, false, false)
     outputData.result = rollCalc(outputData.rollResult, outputData.targetNumber)
+    let roll = await task.roll
+    
 
     console.log("rollResult: ", outputData)
 
-    let message = {}
+    let message = {
+        "resultText": outputData.resultText,
+        "result": outputData.result,
+        "resultClass": outputData.resultClass === "success" ? "fail" : "success",
+        "resultLabel": outputData.resultLabel,
+        "resultText": outputData.resultText,
+        "targetNumber": outputData.targetNumber,
+        "taskName": outputData.taskName,
+    }
+
     
-    message.resultText = outputData.resultText;
-    message.resultClass = outputData.resultClass === "success" ? "fail" : "success";
 
-    message.targetNumber = infectionMod;
-
-    let html = await renderTemplate(TASK_RESULT_OUTPUT, message)
-    let alias = game.i18n.localize("ep2e.roll.dialog.push.infectionTries");
-    let roll = await task.roll
-
-    //Viruses Skill check printed to the chat
-    if (game.dice3d) {
-        await game.dice3d.showForRoll(roll, game.user, true, recipientList)
-      } else {
-        chatData.sound = CONFIG.sounds.dice;
-      }
-
-    ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({alias: alias}),
-        content: html,
-        whisper: recipientList
-    })
-
+    await rollToChat(message, TASK_RESULT_OUTPUT, roll, actingPerson, recipientList, false)
 
 
     //Effect in case virus was successful
@@ -156,38 +149,30 @@ export async function rollPsiEffect(actorWhole, psiOwner, push){
             message.influenceCopy = actorModel.strainInfluence.influence + result + ".description";
         }
 
-        let html = await renderTemplate(PSI_INFLUENCE_OUTPUT, message)
-        let alias = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");
+        let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");        
+    
+        await rollToChat(message, PSI_INFLUENCE_OUTPUT, d6, actingPerson, recipientList, false)
 
-        let msg = await d6.toMessage({
-            speaker: ChatMessage.getSpeaker({alias: alias}),
-            flavor: html
-        });
-
-        if (game.dice3d){
-            await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
-        }
     }
     
-    if (push != "none" && d6.total === 1){
+    if (push && d6.total === 1){
         physicalDamageRoll += "2d6";
     }
-    else if (d6.total === 1 || push != "none"){
+    else if (d6.total === 1 || push){
         physicalDamageRoll = "1d6";
     }
 
     if (physicalDamageRoll && actorWhole.type === "character"){
         
-        let physicalDamage = await new Roll(physicalDamageRoll).evaluate({async: true});
-        let alias = game.i18n.localize("ep2e.roll.dialog.push.infectionDamage");
+        const physicalDamage = await new Roll(physicalDamageRoll).evaluate({async: true});
+        const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionDamage");
 
-        let msg = await physicalDamage.toMessage({
-            speaker: ChatMessage.getSpeaker({alias: alias})
-        });
-
-        if (game.dice3d){
-            await game.dice3d.waitFor3DAnimationByMessageID(msg.id);
+        let message = {
+            "psiDamageValue": physicalDamage.total,
+            "type": "psiDamage"
         }
+
+        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false)
 
         durUpdate += physicalDamage.total;
 

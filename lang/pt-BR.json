@@ -956,6 +956,7 @@
           "infectionDamage": "A Infecção te causa dano de",
           "infectionInfluence": "A Infecção te influencia",
           "infectionTries": "A Infecção amplia o controle",
+          "infectionTakeover": "infection takeover",
           "effectReceived": "Efeito recebido"
         },
         "ignoreInfection": "Ignorar Infecção",

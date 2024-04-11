@@ -80,5 +80,12 @@
   </div>
   {{/if}}
 
+  {{#if (eq type "psiDamage")}}
+  <div class="alignCenter">
+    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+      <span><b>{{localize "ep2e.psi.effect.physicalDamage"}} {{psiDamageValue}}</b></span>
+    </div>
+  </div>
+  {{/if}}
 
 </div>

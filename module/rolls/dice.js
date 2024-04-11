@@ -127,6 +127,7 @@ function defineRoll(dataset, actorWhole){
             sleight.description = sleightItem.system.description
             sleight.action = sleightItem.system.actionName
             sleight.duration = sleightItem.system.durationName
+            sleight.infection = sleightItem.system.infection
             }
           break;
         case 'guns':
@@ -170,6 +171,9 @@ function setRollVisibility(activeRollTarget){
 export function rollCalc(value, target){
     
     let result
+
+    console.log("Value: ", value)
+    console.log("Target: ", target)
 
     if(value <= target) {   // success results
         if(value % 11 === 0 && value !== 99)
@@ -884,6 +888,31 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
 
         return "cancel"
     }
+}
+
+/**
+ * 
+ * @param {Object} message - Provides all values to the html template
+ * @param {Class} task - Result of the TaskRoll class 
+ * @param {Array} recipientList - List of users to whisper the result to (empty if public)
+ * @param {Boolean} blind - If the roll is blind or not
+ * @param {String} alias - Alias of the speaker
+ */
+export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind){
+    let html = await renderTemplate(htmlTemplate, message)
+
+    /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
+    if (game.dice3d) {
+        await game.dice3d.showForRoll(roll, game.user, true, recipientList, blind)
+      } else {
+        chatData.sound = CONFIG.sounds.dice;
+      }
+
+    ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({alias: alias}),
+        content: html,
+        whisper: recipientList
+    })
 }
 
 

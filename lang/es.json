@@ -941,6 +941,7 @@
           "infectionDamage": "The Infection damages you for",
           "infectionInfluence": "The Infection influences you",
           "infectionTries": "The Infection fastens it's grip",
+          "infectionTakeover": "infection takeover",
           "effectReceived": "Effect received"
         },
         "ignoreInfection": "Ignore Infection",

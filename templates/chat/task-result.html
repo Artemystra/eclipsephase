@@ -159,7 +159,7 @@
 
   {{#if (eq taskName "Psi")}}
     {{#if alternatives.options.available}}
-      {{#if (ne options.ignoreInfection)}}
+      {{#if (ne options.ignoreInfection true)}}
       {{log userID}}
       <button class="chatActionButton psiEffect privateChatButton" data-actorid="{{actor._id}}" data-userid="{{userID}}" data-psipush="{{options.push}}">{{localize "ep2e.roll.psi.rollButtonLabel"}}</button>
       {{/if}}

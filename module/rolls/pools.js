@@ -10,7 +10,8 @@ const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 export async function usePoolFromChat(data){
     const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
     const dataset = data.currentTarget.dataset;
-    console.log("messageID: ", game.messages.get(messageID))
+    //console.log("messageID: ", game.messages.get(messageID))
+    console.log("dataset: ", dataset)
     const pool = {skillPoolValue: dataset.skillpoolvalue ? parseInt(dataset.skillpoolvalue) : 0, flexPoolValue: dataset.flexpoolvalue ? parseInt(dataset.flexpoolvalue) : 0, updatePoolPath : dataset.updatepoolpath ? dataset.updatepoolpath : "", updateFlexPath : dataset.updateflexpath ? dataset.updateflexpath : "", poolType: dataset.pooltype ? dataset.pooltype : ""}
     const options = {usePool: dataset.usepool}
     const actor = game.actors.get(dataset.actorid)
@@ -59,6 +60,9 @@ export async function update(options, pool, task, actorWhole){
         let poolUpdate = poolValue - 1;
         let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + poolType;
         //Determine pool to be updated
+        console.log("poolPath: ", poolPath)
+        console.log("poolUpdate: ", poolUpdate)
+        console.log("actorWhole: ", actorWhole)
         actorWhole.update({[poolPath] : poolUpdate});
 
         if(options.usePool === "pool" && task || options.usePool === "flex" && task)

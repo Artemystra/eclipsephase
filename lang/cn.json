@@ -948,6 +948,7 @@
           "infectionDamage": "感染伤害了你",
           "infectionInfluence": "感染影响了你",
           "infectionTries": "感染收紧了它的掌控",
+          "infectionTakeover": "infection takeover",
           "effectReceived": "获得效果"
         },
         "ignoreInfection": "忽视感染",

@@ -1000,6 +1000,7 @@
           "infectionDamage": "The Infection damages you",
           "infectionInfluence": "The Infection influences you",
           "infectionTries": "The Infection tries to take over",
+          "infectionTakeover": "infection takeover",
           "effectReceived": "Effect received"
         },
         "ignoreInfection": "Ignore Infection",
