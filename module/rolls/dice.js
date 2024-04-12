@@ -351,7 +351,7 @@ export class TaskRoll {
   /**
    * Format all of the output data so the output partial understands it.
    */
-  outputData(options, actorWhole, pool, sleight, rolledFrom) {
+  outputData(options, actorWhole, pool, rollItem, rolledFrom) {
     let data = {}
 
     let resultText = TASK_RESULT_TEXT[this._result]
@@ -373,7 +373,7 @@ export class TaskRoll {
     data.taskValue = this.baseValue
     data.modValue = this.modifierValue
 
-    data.itemdata = sleight ? sleight : {}
+    data.itemdata = rollItem
 
     data.modifiers = []
     if(this.modifiers.length > 0) {
@@ -480,7 +480,13 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     
     await task.performRoll()
 
-    let outputData = task.outputData(options, actorWhole, pool, roll.sleight, rolledFrom)
+    let itemData = {}
+    if(weaponSelected)
+        itemData = weaponSelected
+    else if(roll.sleight)
+        itemData = roll.sleight
+
+    let outputData = task.outputData(options, actorWhole, pool, itemData, rolledFrom)
 
     outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
 

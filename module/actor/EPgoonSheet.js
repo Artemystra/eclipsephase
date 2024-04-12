@@ -585,13 +585,13 @@ export default class EPgoonSheet extends ActorSheet {
     
           if (skillKey === "guns" || skillKey === "melee"){
         
-            weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
+            weaponPrep = await weaponPreparation(actorWhole, skillKey, rolledFrom, dataset.weaponid)
             
             if (!weaponPrep || weaponPrep.cancel){
               return;
             }
-            weaponSelected = weaponPrep.selection
-            rolledFrom = weaponSelected.rolledFrom
+            weaponSelected = weaponPrep
+            rolledFrom = weaponPrep.rolledFrom
           }
           this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
         }

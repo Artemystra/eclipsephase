@@ -1,6 +1,7 @@
+import { gmList } from "../rolls/chat.js";
 import { itemReduction, listSelection } from "./common-sheet-functions.js";
 //End-to-end weapon preparation
-export async function weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, weaponID){
+export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, weaponMode){
   
   let selection = {};
   let weaponName = null;
@@ -11,7 +12,7 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
   let weaponTraits = null;
   let weapon = null;
 
-
+  console.log("skillKey: ", skillKey)
 
   if (rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
     weapon = actorWhole.items.get(weaponID);
@@ -24,7 +25,7 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
     maxAmmo = weapon.system.ammoMax;
 
     if (weapon.system.additionalMode){
-      selectedWeaponMode = await selectWeaponMode(weapon, traits.curatedList);
+      selectedWeaponMode = await selectWeaponMode(weapon, traits.curatedList, weaponMode);
 
       if(selectedWeaponMode.cancel){
         return;
@@ -32,17 +33,19 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
       
       weaponDamage = selectedWeaponMode.dv;
       weaponTraits = selectedWeaponMode.weaponTraits;
+      weaponMode = selectedWeaponMode.weaponMode;
     }
     else{
 
       let calculated = await damageValueCalc(weapon, weapon.system.mode1, traits.curatedList.mode1.automatedEffects, "weapon");
 
       weaponDamage = calculated.dv;
+      weaponMode = "1";
     }
     
     rolledFrom = rolledFrom ? rolledFrom : null,
     currentAmmo = currentAmmo ? currentAmmo : null,
-    selection = {weapon, weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits}
+    selection = {weapon, weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits, weaponMode}
   }
   else {
     let weaponUsed = await weaponListConstructor(actorWhole, skillKey)
@@ -59,15 +62,16 @@ export async function weaponPreparation(actorModel, actorWhole, skillKey, rolled
     rolledFrom = weaponUsed.rolledFrom ? weaponUsed.rolledFrom : null,
     currentAmmo = weaponUsed.currentAmmo ? weaponUsed.currentAmmo : null,
     weaponTraits = weaponUsed.weaponTraits
-    selection = {weapon, weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits}
+    weaponMode = weaponUsed.weaponMode
+    selection = {weapon, weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits, weaponMode}
     
   }
 
-  return {selection}
+  return selection
 }
 
 //Constructs a subset of active traits
-async function traitSubSetConstructor(weapon){
+export async function traitSubSetConstructor(weapon){
   console.log("My weapon:", weapon.system)
   let traitsMode1 = weapon.system.mode1.traits;
   let traitsMode2 =  weapon.system.mode2.traits;
@@ -232,6 +236,7 @@ export async function weaponListConstructor(actor, skillKey){
       for (let weaponObj of actorWeapons){        
         if (weaponObj._id === weaponID){
           let weaponName = weaponObj.name;
+          let weaponMode = "1";
           let rolledFrom = weaponObj.type;
           let weaponType = rolledFrom === "ccWeapon" ? "melee" : "ranged";
           let currentAmmo = weaponObj.system.ammoMin;
@@ -252,11 +257,12 @@ export async function weaponListConstructor(actor, skillKey){
             else{
               weaponDamage = selectedWeaponMode.dv;
               weaponTraits = selectedWeaponMode.weaponTraits;
+              weaponMode = selectedWeaponMode.weaponMode;
             }
 
           }
 
-          return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits}
+          return {weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits, weaponMode}
         }
       }
     }
@@ -265,14 +271,15 @@ export async function weaponListConstructor(actor, skillKey){
 }
   
   //Select weapon mode in case of multiple available modes
-  async function selectWeaponMode (weapon, traits){
+ export async function selectWeaponMode (weapon, traits, selectedWeaponMode){
 
     let mode1calculated = await damageValueCalc(weapon, weapon.system.mode1, traits.mode1.automatedEffects, "weapon");
     let mode2calculated = await damageValueCalc(weapon, weapon.system.mode2, traits.mode2.automatedEffects, "weapon");
 
   
     let weaponModes = [{"_id": 1, "name": weapon.system.mode1.name, "range": weapon.system.mode1.range, "firingModes": weapon.system.mode1.firingMode, "dv": mode1calculated.dv},{"_id": 2, "name": weapon.system.mode2.name, "range": weapon.system.mode2.range, "firingModes": weapon.system.mode2.firingMode, "dv": mode2calculated.dv}];
-    let selectedWeaponMode = await listSelection(weaponModes, "weaponList" , "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline");
+    if(!selectedWeaponMode)
+      selectedWeaponMode = await listSelection(weaponModes, "weaponList" , "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline");
   
     if(selectedWeaponMode.cancelled){
       let cancel = selectedWeaponMode.cancelled
@@ -285,8 +292,9 @@ export async function weaponListConstructor(actor, skillKey){
       let firingMode = weapon.system.mode1.firingMode;
       let dv = weaponModes[0].dv
       let weaponTraits = traits.mode1
+      let weaponMode = "1"
     
-      return {name, range, firingMode, dv, weaponTraits};
+      return {name, range, firingMode, dv, weaponTraits, weaponMode};
   
     }
     
@@ -296,8 +304,9 @@ export async function weaponListConstructor(actor, skillKey){
       let firingMode = weapon.system.mode2.firingMode;
       let dv = weaponModes[1].dv
       let weaponTraits = traits.mode2
+      let weaponMode = "2"
     
-      return {name, range, firingMode, dv, weaponTraits};
+      return {name, range, firingMode, dv, weaponTraits, weaponMode};
   
     }
   
@@ -512,7 +521,7 @@ export async function reloadWeapon(html, actor) {
               ChatMessage.create({
                   speaker: ChatMessage.getSpeaker({actor: actor}),
                   content: html,
-                  whisper: ChatMessage.getWhisperRecipients("GM")
+                  whisper: gmList()
               })
             }
 

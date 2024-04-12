@@ -1,6 +1,7 @@
 import { moreInfo, registerCommonHandlers } from "../common/common-sheet-functions.js";
 import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
+import * as damageFunctions from "./damage.js";
 
 /**
  * Hides GM info from players
@@ -35,6 +36,7 @@ export function addChatListeners(html){
     html.on('click', 'a.moreInfoDialog', moreInfo);
     html.on('click', 'button.usePool', poolFunctions.usePoolFromChat);
     html.on('click', 'button.psiEffect', psiFunctions.preparePsi);
+    html.on('click', 'button.weaponDamage', damageFunctions.prepareWeapon);
 
     registerCommonHandlers(html);
 }

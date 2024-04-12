@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT, TASK_RESULT_TEXT } from "./dice.js";
+import { prepareWeapon } from "./damage.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 
@@ -8,13 +9,11 @@ const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
  * @param {Object} data 
  */
 export async function usePoolFromChat(data){
-    const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
     const dataset = data.currentTarget.dataset;
-    //console.log("messageID: ", game.messages.get(messageID))
-    console.log("dataset: ", dataset)
     const pool = {skillPoolValue: dataset.skillpoolvalue ? parseInt(dataset.skillpoolvalue) : 0, flexPoolValue: dataset.flexpoolvalue ? parseInt(dataset.flexpoolvalue) : 0, updatePoolPath : dataset.updatepoolpath ? dataset.updatepoolpath : "", updateFlexPath : dataset.updateflexpath ? dataset.updateflexpath : "", poolType: dataset.pooltype ? dataset.pooltype : ""}
     const options = {usePool: dataset.usepool}
     const actor = game.actors.get(dataset.actorid)
+    const rolledFrom = dataset.rolledfrom
 
     update(options, pool, null, actor)
 
@@ -30,6 +29,21 @@ export async function usePoolFromChat(data){
     let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: [game.user._id]} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
 
     ChatMessage.create(attr)
+
+    if(rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
+        let data = {}
+        const result = parseInt(dataset.newresult)
+        console.log("This is my newResult: ", result)
+
+        data.actorid = dataset.actorid
+        data.weaponid = dataset.weaponid
+        data.weaponmode = dataset.weaponmode
+        data.rolledfrom = dataset.rolledfrom
+        data.biomorphTarget = dataset.biomorphTarget ? true : false
+        data.attackmode = dataset.attackmode
+
+        await prepareWeapon(false, result, data)
+    }
 
 }
 

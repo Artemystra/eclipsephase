@@ -1329,6 +1329,15 @@
         "rollButtonLabel": "Roll Psi Infection"
       }
     },
+    "chat": {
+      "buttonLabel": {
+        "mitigateResult": "Mitigate Result",
+        "swapResult": "Swap Result",
+        "upgradeResult": "Upgrade Result",
+        "psiInfection": "Roll Psi Infection",
+        "weaponDamage": "Roll Weapon Damage"
+      }
+    },
     "rule": {
       "weapon": {
         "effect": {
