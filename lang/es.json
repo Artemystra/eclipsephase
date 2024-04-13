@@ -1130,7 +1130,9 @@
         "rolled": "rolled",
         "appliedMods": "Applied Mods",
         "baseValue": "Base Value",
-        "rollTarget": "Roll Target",
+        "rollTarget": "Target",
+        "total": "Result",
+        "damageDone": "Damage Done",
         "infectionRaise": "Infection raised to",
         "rest": {
           "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",

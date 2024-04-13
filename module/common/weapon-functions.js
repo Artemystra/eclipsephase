@@ -1,7 +1,7 @@
 import { gmList } from "../rolls/chat.js";
 import { itemReduction, listSelection } from "./common-sheet-functions.js";
 //End-to-end weapon preparation
-export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, weaponMode){
+export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, mode){
   
   let selection = {};
   let weaponName = null;
@@ -11,8 +11,7 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
   let maxAmmo = null;
   let weaponTraits = null;
   let weapon = null;
-
-  console.log("skillKey: ", skillKey)
+  let weaponMode = null;
 
   if (rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
     weapon = actorWhole.items.get(weaponID);
@@ -25,7 +24,7 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
     maxAmmo = weapon.system.ammoMax;
 
     if (weapon.system.additionalMode){
-      selectedWeaponMode = await selectWeaponMode(weapon, traits.curatedList, weaponMode);
+      selectedWeaponMode = await selectWeaponMode(weapon, traits.curatedList, mode);
 
       if(selectedWeaponMode.cancel){
         return;
@@ -42,7 +41,7 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
       weaponDamage = calculated.dv;
       weaponMode = "1";
     }
-    
+
     rolledFrom = rolledFrom ? rolledFrom : null,
     currentAmmo = currentAmmo ? currentAmmo : null,
     selection = {weapon, weaponID, weaponName, weaponDamage, weaponType, rolledFrom, currentAmmo, weaponTraits, weaponMode}
@@ -276,7 +275,6 @@ export async function weaponListConstructor(actor, skillKey){
     let mode1calculated = await damageValueCalc(weapon, weapon.system.mode1, traits.mode1.automatedEffects, "weapon");
     let mode2calculated = await damageValueCalc(weapon, weapon.system.mode2, traits.mode2.automatedEffects, "weapon");
 
-  
     let weaponModes = [{"_id": 1, "name": weapon.system.mode1.name, "range": weapon.system.mode1.range, "firingModes": weapon.system.mode1.firingMode, "dv": mode1calculated.dv},{"_id": 2, "name": weapon.system.mode2.name, "range": weapon.system.mode2.range, "firingModes": weapon.system.mode2.firingMode, "dv": mode2calculated.dv}];
     if(!selectedWeaponMode)
       selectedWeaponMode = await listSelection(weaponModes, "weaponList" , "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline");
@@ -286,7 +284,8 @@ export async function weaponListConstructor(actor, skillKey){
       return {cancel};
     }
   
-    if(selectedWeaponMode.selection === "1"){
+    if(selectedWeaponMode.selection === "1" || selectedWeaponMode === "1" ){
+      console.log("Mode 1 selected")
       let name = weapon.system.mode1.name;
       let range = weapon.system.mode1.range;
       let firingMode = weapon.system.mode1.firingMode;

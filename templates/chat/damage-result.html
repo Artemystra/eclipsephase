@@ -55,6 +55,9 @@
           </table>
         </div>
     {{/if}}
+
+    {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=targetNumber diceBreakdown=diceBreakdown formula=formula total=total resultClass=resultClass rollType=rollType}}
+
   {{/if}}
 
   {{#if (eq type "weaponBreak")}}

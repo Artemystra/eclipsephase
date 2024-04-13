@@ -24,7 +24,7 @@ export async function usePoolFromChat(data){
     message.type = dataset.usagetype;
     message.newResult = dataset.newresult ? parseInt(dataset.newresult) : false;
     message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
-    console.log("message: ", message)
+    
     let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
     let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: [game.user._id]} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
 
@@ -33,13 +33,13 @@ export async function usePoolFromChat(data){
     if(rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
         let data = {}
         const result = parseInt(dataset.newresult)
-        console.log("This is my newResult: ", result)
 
         data.actorid = dataset.actorid
         data.weaponid = dataset.weaponid
         data.weaponmode = dataset.weaponmode
         data.rolledfrom = dataset.rolledfrom
-        data.biomorphTarget = dataset.biomorphTarget ? true : false
+        data.biomorphtarget = dataset.biomorphtarget
+        data.touchonly = dataset.touchonly
         data.attackmode = dataset.attackmode
 
         await prepareWeapon(false, result, data)
@@ -74,9 +74,6 @@ export async function update(options, pool, task, actorWhole){
         let poolUpdate = poolValue - 1;
         let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + poolType;
         //Determine pool to be updated
-        console.log("poolPath: ", poolPath)
-        console.log("poolUpdate: ", poolUpdate)
-        console.log("actorWhole: ", actorWhole)
         actorWhole.update({[poolPath] : poolUpdate});
 
         if(options.usePool === "pool" && task || options.usePool === "flex" && task)
@@ -119,7 +116,6 @@ export async function outcomeAlternatives(outputData, pool){
     obj.pools.available = Boolean(obj.pools.skillPoolValue + obj.pools.flexPoolValue > 0) 
 
     if(outputData.resultClass === "success"){
-        console.log("swap-result > original-result: ", (obj.result > obj.originalResult), "obj.result + 1 < 6: ", ((obj.originalResult + 1) < 6), "obj.pools.available: ", obj.pools.available)
         if(obj.resultClass === "success" && (obj.result > obj.originalResult) && obj.pools.available)
             obj.options["swap"] = true
         

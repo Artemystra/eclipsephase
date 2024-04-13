@@ -1183,7 +1183,9 @@
         "rolled": "würfelt",
         "appliedMods": "Angewandte Modifikatoren",
         "baseValue": "Grundwert",
-        "rollTarget": "Modifizierter Wert",
+        "rollTarget": "Ziel",
+        "total": "Resultat",
+        "damageDone": "Schaden gesamt",
         "infectionRaise": "Ienfektion steigt auf",
         "rest": {
           "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",

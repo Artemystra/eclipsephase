@@ -20,7 +20,7 @@ export async function infectionUpdate(actorWhole, options, pool){
 
     if(options.ignoreInfection)
         options["ignoreInfection"] = await pools.update(options, pool, null, actorWhole)
-    console.log("options: ", options)
+
     if(!options.ignoreInfection){
         infectionMod = options.push ? raiseInfection * 2 : raiseInfection;
         infectionMod += parseInt(actorModel.psiStrain.infection)
@@ -61,9 +61,6 @@ export async function rollPsiEffect(actorWhole, psiOwner, push){
     let outputData = task.outputData(false, actorWhole, false, false, false)
     outputData.result = rollCalc(outputData.rollResult, outputData.targetNumber)
     let roll = await task.roll
-    
-
-    console.log("rollResult: ", outputData)
 
     let message = {
         "resultText": outputData.resultText,

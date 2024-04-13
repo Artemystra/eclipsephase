@@ -1145,7 +1145,9 @@
         "rolled": "rolou",
         "appliedMods": "Mods Aplicados",
         "baseValue": "Valor Base",
-        "rollTarget": "Alvo da Rolagem",
+        "rollTarget": "Target",
+        "total": "Result",
+        "damageDone": "Damage Done",
         "infectionRaise": "Infecção elevada para",
         "rest": {
           "short": "Eu usei um<p/><strong>Descanso Curto<p/></strong>para recuperar alguns pontos de parada<p/>",

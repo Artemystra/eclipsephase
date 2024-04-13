@@ -1138,6 +1138,8 @@
         "appliedMods": "附加调整值",
         "baseValue": "基础值",
         "rollTarget": "目标值",
+        "total": "Result",
+        "damageDone": "Damage Done",
         "infectionRaise": "感染加深至",
         "rest": {
           "short": "我使用一次<p/><strong>短填充<p/></strong>恢复了部分能力池<p/>",
