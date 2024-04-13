@@ -18,7 +18,7 @@
           <strong>{{localize "ep2e.roll.announce.combat.additionalEffects"}}</strong>
         </div>
         <div>
-          <table>
+          <table style="margin-bottom: 0;">
             {{#each weaponTraits as |trait key|}}
               {{#if trait.value}}
               <tr>
@@ -55,8 +55,10 @@
           </table>
         </div>
     {{/if}}
-
+    
+    {{#if total}}
     {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=targetNumber diceBreakdown=diceBreakdown formula=formula total=total resultClass=resultClass rollType=rollType}}
+    {{/if}}
 
   {{/if}}
 

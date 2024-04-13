@@ -1,7 +1,7 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat} from "./dice.js";
 import * as pools from "./pools.js";
-import { gmList } from "./chat.js";
+import { gmList } from "../common/common-sheet-functions.js";
 
 export function preparePsi(data){
 

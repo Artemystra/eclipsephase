@@ -1,6 +1,6 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
-import { gmList } from "./chat.js";
+import { prepareRecipients } from "../common/common-sheet-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -448,7 +448,6 @@ export class TaskRollModifier {
 
 export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
     let proceed
-    let recipientList
     let options = {}
     let specName = dataset.specname || "";
     let roll = defineRoll(dataset, actorWhole)
@@ -488,15 +487,8 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let actingPerson = this.actor
     let blind = options.rollMode === "blind" ? game.user.isGM ? false : true : false
     console.log("This is my rollMode: ", options.rollMode)
-    if(options.rollMode === "blind")
-        recipientList = gmList()
 
-    if(options.rollMode === "private"){
-        recipientList = gmList()
-        let owner = game.user._id
-        if(!recipientList.includes(owner))
-            recipientList.push(owner)
-    }
+    let recipientList = prepareRecipients(options.rollMode)
 
     console.log("This is my outputData: ", outputData)
 
@@ -901,42 +893,45 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  */
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
+    console.log("this is my roll", roll)
+    if(roll){
+        let i = 0
+        for(let dice of roll.dice){
+            if(dice.faces === 6)
+                for(let roll of dice.results){
+                diceBreakdown.sixes[i] = roll
+                i++
+            }
+            else if(dice.faces === 10)
+                for(let roll of dice.results){
+                diceBreakdown.tens[i] = roll
+                i++
+            }
+            else if (dice.faces === 100)
+                for(let roll of dice.results){
+                diceBreakdown.hundreds[i] = roll
+                i++
+            }
+        }
 
-    console.log("This is my roll", roll)
-    let i = 0
-    for(let dice of roll.dice){
-        if(dice.faces === 6)
-            for(let roll of dice.results){
-            diceBreakdown.sixes[i] = roll
-            i++
-        }
-        else if(dice.faces === 10)
-            for(let roll of dice.results){
-            diceBreakdown.tens[i] = roll
-            i++
-        }
-        else if (dice.faces === 100)
-            for(let roll of dice.results){
-            diceBreakdown.hundreds[i] = roll
-            i++
+        message.diceBreakdown = diceBreakdown
+        message.formula = roll.formula
+        message.total = roll.total
+        message.rollType = rollType
+
+        /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
+        if (game.dice3d) {
+            await game.dice3d.showForRoll(roll, game.user, true, recipientList, blind)
+        } else {
+            chatData.sound = CONFIG.sounds.dice;
         }
     }
 
-    message.diceBreakdown = diceBreakdown
-    message.formula = roll.formula
-    message.total = roll.total
-    message.rollType = rollType
+    console.log("This is my message", message)
 
     let html = await renderTemplate(htmlTemplate, message)
 
     console.log("This is my diceBreakdown", diceBreakdown)
-
-    /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
-    if (game.dice3d) {
-        await game.dice3d.showForRoll(roll, game.user, true, recipientList, blind)
-      } else {
-        chatData.sound = CONFIG.sounds.dice;
-      }
 
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: alias}),

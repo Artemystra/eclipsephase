@@ -1,12 +1,13 @@
 import { weaponPreparation, damageValueCalc } from "../common/weapon-functions.js"
 import { WEAPON_DAMAGE_OUTPUT, rollToChat } from "./dice.js"
+import { prepareRecipients } from "../common/common-sheet-functions.js"
 
 export async function prepareWeapon(data, result, preparedData){
 
     /*const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
     console.log("messageID: ", game.messages.get(messageID))*/
     const dataset = preparedData ? preparedData : data.currentTarget.dataset;
-    const actor = game.actors.get(dataset.actorid);
+    const actorWhole = game.actors.get(dataset.actorid);
     const weaponID = dataset.weaponid;
     const selectedWeaponMode = dataset.weaponmode;
     const rolledFrom = dataset.rolledfrom;
@@ -15,7 +16,10 @@ export async function prepareWeapon(data, result, preparedData){
     const biomorphTarget = dataset.biomorphtarget === "true" ? true : false
     const touchOnly = dataset.touchonly === "true" ? true : false
     const attackMode = dataset.attackmode
+    const rollMode = dataset.rollmode
+    const blind = rollMode === "blindroll" ? game.user.isGM ? false : true : false
     let modeDamage
+
     if(attackMode === "burst" || attackMode === "aggressive" || attackMode === "aggressiveCharge")
         modeDamage = "+1d10"
     else if(attackMode === "charge")
@@ -25,10 +29,12 @@ export async function prepareWeapon(data, result, preparedData){
     else
         modeDamage = ""
 
-    let weaponSelected = await weaponPreparation(actor, skillKey, rolledFrom, weaponID, selectedWeaponMode)
-    console.log("Weapon Selected: ", selectedWeaponMode)
+    let recipientList = prepareRecipients(rollMode)
+
+    let weaponSelected = await weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, selectedWeaponMode)
+    
     if(rollResult > 2 && rollResult < 6 || rollResult === 7 || rollResult === 9)
-        await dealWeaponDamage(actor, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly)
+        await dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList)
 
 
     else if (weaponSelected.weaponTraits.automatedEffects.dvOnMiss){
@@ -47,26 +53,19 @@ export async function prepareWeapon(data, result, preparedData){
         message.weaponTraits["dvOnMiss"] = weaponSelected.weaponTraits.automatedEffects["dvOnMiss"]
         message.weaponTraits.dvOnMiss["calculated"] = rollFormula
 
-        let html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
-
         let roll = await new Roll(rollFormula).evaluate({async: true});
-        let label = html;
 
-        roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: label
-        });
+        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "damageOutput")
+
     }
 
 }
 
-async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly){
+async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList){
     let meleeDamageMod = actorWhole.system.mods.meleeDamageMod
     let successModifier = "";
     let criticalModifier = "";
     let weaponDamage = touchOnly ? "ep2e.item.weapon.table.noDamage" : weaponSelected.weaponDamage
-    let blind = false
-    let recipientList = []
 
     if(rollResult === 4)
         successModifier = "+1d6";
@@ -114,20 +113,16 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
         delete message.weaponTraits
     }
 
-    let html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
-
     if (!weaponSelected.weaponTraits.automatedEffects.noDamage && weaponDamage != "ep2e.item.weapon.table.noDamage"){
         let roll = await new Roll(rollFormula).evaluate({async: true});
 
-        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole, recipientList, blind, "damageOutput")
+        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "damageOutput")
 
     }
     else {
-        html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+        message.total = false
 
-        ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({actor: actorWhole}),
-            content: html
-        })
+        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, false, actorWhole.name, recipientList, blind, "damageOutput")
+
     }
 }

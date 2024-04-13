@@ -158,7 +158,7 @@
 
   {{#if (or (eq rolledFrom "rangedWeapon")(eq rolledFrom "ccWeapon"))}}
     {{#if (or (eq resultClass "success")(eq itemdata.weaponTraits.automatedEffects.dvOnMiss.value true))}}
-      <button class="chatActionButton weaponDamage privateChatButton" data-actorid="{{actor._id}}" data-userid="{{userID}}" data-weaponid="{{itemdata.weaponID}}" data-weaponmode="{{itemdata.weaponMode}}" data-rolledfrom="{{rolledFrom}}" data-rollresult="{{alternatives.originalResult}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-touchonly="{{options.touchOnly}}">{{localize "ep2e.chat.buttonLabel.weaponDamage"}}</button>
+      <button class="chatActionButton weaponDamage privateChatButton" data-actorid="{{actor._id}}" data-userid="{{userID}}" data-weaponid="{{itemdata.weaponID}}" data-weaponmode="{{itemdata.weaponMode}}" data-rolledfrom="{{rolledFrom}}" data-rollresult="{{alternatives.originalResult}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-touchonly="{{options.touchOnly}}" data-rollmode="{{rollMode}}">{{localize "ep2e.chat.buttonLabel.weaponDamage"}}</button>
     {{/if}}
   {{/if}}
 </div>

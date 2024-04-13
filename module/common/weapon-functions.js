@@ -1,5 +1,4 @@
-import { gmList } from "../rolls/chat.js";
-import { itemReduction, listSelection } from "./common-sheet-functions.js";
+import { itemReduction, listSelection, gmList } from "./common-sheet-functions.js";
 //End-to-end weapon preparation
 export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, mode){
   

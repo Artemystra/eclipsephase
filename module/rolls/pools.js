@@ -41,6 +41,7 @@ export async function usePoolFromChat(data){
         data.biomorphtarget = dataset.biomorphtarget
         data.touchonly = dataset.touchonly
         data.attackmode = dataset.attackmode
+        data.rollmode = dataset.rollmode
 
         await prepareWeapon(false, result, data)
     }
@@ -123,9 +124,6 @@ export async function outcomeAlternatives(outputData, pool){
             obj.options["upgrade"] = true
             obj["resultText"] = TASK_RESULT_TEXT[(obj.originalResult+1)].text
          }   
-        
-        else if(obj.resultClass === "success" && obj.originalResult === 5 && obj.pools.available)
-            obj.options["swap"] = true
     }
     else if(outputData.resultClass === "fail"){
         

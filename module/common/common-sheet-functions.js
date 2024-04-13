@@ -906,3 +906,26 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
       return msg.toObject();
   }
 }
+
+export function gmList(){
+  let gmList = game.users.filter(user => user.isGM)
+  let activeGMs = gmList.filter(user => user.active)
+  let gmIDs = activeGMs.map(user => user._id)
+  return gmIDs
+}
+
+export function prepareRecipients(rollMode){
+  let recipientList = []
+  
+  if(rollMode === "blind" || rollMode === "blindroll")
+  recipientList = gmList()
+
+  if(rollMode === "private" || rollMode === "gmroll"){
+    recipientList = gmList()
+    let owner = game.user._id
+    if(!recipientList.includes(owner))
+        recipientList.push(owner)
+  }
+
+  return recipientList
+}

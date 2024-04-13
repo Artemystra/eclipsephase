@@ -41,10 +41,3 @@ export function addChatListeners(html){
     registerCommonHandlers(html);
 }
 
-export function gmList(){
-    let gmList = game.users.filter(user => user.isGM)
-    let activeGMs = gmList.filter(user => user.active)
-    let gmIDs = activeGMs.map(user => user._id)
-    return gmIDs
-}
-
