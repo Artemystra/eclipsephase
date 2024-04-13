@@ -5,8 +5,9 @@ import { prepareWeapon } from "./damage.js";
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 
 /**
- * 
- * @param {Object} data 
+ * Prepares the pool usage based on the button clicked in the chat message. If the message also 
+ * provides a velue for {rolledFrom} it will also prepare the weapon for the consequtive roll
+ * @param {Object} data - Pulls all necessary data from the button clicked on the chat message
  */
 export async function usePoolFromChat(data){
     const dataset = data.currentTarget.dataset;
@@ -124,6 +125,9 @@ export async function outcomeAlternatives(outputData, pool){
             obj.options["upgrade"] = true
             obj["resultText"] = TASK_RESULT_TEXT[(obj.originalResult+1)].text
          }   
+        
+        else if(obj.resultClass === "success" && obj.originalResult === 5 && (obj.result > obj.originalResult) && obj.pools.available)
+            obj.options["swap"] = true
     }
     else if(outputData.resultClass === "fail"){
         
@@ -140,8 +144,8 @@ export async function outcomeAlternatives(outputData, pool){
             obj.options["mitigate"] = true
         }
 
-        else if(obj.originalResult === 0 && (obj.value > obj.rollResult) && obj.pools.available)
-            obj.options["swap"] = true
+        /*else if(obj.originalResult === 0 && (obj.value > obj.rollResult) && obj.pools.available)
+            obj.options["swap"] = true*/
 
     }
 
