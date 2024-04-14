@@ -471,7 +471,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         if(options.usePool)
             pools.update(options.usePool, pool, task, actorWhole)
 
-        if(roll.type === "psi")
+        if(roll.type === "psi" && actorWhole.type != "goon")
             options.totalInfection = await psi.infectionUpdate(actorWhole, options, pool)
         
         if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
@@ -499,7 +499,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        
+        console.log(outputData)
         await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon")

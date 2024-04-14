@@ -152,7 +152,7 @@
   
   {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=targetNumber diceBreakdown=diceBreakdown formula=formula total=total resultClass=resultClass}}
 
-  {{#if (and (eq taskName "Psi")(eq alternatives.options.available true)(ne options.ignoreInfection true))}}
+  {{#if (and (eq taskName "Psi")(eq alternatives.options.available true)(ne options.ignoreInfection true)(ne actor.type "goon"))}}
       <button class="chatActionButton psiEffect privateChatButton" data-actorid="{{actor._id}}" data-userid="{{userID}}" data-psipush="{{options.push}}">{{localize "ep2e.chat.buttonLabel.psiInfection"}}</button>
   {{/if}}
 
