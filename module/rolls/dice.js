@@ -461,48 +461,51 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     for (let entry in values){
         options[entry] = values[entry] || false
     }
+    console.log("This is my options: ", options)
+    let numberOfTargets = options.numberOfTargets ? parseInt(options.numberOfTargets) : 1
 
-    let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
+    for(let repitition = 1; repitition <= numberOfTargets; repitition++){
 
-    if(options.usePool)
-        pools.update(options.usePool, pool, task, actorWhole)
+        let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
 
-    if(roll.type === "psi")
-        options.totalInfection = await psi.infectionUpdate(actorWhole, options, pool)
-    
-    if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
-        addTaskModifiers(actorModel, options, task, roll.type, rolledFrom, weaponSelected)
-    
-    await task.performRoll()
+        if(options.usePool)
+            pools.update(options.usePool, pool, task, actorWhole)
 
-    let itemData = {}
-    if(weaponSelected)
-        itemData = weaponSelected
-    else if(roll.sleight)
-        itemData = roll.sleight
+        if(roll.type === "psi")
+            options.totalInfection = await psi.infectionUpdate(actorWhole, options, pool)
+        
+        if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
+            addTaskModifiers(actorModel, options, task, roll.type, rolledFrom, weaponSelected)
+        
+        await task.performRoll()
 
-    let outputData = task.outputData(options, actorWhole, pool, itemData, rolledFrom)
+        let itemData = {}
+        if(weaponSelected)
+            itemData = weaponSelected
+        else if(roll.sleight)
+            itemData = roll.sleight
 
-    outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
-    let diceRoll = task.roll
-    let actingPerson = this.actor
-    let blind = options.rollMode === "blind" ? game.user.isGM ? false : true : false
-    console.log("This is my rollMode: ", options.rollMode)
+        let outputData = task.outputData(options, actorWhole, pool, itemData, rolledFrom)
 
-    let recipientList = prepareRecipients(options.rollMode)
+        outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
+        let diceRoll = task.roll
+        let actingPerson = this.actor
+        let blind = options.rollMode === "blind" ? game.user.isGM ? false : true : false
+        console.log("This is my rollMode: ", options.rollMode)
 
-    console.log("This is my outputData: ", outputData)
+        let recipientList = prepareRecipients(options.rollMode)
 
-    if(rolledFrom === "rangedWeapon")
-       proceed = await checkAmmo(actorWhole, weaponSelected, options.attackMode)
+        if(rolledFrom === "rangedWeapon")
+        proceed = await checkAmmo(actorWhole, weaponSelected, options.attackMode)
 
-    if(proceed === "cancel")
-        return
-    console.log("This is my recipientList: ", recipientList)
-    await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
+        if(proceed === "cancel")
+            return
+        console.log("This is my recipientList: ", recipientList)
+        await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
-    if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon")
-        psi.rollPsiEffect(actorWhole, game.user._id, options.push)
+        if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon")
+            psi.rollPsiEffect(actorWhole, game.user._id, options.push)
+    }
 }
 
 /**
@@ -643,7 +646,7 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
     }
 
     if (options.numberOfTargets>1) {
-        modValue = 0 - (numberOfTargets-1)*20
+        modValue = 0 - (options.numberOfTargets-1)*20
         announce = "ep2e.roll.announce.combat.melee.multipleTargets";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }

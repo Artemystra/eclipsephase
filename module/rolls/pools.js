@@ -16,35 +16,38 @@ export async function usePoolFromChat(data){
     const actor = game.actors.get(dataset.actorid)
     const rolledFrom = dataset.rolledfrom
 
-    update(options, pool, null, actor)
+    let updateResult = await update(options, pool, null, actor)
 
-    let message = {}
-          
-    message.resultText = dataset.resulttext;
-    
-    message.type = dataset.usagetype;
-    message.newResult = dataset.newresult ? parseInt(dataset.newresult) : false;
-    message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
-    
-    let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
-    let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: [game.user._id]} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
+    if(updateResult){
 
-    ChatMessage.create(attr)
+        let message = {}
+            
+        message.resultText = dataset.resulttext;
+        
+        message.type = dataset.usagetype;
+        message.newResult = dataset.newresult ? parseInt(dataset.newresult) : false;
+        message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
+        
+        let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+        let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: [game.user._id]} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
 
-    if(rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
-        let data = {}
-        const result = parseInt(dataset.newresult)
+        ChatMessage.create(attr)
 
-        data.actorid = dataset.actorid
-        data.weaponid = dataset.weaponid
-        data.weaponmode = dataset.weaponmode
-        data.rolledfrom = dataset.rolledfrom
-        data.biomorphtarget = dataset.biomorphtarget
-        data.touchonly = dataset.touchonly
-        data.attackmode = dataset.attackmode
-        data.rollmode = dataset.rollmode
+        if(rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
+            let data = {}
+            const result = parseInt(dataset.newresult)
 
-        await prepareWeapon(false, result, data)
+            data.actorid = dataset.actorid
+            data.weaponid = dataset.weaponid
+            data.weaponmode = dataset.weaponmode
+            data.rolledfrom = dataset.rolledfrom
+            data.biomorphtarget = dataset.biomorphtarget
+            data.touchonly = dataset.touchonly
+            data.attackmode = dataset.attackmode
+            data.rollmode = dataset.rollmode
+
+            await prepareWeapon(false, result, data)
+        }
     }
 
 }
@@ -56,29 +59,31 @@ export async function usePoolFromChat(data){
  * @param {Object} actorWhole - The actor object data is being pulled from
 */
 export async function update(options, pool, task, actorWhole){
+    let actor = actorWhole
+    console.log("actor: ", actor)
     let poolValue
     let poolPath
     let poolType
-    if (options.usePool === "flex" || options.usePool === "flexIgnore"){
-        poolValue = pool.flexPoolValue
+    if (options === "flex" || options === "flexIgnore"){
         poolPath = pool.updateFlexPath
+        poolValue = eval("actorWhole." + poolPath)
         poolType = "ep2e.skills.flex.poolHeadline"
     }
     else {
-        poolValue = pool.skillPoolValue
         poolPath = pool.updatePoolPath
+        poolValue = eval("actorWhole." + poolPath)
         poolType = pool.poolType
     }
-
+    console.log("poolValue: ", poolValue)
     //Checks if pool used
     if (poolValue > 0){
         let poolMod = 20;
         let poolUpdate = poolValue - 1;
-        let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + poolType;
+        let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + game.i18n.localize(poolType);
         //Determine pool to be updated
         actorWhole.update({[poolPath] : poolUpdate});
-
-        if(options.usePool === "pool" && task || options.usePool === "flex" && task)
+        console.log("options.usePool: ", options, "task: ", task)
+        if(options === "pool" && task || options === "flex" && task)
             task.addModifier(new TaskRollModifier(message, poolMod))
 
         return true
@@ -86,7 +91,7 @@ export async function update(options, pool, task, actorWhole){
     else if (poolValue <= 0){
         let message = {}
         
-        message.type = "cantAddModifier";
+        message.type = "notEnoughPool";
         message.poolName = poolType;
 
         let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
