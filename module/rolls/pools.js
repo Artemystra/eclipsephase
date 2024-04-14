@@ -59,8 +59,6 @@ export async function usePoolFromChat(data){
  * @param {Object} actorWhole - The actor object data is being pulled from
 */
 export async function update(options, pool, task, actorWhole){
-    let actor = actorWhole
-    console.log("actor: ", actor)
     let poolValue
     let poolPath
     let poolType
@@ -74,7 +72,8 @@ export async function update(options, pool, task, actorWhole){
         poolValue = eval("actorWhole." + poolPath)
         poolType = pool.poolType
     }
-    console.log("poolValue: ", poolValue)
+    console.log("this is my poolPath: ", poolPath)
+    console.log("this is my poolValue: ", poolValue)
     //Checks if pool used
     if (poolValue > 0){
         let poolMod = 20;
@@ -82,7 +81,7 @@ export async function update(options, pool, task, actorWhole){
         let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + game.i18n.localize(poolType);
         //Determine pool to be updated
         actorWhole.update({[poolPath] : poolUpdate});
-        console.log("options.usePool: ", options, "task: ", task)
+        
         if(options === "pool" && task || options === "flex" && task)
             task.addModifier(new TaskRollModifier(message, poolMod))
 

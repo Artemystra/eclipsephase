@@ -113,8 +113,8 @@ function defineRoll(dataset, actorWhole){
     let sleight = {}
     let template
     let templateSize = {width: 276}
-    console.log("This is my dataset: ", dataset)
     let title = game.i18n.localize('ep2e.roll.dialog.title.check')
+
     switch (type) {
         case 'fray':
             template = TASK_CHECK_DIALOG_TEMPLATE
@@ -461,7 +461,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     for (let entry in values){
         options[entry] = values[entry] || false
     }
-    console.log("This is my options: ", options)
+    
     let numberOfTargets = options.numberOfTargets ? parseInt(options.numberOfTargets) : 1
 
     for(let repitition = 1; repitition <= numberOfTargets; repitition++){
@@ -491,7 +491,6 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         let diceRoll = task.roll
         let actingPerson = this.actor
         let blind = options.rollMode === "blind" ? game.user.isGM ? false : true : false
-        console.log("This is my rollMode: ", options.rollMode)
 
         let recipientList = prepareRecipients(options.rollMode)
 
@@ -500,7 +499,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        console.log("This is my recipientList: ", recipientList)
+        
         await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon")
@@ -897,7 +896,7 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  */
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
-    console.log("this is my roll", roll)
+    
     if(roll){
         let i = 0
         for(let dice of roll.dice){
@@ -931,11 +930,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         }
     }
 
-    console.log("This is my message", message)
-
     let html = await renderTemplate(htmlTemplate, message)
-
-    console.log("This is my diceBreakdown", diceBreakdown)
 
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: alias}),

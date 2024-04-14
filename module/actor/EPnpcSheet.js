@@ -100,17 +100,7 @@ export default class EPnpcSheet extends ActorSheet {
     _prepareCharacterItems(sheetData) {
         let actor = sheetData.actor
         let actorModel = actor.system
-
-
-      // console.log("***** in _prepareCharacterItems")
-      // console.log(sheetData)
-      // console.log(actor)
-      // console.log(actorModel)
-
-
-        // const actorData = sheetData.data;
-        // const data = actorData.data;
-
+        
         // Initialize containers.
         const gear = [];
         const consumable = [];
