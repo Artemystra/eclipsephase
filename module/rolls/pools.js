@@ -12,7 +12,7 @@ const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 export async function usePoolFromChat(data){
     const dataset = data.currentTarget.dataset;
     const pool = {skillPoolValue: dataset.skillpoolvalue ? parseInt(dataset.skillpoolvalue) : 0, flexPoolValue: dataset.flexpoolvalue ? parseInt(dataset.flexpoolvalue) : 0, updatePoolPath : dataset.updatepoolpath ? dataset.updatepoolpath : "", updateFlexPath : dataset.updateflexpath ? dataset.updateflexpath : "", poolType: dataset.pooltype ? dataset.pooltype : ""}
-    const options = {usePool: dataset.usepool}
+    const options = dataset.usepool
     const actor = game.actors.get(dataset.actorid)
     const rolledFrom = dataset.rolledfrom
 
@@ -62,8 +62,11 @@ export async function update(options, pool, task, actorWhole){
     let poolValue
     let poolPath
     let poolType
+    console.log("Pool: ", pool)
+    console.log("Options: ", options)
     if (options === "flex" || options === "flexIgnore"){
         poolPath = pool.updateFlexPath
+        console.log("poolPath: ", poolPath)
         poolValue = eval("actorWhole." + poolPath)
         poolType = "ep2e.skills.flex.poolHeadline"
     }
@@ -79,6 +82,8 @@ export async function update(options, pool, task, actorWhole){
         let poolUpdate = poolValue - 1;
         let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + game.i18n.localize(poolType);
         //Determine pool to be updated
+        console.log("poolPath: ", poolPath)
+        console.log("poolUpdate: ", poolUpdate)
         actorWhole.update({[poolPath] : poolUpdate});
         
         if(options === "pool" && task || options === "flex" && task)
