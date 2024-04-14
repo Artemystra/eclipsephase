@@ -62,11 +62,9 @@ export async function update(options, pool, task, actorWhole){
     let poolValue
     let poolPath
     let poolType
-    console.log("Pool: ", pool)
-    console.log("Options: ", options)
+
     if (options === "flex" || options === "flexIgnore"){
         poolPath = pool.updateFlexPath
-        console.log("poolPath: ", poolPath)
         poolValue = eval("actorWhole." + poolPath)
         poolType = "ep2e.skills.flex.poolHeadline"
     }
@@ -82,8 +80,7 @@ export async function update(options, pool, task, actorWhole){
         let poolUpdate = poolValue - 1;
         let message = game.i18n.localize('ep2e.roll.announce.poolUsage.poolUsed') + ": " + game.i18n.localize(poolType);
         //Determine pool to be updated
-        console.log("poolPath: ", poolPath)
-        console.log("poolUpdate: ", poolUpdate)
+
         actorWhole.update({[poolPath] : poolUpdate});
         
         if(options === "pool" && task || options === "flex" && task)

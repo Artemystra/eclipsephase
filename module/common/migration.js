@@ -1465,16 +1465,15 @@ export function migrationPre110(startMigration, endMigration){
       let update = {}
       if(actor.type != "character"){
         
-        let oldIniMod = parseInt(actor.system.mods.iniMod)
-        let oldThreatCurrent = parseInt(actor.system.threatLevel.current)
-        let oldThreatMax = parseInt(actor.system.threatLevel.total)
-
-        update["system.mods.iniMod"] = oldIniMod
-        update["system.threatlevel.current"] = oldThreatCurrent
-        update["system.threatlevel.armorTotal"] = oldThreatMax
-        update["system.updated"] = latestUpdate
+        update["system.mods.iniMod"] = parseInt(actor.system.mods.iniMod)
+        update["system.threatlevel.current"] = parseInt(actor.system.threatLevel.current)
+        update["system.threatlevel.armorTotal"] = parseInt(actor.system.threatLevel.total)
 
       }
+
+      update["system.psiStrain.infection"] = parseInt(actor.system.psiStrain.infection)
+      update["system.updated"] = latestUpdate
+      
       actor.update(update)
     }
     game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
