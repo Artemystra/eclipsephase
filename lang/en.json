@@ -1019,7 +1019,7 @@
           "damageRoll": "Damage Check",
           "swap": "Swap Result",
           "raise": "Raise Result",
-          "talentCheck": "Skill Check"
+          "check": "Dice roll"
         },
         "button": {
           "roll": "Roll",

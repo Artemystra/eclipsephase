@@ -974,7 +974,7 @@
           "damageRoll": "Teste de Dano",
           "swap": "Trocar Resultado",
           "raise": "Elevar Resultado",
-          "talentCheck": "Teste"
+          "check": "Dice roll"
         },
         "button": {
           "roll": "Rolar",

@@ -1006,7 +1006,7 @@
           "damageRoll": "Schadenswurf",
           "swap": "Ergebnis Drehen",
           "raise": "Ergebnis Verbessern",
-          "talentCheck": "Skillprobe"
+          "check": "Würfelwurf"
         },
         "button": {
           "roll": "Würfeln",

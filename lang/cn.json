@@ -966,7 +966,7 @@
           "damageRoll": "伤害检定k",
           "swap": "颠倒结果",
           "raise": "提升结果",
-          "talentCheck": "检定"
+          "check": "Dice roll"
         },
         "button": {
           "roll": "投骰",

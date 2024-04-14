@@ -113,7 +113,8 @@ function defineRoll(dataset, actorWhole){
     let sleight = {}
     let template
     let templateSize = {width: 276}
-    let title = game.i18n.localize('ep2e.roll.dialog.title.talentCheck')
+    console.log("This is my dataset: ", dataset)
+    let title = game.i18n.localize('ep2e.roll.dialog.title.check')
     switch (type) {
         case 'fray':
             template = TASK_CHECK_DIALOG_TEMPLATE
@@ -923,7 +924,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         if (game.dice3d) {
             await game.dice3d.showForRoll(roll, game.user, true, recipientList, blind)
         } else {
-            chatData.sound = CONFIG.sounds.dice;
+            message.sound = CONFIG.sounds.dice
         }
     }
 
@@ -936,6 +937,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: alias}),
         content: html,
-        whisper: recipientList
+        whisper: recipientList,
+        sound: message.sound
     })
 }
