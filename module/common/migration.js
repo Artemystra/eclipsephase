@@ -1472,6 +1472,7 @@ export function migrationPre110(startMigration, endMigration){
         update["system.mods.iniMod"] = oldIniMod
         update["system.threatlevel.current"] = oldThreatCurrent
         update["system.threatlevel.armorTotal"] = oldThreatMax
+        update["system.updated"] = latestUpdate
 
       }
       actor.update(update)

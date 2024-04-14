@@ -111,7 +111,6 @@
             <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.infectionHeadline"}}</h3>
         </div>
         {{#if (eq rolledFrom "psiSleight")}}
-        {{log rollData}}
         <div class="form-group listBackgroundMain">
             <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.baseCostLabel"}}</label>
             <input type="number" name="raiseInfection" placeholder="0" value="{{rollData.sleight.infection}}" disabled/>

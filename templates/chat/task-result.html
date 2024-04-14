@@ -118,7 +118,7 @@
         </div>
       </div>
       <div class="showMore noShow">
-        <table>
+        <table style="margin-bottom: 0px;">
           <tr>
             <td class="table-dice-label">
               {{localize "ep2e.roll.announce.baseValue"}}
@@ -149,7 +149,7 @@
       </div>
     </div>
   {{/if}}
-    {{log rollType}}
+  
   {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=targetNumber diceBreakdown=diceBreakdown formula=formula total=total resultClass=resultClass}}
 
   {{#if (and (eq taskName "Psi")(eq alternatives.options.available true)(ne options.ignoreInfection true))}}

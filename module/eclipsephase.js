@@ -509,6 +509,8 @@ Hooks.on("renderChatMessage", (app, html, data) => EPchat.addChatListeners(html,
 Hooks.on("renderChatLog", (app, html, data) => EPchat.GMvision(html, data));
 Hooks.on("renderChatMessage", (app, html, data) => EPchat.GMvision(html, data));
 Hooks.on("renderChatMessage", (app, html, data) => EPchat.ownerVision(html, data));
+Hooks.on("renderChatLog", (app, html, data) => EPchat.playerVision(html, data));
+Hooks.on("renderChatMessage", (app, html, data) => EPchat.playerVision(html, data));
 
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)

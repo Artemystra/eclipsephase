@@ -19,6 +19,20 @@ export async function GMvision(html){
 }
 
 /**
+ * Hides player info from GM
+ */
+export async function playerVision(html){
+    let GMvision = game.user.isGM
+    let GMinfo = html.find(".playerInfo")
+    
+    if(GMvision){
+        for (let entry of GMinfo){
+            entry.classList.add("noShow");
+        }
+    }
+}
+
+/**
  * Hides Owner info from other players
  * @param {*} html 
  */

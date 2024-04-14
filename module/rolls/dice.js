@@ -461,7 +461,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     for (let entry in values){
         options[entry] = values[entry] || false
     }
-    
+
     let numberOfTargets = options.numberOfTargets ? parseInt(options.numberOfTargets) : 1
 
     for(let repitition = 1; repitition <= numberOfTargets; repitition++){
@@ -489,7 +489,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
         let diceRoll = task.roll
-        let actingPerson = this.actor
+        let actingPerson = actorWhole.name
         let blind = options.rollMode === "blind" ? game.user.isGM ? false : true : false
 
         let recipientList = prepareRecipients(options.rollMode)

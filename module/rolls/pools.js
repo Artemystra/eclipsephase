@@ -72,8 +72,7 @@ export async function update(options, pool, task, actorWhole){
         poolValue = eval("actorWhole." + poolPath)
         poolType = pool.poolType
     }
-    console.log("this is my poolPath: ", poolPath)
-    console.log("this is my poolValue: ", poolValue)
+    
     //Checks if pool used
     if (poolValue > 0){
         let poolMod = 20;
