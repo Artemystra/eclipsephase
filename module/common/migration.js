@@ -1462,6 +1462,7 @@ export function migrationPre110(startMigration, endMigration){
   const latestUpdate = "1.1.0";
   if (startMigration){        
     for(let actor of game.actors){
+      
       let update = {}
       if(actor.type != "character"){
         
@@ -1471,9 +1472,12 @@ export function migrationPre110(startMigration, endMigration){
 
       }
 
-      update["system.psiStrain.infection"] = parseInt(actor.system.psiStrain.infection)
+      if(actor.type != "goon")
+        update["system.psiStrain.infection"] = parseInt(actor.system.psiStrain.infection)
+
+
       update["system.updated"] = latestUpdate
-      
+
       actor.update(update)
     }
     game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
