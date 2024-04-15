@@ -79,8 +79,14 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
     }
     
     //Damage Chat Message Constructor
-    let intermediateRollFormula =  weaponDamage + modeDamage + (meleeDamageMod ? meleeDamageMod : "") + (biomorphTarget ? " + 1d6" : "") + successModifier;
+    let intermediateRollFormula
     let rollFormula = null
+
+    if(weaponSelected.rolledFrom === "ccWeapon")
+        intermediateRollFormula =  weaponDamage + modeDamage + (meleeDamageMod ? meleeDamageMod : "") + (biomorphTarget ? " + 1d6" : "") + successModifier;
+    else
+        intermediateRollFormula =  weaponDamage + modeDamage + (biomorphTarget ? " + 1d6" : "") + successModifier;
+
 
     if (criticalModifier && !weaponSelected.weaponTraits.automatedEffects.dvHalved) {
         rollFormula = criticalModifier + (intermediateRollFormula);
