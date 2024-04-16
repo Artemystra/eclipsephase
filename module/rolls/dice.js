@@ -468,8 +468,16 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
 
-        if(options.usePool)
-            pools.update(options.usePool, pool, task, actorWhole)
+        if(options.usePool){
+            let updatedPools = await pools.update(options.usePool, pool, task, actorWhole)
+            if(pool.flexPoolValue){
+                pool["skillPoolValue"] = updatedPools.skillPoolValue
+                pool["flexPoolValue"] = updatedPools.flexPoolValue
+            }
+            if(pool.flexPoolValue){
+                pool["skillPoolValue"] = updatedPools.skillPoolValue
+            }
+        }
 
         if(roll.type === "psi" && actorWhole.type != "goon")
             options.totalInfection = await psi.infectionUpdate(actorWhole, options, pool)
@@ -896,6 +904,7 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  */
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
+    const showTo = recipientList.length > 0 ? recipientList : null
     
     if(roll){
         let i = 0
@@ -921,10 +930,11 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         message.formula = roll.formula
         message.total = roll.total
         message.rollType = rollType
+        console.log(roll)
 
         /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
         if (game.dice3d) {
-            await game.dice3d.showForRoll(roll, game.user, true, recipientList, blind)
+            await game.dice3d.showForRoll(roll, game.user, true, showTo, blind)
         } else {
             message.sound = CONFIG.sounds.dice
         }
@@ -936,6 +946,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         speaker: ChatMessage.getSpeaker({alias: alias}),
         content: html,
         whisper: recipientList,
-        sound: message.sound
+        sound: message.sound,
+        blind: blind
     })
 }

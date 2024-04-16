@@ -62,16 +62,20 @@ export async function update(options, pool, task, actorWhole){
     let poolValue
     let poolPath
     let poolType
+    let updatedPool = pool.skillPoolValue
+    let updatedFlex = pool.flexPoolValue
 
     if (options === "flex" || options === "flexIgnore"){
         poolPath = pool.updateFlexPath
         poolValue = eval("actorWhole." + poolPath)
         poolType = "ep2e.skills.flex.poolHeadline"
+        updatedFlex = pool.flexPoolValue - 1
     }
     else {
         poolPath = pool.updatePoolPath
         poolValue = eval("actorWhole." + poolPath)
         poolType = pool.poolType
+        updatedPool = pool.skillPoolValue - 1
     }
     
     //Checks if pool used
@@ -86,7 +90,9 @@ export async function update(options, pool, task, actorWhole){
         if(options === "pool" && task || options === "flex" && task)
             task.addModifier(new TaskRollModifier(message, poolMod))
 
-        return true
+        let poolReturn = updatedFlex ? {"skillPoolValue": updatedPool, "flexPoolValue": updatedFlex} : {"skillPoolValue": updatedPool}
+
+        return poolReturn
     }
     else if (poolValue <= 0){
         let message = {}
