@@ -23,6 +23,7 @@
                     <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</label>
                     <select name="usePool" class="input-large">
                         <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        {{#if (eq rollType "psi")}}<option value="ignoreInfection">{{localize "ep2e.roll.dialog.ignoreInfection"}} ({{localize pool.poolType}})</option>{{/if}}
                         <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{localize pool.poolType}})</option>
                         <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}} ({{localize pool.poolType}})</option>
                         <option value="flex">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{localize "ep2e.skills.flex.flexHeadline"}})</option>
@@ -34,6 +35,7 @@
                     <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.usePool"}} {{localize pool.poolType}}</label>
                     <select name="usePool" class="input-large">
                         <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        {{#if (eq rollType "psi")}}<option value="ignoreInfection">{{localize "ep2e.roll.dialog.ignoreInfection"}} ({{localize pool.poolType}})</option>{{/if}}
                         <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
                         <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
                     </select>
@@ -133,17 +135,6 @@
                 <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
             </select>
         </div>
-        {{#if pool.skillPoolValue}}
-        <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="ignoreInfection">
-            <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.ignoreInfection"}}<br>(1 {{localize pool.poolType}})</label>
-        </div>
-        {{else}}
-        <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="ignoreInfection" disabled>
-            <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noPool"}}</label>
-        </div>
-        {{/if}}
     </div>
     {{/if}}
 {{/if}}

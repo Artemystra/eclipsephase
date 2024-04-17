@@ -109,7 +109,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
 function defineRoll(dataset, actorWhole){
     
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'ignoreInfection', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode']
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode']
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -467,20 +467,22 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     for(let repitition = 1; repitition <= numberOfTargets; repitition++){
 
         let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
-
+        console.log("This is options: ", options)
         if(options.usePool){
+
             let updatedPools = await pools.update(options.usePool, pool, task, actorWhole)
+            
             if(pool.flexPoolValue){
                 pool["skillPoolValue"] = updatedPools.skillPoolValue
                 pool["flexPoolValue"] = updatedPools.flexPoolValue
             }
-            if(pool.flexPoolValue){
+            else{
                 pool["skillPoolValue"] = updatedPools.skillPoolValue
             }
         }
 
         if(roll.type === "psi" && actorWhole.type != "goon")
-            options.totalInfection = await psi.infectionUpdate(actorWhole, options, pool)
+            options.totalInfection = await psi.infectionUpdate(actorWhole, options)
         
         if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
             addTaskModifiers(actorModel, options, task, roll.type, rolledFrom, weaponSelected)
@@ -498,7 +500,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
-        let blind = options.rollMode === "blind" ? game.user.isGM ? false : true : false
+        let blind = options.rollMode === "blind" ? true : false
 
         let recipientList = prepareRecipients(options.rollMode)
 
@@ -507,7 +509,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        console.log(outputData)
+        
         await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon")
@@ -930,7 +932,6 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         message.formula = roll.formula
         message.total = roll.total
         message.rollType = rollType
-        console.log(roll)
 
         /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
         if (game.dice3d) {

@@ -12,25 +12,18 @@ export function preparePsi(data){
     rollPsiEffect(actorWhole, psiOwner, push)
 }
 
-export async function infectionUpdate(actorWhole, options, pool){
+export async function infectionUpdate(actorWhole, options){
 
     const raiseInfection = parseInt(options.raiseInfection);
     const actorModel = actorWhole.system;
-    let infectionMod
+    let infectionMod = actorModel.psiStrain.infection + (options.push ? raiseInfection * 2 : raiseInfection)
 
-    if(options.ignoreInfection)
-        options["ignoreInfection"] = await pools.update(options, pool, null, actorWhole)
+    if (infectionMod <= 100)
+        actorWhole.update({"system.psiStrain.infection" : infectionMod});
 
-    if(!options.ignoreInfection){
-        infectionMod = options.push ? raiseInfection * 2 : raiseInfection;
-        infectionMod += parseInt(actorModel.psiStrain.infection)
-        if (infectionMod <= 100){
-            actorWhole.update({"system.psiStrain.infection" : infectionMod});
-        }
-        else if (infectionMod > 100){
-            actorWhole.update({"system.psiStrain.infection" : 100});
-        }
-    }
+    else if (infectionMod > 100)
+        actorWhole.update({"system.psiStrain.infection" : 100});
+    
 
     return infectionMod
 }
