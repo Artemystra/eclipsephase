@@ -440,10 +440,12 @@ export class TaskRollModifier {
 /**
  * Performs a roll against any given skill or aptitude. Prints it's result 
  * into the chat for further usage.
- * @param {Object} dataset 
- * @param {Object} actorModel 
- * @param {Object} actorWhole 
- * @param {Object} systemOptions 
+ * @param {Object} dataset - The dataset object that contains all the necessary information for the roll. It is derived from the html element that was clicked to trigger the roll
+ * @param {Object} actorModel - The actor's system object that the roll is being performed from
+ * @param {Object} actorWhole - The actor object that the roll is being performed from
+ * @param {Object} systemOptions - The system options selected mainly to determine whether homebrew rules are in effect
+ * @param {Object} weaponSelected - The weapon object that is being used for the roll (This is important for attack rolls (melee/guns) only)
+ * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
  * @returns 
  */
 
@@ -512,7 +514,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         
         await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
-        if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon")
+        if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push)
     }
 }
@@ -522,6 +524,12 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
  * @param {string} template - Path to the html template for this dialog
  * @param {string} title - What to display in the title bar
  * @param {string[]} names - List of element ids to get values from
+ * @param {string} specName - The name of the specialization (if any. Default: null)
+ * @param {Object} pool - The pool object to display pool usage options in the dialog
+ * @param {string} actorType - The type of actor this is (character, npc, goon)
+ * @param {Object} traits - The traits object to display special effects in the dialog
+ * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
+ * @returns {Promise<Object>} - The values of the form when submitted
  */
 async function showOptionsDialog(rollData, rollType, specName, pool, actorType, traits, rolledFrom) {
 
@@ -901,8 +909,9 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  * @param {Object} message - Provides all values to the html template
  * @param {Class} task - Result of the TaskRoll class 
  * @param {Array} recipientList - List of users to whisper the result to (empty if public)
- * @param {Boolean} blind - If the roll is blind or not
+ * @param {Boolean} blind - If the roll is blind or not (important: due to the API provided by DsN blind rolls will not trigger any 3D dice animations)
  * @param {String} alias - Alias of the speaker
+ * @param {String} htmlTemplate - Path to the html template to use for the chat message
  */
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
@@ -946,7 +955,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: alias}),
         content: html,
-        whisper: recipientList,
+        whisper: showTo,
         sound: message.sound,
         blind: blind
     })

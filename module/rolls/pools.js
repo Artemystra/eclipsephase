@@ -137,7 +137,7 @@ export async function outcomeAlternatives(outputData, pool){
             obj["resultText"] = TASK_RESULT_TEXT[(obj.originalResult+1)].text
          }   
         
-        else if(obj.resultClass === "success" && obj.originalResult === 5 && (obj.result > obj.originalResult) && obj.pools.available)
+        else if(obj.resultClass === "success" && obj.originalResult === 5 && (obj.value > outputData.rollResult) && obj.pools.available)
             obj.options["swap"] = true
     }
     else if(outputData.resultClass === "fail"){
