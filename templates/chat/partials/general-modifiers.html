@@ -66,6 +66,7 @@
             <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.useThreat"}}</label>
             <select name="usePool" class="input-large">
                 <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                {{#if (eq rollType "psi")}}<option value="ignoreInfection">{{localize "ep2e.roll.dialog.ignoreInfection"}} ({{localize pool.poolType}})</option>{{/if}}
                 <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
                 <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
             </select>
