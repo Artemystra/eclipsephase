@@ -587,7 +587,6 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
     let modValue
     let addition
     let announce
-    let weaponDamage
     let weaponTraits = weaponSelected ? weaponSelected.weaponTraits : null
     let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
     let trauma = 10*parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0)

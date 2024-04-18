@@ -1,3 +1,9 @@
+/**
+ * Foundry VTTs item creation & deletion functions
+ * @param {Object} html - The HTML object to which the event listeners are added
+ * @param {*} callerobj 
+ * @param {*} caller 
+ */
 export function registerItemHandlers(html,callerobj,caller){
       // Add Inventory Item
       html.find('.item-create').click(caller._onItemCreate.bind(this));
@@ -17,6 +23,11 @@ export function registerItemHandlers(html,callerobj,caller){
     });
 }
 
+/**
+ * Foundry VTTs active effect creation & deletion functions
+ * @param {Object} html - The HTML object to which the event listeners are added
+ * @param {*} callerobj 
+ */
 export function registerEffectHandlers(html,callerobj){
     html.find('.effect-create').click(ev => {
         callerobj.createEmbeddedDocuments('ActiveEffect', [{
@@ -60,14 +71,31 @@ export function registerEffectHandlers(html,callerobj){
   
 }
 
-export async function _tempEffectCreation(callerobj, numberOfRuns, tempEffLabel, tempEffIcon, tempEffTar, tempEffMode, tempEffVal){
-    return callerobj.createEmbeddedDocuments('ActiveEffect', [{
+/**
+ * Function to create temporary effects. These effects are used to be automatically 
+ * deleted under certain circumstances. Therefore they're marked accordingly
+ * @param {Object} actor - The actor object effects are added to
+ * @param {Number} numberOfRuns - Defines how many times the effect is deleted
+ * @param {String} tempEffLabel - The label of the temporary effect
+ * @param {String} tempEffIcon - The icon of the temporary effect
+ * @param {String} tempEffTar - The target value of the temporary effect
+ * @param {String} tempEffMode - The mode of the temporary effect
+ * @param {*} tempEffVal - The value of the temporary effect
+ * @returns 
+ */
+export async function _tempEffectCreation(actor, numberOfRuns, tempEffLabel, tempEffIcon, tempEffTar, tempEffMode, tempEffVal){
+    return actor.createEmbeddedDocuments('ActiveEffect', [{
       label: tempEffLabel,
       icon: tempEffIcon,
       changes: [{key : tempEffTar, mode : tempEffMode, value : -1*numberOfRuns}]
     }]);
 }
 
+/**
+ * Animation handlers for character sheets
+ * @param {Object} html 
+ * @param {Object} callerobj 
+ */
 export function registerCommonHandlers(html,callerobj){
     
     //Open/Close items (gear/weapons/flaws/traits etc.)
@@ -137,6 +165,12 @@ export function registerCommonHandlers(html,callerobj){
     
 }
 
+/**
+ * Create special & know skills
+ * @param {Object} event - The event starting the function (default: click)
+ * @param {Object} callerobj - The object the function is called from (default: actor)
+ * @returns 
+ */
 export function itemCreate(event,callerobj){
       event.preventDefault();
       const header = event.currentTarget;
@@ -155,6 +189,12 @@ export function itemCreate(event,callerobj){
       return callerobj.createEmbeddedDocuments("Item", [itemData]);
 }
 
+/**
+ * Deletes a given number of items from the actor's inventory
+ * @param {Object} actor - The actor object the items are deleted from
+ * @param {String} itemID - The ID of the item to be deleted
+ * @param {Number} itemQuantity - The quantity of the items to be deleted
+ */
 export async function itemReduction(actor, itemID, itemQuantity){
   let quantity = Number(itemQuantity) - 1;
   let ammoUpdate = [];
@@ -802,8 +842,14 @@ export async function moreInfo(event){
     }
 }
 
-//Item Toggles
-
+/**
+ * Toggles the active state of an item and its effects.
+ * This is the main function to handle automatic active effect
+ * toggle on morph switch.
+ * @param {Object} html - The html object of the actor sheet
+ * @param {Object} actor - The actor object
+ * @param {Array} allEffects - An array of the actor's active effects
+ */
 export function embeddedItemToggle(html, actor, allEffects){
   html.find('.equipped.checkBox').click(async ev => {
     const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
@@ -834,6 +880,11 @@ export function embeddedItemToggle(html, actor, allEffects){
   });
 }
 
+/**
+ * Simple toggle for items active state
+ * @param {Object} html - The html object passeed in click on a button of the actor sheet
+ * @param {Object} item - The item to be toggled
+ */
 export function itemToggle(html, item){
   html.find('.toggleItem').click(async ev => {
     const element = ev.currentTarget;
@@ -847,7 +898,13 @@ export function itemToggle(html, item){
   });
 }
 
-//List dialog constructor
+/**
+ * The standard constructor for lists throughout the system (e.g. weapon selection)
+ * @param {Array} objectList - An array with objects to be listed
+ * @param {String} dialogType - The type of dialog to be displayed. This defines which part of the list-dialog.html is displayed
+ * @param {String} headline - The headline of the dialog
+ * @returns 
+ */
 export async function listSelection(objectList, dialogType, headline){
   let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
   let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
@@ -881,7 +938,15 @@ function _proListSelection(form) {
   }
 }
 
-//Joins multiple consecutive dice rolls into one Message
+/**
+ * A powerful constructor of joined rolls for the chat.
+ * Use this in case you need to make a series of rolls and want to display them into
+ * one singular chat message.
+ * @param {Array} rollsArray - The array of rolls to be displayed
+ * @param {Object} messageData - Object with the chat message data
+ * @param {*} param2 
+ * @returns - An object to be displayed in the chat
+ */
 async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create=true}={}) {
   for ( const roll of rollsArray ) {
       if ( !roll._evaluated ) await roll.evaluate({async: true});
@@ -907,6 +972,10 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
   }
 }
 
+/**
+ * Creator for GM lists
+ * @returns - a list of all currently active (in the sense of being online) GMs
+ */
 export function gmList(){
   let gmList = game.users.filter(user => user.isGM)
   let activeGMs = gmList.filter(user => user.active)
@@ -914,6 +983,13 @@ export function gmList(){
   return gmIDs
 }
 
+/**
+ * Creator for recipient lists. This function is the basis for
+ * GMs whispering rolls to players instead of the other way around.
+ * It is also usable for simple blind and gmrolls.
+ * @param {*} rollMode - The roll mode of the roll (e.g. blind, gmroll, private)
+ * @returns - A list of recipients
+ */
 export function prepareRecipients(rollMode){
   let recipientList = []
   
