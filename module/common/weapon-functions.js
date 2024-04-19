@@ -1,4 +1,5 @@
 import { itemReduction, listSelection, gmList } from "./common-sheet-functions.js";
+import { damageValueCalc } from "./common-sheet-functions.js";
 //End-to-end weapon preparation
 export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, mode){
   
@@ -309,72 +310,6 @@ export async function weaponListConstructor(actor, skillKey){
     }
   
   }
-  
-//DV calculator (this translates the three given integers into a human readable roll formula)
-export async function damageValueCalc (object, dvPath, traits, calcType){
-  let dv = "";
-  
-  if(calcType === "ammo"){
-    //Ammo Damage Calculation
-    dv = "ep2e.item.weapon.table.noDamageValueModifier"
-    const d10 = object.type != "drug" ? dvPath.d10 : 0;
-    const d6 = object.type != "drug" ? dvPath.d6 : 0;
-    const bonus = object.type != "drug" ? dvPath.bonus : 0;
-    let bonusValue = bonus ? "+"  + bonus : "";
-  
-    if (d10 && d6){
-      dv = d10 + "d10+" + d6 + "d6" + bonusValue;
-    }
-    else if (d10 && !d6){
-      dv = d10 + "d10" + bonusValue;
-    }
-    else if (!d10 && d6){
-      dv = d6 + "d6" + bonusValue;
-    }
-    
-  }
-  else if (calcType === "weapon"){
-    //if the weapon has the noDamage Trait the calculation is skipped
-    if (traits.noDamage){
-      dv = "ep2e.item.weapon.table.noDamageAmmo"
-    }
-    //Weapon Damage Calculation
-    else {
-      let d10 = Number(dvPath.d10);
-      let d6 = Number(dvPath.d6);
-      let bonus = Number(dvPath.bonus);
-      //Ammo damage modifier
-      if (object.type != "ccWeapon"){
-        if (!object.system.ammoSelected.traits.bioMorphsOnly.value && !object.system.ammoSelected.traits.dvOnMiss.value){
-          d10 += Number(object.system.ammoSelected.dvModifier.d10);
-          d6 += Number(object.system.ammoSelected.dvModifier.d6);
-          bonus += Number(object.system.ammoSelected.dvModifier.bonus);
-        }
-      }
-      if (!d10 && !d6 && !bonus){
-        dv = "ep2e.item.weapon.table.noDamage"
-      }
-      /*else if(object.system.ammoSelected.traits){
-  
-      }*/
-      else {
-        let bonusValue = bonus ? "+"  + bonus : "";
-      
-        if (d10 && d6){
-          dv = d10 + "d10+" + d6 + "d6" + bonusValue;
-        }
-        else if (d10 && !d6){
-          dv = d10 + "d10" + bonusValue;
-        }
-        else if (!d10 && d6){
-          dv = d6 + "d6" + bonusValue;
-        }
-      }
-    }
-  }
-
-  return {dv};
-}
 
 //Reload Weapons
 export async function reloadWeapon(html, actor) {

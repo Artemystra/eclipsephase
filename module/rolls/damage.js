@@ -1,4 +1,5 @@
-import { weaponPreparation, damageValueCalc } from "../common/weapon-functions.js"
+import { weaponPreparation } from "../common/weapon-functions.js"
+import { damageValueCalc } from "../common/common-sheet-functions.js"
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat } from "./dice.js"
 import { prepareRecipients } from "../common/common-sheet-functions.js"
 
