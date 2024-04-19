@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo, healthBarChange} from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo} from "../common/common-sheet-functions.js";
+import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as Dice from "../rolls/dice.js";
@@ -875,21 +876,18 @@ export default class EPactorSheet extends ActorSheet {
 
       let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : "")
       let roll = await new Roll(rollFormula).evaluate({async: true});
-      let recover = null;
       let restValue = null;
       if (restType === "short"){
+
+        let message = {}
+
+        message.rollTitle = "ep2e.roll.announce.total"
+        message.mainMessage = "ep2e.roll.announce.rest.short"
+
+        await Dice.rollToChat(message, Dice.DEFAULT_ROLL, roll, actorWhole.name, null, false, "rollOutput")
+
+        restValue = roll.total
         
-        let label = game.i18n.localize("ep2e.roll.announce.rest.short");
-        recover = await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: label
-        });
-
-        restValue = recover.content
-
-        if (game.dice3d){
-          await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
-        }
       }
 
       if (restType === "long" && !brewStatus){
@@ -974,7 +972,7 @@ export default class EPactorSheet extends ActorSheet {
       //Calculate the healthBar
       html.find(".healthPanelNoSubmit").change(this.autoSubmitPrevention.bind(this))
 
-      healthBarChange(actor, html);
+      damage.healthBarChange(actor, html);
 
       //More Information Dialog
       html.on('click', 'a.moreInfoDialog', moreInfo);

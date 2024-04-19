@@ -12,6 +12,8 @@ export const TASK_RESULT_OUTPUT = 'systems/eclipsephase/templates/chat/task-resu
 export const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage.html'
 export const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
 export const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
+export const DAMAGE_STATUS_OUTPUT = 'systems/eclipsephase/templates/chat/damage-status.html'
+export const DEFAULT_ROLL = 'systems/eclipsephase/templates/chat/default-roll-to-chat.html'
 
 /*
  * Task result constants
@@ -911,42 +913,53 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  * @param {Boolean} blind - If the roll is blind or not (important: due to the API provided by DsN blind rolls will not trigger any 3D dice animations)
  * @param {String} alias - Alias of the speaker
  * @param {String} htmlTemplate - Path to the html template to use for the chat message
+ * @param {*} roll - The roll object (standard: Object. May be an array if multirolls are performed)
+ * @param {String} rollType - The type of roll
+ * @param {String} rollTitle - The title of the roll
  */
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
-    const diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
-    const showTo = recipientList.length > 0 ? recipientList : null
-    
+    const diceArray = []
+    const showTo = recipientList != null ? recipientList.length > 0 ? recipientList : null : null
+    console.log(roll)
     if(roll){
-        let i = 0
-        for(let dice of roll.dice){
-            if(dice.faces === 6)
-                for(let roll of dice.results){
-                diceBreakdown.sixes[i] = roll
-                i++
+        if(roll.length > 1){
+             for(let array = 0; array < roll.length; array++){
+                console.log("This is my roll: ", roll[array])
+                const diceBreakdown = breakdown(roll[array])
+
+                diceBreakdown.rollType = rollType
+                diceBreakdown.rollTitle = message.rollTitle
+                diceBreakdown.total = roll[array].total
+                diceBreakdown.rollNumber = array + 1
+                diceArray.push(diceBreakdown)
+
+                /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
+                if (game.dice3d) {
+                    game.dice3d.showForRoll(roll[array], game.user, true, showTo, blind)
+                } else {
+                    message.sound = CONFIG.sounds.dice
+                }
             }
-            else if(dice.faces === 10)
-                for(let roll of dice.results){
-                diceBreakdown.tens[i] = roll
-                i++
-            }
-            else if (dice.faces === 100)
-                for(let roll of dice.results){
-                diceBreakdown.hundreds[i] = roll
-                i++
+            message.diceArray = diceArray
+        }
+        else{
+            
+            const diceBreakdown = breakdown(roll)
+
+            message.diceBreakdown = diceBreakdown
+            
+            /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
+            if (game.dice3d) {
+                await game.dice3d.showForRoll(roll, game.user, true, showTo, blind)
+            } else {
+                message.sound = CONFIG.sounds.dice
             }
         }
 
-        message.diceBreakdown = diceBreakdown
+        console.log("This is my dice array: ", diceArray)
         message.formula = roll.formula
         message.total = roll.total
         message.rollType = rollType
-
-        /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
-        if (game.dice3d) {
-            await game.dice3d.showForRoll(roll, game.user, true, showTo, blind)
-        } else {
-            message.sound = CONFIG.sounds.dice
-        }
     }
 
     let html = await renderTemplate(htmlTemplate, message)
@@ -958,4 +971,29 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         sound: message.sound,
         blind: blind
     })
+}
+
+function breakdown(roll){
+    let diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
+    let i = 0
+    
+    for(let dice of roll.dice){
+        if(dice.faces === 6)
+            for(let roll of dice.results){
+            diceBreakdown.sixes[i] = roll
+            i++
+        }
+        else if(dice.faces === 10)
+            for(let roll of dice.results){
+            diceBreakdown.tens[i] = roll
+            i++
+        }
+        else if (dice.faces === 100)
+            for(let roll of dice.results){
+            diceBreakdown.hundreds[i] = roll
+            i++
+        }
+    }
+
+    return diceBreakdown
 }

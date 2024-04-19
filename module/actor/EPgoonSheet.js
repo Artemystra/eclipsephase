@@ -1,6 +1,7 @@
 import * as Dice from "../rolls/dice.js"
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo, healthBarChange } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers, _tempEffectCreation,moreInfo } from "../common/common-sheet-functions.js";
+import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 
@@ -515,7 +516,7 @@ export default class EPgoonSheet extends ActorSheet {
         //Calculate the healthBar
         html.find(".healthPanelNoSubmit").change(this.autoSubmitPrevention.bind(this))
 
-        healthBarChange(actor, html);
+        damage.healthBarChange(actor, html);
 
     }
 

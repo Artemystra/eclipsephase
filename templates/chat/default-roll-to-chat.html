@@ -1,0 +1,22 @@
+<div class="alignCenter">
+
+    <div class="alignCenter">
+        <div style="margin-bottom: 20px;">
+            {{{localize mainMessage}}}
+        </div>
+    
+        {{#if focusMessage}}
+            <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
+                <span><b>{{{localize focusMessage}}}</b></span><br>
+                {{#if messageComment}}
+                <span style="font-size: 14px;">({{{localize messageComment}}})</span>
+                {{/if}}
+            </div>
+        {{/if}}
+      
+      {{#if total}}
+        {{> systems/eclipsephase/templates/chat/partials/roll-results.html diceBreakdown=diceBreakdown rollTitle=rollTitle total=total rollType=rollType formula=null}}
+      {{/if}}
+    </div>
+
+</div>

@@ -1,19 +1,27 @@
-{{#if (eq rollType "damageOutput")}}
+{{#if (eq rollType "rollOutput")}}
+
 <div class="item">
     <table class="slideShow" style="margin: 0; min-height: 50px;">
       <tr style="background-color: var(--pitchBorder);">
-        <td class="table-dice-label" style="font-size: 16px;">{{localize "ep2e.roll.announce.damageDone"}}</td>
+        <td class="table-dice-label" style="font-size: 16px;">{{localize rollTitle}} {{diceBreakdown.rollNumber}}</td>
         <td style="font-size: 16px; display: flex; justify-content: center; min-height: 50px; min-width: 15px; align-items: center; padding: 0!important;"><strong>{{total}}</strong></td>
       </tr>
     </table>
-    <div class="showMore noShow">
-        <div style=" display: flex; justify-content: center; background-color: var(--highlightBackground); min-width: 100%;">
-            <div class="eclipsephase rollFormulaContainer">
-                <p><strong>{{formula}}</strong></p>
-            </div>
+    <div class="showMore noShow" style="background-image: url(systems/eclipsephase/resources/img/background3.webp);">
+        <div style=" display: flex; justify-content: center; min-width: 100%;">
+            {{#if formula}}
+                <div class="eclipsephase rollFormulaContainer">
+                    <p><strong>{{formula}}</strong></p>
+                </div>
+            {{/if}}
         </div>
 
         <div class="alignCenter eclipsephase dicetray">
+            {{#each diceBreakdown.hundreds as |die key|}}
+            <div class="diecontainer hundreds">
+                <strong class="eyes">{{die.result}}</strong>
+            </div>
+            {{/each}}
             {{#each diceBreakdown.tens as |die key|}}
             <div class="diecontainerSmall tens">
                 <strong class="eyes">{{die.result}}</strong>
@@ -38,7 +46,7 @@
         <td class="table-dice-result" style="font-size: 16px;"><strong style="text-decoration: underline; text-decoration-style: double;">{{targetNumber}}</strong></td>
       </tr>
     </table>
-    <div class="showMore noShow">
+    <div class="showMore noShow" style="background-image: url(systems/eclipsephase/resources/img/background3.webp);">
 
         <div class="alignCenter eclipsephase dicetray">
             {{#each diceBreakdown.hundreds as |die key|}}

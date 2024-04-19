@@ -474,7 +474,6 @@
   flex-wrap: wrap;
   padding: 5px 10px;
   justify-content: center;
-  background-color: var(--highlightBackground);
 }
 
 .eclipsephase.dicetray .diecontainer{
