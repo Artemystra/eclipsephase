@@ -471,7 +471,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     for(let repitition = 1; repitition <= numberOfTargets; repitition++){
 
         let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
-        console.log("This is options: ", options)
+
         if(options.usePool){
 
             let updatedPools = await pools.update(options.usePool, pool, task, actorWhole)
@@ -920,11 +920,11 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceArray = []
     const showTo = recipientList != null ? recipientList.length > 0 ? recipientList : null : null
-    console.log(roll)
+    
     if(roll){
         if(roll.length > 1){
              for(let array = 0; array < roll.length; array++){
-                console.log("This is my roll: ", roll[array])
+                
                 const diceBreakdown = breakdown(roll[array])
 
                 diceBreakdown.rollType = rollType
@@ -956,8 +956,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
             }
         }
 
-        console.log("This is my dice array: ", diceArray)
-        message.formula = roll.formula
+        message.formula = roll.terms.length > 1 ? roll.formula : null
         message.total = roll.total
         message.rollType = rollType
     }

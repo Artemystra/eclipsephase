@@ -874,7 +874,7 @@ export default class EPactorSheet extends ActorSheet {
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie);
       }
 
-      let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : "")
+      let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : "") + (actorModel.mods.recoverBonus ? " + " + eval(actorModel.mods.recoverBonus) : "")
       let roll = await new Roll(rollFormula).evaluate({async: true});
       let restValue = null;
       if (restType === "short"){

@@ -901,19 +901,23 @@
           "type": {
             "label": "Ware Type",
             "b": "B",
+            "bc": "BC",
             "bch": "BCH",
             "bh": "BH",
             "bhm": "BHM",
+            "bn": "BN",
             "bm": "BM",
             "c": "C",
             "ch": "CH",
             "chn": "CHN",
             "chm": "CHM",
             "h": "H",
+            "hm": "HM",
             "hn": "HN",
             "hmn": "HMN",
             "n": "N",
             "nh": "NH",
+            "m": "M",
             "mn": "MN"
           }
         }

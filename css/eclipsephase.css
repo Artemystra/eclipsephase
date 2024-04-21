@@ -1672,6 +1672,10 @@ h3.subheaderBlank {
   align-items: center;
 }
 
+.slideShow {
+  cursor: pointer;
+}
+
 .contentcenter .slideShow, 
 .contentleft .slideShow {
   max-width: 50px;

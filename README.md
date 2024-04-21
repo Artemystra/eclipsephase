@@ -160,7 +160,7 @@ Since there are several items (like traits, flaws and ware) that are morph speci
 
 Creating your own active effect items is simpel, but as for now you need to now the exact data value path. To make this a bit easier for you we created a list with all modifiers that are present till date, so you don't have to guess on how to build your own active effect items.
 
-<p><strong><u>General Mods</strong></u><br>
+<p><strong><u>General Mods</strong></u></p>
 system.mods.globalMod = affects all skill/aptitude tests.<br>
 system.mods.traumaMod = affects all skill/aptitude tests through trauma. (type "-10" to ignore one trauma)<br>
 system.mods.woundMod = affects all skill/aptitude tests through trauma. (type "-10" to ignore one wound)<br>
@@ -172,13 +172,13 @@ system.mods.ttMod = affects trauma threshold. This gets added after the tt is ca
 system.mods.energyMod = affects energy armor. This is added on top of the energy armor without any effect on encumberance.<br>
 system.mods.kineticMod = affects kinetic armor. This is added on top of the kinetic armor without any effect on encumberance.</p>
 
-<p><strong><u>Pool Mods</strong></u>
+<p><strong><u>Pool Mods</strong></u></p>
 system.pools.insight.mod = affects the maximum insight pool.<br>
 system.pools.moxie.mod = affects the maximum moxie pool.<br>
 system.pools.vigor.mod = affects the maximum vigor pool.<br>
 system.pools.flex.mod = affects the maximum flex pool.</p>
 
-<p><strong><u>Aptitude Mods</strong></u>
+<p><strong><u>Aptitude Mods</strong></u></p>
 system.aptitudes.cog.mod = affects the cognition roll. It is not affecting the cognition itself.<br>
 system.aptitudes.int.mod = affects the intuition roll. It is not affecting the intuition itself.<br>
 system.aptitudes.ref.mod = affects the reflexes roll. It is not affecting the reflexes itself.<br>
@@ -186,7 +186,7 @@ system.aptitudes.sav.mod = affects the savvy roll. It is not affecting the savvy
 system.aptitudes.som.mod = affects the somatics roll. It is not affecting the somatics itself.<br>
 system.aptitudes.wil.mod = affects the willpower roll. It is not affecting the willpower itself.</p>
 
-<p><strong><u>Skill Mods</strong></u>
+<p><strong><u>Skill Mods</strong></u></p>
 system.skillsIns.infosec.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
 system.skillsIns.interface.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
 system.skillsIns.perceive.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
@@ -206,6 +206,9 @@ system.skillsVig.free fall.mod = affects the skilltotal of given skill. Also aff
 system.skillsVig.guns.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
 system.skillsVig.infiltrate.mod = affects the skilltotal of given skill. Also affects the skilltest roll.<br>
 system.skillsVig.melee.mod = affects the skilltotal of given skill. Also affects the skilltest roll.</p>
+
+<p><strong><u>Special Mods</strong></u></p>
+system.mods.recoverBonus = adds a modifier to every pool recovery roll.<br>
 
 <h2><strong>Disclaimers</strong></h2>
 <h3>Personal</h3>
