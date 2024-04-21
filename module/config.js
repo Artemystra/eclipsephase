@@ -54,19 +54,23 @@ eclipsephase.armorTypes = {
 
 eclipsephase.wareTypes = {
     b: "ep2e.item.ware.table.type.b",
+    bc: "ep2e.item.ware.table.type.bc",
     bch: "ep2e.item.ware.table.type.bch",
     bh: "ep2e.item.ware.table.type.bh",
     bhm: "ep2e.item.ware.table.type.bhm",
+    bn: "ep2e.item.ware.table.type.bn",
     bm: "ep2e.item.ware.table.type.bm",
     c: "ep2e.item.ware.table.type.c",
     ch: "ep2e.item.ware.table.type.ch",
     chn: "ep2e.item.ware.table.type.chn",
     chm: "ep2e.item.ware.table.type.chm",
     h: "ep2e.item.ware.table.type.h",
+    hm: "ep2e.item.ware.table.type.hm",
     hn: "ep2e.item.ware.table.type.hn",
     hmn: "ep2e.item.ware.table.type.hmn",
     n: "ep2e.item.ware.table.type.n",
     nh: "ep2e.item.ware.table.type.nh",
+    m: "ep2e.item.ware.table.type.m",
     mn: "ep2e.item.ware.table.type.mn"
 }
 

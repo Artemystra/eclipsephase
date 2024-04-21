@@ -409,7 +409,14 @@
       "considerResting": "Du kannst ihn mit einer 'Ausruhen'-Aktion wieder füllen",
       "numberWounds": "Anzahl Wunden zu ignorieren",
       "numberTrauma": "Anzahl Trauma zu ignorieren",
-      "repSize": "Größe des Gefallens"
+      "repSize": "Größe des Gefallens",
+      "use": {
+        "insight": "Insight Nutzen",
+        "vigor": "Vigor Nutzen",
+        "moxie": "Moxie Nutzen",
+        "threat": "Threat Nutzen",
+        "flex": "Flex Nutzen"
+      }
       },
       "addSkill": "Skill",
       "chooseAptitude": "Anlage Wählen",
@@ -941,19 +948,23 @@
           "type": {
             "label": "Mod Typ",
             "b": "B",
+            "bc": "BC",
             "bch": "BCH",
             "bh": "BH",
             "bhm": "BHM",
+            "bn": "BN",
             "bm": "BM",
             "c": "C",
             "ch": "CH",
             "chn": "CHN",
             "chm": "CHM",
             "h": "H",
+            "hm": "HM",
             "hn": "HN",
             "hmn": "HMN",
             "n": "N",
             "nh": "NH",
+            "m": "M",
             "mn": "MN"
           }
         }
@@ -980,7 +991,8 @@
           "target": "Zusätzliches Ziel",
           "infectionDamage": "Die Infektion schadet dir",
           "infectionInfluence": "Die Infektion nimmt Einfluss",
-          "infectionTries": "Die Infektion wird stärker",
+          "infectionTries": "Die Infektion rebelliert",
+          "infectionTakeover": "Infektionsübernahme",
           "effectReceived": "Effekt erhalten"
         },
         "ignoreInfection": "Infektion ignorieren",
@@ -998,7 +1010,7 @@
           "damageRoll": "Schadenswurf",
           "swap": "Ergebnis Drehen",
           "raise": "Ergebnis Verbessern",
-          "talentCheck": "Probe"
+          "check": "Würfelwurf"
         },
         "button": {
           "roll": "Würfeln",
@@ -1175,7 +1187,9 @@
         "rolled": "würfelt",
         "appliedMods": "Angewandte Modifikatoren",
         "baseValue": "Grundwert",
-        "rollTarget": "Modifizierter Wert",
+        "rollTarget": "Ziel",
+        "total": "Resultat",
+        "damageDone": "Schaden gesamt",
         "infectionRaise": "Ienfektion steigt auf",
         "rest": {
           "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
@@ -1276,6 +1290,7 @@
             "defMinCover": "Ziel in geringer Deckung",
             "defModCover": "Ziel in moderater Deckung",
             "defMajCover": "Ziel in Volldeckung",
+            "defHidden": "Ziel ist versteckt",
             "visImpMin": "Leichte Sichterschwernis",
             "visImpMaj": "Schwere Sichterschwernis",
             "blind": "Blind",
@@ -1287,7 +1302,8 @@
             "weaponFull": "Deine Waffe ist noch voll.",
             "noAmmoPresent": "Keine passende Munition vorhanden.",
             "ammoSkillModifier": "Skillmodifikator (Munition)",
-            "weaponFixated": "Aus der Hüfte geschossen"
+            "weaponFixated": "Aus der Hüfte geschossen",
+            "fray": "Schuss Ausweichen"
           },
           "damage": {
             "physicalDamage": "Mein Morph wurde beschädigt",
@@ -1298,6 +1314,9 @@
             "trauma": "Trauma"
           }
         }
+      },
+      "psi": {
+        "rollButtonLabel": "Psi-Infektion Würfeln"
       }
     },
     "rule": {

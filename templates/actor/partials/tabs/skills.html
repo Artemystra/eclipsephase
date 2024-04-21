@@ -37,7 +37,7 @@
                                     </div>
                                 </i>
                             {{#if isGM}}
-                                <input class="input-xs" type="number" onFocus="this.select()" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
+                                <input class="input-xs" onFocus="this.select()" type="number" onFocus="this.select()" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
                             {{else}}
                                 {{#if (eq actor.system.editAll false)}}
                                 <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.insight.value}}{{actor.system.pools.insight.value}}{{else}}0{{/if}}</label>
@@ -127,7 +127,7 @@
                                 </div>
                             </i>
                             {{#if isGM}}
-                                <input class="input-xs -small" type="number"  name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/> 
+                                <input class="input-xs -small" onFocus="this.select()" type="number"  name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/> 
                                 {{else}}
                                     {{#if (eq actor.system.editAll false)}}
                                     <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.vigor.value}}{{actor.system.pools.vigor.value}}{{else}}0{{/if}}</label>
@@ -225,7 +225,7 @@
                                 </div>
                             </i>
                             {{#if isGM}}
-                                <input class="input-xs -small" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
+                                <input class="input-xs -small" onFocus="this.select()" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
                                 {{else}}
                                     {{#if (eq actor.system.editAll false)}}
                                     <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.moxie.value}}{{actor.system.pools.moxie.value}}{{else}}0{{/if}}</label>
@@ -382,7 +382,7 @@
                                 </div>
                             </i>
                             {{#if isGM}}
-                                <input class="input-xs -small" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
+                                <input class="input-xs -small" onFocus="this.select()" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
                                 {{else}}
                                     {{#if (eq actor.system.editAll false)}}
                                     <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.flex.value}}{{actor.system.pools.flex.value}}{{else}}0{{/if}}</label>
@@ -500,25 +500,25 @@
                                 <div class="grid grid-4col">
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-center insightPoolRecovery">
-                                            <input class=" input-xs" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
+                                            <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
                                             <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelInsight"}}</label>
                                         </div>
                                     </div>
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-center vigorPoolRecovery">
-                                            <input class=" input-xs" type="number" name="system.pools.update.vigor" value="{{actor.system.pools.update.vigor}}" data-dtype="Number" placeholder="0"/>
+                                            <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.vigor" value="{{actor.system.pools.update.vigor}}" data-dtype="Number" placeholder="0"/>
                                             <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelVigor"}}</label>
                                         </div>
                                     </div>
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-center moxiePoolRecovery">
-                                            <input class=" input-xs" type="number" name="system.pools.update.moxie" value="{{actor.system.pools.update.moxie}}" data-dtype="Number" placeholder="0"/>
+                                            <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.moxie" value="{{actor.system.pools.update.moxie}}" data-dtype="Number" placeholder="0"/>
                                             <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelMoxie"}}</label>
                                         </div>
                                     </div>
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-center flexPoolRecovery">
-                                            <input class=" input-xs" type="number" name="system.pools.update.flex" value="{{actor.system.pools.update.flex}}" data-dtype="Number" placeholder="0"/>
+                                            <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.flex" value="{{actor.system.pools.update.flex}}" data-dtype="Number" placeholder="0"/>
                                             <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelFlex"}}</label>
                                         </div>
                                     </div>
@@ -527,19 +527,19 @@
                             <div class="grid grid-3col">
                                 <div class="flexrow flex-group-center">
                                     <div class="flexrow flex-group-center insightPoolRecovery">
-                                        <input class=" input-xs" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
+                                        <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
                                         <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelInsight"}}</label>
                                     </div>
                                 </div>
                                 <div class="flexrow flex-group-center">
                                     <div class="flexrow flex-group-center vigorPoolRecovery">
-                                        <input class=" input-xs" type="number" name="system.pools.update.vigor" value="{{actor.system.pools.update.vigor}}" data-dtype="Number" placeholder="0"/>
+                                        <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.vigor" value="{{actor.system.pools.update.vigor}}" data-dtype="Number" placeholder="0"/>
                                         <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelVigor"}}</label>
                                     </div>
                                 </div>
                                 <div class="flexrow flex-group-center">
                                     <div class="flexrow flex-group-center moxiePoolRecovery">
-                                        <input class=" input-xs" type="number" name="system.pools.update.moxie" value="{{actor.system.pools.update.moxie}}" data-dtype="Number" placeholder="0"/>
+                                        <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.moxie" value="{{actor.system.pools.update.moxie}}" data-dtype="Number" placeholder="0"/>
                                         <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelMoxie"}}</label>
                                     </div>
                                 </div>

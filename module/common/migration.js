@@ -1416,10 +1416,6 @@ export function migrationPre0992(startMigration, endMigration){
               update[updatePath + ".full"] = movSplit[1];
               update[updatePath + ".type"] = movType;
 
-              console.log("This is movSplit", movSplit)
-              console.log("Actor name:",actor.name)
-              console.log("Morph name:", eval("actor.system.bodies.morph" + morphNumber + ".name"))
-              console.log("movement" + movNumber + ":", morphMovement)
             }
             else{
               break;
@@ -1445,9 +1441,6 @@ export function migrationPre0992(startMigration, endMigration){
             let movSplit = movSpeed.split('/');
 
             let updatePath = "system.bodies.morph1.movement" + movNumber
-            update[updatePath + ".base"] = movSplit[0];
-            update[updatePath + ".full"] = movSplit[1];
-            update[updatePath + ".type"] = movType;
           }
           else{
             break;
@@ -1455,6 +1448,36 @@ export function migrationPre0992(startMigration, endMigration){
         }
 
       }
+      actor.update(update)
+    }
+    game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+    endMigration = true
+    return {endMigration}
+  }
+}
+
+//Morph Movement Migration into the new integer system
+export function migrationPre110(startMigration, endMigration){
+
+  const latestUpdate = "1.1.0";
+  if (startMigration){        
+    for(let actor of game.actors){
+      
+      let update = {}
+      if(actor.type != "character"){
+        
+        update["system.mods.iniMod"] = parseInt(actor.system.mods.iniMod)
+        update["system.threatlevel.current"] = parseInt(actor.system.threatLevel.current)
+        update["system.threatlevel.armorTotal"] = parseInt(actor.system.threatLevel.total)
+
+      }
+
+      if(actor.type != "goon")
+        update["system.psiStrain.infection"] = parseInt(actor.system.psiStrain.infection)
+
+
+      update["system.updated"] = latestUpdate
+
       actor.update(update)
     }
     game.settings.set("eclipsephase", "migrationVersion", latestUpdate);

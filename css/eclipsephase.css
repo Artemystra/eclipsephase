@@ -236,7 +236,7 @@
   justify-content: space-between;
 }
 
-/* Styles limited to eclipsephase sheets */
+/* Styles limited to eclipsephase system */
 .eclipsephase .awesomeIcon {
   color: var(--iconGrey);
 }
@@ -466,6 +466,61 @@
 
 .item-controls {
   margin: 5px 0 5px 0!important;
+}
+
+.eclipsephase.dicetray{
+  min-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px 10px;
+  justify-content: center;
+}
+
+.eclipsephase.dicetray .diecontainer{
+  min-width: 70px;
+  min-height: 70px;
+}
+
+.eclipsephase.dicetray .diecontainerSmall{
+  min-width: 55px;
+  min-height: 55px;
+}
+
+.eclipsephase.dicetray .diecontainer.hundreds{
+  background-image: url(../resources/icons/d100.webp);
+  background-size: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eclipsephase.dicetray .diecontainerSmall.tens{
+  background-image: url(../resources/icons/d10.webp);
+  background-size: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eclipsephase.dicetray .diecontainerSmall.sixes{
+  background-image: url(../resources/icons/d6.webp);
+  background-size: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eclipsephase.dicetray .diecontainer .eyes{
+  font-size: 20px;
+  color: var(--mainText);
+}
+
+.eclipsephase.rollFormulaContainer{
+  margin: 10px 0 5px 0;
+  padding: 0 15px; 
+  max-width: fit-content; 
+  background-color: #161616;
+  border-radius: 8px;
 }
 
 /* Colors */
@@ -812,6 +867,21 @@ a.content-link, a.inline-roll {
 .prosemirror menu button:hover {
   background: var(--highlightBackground);
   color: var(--mainText);
+}
+
+
+.chatPoolButton {
+  max-width: 45%;
+}
+
+.chatActionButton {
+  max-width: 85%;
+  margin: 10px 0;
+}
+
+.threatButton{
+  max-width: 100%;
+
 }
 
 .prosemirror menu .pm-dropdown ul {
@@ -1600,6 +1670,10 @@ h3.subheaderBlank {
   display: flex!important;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.slideShow {
+  cursor: pointer;
 }
 
 .contentcenter .slideShow, 

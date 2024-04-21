@@ -379,7 +379,14 @@
         "considerResting": "Consider using a 'rest'-action",
         "numberWounds": "Wounds to Ignore",
         "numberTrauma": "Trauma to Ignore",
-        "repSize": "Size of Favor"
+        "repSize": "Size of Favor",
+        "use": {
+          "insight": "Use Insight",
+          "vigor": "Use Vigor",
+          "moxie": "Use Moxie",
+          "threat": "Use Threat",
+          "flex": "Use Flex"
+        }
       },
       "addSkill": "Add Skill",
       "chooseAptitude": "Choose Apt",
@@ -894,19 +901,23 @@
           "type": {
             "label": "Ware Type",
             "b": "B",
+            "bc": "BC",
             "bch": "BCH",
             "bh": "BH",
             "bhm": "BHM",
+            "bn": "BN",
             "bm": "BM",
             "c": "C",
             "ch": "CH",
             "chn": "CHN",
             "chm": "CHM",
             "h": "H",
+            "hm": "HM",
             "hn": "HN",
             "hmn": "HMN",
             "n": "N",
             "nh": "NH",
+            "m": "M",
             "mn": "MN"
           }
         }
@@ -934,6 +945,7 @@
           "infectionDamage": "The Infection damages you for",
           "infectionInfluence": "The Infection influences you",
           "infectionTries": "The Infection fastens it's grip",
+          "infectionTakeover": "infection takeover",
           "effectReceived": "Effect received"
         },
         "ignoreInfection": "Ignore Infection",
@@ -951,7 +963,7 @@
           "damageRoll": "Damage Check",
           "swap": "Swap Result",
           "raise": "Raise Result",
-          "talentCheck": "Check"
+          "check": "Dice roll"
         },
         "button": {
           "roll": "Roll",
@@ -1122,7 +1134,9 @@
         "rolled": "rolled",
         "appliedMods": "Applied Mods",
         "baseValue": "Base Value",
-        "rollTarget": "Roll Target",
+        "rollTarget": "Target",
+        "total": "Result",
+        "damageDone": "Damage Done",
         "infectionRaise": "Infection raised to",
         "rest": {
           "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
@@ -1223,6 +1237,7 @@
             "defMinCover": "Target in minor Cover",
             "defModCover": "Target in moderate Cover",
             "defMajCover": "Target in major Cover",
+            "defHidden": "Target is Hidden",
             "visImpMin": "Minor Visual Impairment",
             "visImpMaj": "Major Visual Impaired",
             "blind": "Blind",
@@ -1234,9 +1249,13 @@
             "weaponFull": "Your weapon is still fully loaded.",
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
-            "weaponFixated": "Shot from Hip"
+            "weaponFixated": "Shot from Hip",
+            "fray": "Fray Ranged"
           }
         }
+      },
+      "psi": {
+        "rollButtonLabel": "Determine Infection Effect"
       }
     },
     "rule": {

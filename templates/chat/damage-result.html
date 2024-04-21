@@ -5,7 +5,7 @@
   <div class="alignCenter">
     <p>{{localize "ep2e.roll.announce.combat.hit"}} <span class="resource-value"></span></p>
 
-    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
       <span><b>{{weaponName}}</b></span><br>
       {{#if ammoLoadedName}}
         <span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span>
@@ -18,7 +18,7 @@
           <strong>{{localize "ep2e.roll.announce.combat.additionalEffects"}}</strong>
         </div>
         <div>
-          <table>
+          <table style="margin-bottom: 0;">
             {{#each weaponTraits as |trait key|}}
               {{#if trait.value}}
               <tr>
@@ -55,13 +55,18 @@
           </table>
         </div>
     {{/if}}
+    
+    {{#if total}}
+    {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=targetNumber diceBreakdown=diceBreakdown formula=formula total=total resultClass=resultClass rollType=rollType}}
+    {{/if}}
+
   {{/if}}
 
   {{#if (eq type "weaponBreak")}}
   <div class="alignCenter">
     <p>{{localize copy}} <span class="resource-value"></span></p>
 
-    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
       <span><b>{{weaponName}}</b></span>
     </div>
   </div>
@@ -71,7 +76,7 @@
   <div style="margin-bottom: 30px;">
     <p>{{{localize copy}}}</p>
 
-    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--mainBackground);">
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
       <span><b>{{weaponName}}</b></span><br>
       {{#if ammoLoadedName}}
         <span style="font-size: 14px;">{{localize "ep2e.item.general.table.slot.ammo"}}:<br>({{ammoLoadedName}})</span>
@@ -80,5 +85,12 @@
   </div>
   {{/if}}
 
+  {{#if (eq type "psiDamage")}}
+  <div class="alignCenter">
+    <div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
+      <span><b>{{localize "ep2e.psi.effect.physicalDamage"}} {{psiDamageValue}}</b></span>
+    </div>
+  </div>
+  {{/if}}
 
 </div>

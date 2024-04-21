@@ -378,7 +378,14 @@
         "considerResting": "考虑使用“休息”动作",
         "numberWounds": "忽视的损伤数",
         "numberTrauma": "忽视的创伤数",
-        "repSize": "支援等级"
+        "repSize": "支援等级",
+        "use": {
+          "insight": "Use Insight",
+          "vigor": "Use Vigor",
+          "moxie": "Use Moxie",
+          "threat": "Use Threat",
+          "flex": "Use Flex"
+        }
       },
       "addSkill": "添加技能",
       "chooseAptitude": "选择属性",
@@ -901,19 +908,23 @@
           "type": {
             "label": "插件类型",
             "b": "B",
+            "bc": "BC",
             "bch": "BCH",
             "bh": "BH",
             "bhm": "BHM",
+            "bn": "BN",
             "bm": "BM",
             "c": "C",
             "ch": "CH",
             "chn": "CHN",
             "chm": "CHM",
             "h": "H",
+            "hm": "HM",
             "hn": "HN",
             "hmn": "HMN",
             "n": "N",
             "nh": "NH",
+            "m": "M",
             "mn": "MN"
           }
         }
@@ -941,6 +952,7 @@
           "infectionDamage": "感染伤害了你",
           "infectionInfluence": "感染影响了你",
           "infectionTries": "感染收紧了它的掌控",
+          "infectionTakeover": "infection takeover",
           "effectReceived": "获得效果"
         },
         "ignoreInfection": "忽视感染",
@@ -958,7 +970,7 @@
           "damageRoll": "伤害检定k",
           "swap": "颠倒结果",
           "raise": "提升结果",
-          "talentCheck": "检定"
+          "check": "Dice roll"
         },
         "button": {
           "roll": "投骰",
@@ -1130,6 +1142,8 @@
         "appliedMods": "附加调整值",
         "baseValue": "基础值",
         "rollTarget": "目标值",
+        "total": "Result",
+        "damageDone": "Damage Done",
         "infectionRaise": "感染加深至",
         "rest": {
           "short": "我使用一次<p/><strong>短填充<p/></strong>恢复了部分能力池<p/>",
@@ -1230,6 +1244,7 @@
             "defMinCover": "目标位于次级掩蔽",
             "defModCover": "目标位于中级掩蔽",
             "defMajCover": "目标位于上级掩蔽",
+            "defHidden": "Target is Hidden",
             "visImpMin": "次级视觉衰弱",
             "visImpMaj": "上级视觉衰弱",
             "blind": "目盲",
@@ -1241,9 +1256,13 @@
             "weaponFull": "你的武器弹药已满。",
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
-            "weaponFixated": "Shot from Hip"
+            "weaponFixated": "Shot from Hip",
+            "fray": "Fray Ranged"
           }
         }
+      },
+      "psi": {
+        "rollButtonLabel": "Determine Infection Effect"
       }
     },
     "rule": {

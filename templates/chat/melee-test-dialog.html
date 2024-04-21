@@ -13,12 +13,12 @@
         </div>
         <div>
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="CalledShot" id="calledshot">
+                <input type="checkbox" name="calledShot" id="calledshot">
                 <label class="resource-label" for="calledshot">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
                 <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.label"}}</label>
-                <select class="input-large" name="SizeDifference" style="max-width: 160px">
+                <select class="input-large" name="sizeDifference" style="max-width: 160px">
                     <option value=-30>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.vms"}}</option>
                     <option value=-20>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.ms"}}</option>
                     <option value=-10>{{localize "ep2e.roll.dialog.melee.attacker.sizeDifference.s"}}</option>
@@ -30,12 +30,12 @@
             </div>
             <div class="form-group listBackgroundMain">
                 <label class="resource-labelDialog" style="min-width: 180px;">{{localize "ep2e.roll.dialog.melee.attacker.numberOfTargetsLabel"}}</label>
-                <input class="input-xs" type="number" name="NumberTargets" placeholder="1" />
+                <input class="input-xs" type="number" name="numberOfTargets" placeholder="1" />
                 <label class="resource-labelDialog" style="min-width: 180px;">{{localize "ep2e.roll.dialog.melee.attacker.numberOfTargetsMod"}}</label>
             </div>
             <div class="form-group listBackgroundMain">
                 <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.melee.attacker.type.label"}}</label>
-                <select class="input-large" name="HitType" style="max-width: 160px">
+                <select class="input-large" name="attackMode" style="max-width: 160px">
                     <option value="none">{{localize "ep2e.roll.dialog.melee.attacker.type.none"}}</option>
                     <option value="charge">{{localize "ep2e.roll.dialog.melee.attacker.type.charge"}}</option>
                     <option value="aggressive">{{localize "ep2e.roll.dialog.melee.attacker.type.aggressive"}}</option>
@@ -44,12 +44,12 @@
             </div>
             {{#if (eq traits.confirmationEffects.touchOnly.value true)}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="TouchOnly" id="touchOnly">
+                    <input type="checkbox" name="touchOnly" id="touchOnly">
                     <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
                 </div>
             {{else if (ne rolledFrom "ccWeapon")}}
                 <div class="form-group listBackgroundMain">
-                    <input type="checkbox" name="TouchOnly" id="touchOnly">
+                    <input type="checkbox" name="touchOnly" id="touchOnly">
                     <label class="resource-label" for="tocuhOnly">{{localize "ep2e.roll.dialog.touchOnly"}}</label>
                 </div>
             {{/if}}

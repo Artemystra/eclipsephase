@@ -1,6 +1,6 @@
 // Import Modules
 // const util = require('util');
-import * as EPchat from "./chat.js";
+import * as EPchat from "./rolls/chat.js";
 import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
@@ -18,7 +18,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPmorphFlawSheet from "./item/EPmorphFlawSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
-import  { migrationLegacy, migrationPre0861,  migrationPre09, migrationPre093, migrationPre095, migrationPre098, migrationPre0985, migrationPre0992} from "./common/migration.js";
+import  * as update from "./common/migration.js";
 
 function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -204,6 +204,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
+    "systems/eclipsephase/templates/chat/partials/roll-results.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.html",
     "systems/eclipsephase/templates/item/partials/grenade-details.html",
     "systems/eclipsephase/templates/item/partials/item-traits.html"
@@ -244,6 +245,7 @@ let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion)
 let before0985 = foundry.utils.isNewerVersion("0.9.8.5", gameVersion)
 let before099 = foundry.utils.isNewerVersion("0.9.9", gameVersion)
 let before0992 = foundry.utils.isNewerVersion("0.9.9.2", gameVersion)
+let before110 = foundry.utils.isNewerVersion("1.1.0", gameVersion)
 //For testing against the latest version: game.system.version
 
 
@@ -258,8 +260,8 @@ if (isLegacy){
     startMigration = migration.start
   }
 
-  await migrationLegacy(startMigration)
-  let Migration0861 = await migrationPre0861(startMigration)
+  await update.migrationLegacy(startMigration)
+  let Migration0861 = await update.migrationPre0861(startMigration)
 
   endMigration = Migration0861["endMigration"]
 }
@@ -275,7 +277,7 @@ if (before0861) {
     startMigration = migration.start
   }
 
-  let Migration0861 = await migrationPre0861(startMigration)
+  let Migration0861 = await update.migrationPre0861(startMigration)
 
   endMigration = Migration0861["endMigration"]
 }
@@ -291,7 +293,7 @@ if (before09) {
     startMigration = migration.start
   }
 
-  let Migration09 = await migrationPre09(startMigration)
+  let Migration09 = await update.migrationPre09(startMigration)
 
   endMigration = Migration09["endMigration"]
 }
@@ -308,7 +310,7 @@ if (before093) {
     startMigration = migration.start
   }
 
-  let Migration093 = await migrationPre093(startMigration)
+  let Migration093 = await update.migrationPre093(startMigration)
 
   endMigration = Migration093["endMigration"]
 }
@@ -325,7 +327,7 @@ if (before095) {
     startMigration = migration.start
   }
 
-  let Migration095 = migrationPre095(startMigration)
+  let Migration095 = update.migrationPre095(startMigration)
 
   endMigration = Migration095["endMigration"]
 }
@@ -342,7 +344,7 @@ if (before098) {
     startMigration = migration.start
   }
 
-  let Migration098 = migrationPre098(startMigration)
+  let Migration098 = update.migrationPre098(startMigration)
 
   endMigration = Migration098["endMigration"]
 }
@@ -359,7 +361,7 @@ if (before0985) {
     startMigration = migration.start
   }
 
-  let Migration0985 = migrationPre0985(startMigration)
+  let Migration0985 = update.migrationPre0985(startMigration)
 
   endMigration = Migration0985["endMigration"]
 }
@@ -391,7 +393,28 @@ if (before0992) {
     startMigration = migration.start
   }
 
-  let Migration0992 = migrationPre0992(startMigration)
+  let Migration0992 = update.migrationPre0992(startMigration)
+
+  endMigration = Migration0992["endMigration"]
+}
+
+if(endMigration){
+  await migrationEnd(endMigration)
+}
+
+//1.1.0 Migration
+if (before110) {
+  endMigration = false
+  const messageCopy = "ep2e.migration.110"
+  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+  
+  if (migration.cancelled) {
+  }
+  else if (migration.start){
+    startMigration = migration.start
+  }
+
+  let Migration0992 = update.migrationPre110(startMigration)
 
   endMigration = Migration0992["endMigration"]
 }
@@ -482,9 +505,12 @@ async function migrationEnd(endMigration) {
 //Gets chat data
 Hooks.on("renderChatMessage", (app, html, data) => EPchat.addChatListeners(html, data));
 
-//Sets parts of the chat invisible to players
+//Sets parts of the chat invisible to players or the GM
 Hooks.on("renderChatLog", (app, html, data) => EPchat.GMvision(html, data));
 Hooks.on("renderChatMessage", (app, html, data) => EPchat.GMvision(html, data));
+Hooks.on("renderChatMessage", (app, html, data) => EPchat.ownerVision(html, data));
+Hooks.on("renderChatLog", (app, html, data) => EPchat.playerVision(html, data));
+Hooks.on("renderChatMessage", (app, html, data) => EPchat.playerVision(html, data));
 
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)

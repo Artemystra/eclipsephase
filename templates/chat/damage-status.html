@@ -1,0 +1,113 @@
+
+<div class="alignCenter">
+
+    <p>{{localize title}}<br>
+        {{#if roll}}
+            {{rollLength}}{{localize rollTimes}}
+        {{/if}}
+    </p>
+
+    {{#if (ne totalDamage 0)}}
+        {{#if roll}}
+            <p style="font-size: 10px;">
+                {{#if (gt weeksValue 0)}}
+                    <span>{{weeksValue}}</span>
+                    <span>{{localize weeksLabel}}</span>
+                {{/if}}
+                {{#if (gt daysValue 0)}}
+                    <span>{{daysValue}}</span>
+                    <span>{{localize daysLabel}}</span>
+                {{/if}}
+                {{#if (gt hoursValue 0)}}
+                    <span>{{hoursValue}}</span>
+                    <span>{{localize hoursLabel}}</span>
+                {{/if}}
+            </p>
+
+            <div style="margin-top: 25px">
+                {{#each diceArray as |diceBreakdown key|}}
+                    {{> systems/eclipsephase/templates/chat/partials/roll-results.html diceBreakdown=diceBreakdown total=diceBreakdown.total rollType=diceBreakdown.rollType}}
+                {{/each}}
+            </div>
+        {{/if}}
+
+        <p></p>
+        {{#if (ne roll true)}}
+            <div class="grid" style="margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
+                {{#if damageValue}}
+                    <div class="flexrow flex-group-center">
+                        <span>{{localize damageType}}</span>
+                    </div>
+                    <div class="flexrow flex-group-center">
+                        <span>{{damageValue}}</span>
+                    </div>
+                {{/if}}
+                {{#if modifierValue}}
+                    <div class="flexrow flex-group-center">
+                        <span>{{localize modifierType}}</span>
+                    </div>
+                    <div class="flexrow flex-group-center">
+                        <span>{{modifierValue}}</span>
+                    </div>   
+                {{/if}} 
+                {{#if timeframe}}
+                    <div class="flexrow flex-group-center">
+                        <span>{{localize timeframeLabel}}</span>
+                    </div>
+                    <div>
+                        {{#if (gt weeksValue 0)}}
+                            <p style="margin: 0px;">{{weeksValue}} {{localize weeksLabel}}</p>
+                        {{/if}}
+                        {{#if (gt daysValue 0)}}
+                            <p style="margin: 0px;">{{daysValue}} {{localize daysLabel}}</p>
+                        {{/if}}
+                        {{#if (gt hoursValue 0)}}
+                            <p style="margin: 0px;">{{hoursValue}} {{localize hoursLabel}}</p>
+                        {{/if}}
+                    </div>   
+                {{/if}} 
+                {{#if healthFull}}
+                    <span>{{localize healthFull}}</span>
+                {{/if}}
+            </div>
+        {{/if}}
+    {{else if (eq noTime true)}}
+    <div style="margin: 30px 0 20px 0; padding: 15px 0 25px 0; background-color: var(--pitchBorder);">
+        <p style="font-size: 12px;">
+            {{localize subheader}}
+        </p>
+        <div class="grid">
+            <div class="flexrow flex-group-center">
+                <span>{{localize damageType}}</span>
+            </div>
+            <div>
+                {{#if (gt weeksValueHealth 0)}}
+                    <p style="margin: 0px;">{{weeksValueHealth}} {{localize weeksLabel}}</p>
+                {{/if}}
+                {{#if (gt daysValueHealth 0)}}
+                    <p style="margin: 0px;">{{daysValueHealth}} {{localize daysLabel}}</p>
+                {{/if}}
+                {{#if (gt hoursValueHealth 0)}}
+                    <p style="margin: 0px;">{{hoursValueHealth}} {{localize hoursLabel}}</p>
+                {{/if}}
+            </div>
+            <div class="flexrow flex-group-center">
+                <span>{{localize modifierType}}</span>
+            </div>
+            <div>
+                {{#if (gt weeksValueWounds 0)}}
+                    <p style="margin: 0px;">{{weeksValueWounds}} {{localize weeksLabel}}</p>
+                {{/if}}
+                {{#if (gt daysValueWounds 0)}}
+                    <p style="margin: 0px;">{{daysValueWounds}} {{localize daysLabel}}</p>
+                {{/if}}
+                {{#if (gt hoursValueWounds 0)}}
+                    <p style="margin: 0px;">{{hoursValueWounds}} {{localize hoursLabel}}</p>
+                {{/if}}
+            </div>  
+        </div>
+    </div>
+    {{/if}}
+</div>
+  
+  

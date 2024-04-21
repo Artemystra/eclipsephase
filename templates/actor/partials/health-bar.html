@@ -192,18 +192,18 @@
             <i class="fa-regular fa-stopwatch awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.iniMod"}}</span>
             <span class="resource-label" style="margin-left: 5px;">{{actor.system.initiative.display}} + </span>
-            <input class="input-xs" style="text-align: center" type="text" name="system.mods.manualIniMod" value="{{actor.system.mods.manualIniMod}}" data-dtype="Number" placeholder="0"/>
+            <input class="input-xs" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.mods.manualIniMod" value="{{actor.system.mods.manualIniMod}}" data-dtype="Number" placeholder="0"/>
         </div>
         <div class="wantToKnowMore">
             <i class="fa-solid fa-land-mine-on awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.threat"}}</span>
-            <input class="input-xs standard-height" style="text-align: center" type="text" name="system.threatLevel.current" value="{{actor.system.threatLevel.current}}" placeholder="0"/>/
-            <input class="input-xs standard-height" style="text-align: center" type="text" name="system.threatLevel.total" value="{{actor.system.threatLevel.total}}" placeholder="0"/>  
+            <input class="input-xs standard-height" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.threatLevel.current" value="{{actor.system.threatLevel.current}}" placeholder="0"/>/
+            <input class="input-xs standard-height" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.threatLevel.total" value="{{actor.system.threatLevel.total}}" placeholder="0"/>  
         </div>
         <div class="wantToKnowMore">
             <i class="fa-solid fa-face-scream awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px; left: -20px;">{{localize "ep2e.healthbar.tooltip.stressTest"}}</span>
-            <input class="input-medium" style="text-align: center" type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
+            <input class="input-medium" style="text-align: center" onFocus="this.select()" type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
         </div>
         {{/if}}
     </div>

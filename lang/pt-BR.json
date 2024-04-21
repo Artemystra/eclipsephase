@@ -380,7 +380,14 @@
         "considerResting": "Considere usar uma ação de 'descanso'",
         "numberWounds": "Ferimentos para Ignorar",
         "numberTrauma": "Traumas para Ignorar",
-        "repSize": "Tamanho do Favor"
+        "repSize": "Tamanho do Favor",
+        "use": {
+          "insight": "Use Insight",
+          "vigor": "Use Vigor",
+          "moxie": "Use Moxie",
+          "threat": "Use Threat",
+          "flex": "Use Flex"
+        }
       },
       "addSkill": "Adicionar Perícia",
       "chooseAptitude": "Escolher Apt",
@@ -909,19 +916,23 @@
           "type": {
             "label": "Tipo de Ware",
             "b": "B",
+            "bc": "BC",
             "bch": "BCH",
             "bh": "BH",
             "bhm": "BHM",
+            "bn": "BN",
             "bm": "BM",
             "c": "C",
             "ch": "CH",
             "chn": "CHN",
             "chm": "CHM",
             "h": "H",
+            "hm": "HM",
             "hn": "HN",
             "hmn": "HMN",
             "n": "N",
             "nh": "NH",
+            "m": "M",
             "mn": "MN"
           }
         }
@@ -949,6 +960,7 @@
           "infectionDamage": "A Infecção te causa dano de",
           "infectionInfluence": "A Infecção te influencia",
           "infectionTries": "A Infecção amplia o controle",
+          "infectionTakeover": "infection takeover",
           "effectReceived": "Efeito recebido"
         },
         "ignoreInfection": "Ignorar Infecção",
@@ -966,7 +978,7 @@
           "damageRoll": "Teste de Dano",
           "swap": "Trocar Resultado",
           "raise": "Elevar Resultado",
-          "talentCheck": "Teste"
+          "check": "Dice roll"
         },
         "button": {
           "roll": "Rolar",
@@ -1137,7 +1149,9 @@
         "rolled": "rolou",
         "appliedMods": "Mods Aplicados",
         "baseValue": "Valor Base",
-        "rollTarget": "Alvo da Rolagem",
+        "rollTarget": "Target",
+        "total": "Result",
+        "damageDone": "Damage Done",
         "infectionRaise": "Infecção elevada para",
         "rest": {
           "short": "Eu usei um<p/><strong>Descanso Curto<p/></strong>para recuperar alguns pontos de parada<p/>",
@@ -1238,6 +1252,7 @@
             "defMinCover": "Alvo em Cobertura menor",
             "defModCover": "Alvo em Cobertura moderada",
             "defMajCover": "Alvo em Cobertura maior",
+            "defHidden": "Target is Hidden",
             "visImpMin": "Visão Prejudicada Menor",
             "visImpMaj": "Visão Prejudicada Maior",
             "blind": "Cego",
@@ -1249,9 +1264,13 @@
             "weaponFull": "Sua arma ainda está totalmente carregada.",
             "noAmmoPresent": "No fitting ammunition present.",
             "ammoSkillModifier": "Ammo Skill Modifier",
-            "weaponFixated": "Shot from Hip"
+            "weaponFixated": "Shot from Hip",
+            "fray": "Fray Ranged"
           }
         }
+      },
+      "psi": {
+        "rollButtonLabel": "Determine Infection Effect"
       }
     },
     "rule": {

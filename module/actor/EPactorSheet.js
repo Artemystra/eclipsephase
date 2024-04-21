@@ -1,8 +1,9 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo, healthBarChange} from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo} from "../common/common-sheet-functions.js";
+import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
-import * as Dice from "../dice.js";
+import * as Dice from "../rolls/dice.js";
 import itemRoll from "../item/EPitem.js";
 
 
@@ -873,23 +874,20 @@ export default class EPactorSheet extends ActorSheet {
         poolSpend = (maxInsight - curInsight) + ( maxVigor - curVigor) + (maxMoxie - curMoxie);
       }
 
-      let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : "")
+      let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : "") + (actorModel.mods.recoverBonus ? " + " + eval(actorModel.mods.recoverBonus) : "")
       let roll = await new Roll(rollFormula).evaluate({async: true});
-      let recover = null;
       let restValue = null;
       if (restType === "short"){
+
+        let message = {}
+
+        message.rollTitle = "ep2e.roll.announce.total"
+        message.mainMessage = "ep2e.roll.announce.rest.short"
+
+        await Dice.rollToChat(message, Dice.DEFAULT_ROLL, roll, actorWhole.name, null, false, "rollOutput")
+
+        restValue = roll.total
         
-        let label = game.i18n.localize("ep2e.roll.announce.rest.short");
-        recover = await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
-            flavor: label
-        });
-
-        restValue = recover.content
-
-        if (game.dice3d){
-          await game.dice3d.waitFor3DAnimationByMessageID(recover.id);
-        }
       }
 
       if (restType === "long" && !brewStatus){
@@ -974,7 +972,7 @@ export default class EPactorSheet extends ActorSheet {
       //Calculate the healthBar
       html.find(".healthPanelNoSubmit").change(this.autoSubmitPrevention.bind(this))
 
-      healthBarChange(actor, html);
+      damage.healthBarChange(actor, html);
 
       //More Information Dialog
       html.on('click', 'a.moreInfoDialog', moreInfo);
@@ -1080,123 +1078,48 @@ export default class EPactorSheet extends ActorSheet {
     const dataset = element.dataset;
     const actorWhole = this.actor;
     const actorModel = this.actor.system;
-
-    if(dataset.type === 'rep') {
-      this._onRepRoll(dataset, actorModel)
-      return
-    }
-
-    let specNameValue = dataset.specname;
-    let skillRollValue = dataset.rollvalue;
-    let poolType = dataset.pooltype;
-    let aptType = dataset.apttype;
-    const flexPool = actorModel.pools.flex.value;
-    let skillPoolValue = null;
-    let skillKey = dataset.key.toLowerCase();
+    let skillKey = dataset.key ? dataset.key.toLowerCase() : null;
     let weaponPrep = null;
     let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
     let weaponSelected = null;
+    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 
-    if (rolledFrom === "rangedWeapon") {
-      specNameValue = actorModel.skillsVig.guns.specname;
-      skillRollValue = actorModel.skillsVig.guns.roll;
-      poolType = "Vigor";
-    }
-    else if (rolledFrom === "ccWeapon") {
-      specNameValue = actorModel.skillsVig.melee.specname;
-      skillRollValue = actorModel.skillsVig.melee.roll;
-      poolType = "Vigor";
-    }
+    if(dataset.type === 'skill') {
 
-    if (skillKey === "guns" || skillKey === "melee"){
-
-      weaponPrep = await weaponPreparation(actorModel, actorWhole, skillKey, rolledFrom, dataset.weaponid)
-      
-      if (!weaponPrep || weaponPrep.cancel){
-        return;
+      if (rolledFrom === "psiSleight") {
+        skillKey = "psi";
+        dataset.rollvalue = actorModel.skillsMox.psi.roll;
+        dataset.specname = actorModel.skillsMox.psi.specname;
+        dataset.pooltype = "Moxie";
       }
-      weaponSelected = weaponPrep.selection
-      rolledFrom = weaponSelected.rolledFrom 
-    }
 
-    if (rolledFrom === "psiSleight") {
-      specNameValue = actorModel.skillsMox.psi.specname;
-      skillRollValue = actorModel.skillsMox.psi.roll;
-      poolType = "Moxie";
-    }
+      if (rolledFrom === "rangedWeapon") {
+        skillKey = "guns";
+        dataset.rollvalue = actorModel.skillsVig.guns.roll;
+        dataset.specname = actorModel.skillsVig.guns.specname;
+        dataset.pooltype = "Vigor";
+      }
+      else if (rolledFrom === "ccWeapon") {
+        skillKey = "melee";
+        dataset.rollvalue = actorModel.skillsVig.melee.roll;
+        dataset.specname = actorModel.skillsVig.melee.specname;
+        dataset.pooltype = "Vigor";
+      }
 
-    switch (aptType) {
-      case 'int':
-        poolType = "Insight"
-        break;
-      case 'cog':
-        poolType = "Insight"
-        break;
-      case 'ref':
-        poolType = "Vigor"
-        break;
-      case 'som':
-        poolType = "Vigor"
-        break;
-      case 'wil':
-        poolType = "Moxie"
-        break;
-      case 'sav':
-        poolType = "Moxie"
-        break;
-      default:
-        break;
-    }
+      if (skillKey === "guns" || skillKey === "melee"){
+    
+        weaponPrep = await weaponPreparation(actorWhole, skillKey, rolledFrom, dataset.weaponid)
+        
+        if (!weaponPrep || weaponPrep.cancel){
+          return;
+        }
+        weaponSelected = weaponPrep
+        rolledFrom = weaponPrep.rolledFrom
+      }
 
-    switch (poolType) {
-      case 'Insight':
-        skillPoolValue = actorModel.pools.insight.value;
-        break;
-      case 'Vigor':
-        skillPoolValue = actorModel.pools.vigor.value;
-        break;
-      case 'Moxie':
-        skillPoolValue = actorModel.pools.moxie.value;
-        break;
-      default:
-        break;
+      this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }
-      Dice.TaskCheck ({
-        //Actor data
-        actorWhole : actorWhole,
-        actorData : actorModel,
-        //Skill data
-        skillKey : skillKey,
-        skillName : dataset.name,
-        specName : specNameValue,
-        rollType : dataset.type,
-        skillValue : skillRollValue,
-        rolledFrom : rolledFrom,
-        //Pools
-        poolType: poolType,
-        poolValue: skillPoolValue,
-        flexValue: flexPool,
-        //Weapon data
-        weaponSelected : weaponSelected ? weaponSelected.weapon : null,
-        weaponID : weaponSelected ? weaponSelected.weaponID : null,
-        weaponName : weaponSelected ? weaponSelected.weaponName : null,
-        weaponDamage : weaponSelected ? weaponSelected.weaponDamage : null,
-        weaponType : weaponSelected ? weaponSelected.weaponType : null,
-        currentAmmo : weaponSelected ? weaponSelected.currentAmmo : null,
-        maxAmmo : weaponSelected ? weaponSelected.maxAmmo : null,
-        meleeDamageMod: actorModel.mods.meleeDamageMod,
-        weaponTraits : weaponSelected ? weaponSelected.weaponTraits : null,
-        //Psi
-        sleightName : dataset.sleightname,
-        sleightDescription : dataset.description,
-        sleightAction : dataset.action,
-        sleightDuration : dataset.duration,
-        sleightInfection : dataset.infection,
-        //System Options
-        askForOptions : event.shiftKey,
-        optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
-        brewStatus: game.settings.get("eclipsephase", "superBrew")
-      });
+    
     }
 
   _onSkillEdit(event) {
@@ -1219,9 +1142,9 @@ export default class EPactorSheet extends ActorSheet {
       $(value).toggleClass("noShow");
     })
   }
-
-  _onRepRoll(dataset, actorModel) {
-    Dice.ReputationRoll(dataset, actorModel)
+  
+  _onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
+    Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
   }
 }
 
