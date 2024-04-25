@@ -17,7 +17,7 @@
                     <input class="input-XL" name="system.muse.skills.{{key}}.skillname" type="text" value="{{localize skill.skillname}}" placeholder="{{localize 'ep2e.skills.additionalSkills.placeholder'}}" style="text-transform: uppercase;"/>
                     <input class="input-small" type="number" name="system.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
                     <div class="flexrow flex-group-center" style="max-width: 40px;">
-                        <img data-type="skill" data-name="{{skill.skillname}}" data-key="{{key}}" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                        <img data-type="skill" data-name="{{skill.skillname}}" data-key="muse" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
                     </div>
                 </div>
                 {{/each}}

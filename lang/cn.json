@@ -254,7 +254,9 @@
       "headline": "缪斯信息",
       "nameLabel": "名称",
       "namePlaceholder": "例如 阿缪辛",
-      "aboutLabel": "关于"
+      "aboutLabel": "关于",
+      "bracketsMuse": "(Muse)",
+      "museOf": "Muse of:"
     },
     "skills":{
       "placeholders": {
