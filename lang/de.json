@@ -285,7 +285,9 @@
       "headline": "Muse Info",
       "nameLabel": "Name",
       "namePlaceholder": "e.g. Amusing",
-      "aboutLabel": "Über"
+      "aboutLabel": "Über",
+      "bracketsMuse": "(Muse)",
+      "museOf": "Muse von:"
     },
     "skills":{
       "placeholders": {

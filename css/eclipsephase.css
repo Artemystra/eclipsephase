@@ -265,6 +265,7 @@
 
 .eclipsephase nav.sheet-tabs {
   min-height: 50px;
+  max-height: 50px;
   margin: 10px 0 0 0;
   border: none;
 }

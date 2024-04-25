@@ -49,6 +49,7 @@ const POOL_SUM = {
     VIG: { poolType: "ep2e.skills.vigorSkills.poolHeadline", useMessage: "ep2e.skills.pool.use.vigor", skillPoolValue: "actorModel.pools.vigor.value", updatePoolPath: "system.pools.vigor.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
     MOX: { poolType: "ep2e.skills.moxieSkills.poolHeadline", useMessage: "ep2e.skills.pool.use.moxie", skillPoolValue: "actorModel.pools.moxie.value", updatePoolPath: "system.pools.moxie.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
     THR: { poolType: "ep2e.healthbar.tooltip.threat", useMessage: "ep2e.skills.pool.use.threat", skillPoolValue: "actorModel.threatLevel.current", updatePoolPath: "system.threatLevel.current", flexPoolValue: 0, poolUsageCount: 0 },
+    NON: { poolType: "ep2e.roll.dialog.ranged.attacker.visual.none", useMessage: "-", skillPoolValue: 0, updatePoolPath: "-", flexPoolValue: 0, poolUsageCount: 0 }
 }
 
 async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
@@ -83,9 +84,12 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
         }
     }
 
-    else if (rollType === 'rep'){
+    else if (rollType === 'rep')
         pool = POOL_SUM.MOX
-    }
+    
+
+    else if (rollType === 'muse')
+        pool = POOL_SUM.NON
 
     else {
         switch (poolType) {
@@ -504,6 +508,12 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
+
+        if(roll.type === "muse" && actorModel.muse.name)
+            actingPerson = actorModel.muse.name + " " + game.i18n.localize("ep2e.muse.bracketsMuse")
+        else if(roll.type === "muse" && !actorModel.muse.name)
+            actingPerson = game.i18n.localize("ep2e.muse.museOf") + " " + actorWhole.name
+
         let blind = options.rollMode === "blind" ? true : false
 
         let recipientList = prepareRecipients(options.rollMode)

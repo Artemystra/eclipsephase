@@ -256,7 +256,9 @@
       "headline": "Musa (Infomações)",
       "nameLabel": "Nome",
       "namePlaceholder": "ex.: Divertida",
-      "aboutLabel": "Sobre"
+      "aboutLabel": "Sobre",
+      "bracketsMuse": "(Muse)",
+      "museOf": "Muse of:"
     },
     "skills": {
       "placeholders": {
