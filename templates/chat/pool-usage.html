@@ -2,7 +2,7 @@
 
   {{#if (eq type "swapped")}}
     {{localize "ep2e.roll.announce.poolUsage.poolUsed"}} (<strong>{{localize poolName}}</strong>)<br>
-    <p>{{localize "ep2e.roll.announce.poolUsage.swappedTo"}} <strong>{{swipSwap}}</strong></p>
+    <p>{{localize "ep2e.roll.announce.poolUsage.swappedTo"}} <strong>{{newValue}}</strong></p>
     <div style="display: flex; margin: 20px 0 0 0; padding: 20px 0; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
       {{#if (lt newResult 3)}}
         <span class="fail">{{localize resultText}}</span>

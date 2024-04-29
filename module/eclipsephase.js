@@ -20,7 +20,7 @@ import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as update from "./common/migration.js";
 
-function registerSystemSettings() {
+async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
     config: true,
     scope: "client",

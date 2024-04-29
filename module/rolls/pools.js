@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT, TASK_RESULT_TEXT } from "./dice.js";
+import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
 import { prepareWeapon } from "./damage.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
@@ -26,6 +26,7 @@ export async function usePoolFromChat(data){
         
         message.type = dataset.usagetype;
         message.newResult = dataset.newresult ? parseInt(dataset.newresult) : false;
+        message.newValue = dataset.newvalue ? parseInt(dataset.newvalue) : false;
         message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
         
         let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
@@ -118,13 +119,14 @@ export async function update(options, pool, task, actorWhole){
  * @param {Object} pool - The pool object bound to the roll
  * @returns - An object containing the outcome of the analysis
  */
-export async function outcomeAlternatives(outputData, pool){
+export async function outcomeAlternatives(outputData, pool, systemOptions){
+    let resultText = systemOptions.brewStatus ? HOMEBREW_TASK_RESULT_TEXT : TASK_RESULT_TEXT;
     let obj = {options: {swap: false, upgrade: false, mitigate: false}} 
     obj.value = await swapDice(outputData.rollResult);
     obj.result =  rollCalc(obj.value, outputData.targetNumber)
     obj.originalResult = rollCalc(outputData.rollResult, outputData.targetNumber)
-    obj.resultClass = TASK_RESULT_TEXT[obj.result].class
-    obj.resultText = TASK_RESULT_TEXT[obj.result].text
+    obj.resultClass = resultText[obj.result].class
+    obj.resultText = resultText[obj.result].text
     obj.pools = pool
     obj.pools.available = Boolean(obj.pools.skillPoolValue + obj.pools.flexPoolValue > 0) 
 
@@ -134,7 +136,7 @@ export async function outcomeAlternatives(outputData, pool){
         
         else if(((obj.originalResult + 1) < 6)  && obj.pools.available){
             obj.options["upgrade"] = true
-            obj["resultText"] = TASK_RESULT_TEXT[(obj.originalResult+1)].text
+            obj["resultText"] = resultText[(obj.originalResult+1)].text
          }   
         
         else if(obj.resultClass === "success" && obj.originalResult === 5 && (obj.value > outputData.rollResult) && obj.pools.available)
@@ -147,11 +149,11 @@ export async function outcomeAlternatives(outputData, pool){
         
         else if(((obj.originalResult + 1) < 3)  && obj.pools.available){
             obj.options["mitigate"] = true
-            obj["resultText"] = TASK_RESULT_TEXT[(obj.originalResult+1)].text
+            obj["resultText"] = resultText[(obj.originalResult+1)].text
         }
 
         else if(outputData.rollResult % 11 === 0 && obj.pools.available){
-            obj["resultText"] = TASK_RESULT_TEXT[0].text
+            obj["resultText"] = resultText[0].text
             obj.options["mitigate"] = true
         }
 

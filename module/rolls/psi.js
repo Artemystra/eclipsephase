@@ -9,7 +9,8 @@ export function preparePsi(data){
     const actorWhole = game.actors.get(dataset.actorid);
     const psiOwner = dataset.userid
     const push = dataset.psipush === "false" ? false : dataset.psipush;
-    rollPsiEffect(actorWhole, psiOwner, push)
+    const systemOptions = {"brewStatus" : game.settings.get("eclipsephase", "superBrew")}
+    rollPsiEffect(actorWhole, psiOwner, push, systemOptions)
 }
 
 export async function infectionUpdate(actorWhole, options){
@@ -28,7 +29,7 @@ export async function infectionUpdate(actorWhole, options){
     return infectionMod
 }
 
-export async function rollPsiEffect(actorWhole, psiOwner, push){
+export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
     //Infection (only relevant for psi checks)
 
     const actorModel = actorWhole.system;
@@ -51,7 +52,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push){
 
     await task.performRoll()
 
-    let outputData = task.outputData(false, actorWhole, false, false, false)
+    let outputData = task.outputData(false, actorWhole, false, false, false, systemOptions)
     outputData.result = rollCalc(outputData.rollResult, outputData.targetNumber)
     let roll = await task.roll
 
