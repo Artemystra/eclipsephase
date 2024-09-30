@@ -87,7 +87,7 @@ export async function _tempEffectCreation(actor, numberOfRuns, tempEffLabel, tem
     return actor.createEmbeddedDocuments('ActiveEffect', [{
       label: tempEffLabel,
       icon: tempEffIcon,
-      changes: [{key : tempEffTar, mode : tempEffMode, value : -1*numberOfRuns}]
+      changes: [{key : tempEffTar, mode : tempEffMode, value : -10*numberOfRuns}]
     }]);
 }
 
