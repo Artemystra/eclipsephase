@@ -1,5 +1,7 @@
-2024/04/28-22:39:02.392014 30e883000 Log #757: 0 ops saved to Table #760 OK
-2024/04/28-22:39:02.392126 30e883000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/000757.log: OK
-2024/04/28-22:39:02.392509 30e883000 Table #759: 81 entries OK
-2024/04/28-22:39:02.392746 30e883000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/MANIFEST-000755: OK
-2024/04/28-22:39:02.393131 30e883000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights; recovered 1 files; 30369 bytes. Some data may have been lost. ****
+2024/09/30-09:59:29.535796 313450000 Recovering log #777
+2024/09/30-09:59:29.536282 313450000 Delete type=0 #777
+2024/09/30-09:59:29.536312 313450000 Delete type=3 #776
+2024/09/30-10:08:02.924330 30db47000 Level-0 table #781: started
+2024/09/30-10:08:02.924350 30db47000 Level-0 table #781: 0 bytes OK
+2024/09/30-10:08:02.924511 30db47000 Delete type=0 #779
+2024/09/30-10:08:02.924753 30db47000 Manual compaction at level-0 from '!folders!7VpBcB8nysG3tqmh' @ 72057594037927935 : 1 .. '!items.effects!mov7JH4xI4YZH27O.0OKMc1hoRoQqprD1' @ 0 : 0; will stop at (end)

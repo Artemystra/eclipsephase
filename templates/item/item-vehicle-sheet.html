@@ -13,10 +13,10 @@
             <h3 class="subheader">
                 {{localize "ep2e.item.vehicle.table.type.label"}}
                 <select name="system.type" data-type="String">
-                    {{#select item.system.type}}
+                    {{#selectOptions item.system.type}}
                     {{#each config.vehicleType as |name key|}}
                     <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{/each}} {{/selectOptions}}
                 </select>
             </h3>
             <div class="alignRight flexGrowThreeQuarter">
@@ -79,19 +79,19 @@
                 <div>
                     <i class="fa-regular fa-money-bill wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span></i>
                     <select name="system.cost" data-type="String">
-                        {{#select item.system.cost}}
+                        {{#selectOptions item.system.cost}}
                         {{#each config.costTypes as |name key|}}
                         <option value="{{key}}">{{localize name}}</option>
-                        {{/each}} {{/select}}
+                        {{/each}} {{/selectOptions}}
                     </select>
                 </div>
                 <div>
                     <i class="fa-regular fa-ruler wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
                     <select name="system.slotType" data-type="String">
-                        {{#select item.system.slotType}}
+                        {{#selectOptions item.system.slotType}}
                         {{#each config.vehicleSize as |name key|}}
                         <option value="{{key}}">{{localize name}}</option>
-                        {{/each}} {{/select}}
+                        {{/each}} {{/selectOptions}}
                     </select>
                 </div>
             </div>
@@ -140,7 +140,7 @@
                             <input class="item-standard-margin-small input-small" type="text" name="system.movement.{{key}}.speed" value="{{speed}}" placeholder="0/0" style="text-align: center"/>
                             <i class="fa-regular fa-tags awesomeIcon"></i>
                             <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
-                                {{#select mov.type}}
+                                {{#selectOptions mov.type}}
                                 {{#each config.moveTypes as |moveType key|}}
                                     <option value="{{key}}">{{localize moveType}}</option>
                                 {{/each}}
@@ -160,7 +160,7 @@
                                 <option value="walker">{{localize "ep2e.morph.currentMorph.movementTypes.walker"}}</option>
                                 <option value="wheeled">{{localize "ep2e.morph.currentMorph.movementTypes.wheeled"}}</option>
                                 <option value="winged">{{localize "ep2e.morph.currentMorph.movementTypes.winged"}}</option>
-                                {{/select}}
+                                {{/selectOptions}}
                             </select>
                         </div>
                         {{/each}}

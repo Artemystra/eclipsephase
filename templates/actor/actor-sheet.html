@@ -60,7 +60,7 @@
                                         <div class="alignRight flexGrowThreeQuarter">
                                             <label class="resource-value" style="margin-right: 0.5em;">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</label>
                                             <select class="bodySelect" name="system.bodies.activeMorph" data-type="text" style="width: 120px;">
-                                                {{#select actor.system.bodies.activeMorph}}
+                                                {{#selectOptions system.bodies.activeMorph}}
                                                 <option value="morph1">{{#if
                                                 actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 <option value="morph2">{{#if
@@ -73,7 +73,7 @@
                                                 actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
                                                 <option value="morph6">{{#if
                                                 actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
-                                                {{/select}}
+                                                {{/selectOptions}}
                                             </select>
                                         </div>
                                     </div>

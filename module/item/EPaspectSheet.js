@@ -7,7 +7,7 @@ export default class EPaspectSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       resizable: false,
       width: 520,

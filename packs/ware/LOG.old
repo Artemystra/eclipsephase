@@ -1,5 +1,7 @@
-2024/04/28-22:39:02.376111 30e084000 Log #762: 0 ops saved to Table #765 OK
-2024/04/28-22:39:02.376237 30e084000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ware/000762.log: OK
-2024/04/28-22:39:02.376906 30e084000 Table #764: 190 entries OK
-2024/04/28-22:39:02.377079 30e084000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ware/MANIFEST-000760: OK
-2024/04/28-22:39:02.377310 30e084000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ware; recovered 1 files; 46956 bytes. Some data may have been lost. ****
+2024/09/30-09:59:29.525548 313450000 Recovering log #782
+2024/09/30-09:59:29.526173 313450000 Delete type=0 #782
+2024/09/30-09:59:29.526214 313450000 Delete type=3 #781
+2024/09/30-10:08:02.923288 30db47000 Level-0 table #786: started
+2024/09/30-10:08:02.923400 30db47000 Level-0 table #786: 0 bytes OK
+2024/09/30-10:08:02.923625 30db47000 Delete type=0 #784
+2024/09/30-10:08:02.924638 30db47000 Manual compaction at level-0 from '!folders!BqAuWSEWfisfuXXd' @ 72057594037927935 : 1 .. '!items.effects!x7IYwgKwlTY00kfW.Dw4OdbsOtNmEZNwy' @ 0 : 0; will stop at (end)

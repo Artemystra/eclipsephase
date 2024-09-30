@@ -213,6 +213,7 @@ export default class EPactor extends Actor {
     else{
       if(this.type === "character") {
         let morph = actorModel.bodies[actorModel.bodies.activeMorph];
+        console.log(morph.dur)
         actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
         actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
         actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) ? Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) : 0;

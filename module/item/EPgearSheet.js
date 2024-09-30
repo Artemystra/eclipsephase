@@ -27,7 +27,7 @@ export default class EPgearSheet extends ItemSheet {
   }
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["eclipsephase", "sheet", "item"],
       resizable: false,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".item-sheet-body", initial: "details" }]

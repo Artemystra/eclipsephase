@@ -16,6 +16,14 @@ export default class EPactorSheet extends ActorSheet {
       super(...args);
 
       const showEverything = game.settings.get("eclipsephase", "showEverything");
+      console.log("This is show everything:", showEverything)
+      console.log("This is the actor:", this.actor)
+      if (!game.user.isGM && !this.actor.isOwner){
+        console.log("Hi, I'm true!")
+      }
+      else{
+        console.log("Hi, I'm false!", this.position)
+      }
       if(showEverything){
         this.position.height = 850;
         this.position.width = 1400;
@@ -33,7 +41,7 @@ export default class EPactorSheet extends ActorSheet {
     }
 
     static get defaultOptions() {
-      return mergeObject(super.defaultOptions, {
+      return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["eclipsephase", "sheet", "actor"],
         resizable: false,
         tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "health" }]
@@ -89,6 +97,9 @@ export default class EPactorSheet extends ActorSheet {
     // Why jump through hoops in the template when we can set the active morph
     // here?!
     let morphKey = actor.system.bodies.activeMorph
+    console.log("This is my morphKey:", morphKey)
+    console.log("This is my bodies:", actor.system.bodies)
+    console.log("This is my bodies:", actor.system.bodies["morph1"])
     let description = await TextEditor.enrichHTML(actor.system.bodies[morphKey].description,
       { async: true })
 
@@ -103,7 +114,7 @@ export default class EPactorSheet extends ActorSheet {
       description: description
     }
 
-    return mergeObject(sheetData, {
+    return foundry.utils.mergeObject(sheetData, {
       isGM: game.user.isGM
     });
   }

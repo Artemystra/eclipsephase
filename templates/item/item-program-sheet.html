@@ -15,10 +15,10 @@
                 <label class="resource-label input-medium">
                     <td><label class="resource-label">{{localize "ep2e.item.program.table.level.label"}}:</label>
                 <select name="system.programLevel" data-type="String">
-                    {{#select item.system.programLevel}}
+                    {{#selectOptions item.system.programLevel}}
                     {{#each config.programLevels as |name key|}}
                     <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{/each}} {{/selectOptions}}
                 </select>
             </div>
         </div>
