@@ -942,8 +942,8 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  */
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceArray = []
+
     const showTo = recipientList != null ? recipientList.length > 0 ? recipientList : null : null
-    
     if(roll){
         if(roll.length > 1){
              for(let array = 0; array < roll.length; array++){
@@ -978,8 +978,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
                 message.sound = CONFIG.sounds.dice
             }
         }
-
-        message.formula = roll.terms.length > 1 ? roll.formula : null
+        message.formula = roll.length > 1 ? roll.formula : null
         message.total = roll.total
         message.rollType = rollType
     }

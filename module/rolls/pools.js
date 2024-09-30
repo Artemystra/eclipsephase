@@ -1,5 +1,6 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
+import { prepareRecipients } from "../common/common-sheet-functions.js";
 import { prepareWeapon } from "./damage.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
@@ -15,6 +16,8 @@ export async function usePoolFromChat(data){
     const options = dataset.usepool
     const actor = game.actors.get(dataset.actorid)
     const rolledFrom = dataset.rolledfrom
+    console.log("This is my data", dataset)
+    const recipientList = prepareRecipients(dataset.rollmode)
 
     let updateResult = await update(options, pool, null, actor)
 
@@ -30,7 +33,7 @@ export async function usePoolFromChat(data){
         message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
         
         let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
-        let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: [game.user._id]} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
+        let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: recipientList} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
 
         ChatMessage.create(attr)
 
