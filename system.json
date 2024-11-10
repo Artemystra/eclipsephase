@@ -5,8 +5,8 @@
   "description": "Diemen's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
   "version": "1.1.2",
   "compatibility": {
-    "verified": "11",
-    "minimum": "11"
+    "verified": "12",
+    "minimum": "12"
   },
   "authors": [
     {
