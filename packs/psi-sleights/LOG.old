@@ -1,5 +1,5 @@
-2024/04/23-00:20:00.414121 30a878000 Recovering log #751
-2024/04/23-00:20:00.415161 30a878000 Level-0 table #753: started
-2024/04/23-00:20:00.416357 30a878000 Level-0 table #753: 60549 bytes OK
-2024/04/23-00:20:00.417043 30a878000 Delete type=3 #750
-2024/04/23-00:20:00.417146 30a878000 Delete type=0 #751
+2024/04/28-22:39:02.392014 30e883000 Log #757: 0 ops saved to Table #760 OK
+2024/04/28-22:39:02.392126 30e883000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/000757.log: OK
+2024/04/28-22:39:02.392509 30e883000 Table #759: 81 entries OK
+2024/04/28-22:39:02.392746 30e883000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/MANIFEST-000755: OK
+2024/04/28-22:39:02.393131 30e883000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights; recovered 1 files; 30369 bytes. Some data may have been lost. ****

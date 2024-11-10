@@ -31,18 +31,31 @@ export const TASK_RESULT = {
     AUTOSUCCESS : 9
 }
 
+export const HOMEBREW_TASK_RESULT_TEXT = {
+    0: { class: 'fail', text: 'ep2e.roll.successType.majorFailure' },
+    1: { class: 'fail', text: 'ep2e.roll.successType.standardFailure' },
+    2: { class: 'fail', text: 'ep2e.roll.successType.minorFailure' },
+    3: { class: 'success', text: 'ep2e.roll.successType.minorSuccess' },
+    4: { class: 'success', text: 'ep2e.roll.successType.standardSuccess' },
+    5: { class: 'success', text: 'ep2e.roll.successType.majorSuccess' },
+    6: { class: 'fail', text: 'ep2e.roll.successType.criticalFailure' },
+    7: { class: 'success', text: 'ep2e.roll.successType.criticalSuccess' },
+    8: { class: 'fail', text: 'ep2e.roll.successType.supremeFailure' },
+    9: { class: 'success', text: 'ep2e.roll.successType.supremeSuccess' }
+} 
+
 export const TASK_RESULT_TEXT = {
-  0: { class: 'fail', text: 'ep2e.roll.successType.superiorFailure' },
-  1: { class: 'fail', text: 'ep2e.roll.successType.greaterFailure' },
-  2: { class: 'fail', text: 'ep2e.roll.successType.failure' },
-  3: { class: 'success', text: 'ep2e.roll.successType.success' },
-  4: { class: 'success', text: 'ep2e.roll.successType.greaterSuccess' },
-  5: { class: 'success', text: 'ep2e.roll.successType.superiorSuccess' },
-  6: { class: 'fail', text: 'ep2e.roll.successType.criticalFailure' },
-  7: { class: 'success', text: 'ep2e.roll.successType.criticalSuccess' },
-  8: { class: 'fail', text: 'ep2e.roll.successType.supremeFailure' },
-  9: { class: 'success', text: 'ep2e.roll.successType.supremeSuccess' }
-}
+    0: { class: 'fail', text: 'ep2e.roll.successType.superiorTwoFailure' },
+    1: { class: 'fail', text: 'ep2e.roll.successType.superiorFailure' },
+    2: { class: 'fail', text: 'ep2e.roll.successType.failure' },
+    3: { class: 'success', text: 'ep2e.roll.successType.success' },
+    4: { class: 'success', text: 'ep2e.roll.successType.superiorSuccess' },
+    5: { class: 'success', text: 'ep2e.roll.successType.superiorTwoSuccess' },
+    6: { class: 'fail', text: 'ep2e.roll.successType.criticalFailure' },
+    7: { class: 'success', text: 'ep2e.roll.successType.criticalSuccess' },
+    8: { class: 'fail', text: 'ep2e.roll.successType.autoFailure' },
+    9: { class: 'success', text: 'ep2e.roll.successType.autoSuccess' }
+}    
 
 const POOL_SUM = {
     INS: { poolType: "ep2e.skills.insightSkills.poolHeadline", useMessage: "ep2e.skills.pool.use.insight", skillPoolValue: "actorModel.pools.insight.value", updatePoolPath: "system.pools.insight.value", flexPoolValue: "actorModel.pools.flex.value", updateFlexPath: "system.pools.flex.value", poolUsageCount: 0 },
@@ -354,10 +367,10 @@ export class TaskRoll {
   /**
    * Format all of the output data so the output partial understands it.
    */
-  outputData(options, actorWhole, pool, rollItem, rolledFrom) {
+  outputData(options, actorWhole, pool, rollItem, rolledFrom, systemOptions) {
     let data = {}
 
-    let resultText = TASK_RESULT_TEXT[this._result]
+    let resultText = systemOptions.brewStatus ? HOMEBREW_TASK_RESULT_TEXT[this._result] : TASK_RESULT_TEXT[this._result]
 
     data.userID = game.user._id
     data.actor = actorWhole
@@ -503,9 +516,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         else if(roll.sleight)
             itemData = roll.sleight
 
-        let outputData = task.outputData(options, actorWhole, pool, itemData, rolledFrom)
+        let outputData = task.outputData(options, actorWhole, pool, itemData, rolledFrom, systemOptions)
 
-        outputData.alternatives = await pools.outcomeAlternatives(outputData, pool)
+        outputData.alternatives = await pools.outcomeAlternatives(outputData, pool, systemOptions)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
 
@@ -523,7 +536,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        
+        console.log(outputData)
         await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
@@ -929,8 +942,8 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  */
 export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceArray = []
+
     const showTo = recipientList != null ? recipientList.length > 0 ? recipientList : null : null
-    
     if(roll){
         if(roll.length > 1){
              for(let array = 0; array < roll.length; array++){
@@ -965,8 +978,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
                 message.sound = CONFIG.sounds.dice
             }
         }
-
-        message.formula = roll.terms.length > 1 ? roll.formula : null
+        message.formula = roll.length > 1 ? roll.formula : null
         message.total = roll.total
         message.rollType = rollType
     }
