@@ -1,5 +1,3 @@
-2024/04/28-22:39:02.376111 30e084000 Log #762: 0 ops saved to Table #765 OK
-2024/04/28-22:39:02.376237 30e084000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ware/000762.log: OK
-2024/04/28-22:39:02.376906 30e084000 Table #764: 190 entries OK
-2024/04/28-22:39:02.377079 30e084000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ware/MANIFEST-000760: OK
-2024/04/28-22:39:02.377310 30e084000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ware; recovered 1 files; 46956 bytes. Some data may have been lost. ****
+2024/11/11-14:11:57.550562 30c8a2000 Recovering log #767
+2024/11/11-14:11:57.551462 30c8a2000 Delete type=0 #767
+2024/11/11-14:11:57.551508 30c8a2000 Delete type=3 #766

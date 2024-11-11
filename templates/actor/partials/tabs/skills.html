@@ -45,7 +45,7 @@
                                 <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
                                 {{/if}}
                             {{/if}}
-                            <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>{{/if}}
+                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>{{/if}}
                             <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
@@ -132,10 +132,10 @@
                                     {{#if (eq actor.system.editAll false)}}
                                     <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.vigor.value}}{{actor.system.pools.vigor.value}}{{else}}0{{/if}}</label>
                                     {{else}}
-                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/>
+                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10; width: 40px" type="number" name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/>
                                     {{/if}}
                                 {{/if}}
-                                <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>{{/if}}
+                                <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>{{/if}}
                                 <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
@@ -233,7 +233,7 @@
                                     <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
                                     {{/if}}
                                 {{/if}}
-                                <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>{{/if}}
+                                <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>{{/if}}
                                 <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
@@ -390,7 +390,7 @@
                                     <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
                                     {{/if}}
                                 {{/if}}
-                                <span class="resource-value" style="position: relative; z-index: 10;">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
+                                <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
                                 <i style="min-width: 30px; text-align: center;"></i>
                         </div>
                         {{#if (eq isGM false)}}
