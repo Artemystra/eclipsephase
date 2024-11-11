@@ -369,7 +369,7 @@ export class TaskRoll {
    */
   outputData(options, actorWhole, pool, rollItem, rolledFrom, systemOptions) {
     let data = {}
-
+    
     let resultText = systemOptions.brewStatus ? HOMEBREW_TASK_RESULT_TEXT[this._result] : TASK_RESULT_TEXT[this._result]
 
     data.userID = game.user._id
@@ -515,7 +515,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             itemData = weaponSelected
         else if(roll.sleight)
             itemData = roll.sleight
-
+        
         let outputData = task.outputData(options, actorWhole, pool, itemData, rolledFrom, systemOptions)
 
         outputData.alternatives = await pools.outcomeAlternatives(outputData, pool, systemOptions)
@@ -536,11 +536,11 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        console.log(outputData)
+        
         await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
-
+        
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
-            psi.rollPsiEffect(actorWhole, game.user._id, options.push)
+            psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
     }
 }
 

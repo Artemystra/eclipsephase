@@ -17,7 +17,7 @@ export async function infectionUpdate(actorWhole, options){
 
     const raiseInfection = parseInt(options.raiseInfection);
     const actorModel = actorWhole.system;
-    let infectionMod = actorModel.psiStrain.infection + (options.push ? raiseInfection * 2 : raiseInfection)
+    let infectionMod = parseInt(actorModel.psiStrain.infection) + parseInt(options.push ? raiseInfection * 2 : raiseInfection)
 
     if (infectionMod <= 100)
         actorWhole.update({"system.psiStrain.infection" : infectionMod});
