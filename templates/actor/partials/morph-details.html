@@ -59,28 +59,28 @@
     <div class=" grid grid-4col" style="padding: 0 8px 5px 8px;">
             <div>
                 <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
-                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.insight" value="{{morph.morph.insight}}" placeholder="0"/>
+                <input class="input-xs" onFocus="this.select()" type="number" name="system.bodies.{{morph.key}}.insight" value="{{morph.morph.insight}}" placeholder="0"/>
                 {{#if actor.system.pools.insight.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.insight.mod}}</label>
                 {{/if}}
             </div>
             <div>
                 <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
-                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.moxie" value="{{morph.morph.moxie}}" placeholder="0"/>
+                <input class="input-xs" onFocus="this.select()" type="number" name="system.bodies.{{morph.key}}.moxie" value="{{morph.morph.moxie}}" placeholder="0"/>
                 {{#if actor.system.pools.moxie.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.moxie.mod}}</label>
                 {{/if}}
             </div>
             <div>
                 <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
-                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.vigor" value="{{morph.morph.vigor}}" placeholder="0"/>
+                <input class="input-xs" onFocus="this.select()" type="number" name="system.bodies.{{morph.key}}.vigor" value="{{morph.morph.vigor}}" placeholder="0"/>
                 {{#if actor.system.pools.vigor.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.vigor.mod}}</label>
                 {{/if}}
             </div>
             <div>
                 <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
-                <input class="input-xs" type="number" name="system.bodies.{{morph.key}}.flex" value="{{morph.morph.flex}}" placeholder="0"/>
+                <input class="input-xs" onFocus="this.select()" type="number" name="system.bodies.{{morph.key}}.flex" value="{{morph.morph.flex}}" placeholder="0"/>
                 {{#if actor.system.pools.flex.mod}}
                     <label class="resource-label footnote">+{{actor.system.pools.flex.mod}}</label>
                 {{/if}}
