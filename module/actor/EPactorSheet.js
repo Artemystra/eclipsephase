@@ -33,7 +33,7 @@ export default class EPactorSheet extends ActorSheet {
     }
 
     static get defaultOptions() {
-      return mergeObject(super.defaultOptions, {
+      return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["eclipsephase", "sheet", "actor"],
         resizable: false,
         tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "health" }]
@@ -103,7 +103,7 @@ export default class EPactorSheet extends ActorSheet {
       description: description
     }
 
-    return mergeObject(sheetData, {
+    return foundry.utils.mergeObject(sheetData, {
       isGM: game.user.isGM
     });
   }

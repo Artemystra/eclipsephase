@@ -28,7 +28,7 @@ export default class EPnpcSheet extends ActorSheet {
     }
 
     static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
+        return foundry.utils.mergeObject(super.defaultOptions, {
             classes: ["eclipsephase", "sheet", "actor"],
             resizable: false,
             tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" }]
@@ -74,7 +74,7 @@ export default class EPnpcSheet extends ActorSheet {
         console.log("******* npc sheet")
         console.log(sheetData)
 
-        return mergeObject(sheetData, {
+        return foundry.utils.mergeObject(sheetData, {
           isGM: game.user.isGM
         });
       }
