@@ -23,6 +23,13 @@ export function registerItemHandlers(html,callerobj,caller){
     });
 }
 
+export function createDroplist(html, callerobj){
+  html.find('name="droplist"')(ev => {
+    console.log("I'm a droplist")
+  })
+  
+}
+
 /**
  * Foundry VTTs active effect creation & deletion functions
  * @param {Object} html - The HTML object to which the event listeners are added

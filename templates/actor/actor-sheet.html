@@ -78,17 +78,13 @@
                                         </div>
                                     </div>
 
-                                    {{> systems/eclipsephase/templates/actor/partials/morph-details.html 
-                                        name=actor.system.bodies.activeMorph
-                                        morph=activeMorph }}
+                                    {{> systems/eclipsephase/templates/actor/partials/morph-details.html name=actor.system.bodies.activeMorph morph=activeMorph }}
                                 </div>
                             </div>
                                 <img class="morph-img" src="{{activeMorph.morph.img}}" data-edit="system.bodies.{{activeMorph.key}}.img" title="{{actor.name}}'s {{activeMorph.name}}"/>
                             </div>
                             <div>
-                                {{> systems/eclipsephase/templates/actor/partials/morph-traits.html
-                                    name=actor.system.bodies.activeMorph
-                                    morph=activeMorph }}
+                                {{> systems/eclipsephase/templates/actor/partials/morph-traits.html name=actor.system.bodies.activeMorph morph=activeMorph }}
                             </div>
                             <div class="flexrow subheader">
                                 <h3 class="subheader">
@@ -98,13 +94,7 @@
                                 </div>
                             </div>
                             {{#if (eq activeMorph.key "morph1")}}
-                            {{editor
-                            activeMorph.description
-                            target="system.bodies.morph1.description"
-                            button=true
-                            owner=owner
-                            editable=this.options.editable
-                            }}
+                            {{editor activeMorph.description target="system.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
                             {{else if (eq activeMorph.key "morph2")}}
                             {{editor
                             activeMorph.description

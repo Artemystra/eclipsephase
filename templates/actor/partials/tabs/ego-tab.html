@@ -23,10 +23,9 @@
                 <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.sex.headline"}}</label>
                 <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.sex" data-type="String" type="text" list="sexList" value="{{actor.system.ego.sex}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectSex'}}" style="padding-left: 5px;">
                 <datalist id="sexList">
-                    {{#selectOptions actor.system.ego.sex}}
-                    {{#each config.sexes as |sex key|}}
-                    <option value="{{localize sex}}"></option>
-                    {{/each}} {{/selectOptions}}
+                    {{#selectOptions config.sexes selected=value localize=true}}
+                    <option value="value"></option>
+                    {{/selectOptions}}
                 </datalist>
             </div>
             <!--

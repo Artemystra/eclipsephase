@@ -6,10 +6,7 @@
         <div>
             <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
             <select style="max-width: 100px;" class="selectSpecApt" name="system.bodies.{{morph.key}}.type" data-type="String">
-                {{#select morph.morph.type}}
-                {{#each config.bodyTypes as |bodyType key|}}
-                <option value="{{key}}">{{localize bodyType}}</option>
-                {{/each}} {{/select}}
+                {{selectOptions config.bodyTypes selected=morph.morph.type localize=true}}
             </select>
         </div>
         <div>
@@ -30,11 +27,7 @@
         <div>
             <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>
             <select class="selectSpecApt" style="max-width: 85px;" name="system.bodies.{{morph.key}}.movement1.type" data-type="String">
-                {{#select morph.morph.movement1.type}}
-                {{#each config.moveTypes as |moveType key|}}
-                    <option value="{{key}}">{{localize moveType}}</option>
-                {{/each}}
-                {{/select}}
+                {{selectOptions config.moveTypes selected=morph.morph.movement1.type localize=true}}
             </select>
         </div>
         <div>
@@ -48,11 +41,7 @@
         <div>
             <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>
             <select class="selectSpecApt" style="max-width: 85px;" name="system.bodies.{{morph.key}}.movement2.type" data-type="String">
-                {{#select morph.morph.movement2.type}}
-                {{#each config.moveTypes as |moveType key|}}
-                    <option value="{{key}}">{{localize moveType}}</option>
-                {{/each}}
-                {{/select}}
+                {{selectOptions config.moveTypes selected=morph.morph.movement2.type localize=true}}
             </select>
         </div>
     </div>

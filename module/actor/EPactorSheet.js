@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo} from "../common/common-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
-import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
+import { traitAndAccessoryFinder, IDprep } from "../common/sheet-preparation.js";
 import * as Dice from "../rolls/dice.js";
 import itemRoll from "../item/EPitem.js";
 
@@ -85,6 +85,8 @@ export default class EPactorSheet extends ActorSheet {
 
     //Prepare dropdowns
     sheetData.config = CONFIG.eclipsephase;
+
+    sheetData.IDcollection = IDprep(actor, sheetData);
 
     // Why jump through hoops in the template when we can set the active morph
     // here?!

@@ -4,13 +4,7 @@
             <h3 class="subheader colorV1">{{localize "ep2e.id.headline"}}</h3>
             <div class="alignRight flexGrowHalf">
                 <select class="selectSpecApt input-XL" name="system.ego.idSelected" data-type="String">
-                    {{#select actor.system.ego.idSelected}}
-                    <option value="id1">{{localize "ep2e.id.idSelector.id1"}}: {{actor.system.ego.ids.id1.name}}</option>
-                    <option value="id2">{{localize "ep2e.id.idSelector.id2"}}: {{actor.system.ego.ids.id2.name}}</option>
-                    <option value="id3">{{localize "ep2e.id.idSelector.id3"}}: {{actor.system.ego.ids.id3.name}}</option>
-                    <option value="id4">{{localize "ep2e.id.idSelector.id4"}}: {{actor.system.ego.ids.id4.name}}</option>
-                    <option value="id5">{{localize "ep2e.id.idSelector.id5"}}: {{actor.system.ego.ids.id5.name}}</option>
-                    {{/select}}
+                    {{selectOptions IDcollection selected=actor.system.ego.idSelected nameAttr="key" labelAttr=label localize=true}}
                 </select>
             </div>
         </div>

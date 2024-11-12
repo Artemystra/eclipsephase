@@ -385,3 +385,10 @@ eclipsephase.psiStrainLabels = {
     enhancedBehaviour: "ep2e.psi.effect.enhancedBehaviour.label",
     restrictedBehaviour: "ep2e.psi.effect.restrictedBehaviour.label"
 }
+
+eclipsephase.otherPsiLabels = {
+    enhancedBehaviour: "ep2e.psi.effect.enhancedBehaviour.label",
+    restricted: "ep2e.psi.effect.restrictedBehaviour.label",
+    motivation: "ep2e.psi.effect.motivation.label",
+    other: "ep2e.psi.effect.other"
+}
