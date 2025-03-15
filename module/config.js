@@ -193,6 +193,12 @@ eclipsephase.rangedAmmoType = {
     rail: "ep2e.item.weapon.table.ammoUsed.rail"
 }
 
+eclipsephase.trippleSkillModifiers = {
+    10: "+ 10",
+    20: "+ 20",
+    30: "+ 30"
+}
+
 eclipsephase.genders = {
     cis: "ep2e.ego.general.gender.cis",
     trans: "ep2e.ego.general.gender.trans",

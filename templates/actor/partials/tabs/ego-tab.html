@@ -12,10 +12,9 @@
                 <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.origin.headline"}}</label>
                 <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()"  name="system.ego.origin" data-type="String" type="text" list="originList" value="{{actor.system.ego.origin}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectOrigin'}}" style="padding-left: 5px;">
                 <datalist id="originList">
-                    {{#select actor.system.ego.origin}}
                     {{#each config.origins as |origin key|}}
-                    <option value="{{localize origin}}"></option>
-                    {{/each}} {{/select}}
+                        <option value="{{localize origin}}"></option>
+                    {{/each}}
                 </datalist>
             </div>
             <!--This is my test Droplist-->
@@ -23,31 +22,18 @@
                 <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.sex.headline"}}</label>
                 <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.sex" data-type="String" type="text" list="sexList" value="{{actor.system.ego.sex}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectSex'}}" style="padding-left: 5px;">
                 <datalist id="sexList">
-                    {{#selectOptions config.sexes selected=value localize=true}}
-                    <option value="value"></option>
-                    {{/selectOptions}}
-                </datalist>
-            </div>
-            <!--
-            <div class="flexrow grid-2col">
-                <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.sex.headline"}}</label>
-                <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.sex" data-type="String" type="text" list="sexList" value="{{actor.system.ego.sex}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectSex'}}" style="padding-left: 5px;">
-                <datalist id="sexList">
-                    {{#select actor.system.ego.sex}}
                     {{#each config.sexes as |sex key|}}
-                    <option value="{{localize sex}}"></option>
-                    {{/each}} {{/select}}
+                        <option value="{{localize sex}}"></option>
+                    {{/each}}
                 </datalist>
             </div>
-            -->
             <div class="flexrow grid-2col">
                 <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.gender.headline"}}</label>
                 <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.gender" data-type="String" type="text" list="genderList" value="{{actor.system.ego.gender}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectGender'}}" style="padding-left: 5px;">
                 <datalist id="genderList">
-                    {{#select actor.system.ego.gender}}
                     {{#each config.genders as |gender key|}}
                     <option value="{{localize gender}}"></option>
-                    {{/each}} {{/select}}
+                    {{/each}}
                 </datalist>
             </div>
         </div>

@@ -45,7 +45,7 @@ export default class EPactor extends Actor {
       }
     }
     actorModel.mods.psiMultiplier = chiMultiplier
-    actorModel.currentStatus = [];
+    actorModel.currentStatus = [];    
 
     // Homebrew Switch
     actorModel.homebrew = game.settings.get("eclipsephase", "superBrew");
@@ -91,7 +91,32 @@ export default class EPactor extends Actor {
     this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel, chiMultiplier);
 
-    if (this.type === "character"){    
+    if (this.type === "character"){  
+      
+      //prepare morph list (PC)
+      let morphNameValues = [
+        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph1.name},
+        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph2.name},
+        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph3.name},
+        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph4.name},
+        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph5.name},
+        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph6.name}
+      ]
+  
+      const morphList = []
+      let counter = 0
+  
+      for(let morphName of morphNameValues){
+        counter++
+        if(morphName.custom){
+          morphList.push({key: "morph"+counter, label: morphName.custom});
+        }
+        else
+        morphList.push({key: "morph"+counter, label: morphName.custom});
+      }
+  
+      
+      actorModel.morphList = morphList;  
       let morph = actorModel.bodies[actorModel.bodies.activeMorph]
       actorModel.additionalSystems.movementBase = morph.movement1 ? morph.movement1.base : 0;
       this._calculateMentalHealth(actorModel, chiMultiplier)

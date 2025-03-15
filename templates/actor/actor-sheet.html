@@ -59,21 +59,8 @@
                                         <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
                                         <div class="alignRight flexGrowThreeQuarter">
                                             <label class="resource-value" style="margin-right: 0.5em;">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</label>
-                                            <select class="bodySelect" name="system.bodies.activeMorph" data-type="text" style="width: 120px;">
-                                                {{#select actor.system.bodies.activeMorph}}
-                                                <option value="morph1">{{#if
-                                                actor.system.bodies.morph1.name}}{{actor.system.bodies.morph1.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
-                                                <option value="morph2">{{#if
-                                                actor.system.bodies.morph2.name}}{{actor.system.bodies.morph2.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
-                                                <option value="morph3">{{#if
-                                                actor.system.bodies.morph3.name}}{{actor.system.bodies.morph3.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
-                                                <option value="morph4">{{#if
-                                                actor.system.bodies.morph4.name}}{{actor.system.bodies.morph4.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
-                                                <option value="morph5">{{#if
-                                                actor.system.bodies.morph5.name}}{{actor.system.bodies.morph5.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
-                                                <option value="morph6">{{#if
-                                                actor.system.bodies.morph6.name}}{{actor.system.bodies.morph6.name}}{{else}}{{localize "ep2e.morph.currentMorph.morphList.placeholder"}}{{/if}}</option>
-                                                {{/select}}
+                                            <select class="bodySelect" name="system.bodies.activeMorph" data-type="text" style="width: 120px;" value="{{actor.system.bodies.activeMorph}}">
+                                                {{selectOptions actor.system.morphList selected=actor.system.bodies.activeMorph valueAttr="key" labelAttr=label localize=true}}
                                             </select>
                                         </div>
                                     </div>

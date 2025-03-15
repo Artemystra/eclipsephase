@@ -355,12 +355,7 @@
 {{#each actor.system.strainInfluence as |influence key|}}
 <li  class="psiInfluenceContainer">
     <select name="system.strainInfluence.{{key}}.label" class="psiFormLabel" data-type="String">
-        {{#select influence.label}}
-            <option value="enhancedBehaviour">{{localize "ep2e.psi.effect.enhancedBehaviour.label"}}</option>
-            <option value="restricted">{{localize "ep2e.psi.effect.restrictedBehaviour.label"}}</option>
-            <option value="motivation">{{localize "ep2e.psi.effect.motivation.label"}}</option>
-            <option value="other">{{localize "ep2e.psi.effect.other"}}</option>
-        {{/select}}
+        {{selectOptions @root.config.otherPsiLabels selected=influence.label localize=true}}
     </select>
     <div class="flexrow flex-group-center">
         <div class="psi-circle">{{influence.number}}</div>

@@ -35,7 +35,6 @@ export function IDprep(actor, sheetData){
   let IDcollection = [];
   let IDcount = 0;
   for(let id in actor.system.ego.ids){
-    console.log("This is my current ID: "+id);
     const idPath = actor.system.ego.ids[id];
     IDcount++;;
     if(idPath.name != ""){

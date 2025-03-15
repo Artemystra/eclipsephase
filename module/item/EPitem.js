@@ -1,3 +1,5 @@
+import { eclipsephase } from "../config.js"
+
 export default class EPitem extends Item {
 
     async prepareData() {
