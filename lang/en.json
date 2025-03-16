@@ -56,10 +56,11 @@
   "TYPES.Item.ccWeapon" : "Close Combat Weapon",
   "TYPES.Item.armor" : "Armor",
   "TYPES.Item.grenade" : "Grenade",
-  "TYPES.Item.trait" : "Trait",
-  "TYPES.Item.flaw" : "Flaw",
-  "TYPES.Item.morphTrait" : "Morph Trait",
-  "TYPES.Item.morphFlaw" : "Morph Flaw",
+  "TYPES.Item.traits" : "Traits & Flaws",
+  "TYPES.Item.trait" : "Trait (DEPRECATED)",
+  "TYPES.Item.flaw" : "Flaw (DEPRECATED)",
+  "TYPES.Item.morphTrait" : "Morph Trait (DEPRECATED)",
+  "TYPES.Item.morphFlaw" : "Morph Flaw (DEPRECATED)",
   "TYPES.Item.ware" : "Ware",
   "TYPES.Item.aspect" : "Psi Sleight",
   "TYPES.Item.program" : "Program",
@@ -727,6 +728,10 @@
           "descriptionPlaceholder": "Add a description"
         }
       },
+      "traits":{
+        "traitLabel": "Positive",
+        "flawLabel": "Negative"
+      },
       "armor": {
         "table": {
           "energy": "Energy",
@@ -1339,6 +1344,12 @@
       },
       "psi": {
         "rollButtonLabel": "Roll Psi Infection"
+      }
+    },
+    "dialog": {
+      "selectTrait": {
+        "header": "Select Trait Type",
+        "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
       }
     },
     "chat": {

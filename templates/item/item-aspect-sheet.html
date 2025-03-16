@@ -32,10 +32,7 @@
                     <tr>
                         <td>
                             <select name="system.psiType" data-type="String">
-                                {{#select item.system.psiType}}
-                                {{#each config.psiTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.psiTypes selected=item.system.psiType localize=true}}
                             </select>
                         </td>
                         <td>
@@ -66,28 +63,19 @@
                     <tr>
                         <td>
                             <select name="system.psiType" data-type="String">
-                                {{#select item.system.psiType}}
-                                {{#each config.psiTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.psiTypes selected=item.system.psiType localize=true}}
                             </select>
                         </td>
                         {{#if (eq item.system.psiType "chi")}}
                         {{else}}
                         <td>
                             <select name="system.actionType" data-type="String">
-                                {{#select item.system.actionType}}
-                                {{#each config.actionTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.actionTypes selected=item.system.actionType localize=true}}
                             </select>
                         </td>
                         <td>
                             <select name="system.duration" data-type="String">
-                                {{#select item.system.duration}}
-                                {{#each config.duration as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.duration selected=item.system.duration localize=true}}
                             </select>
                         </td>
                         {{/if}}

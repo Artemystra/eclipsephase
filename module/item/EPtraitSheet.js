@@ -1,3 +1,4 @@
+import { registerEffectHandlers,registerCommonHandlers } from "../common/common-sheet-functions.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -10,7 +11,7 @@ export default class EPtraitSheet extends ItemSheet {
       classes: ["eclipsephase", "sheet", "item"],
       resizable: false,
       width: 520,
-      height: 350,
+      height: 450,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".item-sheet-body", initial: "description" }]
     });
   }
@@ -30,14 +31,23 @@ export default class EPtraitSheet extends ItemSheet {
 
   /** @override */
   getData() {
-    const sheetData = super.getData();
-    const actor = sheetData.actor
+    const sheetData = super.getData()
+    const item = sheetData.item
 
     sheetData.config = CONFIG.eclipsephase;
-    actor.showEffectsTab = true;
+    item.showEffectsTab = true;
     if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-      actor.showEffectsTab = true
+      item.showEffectsTab = true
     }
+
+    if(item.system.traitType === "trait"){
+      item.img = "systems/eclipsephase/resources/icons/add.png"
+    }
+    else
+    item.img = "systems/eclipsephase/resources/icons/subtract.png"
+
+    /* In case ACTOR DATA is needed */
+   console.log(item) 
 
     return sheetData
   }

@@ -146,5 +146,21 @@
             </div>
             {{/each}}
         </div>
+
+        {{else if (eq dialogType "selectTraitType")}}
+        
+        {{localize "ep2e.dialog.selectTrait.copy"}}
+
+        <div style="min-height: 60px; display: flex; align-items: center; justify-content: space-evenly;">
+            <div>
+                <input type="radio" name="TraitTypeSelection" value="ego" id="ego" checked>
+                <label for="ego">{{localize "ep2e.actorSheet.leftTabs.egoTab"}}</label>
+            </div>
+            <div>
+                <input type="radio" name="TraitTypeSelection" value="morph" id="morph">
+                <label for="morph">{{localize "ep2e.actorSheet.rightTabs.morphTab"}}</label>
+            </div>
+        </div>
+
     {{/if}}
 </form>

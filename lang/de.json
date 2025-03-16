@@ -725,6 +725,10 @@
           "descriptionPlaceholder": "Beschreibung hinzufügen"
         }
       },
+      "traits":{
+        "traitLabel": "Positiv",
+        "flawLabel": "Negativ"
+      },
       "armor": {
         "table": {
           "energy": "Energie",
@@ -1323,6 +1327,21 @@
       },
       "psi": {
         "rollButtonLabel": "Psi-Infektion Würfeln"
+      }
+    },
+    "dialog": {
+      "selectTrait": {
+        "header": "Trait Typ Wählen",
+        "copy": "Hinweis: Diese Eigenschaft kann für Egos oder Morphs gewählt werden. Morpheigenschaften sind an den derzeitig bewohnten Körper gebunden, während Egoeigenschaften immer erhalten bleiben, auch wenn der Körper gewechselt wird."
+      }
+    },
+    "chat": {
+      "buttonLabel": {
+        "mitigateResult": "Ergebnis Retten",
+        "swapResult": "Würfel Drehen",
+        "upgradeResult": "Ergebnis Verbessern",
+        "psiInfection": "Psi Infektion Würfeln",
+        "weaponDamage": "Waffenschaden würfeln"
       }
     },
     "rule": {

@@ -115,12 +115,27 @@ export default class EPactorSheet extends ActorSheet {
     const actor = this.actor
     const actorModel = actor.system
     const itemModel = item.system
+    let traitSelection
     
     let currentMorph = actorModel.bodies.activeMorph
 
+    if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
+      traitSelection = await selectTraitType()
 
-    // Create a Consumable spell scroll on the Inventory tab
-    if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware") {
+    if(traitSelection.cancelled)
+      return
+
+    console.log("+++", traitSelection)
+
+    if(traitSelection.value === "morph")
+      itemModel.ego = false;
+    else
+      itemModel.morph = false;
+
+    console.log("---", item)
+    }
+    // Binds a morph-trait to the currently active morph
+    if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware" || item.system.morph === true) {
       itemModel.boundTo = currentMorph
     }
 
@@ -267,10 +282,10 @@ export default class EPactorSheet extends ActorSheet {
           item.specroll = ((Number(itemModel.value) + aptSelect)<100 ? Number(itemModel.value) + aptSelect : 100) + 10;
           know.push(item);
         }
-        else if (item.type === 'trait') {
+        else if (item.type === 'trait' || item.system.traitType === "trait" && item.system.ego) {
           trait.push(item);
         }
-        else if (item.type === 'flaw') {
+        else if (item.type === 'flaw' || item.system.traitType === "flaw" && item.system.ego) {
           flaw.push(item);
         }
         else if (itemModel.displayCategory === 'ranged') {
@@ -537,7 +552,7 @@ export default class EPactorSheet extends ActorSheet {
       else if (item.type === 'ware' && itemModel.boundTo) {
             ware[itemModel.boundTo].push(item);
         }
-        else if (item.type === 'morphFlaw' && itemModel.boundTo) {
+        else if (item.type === 'morphFlaw' && itemModel.boundTo || item.system.traitType === 'flaw' && item.system.morph && itemModel.boundTo) {
             if (itemModel.boundTo === "morph1"){
                 morphtrait.present1 = true;
             }
@@ -558,7 +573,7 @@ export default class EPactorSheet extends ActorSheet {
             }
             morphflaw[itemModel.boundTo].push(item);
         }
-        else if (item.type === 'morphTrait' && itemModel.boundTo) {
+        else if (item.type === 'morphTrait' && itemModel.boundTo || item.system.traitType === 'trait' && item.system.morph && itemModel.boundTo) {
             if (itemModel.boundTo === "morph1"){
                 morphtrait.present1 = true;
             }
@@ -1184,5 +1199,42 @@ async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, c
 function _poolUsageModifiers(form) {
     return {
         modifier: form.modifier ? form.modifier.value : null
+    }
+}
+
+async function selectTraitType() {
+  const dialog = 'systems/eclipsephase/templates/chat/list-dialog.html';
+  const dialogType = "selectTraitType";
+  let dialogName = game.i18n.localize('ep2e.dialog.selectTrait.header');
+  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+  let confirmButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
+  const html = await renderTemplate(dialog, {dialogType});
+
+  return new Promise(resolve => {
+      const data = {
+          title: dialogName,
+          content: html,
+          buttons: {
+              cancel: {
+                  label: cancelButton,
+                  callback: html => resolve ({cancelled: true})
+              },
+              normal: {
+                  label: confirmButton,
+                  callback: html => resolve(_traitSelection(html[0].querySelector("form")))
+              }
+          },
+          default: "normal",
+          close: () => resolve ({cancelled: true})
+      };
+      let options = {width:315}
+      new Dialog(data, options).render(true);
+  });
+}
+
+//Pool usage confirmation check results
+function _traitSelection(form) {
+    return {
+        value: form.TraitTypeSelection.value
     }
 }

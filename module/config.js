@@ -1,8 +1,8 @@
 export const eclipsephase = {};
 
-eclipsephase.qualityTypes = {
-    trait: "Trait",
-    flaw: "Flaw"
+eclipsephase.traitTypes = {
+    trait: "ep2e.item.traits.traitLabel",
+    flaw: "ep2e.item.traits.flawLabel"
 }
 
 eclipsephase.firingModes = {

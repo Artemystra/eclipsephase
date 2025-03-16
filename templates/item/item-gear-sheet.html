@@ -30,18 +30,12 @@
                     <tr>
                         <td>
                             <select name="system.slotType" data-type="String">
-                                {{#select item.system.slotType}}
-                                {{#each config.gearTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.gearTypes selected=item.system.slotType localize=true}}
                             </select>
                         </td>
                         <td>
                             <select name="system.cost" data-type="String">
-                                {{#select item.system.cost}}
-                                {{#each config.costTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.costTypes selected=item.system.cost localize=true}}
                             </select>
                         </td>
                     </tr>
