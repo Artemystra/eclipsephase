@@ -359,6 +359,7 @@ export function embeddedItemToggle(html, actor, allEffects){
  */
 export function itemToggle(html, item){
   html.find('.toggleItem').click(async ev => {
+    
     const element = ev.currentTarget;
     const dataset = element.dataset;
     const path = dataset.path;
