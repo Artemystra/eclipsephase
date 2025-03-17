@@ -892,7 +892,7 @@ export default class EPactorSheet extends ActorSheet {
       }
 
       let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod)*actorModel.mods.psiMultiplier : "") + (actorModel.mods.recoverBonus ? " + " + eval(actorModel.mods.recoverBonus) : "")
-      let roll = await new Roll(rollFormula).evaluate({async: true});
+      let roll = await new Roll(rollFormula).evaluate();
       let restValue = null;
       if (restType === "short"){
 

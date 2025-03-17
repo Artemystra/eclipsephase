@@ -343,7 +343,7 @@ export class TaskRoll {
    */
   async performRoll() {
     this._roll = new Roll('d100')
-    let result = await this._roll.evaluate({async: true })
+    let result = await this._roll.evaluate()
 
     this._rollValue = parseInt(this._roll.total)
     this._calculateResult()

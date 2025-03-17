@@ -421,7 +421,7 @@ function _proListSelection(form) {
  */
 async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create=true}={}) {
   for ( const roll of rollsArray ) {
-      if ( !roll._evaluated ) await roll.evaluate({async: true});
+      if ( !roll._evaluated ) await roll.evaluate();
   }
 
   // Prepare chat data

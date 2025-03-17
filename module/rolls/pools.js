@@ -14,7 +14,7 @@ export async function usePoolFromChat(data){
     const dataset = data.currentTarget.dataset;
     const pool = {skillPoolValue: dataset.skillpoolvalue ? parseInt(dataset.skillpoolvalue) : 0, flexPoolValue: dataset.flexpoolvalue ? parseInt(dataset.flexpoolvalue) : 0, updatePoolPath : dataset.updatepoolpath ? dataset.updatepoolpath : "", updateFlexPath : dataset.updateflexpath ? dataset.updateflexpath : "", poolType: dataset.pooltype ? dataset.pooltype : ""}
     const options = dataset.usepool
-    const actor = game.actors.get(dataset.actorid)
+    const actor = await fromUuid(dataset.actorid)
     const rolledFrom = dataset.rolledfrom
     console.log("This is my data", dataset)
     const recipientList = prepareRecipients(dataset.rollmode)

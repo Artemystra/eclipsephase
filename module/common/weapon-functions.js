@@ -12,6 +12,7 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
   let weaponTraits = null;
   let weapon = null;
   let weaponMode = null;
+  console.log(actorWhole)
 
   if (rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
     weapon = actorWhole.items.get(weaponID);
@@ -71,7 +72,6 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
 
 //Constructs a subset of active traits
 export async function traitSubSetConstructor(weapon){
-  console.log("My weapon:", weapon.system)
   let traitsMode1 = weapon.system.mode1.traits;
   let traitsMode2 =  weapon.system.mode2.traits;
   let accessories = weapon.system.accessories;
