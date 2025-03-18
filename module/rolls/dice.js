@@ -967,7 +967,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         }
         else{
             
-            const diceBreakdown = await breakdown(roll)
+            const diceBreakdown = breakdown(roll)
             
             message.diceBreakdown = diceBreakdown
             
@@ -994,7 +994,7 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
     })
 }
 
-async function breakdown(roll){
+function breakdown(roll){
     
     let diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
     let i = 0
