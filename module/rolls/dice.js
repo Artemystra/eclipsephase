@@ -967,8 +967,8 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
         }
         else{
             
-            const diceBreakdown = breakdown(roll)
-
+            const diceBreakdown = await breakdown(roll)
+            
             message.diceBreakdown = diceBreakdown
             
             /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
@@ -994,10 +994,11 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
     })
 }
 
-function breakdown(roll){
+async function breakdown(roll){
+    
     let diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
     let i = 0
-    
+
     for(let dice of roll.dice){
         if(dice.faces === 6)
             for(let roll of dice.results){
@@ -1015,6 +1016,6 @@ function breakdown(roll){
             i++
         }
     }
-
+    console.log("^^^", diceBreakdown)
     return diceBreakdown
 }

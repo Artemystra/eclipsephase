@@ -8,7 +8,7 @@ export async function prepareWeapon(data, result, preparedData){
     /*const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
     console.log("messageID: ", game.messages.get(messageID))*/
     const dataset = preparedData ? preparedData : data.currentTarget.dataset;
-    console.log("---",dataset)
+
     /*let unlinkedActorToken
     if(dataset.tokenid){
       unlinkedActorToken = await fromUuid(dataset.tokenid)
@@ -39,7 +39,7 @@ export async function prepareWeapon(data, result, preparedData){
         modeDamage = ""
 
     let recipientList = prepareRecipients(rollMode)
-    console.log("+++", actorWhole)
+    
     let weaponSelected = await weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, selectedWeaponMode)
     
     if(rollResult > 2 && rollResult < 6 || rollResult === 7 || rollResult === 9)
@@ -364,7 +364,7 @@ export async function healthBarChange(actor, html){
           if (healFormula.cancelled){
             return;
           }
-  
+          
           let healRoll = [];
           let repetition = 0;
           let html = null;
@@ -372,12 +372,12 @@ export async function healthBarChange(actor, html){
             for (let i = 1 ; i <= healFormula.duration; i++){
   
               hoursPassed++
-  
+              
               if(repetition >= (healFormula.heal).length){
                 hoursPassed--
                 break
               }
-  
+
               if(damageCount > 0 && healFormula.heal[repetition].cycle === hoursPassed){
                 
                 let rollFormula = healFormula.heal[repetition].roll;
@@ -389,7 +389,7 @@ export async function healthBarChange(actor, html){
                 repetition++
       
               }
-  
+              
               if(damageCount === 0){
                 break;
               }
@@ -408,7 +408,7 @@ export async function healthBarChange(actor, html){
             message.weeksValue = Math.floor(hoursPassed/7);
             message.daysValue = Math.floor((hoursPassed-message.weeksValue*7));
           }
-  
+          
           let rollCount = repetition;
           let woundHealing = 0
           repetition = 0;
@@ -445,9 +445,12 @@ export async function healthBarChange(actor, html){
           message.daysLabel = "ep2e.roll.announce.heal.partial.days"
           message.hoursLabel = "ep2e.roll.announce.heal.partial.hours"
           message.rollTitle = "ep2e.roll.announce.total"
-          
+
           if (healRoll.length > 0){
-            await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll, actor.name, game.user._id, false, "rollOutput")
+            if (healRoll.length === 1)
+              await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll[0], actor.name, game.user._id, false, "rollOutput")
+            else
+              await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll, actor.name, game.user._id, false, "rollOutput")
           }     
   
           newDamage = damageCount;
