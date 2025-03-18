@@ -1647,7 +1647,7 @@
         "base"
       ],
       "statChange": null,
-      "traitType": "",
+      "traitType": "trait",
       "ego": false,
       "morph": false
     },
