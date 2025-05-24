@@ -1,4 +1,4 @@
-class EPmenuLayer extends PlaceablesLayer {
+class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
     constructor () {
       super()
       this.objects = {}
@@ -55,6 +55,7 @@ class EPmenuLayer extends PlaceablesLayer {
         }*/
 
         static renderControls (app, html, data) {
+            
             const isGM = game.user.isGM
             const active = game.settings.get("eclipsephase", "GMmenu")
             const EPmenu = html.find('.fa-bookmark').parent()

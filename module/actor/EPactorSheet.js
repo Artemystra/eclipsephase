@@ -11,7 +11,7 @@ import itemRoll from "../item/EPitem.js";
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-export default class EPactorSheet extends ActorSheet {
+export default class EPactorSheet extends foundry.appv1.sheets.ActorSheet {
     constructor(...args) {
       super(...args);
 

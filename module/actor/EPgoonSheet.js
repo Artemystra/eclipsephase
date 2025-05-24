@@ -5,7 +5,7 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 
-export default class EPgoonSheet extends ActorSheet {
+export default class EPgoonSheet extends foundry.appv1.sheets.ActorSheet {
 
     constructor(...args) {
       super(...args);

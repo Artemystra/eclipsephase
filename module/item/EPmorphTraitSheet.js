@@ -4,7 +4,7 @@ import { registerEffectHandlers,registerCommonHandlers } from "../common/common-
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export default class EPmorphTraitSheet extends ItemSheet {
+export default class EPmorphTraitSheet extends foundry.appv1.sheets.ItemSheet {
 
   /** @override */
   static get defaultOptions() {

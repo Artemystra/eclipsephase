@@ -3,7 +3,7 @@ import { registerEffectHandlers,registerCommonHandlers } from "../common/common-
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export default class EPtraitSheet extends ItemSheet {
+export default class EPtraitSheet extends foundry.appv1.sheets.ItemSheet {
 
   /** @override */
   static get defaultOptions() {

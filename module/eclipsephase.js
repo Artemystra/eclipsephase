@@ -148,19 +148,19 @@ Hooks.once('init', async function() {
   CONFIG.Item.documentClass = EPitem;
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character"], makeDefault: true });
-  Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
-  Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPtraitSheet, {types: ["traits"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
-  Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPknowSkillSheet, {types: ["knowSkill"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPspecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPvehicleSheet, {types: ["vehicle"], makeDefault: true });
+  foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
+  foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character"], makeDefault: true });
+  foundry.documents.collections.Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
+  foundry.documents.collections.Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
+  foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPtraitSheet, {types: ["traits"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPknowSkillSheet, {types: ["knowSkill"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPspecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPvehicleSheet, {types: ["vehicle"], makeDefault: true });
   //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
   // If you need to add Handlebars helpers, here are a few useful examples:
   Handlebars.registerHelper('concat', function() {
@@ -208,7 +208,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/item/partials/grenade-details.html",
     "systems/eclipsephase/templates/item/partials/item-traits.html"
   ];
-  await loadTemplates(templates);
+  await foundry.applications.handlebars.loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
     return str.toLowerCase();
   });
@@ -507,6 +507,7 @@ Hooks.on("renderChatMessage", (app, html, data) => EPchat.addChatListeners(html,
 //Sets parts of the chat invisible to players or the GM
 Hooks.on("renderChatLog", (app, html, data) => EPchat.GMvision(html, data));
 Hooks.on("renderChatMessage", (app, html, data) => EPchat.GMvision(html, data));
+Hooks.on("renderChatMessageHTML", (app, html, data) => EPchat.GMvision(html, data));
 Hooks.on("renderChatMessage", (app, html, data) => EPchat.ownerVision(html, data));
 Hooks.on("renderChatLog", (app, html, data) => EPchat.playerVision(html, data));
 Hooks.on("renderChatMessage", (app, html, data) => EPchat.playerVision(html, data));
