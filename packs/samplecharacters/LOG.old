@@ -1,8 +1,1 @@
-2025/05/25-00:58:12.669969 312da8000 Log #763: 0 ops saved to Table #793 OK
-2025/05/25-00:58:12.670213 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/000763.log: OK
-2025/05/25-00:58:12.670286 312da8000 Log #792: 0 ops saved to Table #794 OK
-2025/05/25-00:58:12.670410 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/000792.log: OK
-2025/05/25-00:58:12.671062 312da8000 Table #778: 553 entries OK
-2025/05/25-00:58:12.671289 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/MANIFEST-000791: OK
-2025/05/25-00:58:12.671386 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/MANIFEST-000762: OK
-2025/05/25-00:58:12.671818 312da8000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters; recovered 1 files; 256747 bytes. Some data may have been lost. ****
+2025/05/25-00:58:12.673169 312da8000 Delete type=3 #1

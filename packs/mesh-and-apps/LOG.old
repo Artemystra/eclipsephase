@@ -1,8 +1,1 @@
-2025/05/25-00:58:12.660372 313dae000 Log #464: 0 ops saved to Table #494 OK
-2025/05/25-00:58:12.660503 313dae000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/000464.log: OK
-2025/05/25-00:58:12.660541 313dae000 Log #493: 0 ops saved to Table #495 OK
-2025/05/25-00:58:12.660619 313dae000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/000493.log: OK
-2025/05/25-00:58:12.660679 313dae000 Table #479: 25 entries OK
-2025/05/25-00:58:12.660876 313dae000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/MANIFEST-000463: OK
-2025/05/25-00:58:12.660946 313dae000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/MANIFEST-000492: OK
-2025/05/25-00:58:12.661215 313dae000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps; recovered 1 files; 6574 bytes. Some data may have been lost. ****
+2025/05/25-00:58:12.662324 313dae000 Delete type=3 #1

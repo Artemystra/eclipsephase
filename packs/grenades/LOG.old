@@ -1,8 +1,1 @@
-2025/05/25-00:58:12.652435 312da8000 Log #767: 0 ops saved to Table #797 OK
-2025/05/25-00:58:12.652652 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/000767.log: OK
-2025/05/25-00:58:12.652708 312da8000 Log #796: 0 ops saved to Table #798 OK
-2025/05/25-00:58:12.652802 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/000796.log: OK
-2025/05/25-00:58:12.652869 312da8000 Table #782: 10 entries OK
-2025/05/25-00:58:12.653073 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/MANIFEST-000795: OK
-2025/05/25-00:58:12.653160 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/MANIFEST-000766: OK
-2025/05/25-00:58:12.653436 312da8000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades; recovered 1 files; 4891 bytes. Some data may have been lost. ****
+2025/05/25-00:58:12.654773 312da8000 Delete type=3 #1
