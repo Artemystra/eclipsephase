@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-2024/11/11-14:29:20.356161 30f757000 Recovering log #759
-2024/11/11-14:29:20.356297 30f757000 Level-0 table #761: started
-2024/11/11-14:29:20.356803 30f757000 Level-0 table #761: 19389 bytes OK
-2024/11/11-14:29:20.357636 30f757000 Delete type=0 #759
-2024/11/11-14:29:20.357763 30f757000 Delete type=3 #758
-=======
-2025/03/18-13:53:54.613398 30fca2000 Recovering log #789
-2025/03/18-13:53:54.613805 30fca2000 Delete type=0 #789
-2025/03/18-13:53:54.613838 30fca2000 Delete type=3 #788
->>>>>>> dcd8c8d8477cc18361a46474bbe6e6a3a16f4e6c
+2025/05/25-00:58:12.614357 3135ab000 Log #764: 0 ops saved to Table #794 OK
+2025/05/25-00:58:12.614559 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/000764.log: OK
+2025/05/25-00:58:12.614620 3135ab000 Log #793: 0 ops saved to Table #795 OK
+2025/05/25-00:58:12.614699 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/000793.log: OK
+2025/05/25-00:58:12.614803 3135ab000 Table #779: 100 entries OK
+2025/05/25-00:58:12.615015 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/MANIFEST-000763: OK
+2025/05/25-00:58:12.615103 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/MANIFEST-000792: OK
+2025/05/25-00:58:12.615384 3135ab000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear; recovered 1 files; 19389 bytes. Some data may have been lost. ****

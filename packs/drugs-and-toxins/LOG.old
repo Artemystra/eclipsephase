@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-2024/11/11-14:29:20.412206 30ff5a000 Recovering log #758
-2024/11/11-14:29:20.412328 30ff5a000 Level-0 table #760: started
-2024/11/11-14:29:20.414371 30ff5a000 Level-0 table #760: 14589 bytes OK
-2024/11/11-14:29:20.415027 30ff5a000 Delete type=0 #758
-2024/11/11-14:29:20.415103 30ff5a000 Delete type=3 #757
-=======
-2025/03/18-13:53:54.636300 3104a5000 Recovering log #788
-2025/03/18-13:53:54.636649 3104a5000 Delete type=0 #788
-2025/03/18-13:53:54.636677 3104a5000 Delete type=3 #787
->>>>>>> dcd8c8d8477cc18361a46474bbe6e6a3a16f4e6c
+2025/05/25-00:58:12.639580 3135ab000 Log #763: 0 ops saved to Table #793 OK
+2025/05/25-00:58:12.639720 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/000763.log: OK
+2025/05/25-00:58:12.639755 3135ab000 Log #792: 0 ops saved to Table #794 OK
+2025/05/25-00:58:12.639854 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/000792.log: OK
+2025/05/25-00:58:12.639999 3135ab000 Table #778: 49 entries OK
+2025/05/25-00:58:12.640778 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/MANIFEST-000791: OK
+2025/05/25-00:58:12.640866 3135ab000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/MANIFEST-000762: OK
+2025/05/25-00:58:12.641160 3135ab000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins; recovered 1 files; 14589 bytes. Some data may have been lost. ****

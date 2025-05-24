@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-2024/11/11-14:29:20.327176 31075d000 Recovering log #775
-2024/11/11-14:29:20.330951 31075d000 Level-0 table #777: started
-2024/11/11-14:29:20.333806 31075d000 Level-0 table #777: 87542 bytes OK
-2024/11/11-14:29:20.334429 31075d000 Delete type=0 #775
-2024/11/11-14:29:20.334504 31075d000 Delete type=3 #774
-=======
-2025/03/18-13:53:54.608991 30f49f000 Recovering log #805
-2025/03/18-13:53:54.609318 30f49f000 Delete type=3 #804
-2025/03/18-13:53:54.609376 30f49f000 Delete type=0 #805
->>>>>>> dcd8c8d8477cc18361a46474bbe6e6a3a16f4e6c
+2025/05/25-00:58:12.606010 3145b1000 Log #809: 0 ops saved to Table #810 OK
+2025/05/25-00:58:12.606155 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/000809.log: OK
+2025/05/25-00:58:12.606215 3145b1000 Log #780: 0 ops saved to Table #811 OK
+2025/05/25-00:58:12.606296 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/000780.log: OK
+2025/05/25-00:58:12.606519 3145b1000 Table #795: 63 entries OK
+2025/05/25-00:58:12.606730 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/MANIFEST-000779: OK
+2025/05/25-00:58:12.606811 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/MANIFEST-000808: OK
+2025/05/25-00:58:12.607051 3145b1000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons; recovered 1 files; 87970 bytes. Some data may have been lost. ****

@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-2024/11/11-14:29:20.523766 31075d000 Recovering log #758
-2024/11/11-14:29:20.523871 31075d000 Level-0 table #760: started
-2024/11/11-14:29:20.524415 31075d000 Level-0 table #760: 13634 bytes OK
-2024/11/11-14:29:20.525026 31075d000 Delete type=0 #758
-2024/11/11-14:29:20.525115 31075d000 Delete type=3 #757
-=======
-2025/03/18-13:53:54.683556 30f49f000 Recovering log #788
-2025/03/18-13:53:54.683948 30f49f000 Delete type=0 #788
-2025/03/18-13:53:54.683973 30f49f000 Delete type=3 #787
->>>>>>> dcd8c8d8477cc18361a46474bbe6e6a3a16f4e6c
+2025/05/25-00:58:12.678279 312da8000 Log #763: 0 ops saved to Table #793 OK
+2025/05/25-00:58:12.678459 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/000763.log: OK
+2025/05/25-00:58:12.678500 312da8000 Log #792: 0 ops saved to Table #794 OK
+2025/05/25-00:58:12.678563 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/000792.log: OK
+2025/05/25-00:58:12.678632 312da8000 Table #778: 15 entries OK
+2025/05/25-00:58:12.678788 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/MANIFEST-000791: OK
+2025/05/25-00:58:12.678858 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/MANIFEST-000762: OK
+2025/05/25-00:58:12.679104 312da8000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals; recovered 1 files; 13634 bytes. Some data may have been lost. ****

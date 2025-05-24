@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-2024/11/11-14:29:20.344528 30ff5a000 Recovering log #764
-2024/11/11-14:29:20.344709 30ff5a000 Level-0 table #766: started
-2024/11/11-14:29:20.345310 30ff5a000 Level-0 table #766: 31615 bytes OK
-2024/11/11-14:29:20.345947 30ff5a000 Delete type=3 #763
-2024/11/11-14:29:20.346014 30ff5a000 Delete type=0 #764
-=======
-2025/03/18-13:53:54.611210 3104a5000 Recovering log #794
-2025/03/18-13:53:54.611631 3104a5000 Delete type=3 #793
-2025/03/18-13:53:54.611670 3104a5000 Delete type=0 #794
->>>>>>> dcd8c8d8477cc18361a46474bbe6e6a3a16f4e6c
+2025/05/25-00:58:12.610169 312da8000 Log #798: 0 ops saved to Table #799 OK
+2025/05/25-00:58:12.610275 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/000798.log: OK
+2025/05/25-00:58:12.610315 312da8000 Log #769: 0 ops saved to Table #800 OK
+2025/05/25-00:58:12.610387 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/000769.log: OK
+2025/05/25-00:58:12.610505 312da8000 Table #784: 81 entries OK
+2025/05/25-00:58:12.610691 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/MANIFEST-000797: OK
+2025/05/25-00:58:12.610768 312da8000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/MANIFEST-000768: OK
+2025/05/25-00:58:12.611057 312da8000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights; recovered 1 files; 31851 bytes. Some data may have been lost. ****

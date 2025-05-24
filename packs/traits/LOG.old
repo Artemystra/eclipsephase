@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-2024/11/11-14:29:20.295783 30f757000 Recovering log #463
-2024/11/11-14:29:20.296078 30f757000 Level-0 table #465: started
-2024/11/11-14:29:20.296832 30f757000 Level-0 table #465: 41388 bytes OK
-2024/11/11-14:29:20.297343 30f757000 Delete type=0 #463
-2024/11/11-14:29:20.297406 30f757000 Delete type=3 #462
-=======
-2025/03/18-19:56:21.942478 3104a5000 Delete type=3 #1
->>>>>>> dcd8c8d8477cc18361a46474bbe6e6a3a16f4e6c
+2025/05/25-00:58:12.595130 3145b1000 Log #6: 0 ops saved to Table #469 OK
+2025/05/25-00:58:12.595250 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/000006.log: OK
+2025/05/25-00:58:12.595282 3145b1000 Log #468: 0 ops saved to Table #470 OK
+2025/05/25-00:58:12.595346 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/000468.log: OK
+2025/05/25-00:58:12.595547 3145b1000 Table #5: 231 entries OK
+2025/05/25-00:58:12.595720 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/MANIFEST-000467: OK
+2025/05/25-00:58:12.595802 3145b1000 Archiving /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/MANIFEST-000004: OK
+2025/05/25-00:58:12.596134 3145b1000 **** Repaired leveldb /Users/diemen/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits; recovered 1 files; 89084 bytes. Some data may have been lost. ****
