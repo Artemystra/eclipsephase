@@ -634,6 +634,13 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
     if(trauma > 0)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
 
+    
+    /* Armor Malus */
+
+    if(actorModel.physical.additionalArmorMalus || actorModel.physical.mainArmorMalus || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus){
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - actorModel.physical.additionalArmorMalus - actorModel.physical.mainArmorMalus - actorModel.physical.totalWeaponMalus - actorModel.physical.totalGearMalus))
+    }
+
     /* Melee Roll */
 
     if (options.attackMode === "charge"){
