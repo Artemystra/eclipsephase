@@ -19,10 +19,7 @@
                     <i class="fa-regular fa-tags awesomeIcon icon-small" style="max-width: fit-content;"></i>
                     <label class="tooltipText">{{localize "ep2e.item.weapon.table.type.label"}}</label>
                     <select name="system.ammoType" data-type="String" style="max-width: 150px; min-width: 100px;">
-                        {{#select item.system.ammoType}}
-                        {{#each config.rangedAmmoType as |name key|}}
-                        <option value="{{key}}">{{localize name}}</option>
-                        {{/each}} {{/select}}
+                        {{selectOptions config.rangedAmmoType selected=item.system.ammoType localize=true}}
                     </select>
                 </div>
                 {{/if}}
@@ -42,10 +39,7 @@
                 <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-small icon-space"/>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
                 <select class="input-large" name="system.mode1.firingMode" data-type="String">
-                    {{#select item.system.mode1.firingMode}}
-                    {{#each config.firingModes as |name key|}}
-                    <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{selectOptions config.firingModes selected=item.system.mode1.firingMode localize=true}}
                 </select>                         
             </div>
             <div class="flexrow alignCenter wantToKnowMore">
@@ -67,20 +61,14 @@
                 <i class="fa-regular fa-coins awesomeIcon" style="font-size: 18px;"></i>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span>
                 <select name="system.cost" data-type="String">
-                    {{#select item.system.cost}}
-                    {{#each config.costTypes as |name key|}}
-                    <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{selectOptions config.costTypes selected=item.system.cost localize=true}}
                 </select>
             </div>
             <div class="wantToKnowMore flexrow alignCenter">
                 <i class="fa-regular fa-ruler awesomeIcon" style="font-size: 18px;"></i>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.slot.label"}}</span>
                 <select name="system.slotType" data-type="String" style="max-width: 110px;">
-                    {{#select item.system.slotType}}
-                    {{#each config.weaponTypes as |name key|}}
-                    <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{selectOptions config.weaponTypes selected=item.system.slotType localize=true}}
                 </select>
             </div>
         </div>
@@ -118,11 +106,7 @@
                     <div class="wantToKnowMore" style="display: flex; align-items: center;">
                         <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.skills.vigorSkills.melee"}} {{localize "ep2e.skills.skillMod"}}</span>
                         <select class="input-large" name="system.mode1.traits.reach.skillMod" style="max-width: 160px">
-                            {{#select item.skillMod}}
-                            <option value="10">+ 10</option>
-                            <option value="20">+ 20</option>
-                            <option value="30">+ 30</option>
-                            {{/select}}
+                            {{selectOptions @root.config.trippleSkillModifiers selected=item.skillMod localize=true}}
                         </select>
                     </div>
                     <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">
@@ -236,10 +220,7 @@
                 <img src="systems/eclipsephase/resources/icons/firingmode.webp" class="icon-small icon-space"/>
                 <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.firingMode.label"}}</span>
                 <select class="input-large" name="system.mode2.firingMode" data-type="String">
-                    {{#select item.system.mode2.firingMode}}
-                    {{#each config.firingModes as |name key|}}
-                    <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{selectOptions config.firingModes selected=item.system.mode2.firingMode localize=true}}
                 </select>                         
             </div>
             <div class="flexrow alignCenter wantToKnowMore">
@@ -303,11 +284,7 @@
                     <div class="wantToKnowMore" style="display: flex; align-items: center;">
                         <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.skills.vigorSkills.melee"}} {{localize "ep2e.skills.skillMod"}}</span>
                         <select class="input-large" name="system.mode2.traits.reach.skillMod" style="max-width: 160px">
-                            {{#select item.skillMod}}
-                            <option value="10">+ 10</option>
-                            <option value="20">+ 20</option>
-                            <option value="30">+ 30</option>
-                            {{/select}}
+                            {{selectOptions @root.config.trippleSkillModifiers selected=item.skillMod localize=true}}
                         </select>
                     </div>
                     <a class="moreInfoDialog" data-description="ep2e.rule.weapon.effect.{{key}}" data-title="{{item.name}}" data-rolledfrom="info">

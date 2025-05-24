@@ -28,3 +28,22 @@ export function traitAndAccessoryFinder(itemModel){
     
     return {mode1TraitCounter, mode2TraitCounter, accessoryCounter}
   }
+
+  
+export function IDprep(actor, sheetData){
+
+  let IDcollection = [];
+  let IDcount = 0;
+  for(let id in actor.system.ego.ids){
+    const idPath = actor.system.ego.ids[id];
+    IDcount++;;
+    if(idPath.name != ""){
+      IDcollection.push({key: "id"+IDcount, label: idPath.name});
+    }
+    else{
+      IDcollection.push({key: "id"+IDcount, label: "ID"+IDcount});
+    }
+  }
+
+  return IDcollection;
+}

@@ -33,26 +33,17 @@
                     <tr>
                         <td>
                             <select name="system.category" data-type="String">
-                                {{#select item.system.category}}
-                                {{#each config.drugCategories as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.drugCategories selected=item.system.category localize=true}}
                             </select>   
                         </td>
                         <td>
                             <select name="system.drugType" data-type="String">
-                                {{#select item.system.drugType}}
-                                {{#each config.drugTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.drugTypes selected=item.system.drugType localize=true}}
                             </select>
                         </td>
                         <td>
                             <select name="system.cost" data-type="String">
-                                {{#select item.system.cost}}
-                                {{#each config.costTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.costTypes selected=item.system.cost localize=true}}
                             </select>
                         </td>
                     </tr>
@@ -78,10 +69,7 @@
                         </td>
                         <td>
                             <select name="system.addictionType" data-type="String">
-                                {{#select item.system.addictionType}}
-                                {{#each config.drugAddicitonTypes as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.drugAddicitonTypes selected=item.system.addictionType localize=true}}
                             </select>
                         </td>
                     </tr>

@@ -23,6 +23,13 @@ export function registerItemHandlers(html,callerobj,caller){
     });
 }
 
+export function createDroplist(html, callerobj){
+  html.find('name="droplist"')(ev => {
+    console.log("I'm a droplist")
+  })
+  
+}
+
 /**
  * Foundry VTTs active effect creation & deletion functions
  * @param {Object} html - The HTML object to which the event listeners are added
@@ -87,7 +94,7 @@ export async function _tempEffectCreation(actor, numberOfRuns, tempEffLabel, tem
     return actor.createEmbeddedDocuments('ActiveEffect', [{
       label: tempEffLabel,
       icon: tempEffIcon,
-      changes: [{key : tempEffTar, mode : tempEffMode, value : -10*numberOfRuns}]
+      changes: [{key : tempEffTar, mode : tempEffMode, value : tempEffVal*numberOfRuns}]
     }]);
 }
 
@@ -352,6 +359,7 @@ export function embeddedItemToggle(html, actor, allEffects){
  */
 export function itemToggle(html, item){
   html.find('.toggleItem').click(async ev => {
+    
     const element = ev.currentTarget;
     const dataset = element.dataset;
     const path = dataset.path;
@@ -414,7 +422,7 @@ function _proListSelection(form) {
  */
 async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create=true}={}) {
   for ( const roll of rollsArray ) {
-      if ( !roll._evaluated ) await roll.evaluate({async: true});
+      if ( !roll._evaluated ) await roll.evaluate();
   }
 
   // Prepare chat data

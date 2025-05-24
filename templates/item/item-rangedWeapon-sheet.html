@@ -8,15 +8,15 @@
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
         {{#if (ne item.system.additionalMode true)}}
         <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
-        <div class="itemSmall wantToKnowMore toggleItem"data-path="system.additionalMode" style="margin: 0 10px; background-color: var(--accentBackground); max-width: 55px;">
+        <div class="itemSmall wantToKnowMore toggleItem" data-path="system.additionalMode" style="margin: 0 10px; background-color: var(--accentBackground); max-width: 55px; min-height: 50px; cursor: pointer">
             <i class="fas fa-plus awesomeIcon"></i>
             <label class="tooltipText">{{localize "ep2e.item.general.tabs.addMode"}}</label>
         </div>
         {{else}}
         <a class="item" data-tab="details">{{#if item.system.mode1.name}}{{localize item.system.mode1.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode1"}}{{/if}}</a>
         <div  class="item" data-tab="details2">
-            <a>{{#if item.system.mode2.name}}{{localize item.system.mode2.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode2"}}{{/if}}</a>
-            <div class="itemSmall wantToKnowMore toggleItem"data-path="system.additionalMode" style=" max-width: 25px; justify-content: flex-end;">
+            <a style="width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{#if item.system.mode2.name}}{{localize item.system.mode2.name}}{{else}}{{localize "ep2e.item.general.tabs.weaponMode2"}}{{/if}}</a>
+            <div class="itemSmall wantToKnowMore toggleItem" data-path="system.additionalMode" style=" max-width: 25px; justify-content: flex-end; cursor: pointer">
                 <a><i class="far fa-times-circle awesomeIcon" style="margin-bottom: 6px;"></i></a>
             </div>
         </div>

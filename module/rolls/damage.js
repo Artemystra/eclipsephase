@@ -8,7 +8,16 @@ export async function prepareWeapon(data, result, preparedData){
     /*const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
     console.log("messageID: ", game.messages.get(messageID))*/
     const dataset = preparedData ? preparedData : data.currentTarget.dataset;
-    const actorWhole = game.actors.get(dataset.actorid);
+
+    /*let unlinkedActorToken
+    if(dataset.tokenid){
+      unlinkedActorToken = await fromUuid(dataset.tokenid)
+      console.log("Ping")
+      console.log(unlinkedActorToken)
+      console.log(unlinkedActorToken.actors.values().next().value)
+    }*/
+
+    const actorWhole = await fromUuid(dataset.actorid);
     const weaponID = dataset.weaponid;
     const selectedWeaponMode = dataset.weaponmode;
     const rolledFrom = dataset.rolledfrom;
@@ -20,7 +29,6 @@ export async function prepareWeapon(data, result, preparedData){
     const rollMode = dataset.rollmode
     const blind = rollMode === "blindroll" ? game.user.isGM ? false : true : false
     let modeDamage
-
     if(attackMode === "burst" || attackMode === "aggressive" || attackMode === "aggressiveCharge")
         modeDamage = "+1d10"
     else if(attackMode === "charge")
@@ -31,7 +39,7 @@ export async function prepareWeapon(data, result, preparedData){
         modeDamage = ""
 
     let recipientList = prepareRecipients(rollMode)
-
+    
     let weaponSelected = await weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, selectedWeaponMode)
     
     if(rollResult > 2 && rollResult < 6 || rollResult === 7 || rollResult === 9)
@@ -55,7 +63,7 @@ export async function prepareWeapon(data, result, preparedData){
         message.weaponTraits.dvOnMiss["calculated"] = rollFormula
         message.rollTitle = "ep2e.roll.announce.damageDone"
 
-        let roll = await new Roll(rollFormula).evaluate({async: true});
+        let roll = await new Roll(rollFormula).evaluate();
 
         await rollToChat(message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput")
 
@@ -123,7 +131,7 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
     }
 
     if (!weaponSelected.weaponTraits.automatedEffects.noDamage && weaponDamage != "ep2e.item.weapon.table.noDamage"){
-        let roll = await new Roll(rollFormula).evaluate({async: true});
+        let roll = await new Roll(rollFormula).evaluate();
 
         await rollToChat(message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput")
 
@@ -356,7 +364,7 @@ export async function healthBarChange(actor, html){
           if (healFormula.cancelled){
             return;
           }
-  
+          
           let healRoll = [];
           let repetition = 0;
           let html = null;
@@ -364,24 +372,24 @@ export async function healthBarChange(actor, html){
             for (let i = 1 ; i <= healFormula.duration; i++){
   
               hoursPassed++
-  
+              
               if(repetition >= (healFormula.heal).length){
                 hoursPassed--
                 break
               }
-  
+
               if(damageCount > 0 && healFormula.heal[repetition].cycle === hoursPassed){
                 
                 let rollFormula = healFormula.heal[repetition].roll;
                 
-                let arrayItem = await new Roll(rollFormula).evaluate({async: true})
+                let arrayItem = await new Roll(rollFormula).evaluate()
                 healRoll.push(arrayItem)
       
                 damageCount = damageCount - healRoll[repetition]._total > 0 ? damageCount - healRoll[repetition]._total: 0;
                 repetition++
       
               }
-  
+              
               if(damageCount === 0){
                 break;
               }
@@ -400,7 +408,7 @@ export async function healthBarChange(actor, html){
             message.weeksValue = Math.floor(hoursPassed/7);
             message.daysValue = Math.floor((hoursPassed-message.weeksValue*7));
           }
-  
+          
           let rollCount = repetition;
           let woundHealing = 0
           repetition = 0;
@@ -437,9 +445,12 @@ export async function healthBarChange(actor, html){
           message.daysLabel = "ep2e.roll.announce.heal.partial.days"
           message.hoursLabel = "ep2e.roll.announce.heal.partial.hours"
           message.rollTitle = "ep2e.roll.announce.total"
-          
+
           if (healRoll.length > 0){
-            await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll, actor.name, game.user._id, false, "rollOutput")
+            if (healRoll.length === 1)
+              await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll[0], actor.name, game.user._id, false, "rollOutput")
+            else
+              await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll, actor.name, game.user._id, false, "rollOutput")
           }     
   
           newDamage = damageCount;

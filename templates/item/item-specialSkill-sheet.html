@@ -20,10 +20,7 @@
                     {{#if item.system.isThreat}}
                     {{else}}
                     <td><select class="input-XL" name="system.aptitude" data-type="String">
-                        {{#select item.system.aptitude}}
-                        {{#each config.aptitudes as |name key|}}
-                        <option value="{{key}}">{{localize name}}</option>
-                        {{/each}} {{/select}}
+                        {{selectOptions config.aptitudes selected=item.system.aptitude localize=true}}
                     </select></td>
                     {{/if}}
                     <td><input class="input-large" type="text"

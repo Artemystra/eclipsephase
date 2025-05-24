@@ -86,7 +86,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
 
         let rollFormula = "1d6"
 
-        d6 = await new Roll(rollFormula+virusMod).evaluate({async: true});
+        d6 = await new Roll(rollFormula+virusMod).evaluate();
 
         let message = {};
         let result = d6.total > 6 ? 6 : d6.total;
@@ -155,7 +155,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
 
     if (physicalDamageRoll && actorWhole.type === "character"){
         
-        const physicalDamage = await new Roll(physicalDamageRoll).evaluate({async: true});
+        const physicalDamage = await new Roll(physicalDamageRoll).evaluate();
         const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionDamage");
 
         let message = {

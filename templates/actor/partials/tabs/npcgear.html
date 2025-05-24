@@ -67,10 +67,7 @@
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}:</label>
                         <select class="selectSpecApt item-standard-margin-medium" name="system.bodyType.value" data-type="String">
-                            {{#select actor.system.bodyType.value}}
-                            {{#each config.bodyTypes as |bodyType key|}}
-                            <option value="{{key}}">{{localize bodyType}}</option>
-                            {{/each}} {{/select}}
+                            {{selectOptions config.bodyTypes selected=actor.system.bodyType.value localize=true}}
                         </select>
                     </div>
                     <div>
@@ -91,11 +88,7 @@
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
                         <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movement1.type" data-type="String" selected="Walker">
-                            {{#select actor.system.bodies.morph1.movement1.type}}
-                            {{#each config.moveTypes as |moveType key|}}
-                                <option value="{{key}}">{{localize moveType}}</option>
-                            {{/each}}
-                            {{/select}}
+                            {{selectOptions config.moveTypes selected=actor.system.bodies.morph1.movement1.type localize=true}}
                         </select>
                     </div>
                 </div>
@@ -111,11 +104,7 @@
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
                         <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movement2.type" data-type="String">
-                            {{#select actor.system.bodies.morph1.movement2.type}}
-                            {{#each config.moveTypes as |moveType key|}}
-                                <option value="{{key}}">{{localize moveType}}</option>
-                            {{/each}}
-                            {{/select}}
+                            {{selectOptions config.moveTypes selected=actor.system.bodies.morph1.movement2.type localize=true}}
                         </select>
                     </div>
                 </div>

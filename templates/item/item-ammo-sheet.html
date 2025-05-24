@@ -24,10 +24,7 @@
                             <i class="fa-regular fa-tags awesomeIcon icon-small" style="max-width: fit-content;"></i>
                             <label class="tooltipText">{{localize "ep2e.item.weapon.table.type.label"}}</label>
                             <select class="input-large" name="system.type" data-type="String">
-                                {{#select item.system.type}}
-                                {{#each config.rangedAmmoType as |name key|}}
-                                <option value="{{key}}">{{localize name}}</option>
-                                {{/each}} {{/select}}
+                                {{selectOptions config.rangedAmmoType selected=item.system.type localize=true}}
                             </select>                         
                         </div>
 
@@ -74,10 +71,7 @@
                         <i class="fa-regular fa-coins awesomeIcon icon-small alignCenter" style="font-size: 18px;"></i>
                         <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span>
                         <select name="system.cost" data-type="String" style="max-width: 100px;">
-                            {{#select item.system.cost}}
-                            {{#each config.costTypes as |name key|}}
-                            <option value="{{key}}">{{localize name}}</option>
-                            {{/each}} {{/select}}
+                            {{selectOptions config.costTypes selected=item.system.cost localize=true}}
                         </select>
                     </div>
 

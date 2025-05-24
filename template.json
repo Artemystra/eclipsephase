@@ -1032,6 +1032,7 @@
       "rangedWeapon",
       "ccWeapon",
       "armor",
+      "traits",
       "trait",
       "flaw",
       "morphTrait",
@@ -1641,35 +1642,23 @@
       "displayCategory": "consumable",
       "slotType": "consumable"
     },
+    "traits": {
+      "templates": [
+        "base"
+      ],
+      "statChange": null,
+      "traitType": "trait",
+      "ego": false,
+      "morph": false
+    },
     "trait": {
       "templates": [
         "base"
       ],
       "statChange": null,
-      "qualityType": ""
-    },
-    "flaw": {
-      "templates": [
-        "base"
-      ],
-      "statChange": null,
-      "qualityType": ""
-    },
-    "morphTrait": {
-      "templates": [
-        "base"
-      ],
-      "statChange": null,
-      "qualityType": "",
-      "boundTo": null
-    },
-    "morphFlaw": {
-      "templates": [
-        "base"
-      ],
-      "statChange": null,
-      "qualityType": "",
-      "boundTo": null
+      "traitType": "",
+      "ego": false,
+      "morph": false
     },
     "ware": {
       "templates": [

@@ -1,8 +1,8 @@
 export const eclipsephase = {};
 
-eclipsephase.qualityTypes = {
-    trait: "Trait",
-    flaw: "Flaw"
+eclipsephase.traitTypes = {
+    trait: "ep2e.item.traits.traitLabel",
+    flaw: "ep2e.item.traits.flawLabel"
 }
 
 eclipsephase.firingModes = {
@@ -191,6 +191,12 @@ eclipsephase.rangedAmmoType = {
     seeker: "ep2e.item.weapon.table.ammoUsed.seeker",
     spray: "ep2e.item.weapon.table.ammoUsed.spray",
     rail: "ep2e.item.weapon.table.ammoUsed.rail"
+}
+
+eclipsephase.trippleSkillModifiers = {
+    10: "+ 10",
+    20: "+ 20",
+    30: "+ 30"
 }
 
 eclipsephase.genders = {
@@ -384,4 +390,11 @@ eclipsephase.psiStrainLabels = {
     none: "ep2e.psi.strain.none",
     enhancedBehaviour: "ep2e.psi.effect.enhancedBehaviour.label",
     restrictedBehaviour: "ep2e.psi.effect.restrictedBehaviour.label"
+}
+
+eclipsephase.otherPsiLabels = {
+    enhancedBehaviour: "ep2e.psi.effect.enhancedBehaviour.label",
+    restricted: "ep2e.psi.effect.restrictedBehaviour.label",
+    motivation: "ep2e.psi.effect.motivation.label",
+    other: "ep2e.psi.effect.other"
 }

@@ -13,10 +13,7 @@
             <h3 class="subheader">
                 {{localize "ep2e.item.vehicle.table.type.label"}}
                 <select name="system.type" data-type="String">
-                    {{#select item.system.type}}
-                    {{#each config.vehicleType as |name key|}}
-                    <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{selectOptions config.vehicleType selected=item.system.type localize=true}}
                 </select>
             </h3>
             <div class="alignRight flexGrowThreeQuarter">
@@ -79,19 +76,13 @@
                 <div>
                     <i class="fa-regular fa-money-bill wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.general.table.cost.label"}}</span></i>
                     <select name="system.cost" data-type="String">
-                        {{#select item.system.cost}}
-                        {{#each config.costTypes as |name key|}}
-                        <option value="{{key}}">{{localize name}}</option>
-                        {{/each}} {{/select}}
+                        {{selectOptions config.costTypes selected=item.system.cost localize=true}}
                     </select>
                 </div>
                 <div>
                     <i class="fa-regular fa-ruler wantToKnowMore awesomeIcon" style="font-size: 18px;"><span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.item.vehicle.table.size.label"}}</span></i>
                     <select name="system.slotType" data-type="String">
-                        {{#select item.system.slotType}}
-                        {{#each config.vehicleSize as |name key|}}
-                        <option value="{{key}}">{{localize name}}</option>
-                        {{/each}} {{/select}}
+                        {{selectOptions config.vehicleSize selected=item.system.slotType localize=true}}
                     </select>
                 </div>
             </div>
@@ -140,27 +131,7 @@
                             <input class="item-standard-margin-small input-small" type="text" name="system.movement.{{key}}.speed" value="{{speed}}" placeholder="0/0" style="text-align: center"/>
                             <i class="fa-regular fa-tags awesomeIcon"></i>
                             <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
-                                {{#select mov.type}}
-                                {{#each config.moveTypes as |moveType key|}}
-                                    <option value="{{key}}">{{localize moveType}}</option>
-                                {{/each}}
-                                <option value="none">{{localize "ep2e.morph.currentMorph.movementTypes.none"}}</option>
-                                <option value="boat">{{localize "ep2e.morph.currentMorph.movementTypes.boat"}}</option>
-                                <option value="hopper">{{localize "ep2e.morph.currentMorph.movementTypes.hopper"}}</option>
-                                <option value="hover">{{localize "ep2e.morph.currentMorph.movementTypes.hover"}}</option>
-                                <option value="ionic">{{localize "ep2e.morph.currentMorph.movementTypes.ionic"}}</option>
-                                <option value="microlight">{{localize "ep2e.morph.currentMorph.movementTypes.microlight"}}</option>
-                                <option value="roller">{{localize "ep2e.morph.currentMorph.movementTypes.roller"}}</option>
-                                <option value="rotor">{{localize "ep2e.morph.currentMorph.movementTypes.rotor"}}</option>
-                                <option value="snake">{{localize "ep2e.morph.currentMorph.movementTypes.snake"}}</option>
-                                <option value="submarine">{{localize "ep2e.morph.currentMorph.movementTypes.submarine"}}</option>
-                                <option value="swimmer">{{localize "ep2e.morph.currentMorph.movementTypes.swimmer"}}</option>
-                                <option value="thrustvector">{{localize "ep2e.morph.currentMorph.movementTypes.thrustvector"}}</option>
-                                <option value="tracked">{{localize "ep2e.morph.currentMorph.movementTypes.tracked"}}</option>
-                                <option value="walker">{{localize "ep2e.morph.currentMorph.movementTypes.walker"}}</option>
-                                <option value="wheeled">{{localize "ep2e.morph.currentMorph.movementTypes.wheeled"}}</option>
-                                <option value="winged">{{localize "ep2e.morph.currentMorph.movementTypes.winged"}}</option>
-                                {{/select}}
+                                {{selectOptions @root.config.moveTypes selected=mov.type localize=true}}
                             </select>
                         </div>
                         {{/each}}

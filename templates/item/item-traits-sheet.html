@@ -1,0 +1,43 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <div class="header-fields flexgrow flex-group-left" style="align-items: flex-end;">
+            <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.table.description"}}</a>
+        {{#if item.showEffectsTab}}
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
+        {{/if}}
+    </nav>
+    {{!-- Sheet Body --}}
+    <section class="item-sheet-body">
+        <div style="background-color: var(--mainBackground);">
+            <div class="item contentBox" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="padding-bottom: 5px;">
+                <div class="flexrow">
+                    <h3 class="subheader dialog">
+                        Trait Type
+                    </h3>
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                </div>
+            </div>
+            <div class="flexrow flex-group-center listBackground grid" style="background-color: var(--pitchBorder); margin: 0; border-top: solid var(--accentBackground) 3px">
+                <div class="flexrow flex-group-left">
+                    {{radioBoxes "system.traitType" config.traitTypes checked=item.system.traitType localize=true}}
+                </div>
+                <div class="flexrow flex-group-left">
+                    <input style="margin:auto; display:flex; margin: 5px 15px;" type="checkbox" class="rest" id="egoCheckbox" name="system.ego" {{checked item.system.ego}}/>
+                    <label class="resource-sub-label" for="egoCheckbox">{{localize "ep2e.actorSheet.leftTabs.egoTab"}}</label>
+                    <input style="margin:auto; display:flex; margin: 5px 15px;" type="checkbox" class="rest" id="morphCheckbox" name="system.morph" {{checked item.system.morph}}/>
+                    <label class="resource-sub-label" for="morphCheckbox">{{localize "ep2e.actorSheet.rightTabs.morphTab"}}</label>
+                </div>
+            </div>
+        </div>
+        <div class="tab details" data-group="primary" data-tab="details">
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+</div>
+        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+</section>
+</form>

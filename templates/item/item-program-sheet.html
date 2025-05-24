@@ -15,10 +15,7 @@
                 <label class="resource-label input-medium">
                     <td><label class="resource-label">{{localize "ep2e.item.program.table.level.label"}}:</label>
                 <select name="system.programLevel" data-type="String">
-                    {{#select item.system.programLevel}}
-                    {{#each config.programLevels as |name key|}}
-                    <option value="{{key}}">{{localize name}}</option>
-                    {{/each}} {{/select}}
+                    {{selectOptions config.programLevels selected=item.system.programLevel localize=true}}
                 </select>
             </div>
         </div>
