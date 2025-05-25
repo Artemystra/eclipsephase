@@ -613,8 +613,8 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
     let addition
     let announce
     let weaponTraits = weaponSelected ? weaponSelected.weaponTraits : null
-    let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
-    let trauma = 10*parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0)
+    let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod*10) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
+    let trauma = 10*parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod*10) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0)
     
     if(options.rangedFray)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
