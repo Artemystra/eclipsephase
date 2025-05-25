@@ -613,8 +613,8 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
     let addition
     let announce
     let weaponTraits = weaponSelected ? weaponSelected.weaponTraits : null
-    let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod*10) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
-    let trauma = 10*parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod*10) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0)
+    let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
+    let trauma = 10*(parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0))
     
     if(options.rangedFray)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
@@ -635,13 +635,11 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
 
     
-    /* Armor Malus */
+    /* Encumberance (Armor) Malus */
 
-    if(actorModel.physical.additionalArmorMalus || actorModel.physical.mainArmorMalus || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus){
-        task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - actorModel.physical.additionalArmorMalus - actorModel.physical.mainArmorMalus - actorModel.physical.totalWeaponMalus - actorModel.physical.totalGearMalus))
+    if(actorModel.physical.additionalArmorMalus || actorModel.physical.mainArmorMalus || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus || actorModel.physical.armorSomMalus ){
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - actorModel.physical.additionalArmorMalus - actorModel.physical.mainArmorMalus - actorModel.physical.totalWeaponMalus - actorModel.physical.totalGearMalus - actorModel.physical.armorSomMalus))
     }
-
-    /*Test*/
 
     /* Melee Roll */
 
