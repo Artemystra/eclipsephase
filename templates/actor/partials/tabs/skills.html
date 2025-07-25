@@ -524,7 +524,7 @@
                                     </div>
                                 </div>
                             {{else}}
-                            <div class="grid grid-3col">
+                                <div class="grid grid-4col">
                                 <div class="flexrow flex-group-center">
                                     <div class="flexrow flex-group-center insightPoolRecovery">
                                         <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
@@ -543,7 +543,33 @@
                                         <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelMoxie"}}</label>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="flexrow flex-group-center">
+                                    <div class="flexrow flex-group-center flexPoolRecovery">
+                                        <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.flex" value="{{actor.system.pools.update.flex}}" data-dtype="Number" placeholder="0"/>
+                                        <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelFlex"}}</label>
+                                    </div>
+                                </div>
+                                </div>
+                            <!-- <div class="grid grid-3col">
+                                <div class="flexrow flex-group-center">
+                                    <div class="flexrow flex-group-center insightPoolRecovery">
+                                        <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.insight" value="{{actor.system.pools.update.insight}}" data-dtype="Number" placeholder="0"/>
+                                        <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelInsight"}}</label>
+                                    </div>
+                                </div>
+                                <div class="flexrow flex-group-center">
+                                    <div class="flexrow flex-group-center vigorPoolRecovery">
+                                        <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.vigor" value="{{actor.system.pools.update.vigor}}" data-dtype="Number" placeholder="0"/>
+                                        <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelVigor"}}</label>
+                                    </div>
+                                </div>
+                                <div class="flexrow flex-group-center">
+                                    <div class="flexrow flex-group-center moxiePoolRecovery">
+                                        <input class=" input-xs" onFocus="this.select()" type="number" name="system.pools.update.moxie" value="{{actor.system.pools.update.moxie}}" data-dtype="Number" placeholder="0"/>
+                                        <label class="resource-value" style="min-width: 100%;">{{localize "ep2e.skills.restingMenu.labelMoxie"}}</label>
+                                    </div>
+                                </div>
+                            </div> -->
                             {{/if}}
                             <div class="flex-group-center" style="margin-bottom: 0px;">
                                 <div style="display: inline-block;">
