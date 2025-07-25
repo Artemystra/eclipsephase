@@ -82,6 +82,10 @@ export default class EPgoonSheet extends ActorSheet {
       }
     
     async _onDropItemCreate(item){
+      const actor = this.actor
+      const actorModel = actor.system
+      const itemModel = item.system
+      let traitSelection
       
       item.system.updated = game.system.version
 
@@ -93,6 +97,13 @@ export default class EPgoonSheet extends ActorSheet {
         item.system.ammoMin = item.system.ammoMax;
         item.system.ammoSelected.name = capitalizedName + " (Standard)";
         }
+      }
+
+      //Auto switches the trait to a morph trait if the trait has both a morph and a ego variant
+      if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
+
+        itemModel.ego = false;
+  
       }
 
       // Create the owned item as normal
@@ -311,13 +322,13 @@ export default class EPgoonSheet extends ActorSheet {
             else if (item.type === 'ware') {
                 ware.push(item)
             }
-            else if (item.type === 'morphTrait'){
+            else if (item.type === 'morphTrait' || item.system.traitType === 'trait' && item.system.morph){
                 morphTrait.push(item);
             }
 
-            else if (item.type === 'morphFlaw'){
+            else if (item.type === 'morphFlaw' || item.system.traitType === 'flaw' && item.system.morph){
               morphFlaw.push(item);
-          }
+            }
                 
             else if (item.type === 'aspect') {
               let psiDuration = itemModel.duration;

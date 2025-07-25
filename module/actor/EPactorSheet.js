@@ -119,20 +119,18 @@ export default class EPactorSheet extends ActorSheet {
     
     let currentMorph = actorModel.bodies.activeMorph
 
+    //Shows a pop-up if the trait has both a morph and a ego variant
     if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
       traitSelection = await selectTraitType()
 
     if(traitSelection.cancelled)
       return
 
-    console.log("+++", traitSelection)
-
     if(traitSelection.value === "morph")
       itemModel.ego = false;
     else
       itemModel.morph = false;
 
-    console.log("---", item)
     }
     // Binds a morph-trait to the currently active morph
     if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware" || item.system.morph === true) {
@@ -848,7 +846,8 @@ export default class EPactorSheet extends ActorSheet {
     html.find('.rest').click(async func => {
       const element = event.currentTarget;
       const dataset = element.dataset;
-      const brewStatus = game.settings.get("eclipsephase", "superBrew");
+      const brewStatus = false;
+      //const brewStatus = game.settings.get("eclipsephase", "superBrew"); -> Out of order for the time being (25.07.2025)
       const restReset = game.settings.get("eclipsephase", "restReset");
       const actorWhole = actor;
       const actorModel = this.actor.system;

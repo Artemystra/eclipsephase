@@ -80,6 +80,10 @@ export default class EPnpcSheet extends ActorSheet {
       }
 
       async _onDropItemCreate(item){
+        const actor = this.actor
+        const actorModel = actor.system
+        const itemModel = item.system
+        let traitSelection
       
         item.system.updated = game.system.version
 
@@ -92,6 +96,13 @@ export default class EPnpcSheet extends ActorSheet {
           item.system.ammoSelected.name = capitalizedName + " (Standard)";
           }
         }
+
+        //Auto switches the trait to a morph trait if the trait has both a morph and a ego variant
+      if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
+        
+        itemModel.ego = false;
+  
+      }
   
         // Create the owned item as normal
         return super._onDropItemCreate(item)
@@ -382,13 +393,14 @@ export default class EPnpcSheet extends ActorSheet {
               itemModel.ir = Math.round(itemModel.luc * 2);
               vehicle[itemModel.type].push(item)
             }
-            else if (item.type === 'morphTrait') {
-                morphtrait.present = true
-                morphtrait.push(item)
+            else if (item.type === 'morphTrait' || item.system.traitType === 'trait' && item.system.morph){
+              morphtrait.present = true
+              morphtrait.push(item)
             }
-            else if (item.type === 'morphFlaw') {
-                morphtrait.present = true
-                morphflaw.push(item)
+
+            else if (item.type === 'morphFlaw' || item.system.traitType === 'flaw' && item.system.morph){
+              morphtrait.present = true
+              morphflaw.push(item)
             }
 
 
