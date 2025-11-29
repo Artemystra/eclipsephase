@@ -57,15 +57,20 @@ class EPmenuLayer extends PlaceablesLayer {
         static renderControls (app, html, data) {
             const isGM = game.user.isGM
             const active = game.settings.get("eclipsephase", "GMmenu")
-            const EPmenu = html.find('.fa-bookmark').parent()
-            if (isGM && active) {
-              EPmenu.after(
-                '<li class="scene-control ep-menu ep-restore-rest" title="Restore Rest (All Players)"><i class="fa-regular fa-battery-bolt"></i></li>'
-              )
-            }
-            html
-              .find('.ep-menu.ep-restore-rest')
-              .click(async event => {
+            const EPmenu = html.querySelector('.fa-bookmark').parentElement
+
+            const menuItem = document.createElement("button");
+            menuItem.classList.add("scene-control", "ep-menu", "ep-restore-rest", "control", "ui-control", "layer", "icon", "fa-regular", "fa-battery-bolt");
+            menuItem.title = "Restore Rest (All Players)";
+            menuItem.role = "tab"
+            
+            if (!isGM && !active) return;
+
+            if (html.querySelector('ep-menu.ep-restore-rest')) return;
+
+            EPmenu.insertAdjacentElement("afterend", menuItem)
+
+            menuItem.addEventListener("click", async (event) => {
                 let charList = getActorsWithOwners()
 
                 let charSelect = await selectChars(charList)

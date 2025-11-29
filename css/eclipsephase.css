@@ -605,7 +605,8 @@ span.neutral {
   backdrop-filter: blur(6px);
 }
 
-#chat-log .message {
+#chat-log .message,
+.chat-message {
   background-image: url(../resources/img/background2.jpg);
   opacity: 0.8;
   color: var(--mainText);
@@ -870,9 +871,16 @@ a.content-link, a.inline-roll {
   color: var(--mainText);
 }
 
+.chatPoolControls {
+  display: flex; 
+  min-width: 100%; 
+  justify-content: space-between; 
+  gap: 10px; 
+  padding: 10px 10px;
+}
 
 .chatPoolButton {
-  max-width: 45%;
+  width: 100%;
 }
 
 .chatActionButton {
@@ -1040,6 +1048,11 @@ a:hover,
   text-shadow: none;
   background-color: var(--mainBackground);
   border-top: solid 4px var(--highlight);
+  color: var(--mainText);
+}
+
+.eclipsephase .tabs .item {
+  color: var(--iconGrey);
 }
 
 .eclipsephase .tox .tox-editor-container {
@@ -1715,7 +1728,8 @@ h3.subheaderBlank {
 }
 
 .flavor-text,
-.message-content {
+.message-content,
+.chat-message {
   font-size: 16px!important;
   text-align: center;
   margin: 20px 0 0 0;

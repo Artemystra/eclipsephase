@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="showMore noShow">
-          <div style="display: flex; min-width: 100%; justify-content: space-between; padding: 10px 10px;">
+          <div class="chatPoolControls">
             {{#if (eq actor.type "character")}}
               {{#if (gt pools.skillPoolValue 0)}}
                 <button class="chatPoolButton usePool autoClose" data-actorid="{{actor.uuid}}" data-userid="{{userID}}" data-usepool="pool" data-usagetype="swapped" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}" data-newresult="{{alternatives.result}}" data-newvalue="{{alternatives.value}}" data-rollmode="{{rollMode}}" data-weaponid="{{itemdata.weaponID}}" data-weaponmode="{{itemdata.weaponMode}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-rolledfrom="{{rolledFrom}}" data-touchonly="{{options.touchOnly}}">{{localize pools.useMessage}}</button>
@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="showMore noShow">
-          <div style="display: flex; min-width: 100%; justify-content: space-between; padding: 10px 10px;">
+          <div class="chatPoolControls">
             {{#if (eq actor.type "character")}}
               {{#if (gt pools.skillPoolValue 0)}}
                 <button class="chatPoolButton usePool autoClose" data-actorid="{{actor.uuid}}" data-userid="{{userID}}" data-usepool="pool" data-usagetype="upgraded" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}" data-newresult="{{alternatives.result}}" data-rollmode="{{rollMode}}" data-weaponid="{{itemdata.weaponID}}" data-weaponmode="{{itemdata.weaponMode}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-rolledfrom="{{rolledFrom}}" data-touchonly="{{options.touchOnly}}">{{localize pools.useMessage}}</button>
@@ -74,7 +74,7 @@
           </div>
         </div>
         <div class="showMore noShow">
-          <div style="display: flex; min-width: 100%; justify-content: space-between; padding: 10px 10px;">
+          <div class="chatPoolControls">
             {{#if (eq actor.type "character")}}
               {{#if (gt pools.skillPoolValue 0)}}
                 <button class="chatPoolButton usePool autoClose" data-actorid="{{actor.uuid}}" data-userid="{{userID}}" data-usepool="pool" data-usagetype="mitigated" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}" data-newresult="{{alternatives.result}}" data-rollmode="{{rollMode}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-rolledfrom="{{rolledFrom}}" data-touchonly="{{options.touchOnly}}">{{localize pools.useMessage}}</button>
