@@ -1,3 +1,14 @@
-2025/07/25-19:16:00.411686 313b60000 Recovering log #799
-2025/07/25-19:16:00.411974 313b60000 Delete type=3 #798
-2025/07/25-19:16:00.412009 313b60000 Delete type=0 #799
+2025/11/29-10:06:01.813328 30edb4000 Recovering log #801
+2025/11/29-10:06:01.813681 30edb4000 Delete type=3 #800
+2025/11/29-10:06:01.813735 30edb4000 Delete type=0 #801
+2025/11/29-12:27:07.373298 31aa63000 Level-0 table #805: started
+2025/11/29-12:27:07.373841 31aa63000 Level-0 table #805: 36161 bytes OK
+2025/11/29-12:27:07.374074 31aa63000 Delete type=0 #803
+2025/11/29-12:27:07.376312 31aa63000 Manual compaction at level-0 from '!items!0hG5VJieUcAqD7WW' @ 72057594037927935 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at '!items!znq17lMEMESDOHco' @ 78 : 1
+2025/11/29-12:27:07.376316 31aa63000 Compacting 2@0 + 0@1 files
+2025/11/29-12:27:07.376796 31aa63000 Generated table #806@0: 39 keys, 36161 bytes
+2025/11/29-12:27:07.376801 31aa63000 Compacted 2@0 + 0@1 files => 36161 bytes
+2025/11/29-12:27:07.376837 31aa63000 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/11/29-12:27:07.376861 31aa63000 Delete type=2 #779
+2025/11/29-12:27:07.376917 31aa63000 Delete type=2 #805
+2025/11/29-12:27:07.378411 31aa63000 Manual compaction at level-0 from '!items!znq17lMEMESDOHco' @ 78 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at (end)

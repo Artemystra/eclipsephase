@@ -501,15 +501,20 @@ async function migrationEnd(endMigration) {
   Hooks.on("hotbarDrop", (bar, data, slot) => createEclipsePhaseMacro(data, slot));
 });
 
-//Gets chat data
-Hooks.on("renderChatMessage", (app, html, data) => EPchat.addChatListeners(html, data));
+//Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
+Hooks.on("renderChatMessageHTML", (message, html, data) => {
+  EPchat.addChatListeners(html, data);
+  EPchat.GMvision(html, data);
+  EPchat.ownerVision(html, data);
+  EPchat.playerVision(html, data);
+});
 
-//Sets parts of the chat invisible to players or the GM
-Hooks.on("renderChatLog", (app, html, data) => EPchat.GMvision(html, data));
-Hooks.on("renderChatMessage", (app, html, data) => EPchat.GMvision(html, data));
-Hooks.on("renderChatMessage", (app, html, data) => EPchat.ownerVision(html, data));
-Hooks.on("renderChatLog", (app, html, data) => EPchat.playerVision(html, data));
-Hooks.on("renderChatMessage", (app, html, data) => EPchat.playerVision(html, data));
+//Renders the ChatLog according to given visibility options
+Hooks.on("renderChatLog", (app,html,data) => {
+  EPchat.GMvision(html, data);
+  EPchat.ownerVision(html, data);
+  EPchat.playerVision(html, data);
+});
 
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)

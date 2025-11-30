@@ -8,13 +8,12 @@ import * as damageFunctions from "./damage.js";
  * @param {*} html 
  */
 export async function GMvision(html){
-    let GMvision = game.user.isGM
-    let GMinfo = html.find(".GMinfo")
     
-    if(!GMvision){
-        for (let entry of GMinfo){
-            entry.classList.add("noShow");
-        }
+    let GMvision = game.user.isGM
+    let GMinfo = html.querySelector(".GMinfo")
+    console.log("This is my gminfo:", GMinfo)
+    if(!GMvision && GMinfo){
+            GMinfo.classList.add("noShow");
     }
 }
 
@@ -23,9 +22,9 @@ export async function GMvision(html){
  */
 export async function playerVision(html){
     let GMvision = game.user.isGM
-    let GMinfo = html.find(".playerInfo")
+    let GMinfo = html.querySelector(".playerInfo")
     
-    if(GMvision){
+    if(GMvision && GMinfo){
         for (let entry of GMinfo){
             entry.classList.add("noShow");
         }
@@ -37,15 +36,21 @@ export async function playerVision(html){
  * @param {*} html 
  */
 export async function ownerVision(html){ 
-    let buttons = html.find(".privateChatButton")
-    let actor = game.actors.get(buttons.attr("data-ownerid"))
+    const button = html.querySelector(".privateChatButton") ? html.querySelector(".privateChatButton") : false;
+    
+    if(!button) {
+        console.log("No Button present");
+        return;
+    }
+    const actor = game.actors.get(html.querySelector(".privateChatButton").getAttribute("data-ownerid"))
 
     if(actor && !actor.isOwner){
-        buttons.addClass("noShow")
+        button.classList.add("noShow")
     }
 }
 
-export function addChatListeners(html){
+export async function addChatListeners($html){
+    const html = await bridgeJQuery($html);
     html.on('click', 'i.moreInfo', moreInfo);
     html.on('click', 'a.moreInfoDialog', moreInfo);
     html.on('click', 'button.usePool', poolFunctions.usePoolFromChat);
@@ -55,3 +60,11 @@ export function addChatListeners(html){
     registerCommonHandlers(html);
 }
 
+/**
+ * Bridges jQuery for the time being
+ * @param {*} html
+ */
+async function bridgeJQuery(html) {
+    html instanceof HTMLElement ? console.log("jQuery found - Fix needed!") : 0 ;
+    return html instanceof HTMLElement ? $(html) : html;
+}
