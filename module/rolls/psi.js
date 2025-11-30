@@ -3,10 +3,10 @@ import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TA
 import * as pools from "./pools.js";
 import { gmList } from "../common/common-sheet-functions.js";
 
-export function preparePsi(data){
-
+export async function preparePsi(data){
     const dataset = data.currentTarget.dataset;
-    const actorWhole = game.actors.get(dataset.actorid);
+    const actorWhole = await fromUuid(dataset.actorid)
+    console.log("actorWhole", actorWhole)
     const psiOwner = dataset.userid
     const push = dataset.psipush === "false" ? false : dataset.psipush;
     const systemOptions = {"brewStatus" : game.settings.get("eclipsephase", "superBrew")}
@@ -31,7 +31,7 @@ export async function infectionUpdate(actorWhole, options){
 
 export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
     //Infection (only relevant for psi checks)
-
+    console.log("this is actorWhole", actorWhole)
     const actorModel = actorWhole.system;
     const recipientList = gmList();
     if(!recipientList.includes(psiOwner))

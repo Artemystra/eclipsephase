@@ -875,7 +875,7 @@ a.content-link, a.inline-roll {
   color: var(--mainText);
 }
 
-.chatPoolControls {
+.chatControls {
   display: flex; 
   min-width: 100%; 
   justify-content: space-between; 
@@ -883,7 +883,7 @@ a.content-link, a.inline-roll {
   padding: 10px 10px;
 }
 
-.chatPoolButton {
+.chatButton {
   width: 100%;
 }
 
