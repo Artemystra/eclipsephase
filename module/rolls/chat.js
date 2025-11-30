@@ -32,14 +32,13 @@ export async function playerVision(html){
 }
 
 /**
- * Hides Owner info from other players
+ * Hides Buttons & Owner info from other players that are restricte from using them
  * @param {*} html 
  */
 export async function ownerVision(html){ 
-    const button = html.querySelector(".privateChatButton") ? html.querySelector(".privateChatButton") : false;
+    const button = html.querySelector(".privateChatButton")
     
     if(!button) {
-        console.log("No Button present");
         return;
     }
     const actor = game.actors.get(html.querySelector(".privateChatButton").getAttribute("data-ownerid"))
