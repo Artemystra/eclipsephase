@@ -68,6 +68,8 @@
   "TYPES.Item.vehicle" : "载具",
   "TYPES.Item.drug" : "药物",
   "TYPES.Item.ammo" : "Ammo",
+  "TYPES.Item.id" : "ID",
+  "TYPES.Item.morph" : "Morph",
 
   "ep2e": {
     "actorSheet": {
@@ -406,8 +408,7 @@
         },
         "durabilityLabel": "耐久值",
         "movement": {
-          "label1": "移动 1",
-          "label2": "移动 2",
+          "label": "移动",
           "speed": "速度",
           "type": "类型"
         },

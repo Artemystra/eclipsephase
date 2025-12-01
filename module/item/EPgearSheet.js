@@ -20,6 +20,10 @@ export default class EPgearSheet extends ItemSheet {
       this.position.width = 520;
       this.position.height = 420;
     }
+    else if(this.item.type === "morph"){
+      this.position.width = 620;
+      this.position.height = 500;
+    }
     else {
       this.position.width = 520;
       this.position.height = 415;

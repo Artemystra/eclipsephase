@@ -26,6 +26,7 @@ export default class EPactor extends Actor {
     { skill: "survival", aptitude: "int", multiplier: 1, category: "insight" },
   ]
 
+  static STANDARD_MORPH = { dur: 30, type: "bio", description: "", img: "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg", insight: null, moxie: null, vigor: null, flex: null}
   /**
    * Augment the basic actor data with additional dynamic data.
    */
@@ -34,6 +35,7 @@ export default class EPactor extends Actor {
     const actor = this;
     const actorModel = this.system;
     const actorWhole = this;
+    const activeMorph = actorModel.activeMorph ? await fromUuid(actorModel.activeMorph) : EPactor.STANDARD_MORPH;
     const flags = actorModel.flags;
     const items = this.items;
     let gammaCount = 0;
@@ -87,38 +89,13 @@ export default class EPactor extends Actor {
       }
     }
 
-    this._calculatePhysicalHealth(actorModel, chiMultiplier);
+    this._calculatePhysicalHealth(actorModel, activeMorph, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel, chiMultiplier);
 
     if (this.type === "character"){  
       
-      //prepare morph list (PC)
-      let morphNameValues = [
-        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph1.name},
-        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph2.name},
-        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph3.name},
-        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph4.name},
-        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph5.name},
-        {default: "ep2e.morph.currentMorph.morphList.placeholder", custom: actorModel.bodies.morph6.name}
-      ]
-  
-      const morphList = []
-      let counter = 0
-  
-      for(let morphName of morphNameValues){
-        counter++
-        if(morphName.custom){
-          morphList.push({key: "morph"+counter, label: morphName.custom});
-        }
-        else
-        morphList.push({key: "morph"+counter, label: morphName.custom});
-      }
-  
-      
-      actorModel.morphList = morphList;  
-      let morph = actorModel.bodies[actorModel.bodies.activeMorph]
-      actorModel.additionalSystems.movementBase = morph.movement1 ? morph.movement1.base : 0;
+      actorModel.additionalSystems.movementBase = activeMorph.movement1 ? activeMorph.movement1.base : 0;
       this._calculateMentalHealth(actorModel, chiMultiplier)
       this._calculateHomebrewEncumberance(actorModel);
       this._calculateSideCart(actorModel, items);
@@ -207,7 +184,7 @@ export default class EPactor extends Actor {
     actorModel.initiative.display = "1d6 + " + (actorModel.initiative.value - eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0))
   }
 
-  _calculatePhysicalHealth(actorModel, chiMultiplier){
+  _calculatePhysicalHealth(actorModel, activeMorph, chiMultiplier){
     
     //Calculating WT & DR
 
@@ -237,13 +214,12 @@ export default class EPactor extends Actor {
     //Characters
     else{
       if(this.type === "character") {
-        let morph = actorModel.bodies[actorModel.bodies.activeMorph];
-        actorModel.health.physical.max = Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
+        console.log("this is actorModel", actorModel, "and this is my activeMorph:", activeMorph)
+        actorModel.health.physical.max = Number(activeMorph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
         actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
-        actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) ? Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morph.type])) : 0;
+        actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[activeMorph.type]));
         actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max ? actorModel.physical.dr - actorModel.health.physical.max : 0;
         actorModel.health.death.value = actorModel.health.physical.value - actorModel.physical.dr
-        actorModel.bodyType.value = morph.type;
   
         if (actorModel.health.physical.value < actorModel.health.physical.max){
           actorModel.health.death.value = 0
@@ -260,14 +236,13 @@ export default class EPactor extends Actor {
           actorModel.health.physical.value = actorModel.physical.dr
         }
   
-        this._calculatePools(actorModel, morph, chiMultiplier)
+        this._calculatePools(actorModel, activeMorph, chiMultiplier)
       }}
     
     //Health bar calculation
     let durabilityContainerWidth = 0
     let deathContainerWidth =  0
 
-    const morph = actorModel.bodies[actorModel.bodies.activeMorph];
     const currentPhysicalDamage = actorModel.health.physical.value;
     const maxPhysicalDamage = actorModel.health.physical.max;
     actorModel.physical.relativePhysicalDamage = Math.round(currentPhysicalDamage*100/maxPhysicalDamage) > 100 ? 100 : Math.round(currentPhysicalDamage*100/maxPhysicalDamage);
@@ -277,7 +252,7 @@ export default class EPactor extends Actor {
     actorModel.physical.relativeDeathDamage = Math.round(currentDeathDamage*100/maxDeathDamage) > 100 ? 100 : Math.round(currentDeathDamage*100/maxDeathDamage);
     
     if(this.type === 'npc' || this.type === 'goon') {
-      if(Number(eclipsephase.damageRatingMultiplier[actorModel.bodyType.value]) === 1.5){
+      if(Number(eclipsephase.damageRatingMultiplier[activeMorph.type]) === 1.5){
         durabilityContainerWidth = 66.5;
         deathContainerWidth =  33.5;
       }
@@ -287,7 +262,7 @@ export default class EPactor extends Actor {
       }
     }
     else{
-      if(Number(eclipsephase.damageRatingMultiplier[morph.type]) === 1.5){
+      if(Number(eclipsephase.damageRatingMultiplier[activeMorph.type]) === 1.5){
         durabilityContainerWidth = 66.5;
         deathContainerWidth =  33.5;
       }

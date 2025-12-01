@@ -314,6 +314,7 @@
   flex: 0 0 100px;
   height: 60px;
   width: 60px;
+  max-width: 60px;
   margin-right: 1px;
   border: none;
 }
@@ -428,6 +429,48 @@
 .eclipsephase .resource-value {
   text-transform: uppercase;
   font-weight: bold;
+}
+
+.eclipsephase .headline6 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 10px 0 5px 0;
+}
+
+.eclipsephase .headline5 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 20px 0 10px 0;
+}
+
+.eclipsephase .headline4 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 20px;
+  margin: 20px 0 10px 0;
+}
+
+.eclipsephase .headline3 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 24px;
+  margin: 30px 0 15px 0;
+}
+
+.eclipsephase .headline2 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 28px;
+  margin: 30px 0 15px 0;
+}
+
+.eclipsephase .headline1 {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 32px;
+  margin: 40px 0 20px 0;
 }
 
 .epInactive {
@@ -1429,6 +1472,7 @@ h3.subheaderBlank {
 
 .input-small {
   max-width: 40px!important;
+  min-width: 30px!important;
 }
 
 .input-medium {
@@ -1581,9 +1625,37 @@ h3.subheaderBlank {
   column-gap: 35px;
 }
 
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--pitchBorder);
+  border-top: 2px var(--accentBackground) solid;
+  padding: 5px 0.5em 5px 0.5em;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: none;
+  padding: 5px 0.5em 5px 0.5em;
+}
+
+.itemGroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .itemBackground {
   background: var(--mainBackground);
   padding: 10px 0.5em 10px 0.5em;
+}
+
+.itemBackgroundDark {
+  background: var(--pitchBorder);
 }
 
 .noPadBot {
@@ -1652,18 +1724,21 @@ h3.subheaderBlank {
 }
 
 .icon-xsmall{
+  font-size: 16px;
   max-height: 16px!important;
   max-width: 16px!important;
   border: none;
 }
 
 .icon-small{
+  font-size: 24px;
   max-height: 24px!important;
   max-width: 24px!important;
   border: none;
 }
 
 .icon-medium{
+  font-size: 40px;
   max-height: 40px!important;
   max-width: 40px!important;
   border: none;

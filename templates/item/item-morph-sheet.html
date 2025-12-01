@@ -1,0 +1,85 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
+        <a class="item" data-tab="description">{{localize "ep2e.item.general.table.description"}}</a>
+        {{#if item.showEffectsTab}}
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
+        {{/if}}
+    </nav>
+    {{!-- Sheet Body --}}
+
+    <section class="item-sheet-body" style="min-height: 245px; height: fit-content;">
+        <div class="tab details" data-group="primary" data-tab="details">
+            <div class="itemRow">
+                <div class="itemGroup">
+                    <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
+                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
+                    <input class="input-small" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="0" style="text-align: center"/>
+                </div>
+                <div class="itemGroup">
+                    <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
+                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
+                    <select style="max-width: 100px;" class="selectSpecApt" name="system.type" data-type="String">
+                        {{selectOptions config.bodyTypes selected=item.system.type localize=true}}
+                    </select>
+                </div>
+            </div>
+            <div class="itemHeader">
+                    <div class="itemGroup">
+                        <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
+                        <input class="input-xs" onFocus="this.select()" type="number" name="system.insight" value="{{item.system.insight}}" placeholder="0"/>
+                    </div>
+                    <div class="itemGroup">
+                        <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
+                        <input class="input-xs" onFocus="this.select()" type="number" name="system.moxie" value="{{item.system.moxie}}" placeholder="0"/>
+                    </div>
+                    <div class="itemGroup">
+                        <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
+                        <input class="input-xs" onFocus="this.select()" type="number" name="system.vigor" value="{{item.system.vigor}}" placeholder="0"/>
+                    </div>
+                    <div class="itemGroup">
+                        <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
+                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
+                        <input class="input-xs" onFocus="this.select()" type="number" name="system.flex" value="{{item.system.flex}}" placeholder="0"/>
+                    </div>
+            </div> 
+            <p class="headline5">{{localize "ep2e.morph.currentMorph.movement.label"}}</p>
+            <div class="grid grid-2col">
+                {{#each item.system.movement as |mov key|}}
+                <div class="itemRow itemBackgroundDark">
+                    <div class="itemGroup wantToKnowMore">
+                        <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
+                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
+                        <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.base" value="{{base}}" placeholder="0"/>/
+                        <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.full" value="{{full}}" placeholder="0"/>
+                    </select>
+                    </div>
+                    <div class="itemGroup wantToKnowMore">
+                        <i class="fa-regular fa-tags awesomeIcon icon-xsmall"></i>
+                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}</label>
+                        <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
+                            {{selectOptions @root.config.moveTypes selected=mov.type localize=true}}
+                        </select>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="tab description" data-group="primary" data-tab="description">
+            <div class="textAreaDescription"><textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+        </div>
+
+        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+
+    </section>
+</form>

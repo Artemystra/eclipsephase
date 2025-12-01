@@ -280,39 +280,88 @@
             "mod": null
           }
         },
-        "morph": {
+        "ego": {
+          "sex": "",
+          "gender": "",
+          "age": "",
+          "origin": "",
+          "languages": "",
+          "motivations": {
+            "motivation1": "",
+            "motivation2": "",
+            "motivation3": ""
+          },
+          "idSelected": "id1",
+          "egoFlex": null
+        },  
+        "psiStrain": {
           "name": "",
-          "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
-          "type": "",
-          "dur": null,
-          "insight": null,
-          "moxie": null,
-          "vigor": null,
-          "flex": null,
-          "movement1": {
-            "type": null,
-            "base": null,
-            "full": null
+          "strainType": 0,
+          "description": "",
+          "infection": 0
+        },
+        "subStrain": {
+          "label": "",
+          "influence2": {
+            "label": "",
+            "description": ""
           },
-          "movement2": {
-            "type": null,
-            "base": null,
-            "full": null
+          "influence3": {
+            "label": "",
+            "description": ""
           },
-          "movement3": {
-            "type": null,
-            "base": null,
-            "full": null
+          "influence4": {
+            "label": "",
+            "description": ""
           },
-          "description": ""
-        } 
+          "influence5": {
+            "label": "",
+            "description": ""
+          },
+          "influence6": {
+            "label": "",
+            "description": ""
+          }
+        },
+        "strainInfluence": {
+          "influence1": {
+            "number": "1 ",
+            "label": "ep2e.psi.effect.physicalDamage",
+            "description": "ep2e.psi.effect.takeDamage"
+          },
+          "influence2": {
+            "number": "2 ",
+            "label": "",
+            "description": ""
+          },
+          "influence3": {
+            "number": "3 ",
+            "label": "",
+            "description": ""
+          },
+          "influence4": {
+            "number": "4 ",
+            "label": "",
+            "description": ""
+          },
+          "influence5": {
+            "number": "5 ",
+            "label": "",
+            "description": ""
+          },
+          "influence6": {
+            "number": "6 ",
+            "label": "",
+            "description": ""
+          }
+        },
+        "activeMorph": null
       },  
       "npc": {
         "threatLevel": {
           "current": null,
           "total": null
-        },
-        "biography":null
+        }
       },
       "muse": {
         "muse": {
@@ -402,628 +451,26 @@
         "muse"
       ],
       "biography": "",
-      "ego": {
-        "sex": "",
-        "gender": "",
-        "age": "",
-        "origin": "",
-        "languages": "",
-        "motivations": {
-          "motivation1": "",
-          "motivation2": "",
-          "motivation3": ""
-        },
-        "idSelected": "id1",
-        "egoFlex": null,
-        "ids": {
-          "id1": {
-              "name": "none",
-                "rep": {
-                  "@-rep": {
-                    "name": "ep2e.id.repType.@rep",
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "c-rep": {
-                    "name": "ep2e.id.repType.crep",
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "f-rep": {
-                    "name": "ep2e.id.repType.frep",
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "g-rep": {
-                    "name": "ep2e.id.repType.grep",
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "i-rep": {
-                    "name": "ep2e.id.repType.irep",
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "r-rep": {
-                    "name": "ep2e.id.repType.rrep",
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  },
-                  "x-rep": {
-                    "name": "ep2e.id.repType.xrep",
-                    "value": null,
-                    "small1": false,
-                    "small2": false,
-                    "small3": false,
-                    "med1": false,
-                    "med2": false,
-                    "large": false
-                  }
-                }
-              },
-          "id2": {
-            "name": "none",
-              "rep": {
-                "@-rep": {
-                  "name": "ep2e.id.repType.@rep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "c-rep": {
-                  "name": "ep2e.id.repType.crep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "f-rep": {
-                  "name": "ep2e.id.repType.frep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "g-rep": {
-                  "name": "ep2e.id.repType.grep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "i-rep": {
-                  "name": "ep2e.id.repType.irep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "r-rep": {
-                  "name": "ep2e.id.repType.rrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "x-rep": {
-                  "name": "ep2e.id.repType.xrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                }
-              }
-              },
-          "id3": {
-            "name": "none",
-              "rep": {
-                "@-rep": {
-                  "name": "ep2e.id.repType.@rep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "c-rep": {
-                  "name": "ep2e.id.repType.crep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "f-rep": {
-                  "name": "ep2e.id.repType.frep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "g-rep": {
-                  "name": "ep2e.id.repType.grep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "i-rep": {
-                  "name": "ep2e.id.repType.irep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "r-rep": {
-                  "name": "ep2e.id.repType.rrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "x-rep": {
-                  "name": "ep2e.id.repType.xrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                }
-              }
-            },
-          "id4": {
-            "name": "none",
-              "rep": {
-                "@-rep": {
-                  "name": "ep2e.id.repType.@rep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "c-rep": {
-                  "name": "ep2e.id.repType.crep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "f-rep": {
-                  "name": "ep2e.id.repType.frep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "g-rep": {
-                  "name": "ep2e.id.repType.grep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "i-rep": {
-                  "name": "ep2e.id.repType.irep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "r-rep": {
-                  "name": "ep2e.id.repType.rrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "x-rep": {
-                  "name": "ep2e.id.repType.xrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                }
-              }
-            },
-          "id5": {
-            "name": "none",
-              "rep": {
-                "@-rep": {
-                  "name": "ep2e.id.repType.@rep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "c-rep": {
-                  "name": "ep2e.id.repType.crep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "f-rep": {
-                  "name": "ep2e.id.repType.frep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "g-rep": {
-                  "name": "ep2e.id.repType.grep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "i-rep": {
-                  "name": "ep2e.id.repType.irep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "r-rep": {
-                  "name": "ep2e.id.repType.rrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                },
-                "x-rep": {
-                  "name": "ep2e.id.repType.xrep",
-                  "value": null,
-                  "small1": false,
-                  "small2": false,
-                  "small3": false,
-                  "med1": false,
-                  "med2": false,
-                  "large": false
-                }
-              }
-            }
-        }
-      },
       "rest": {
         "short1": false,
         "short2": false,
         "shortExtra": false,
         "long": false,
         "restValue": null
-      },
-      "bodies": {
-        "activeMorph": "morph1",
-        "allMorphs": [],
-        "morph1": {
-          "templates": [
-            "morph"
-          ]
-        },
-        "morph2": {
-          "templates": [
-            "morph"
-          ]
-        },
-        "morph3": {
-          "templates": [
-            "morph"
-          ]
-        },
-        "morph4": {
-          "templates": [
-            "morph"
-          ]
-        },
-        "morph5": {
-          "templates": [
-            "morph"
-          ]
-        },
-        "morph6": {
-          "templates": [
-            "morph"
-          ]
-        }
-      },    
-      "psiStrain": {
-        "name": "",
-        "strainType": 0,
-        "description": "",
-        "infection": 0
-      },
-      "subStrain": {
-        "label": "",
-        "influence2": {
-          "label": "",
-          "description": ""
-        },
-        "influence3": {
-          "label": "",
-          "description": ""
-        },
-        "influence4": {
-          "label": "",
-          "description": ""
-        },
-        "influence5": {
-          "label": "",
-          "description": ""
-        },
-        "influence6": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "strainInfluence": {
-        "influence1": {
-          "number": "1 ",
-          "label": "ep2e.psi.effect.physicalDamage",
-          "description": "ep2e.psi.effect.takeDamage"
-        },
-        "influence2": {
-          "number": "2 ",
-          "label": "",
-          "description": ""
-        },
-        "influence3": {
-          "number": "3 ",
-          "label": "",
-          "description": ""
-        },
-        "influence4": {
-          "number": "4 ",
-          "label": "",
-          "description": ""
-        },
-        "influence5": {
-          "number": "5 ",
-          "label": "",
-          "description": ""
-        },
-        "influence6": {
-          "number": "6 ",
-          "label": "",
-          "description": ""
-        }
-      },
-      "bodyTypes": {
-        "synth": {
-          "label": "Synthetic"
-        },
-        "bio": {
-          "label": "Biologic"
-        }
-      },
-      "bodyType": {
-        "value": ""
       }
     },
     "npc": {
       "templates": [
         "base",
         "npc"
-      ],
-      "motivations": {
-        "motivation1": "",
-        "motivation2": "",
-        "motivation3": ""
-      },
-      "bodies": {
-        "morph1": {
-          "templates": [
-            "morph"
-          ]
-        }
-      },
-      "psiStrain": {
-        "name": "",
-        "strainType": "",
-        "description": ""
-      },
-      "subStrain": {
-        "label": "",
-        "influence2": {
-          "label": "",
-          "description": ""
-        },
-        "influence3": {
-          "label": "",
-          "description": ""
-        },
-        "influence4": {
-          "label": "",
-          "description": ""
-        },
-        "influence5": {
-          "label": "",
-          "description": ""
-        },
-        "influence6": {
-          "label": "",
-          "description": ""
-        }
-      },
-      "strainInfluence": {
-        "influence1": {
-          "number": "1 ",
-          "label": "ep2e.psi.effect.physicalDamage",
-          "description": "ep2e.psi.effect.takeDamage"
-        },
-        "influence2": {
-          "number": "2 ",
-          "label": "",
-          "description": ""
-        },
-        "influence3": {
-          "number": "3 ",
-          "label": "",
-          "description": ""
-        },
-        "influence4": {
-          "number": "4 ",
-          "label": "",
-          "description": ""
-        },
-        "influence5": {
-          "number": "5 ",
-          "label": "",
-          "description": ""
-        },
-        "influence6": {
-          "number": "6 ",
-          "label": "",
-          "description": ""
-        }
-      },
-      "bodyTypes": {
-        "synth": {
-          "label": "Synthetic"
-        },
-        "bio": {
-          "label": "Biologic"
-        }
-      },
-      "bodyType": {
-        "value": ""
-      }
+      ]
     },
     "goon": {
       "templates": [
         "base",
         "npc"
       ],
-      "stresstest": null,
-      "bodies": {
-        "morph1": {
-          "templates": [
-            "morph"
-          ]
-        },
-        "armor": {
-          "energy":0,
-          "kinetic":0
-        }
-      },
-      "bodyTypes": {
-        "synth": {
-          "label": "Synthetic"
-        },
-        "bio": {
-          "label": "Biologic"
-        }
-      },
-      "bodyType": {
-        "value": ""
-      }
+      "stresstest": null
     }
   },
   "Item": { 
@@ -1045,7 +492,9 @@
       "vehicle",
       "drug",
       "grenade",
-      "ammo"
+      "ammo",
+      "id",
+      "morph"
     ],
     "templates": {
       "base": {
@@ -1866,6 +1315,153 @@
           "mod": null
         }
       }      
-    }
+    },
+    "id": {
+      "rep": {
+        "@-rep": {
+          "name": "ep2e.id.repType.@rep",
+          "value": null,
+          "small1": false,
+          "small2": false,
+          "small3": false,
+          "med1": false,
+          "med2": false,
+          "large": false
+        },
+        "c-rep": {
+          "name": "ep2e.id.repType.crep",
+          "value": null,
+          "small1": false,
+          "small2": false,
+          "small3": false,
+          "med1": false,
+          "med2": false,
+          "large": false
+        },
+        "f-rep": {
+          "name": "ep2e.id.repType.frep",
+          "value": null,
+          "small1": false,
+          "small2": false,
+          "small3": false,
+          "med1": false,
+          "med2": false,
+          "large": false
+        },
+        "g-rep": {
+          "name": "ep2e.id.repType.grep",
+          "value": null,
+          "small1": false,
+          "small2": false,
+          "small3": false,
+          "med1": false,
+          "med2": false,
+          "large": false
+        },
+        "i-rep": {
+          "name": "ep2e.id.repType.irep",
+          "value": null,
+          "small1": false,
+          "small2": false,
+          "small3": false,
+          "med1": false,
+          "med2": false,
+          "large": false
+        },
+        "r-rep": {
+          "name": "ep2e.id.repType.rrep",
+          "value": null,
+          "small1": false,
+          "small2": false,
+          "small3": false,
+          "med1": false,
+          "med2": false,
+          "large": false
+        },
+        "x-rep": {
+          "name": "ep2e.id.repType.xrep",
+          "value": null,
+          "small1": false,
+          "small2": false,
+          "small3": false,
+          "med1": false,
+          "med2": false,
+          "large": false
+        }
+      }
+    },
+    "morph": {
+      "description": "",
+      "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+      "customToken": null,
+      "type": "",
+      "dur": null,
+      "insight": null,
+      "moxie": null,
+      "vigor": null,
+      "flex": null,
+      "movement": {
+        "movement1": {
+          "active": true,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement2": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement3": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement4": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement5": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement6": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement7": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement8": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement9": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement10": {
+          "active": false,
+          "type": null,
+          "base": null,
+          "full": null
+        }
+      }
+    } 
   }
 }

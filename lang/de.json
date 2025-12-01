@@ -68,6 +68,8 @@
   "TYPES.Item.vehicle" : "Fahrzeug",
   "TYPES.Item.drug" : "Droge",
   "TYPES.Item.ammo" : "Munition",
+  "TYPES.Item.id" : "ID",
+  "TYPES.Item.morph" : "Morph",
 
   "ep2e": {
     "actorSheet": {
@@ -437,8 +439,7 @@
         },
         "durabilityLabel": "Ausdauer",
         "movement": {
-          "label1": "Bewegung 1",
-          "label2": "Bewegung 2",
+          "label": "Fortbewegung",
           "speed": "Geschw.",
           "type": "Typ"
         },

@@ -71,12 +71,6 @@ export default class EPactorSheet extends ActorSheet {
       actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
     }
 
-    eclipsephase.morphNames.forEach(name => {
-      if(actor.system.bodies[name].img === ""){
-        actor.system.bodies[name].img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-      }
-    })
-
     if (actor.type === 'character') {
       this._prepareCharacterItems(sheetData);
     }
@@ -87,23 +81,6 @@ export default class EPactorSheet extends ActorSheet {
     sheetData.config = CONFIG.eclipsephase;
 
     sheetData.IDcollection = IDprep(actor, sheetData);
-
-    // Why jump through hoops in the template when we can set the active morph
-    // here?!
-    let morphKey = actor.system.bodies.activeMorph
-    let description = await TextEditor.enrichHTML(actor.system.bodies[morphKey].description,
-      { async: true })
-
-    sheetData.activeMorph = {
-      key: morphKey,
-      name: actor.system.bodies[morphKey].name || "New Morph",
-      morph: actor.system.bodies[morphKey],
-      wares: actor.ware[morphKey],
-      traits: actor.morphTrait[morphKey],
-      presentTraits: actor.morphTrait[morphKey].length + actor.morphFlaw[morphKey].length > 0,
-      flaws: actor.morphFlaw[morphKey],
-      description: description
-    }
 
     return foundry.utils.mergeObject(sheetData, {
       isGM: game.user.isGM

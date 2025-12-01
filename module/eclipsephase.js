@@ -153,7 +153,7 @@ Hooks.once('init', async function() {
   Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
   Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo"], makeDefault: true });
+  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo", "id", "morph"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPtraitSheet, {types: ["traits"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
