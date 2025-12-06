@@ -415,6 +415,7 @@
         "movementTypes": {
           "none": "-选择-",
           "boat": "舟行",
+          "glider": "Glider",
           "hopper": "跳行",
           "hover": "悬浮",
           "ionic": "离子推进",
@@ -1089,7 +1090,7 @@
           "enhancementsLabel": "Body Enhancements",
           "noBiomods": "Body has no biomods installed",
           "additions": {
-            "label": "Additions",
+            "label": "Enhancements",
             "none": "None",
             "meds": "Use Meds",
             "fixers": "Use Fixers",

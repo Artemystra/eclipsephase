@@ -16,6 +16,7 @@ import  EPknowSkillSheet  from "./item/EPknowSkillSheet.js";
 import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
+import  * as helperFunction from "./common/common-helper-functions.js"
 import  * as update from "./common/migration.js";
 
 async function registerSystemSettings() {
@@ -179,7 +180,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/morph-details.html",
     "systems/eclipsephase/templates/actor/partials/morph-traits.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html",
-    "systems/eclipsephase/templates/actor/partials/tabs/skills.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/npcgear.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-details.html",
@@ -206,7 +208,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.html",
     "systems/eclipsephase/templates/item/partials/grenade-details.html",
-    "systems/eclipsephase/templates/item/partials/item-traits.html"
+    "systems/eclipsephase/templates/item/partials/item-traits.html",
+    "systems/eclipsephase/templates/item/partials/additions-tab.html"
   ];
   await loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -225,6 +228,40 @@ Hooks.once('init', async function() {
 
   registerSystemSettings();
 });
+
+/**
+ * Helper to build itemlists of all traits/flaws/wares available via compendiums for various items 
+ * they might be needed for (just morphs for now)
+ **/
+Hooks.once("ready", async () => {
+  const compendiumList = {};
+  compendiumList.ware = {"none":"--Select--"};
+  compendiumList.flaw = {"none":"--Select--"};
+  compendiumList.trait = {"none":"--Select--"};
+  const traitsPack = game.packs.get("eclipsephase.traits");
+  const traitsIndex = await traitsPack.getIndex();
+  const warePack = game.packs.get("eclipsephase.ware");
+  const wareIndex = await warePack.getIndex();
+  const joinedIndex = [...wareIndex, ...traitsIndex]
+
+  for(const entry of joinedIndex){
+    const fullItem = await fromUuid(entry.uuid);
+    switch (fullItem.type) {
+      case "traits":
+        fullItem.system.traitType === "trait" ? compendiumList.trait[fullItem.uuid] = fullItem.name : compendiumList.flaw[fullItem.uuid] = fullItem.name;
+        break;
+      case "ware":
+        compendiumList.ware[fullItem.uuid] = fullItem.name;
+        break;
+      default: break
+    }
+  }
+  compendiumList.ware = helperFunction.sortObjectByValue(compendiumList.ware)
+  compendiumList.flaw = helperFunction.sortObjectByValue(compendiumList.flaw)
+  compendiumList.trait = helperFunction.sortObjectByValue(compendiumList.trait)
+
+  CONFIG.compendiumList = compendiumList;
+})
 
 Hooks.once("ready", async function() {
 
@@ -519,6 +556,24 @@ Hooks.on("renderChatLog", (app,html,data) => {
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)
 
+//Gives every character a flat-morph from start using the compendiumpack as a source
+Hooks.on("createActor", async (actor, options, userId) => {
+  if (actor.getFlag("eclipsephase", "defaultMorphAdded")) return;
+  const pack = game.packs.get("eclipsephase.morphs");
+  if (!pack) return;
+  const morph = await pack.getDocument("Q54vb9iG05M575se");
+  if (!morph) return;
+  
+  //adds the morph to items
+  const [standardMorph] = await actor.createEmbeddedDocuments("Item", [morph.toObject()]);
+
+  //adds the Uuid of the freshly created morph to the system.activeMorph
+  await actor.update({
+    "system.activeMorph": standardMorph.uuid
+  });
+
+  await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
+});
 
 /**
  Async function to open a dialog

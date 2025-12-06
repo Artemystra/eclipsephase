@@ -36,7 +36,7 @@ export default class EPactorSheet extends ActorSheet {
       return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["eclipsephase", "sheet", "actor"],
         resizable: false,
-        tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "health" }]
+        tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "morph" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "ego" },{ navSelector: ".morph-tabs", contentSelector: ".morph-details", initial: "sleeved" }]
       });
     }
 
@@ -94,7 +94,7 @@ export default class EPactorSheet extends ActorSheet {
     const itemModel = item.system
     let traitSelection
     
-    let currentMorph = actorModel.bodies.activeMorph
+    let currentMorph = actorModel.activeMorph
 
     //Shows a pop-up if the trait has both a morph and a ego variant
     if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
@@ -159,6 +159,32 @@ export default class EPactorSheet extends ActorSheet {
     const trait = [];
     const flaw = [];
     const effects = [];
+    const rangedweapon = [];
+    const ccweapon = [];
+    const armor = [];
+    const aspect = {
+        none: [],
+        chi: [],
+        gamma: [],
+        epsilon: [],
+        None: [],
+        Chi: [],
+        Gamma: [],
+        Epsilon: []
+    };
+    const program = [];
+    const vehicle = {
+        robot: [],
+        vehicle: [],
+        morph: [],
+        animal: [],
+        Robot: [],
+        Vehicle: [],
+        Morph: [],
+        'Smart-Animal': []
+    };
+    const morph = [];
+    //this will become more important once morphs are items themselves
     const morphtrait = {
         morph1: [],
         morph2: [],
@@ -175,9 +201,6 @@ export default class EPactorSheet extends ActorSheet {
         morph5: [],
         morph6: []
     };
-    const rangedweapon = [];
-    const ccweapon = [];
-    const armor = [];
     const ware = {
         morph1: [],
         morph2: [],
@@ -186,38 +209,21 @@ export default class EPactorSheet extends ActorSheet {
         morph5: [],
         morph6: []
     };
-      const aspect = {
-          none: [],
-          chi: [],
-          gamma: [],
-          epsilon: [],
-          None: [],
-          Chi: [],
-          Gamma: [],
-          Epsilon: []
-      };
-      const program = [];
-      const vehicle = {
-          robot: [],
-          vehicle: [],
-          morph: [],
-          animal: [],
-          Robot: [],
-          Vehicle: [],
-          Morph: [],
-          'Smart-Animal': []
-      };
-      //this will become more important once morphs are items themselves
-      const morph = [];
 
     // Iterate through items, allocating to containers
     for (let item of sheetData.actor.items) {
       let itemModel = item.system;
 
       item.img = item.img || DEFAULT_TOKEN;
-      //Sort drugs into ammo as well
-      if (item.type === "drug"){
 
+      //Adds morphs to their container AND creates a subcontainer to morphflaws/traits and ware
+      if (item.type === "morph"){
+        const morphID = (item.uuid);
+        console.log("This is my morphID:", morphID);
+        ware[morphID] = []
+        morphflaw[morphID] = []
+        morphtrait[morphID] = []
+        morph.push(item)
       }
 
       // Append to features.
@@ -599,6 +605,7 @@ export default class EPactorSheet extends ActorSheet {
     actor.activeEffects=effects;
     actor.actorType = "PC";
     actor.ammo = ammo;
+    actor.morph = morph;
 
     // Check if sleights are present and toggle Psi Tab based on this
     if (actor.aspect.chi.length>0){

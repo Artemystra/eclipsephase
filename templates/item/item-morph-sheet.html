@@ -7,6 +7,7 @@
     </header>
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
         <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
+        <a class="item" data-tab="additions">{{localize "ep2e.roll.dialog.heal.additions.label"}}</a>
         <a class="item" data-tab="description">{{localize "ep2e.item.general.table.description"}}</a>
         {{#if item.showEffectsTab}}
         <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
@@ -57,6 +58,7 @@
                 {{#each item.system.movement as |mov key|}}
                 <div class="itemRow itemBackgroundDark">
                     <div class="itemGroup wantToKnowMore">
+                        {{label}}
                         <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
                         <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
                         <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.base" value="{{base}}" placeholder="0"/>/
@@ -76,8 +78,10 @@
         </div>
 
         <div class="tab description" data-group="primary" data-tab="description">
-            <div class="textAreaDescription"><textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+            <div class="textAreaDescription"><textarea class="description" name="system.description" rows="18" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
         </div>
+
+        {{> systems/eclipsephase/templates/item/partials/additions-tab.html item=item}}
 
         {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
 

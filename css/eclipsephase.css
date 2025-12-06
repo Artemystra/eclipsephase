@@ -20,6 +20,7 @@
   --iconBlue: #346d8e;
   --highlight: #4098d6;
   --complementary1: #57245d;
+  --complementary2: #2bb42b9d;
   --mainText: #d8d8d8;
   --iconGrey: #aaaaaa;
   --inactive: #999;
@@ -978,6 +979,10 @@ a[href] {
   color: var(--highlight);
 }
 
+a.button[href] {
+  color: var(--mainText);
+}
+
 .eclipsephase .items-list .item {
   height: 30px;
   line-height: 24px;
@@ -1100,6 +1105,43 @@ a:hover,
 
 .eclipsephase .tabs .item {
   color: var(--iconGrey);
+}
+
+.eclipsephase .subtabs .item {
+  min-height: 52px;
+  font-size: 14px;
+  background-color: var(--mainBackground);
+  border-top: solid 2px var(--mainBackground);
+  color: var(--iconGrey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.eclipsephase .subtabs .item .label {
+  text-align: center;
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eclipsephase .subtabs .item .state {
+  text-align: center;
+  font-size: 12px;
+  line-height: 20px;
+  background-color: var(--accentBackground);
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eclipsephase .subtabs .item.active {
+  background-color: var(--pitchBorder);
+  border-top: solid 2px var(--highlight);
+  color: var(--mainText);
 }
 
 .eclipsephase .tox .tox-editor-container {

@@ -416,6 +416,7 @@
         "movementTypes": {
           "none": "-Select-",
           "boat": "Boat",
+          "glider": "Glider",
           "hopper": "Hopper",
           "hover": "Hover",
           "ionic": "Ionic",
@@ -1082,7 +1083,7 @@
           "enhancementsLabel": "Body Enhancements",
           "noBiomods": "Body has no biomods installed",
           "additions": {
-            "label": "Additions",
+            "label": "Enhancements",
             "none": "None",
             "meds": "Use Meds",
             "fixers": "Use Fixers",

@@ -164,6 +164,16 @@
       "type": "Item",
       "private": false,
       "flags": {}
+    },
+    {
+      "banner": "systems/eclipsephase/resources/img/bannerAnimals.webp",
+      "name": "morphs",
+      "label": "Morphs",
+      "system": "eclipsephase",
+      "path": "packs/morphs.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     }
   ],
   "languages": [

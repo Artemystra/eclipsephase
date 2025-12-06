@@ -1,0 +1,35 @@
+<div class="tab details" data-group="primary" data-tab="additions">
+    <div class="itemHeader"><p class="resource-value">{{localize "ep2e.inventory.npcInventory.wareLabel"}}</p></div>
+    <div class="grid grid-3col">
+        {{#each item.system.ware as |ware key|}}
+        <div class="itemGroup">
+            {{label}}
+            <select name="system.ware.{{key}}.value" data-type="String" style="max-width: 150px; min-width: 100px;">
+                {{selectOptions @root.itemList.ware selected=ware.value}}
+            </select>
+        </div>
+        {{/each}}
+    </div>
+    <div class="itemHeader"><p class="resource-value">{{localize "ep2e.ego.traits.headline"}}</p></div>
+    <div class="grid grid-3col">
+        {{#each item.system.traits as |trait key|}}
+        <div class="itemGroup">
+            {{label}}
+            <select name="system.traits.{{key}}.value" data-type="String" style="max-width: 150px; min-width: 100px;">
+                {{selectOptions @root.itemList.trait selected=trait.value}}
+            </select>
+        </div>
+        {{/each}}
+    </div>
+    <div class="itemHeader"><p class="resource-value">{{localize "ep2e.ego.flaws.headline"}}</p></div>
+    <div class="grid grid-3col">
+        {{#each item.system.flaws as |flaw key|}}
+        <div class="itemGroup">
+            {{label}}
+            <select name="system.flaws.{{key}}.value" data-type="String" style="max-width: 150px; min-width: 100px;">
+                {{selectOptions @root.itemList.flaw selected=flaw.value}}
+            </select>
+        </div>
+        {{/each}}
+    </div>
+</div>

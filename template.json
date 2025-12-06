@@ -480,10 +480,6 @@
       "ccWeapon",
       "armor",
       "traits",
-      "trait",
-      "flaw",
-      "morphTrait",
-      "morphFlaw",
       "ware",
       "aspect",
       "program",
@@ -498,6 +494,7 @@
     ],
     "templates": {
       "base": {
+        "tags": [],
         "additionalSystems": {},
         "description": "",
         "active": true,
@@ -1100,15 +1097,6 @@
       "ego": false,
       "morph": false
     },
-    "trait": {
-      "templates": [
-        "base"
-      ],
-      "statChange": null,
-      "traitType": "",
-      "ego": false,
-      "morph": false
-    },
     "ware": {
       "templates": [
         "base",
@@ -1401,65 +1389,201 @@
       "vigor": null,
       "flex": null,
       "movement": {
-        "movement1": {
+        "move1": {
+          "label": "1.",
           "active": true,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement2": {
+        "move2": {
+          "label": "2.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement3": {
+        "move3": {
+          "label": "3.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement4": {
+        "move4": {
+          "label": "4.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement5": {
+        "move5": {
+          "label": "5.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement6": {
+        "move6": {
+          "label": "6.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement7": {
+        "move7": {
+          "label": "7.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement8": {
+        "move8": {
+          "label": "8.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement9": {
+        "move9": {
+          "label": "9.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
         },
-        "movement10": {
+        "move10": {
+          "label": "10.",
           "active": false,
           "type": null,
           "base": null,
           "full": null
+        }
+      },
+      "ware": {
+        "ware1": {
+          "label": "1.",
+          "value": ""
+        },
+        "ware2": {
+          "label": "2.",
+          "value": ""
+        },
+        "ware3": {
+          "label": "3.",
+          "value": ""
+        },
+        "ware4": {
+          "label": "4.",
+          "value": ""
+        },
+        "ware5": {
+          "label": "5.",
+          "value": ""
+        },
+        "ware6": {
+          "label": "6.",
+          "value": ""
+        },
+        "ware7": {
+          "label": "7.",
+          "value": ""
+        },
+        "ware8": {
+          "label": "8.",
+          "value": ""
+        },
+        "ware9": {
+          "label": "9.",
+          "value": ""
+        },
+        "ware10": {
+          "label": "10.",
+          "value": ""
+        }
+      },
+      "flaws": {
+        "flaw1": {
+          "label": "1.",
+          "value": ""
+        },
+        "flaw2": {
+          "label": "2.",
+          "value": ""
+        },
+        "flaw3": {
+          "label": "3.",
+          "value": ""
+        },
+        "flaw4": {
+          "label": "4.",
+          "value": ""
+        },
+        "flaw5": {
+          "label": "5.",
+          "value": ""
+        },
+        "flaw6": {
+          "label": "6.",
+          "value": ""
+        },
+        "flaw7": {
+          "label": "7.",
+          "value": ""
+        },
+        "flaw8": {
+          "label": "8.",
+          "value": ""
+        },
+        "flaw9": {
+          "label": "9.",
+          "value": ""
+        },
+        "flaw10": {
+          "label": "10.",
+          "value": ""
+        }
+      },
+      "traits": {
+        "trait1": {
+          "label": "1.",
+          "value": ""
+        },
+        "trait2": {
+          "label": "2.",
+          "value": ""
+        },
+        "trait3": {
+          "label": "3.",
+          "value": ""
+        },
+        "trait4": {
+          "label": "4.",
+          "value": ""
+        },
+        "trait5": {
+          "label": "5.",
+          "value": ""
+        },
+        "trait6": {
+          "label": "6.",
+          "value": ""
+        },
+        "trait7": {
+          "label": "7.",
+          "value": ""
+        },
+        "trait8": {
+          "label": "8.",
+          "value": ""
+        },
+        "trait9": {
+          "label": "9.",
+          "value": ""
+        },
+        "trait10": {
+          "label": "10.",
+          "value": ""
         }
       }
     } 

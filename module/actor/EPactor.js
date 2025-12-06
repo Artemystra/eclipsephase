@@ -35,7 +35,11 @@ export default class EPactor extends Actor {
     const actor = this;
     const actorModel = this.system;
     const actorWhole = this;
-    const activeMorph = actorModel.activeMorph ? await fromUuid(actorModel.activeMorph) : EPactor.STANDARD_MORPH;
+    let morphData = null;
+    if(actorModel.activeMorph){
+      morphData = await fromUuid(actorModel.activeMorph);
+    }
+    const morphValues = morphData?.system ?? EPactor.STANDARD_MORPH;
     const flags = actorModel.flags;
     const items = this.items;
     let gammaCount = 0;
@@ -89,13 +93,13 @@ export default class EPactor extends Actor {
       }
     }
 
-    this._calculatePhysicalHealth(actorModel, activeMorph, chiMultiplier);
+    this._calculatePhysicalHealth(actorModel, morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel, chiMultiplier);
 
     if (this.type === "character"){  
       
-      actorModel.additionalSystems.movementBase = activeMorph.movement1 ? activeMorph.movement1.base : 0;
+      actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
       this._calculateMentalHealth(actorModel, chiMultiplier)
       this._calculateHomebrewEncumberance(actorModel);
       this._calculateSideCart(actorModel, items);
@@ -214,8 +218,7 @@ export default class EPactor extends Actor {
     //Characters
     else{
       if(this.type === "character") {
-        console.log("this is actorModel", actorModel, "and this is my activeMorph:", activeMorph)
-        actorModel.health.physical.max = Number(activeMorph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(morph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
+        actorModel.health.physical.max = Number(activeMorph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(activeMorph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
         actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
         actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[activeMorph.type]));
         actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max ? actorModel.physical.dr - actorModel.health.physical.max : 0;

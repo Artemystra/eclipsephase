@@ -1,75 +1,35 @@
-<div class="tab body" data-group="primary" data-tab="body">
-        <div class="flexrow contentBox noMargin">
-            <div style="flex: 0.7;">
-            
-                <div class="contentBox" style="background-color: var(--focusBackground);">
-                    <div class="flexrow subheader">
-                        <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
-                        <div class="alignRight flexGrowThreeQuarter">
-                            <label class="resource-value" style="margin-right: 0.5em;">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</label>
-                            <select class="bodySelect" name="system.bodies.activeMorph" data-type="text" style="width: 120px;" value="{{actor.system.bodies.activeMorph}}">
-                                {{selectOptions actor.system.morphList selected=actor.system.bodies.activeMorph valueAttr="key" labelAttr=label localize=true}}
-                            </select>
-                        </div>
+<div class="tab body" data-group="primary" data-tab="morph">
+    <div class="flexrow contentBox noMargin">
+        <div style="flex-grow: 0.3; background-color: var(--mainBackground); height: 100vh;">
+            <nav class="morph-tabs subtabs" data-group="morph-details">
+                {{#each actor.morph as |morph key|}}
+                    {{#if (eq actor.system.activeMorph morph.uuid)}}
+                        <a data-tab="sleeved" class="item">
+                            <div class="label">{{name}}</div>
+                            <div class="state">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</div>
+                        </a>
+                    {{else}}
+                        <a data-tab="{{id}}" class="item">
+                            <div class="label">{{name}}</div>
+                        </a>
+                    {{/if}}
+                {{/each}}
+            </nav>
+        </div>
+        <div style="background-color: var(--pitchBorder);">
+            <section class="morph-details">
+            {{#each actor.morph as |morph key|}}
+                {{#if (eq actor.system.activeMorph morph.uuid)}}
+                    <div class="tab body" data-group="morph-details" data-tab="sleeved">
+                        <span class="headline5">{{name}} - {{system.type}}</span>
                     </div>
-
-                    {{> systems/eclipsephase/templates/actor/partials/morph-details.html name=actor.system.bodies.activeMorph morph=activeMorph }}
-                </div>
-            </div>
-                <img class="morph-img" src="{{activeMorph.morph.img}}" data-edit="system.bodies.{{activeMorph.key}}.img" title="{{actor.name}}'s {{activeMorph.name}}"/>
-            </div>
-            <div>
-                {{> systems/eclipsephase/templates/actor/partials/morph-traits.html name=actor.system.bodies.activeMorph morph=activeMorph }}
-            </div>
-            <div class="flexrow subheader">
-                <h3 class="subheader">
-                    {{actor.name}}'s {{activeMorph.name}}
-                </h3>
-                <div class="alignRight flexGrowHalf">
-                </div>
-            </div>
-            {{#if (eq activeMorph.key "morph1")}}
-            {{editor activeMorph.description target="system.bodies.morph1.description" button=true owner=owner editable=this.options.editable}}
-            {{else if (eq activeMorph.key "morph2")}}
-            {{editor
-            activeMorph.description
-            target="system.bodies.morph2.description"
-            button=true
-            owner=owner
-            editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph3")}}
-            {{editor
-            activeMorph.description
-            target="system.bodies.morph3.description"
-            button=true
-            owner=owner
-            editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph4")}}
-            {{editor
-            activeMorph.description
-            target="system.bodies.morph4.description"
-            button=true
-            owner=owner
-            editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph5")}}
-            {{editor
-            activeMorph.description
-            target="system.bodies.morph5.description"
-            button=true
-            owner=owner
-            editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph6")}}
-            {{editor
-            activeMorph.description
-            target="system.bodies.morph6.description"
-            button=true
-            owner=owner
-            editable=this.options.editable
-            }}
-            {{/if}}
-
+                {{else}}
+                    <div class="tab body" data-group="morph-details" data-tab="{{id}}">
+                        <span class="headline5">{{name}} - {{system.type}}</span>
+                    </div>
+                {{/if}}
+            {{/each}}
+            </section>
+        </div>
+    </div>
 </div>

@@ -32,6 +32,7 @@ eclipsephase.gearTypes = {
 eclipsephase.moveTypes = {
     none: "ep2e.morph.currentMorph.movementTypes.none",
     boat: "ep2e.morph.currentMorph.movementTypes.boat",
+    glider: "ep2e.morph.currentMorph.movementTypes.glider",
     hopper: "ep2e.morph.currentMorph.movementTypes.hopper",
     hover: "ep2e.morph.currentMorph.movementTypes.hover",
     ionic: "ep2e.morph.currentMorph.movementTypes.ionic",
@@ -148,8 +149,8 @@ eclipsephase.vehicleHabitat = {
 }
 
 eclipsephase.bodyTypes = {
-    synth: "ep2e.morph.currentMorph.morphType.synth",
     bio: "ep2e.morph.currentMorph.morphType.bio",
+    synth: "ep2e.morph.currentMorph.morphType.synth",
     info: "ep2e.morph.currentMorph.morphType.info"
 }
 
