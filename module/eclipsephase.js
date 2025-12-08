@@ -568,11 +568,15 @@ Hooks.on("createActor", async (actor, options, userId) => {
   const [standardMorph] = await actor.createEmbeddedDocuments("Item", [morph.toObject()]);
 
   //adds the Uuid of the freshly created morph to the system.activeMorph
-  await actor.update({
-    "system.activeMorph": standardMorph.uuid
-  });
+  await actor.update({"system.activeMorph": standardMorph.uuid, "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"});
 
   await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
+});
+
+Hooks.on("createItem", async (item, options, userId) => {
+  if (item.type != "morph") return;
+
+  await item.update ({"img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"})
 });
 
 /**

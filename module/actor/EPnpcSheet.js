@@ -56,9 +56,6 @@ export default class EPnpcSheet extends ActorSheet {
         const sheetData = super.getData();
         const actor = sheetData.actor;
         sheetData.dtypes = ["String", "Number", "Boolean"];
-        if(sheetData.actor.img === "icons/svg/mystery-man.svg"){
-            sheetData.actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-          }
 
           
         if (sheetData.actor.type == 'npc') {

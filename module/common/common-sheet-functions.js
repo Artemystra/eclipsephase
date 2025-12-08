@@ -324,12 +324,45 @@ export async function moreInfo(event){
  */
 export function embeddedItemToggle(html, actor, allEffects){
   html.find('.equipped.checkBox').click(async ev => {
-    const itemId = ev.currentTarget.closest(".equipped.checkBox").dataset.itemId;
+    let updateData = {};
+    console.log("start updateData", updateData)
+    let toggle;
+    let path;
+    const data = ev.currentTarget.dataset;
+    const itemId = data.itemId
     const item = actor.items.get(itemId);
-    let toggle = !item.system.active;
-    const updateData = {
-        "system.active": toggle
-    };
+    console.log("My data", data)
+    //checks whether a radiomenu and toggles everything that's not the currentTarget off
+    if (data.grouppath){
+      path = foundry.utils.getProperty(item, data.grouppath)
+      for(let entry in path){
+        console.log("I'm:", entry)
+        if (entry != data.currenttargetkey){
+          let updatePath = data.grouppath + "." + entry + ".active";
+          updateData[updatePath] = false
+        }
+        else {
+          let updatePath = data.grouppath + "." + entry + ".active";
+          updateData[updatePath] = true
+        }
+      }
+      console.log(updateData)
+      await item.update(updateData)
+      return;
+    }
+
+    //toggles the checkbox on/off
+    if (!data.path){
+      toggle = !item.system.active;
+      path = "system.active";
+    }
+    else {
+      path = data.path;
+      toggle = !foundry.utils.getProperty(item, path);
+      console.log(toggle)
+    }
+    updateData[path] = toggle
+    console.log(updateData)
     const updated = item.update(updateData);
     
     //handles activation/deactivation of values provided by effects inherited from items

@@ -67,9 +67,6 @@ export default class EPactorSheet extends ActorSheet {
 
     sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
-    if(actor.img === "icons/svg/mystery-man.svg"){
-      actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-    }
 
     if (actor.type === 'character') {
       this._prepareCharacterItems(sheetData);

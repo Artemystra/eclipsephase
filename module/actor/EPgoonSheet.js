@@ -57,9 +57,6 @@ export default class EPgoonSheet extends ActorSheet {
         let actor = sheetData.actor
 
         sheetData.dtypes = ["String", "Number", "Boolean"];
-        if(actor.img === "icons/svg/mystery-man.svg"){
-            actor.img = "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg";
-          }
 
 
 

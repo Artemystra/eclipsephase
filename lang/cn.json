@@ -402,6 +402,7 @@
         "morphPlaceholder": "义体名",
         "morphType": {
           "label": "类型",
+          "tooltip": "Morph Type",
           "synth": "人造",
           "bio": "生物",
           "info": "信息"

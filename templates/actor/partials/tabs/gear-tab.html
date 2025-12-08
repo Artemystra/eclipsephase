@@ -9,10 +9,10 @@
                     </div>
                 </div>
                 <div class="itemBackground">
-                        {{#each actor.armor as |item id|}}
+                    {{#each actor.armor as |item id|}}
                         {{#if item.system.active}}
                         <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-                            <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked item.system.active}}>
+                            <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" data-path="system.active"  type="checkbox" {{checked item.system.active}}>
                             <div class="item-image flex-group-center input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <input class="sheet-inline-edit" data-field="name" type="text" name="item.system.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.armorPlaceholder'}}" style="text-align: left; font-weight: bold; min-width: 240px;"/>
                             <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
@@ -43,7 +43,7 @@
                         </div>
                         {{else}}
                         <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-                            <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" type="checkbox" {{checked system.active}}>
+                            <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" data-path="system.active" type="checkbox" {{checked item.system.active}}>
                             <div class="item-image flex-group-center input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                             <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.armorPlaceholder'}}" style="text-align: left; font-weight: bold; min-width: 240px;"/>
                             <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>

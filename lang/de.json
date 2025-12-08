@@ -433,6 +433,7 @@
         "morphPlaceholder": "Morph-Name",
         "morphType": {
           "label": "Typ",
+          "tooltip": "Morphtyp",
           "synth": "Synthetisch",
           "bio": "Biologisch",
           "info": "Digital"

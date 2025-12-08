@@ -404,6 +404,7 @@
         "morphPlaceholder": "Nome do morfo",
         "morphType": {
           "label": "Tipo",
+          "tooltip": "Morfo Tipo",
           "synth": "Sintético",
           "bio": "Biológico",
           "info": "Infomorfo"

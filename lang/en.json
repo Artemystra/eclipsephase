@@ -436,6 +436,7 @@
         "morphPlaceholder": "Morph name",
         "morphType": {
           "label": "Type",
+          "tooltip": "Morph Type",
           "synth": "Synthetic",
           "bio": "Biologic",
           "info": "Infomorph"
