@@ -197,6 +197,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/statusSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html",
+    "systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/consumable.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gear.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/weapons.html",
@@ -567,8 +568,8 @@ Hooks.on("createActor", async (actor, options, userId) => {
   //adds the morph to items
   const [standardMorph] = await actor.createEmbeddedDocuments("Item", [morph.toObject()]);
 
-  //adds the Uuid of the freshly created morph to the system.activeMorph
-  await actor.update({"system.activeMorph": standardMorph.uuid, "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"});
+  //adds the id of the freshly created morph to the system.activeMorph
+  await actor.update({"system.activeMorph": standardMorph.id, "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"});
 
   await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
 });

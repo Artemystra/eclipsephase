@@ -112,7 +112,8 @@
         "confirm": "确认",
         "select": "选择",
         "showDetails": "展示细节",
-        "hideDetails": "隐藏细节"
+        "hideDetails": "隐藏细节",
+        "sleeveMorph": "Sleeve Morph"
       },
       "dialogHeadline": {
         "warning": "警告",
@@ -123,7 +124,11 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>警告:</b>这会将物品从你的人物卡中永远删除。",
-        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>若需略过删除物品时的提示框，请按住SHIFT建的同时点击删除键。</p></i>"
+        "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>若需略过删除物品时的提示框，请按住SHIFT建的同时点击删除键。</p></i>",
+        "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
+        "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Hold SHIFT while pressing the 'Auto-Bot'-button.</p></i>",
+        "sleeveCopyGeneral": "<b>Warning:</b>You are about to sleeve into a new morph",
+        "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>All calculations and tests will be made automatically. New Ware & Traits will be automatically added to your sleeved morph.</p></i>"
       }
     },
     "healthbar": {

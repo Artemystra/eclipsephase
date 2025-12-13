@@ -1,0 +1,27 @@
+<div class="itemBackground">
+    <div class="grid grid-2col">
+        {{#each item as |item id|}}
+            <div>
+                <div class="item flexrow offHand flex-group-center wantToKnowMore" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+                    <label class="tooltipText" style="min-width: 190px; left: -5px">{{item.name}}</label>
+                    <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                    <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+                    <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
+                    <div class="flexrow item-controls flex-group-right" style="max-width: 50px; min-width: 50px;">
+                        <a class="item-control item-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                        <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
+                    </div>
+                    <div class="flex-group-right slideShow input-xs">
+                        <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>
+                        <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
+                    </div>
+                    <div class="item showMore descriptionContainer" style="padding-bottom: 10px;">
+                        <div class="itemDescription shape3" style="min-width: 100%;">
+                            {{item.system.description}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>

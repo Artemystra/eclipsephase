@@ -180,6 +180,7 @@ export default class EPactorSheet extends ActorSheet {
         Morph: [],
         'Smart-Animal': []
     };
+    const bodies = {};
     const morph = [];
     //this will become more important once morphs are items themselves
     const morphtrait = {
@@ -207,20 +208,27 @@ export default class EPactorSheet extends ActorSheet {
         morph6: []
     };
 
+    for (let item of sheetData.actor.items){
+      if (item.type === "morph"){
+        bodies[item.id] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+      }
+
+      
+    }
+    console.log("This is boddies", bodies)
+    actor.bodies = bodies;
     // Iterate through items, allocating to containers
     for (let item of sheetData.actor.items) {
       let itemModel = item.system;
+      const boundTo = item.system.boundTo;
 
       item.img = item.img || DEFAULT_TOKEN;
 
       //Adds morphs to their container AND creates a subcontainer to morphflaws/traits and ware
       if (item.type === "morph"){
-        const morphID = (item.uuid);
-        console.log("This is my morphID:", morphID);
-        ware[morphID] = []
-        morphflaw[morphID] = []
-        morphtrait[morphID] = []
-        morph.push(item)
+        const morphID = (item.id);
+        const category = bodies[morphID];
+        category.morphdetails.push(item)
       }
 
       // Append to features.
@@ -522,55 +530,25 @@ export default class EPactorSheet extends ActorSheet {
           else {
             itemModel.dr = Math.round(itemModel.dur * 1.5);
           }
-          itemModel.luc = Math.round(itemModel.wil * 2)
+          itemModel.luc = Math.round(itemModel.wil * 2);
           itemModel.tt = Math.round(itemModel.luc / 5);
           itemModel.ir = Math.round(itemModel.luc * 2);
           vehicle[itemModel.type].push(item)
         }
       else if (item.type === 'ware' && itemModel.boundTo) {
-            ware[itemModel.boundTo].push(item);
+            const path = bodies[boundTo].morphgear;
+            bodies[boundTo].gearCount += 1;
+            path.push(item);
         }
         else if (item.type === 'morphFlaw' && itemModel.boundTo || item.system.traitType === 'flaw' && item.system.morph && itemModel.boundTo) {
-            if (itemModel.boundTo === "morph1"){
-                morphtrait.present1 = true;
-            }
-            else if (itemModel.boundTo === "morph2"){
-                morphtrait.present2 = true;
-            }
-            else if (itemModel.boundTo === "morph3"){
-                morphtrait.present3 = true;
-            }
-            else if (itemModel.boundTo === "morph4"){
-                morphtrait.present4 = true;
-            }
-            else if (itemModel.boundTo === "morph5"){
-                morphtrait.present5 = true;
-            }
-            else if (itemModel.boundTo === "morph6"){
-                morphtrait.present6 = true;
-            }
-            morphflaw[itemModel.boundTo].push(item);
+            const path = bodies[boundTo].morphflaws;
+            bodies[boundTo].flawsCount += 1;
+            path.push(item);
         }
         else if (item.type === 'morphTrait' && itemModel.boundTo || item.system.traitType === 'trait' && item.system.morph && itemModel.boundTo) {
-            if (itemModel.boundTo === "morph1"){
-                morphtrait.present1 = true;
-            }
-            else if (itemModel.boundTo === "morph2"){
-                morphtrait.present2 = true;
-            }
-            else if (itemModel.boundTo === "morph3"){
-                morphtrait.present3 = true;
-            }
-            else if (itemModel.boundTo === "morph4"){
-                morphtrait.present4 = true;
-            }
-            else if (itemModel.boundTo === "morph5"){
-                morphtrait.present5 = true;
-            }
-            else if (itemModel.boundTo === "morph6"){
-                morphtrait.present6 = true;
-            }
-            morphtrait[itemModel.boundTo].push(item);
+            const path = bodies[boundTo].morphtraits;
+            bodies[boundTo].traitsCount += 1;
+            path.push(item);
         }
     }
 
@@ -933,6 +911,28 @@ export default class EPactorSheet extends ActorSheet {
 
     return actorWhole.update({"system.pools.insight.value" : insightUpdate, "system.pools.vigor.value" : vigorUpdate, "system.pools.moxie.value" : moxieUpdate, "system.pools.flex.value" : flexUpdate, "system.rest.restValue" : null, "system.pools.update.insight" : null, "system.pools.update.vigor" : null, "system.pools.update.moxie" : null, "system.pools.update.flex" : null});
   });
+
+  html.find('.sleeveButton').click(async func => {
+
+    const element = func.currentTarget;
+    const dataset = element.dataset;
+    const itemID = dataset.itemId;
+    const itemName = dataset.name;
+    const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.sleeveMorph"))+ ": " +(itemName?itemName:"");
+    const popUpCopy = "ep2e.actorSheet.popUp.sleeveCopyGeneral";
+    const popUpInfo = "ep2e.actorSheet.popUp.sleeveAdditionalInfo";
+    const popUpPrimary = "ep2e.actorSheet.button.sleeveMorph";
+
+    let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
+
+    if(popUp.confirm === true){
+      actor.update({"system.activeMorph": itemID})
+    }
+    else{
+      return
+    }
+  })
 
     // Drag events for macros.
     if (actor.isOwner) {

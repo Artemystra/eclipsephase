@@ -112,7 +112,8 @@
         "select": "Selecionar",
         "reset": "Redefinir",
         "showDetails": "Mostrar Detalhes",
-        "hideDetails": "Ocultar detalhes"
+        "hideDetails": "Ocultar detalhes",
+        "sleeveMorph": "Sleeve Morph"
       },
       "dialogHeadline": {
         "warning": "Aviso",
@@ -125,7 +126,9 @@
         "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
         "autoBotCopyGeneral": "<p><b>Aviso:</b> Isto irá redefinir todas as perícias do veículo/bot para os valores de perícia da IA padrão do bot. Isso sobrescreverá quaisquer mudanças que você tenha feito em suas perícias.</p><p><b>Selecione o tipo do seu veículo:</b></p>",
-        "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Segure SHIFT enquanto pressiona o botão 'Auto-Bot'.</p></i>"
+        "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Segure SHIFT enquanto pressiona o botão 'Auto-Bot'.</p></i>",
+        "sleeveCopyGeneral": "<b>Warning:</b>You are about to sleeve into a new morph",
+        "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>All calculations and tests will be made automatically. New Ware & Traits will be automatically added to your sleeved morph.</p></i>"
       }
     },
     "healthbar": {

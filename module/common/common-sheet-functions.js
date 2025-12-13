@@ -229,9 +229,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
  * @param {String} popUpTarget - The target of the pop-up (e.g. the item that is deleted)
  * @returns - Returns a promise that resolves to true if the user confirms the dialog, false if the user cancels it.
  */
-export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget) {
+export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary) {
   let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
-  let deleteButton = game.i18n.localize('ep2e.actorSheet.button.delete');
+  let primaryButton = popUpPrimary ? game.i18n.localize(popUpPrimary) : game.i18n.localize('ep2e.actorSheet.button.delete');
   const dialogType = "confirmation"
   const template = "systems/eclipsephase/templates/chat/pop-up.html";
   const html = await renderTemplate(template, {popUpHeadline, popUpCopy, dialogType, popUpInfo, popUpTarget});
@@ -246,7 +246,7 @@ export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpIn
                 callback: html => resolve ({confirm: false})
               },
               normal: {
-                  label: deleteButton,
+                  label: primaryButton,
                   callback: html => resolve ({confirm: true})
               }
           },

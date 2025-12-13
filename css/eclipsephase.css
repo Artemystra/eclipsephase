@@ -36,6 +36,11 @@
   --color-bg-btn-minor-inactive: #414141;
 }
 
+.eclipsephase * {
+  scrollbar-width: thin!important;
+  scrollbar-color: var(--highlight) none!important;
+}
+
 .grid,
 .grid-2col {
   display: grid;
@@ -894,6 +899,37 @@ form button,
   background: var(--highlightBackground);
 }
 
+.eclipsephase button.sheetButton {
+    min-width: 50px;
+    flex: 1 1 0;
+    min-height: 36px;
+    color: var(--mainText);
+    background: var(--pitchBackground);
+    border-color: var(--highlightBackground);
+    text-align: center !important;
+    padding: 0px;
+}
+
+.eclipsephase button.sheetButton:hover {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+.eclipsephase button.sheetButton:focus {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+.eclipsephase .sleeveButton {
+  opacity: 0;
+  display: flex;
+  min-height: 20px! important;
+  max-height: 20px;
+}
+
+.eclipsephase .item.active .sleeveButton {
+  opacity: 100;
+  transition: 300ms;
+}
+
 .dialog .dialog-content {
   width: 100%;
 }
@@ -1108,7 +1144,7 @@ a:hover,
 }
 
 .eclipsephase .subtabs .item {
-  min-height: 52px;
+  min-height: 60px;
   font-size: 14px;
   background-color: var(--mainBackground);
   border-top: solid 2px var(--mainBackground);
@@ -1570,6 +1606,7 @@ h3.subheaderBlank {
 
 .contentBox {
   position: relative;
+  min-width: 100%;
 }
 
 .contentBoxMargin {
@@ -1681,7 +1718,7 @@ h3.subheaderBlank {
   justify-content: space-between;
   align-items: center;
   background-color: none;
-  padding: 5px 0.5em 5px 0.5em;
+  padding: 5px 2px;
 }
 
 .itemGroup {
@@ -1698,6 +1735,13 @@ h3.subheaderBlank {
 
 .itemBackgroundDark {
   background: var(--pitchBorder);
+}
+
+.itemBackground.minSize{
+    min-height: 78px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .noPadBot {
@@ -1974,6 +2018,15 @@ img {
   text-overflow: ellipsis;
 }
 
+.truncateMulti {
+  display: -webkit-box! important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  padding: 0 5px;
+}
+
 .pill {
   max-width: 103px;
   background-color: var(--pitchBorder);
@@ -2221,6 +2274,7 @@ button.epTextlink:hover{
 }
 
 .wantToKnowMore .tooltipText,
+.wantToKnowMore .tooltipTextB,
 .wantToKnowMoreFixed .tooltipText{
     opacity: 0;
     transition: opacity 1s;
@@ -2243,14 +2297,15 @@ button.epTextlink:hover{
     z-index: 100;
 }
 
-.wantToKnowMore:hover .tooltipText,
-.wantToKnowMoreFixed:hover .tooltipText {
-  opacity: 1;
+.wantToKnowMore .tooltipTextB {
+  top: 35px;
 }
 
 .wantToKnowMore:hover .tooltipText,
+.wantToKnowMore:hover .tooltipTextB,
 .wantToKnowMoreFixed:hover .tooltipText {
   visibility: visible;
+  opacity: 1;
 }
 
 .insight,

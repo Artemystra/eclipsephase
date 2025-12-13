@@ -1,71 +1,127 @@
 <div class="tab body" data-group="primary" data-tab="morph">
     <div class="flexrow contentBox noMargin" style="max-height: 850px; height: 100%;">
         <!-- Subnav Area -->
-        <div style="flex-grow: 0.3;">
+        <div style="flex-grow: 0.3; max-height: 685px; overflow: scroll;">
             <nav class="morph-tabs subtabs" data-group="morph-details">
-                {{#each actor.morph as |morph key|}}
+                {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab, as it needs to be identified this way during defaultOptions setup in EPactorSheet.js -->
-                    {{#if (eq actor.system.activeMorph morph.uuid)}}
+                    {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
                         <a data-tab="sleeved" class="item">
-                            <div class="label">{{name}}</div>
+                            <div class="label truncateMulti">{{morphdetails.0.name}}</div>
                             <div class="state">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</div>
                         </a>
                     {{else}}
-                        <a data-tab="{{id}}" class="item">
-                            <div class="label">{{name}}</div>
+                        <a data-tab="{{morphdetails.0.id}}" class="item">
+                            <div class="label truncateMulti">{{morphdetails.0.name}}</div>
+                            <button class="resource-label editWithLabel button sheetButton sleeveButton" title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" data-item-id="{{body.morphdetails.0._id}}" data-name="{{body.morphdetails.0.name}}">{{localize "ep2e.actorSheet.button.sleeveMorph"}}</button>
                         </a>
                     {{/if}}
                 {{/each}}
             </nav>
         </div>
         <!-- Content Area -->
-        <div style="background-color: var(--pitchBorder); min-height: 680px;">
+        <div style="background-color: var(--pitchBorder); min-height: 680px; padding: 10px;">
             <section class="morph-details">
-            {{#each actor.morph as |morph key|}}
+            {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab -->
-                {{#if (eq actor.system.activeMorph morph.uuid)}}
+                {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
                     <div class="tab body" data-group="morph-details" data-tab="sleeved">
                 {{else}}
-                    <div class="tab body" data-group="morph-details" data-tab="{{id}}">
+                    <div class="tab body" data-group="morph-details" data-tab="{{morphdetails.0.id}}">
                 {{/if}}
-                        <div class="contentBox">
-                            <div class="flexrow" style="align-items: flex-start;">
-                                <div class="itemRow">
-                                    <div class="itemGroup wantToKnowMore">
-                                        <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
-                                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
-                                        <label class="resource-value">{{system.dur}}</label>
-                                    </div>
-                                    <div class="itemGroup wantToKnowMore">
-                                        <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
-                                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.morphType.tooltip"}}</label>
-                                        <label class="resource-value">{{#if (eq system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
+                        <div class="contentBox item flexrow" data-item-id="{{body.morphdetails.0._id}}" data-item-name="{{body.morphdetails.0.name}}" style="flex-wrap: wrap; gap: 10px;">
+                            <div class="contentBox flexrow" style="align-items: flex-start;">
+                                <div style="flex: 0.3;">
+                                    <img src="{{morphdetails.0.img}}" style="max-width: 10rem;"/>
+                                    <div style="display: flex;">
+                                        <button class="item-edit resource-label editWithLabel button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
+                                        <button class="item-delete resource-label editWithLabel button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
                                     </div>
                                 </div>
-                                <img src="{{img}}" style="max-width: 10rem;"/>
+                                <div style="flex: 0.7;">
+                                    <div class="itemHeader">
+                                        <div class="itemGroup wantToKnowMore">
+                                            <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
+                                            <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
+                                            <label class="resource-value">{{morphdetails.0.system.dur}}</label>
+                                        </div>
+                                        <div class="itemGroup wantToKnowMore">
+                                            <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
+                                            <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.morphType.tooltip"}}</label>
+                                            <label class="resource-value">{{#if (eq morphdetails.0.system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq morphdetails.0.system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="contentBox" style="max-height: 160px; overflow-y: scroll; padding: 10px;">
+                                        {{body.morphdetails.0.system.description}}
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                {{#each morph.system.movement as |move key|}}
-                                    {{#if base}}
-                                        {{#if (eq active true)}}
-                                            <div class="item flexrow flex-group-center atHand wantToKnowMore">
-                                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{morph._id}}" data-path="system.movement.{{key}}.active" data-grouppath="system.movement" data-currenttargetkey={{key}} type="checkbox" {{checked active}}>
-                                                <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
-                                                <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
-                                                <label class="labelWidth-small flex-group-center noMargin"><strong>{{base}} / {{full}}</strong></label>
-                                                <label class="labelWidth-XL flex-group-center noMargin"><strong>{{type}}</strong></label>
-                                            </div>
-                                        {{else}}
-                                            <div class="item flexrow flex-group-center wantToKnowMore">
-                                                <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{morph._id}}" data-path="system.movement.{{key}}.active" data-grouppath="system.movement" data-currenttargetkey={{key}} type="checkbox" {{checked active}}>
-                                                <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
-                                                <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
-                                                <label class="labelWidth-small flex-group-center noMargin"><strong>{{base}} / {{full}}</strong></label>
-                                                <label class="labelWidth-XL flex-group-center noMargin"><strong>{{type}}</strong></label>
-                                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow subheader">
+                                    <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
+                                    <div class="alignRight flexGrowThreeQuarter">
+                                    </div>
+                                </div>
+                                <div class="grid grid-2col itemBackground noMargin" style="padding: 10 5px">
+                                    {{#each body.morphdetails.0.system.movement as |move key|}}
+                                        {{#if base}}
+                                            {{#if (eq active true)}}
+                                                <div class="item flexrow flex-group-center atHand wantToKnowMore equipped checkBox" data-item-id="{{body.morphdetails.0._id}}" data-path="system.movement.{{key}}.active" data-grouppath="system.movement" data-currenttargetkey={{key}} style="min-width: 100%; min-height: 33px; justify-content: space-between;">
+                                                    <div class="flexrow flex-group-left" style="gap: 5px;">
+                                                        <input class="sheet equipped checkBox" data-dtype="Boolean" type="checkbox" {{checked active}}>
+                                                        <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
+                                                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
+                                                        <label class="labelWidth-medium flex-group-center noMargin" style="min-width: fit-content;"><strong>{{base}} / {{full}}</strong></label>
+                                                    </div>
+                                                    <label class="labelWidth-large flex-group-center noMargin truncateMulti"><strong>{{{type}}}</strong></label>
+                                                </div>
+                                            {{else}}
+                                                <div class="item flexrow flex-group-center offHand wantToKnowMore equipped checkBox" data-item-id="{{body.morphdetails.0._id}}" data-path="system.movement.{{key}}.active" data-grouppath="system.movement" data-currenttargetkey={{key}} style="min-width: 100%; min-height: 33px; justify-content: space-between;">
+                                                    <div class="flexrow flex-group-left" style="gap: 5px;">
+                                                        <input class="sheet equipped checkBox" data-dtype="Boolean" type="checkbox" {{checked active}}>
+                                                        <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
+                                                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
+                                                        <label class="labelWidth-medium flex-group-center noMargin" style="min-width: fit-content;"><strong>{{base}} / {{full}}</strong></label>
+                                                    </div>
+                                                    <label class="labelWidth-large flex-group-center noMargin truncateMulti"><strong>{{type}}</strong></label>
+                                                </div>
+                                            {{/if}}
                                         {{/if}}
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow subheader">
+                                    <h3 class="subheader">{{localize "ep2e.morph.traitsLabel"}}</h3>
+                                    <div class="alignRight flexGrowThreeQuarter">
+                                    </div>
+                                </div>
+                                {{#if body.traitsCount}}
+                                    {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphtraits}}
+                                    {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphflaws}}
+                                {{else}}
+                                    <div class="itemBackground minSize">
+                                        {{localize "ep2e.morph.noMorphTraits"}}
+                                    </div>
+                                {{/if}}  
+
+                            </div>
+                            <div class="contentBox">
+                                    <div class="flexrow subheader">
+                                        <h3 class="subheader">{{localize "ep2e.morph.wareLabel"}}</h3>
+                                        <div class="alignRight flexGrowThreeQuarter">
+                                        </div>
+                                    </div>
+                                    {{#if body.gearCount}}
+                                        {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphgear}}
+                                    {{else}}
+                                        <div class="itemBackground minSize">
+                                            {{localize "ep2e.morph.noMorphWare"}}
+                                        </div>
                                     {{/if}}
-                                {{/each}}
                             </div>
                         </div>
                     </div>

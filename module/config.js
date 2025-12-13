@@ -31,7 +31,7 @@ eclipsephase.gearTypes = {
 
 eclipsephase.moveTypes = {
     none: "ep2e.morph.currentMorph.movementTypes.none",
-    boat: "ep2e.morph.currentMorph.movementTypes.boat",
+    '{{localize "ep2e.morph.currentMorph.movementTypes.boat"}}': "ep2e.morph.currentMorph.movementTypes.boat",
     glider: "ep2e.morph.currentMorph.movementTypes.glider",
     hopper: "ep2e.morph.currentMorph.movementTypes.hopper",
     hover: "ep2e.morph.currentMorph.movementTypes.hover",
@@ -42,7 +42,7 @@ eclipsephase.moveTypes = {
     snake: "ep2e.morph.currentMorph.movementTypes.snake",
     submarine: "ep2e.morph.currentMorph.movementTypes.submarine",
     swimmer: "ep2e.morph.currentMorph.movementTypes.swimmer",
-    thrustvector: "ep2e.morph.currentMorph.movementTypes.thrustvector",
+    'thrust vector': "ep2e.morph.currentMorph.movementTypes.thrustvector",
     tracked: "ep2e.morph.currentMorph.movementTypes.tracked",
     walker: "ep2e.morph.currentMorph.movementTypes.walker",
     wheeled: "ep2e.morph.currentMorph.movementTypes.wheeled",
