@@ -4,6 +4,7 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder, IDprep } from "../common/sheet-preparation.js";
 import * as Dice from "../rolls/dice.js";
+import * as morphFunction from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 
 
@@ -44,7 +45,6 @@ export default class EPactorSheet extends ActorSheet {
             this.position.width = 800;
           }
           else{
-            console.log("This is my actor", this.actor)
             this.position.height = 550;
             this.position.width = 1058;
           }
@@ -143,6 +143,15 @@ export default class EPactorSheet extends ActorSheet {
     let traitSelection
     
     let currentMorph = actorModel.activeMorph
+
+    /**
+     * Replacing the current morph with a new one for NPCs & Threats
+     * as they only have one morph at a time instead of a number of morphs
+     */
+    if (item.type === "morph" && actor.type !== "character"){
+      await morphFunction.replaceMorph(actor, currentMorph, item)
+    }
+
 
     //Shows a pop-up if the trait has both a morph and a ego variant
     if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
@@ -261,12 +270,14 @@ export default class EPactorSheet extends ActorSheet {
 
     for (let item of sheetData.actor.items){
       if (item.type === "morph"){
-        bodies[item.id] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+        let morphID
+        if (actor.type === "character") morphID = item.id
+        if (actor.type !== "character") morphID = "activeMorph"
+        bodies[morphID] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
       }
 
       
     }
-    console.log("This is boddies", bodies)
     actor.bodies = bodies;
     // Iterate through items, allocating to containers
     for (let item of sheetData.actor.items) {
@@ -276,10 +287,14 @@ export default class EPactorSheet extends ActorSheet {
       item.img = item.img || DEFAULT_TOKEN;
 
       //Adds morphs to their container AND creates a subcontainer to morphflaws/traits and ware
-      if (item.type === "morph"){
+      if (item.type === "morph" && actor.type === "character"){
         const morphID = (item.id);
         const category = bodies[morphID];
-        category.morphdetails.push(item)
+        category.morphdetails.push(item);
+      }
+      else if (item.type === "morph" && actor.type !== "character"){
+        const category = bodies["activeMorph"];
+        category.morphdetails.push(item);
       }
 
       // Append to features.
@@ -967,28 +982,8 @@ export default class EPactorSheet extends ActorSheet {
     return actorWhole.update({"system.pools.insight.value" : insightUpdate, "system.pools.vigor.value" : vigorUpdate, "system.pools.moxie.value" : moxieUpdate, "system.pools.flex.value" : flexUpdate, "system.rest.restValue" : null, "system.pools.update.insight" : null, "system.pools.update.vigor" : null, "system.pools.update.moxie" : null, "system.pools.update.flex" : null});
   });
 
-  html.find('.sleeveButton').click(async func => {
-
-    const element = func.currentTarget;
-    const dataset = element.dataset;
-    const itemID = dataset.itemId;
-    const itemName = dataset.name;
-    const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
-    const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.sleeveMorph"))+ ": " +(itemName?itemName:"");
-    const popUpCopy = "ep2e.actorSheet.popUp.sleeveCopyGeneral";
-    const popUpInfo = "ep2e.actorSheet.popUp.sleeveAdditionalInfo";
-    const popUpPrimary = "ep2e.actorSheet.button.sleeveMorph";
-
-    let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
-
-    if(popUp.confirm === true){
-      //(De)Activate morph/body bound traits/flaws/ware
-      //await _onMorphSwitch(actor, allEffects, currentMorph, itemID);
-      await actor.update({"system.activeMorph": itemID})
-    }
-    else{
-      return
-    }
+  html.find('.sleeveButton').click( ev => {
+    (morphFunction.resleeveMorph(actor, $(ev.currentTarget)));
   })
 
     // Drag events for macros.
@@ -1133,7 +1128,6 @@ export default class EPactorSheet extends ActorSheet {
     let itemId = element.closest(".item").dataset.itemId;
     let item = this.actor.items.get(itemId);
     let field = element.dataset.field;
-
     return item.update({ [field]: element.value });
   }
 

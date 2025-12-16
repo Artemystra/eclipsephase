@@ -61,51 +61,16 @@
             </div>
             <div class="listBackground" style="background-color: var(--accentBackground);">
                 <div class="grid grid-3col">
-                    <div>
-                        <input class="input-xl" type="text" onFocus="this.select()" name="system.bodies.morph1.name" value="{{actor.system.bodies.morph1.name}}" placeholder="Morph name"/>
+                    <div class="item" data-item-id="{{item._id}}">
+                        <label class="resource-value">{{actor.bodies.activeMorph.morphdetails.0.name}}</label>
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}:</label>
-                        <select class="selectSpecApt item-standard-margin-medium" name="system.bodyType.value" data-type="String">
-                            {{selectOptions config.bodyTypes selected=actor.system.bodyType.value localize=true}}
-                        </select>
+                        <label class="resource-value">{{#if (eq actor.bodies.activeMorph.morphdetails.0.system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq actor.bodies.activeMorph.morphdetails.0.system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
                     </div>
                     <div>
                         <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}:</label>
-                        <input class="input-small item-standard-margin-medium" onFocus="this.select()" style="text-align: center" type="number" name="system.bodies.morph1.dur" value="{{actor.system.bodies.morph1.dur}}" placeholder="0"/>
-                    </div>
-                </div>
-                <div class="grid grid-3col">
-                    
-                    <div>
-                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.label1"}}</label>                          
-                    </div>
-                    <div>
-                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label>  
-                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement1.base" value="{{actor.system.bodies.morph1.movement1.base}}" placeholder="0"/>/
-                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement1.full" value="{{actor.system.bodies.morph1.movement1.full}}" placeholder="0"/>
-                    </div>
-                    <div>
-                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
-                        <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movement1.type" data-type="String" selected="Walker">
-                            {{selectOptions config.moveTypes selected=actor.system.bodies.morph1.movement1.type localize=true}}
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-3col">
-                    <div>
-                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.label2"}}</label>                      
-                    </div>
-                    <div>
-                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}:</label> 
-                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement2.base" value="{{actor.system.bodies.morph1.movement2.base}}" placeholder="0"/>/
-                        <input class="input-xs" style="text-align: center" onFocus="this.select()" type="number" name="system.bodies.morph1.movement2.full" value="{{actor.system.bodies.morph1.movement2.full}}" placeholder="0"/>
-                    </div>
-                    <div>
-                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}:</label>  
-                        <select class="selectSpecApt item-standard-margin input-large" name="system.bodies.morph1.movement2.type" data-type="String">
-                            {{selectOptions config.moveTypes selected=actor.system.bodies.morph1.movement2.type localize=true}}
-                        </select>
+                        <label class="resource-value">{{actor.bodies.activeMorph.morphdetails.0.system.dur}}</label>
                     </div>
                 </div>
             </div>
@@ -123,8 +88,8 @@
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.traitsLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
-                        {{#if actor.morphTrait}}
-                        {{#each actor.morphTrait as |item id|}}
+                        {{#if actor.bodies.activeMorph.morphtraits}}
+                        {{#each actor.bodies.activeMorph.morphtraits as |item id|}}
                         <div class="item flexrow flex-group-center pill wantToKnowMoreFixed" data-item-id="{{item._id}}">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>
@@ -142,8 +107,8 @@
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.flawsLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
-                        {{#if actor.morphFlaw}}
-                        {{#each actor.morphFlaw as |item id|}}
+                        {{#if actor.bodies.activeMorph.morphflaws}}
+                        {{#each actor.bodies.activeMorph.morphflaws as |item id|}}
                         <div class="item flexrow flex-group-center pill wantToKnowMoreFixed" data-item-id="{{item._id}}">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>
@@ -161,8 +126,8 @@
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.wareLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
-                        {{#if actor.ware}}
-                        {{#each actor.ware as |item id|}}
+                        {{#if actor.bodies.activeMorph.morphware}}
+                        {{#each actor.bodies.activeMorph.morphware as |item id|}}
                         <div class="item flexrow flex-group-center pill wantToKnowMoreFixed" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>

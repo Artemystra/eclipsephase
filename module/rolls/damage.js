@@ -207,7 +207,7 @@ export async function healthBarChange(actor, html){
     }
   
     //Mental health bar animation
-    if(actor.type === "character"){
+    if(actor.type != "goon"){
       //Mental damage Animation
       if(barModifier === "mentalUp"){
         barUp(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
@@ -310,6 +310,7 @@ export async function healthBarChange(actor, html){
       let woundCount = currentModifier
       let healFormula;
       let message = {};
+      const activeMorphType = actor.system.physical.activeMorphType
       message.totalDamage = currentDamage + currentModifier;
   
       //Dialog args
@@ -336,7 +337,7 @@ export async function healthBarChange(actor, html){
         barModifier = "mentalDown"
       }
       else if(healTarget === "physical"){
-        switch (actor.system.bodyType.value){
+        switch (activeMorphType){
           case 'bio':
             message.title = "ep2e.roll.announce.heal.full.bodyHeal";
           break;

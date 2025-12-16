@@ -235,7 +235,6 @@ export default class EPactor extends Actor {
   }
 
   _calculateMentalHealth(actorModel, chiMultiplier) {
-    console.log("I'm mental health of", actorModel)
     actorModel.health.mental.max = (actorModel.aptitudes.wil.value * 2) + eval(actorModel.mods.lucmod) + (actorModel.mods.lucChiMod ? (eval(actorModel.mods.lucChiMod)*chiMultiplier): 0);
     actorModel.mental.ir = actorModel.health.mental.max * 2;
     actorModel.mental.tt = Math.round(actorModel.health.mental.max / 5) + eval(actorModel.mods.ttMod) + (actorModel.mods.ttChiMod ? (eval(actorModel.mods.ttChiMod)*chiMultiplier) : 0);
@@ -267,7 +266,6 @@ export default class EPactor extends Actor {
   }
 
   _calculatePools(actorModel, morphValues, chiMultiplier) {
-    console.log("I'm the morphValues:",morphValues, "of actorModel", actorModel)
     actorModel.pools.flex.totalFlex = Number(morphValues.flex) +
       Number(actorModel.ego.egoFlex) +
       eval(actorModel.pools.flex.mod) + 

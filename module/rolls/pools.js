@@ -17,7 +17,7 @@ export async function usePoolFromChat(data){
     const actor = await fromUuid(dataset.actorid)
     const rolledFrom = dataset.rolledfrom
     console.log("This is my data", dataset)
-    const recipientList = prepareRecipients(dataset.rollmode)
+    const recipientList = await prepareRecipients(dataset.rollmode)
 
     let updateResult = await update(options, pool, null, actor)
 

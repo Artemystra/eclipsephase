@@ -459,7 +459,7 @@ Hooks.once("ready", async function() {
   }
 
   //1.5.0 Migration
-  if (before150) {
+  /*if (before150) {
     endMigration = false;
     const messageCopy = "ep2e.migration.150";
     let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
@@ -469,7 +469,7 @@ Hooks.once("ready", async function() {
 
     let Migration150 = await update.migrationPre150(startMigration);
     endMigration = Migration150["endMigration"];
-  }
+  }*/
 
     if(endMigration){
       await migrationEnd(endMigration)

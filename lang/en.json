@@ -134,7 +134,11 @@
         "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Hold SHIFT while pressing the 'Auto-Bot'-button.</p></i>",
         "sleeveCopyGeneral": "<b>Warning:</b>You are about to sleeve into a new morph",
-        "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>All calculations and tests will be made automatically. New Ware & Traits will be automatically added to your sleeved morph.</p></i>"
+        "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>All calculations and tests will be made automatically. New Ware & Traits will be automatically added to your sleeved morph.</p></i>",
+        "sleeveReplaceHeadline": "You are replacing your current morph with a new one!",
+        "sleeveReplaceCopyOld": "<p><b>Old Morph:</b></p>",
+        "sleeveReplaceCopyNew": "<p><b>New Morph:</b></p>",
+        "sleeveReplaceInfo": "<i><p style='font-size: 11px;'><b>Warning:</b>The old sleeve and all it's ware and traits will be automatically deleted. All calculations will be automatically based on your new sleeve</p></i>"
       }
     },
     "healthbar": {

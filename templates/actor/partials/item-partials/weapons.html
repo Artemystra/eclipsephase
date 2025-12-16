@@ -6,12 +6,12 @@
     {{/if}}
         <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" data-path="system.active" type="checkbox" {{checked item.system.active}}>
             <div class="flexrow flex-group-center input-small">
-                <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
+                <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left icon-small"/>
             </div>
 {{else}}
         <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-path="system.active" data-item-name="{{item.name}}">
             <div class="flexrow flex-group-center input-small" style="margin-left: 14px;">
-                <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left input-small icon-small"/>
+                <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left icon-small"/>
             </div>
 {{/if}}
         <div class="flexrow input-XL alignLeft wantToKnowMore">
