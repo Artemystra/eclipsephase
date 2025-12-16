@@ -7,6 +7,7 @@
     ],
     "templates": {
       "base": {
+        "biography": "",
         "mental": {
           "trauma": null,
           "stress": null,
@@ -357,7 +358,7 @@
         },
         "activeMorph": null
       },  
-      "npc": {
+      "threat": {
         "threatLevel": {
           "current": null,
           "total": null
@@ -450,7 +451,6 @@
         "base",
         "muse"
       ],
-      "biography": "",
       "rest": {
         "short1": false,
         "short2": false,
@@ -461,14 +461,13 @@
     },
     "npc": {
       "templates": [
-        "base",
-        "npc"
+        "base"
       ]
     },
     "goon": {
       "templates": [
         "base",
-        "npc"
+        "threat"
       ],
       "stresstest": null
     }

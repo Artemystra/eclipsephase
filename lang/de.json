@@ -434,6 +434,7 @@
         "headline": "Aktueller Morph",
         "sleevedLabel": "Bewohnt",
         "morphPlaceholder": "Morph-Name",
+        "descriptionMissing": "Achtung: Fehlende Beschreibung",
         "morphType": {
           "label": "Typ",
           "tooltip": "Morphtyp",

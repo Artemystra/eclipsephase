@@ -68,7 +68,7 @@ const POOL_SUM = {
 async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
 
     let pool
-    if (actorType != "character"){
+    if (actorType === "goon"){
         pool = POOL_SUM.THR
     }
     

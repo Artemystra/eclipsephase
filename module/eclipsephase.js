@@ -16,6 +16,7 @@ import  EPknowSkillSheet  from "./item/EPknowSkillSheet.js";
 import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
+import  * as effectsPrep from "./effects.js"
 import  * as helperFunction from "./common/common-helper-functions.js"
 import  * as update from "./common/migration.js";
 
@@ -150,9 +151,7 @@ Hooks.once('init', async function() {
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character"], makeDefault: true });
-  Actors.registerSheet("eclipsephase", EPnpcSheet, {types: ["npc"], makeDefault: true });
-  Actors.registerSheet("eclipsephase", EPgoonSheet, {types: ["goon"], makeDefault: true });
+  Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo", "id", "morph"], makeDefault: true });
   Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
@@ -265,278 +264,291 @@ Hooks.once("ready", async () => {
 })
 
 Hooks.once("ready", async function() {
+  //Prevents players from migrating unintentionally 
+  //(or better "at all")
+  if (!game.user.isGM) return;
+  //Migration script if actorSheets are changing
+  const gameVersion = game.settings.get("eclipsephase", "migrationVersion");
+  const currentVersion = game.system.version
+  gameVersion === "newInstall" ? game.settings.set("eclipsephase", "migrationVersion", currentVersion) : console.log("Last Migration:", gameVersion, "\n" + "System Version:", game.system.version)
+  let startMigration = false
+  let endMigration = false
+  const messageHeadline = "ep2e.migration.headlineStart"
+  let isLegacy = foundry.utils.isNewerVersion("0.8.1", gameVersion);
+  let before0861 = foundry.utils.isNewerVersion("0.8.6.1", gameVersion);
+  let before09 = foundry.utils.isNewerVersion("0.9", gameVersion);
+  let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion);
+  let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion);
+  let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion);
+  let before0985 = foundry.utils.isNewerVersion("0.9.8.5", gameVersion);
+  let before099 = foundry.utils.isNewerVersion("0.9.9", gameVersion);
+  let before0992 = foundry.utils.isNewerVersion("0.9.9.2", gameVersion);
+  let before110 = foundry.utils.isNewerVersion("1.1.0", gameVersion);
+  let before150 = foundry.utils.isNewerVersion("1.5.0", gameVersion);
+  //For testing against the latest version: game.system.version
 
-//Migration script if actorSheets are changing
-const gameVersion = game.settings.get("eclipsephase", "migrationVersion");
-const currentVersion = game.system.version
-gameVersion === "newInstall" ? game.settings.set("eclipsephase", "migrationVersion", currentVersion) : console.log("Last Migration:", gameVersion, "\n" + "System Version:", game.system.version)
-let startMigration = false
-let endMigration = false
-const messageHeadline = "ep2e.migration.headlineStart"
-let isLegacy = foundry.utils.isNewerVersion("0.8.1", gameVersion)
-let before0861 = foundry.utils.isNewerVersion("0.8.6.1", gameVersion)
-let before09 = foundry.utils.isNewerVersion("0.9", gameVersion)
-let before093 = foundry.utils.isNewerVersion("0.9.3", gameVersion)
-let before095 = foundry.utils.isNewerVersion("0.9.4", gameVersion)
-let before098 = foundry.utils.isNewerVersion("0.9.8", gameVersion)
-let before0985 = foundry.utils.isNewerVersion("0.9.8.5", gameVersion)
-let before099 = foundry.utils.isNewerVersion("0.9.9", gameVersion)
-let before0992 = foundry.utils.isNewerVersion("0.9.9.2", gameVersion)
-let before110 = foundry.utils.isNewerVersion("1.1.0", gameVersion)
-//For testing against the latest version: game.system.version
 
+  //pre 0.8.1 Migration
+  if (isLegacy){
+    const messageCopy = "ep2e.migration.legacy"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
 
-//pre 0.8.1 Migration
-if (isLegacy){
-  const messageCopy = "ep2e.migration.legacy"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
+    await update.migrationLegacy(startMigration)
+    let Migration0861 = await update.migrationPre0861(startMigration)
+
+    endMigration = Migration0861["endMigration"]
   }
-  else if (migration.start){
-    startMigration = migration.start
+  //0.8.6.1 Migration
+  if (before0861) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.0861"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
+
+    let Migration0861 = await update.migrationPre0861(startMigration)
+
+    endMigration = Migration0861["endMigration"]
   }
+  //0.9 Migration
+  if (before09) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.09"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
 
-  await update.migrationLegacy(startMigration)
-  let Migration0861 = await update.migrationPre0861(startMigration)
+    let Migration09 = await update.migrationPre09(startMigration)
 
-  endMigration = Migration0861["endMigration"]
-}
-//0.8.6.1 Migration
-if (before0861) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.0861"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
-  }
-
-  let Migration0861 = await update.migrationPre0861(startMigration)
-
-  endMigration = Migration0861["endMigration"]
-}
-//0.9 Migration
-if (before09) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.09"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
-  }
-
-  let Migration09 = await update.migrationPre09(startMigration)
-
-  endMigration = Migration09["endMigration"]
-}
-
-//0.9.3 Migration
-if (before093) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.093"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
+    endMigration = Migration09["endMigration"]
   }
 
-  let Migration093 = await update.migrationPre093(startMigration)
+  //0.9.3 Migration
+  if (before093) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.093"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
 
-  endMigration = Migration093["endMigration"]
-}
+    let Migration093 = await update.migrationPre093(startMigration)
 
-//0.9.4 Migration
-if (before095) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.095"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
-  }
-
-  let Migration095 = update.migrationPre095(startMigration)
-
-  endMigration = Migration095["endMigration"]
-}
-
-//0.9.8 Migration
-if (before098) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.098"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
+    endMigration = Migration093["endMigration"]
   }
 
-  let Migration098 = update.migrationPre098(startMigration)
+  //0.9.4 Migration
+  if (before095) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.095"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
 
-  endMigration = Migration098["endMigration"]
-}
+    let Migration095 = update.migrationPre095(startMigration)
 
-//0.9.8.5 Migration
-if (before0985) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.0985"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
-  }
-
-  let Migration0985 = update.migrationPre0985(startMigration)
-
-  endMigration = Migration0985["endMigration"]
-}
-
-//0.9.9 Migration
-if (before099) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.099"
-  let migration = await informationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    game.settings.set("eclipsephase", "migrationVersion", "0.9.9");
+    endMigration = Migration095["endMigration"]
   }
 
-  endMigration = false
-}
+  //0.9.8 Migration
+  if (before098) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.098"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
 
-//0.9.9.2 Migration
-if (before0992) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.0992"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
-  }
+    let Migration098 = update.migrationPre098(startMigration)
 
-  let Migration0992 = update.migrationPre0992(startMigration)
-
-  endMigration = Migration0992["endMigration"]
-}
-
-if(endMigration){
-  await migrationEnd(endMigration)
-}
-
-//1.1.0 Migration
-if (before110) {
-  endMigration = false
-  const messageCopy = "ep2e.migration.110"
-  let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
-  
-  if (migration.cancelled) {
-  }
-  else if (migration.start){
-    startMigration = migration.start
+    endMigration = Migration098["endMigration"]
   }
 
-  let Migration0992 = update.migrationPre110(startMigration)
+  //0.9.8.5 Migration
+  if (before0985) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.0985"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
 
-  endMigration = Migration0992["endMigration"]
-}
+    let Migration0985 = update.migrationPre0985(startMigration)
 
-if(endMigration){
-  await migrationEnd(endMigration)
-}
+    endMigration = Migration0985["endMigration"]
+  }
 
-console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
+  //0.9.9 Migration
+  if (before099) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.099"
+    let migration = await informationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      game.settings.set("eclipsephase", "migrationVersion", "0.9.9");
+    }
 
-async function migrationStart(endMigration, messageHeadline, messageCopy) {
-  const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-  const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+    endMigration = false
+  }
 
-  return new Promise(resolve => {
-      const data = {
-          title: "Migration Needed",
-          content: html,
-          buttons: {
-              cancel: {
-                  label: "Cancel",
-                  callback: html => resolve ({cancelled: true})
-              },
-              normal: {
-                  label: "Start Migration",
-                  callback: html => resolve ({start: true})
-              }
-          },
-          default: "normal",
-          close: () => resolve ({cancelled: true})
-      };
-      let options = {width:600}
-      new Dialog(data, options).render(true);
-  });
-}
+  //0.9.9.2 Migration
+  if (before0992) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.0992"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
 
-async function informationStart(endMigration, messageHeadline, messageCopy) {
-  const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-  const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+    let Migration0992 = update.migrationPre0992(startMigration)
 
-  return new Promise(resolve => {
-      const data = {
-          title: "Migration Needed",
-          content: html,
-          buttons: {
-              normal: {
-                  label: "Close",
-                  callback: html => resolve ({start: true})
-              }
-          },
-          default: "normal",
-          close: () => resolve ({cancelled: true})
-      };
-      let options = {width:600}
-      new Dialog(data, options).render(true);
-  });
-}
+    endMigration = Migration0992["endMigration"]
+  }
+
+  if(endMigration){
+    await migrationEnd(endMigration)
+  }
+
+  //1.1.0 Migration
+  if (before110) {
+    endMigration = false
+    const messageCopy = "ep2e.migration.110"
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    
+    if (migration.cancelled) {
+    }
+    else if (migration.start){
+      startMigration = migration.start
+    }
+
+    let Migration0992 = update.migrationPre110(startMigration)
+
+    endMigration = Migration0992["endMigration"]
+  }
+
+  //1.5.0 Migration
+  if (before150) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.150";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration150 = await update.migrationPre150(startMigration);
+    endMigration = Migration150["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
+  console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
+
+  async function migrationStart(endMigration, messageHeadline, messageCopy) {
+    const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
+    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+
+    return new Promise(resolve => {
+        const data = {
+            title: "Migration Needed",
+            content: html,
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    callback: html => resolve ({cancelled: true})
+                },
+                normal: {
+                    label: "Start Migration",
+                    callback: html => resolve ({start: true})
+                }
+            },
+            default: "normal",
+            close: () => resolve ({cancelled: true})
+        };
+        let options = {width:600}
+        new Dialog(data, options).render(true);
+    });
+  }
+
+  async function informationStart(endMigration, messageHeadline, messageCopy) {
+    const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
+    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+
+    return new Promise(resolve => {
+        const data = {
+            title: "Migration Needed",
+            content: html,
+            buttons: {
+                normal: {
+                    label: "Close",
+                    callback: html => resolve ({start: true})
+                }
+            },
+            default: "normal",
+            close: () => resolve ({cancelled: true})
+        };
+        let options = {width:600}
+        new Dialog(data, options).render(true);
+    });
+  }
 
 
-async function migrationEnd(endMigration) {
-  const messageHeadline = "ep2e.migration.headlineEnd"
-  const messageCopy = "ep2e.migration.done"
-  const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-  const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+  async function migrationEnd(endMigration) {
+    const messageHeadline = "ep2e.migration.headlineEnd"
+    const messageCopy = "ep2e.migration.done"
+    const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
+    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
 
-  return new Promise(resolve => {
-      const data = {
-          title: "Migration Needed",
-          content: html,
-          buttons: {
-              normal: {
-                  label: "Thank you!",
-                  callback: html => resolve ({start: true})
-              }
-          },
-          default: "normal",
-          close: () => resolve ({cancelled: true})
-      };
-      let options = {width:250}
-      new Dialog(data, options).render(true);
-  });
-}
-
-  // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
-  Hooks.on("hotbarDrop", (bar, data, slot) => createEclipsePhaseMacro(data, slot));
+    return new Promise(resolve => {
+        const data = {
+            title: "Migration Needed",
+            content: html,
+            buttons: {
+                normal: {
+                    label: "Thank you!",
+                    callback: html => resolve ({start: true})
+                }
+            },
+            default: "normal",
+            close: () => resolve ({cancelled: true})
+        };
+        let options = {width:250}
+        new Dialog(data, options).render(true);
+    });
+  }
 });
 
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
@@ -575,9 +587,15 @@ Hooks.on("createActor", async (actor, options, userId) => {
 });
 
 Hooks.on("createItem", async (item, options, userId) => {
-  if (item.type != "morph") return;
+  if (item.type != "morph" || item.parent) return;
 
   await item.update ({"img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"})
+});
+
+
+//Active Effects Suppression
+Hooks.once('init', () => {
+  CONFIG.ActiveEffect.dataModels.base = effectsPrep.EP2eActiveEffectData;
 });
 
 /**

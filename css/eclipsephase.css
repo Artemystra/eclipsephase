@@ -920,12 +920,13 @@ form button,
 
 .eclipsephase .sleeveButton {
   opacity: 0;
-  display: flex;
+  display: none;
   min-height: 20px! important;
   max-height: 20px;
 }
 
 .eclipsephase .item.active .sleeveButton {
+  display: flex;
   opacity: 100;
   transition: 300ms;
 }
@@ -2498,6 +2499,25 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* Flashing Warning Sign */
+/* Apply this class to any element with black text */
+.warning-pulse {
+  color: var(--mainBackground);
+  display: inline-block;        /* makes the background hug the text */
+  padding: 0.15em 0.45em;
+  border-radius: 0.25em;
+
+  /* start transparent; animation will flash it */
+  background-color: rgba(255, 0, 0, 0);
+  animation: warningFlash 2s infinite;
+}
+
+@keyframes warningFlash {
+  0%   { background-color: rgba(255, 0, 0, 1); }   /* flash */
+  10%  { background-color: rgba(255, 0, 0, 1); }   /* hold briefly */
+  100% { background-color: rgba(255, 0, 0, 0); }   /* fade out over rest of 2s */
 }
 
 /* Module Styling Support */

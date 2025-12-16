@@ -1,4 +1,32 @@
         <div class="tab" data-group="primary" data-tab="skills">
+            {{#if (eq actor.type "npc")}}
+                <div class="itemHeader">
+                        <div class="itemGroup">
+                            <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
+                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
+                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
+                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>
+                        </div>
+                        <div class="itemGroup">
+                            <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
+                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
+                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
+                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
+                        </div>
+                        <div class="itemGroup">
+                            <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
+                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
+                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/>
+                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
+                        </div>
+                        <div class="itemGroup">
+                            <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
+                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
+                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
+                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
+                        </div>
+                </div> 
+            {{/if}}
             <div class="skills grid grid-2col" style="margin-top: 0px;">
                 <div class="contentBox">
                     <div class="flexrow subheader">

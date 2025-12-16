@@ -13,7 +13,9 @@
                     {{else}}
                         <a data-tab="{{morphdetails.0.id}}" class="item">
                             <div class="label truncateMulti">{{morphdetails.0.name}}</div>
-                            <button class="resource-label editWithLabel button sheetButton sleeveButton" title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" data-item-id="{{body.morphdetails.0._id}}" data-name="{{body.morphdetails.0.name}}">{{localize "ep2e.actorSheet.button.sleeveMorph"}}</button>
+                            <div style="min-height: 20px; width: 100%;">
+                                <button class="resource-label editWithLabel button sheetButton sleeveButton" title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" data-item-id="{{body.morphdetails.0._id}}" data-name="{{body.morphdetails.0.name}}">{{localize "ep2e.actorSheet.button.sleeveMorph"}}</button>
+                            </div>
                         </a>
                     {{/if}}
                 {{/each}}
@@ -51,14 +53,42 @@
                                             <label class="resource-value">{{#if (eq morphdetails.0.system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq morphdetails.0.system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
                                         </div>
                                     </div>
-                                    <div class="contentBox" style="max-height: 160px; overflow-y: scroll; padding: 10px;">
-                                        {{body.morphdetails.0.system.description}}
-                                    </div>
+                                    {{#if body.morphdetails.0.system.description}}
+                                        <div class="contentBox" style="max-height: 160px; overflow-y: scroll; padding: 10px;">
+                                            {{body.morphdetails.0.system.description}}
+                                        </div>
+                                    {{else}}
+                                        <div class="contentBox" style="max-height: 160px; min-height: 160px; display: flex; justify-content: center; align-items: center;">
+                                            <span class="warning-pulse">{{localize "ep2e.morph.currentMorph.descriptionMissing"}}</span>
+                                        </div>
+                                    {{/if}}
                                     <div>
 
                                     </div>
                                 </div>
                             </div>
+                            <div class="itemHeader">
+                                <div class="itemGroup">
+                                    <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
+                                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
+                                        {{#if body.morphdetails.0.system.insight}}{{body.morphdetails.0.system.insight}}{{else}}0{{/if}}
+                                </div>
+                                <div class="itemGroup">
+                                    <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
+                                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
+                                    {{#if body.morphdetails.0.system.moxie}}{{body.morphdetails.0.system.moxie}}{{else}}0{{/if}}
+                                </div>
+                                <div class="itemGroup">
+                                    <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
+                                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
+                                    {{#if body.morphdetails.0.system.vigor}}{{body.morphdetails.0.system.vigor}}{{else}}0{{/if}}
+                                </div>
+                                <div class="itemGroup">
+                                    <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
+                                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
+                                    {{#if body.morphdetails.0.system.flex}}{{body.morphdetails.0.system.flex}}{{else}}0{{/if}}
+                                </div>
+                            </div> 
                             <div class="contentBox">
                                 <div class="flexrow subheader">
                                     <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
@@ -101,7 +131,9 @@
                                 </div>
                                 {{#if body.traitsCount}}
                                     {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphtraits}}
-                                    {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphflaws}}
+                                    {{#if body.flawsCount}}
+                                        {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphflaws}}
+                                    {{/if}}
                                 {{else}}
                                     <div class="itemBackground minSize">
                                         {{localize "ep2e.morph.noMorphTraits"}}

@@ -16,18 +16,38 @@ export default class EPactorSheet extends ActorSheet {
       super(...args);
 
       const showEverything = game.settings.get("eclipsephase", "showEverything");
-      if(showEverything){
-        this.position.height = 850;
-        this.position.width = 1400;
-      }
-      else {
-        if (!game.user.isGM && !this.actor.isOwner){
-          this.position.height = 650;
-          this.position.width = 800;
-        }
-        else{
+      const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
+      if (this.actor.type === "character"){
+        if(showEverything){
           this.position.height = 850;
           this.position.width = 1400;
+        }
+        else {
+          if (!game.user.isGM && !this.actor.isOwner){
+            this.position.height = 650;
+            this.position.width = 800;
+          }
+          else{
+            this.position.height = 850;
+            this.position.width = 1400;
+          }
+        }
+      }
+      else {
+        if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
+          this.position.height = 340;
+          this.position.width = 800;
+        }
+        else {
+          if (!game.user.isGM && !this.actor.isOwner){
+            this.position.height = 340;
+            this.position.width = 800;
+          }
+          else{
+            console.log("This is my actor", this.actor)
+            this.position.height = 550;
+            this.position.width = 1058;
+          }
         }
       }
     }
@@ -44,15 +64,48 @@ export default class EPactorSheet extends ActorSheet {
 
   get template() {
     const showEverything = game.settings.get("eclipsephase", "showEverything");
-    if (showEverything){
-      return "systems/eclipsephase/templates/actor/actor-sheet.html"
-    }
-    else{
-      if (!game.user.isGM && !this.actor.isOwner){
-        return "systems/eclipsephase/templates/actor/sheet-limited.html";
+    const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
+    const actorSheet = "systems/eclipsephase/templates/actor/actor-sheet.html";
+    const npcSheet = "systems/eclipsephase/templates/actor/npc-sheet.html";
+    const goonSheet = "systems/eclipsephase/templates/actor/goon-sheet.html";
+    const limitedSheet = "systems/eclipsephase/templates/actor/sheet-limited.html";
+    if (this.actor.type === "character"){
+      if (showEverything){
+        return actorSheet;
       }
       else{
-        return "systems/eclipsephase/templates/actor/actor-sheet.html";
+        if (!game.user.isGM && !this.actor.isOwner){
+          return limitedSheet;
+        }
+        else{
+          return actorSheet;
+        }
+      }
+    }
+    if (this.actor.type === "npc"){ 
+      if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
+        return limitedSheet
+      }
+      else{
+        if (!game.user.isGM && !this.actor.isOwner){
+          return limitedSheet;
+        }
+        else{
+          return npcSheet;
+        }
+      }
+    }
+    if (this.actor.type === "goon"){
+      if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
+        return limitedSheet
+      }
+      else{
+        if (!game.user.isGM && !this.actor.isOwner){
+          return limitedSheet;
+        }
+        else{
+          return goonSheet;
+        }
       }
     }
   }
@@ -68,9 +121,7 @@ export default class EPactorSheet extends ActorSheet {
     sheetData.dtypes = ["String", "Number", "Boolean"];
     // Prepare items.
 
-    if (actor.type === 'character') {
-      this._prepareCharacterItems(sheetData);
-    }
+    this._prepareCharacterItems(sheetData);
 
     await this._prepareRenderedHTMLContent(sheetData)
 
@@ -604,8 +655,10 @@ export default class EPactorSheet extends ActorSheet {
     let bio = await TextEditor.enrichHTML(actorModel.biography, { async: true })
     sheetData["htmlBiography"] = bio
 
-    let muse = await TextEditor.enrichHTML(actorModel.muse.description, { async: true })
-    sheetData["htmlMuseDescription"] = muse
+    if(sheetData.actor.type === "character"){
+      let muse = await TextEditor.enrichHTML(actorModel.muse.description, { async: true })
+      sheetData["htmlMuseDescription"] = muse
+    }
   }
 
 
@@ -618,8 +671,10 @@ export default class EPactorSheet extends ActorSheet {
   activateListeners(html) {
     super.activateListeners(html);
 
-    let actor = this.actor;
-    let allEffects = this.object.effects
+    const actor = this.actor;
+    const actorModel = actor.system;
+    const allEffects = this.object.effects;
+    const currentMorph = actorModel.activeMorph;
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -927,7 +982,9 @@ export default class EPactorSheet extends ActorSheet {
     let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if(popUp.confirm === true){
-      actor.update({"system.activeMorph": itemID})
+      //(De)Activate morph/body bound traits/flaws/ware
+      //await _onMorphSwitch(actor, allEffects, currentMorph, itemID);
+      await actor.update({"system.activeMorph": itemID})
     }
     else{
       return
@@ -948,9 +1005,6 @@ export default class EPactorSheet extends ActorSheet {
 
       //Reload Ranged Weapon Functionality
       reloadWeapon(html, actor);
-
-      //(De)Activate morph/body bound traits/flaws/ware
-      html.find(".bodySelect").change(this._onMorphSwitch.bind(this));
 
       //Edit Item Checkboxes
       embeddedItemToggle(html, actor, allEffects);
@@ -992,52 +1046,6 @@ export default class EPactorSheet extends ActorSheet {
 
     await item.roll();
 
-  }
-
-  
-
-  async _onMorphSwitch(event) {
-    event.preventDefault();
-
-    let actor = this.actor
-    let allEffects = this.object.effects
-
-    let currentMorph = event.currentTarget.value;
-    
-    //browses through ALL effects and identifies, whether they are bound to an item or not
-    for (let effectScan of allEffects){
-      if (effectScan.origin){
-
-        /*Woraround fromUuid. Currently not needed - just in case fromUuid changes in the future/will become deactivated during an unstable dev release
-        let Uuid = (effectScan.origin).split(".");
-        let parentItem = actor.items.get(Uuid[3]);
-        */
-      
-        let parentItem = await fromUuid(effectScan.origin)
-
-        if (parentItem.system.boundTo){
-
-          let effUpdateData=[];
-
-          //If a found item is bound to the currently active morph it gets prepared to be activated
-          if (parentItem.system.boundTo === currentMorph) {
-            effUpdateData.push({
-              "_id" : effectScan._id,
-              disabled: false
-            });
-          }
-          //If a found item is NOT bound to the currently active morph it gets prepared to be DEactivated
-          else {
-            effUpdateData.push({
-              "_id" : effectScan._id,
-              disabled: true
-            });
-          }
-          //This pushes the updated data into the effect
-          actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
-        }
-      }   
-    }
   }
 
   _onItemCreate(event) {

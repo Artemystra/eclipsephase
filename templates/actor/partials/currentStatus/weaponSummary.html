@@ -16,7 +16,7 @@
                         </h3>
                     </div>
                     <!--Ammunition Counter & Reload-->
-                    <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end; flex-grow: 0.5!important;" data-item-id="{{item._id}}">
+                    <div class="flexrow alignRight flexGrowQuarter reveal" style="flex-grow: 0.6!important;" data-item-id="{{item._id}}">
                     {{#if (eq type "ranged")}}
                         <img src="systems/eclipsephase/resources/icons/ammo.png" class="toggle icon-small"/>
                         
@@ -85,14 +85,14 @@
                                     </div>
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-left wantToKnowMore">
-                                            <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                                             <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
                                             <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
                                         </div>
                                     </div>
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-left wantToKnowMore">
-                                            <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
                                             <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{item.system.mode1.range}}</span>
                                             <label class="labelWidth-medium noMargin truncate"><strong>{{item.system.mode1.range}}</strong></label>
                                         </div>
@@ -101,7 +101,7 @@
                                 {{else}}
                                 <div class="flexrow flex-group-center" style="min-width: 100%; min-height: 38px;">
                                     <div class="flexrow flex-group-left wantToKnowMore">
-                                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                        <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                                         <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
                                         <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
                                     </div>
@@ -155,14 +155,14 @@
                                     </div>
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-left wantToKnowMore">
-                                            <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                                             <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
                                             <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
                                         </div>
                                     </div>
                                     <div class="flexrow flex-group-center">
                                         <div class="flexrow flex-group-left wantToKnowMore">
-                                            <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                                            <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
                                             <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.range"}}: {{item.system.mode2.range}}</span>
                                             <label class="labelWidth-medium noMargin truncate"><strong>{{item.system.mode2.range}}</strong></label>
                                         </div>
@@ -171,7 +171,7 @@
                                 {{else}}
                                 <div class="flexrow flex-group-center" style="min-width: 100%; min-height: 38px;">
                                     <div class="flexrow flex-group-left wantToKnowMore">
-                                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                                        <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                                         <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
                                         <h4 class="item-image input-medium noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></h4>
                                     </div>

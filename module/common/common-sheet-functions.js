@@ -38,6 +38,7 @@ export function createDroplist(html, callerobj){
 export function registerEffectHandlers(html,callerobj){
     html.find('.effect-create').click(ev => {
         callerobj.createEmbeddedDocuments('ActiveEffect', [{
+          name: "test",
           label: 'Active Effect',
           icon: '/icons/svg/mystery-man.svg'
         }]);
@@ -94,6 +95,7 @@ export async function _tempEffectCreation(actor, numberOfRuns, tempEffLabel, tem
     return actor.createEmbeddedDocuments('ActiveEffect', [{
       label: tempEffLabel,
       icon: tempEffIcon,
+      type: "ep2e",
       changes: [{key : tempEffTar, mode : tempEffMode, value : tempEffVal*numberOfRuns}]
     }]);
 }

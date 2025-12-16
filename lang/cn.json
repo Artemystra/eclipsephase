@@ -405,6 +405,7 @@
         "headline": "当前义体",
         "sleevedLabel": "已套入",
         "morphPlaceholder": "义体名",
+        "descriptionMissing": "Warning: Description Missing",
         "morphType": {
           "label": "类型",
           "tooltip": "Morph Type",

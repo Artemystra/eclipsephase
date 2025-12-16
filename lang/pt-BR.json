@@ -405,6 +405,7 @@
         "headline": "Morfo Atual",
         "sleevedLabel": "Encapado",
         "morphPlaceholder": "Nome do morfo",
+        "descriptionMissing": "Warning: Description Missing",
         "morphType": {
           "label": "Tipo",
           "tooltip": "Morfo Tipo",

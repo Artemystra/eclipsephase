@@ -16,13 +16,11 @@
     }
   ],
   "esmodules": [
-    "module/eclipsephase.js"
+    "module/eclipsephase.js",
+    "module/effects.js"
   ],
   "styles": [
     "css/eclipsephase.css"
-  ],
-  "scripts": [
-    "module/effects.js"
   ],
   "packs": [
     {

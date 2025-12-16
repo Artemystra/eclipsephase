@@ -406,6 +406,7 @@
         "headline": "Current Morph",
         "sleevedLabel": "Sleeved",
         "morphPlaceholder": "Morph name",
+        "descriptionMissing": "Warning: Description Missing",
         "morphType": {
           "label": "Type",
           "tooltip": "Morph Type",

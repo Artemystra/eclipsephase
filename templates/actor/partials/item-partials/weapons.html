@@ -45,8 +45,8 @@
             <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
         </div>
         <div class="flex-group-right slideShow input-xs">
-            <a class="showFlex"><i class="fas fa-plus icon-small awesomeIcon"></i></a>
-            <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
+            <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>
+            <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
         </div>
         <div class="showMore descriptionContainer">
                 <div class="flexrow alignCenter" style="min-width: 100%; min-height: 25px; background-color: var(--focusBackground);">
@@ -62,7 +62,7 @@
                         <label><strong>{{localize item.system.firingModeLabel1}}</strong></label>
                     </div>
                     <div class="flexrow alignLeft wantToKnowMore" style="max-width: 90px; margin-right: 10px;">
-                        <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                        <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
                         <label class="truncate input-medium"><strong>{{item.system.mode1.range}}</strong></label>
                         <label class="tooltipText">{{item.system.mode1.range}}</label>
                     </div>
@@ -78,12 +78,12 @@
                         </h4>
                     </div>
                     <div class="flexrow alignLeft">
-                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
                     </div>
                     {{else}}
                     <div class="flexrow" style="justify-content: center;">
-                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode1.d10}}{{item.system.mode1.d10}}d10{{#if item.system.mode1.d6}}+{{item.system.mode1.d6}}d6{{/if}}{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else if item.system.mode1.d6}}{{item.system.mode1.d6}}d6{{#if item.system.mode1.bonus}}+{{item.system.mode1.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
                     </div>
                     {{/if}}
@@ -135,7 +135,7 @@
                         <label><strong>{{localize item.system.firingModeLabel2}}</strong></label>
                     </div>
                     <div class="flexrow alignLeft wantToKnowMore" style="max-width: 90px; margin-right: 10px;">
-                        <i class="fa-regular fa-arrows-left-right icon-small alignCenter awesomeIcon icon-space"></i>
+                        <i class="fa-regular fa-arrows-left-right icon-xsmall alignCenter awesomeIcon icon-space"></i>
                         <label class="truncate input-medium"><strong>{{item.system.mode2.range}}</strong></label>
                         <label class="tooltipText">{{item.system.mode2.range}}</label>
                     </div>
@@ -144,12 +144,12 @@
                         <label>as above</label>
                     </div>
                     <div class="flexrow alignLeft">
-                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
                     </div>
                     {{else}}
                     <div class="flexrow" style="justify-content: center;">
-                        <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon icon-space"></i>
+                        <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon icon-space"></i>
                         <label class="labelWidth-medium flex-group-center noMargin"><strong>{{#if item.system.mode2.d10}}{{item.system.mode2.d10}}d10{{#if item.system.mode2.d6}}+{{item.system.mode2.d6}}d6{{/if}}{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else if item.system.mode2.d6}}{{item.system.mode2.d6}}d6{{#if item.system.mode2.bonus}}+{{item.system.mode2.bonus}}{{/if}}{{else}}-{{/if}}</strong></label>
                     </div>
                     {{/if}}

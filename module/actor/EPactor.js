@@ -32,12 +32,12 @@ export default class EPactor extends Actor {
    */
   async prepareData() {
     super.prepareData();
-    const actor = this;
-    const actorModel = this.system;
     const actorWhole = this;
+    const actorModel = actorWhole.system;
+    const activeMorph = actorModel.activeMorph;
     let morphData = null;
-    if(actorModel.activeMorph){
-      morphData = await fromUuid(actorModel.activeMorph);
+    if(activeMorph){
+      morphData = actorWhole.items.get(actorModel.activeMorph);
     }
     const morphValues = morphData?.system ?? EPactor.STANDARD_MORPH;
     const flags = actorModel.flags;
@@ -93,24 +93,21 @@ export default class EPactor extends Actor {
       }
     }
 
+    actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
     this._calculatePhysicalHealth(actorModel, morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel, chiMultiplier);
 
     if (this.type === "character"){  
-      
-      actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
-      this._calculateMentalHealth(actorModel, chiMultiplier)
       this._calculateHomebrewEncumberance(actorModel);
       this._calculateSideCart(actorModel, items);
       this._poolUpdate(actorModel);
       this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     }
     if (this.type === "npc" || this.type === "character"){
+      this._calculatePools(actorModel, morphValues, chiMultiplier)
+      this._calculateMentalHealth(actorModel, chiMultiplier)
       this._minimumInfection(actorModel, gammaCount, chiCount);
-    }
-    if (this.type === "npc" || this.type === "goon"){
-      actorModel.additionalSystems.movementBase = actorModel.bodies.morph1.movement1 ? actorModel.bodies.morph1.movement1.base : 0;
     }
 
     // Aptitudes
@@ -188,59 +185,29 @@ export default class EPactor extends Actor {
     actorModel.initiative.display = "1d6 + " + (actorModel.initiative.value - eval(actorModel.mods.manualIniMod ? actorModel.mods.manualIniMod : 0))
   }
 
-  _calculatePhysicalHealth(actorModel, activeMorph, chiMultiplier){
-    
-    //Calculating WT & DR
+  _calculatePhysicalHealth(actorModel, morphValues, chiMultiplier){
+    actorModel.health.physical.max = Number(morphValues.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(morphValues.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
+    actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
+    actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[morphValues.type]));
+    actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max ? actorModel.physical.dr - actorModel.health.physical.max : 0;
+    actorModel.health.death.value = actorModel.health.physical.value - actorModel.physical.dr
 
-    //NPCs & Goons only
-    if(this.type === 'npc' || this.type === 'goon') {
-      actorModel.health.physical.max = (actorModel.bodies.morph1.dur) + eval(actorModel.mods.durmod); // only one morph for npcs
-      actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
-      actorModel.physical.dr = Math.round(actorModel.health.physical.max * eclipsephase.damageRatingMultiplier[actorModel.bodyType.value]);
-      actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max ? actorModel.physical.dr - actorModel.health.physical.max : 0;
-      actorModel.health.death.value = actorModel.health.physical.value - actorModel.physical.dr
-
-      if (actorModel.health.physical.value < actorModel.health.physical.max){
-        actorModel.health.death.value = 0
-      }
-      else {
-        actorModel.health.death.value = actorModel.health.physical.value - actorModel.health.physical.max
-      }
-
-
-      if(actorModel.health.physical.value === null) {
-        actorModel.health.physical.value = 0
-      }
-      else if (actorModel.health.physical.value > actorModel.physical.dr){
-        actorModel.health.physical.value = actorModel.physical.dr
-      }
+    if (actorModel.health.physical.value < actorModel.health.physical.max){
+      actorModel.health.death.value = 0
     }
-    //Characters
-    else{
-      if(this.type === "character") {
-        actorModel.health.physical.max = Number(activeMorph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) ? Number(activeMorph.dur) + eval(actorModel.mods.durmod) + (actorModel.mods.durChiMod ? (eval(actorModel.mods.durChiMod)*chiMultiplier) : 0) : 0;
-        actorModel.physical.wt = Math.round(actorModel.health.physical.max / 5);
-        actorModel.physical.dr = Math.round(actorModel.health.physical.max * Number(eclipsephase.damageRatingMultiplier[activeMorph.type]));
-        actorModel.health.death.max = actorModel.physical.dr - actorModel.health.physical.max ? actorModel.physical.dr - actorModel.health.physical.max : 0;
-        actorModel.health.death.value = actorModel.health.physical.value - actorModel.physical.dr
-  
-        if (actorModel.health.physical.value < actorModel.health.physical.max){
-          actorModel.health.death.value = 0
-        }
-        else {
-          actorModel.health.death.value = actorModel.health.physical.value - actorModel.health.physical.max
-        }
-  
-  
-        if(actorModel.health.physical.value === null) {
-          actorModel.health.physical.value = 0
-        }
-        else if (actorModel.health.physical.value > actorModel.physical.dr){
-          actorModel.health.physical.value = actorModel.physical.dr
-        }
-  
-        this._calculatePools(actorModel, activeMorph, chiMultiplier)
-      }}
+    else {
+      actorModel.health.death.value = actorModel.health.physical.value - actorModel.health.physical.max
+    }
+
+
+    if(actorModel.health.physical.value === null) {
+      actorModel.health.physical.value = 0
+    }
+    else if (actorModel.health.physical.value > actorModel.physical.dr){
+      actorModel.health.physical.value = actorModel.physical.dr
+    }
+       
+      
     
     //Health bar calculation
     let durabilityContainerWidth = 0
@@ -254,32 +221,21 @@ export default class EPactor extends Actor {
     const maxDeathDamage = actorModel.health.death.max;
     actorModel.physical.relativeDeathDamage = Math.round(currentDeathDamage*100/maxDeathDamage) > 100 ? 100 : Math.round(currentDeathDamage*100/maxDeathDamage);
     
-    if(this.type === 'npc' || this.type === 'goon') {
-      if(Number(eclipsephase.damageRatingMultiplier[activeMorph.type]) === 1.5){
-        durabilityContainerWidth = 66.5;
-        deathContainerWidth =  33.5;
-      }
-      else{
-        durabilityContainerWidth = 50;
-        deathContainerWidth =  50;
-      }
+    if(Number(eclipsephase.damageRatingMultiplier[morphValues.type]) === 1.5){
+      durabilityContainerWidth = 66.5;
+      deathContainerWidth =  33.5;
     }
     else{
-      if(Number(eclipsephase.damageRatingMultiplier[activeMorph.type]) === 1.5){
-        durabilityContainerWidth = 66.5;
-        deathContainerWidth =  33.5;
-      }
-      else{
-        durabilityContainerWidth = 50;
-        deathContainerWidth =  50;
-      }
+      durabilityContainerWidth = 50;
+      deathContainerWidth =  50;
     }
-
+    actorModel.physical.activeMorphType = morphValues.type
     actorModel.physical.relativeDurabilityContainer = durabilityContainerWidth
     actorModel.physical.relativeDeathContainer = deathContainerWidth
   }
 
   _calculateMentalHealth(actorModel, chiMultiplier) {
+    console.log("I'm mental health of", actorModel)
     actorModel.health.mental.max = (actorModel.aptitudes.wil.value * 2) + eval(actorModel.mods.lucmod) + (actorModel.mods.lucChiMod ? (eval(actorModel.mods.lucChiMod)*chiMultiplier): 0);
     actorModel.mental.ir = actorModel.health.mental.max * 2;
     actorModel.mental.tt = Math.round(actorModel.health.mental.max / 5) + eval(actorModel.mods.ttMod) + (actorModel.mods.ttChiMod ? (eval(actorModel.mods.ttChiMod)*chiMultiplier) : 0);
@@ -310,18 +266,19 @@ export default class EPactor extends Actor {
     actorModel.mental.relativeInsanityDamage = Math.round(currentDeathDamage*100/maxDeathDamage) > 100 ? 100 : Math.round(currentDeathDamage*100/maxDeathDamage);
   }
 
-  _calculatePools(actorModel, morph, chiMultiplier) {
-    actorModel.pools.flex.totalFlex = Number(morph.flex) +
+  _calculatePools(actorModel, morphValues, chiMultiplier) {
+    console.log("I'm the morphValues:",morphValues, "of actorModel", actorModel)
+    actorModel.pools.flex.totalFlex = Number(morphValues.flex) +
       Number(actorModel.ego.egoFlex) +
       eval(actorModel.pools.flex.mod) + 
       (actorModel.pools.flex.chiMod ? (eval(actorModel.pools.flex.chiMod)*chiMultiplier) : 0)
-    actorModel.pools.insight.totalInsight = Number(morph.insight) +
+    actorModel.pools.insight.totalInsight = Number(morphValues.insight) +
       eval(actorModel.pools.insight.mod) + 
       (actorModel.pools.insight.chiMod ? (eval(actorModel.pools.insight.chiMod)*chiMultiplier) : 0)
-    actorModel.pools.moxie.totalMoxie = Number(morph.moxie) +
+    actorModel.pools.moxie.totalMoxie = Number(morphValues.moxie) +
       eval(actorModel.pools.moxie.mod) + 
       (actorModel.pools.moxie.chiMod ? (eval(actorModel.pools.moxie.chiMod)*chiMultiplier) : 0)
-    actorModel.pools.vigor.totalVigor = Number(morph.vigor) +
+    actorModel.pools.vigor.totalVigor = Number(morphValues.vigor) +
       eval(actorModel.pools.vigor.mod) + 
       (actorModel.pools.vigor.chiMod ? (eval(actorModel.pools.vigor.chiMod)*chiMultiplier) : 0)
   }

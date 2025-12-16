@@ -16,7 +16,7 @@
         </div>
         {{/if}}
     {{/if}}
-    {{#if (eq actorType "character")}}
+    {{#if (ne actorType "goon")}}
         {{#if pool.skillPoolValue}}
             {{#if pool.flexPoolValue}}
                 <div class="form-group listBackgroundMain">

@@ -1486,6 +1486,58 @@ export function migrationPre110(startMigration, endMigration){
   }
 }
 
+export async function migrationPre150(startMigration, endMigration) {
+  const latestUpdate = "1.5";
+  if (!startMigration) return { endMigration: false };
+
+  const TARGET = "ep2e";
+  const log = (...args) => console.log("[EP2e][Migration 1.5]", ...args);
+
+  // --- Actors: actor effects + embedded item effects
+  for (const actor of game.actors.contents) {
+
+    // Actor-owned effects
+    const actorEffectUpdates = actor.effects.contents
+      .filter(ef => (ef.type ?? "base") !== TARGET)
+      .map(ef => ({ _id: ef.id, type: TARGET }));
+
+    if (actorEffectUpdates.length) {
+      await actor.updateEmbeddedDocuments("ActiveEffect", actorEffectUpdates);
+      log(`Actor ${actor.name}: updated ${actorEffectUpdates.length} actor effects`);
+    }
+
+    // Embedded item effects
+    for (const item of actor.items.contents) {
+      const itemEffectUpdates = item.effects.contents
+        .filter(ef => (ef.type ?? "base") !== TARGET)
+        .map(ef => ({ _id: ef.id, type: TARGET }));
+      console.log("Ping", itemEffectUpdates, item.effects)
+      if (itemEffectUpdates.length) {
+        await item.updateEmbeddedDocuments("ActiveEffect", itemEffectUpdates);
+        log(`Actor ${actor.name} / Item ${item.name}: updated ${itemEffectUpdates.length} item effects`);
+      }
+    }
+  }
+
+  // --- World Items directory effects (if you use it)
+  for (const item of game.items.contents) {
+    const itemEffectUpdates = item.effects.contents
+      .filter(ef => (ef.type ?? "base") !== TARGET)
+      .map(ef => ({ _id: ef.id, type: TARGET }));
+
+    if (itemEffectUpdates.length) {
+      await item.updateEmbeddedDocuments("ActiveEffect", itemEffectUpdates);
+      log(`World Item ${item.name}: updated ${itemEffectUpdates.length} effects`);
+    }
+  }
+
+  // Mark migration version
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+
+  endMigration = true;
+  return { endMigration };
+}
+
 //A general item deleter
 function itemDeletion(actor, itemID){
   let itemDelete = [itemID]
