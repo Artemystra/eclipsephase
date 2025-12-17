@@ -56,7 +56,8 @@
         <div class="contentBox">
             <div class="flexrow subheader">
                 <h3 class="subheader">{{localize "ep2e.morph.currentMorph.headline"}}</h3>
-                <div class="alignRight flexGrowThreeQuarter">
+                <div class="alignRight flexGrowThreeQuarter item" data-item-id="{{actor.bodies.activeMorph.morphdetails.0._id}}" data-item-name="{{actor.bodies.activeMorph.morphdetails.0.name}}">
+                    <button class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
                 </div>
             </div>
             <div class="listBackground" style="background-color: var(--accentBackground);">
@@ -126,8 +127,8 @@
                         <label class="resource-label">{{localize "ep2e.inventory.npcInventory.wareLabel"}}:</label>
                     </div>
                     <div class="flexrow headSpace">
-                        {{#if actor.bodies.activeMorph.morphware}}
-                        {{#each actor.bodies.activeMorph.morphware as |item id|}}
+                        {{#if actor.bodies.activeMorph.morphgear}}
+                        {{#each actor.bodies.activeMorph.morphgear as |item id|}}
                         <div class="item flexrow flex-group-center pill wantToKnowMoreFixed" data-item-id="{{item._id}}" style="padding-left: 0.2em;">
                             <h4 class="item-name item-control item-edit noMargin hoverable truncate"><strong>{{item.name}}</strong></h4>
                             <h4 class="tooltipText"><strong>{{item.name}}</strong></h4>

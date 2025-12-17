@@ -19,6 +19,10 @@ export class EP2eActiveEffectData extends foundry.abstract.TypeDataModel {
     // --- Case A: Traits / Ware are morph-bound
     // (only suppress when item is boundTo a different active morph)
     if (t === "trait" || t === "ware" || t === "flaw") {
+
+      //NPCs & Threats morph mods will never be suppressed
+      if(actor.type !== "character") return false;
+
       const boundTo = item.system?.boundTo;
       if (!boundTo) return false; // not morph-bound => never suppressed by morph switching
 

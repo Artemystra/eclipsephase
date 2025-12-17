@@ -31,14 +31,20 @@ export async function replaceMorph(actor, activeMorph, newMorph){
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if(popUp.confirm === true){
-        await deleteMorph(actor, activeMorph)
-        return await actor.update({"system.activeMorph": newMorph.id})
+        await deleteMorph(actor, activeMorph);
+        return
     }
     else{
-        return
+        return;
     }
 }
 
 export async function deleteMorph(actor, activeMorph){
-    
+    const deletionList = [];
+    const morphCollection = actor.type === "character" ? actor.bodies[activeMorph] : actor.bodies["activeMorph"];
+    const consolidatedItemList = [...morphCollection.morphdetails, ...morphCollection.morphtraits, ...morphCollection.morphflaws, ...morphCollection.morphgear];
+    for (let item of consolidatedItemList){
+        deletionList.push(item.id);
+    }
+    await actor.deleteEmbeddedDocuments("Item", deletionList)
 }

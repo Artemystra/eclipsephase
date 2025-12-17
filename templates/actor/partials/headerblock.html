@@ -56,7 +56,7 @@
             <div class="flexrow flex-group-center reveal standard-height">
                 <div class="flexrow flex-group-center input-small">
                     <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
-                    <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+                    <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                 </div>
                 <input class="input-small" type="number" onFocus="this.select()" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
             </div>

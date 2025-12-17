@@ -45,7 +45,7 @@ export default class EPactorSheet extends ActorSheet {
             this.position.width = 800;
           }
           else{
-            this.position.height = 550;
+            this.position.height = 600;
             this.position.width = 1058;
           }
         }
@@ -135,7 +135,7 @@ export default class EPactorSheet extends ActorSheet {
     });
   }
 
-  //Binds morphFlaws/Traits/Gear to a singular morph
+  //Special Rules to apply on Item drop into an actor Sheet
   async _onDropItemCreate(item) {
     const actor = this.actor
     const actorModel = actor.system
@@ -150,10 +150,12 @@ export default class EPactorSheet extends ActorSheet {
      */
     if (item.type === "morph" && actor.type !== "character"){
       await morphFunction.replaceMorph(actor, currentMorph, item)
+      const newDroppedItem = await super._onDropItemCreate(item)
+      console.log("newDroppedItem",newDroppedItem[0].id)
+      return await actor.update({"system.activeMorph": newDroppedItem[0].id});
     }
 
-
-    //Shows a pop-up if the trait has both a morph and a ego variant
+    //Shows a pop-up if a trait has both a morph and a ego variant
     if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
       traitSelection = await selectTraitType()
 
@@ -166,9 +168,10 @@ export default class EPactorSheet extends ActorSheet {
       itemModel.morph = false;
 
     }
-    // Binds a morph-trait to the currently active morph
+    // Binds a morph-trait/ware to the currently active morph
     if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware" || item.system.morph === true) {
-      itemModel.boundTo = currentMorph
+      if (actor.type === "character") itemModel.boundTo = currentMorph
+      if (actor.type !== "character") itemModel.boundTo = "activeMorph"
     }
 
     //Loading weapons with Standard Ammo
@@ -181,6 +184,10 @@ export default class EPactorSheet extends ActorSheet {
       }
     }
 
+    /**
+     * Timestamps newly created items with the latest game system version
+     * This is important for later migrations & mutations of older items
+     */
     item.system.updated = game.system.version
 
     // Create the owned item as normal
@@ -716,6 +723,7 @@ export default class EPactorSheet extends ActorSheet {
 
       if (!askForOptions){
         const li = $(ev.currentTarget).parents(".item");
+        const item = actor.items.get(li.data("itemId"))
         const itemName = [li.data("itemName")] ? [li.data("itemName")] : null;
         const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
         const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete"))+ " " +(itemName?itemName:"");
@@ -724,7 +732,11 @@ export default class EPactorSheet extends ActorSheet {
 
         let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
 
-        if(popUp.confirm === true){
+        console.log("This is my item", item)
+        if (popUp.confirm === true && item.type === "morph"){
+          await morphFunction.deleteMorph(actor, li.data("itemId"))
+        }
+        else if(popUp.confirm === true){
           actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
           li.slideUp(200, () => this.render(false));
         }

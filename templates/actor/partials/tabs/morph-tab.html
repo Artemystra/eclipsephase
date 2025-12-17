@@ -36,8 +36,10 @@
                                 <div style="flex: 0.3;">
                                     <img src="{{morphdetails.0.img}}" style="max-width: 10rem;"/>
                                     <div style="display: flex;">
-                                        <button class="item-edit resource-label editWithLabel button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
-                                        <button class="item-delete resource-label editWithLabel button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
+                                        <button class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
+                                        {{#if (ne @root.actor.system.activeMorph body.morphdetails.0.id)}}
+                                            <button class="item-delete resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
+                                        {{/if}}
                                     </div>
                                 </div>
                                 <div style="flex: 0.7;">
