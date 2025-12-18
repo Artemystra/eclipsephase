@@ -12,7 +12,6 @@ export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weapon
   let weaponTraits = null;
   let weapon = null;
   let weaponMode = null;
-  console.log(actorWhole)
 
   if (rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
     weapon = actorWhole.items.get(weaponID);
@@ -285,7 +284,6 @@ export async function weaponListConstructor(actor, skillKey){
     }
   
     if(selectedWeaponMode.selection === "1" || selectedWeaponMode === "1" ){
-      console.log("Mode 1 selected")
       let name = weapon.system.mode1.name;
       let range = weapon.system.mode1.range;
       let firingMode = weapon.system.mode1.firingMode;

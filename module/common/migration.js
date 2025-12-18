@@ -1490,52 +1490,346 @@ export async function migrationPre150(startMigration, endMigration) {
   const latestUpdate = "1.5";
   if (!startMigration) return { endMigration: false };
 
-  const TARGET = "ep2e";
-  const log = (...args) => console.log("[EP2e][Migration 1.5]", ...args);
+  // Actor types we touch
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
 
-  // --- Actors: actor effects + embedded item effects
-  for (const actor of game.actors.contents) {
+  // Item types to delete (both on actors AND from world Items directory)
+  const DELETE_ITEM_TYPES = new Set(["morphTrait", "trait", "flaw", "morphFlaw"]);
 
-    // Actor-owned effects
-    const actorEffectUpdates = actor.effects.contents
-      .filter(ef => (ef.type ?? "base") !== TARGET)
-      .map(ef => ({ _id: ef.id, type: TARGET }));
+  // Load compendium fallback morph once
+  const pack = game.packs.get("eclipsephase.morphs");
+  if (!pack) {
+    console.error(`[EP Migration ${latestUpdate}] Pack eclipsephase.morphs not found`);
+    return { endMigration: false };
+  }
 
-    if (actorEffectUpdates.length) {
-      await actor.updateEmbeddedDocuments("ActiveEffect", actorEffectUpdates);
-      log(`Actor ${actor.name}: updated ${actorEffectUpdates.length} actor effects`);
+  const baseMorphDoc = await pack.getDocument("suPRftVdLzcNhOH4");
+  if (!baseMorphDoc) {
+    console.error(`[EP Migration ${latestUpdate}] Morph suPRftVdLzcNhOH4 not found in pack`);
+    return { endMigration: false };
+  }
+
+  // -----------------------------
+  // 1) Delete world Items (Items tab) of deprecated types
+  // -----------------------------
+  try {
+    const worldDeleteIds = game.items
+      .filter((i) => DELETE_ITEM_TYPES.has(i.type))
+      .map((i) => i.id);
+
+    if (worldDeleteIds.length) {
+      await Item.deleteDocuments(worldDeleteIds);
+      console.log(
+        `[EP Migration ${latestUpdate}] World Items: deleted ${worldDeleteIds.length} deprecated items`
+      );
+    } else {
+      console.log(`[EP Migration ${latestUpdate}] World Items: nothing to delete`);
     }
+  } catch (err) {
+    console.error(`[EP Migration ${latestUpdate}] World Items: deletion failed`, err);
+  }
 
-    // Embedded item effects
-    for (const item of actor.items.contents) {
-      const itemEffectUpdates = item.effects.contents
-        .filter(ef => (ef.type ?? "base") !== TARGET)
-        .map(ef => ({ _id: ef.id, type: TARGET }));
-      console.log("Ping", itemEffectUpdates, item.effects)
-      if (itemEffectUpdates.length) {
-        await item.updateEmbeddedDocuments("ActiveEffect", itemEffectUpdates);
-        log(`Actor ${actor.name} / Item ${item.name}: updated ${itemEffectUpdates.length} item effects`);
+  // -----------------------------
+  // Actors loop
+  // -----------------------------
+  for (const actor of game.actors) {
+    if (!ACTOR_TYPES.has(actor.type)) continue;
+
+    await actor.update({ "flags.eclipsephase.migrating": true });
+
+    try {
+      // -----------------------------
+      // 3) Delete ALL Active Effects on actor
+      // -----------------------------
+      try {
+        const aeIds = actor.effects?.map((e) => e.id) ?? [];
+        if (aeIds.length) {
+          await actor.deleteEmbeddedDocuments("ActiveEffect", aeIds);
+          console.log(
+            `[EP Migration ${latestUpdate}] ${actor.name}: deleted ${aeIds.length} actor ActiveEffects`
+          );
+        }
+      } catch (err) {
+        console.error(`[EP Migration ${latestUpdate}] ${actor.name}: deleting ActiveEffects failed`, err);
       }
+
+      // -----------------------------
+      // 1) Delete deprecated items on actor
+      // -----------------------------
+      const deleteIds = actor.items
+        .filter((i) => DELETE_ITEM_TYPES.has(i.type))
+        .map((i) => i.id);
+
+      if (deleteIds.length) {
+        await actor.deleteEmbeddedDocuments("Item", deleteIds);
+        console.log(
+          `[EP Migration ${latestUpdate}] ${actor.name}: deleted ${deleteIds.length} deprecated embedded items`
+        );
+      }
+
+      // -----------------------------
+      // 2) Create Morph items + (for characters) remap boundTo morphX -> new morph item id
+      // -----------------------------
+      const result = await _ep150_createMorphsFromLegacy(actor, baseMorphDoc);
+
+      console.log(
+        `[EP Migration ${latestUpdate}] ${actor.name}: created morphs=${(result?.createdIds ?? []).join(
+          ", "
+        )}`
+      );
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
+    }
+
+    await actor.update({ "flags.eclipsephase.migrating": false });
+  }
+
+  game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  return { endMigration: true };
+}
+
+/**
+ * Creates morph items based on legacy actor.system.bodies data.
+ * Falls back to baseMorphDoc for npc/goon missing morph.
+ *
+ * Returns:
+ *  { createdIds: string[], keyToItemId: Record<string,string> }
+ */
+async function _ep150_createMorphsFromLegacy(actor, baseMorphDoc) {
+  const bodies = actor.system?.bodies ?? {};
+
+  // ---- CHARACTER: morph1..morph6, only if dur != 0
+  if (actor.type === "character") {
+    const activeKey = bodies.activeMorph; // e.g. "morph2"
+    const morphKeys = ["morph1", "morph2", "morph3", "morph4", "morph5", "morph6"];
+
+    const docsToCreate = [];
+    const keyToIndex = new Map();
+
+    for (const key of morphKeys) {
+      const legacy = bodies[key];
+      const dur = Number(legacy?.dur ?? 0);
+
+      // only create if dur is not 0 (and legacy exists)
+      if (!legacy || !dur) continue;
+
+      const systemData = _ep150_mapLegacyMorphToItemSystem(legacy);
+
+      keyToIndex.set(key, docsToCreate.length);
+      docsToCreate.push({
+        name: legacy.name || "Morph",
+        type: "morph",
+        img:
+          legacy.img ||
+          systemData.img ||
+          "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+        system: systemData,
+      });
+    }
+
+    // If no legacy morphs created, fall back to compendium morph
+    if (!docsToCreate.length) {
+      const [createdFallback] = await actor.createEmbeddedDocuments("Item", [
+        baseMorphDoc.toObject(),
+      ]);
+
+      if (createdFallback) {
+        await actor.update({ "system.activeMorph": createdFallback.id });
+        return { createdIds: [createdFallback.id], keyToItemId: {} };
+      }
+      return { createdIds: [], keyToItemId: {} };
+    }
+
+    const created = await actor.createEmbeddedDocuments("Item", docsToCreate);
+    const createdIds = created.map((d) => d.id);
+
+    // Build key -> createdItemId mapping (for boundTo remap)
+    const keyToItemId = {};
+    for (const [key, idx] of keyToIndex.entries()) {
+      keyToItemId[key] = createdIds[idx];
+    }
+
+    // set active morph: match old bodies.activeMorph key if possible
+    let activeItemId = createdIds[0];
+    if (activeKey && keyToItemId[activeKey]) {
+      activeItemId = keyToItemId[activeKey];
+    }
+    await actor.update({ "system.activeMorph": activeItemId });
+
+    // -----------------------------
+    // 2) Remap existing items' system.boundTo morphX -> new morph item id
+    // -----------------------------
+    await _ep150_rebindItemsToNewMorphIds(actor, keyToItemId);
+
+    return { createdIds, keyToItemId };
+  }
+
+  // ---- NPC/GOON: bodies.morph1 OR fallback
+  if (actor.type === "npc" || actor.type === "goon") {
+    const legacy = bodies.morph1;
+    const dur = Number(legacy?.dur ?? 0);
+
+    // If no valid morph -> fallback
+    if (!legacy || !dur) {
+      const [createdFallback] = await actor.createEmbeddedDocuments("Item", [
+        baseMorphDoc.toObject(),
+      ]);
+
+      if (createdFallback) {
+        await actor.update({ "system.activeMorph": createdFallback.id });
+        return { createdIds: [createdFallback.id], keyToItemId: {} };
+      }
+      return { createdIds: [], keyToItemId: {} };
+    }
+
+    const systemData = _ep150_mapLegacyMorphToItemSystem(legacy);
+
+    const [createdMorph] = await actor.createEmbeddedDocuments("Item", [
+      {
+        name: legacy.name || "Morph",
+        type: "morph",
+        img: legacy.img || "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+        system: systemData,
+      },
+    ]);
+
+    if (createdMorph) {
+      await actor.update({ "system.activeMorph": createdMorph.id });
+      return { createdIds: [createdMorph.id], keyToItemId: {} };
+    }
+    return { createdIds: [], keyToItemId: {} };
+  }
+
+  return { createdIds: [], keyToItemId: {} };
+}
+
+/**
+ * Rebinds items so that any item with system.boundTo === "morph1".."morph6"
+ * gets rewritten to system.boundTo === "<created morph item id>".
+ *
+ * Only touches items that still exist AFTER deletions.
+ */
+async function _ep150_rebindItemsToNewMorphIds(actor, keyToItemId) {
+  if (!keyToItemId || !Object.keys(keyToItemId).length) return;
+
+  const updates = [];
+
+  for (const item of actor.items) {
+    const boundTo = item.system?.boundTo;
+
+    // legacy values are strings like "morph1", "morph2", ...
+    if (typeof boundTo === "string" && keyToItemId[boundTo]) {
+      updates.push({
+        _id: item.id,
+        "system.boundTo": keyToItemId[boundTo],
+      });
     }
   }
 
-  // --- World Items directory effects (if you use it)
-  for (const item of game.items.contents) {
-    const itemEffectUpdates = item.effects.contents
-      .filter(ef => (ef.type ?? "base") !== TARGET)
-      .map(ef => ({ _id: ef.id, type: TARGET }));
+  if (!updates.length) return;
 
-    if (itemEffectUpdates.length) {
-      await item.updateEmbeddedDocuments("ActiveEffect", itemEffectUpdates);
-      log(`World Item ${item.name}: updated ${itemEffectUpdates.length} effects`);
-    }
-  }
+  await actor.updateEmbeddedDocuments("Item", updates);
+  console.log(
+    `[EP Migration 1.5] ${actor.name}: rebound ${updates.length} items from morphX -> new morph item ids`
+  );
+}
 
-  // Mark migration version
-  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+/**
+ * Maps the old system.bodies.morphX shape to the new Item(type="morph").system model.
+ */
+function _ep150_mapLegacyMorphToItemSystem(legacy) {
+  const sys = _ep150_emptyMorphItemSystem();
 
-  endMigration = true;
-  return { endMigration };
+  sys.description = legacy.description ?? "";
+  sys.img = legacy.img ?? "";
+  sys.type = legacy.type ?? "";
+  sys.dur = legacy.dur ?? null;
+  sys.insight = legacy.insight ?? null;
+  sys.moxie = legacy.moxie ?? null;
+  sys.vigor = legacy.vigor ?? null;
+  sys.flex = legacy.flex ?? null;
+
+  // movement mapping (legacy movement1 -> move1, movement2 -> move2, movement3 -> move3)
+  _ep150_applyMovement(sys, legacy.movement1, "move1", true);
+  _ep150_applyMovement(sys, legacy.movement2, "move2", false);
+  _ep150_applyMovement(sys, legacy.movement3, "move3", false);
+
+  return sys;
+}
+
+function _ep150_applyMovement(sys, legacyMove, key, defaultActive) {
+  if (!sys.movement?.[key]) return;
+
+  const hasData =
+    legacyMove &&
+    (legacyMove.type != null || legacyMove.base != null || legacyMove.full != null);
+
+  sys.movement[key].active = hasData ? true : defaultActive;
+  sys.movement[key].type = legacyMove?.type ?? sys.movement[key].type;
+  sys.movement[key].base = legacyMove?.base ?? sys.movement[key].base;
+  sys.movement[key].full = legacyMove?.full ?? sys.movement[key].full;
+}
+
+function _ep150_emptyMorphItemSystem() {
+  return {
+    description: "",
+    img: "",
+    customToken: null,
+    type: "",
+    dur: null,
+    insight: null,
+    moxie: null,
+    vigor: null,
+    flex: null,
+    movement: {
+      move1: { label: "1.", active: true, type: null, base: null, full: null },
+      move2: { label: "2.", active: false, type: null, base: null, full: null },
+      move3: { label: "3.", active: false, type: null, base: null, full: null },
+      move4: { label: "4.", active: false, type: null, base: null, full: null },
+      move5: { label: "5.", active: false, type: null, base: null, full: null },
+      move6: { label: "6.", active: false, type: null, base: null, full: null },
+      move7: { label: "7.", active: false, type: null, base: null, full: null },
+      move8: { label: "8.", active: false, type: null, base: null, full: null },
+      move9: { label: "9.", active: false, type: null, base: null, full: null },
+      move10: { label: "10.", active: false, type: null, base: null, full: null },
+    },
+    ware: {
+      ware1: { label: "1.", value: "" },
+      ware2: { label: "2.", value: "" },
+      ware3: { label: "3.", value: "" },
+      ware4: { label: "4.", value: "" },
+      ware5: { label: "5.", value: "" },
+      ware6: { label: "6.", value: "" },
+      ware7: { label: "7.", value: "" },
+      ware8: { label: "8.", value: "" },
+      ware9: { label: "9.", value: "" },
+      ware10: { label: "10.", value: "" },
+    },
+    flaws: {
+      flaw1: { label: "1.", value: "" },
+      flaw2: { label: "2.", value: "" },
+      flaw3: { label: "3.", value: "" },
+      flaw4: { label: "4.", value: "" },
+      flaw5: { label: "5.", value: "" },
+      flaw6: { label: "6.", value: "" },
+      flaw7: { label: "7.", value: "" },
+      flaw8: { label: "8.", value: "" },
+      flaw9: { label: "9.", value: "" },
+      flaw10: { label: "10.", value: "" },
+    },
+    traits: {
+      trait1: { label: "1.", value: "" },
+      trait2: { label: "2.", value: "" },
+      trait3: { label: "3.", value: "" },
+      trait4: { label: "4.", value: "" },
+      trait5: { label: "5.", value: "" },
+      trait6: { label: "6.", value: "" },
+      trait7: { label: "7.", value: "" },
+      trait8: { label: "8.", value: "" },
+      trait9: { label: "9.", value: "" },
+      trait10: { label: "10.", value: "" },
+    },
+  };
 }
 
 //A general item deleter

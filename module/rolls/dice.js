@@ -71,7 +71,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
     if (actorType === "goon"){
         pool = POOL_SUM.THR
     }
-    
+
     else if (aptType != null){
         switch (aptType) {
             case 'int':
@@ -1023,6 +1023,5 @@ function breakdown(roll){
             i++
         }
     }
-    console.log("^^^", diceBreakdown)
     return diceBreakdown
 }

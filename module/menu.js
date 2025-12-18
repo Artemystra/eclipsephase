@@ -64,7 +64,7 @@ class EPmenuLayer extends PlaceablesLayer {
             menuItem.title = "Restore Rest (All Players)";
             menuItem.role = "tab"
             
-            if (!isGM && !active) return;
+            if (!isGM) return;
 
             if (html.querySelector('ep-menu.ep-restore-rest')) return;
 

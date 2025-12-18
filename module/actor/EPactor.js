@@ -32,6 +32,7 @@ export default class EPactor extends Actor {
    */
   async prepareData() {
     super.prepareData();
+    if (this.getFlag("eclipsephase", "migrating")) return super.prepareData();
     const actorWhole = this;
     const actorModel = actorWhole.system;
     const activeMorph = actorModel.activeMorph;
@@ -46,6 +47,7 @@ export default class EPactor extends Actor {
     let chiCount = 0;    
     let chiMultiplier = 1;
     if(actorWhole.type === "character" || actorWhole.type === "npc"){
+      actorModel.psiStrain ??= { infection: 0, minimumInfection: 0 };
       if (actorModel.psiStrain.infection >= 33){
         chiMultiplier = 2;
       }
@@ -93,7 +95,7 @@ export default class EPactor extends Actor {
       }
     }
 
-    actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
+    //actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
     this._calculatePhysicalHealth(actorModel, morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel, chiMultiplier);
@@ -601,9 +603,9 @@ export default class EPactor extends Actor {
   }
 
   _minimumInfection(actorModel, gammaCount, chiCount) {
-
+    actorModel.psiStrain ??= { infection: 0, minimumInfection: 0 };
     let minimumInfection = 0;
-    let currentInfection = actorModel.psiStrain.infection;
+    let currentInfection = actorModel.psiStrain.infection ?? 0;
 
     if (gammaCount > 0){
       minimumInfection = 20
@@ -620,7 +622,7 @@ export default class EPactor extends Actor {
   }
 
   async _autoPush(actorModel, actorWhole) {
-    let currentInfection = actorModel.psiStrain.infection;
+    let currentInfection = actorModel.psiStrain.infection ?? 0;
     let autoPushSelection = actorModel.additionalSystems.autoPushSelection
 
     switch(currentInfection){

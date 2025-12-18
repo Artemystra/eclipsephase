@@ -6,6 +6,32 @@
       "goon"
     ],
     "templates": {
+      "morph": {
+        "name": "",
+        "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+        "type": "",
+        "dur": null,
+        "insight": null,
+        "moxie": null,
+        "vigor": null,
+        "flex": null,
+        "movement1": {
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement2": {
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "movement3": {
+          "type": null,
+          "base": null,
+          "full": null
+        },
+        "description": ""
+      },
       "base": {
         "biography": "",
         "mental": {
@@ -457,19 +483,67 @@
         "shortExtra": false,
         "long": false,
         "restValue": null
-      }
+      },
+      "bodies": {
+        "activeMorph": "morph1",
+        "allMorphs": [],
+        "morph1": {
+          "templates": [
+            "morph"
+          ]
+        },
+        "morph2": {
+          "templates": [
+            "morph"
+          ]
+        },
+        "morph3": {
+          "templates": [
+            "morph"
+          ]
+        },
+        "morph4": {
+          "templates": [
+            "morph"
+          ]
+        },
+        "morph5": {
+          "templates": [
+            "morph"
+          ]
+        },
+        "morph6": {
+          "templates": [
+            "morph"
+          ]
+        }
+      }   
     },
     "npc": {
       "templates": [
         "base"
-      ]
+      ],
+      "bodies": {
+        "morph1": {
+          "templates": [
+            "morph"
+          ]
+        }
+      }
     },
     "goon": {
       "templates": [
         "base",
         "threat"
       ],
-      "stresstest": null
+      "stresstest": null,
+      "bodies": {
+        "morph1": {
+          "templates": [
+            "morph"
+          ]
+        }
+      }
     }
   },
   "Item": { 
@@ -479,6 +553,10 @@
       "ccWeapon",
       "armor",
       "traits",
+      "trait",
+      "flaw",
+      "morphTrait",
+      "morphFlaw",
       "ware",
       "aspect",
       "program",

@@ -57,7 +57,7 @@
                                     </div>
                                     {{#if body.morphdetails.0.system.description}}
                                         <div class="contentBox" style="max-height: 160px; overflow-y: scroll; padding: 10px;">
-                                            {{body.morphdetails.0.system.description}}
+                                            {{{body.morphdetails.0.system.description}}}
                                         </div>
                                     {{else}}
                                         <div class="contentBox" style="max-height: 160px; min-height: 160px; display: flex; justify-content: center; align-items: center;">
@@ -136,6 +136,8 @@
                                     {{#if body.flawsCount}}
                                         {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphflaws}}
                                     {{/if}}
+                                {{else if body.flawsCount}}
+                                    {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphflaws}}
                                 {{else}}
                                     <div class="itemBackground minSize">
                                         {{localize "ep2e.morph.noMorphTraits"}}

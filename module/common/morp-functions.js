@@ -22,17 +22,19 @@ export async function resleeveMorph(actor, currentTarget){
 
 export async function replaceMorph(actor, activeMorph, newMorph){
     const oldMorph = actor.items.get(activeMorph)
+    const oldName = oldMorph ? oldMorph.name : "no Morph"
     const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
     const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.popUp.sleeveReplaceHeadline"))
-    const popUpCopy = (game.i18n.localize("ep2e.actorSheet.popUp.sleeveReplaceCopyOld"))+oldMorph.name+(game.i18n.localize("ep2e.actorSheet.popUp.sleeveReplaceCopyNew"))+newMorph.name;
+    const popUpCopy = (game.i18n.localize("ep2e.actorSheet.popUp.sleeveReplaceCopyOld"))+oldName+(game.i18n.localize("ep2e.actorSheet.popUp.sleeveReplaceCopyNew"))+newMorph.name;
     const popUpInfo = "ep2e.actorSheet.popUp.sleeveReplaceInfo";
     const popUpPrimary = "ep2e.actorSheet.button.sleeveMorph";
 
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if(popUp.confirm === true){
+        if (!oldMorph) return;
         await deleteMorph(actor, activeMorph);
-        return
+        return;
     }
     else{
         return;

@@ -11,7 +11,6 @@ export async function GMvision(html){
     
     let GMvision = game.user.isGM
     let GMinfo = html.querySelector(".GMinfo")
-    console.log("This is my gminfo:", GMinfo)
     if(!GMvision && GMinfo){
             GMinfo.classList.add("noShow");
     }

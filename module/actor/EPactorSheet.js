@@ -56,7 +56,7 @@ export default class EPactorSheet extends ActorSheet {
       return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["eclipsephase", "sheet", "actor"],
         resizable: false,
-        tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "morph" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "ego" },{ navSelector: ".morph-tabs", contentSelector: ".morph-details", initial: "sleeved" }]
+        tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "ego" },{ navSelector: ".morph-tabs", contentSelector: ".morph-details", initial: "sleeved" }]
       });
     }
 
@@ -128,7 +128,7 @@ export default class EPactorSheet extends ActorSheet {
     //Prepare dropdowns
     sheetData.config = CONFIG.eclipsephase;
 
-    sheetData.IDcollection = IDprep(actor, sheetData);
+    //sheetData.IDcollection = IDprep(actor, sheetData);
 
     return foundry.utils.mergeObject(sheetData, {
       isGM: game.user.isGM
@@ -151,7 +151,6 @@ export default class EPactorSheet extends ActorSheet {
     if (item.type === "morph" && actor.type !== "character"){
       await morphFunction.replaceMorph(actor, currentMorph, item)
       const newDroppedItem = await super._onDropItemCreate(item)
-      console.log("newDroppedItem",newDroppedItem[0].id)
       return await actor.update({"system.activeMorph": newDroppedItem[0].id});
     }
 
@@ -274,16 +273,20 @@ export default class EPactorSheet extends ActorSheet {
         morph5: [],
         morph6: []
     };
-
+    let test = 0;
     for (let item of sheetData.actor.items){
       if (item.type === "morph"){
         let morphID
+        test += 1;
         if (actor.type === "character") morphID = item.id
         if (actor.type !== "character") morphID = "activeMorph"
         bodies[morphID] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
       }
 
       
+    }
+    if (test === 0){
+      bodies["migrationBody"] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
     }
     actor.bodies = bodies;
     // Iterate through items, allocating to containers
@@ -608,17 +611,17 @@ export default class EPactorSheet extends ActorSheet {
           itemModel.ir = Math.round(itemModel.luc * 2);
           vehicle[itemModel.type].push(item)
         }
-      else if (item.type === 'ware' && itemModel.boundTo) {
+      else if (item.type === 'ware' && itemModel.boundTo && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
             const path = bodies[boundTo].morphgear;
             bodies[boundTo].gearCount += 1;
             path.push(item);
         }
-        else if (item.type === 'morphFlaw' && itemModel.boundTo || item.system.traitType === 'flaw' && item.system.morph && itemModel.boundTo) {
+        else if (item.type === 'morphFlaw' && itemModel.boundTo  && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
             const path = bodies[boundTo].morphflaws;
             bodies[boundTo].flawsCount += 1;
             path.push(item);
         }
-        else if (item.type === 'morphTrait' && itemModel.boundTo || item.system.traitType === 'trait' && item.system.morph && itemModel.boundTo) {
+        else if (item.type === 'morphTrait' && itemModel.boundTo && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
             const path = bodies[boundTo].morphtraits;
             bodies[boundTo].traitsCount += 1;
             path.push(item);
@@ -732,7 +735,6 @@ export default class EPactorSheet extends ActorSheet {
 
         let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
 
-        console.log("This is my item", item)
         if (popUp.confirm === true && item.type === "morph"){
           await morphFunction.deleteMorph(actor, li.data("itemId"))
         }

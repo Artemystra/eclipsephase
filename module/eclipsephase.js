@@ -284,7 +284,7 @@ Hooks.once("ready", async function() {
   let before099 = foundry.utils.isNewerVersion("0.9.9", gameVersion);
   let before0992 = foundry.utils.isNewerVersion("0.9.9.2", gameVersion);
   let before110 = foundry.utils.isNewerVersion("1.1.0", gameVersion);
-  let before150 = foundry.utils.isNewerVersion("1.5.0", gameVersion);
+  let before150 = foundry.utils.isNewerVersion("1.5", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -459,7 +459,7 @@ Hooks.once("ready", async function() {
   }
 
   //1.5.0 Migration
-  /*if (before150) {
+  if (before150) {
     endMigration = false;
     const messageCopy = "ep2e.migration.150";
     let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
@@ -469,7 +469,7 @@ Hooks.once("ready", async function() {
 
     let Migration150 = await update.migrationPre150(startMigration);
     endMigration = Migration150["endMigration"];
-  }*/
+  }
 
     if(endMigration){
       await migrationEnd(endMigration)
@@ -574,7 +574,7 @@ Hooks.on("createActor", async (actor, options, userId) => {
   if (actor.getFlag("eclipsephase", "defaultMorphAdded")) return;
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) return;
-  const morph = await pack.getDocument("Q54vb9iG05M575se");
+  const morph = await pack.getDocument("suPRftVdLzcNhOH4");
   if (!morph) return;
   
   //adds the morph to items

@@ -1,0 +1,21 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <div class="header-fields flexgrow flex-group-left" style="align-items: flex-end;">
+            <img class="item-img" src="systems/eclipsephase/resources/icons/add.png" data-edit="img" title="{{item.name}}"/>
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.table.description"}}</a>
+        {{#if item.showEffectsTab}}
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
+        {{/if}}
+    </nav>
+    {{!-- Sheet Body --}}
+    <section class="item-sheet-body">
+        <div class="tab details" data-group="primary" data-tab="details">
+        <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+</div>
+        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+</section>
+    </form>
