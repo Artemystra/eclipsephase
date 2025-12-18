@@ -76,8 +76,8 @@
             </div>
         </div>
 
-        <div class="tab description" data-group="primary" data-tab="description">
-            <div class="textAreaDescription"><textarea class="description" name="system.description" rows="18" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+        <div class="tab description morph" data-group="primary" data-tab="description" style="min-height: 322px;">
+            {{editor item.system.description target="system.description" button=true owner=owner editable=this.options.editable}}
         </div>
 
         {{> systems/eclipsephase/templates/item/partials/additions-tab.html item=item}}

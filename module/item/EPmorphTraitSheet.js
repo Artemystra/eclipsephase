@@ -1,4 +1,4 @@
-import { registerEffectHandlers,registerCommonHandlers } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers, confirmation } from "../common/common-sheet-functions.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -31,7 +31,7 @@ export default class EPmorphTraitSheet extends ItemSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     const sheetData = super.getData()
     const item = sheetData.item
 

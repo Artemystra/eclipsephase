@@ -119,7 +119,8 @@
         "addNew": "Add New",
         "showDetails": "Show Details",
         "hideDetails": "Hide Details",
-        "sleeveMorph": "Sleeve Morph"
+        "sleeveMorph": "Sleeve Morph",
+        "thankYouLaph": "Thank You, Laph!"
       },
       "dialogHeadline": {
         "warning": "Warning",
@@ -138,7 +139,10 @@
         "sleeveReplaceHeadline": "You are replacing your current morph with a new one!",
         "sleeveReplaceCopyOld": "<p><b>Old Morph:</b></p>",
         "sleeveReplaceCopyNew": "<p><b>New Morph:</b></p>",
-        "sleeveReplaceInfo": "<i><p style='font-size: 11px;'><b>Warning:</b>The old sleeve and all it's ware and traits will be automatically deleted. All calculations will be automatically based on your new sleeve</p></i>"
+        "sleeveReplaceInfo": "<i><p style='font-size: 11px;'><b>Warning:</b>The old sleeve and all it's ware and traits will be automatically deleted. All calculations will be automatically based on your new sleeve</p></i>",
+        "itemDeprecatedHeadline": "Sorry, Agent. I can't let you do this...",
+        "itemDeprecatedCopy": "<p><b>Morphflaws, Morphtraits, Flaws and Traits are no longer supported. Please create the new 'traits'-item instead!</b></p>",
+        "itemDeprecatedInfo": "<i><p style='font-size: 11px;'><b>Information:</b>You will be delighted to learn, that the 'traits'-item can be set to be any type of trait or flaw you might need. Keeping you from adding these legacy traits might not save the world, but it will save yours once these items get deleted for good in a later version of this system.</p></i>"
       }
     },
     "healthbar": {

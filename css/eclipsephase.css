@@ -36,9 +36,35 @@
   --color-bg-btn-minor-inactive: #414141;
 }
 
-.eclipsephase * {
+/* =========================
+   GLOBAL SYSTEM SCROLLBARS
+   ========================= */
+
+/* Firefox */
+.eclipsephase {
   scrollbar-width: thin!important;
-  scrollbar-color: var(--highlight) none!important;
+  scrollbar-color: var(--highlight) transparent!important;
+}
+
+/* Chromium / Foundry */
+.eclipsephase ::-webkit-scrollbar {
+  width: 8px!important;
+  height: 8px!important;
+}
+
+.eclipsephase ::-webkit-scrollbar-track {
+  background: transparent!important;
+}
+
+.eclipsephase ::-webkit-scrollbar-thumb {
+  background-color: var(--highlight)!important;
+  border-radius: 8px!important;
+  border: 2px solid transparent!important;
+  background-clip: content-box!important;
+}
+
+.eclipsephase ::-webkit-scrollbar-corner {
+  background: transparent!important;
 }
 
 .grid,
@@ -899,6 +925,15 @@ form button,
   background: var(--highlightBackground);
 }
 
+button.ui-control[aria-pressed=true] {
+  border-color: var(--highlight);
+}
+
+body.game .app button:hover, 
+body.game .app button:focus {
+  box-shadow: var(--highlight);
+}
+
 .eclipsephase button.sheetButton {
     min-width: 50px;
     flex: 1 1 0;
@@ -1192,6 +1227,10 @@ a:hover,
   min-height: 273px;
 }
 
+.sheet .morph .editor-content{
+  min-height: 322px;
+}
+
 .eclipsephase .sheet-body .tab .editor {
   padding: 0;
 }
@@ -1237,9 +1276,7 @@ form .notes, form .hint {
 #sidebar-tabs {
   flex: 0 0 32px;
   box-sizing: border-box;
-  margin: 0 0 5px;
-  border-bottom: 1px solid var(--highlight);
-  box-shadow: 0 0 10px var(--highlight);
+  padding: 10px 10px;
 }
 
 .tabs .item.active {
@@ -1898,7 +1935,6 @@ h3.subheaderBlank {
 .chat-message {
   font-size: 16px!important;
   text-align: center;
-  margin: 20px 0 0 0;
 }
 
 .editor {
@@ -2621,4 +2657,3 @@ button#world-anvil img {
 #world-anvil-browser .article-filters{
   border: none!important;
 }
-

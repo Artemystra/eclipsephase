@@ -230,15 +230,18 @@ export async function itemReduction(actor, itemID, itemQuantity){
  * @param {String} popUpTarget - The target of the pop-up (e.g. the item that is deleted)
  * @returns - Returns a promise that resolves to true if the user confirms the dialog, false if the user cancels it.
  */
-export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary) {
+export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton) {
   let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
   let primaryButton = popUpPrimary ? game.i18n.localize(popUpPrimary) : game.i18n.localize('ep2e.actorSheet.button.delete');
+  const buttonLayout = singleButton ?? false;
   const dialogType = "confirmation"
   const template = "systems/eclipsephase/templates/chat/pop-up.html";
   const html = await renderTemplate(template, {popUpHeadline, popUpCopy, dialogType, popUpInfo, popUpTarget});
 
   return new Promise(resolve => {
-      const data = {
+      let data
+      if (buttonLayout === false){
+      data = {
           title: popUpTitle,
           content: html,
           buttons: {
@@ -253,7 +256,20 @@ export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpIn
           },
           default: "normal",
           close: () => resolve ({confirm: false})
-      };
+      };}
+      else {
+      data = {
+          title: popUpTitle,
+          content: html,
+          buttons: {
+              normal: {
+                  label: primaryButton,
+                  callback: html => resolve ({confirm: true})
+              }
+          },
+          default: "normal",
+          close: () => resolve ({confirm: false})
+      };}
       let options = {width:250}
       new Dialog(data, options).render(true);
   });

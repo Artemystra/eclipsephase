@@ -53,7 +53,7 @@ export default class EPgearSheet extends ItemSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     const sheetData = super.getData()
     const item = sheetData.item
 
@@ -75,6 +75,8 @@ export default class EPgearSheet extends ItemSheet {
     if (item.type === 'morph') {
       sheetData.itemList = CONFIG.compendiumList;
     }
+
+    await this._prepareRenderedHTMLContent(sheetData)
 
     console.log("***** gear-sheet")
     console.log(sheetData)
@@ -147,6 +149,13 @@ export default class EPgearSheet extends ItemSheet {
 
     registerEffectHandlers(html, this.item);
     registerCommonHandlers(html, this.item);
+  }
+
+    async _prepareRenderedHTMLContent(sheetData) {
+    let itemModel = sheetData.item.system
+
+    let bio = await TextEditor.enrichHTML(itemModel.description, { async: true })
+    sheetData["htmlDescription"] = bio
   }
 
   /* -------------------------------------------- */

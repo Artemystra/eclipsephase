@@ -17,6 +17,7 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
+import  { confirmation } from "./common/common-sheet-functions.js"
 import  * as helperFunction from "./common/common-helper-functions.js"
 import  * as update from "./common/migration.js";
 
@@ -587,9 +588,23 @@ Hooks.on("createActor", async (actor, options, userId) => {
 });
 
 Hooks.on("createItem", async (item, options, userId) => {
-  if (item.type != "morph" || item.parent) return;
+  if (item.type === "morph" && !item.parent){
+    await item.update ({"img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"})
+  }
+});
 
-  await item.update ({"img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"})
+Hooks.on("preCreateItem", (item, data, options, userId) => {
+  if(item.type === "morphTrait" || item.type === "morphFlaw" || item.type === "trait" || item.type === "flaw"){
+    const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const popUpHeadline = game.i18n.localize("ep2e.actorSheet.popUp.itemDeprecatedHeadline");
+    const popUpCopy = game.i18n.localize("ep2e.actorSheet.popUp.itemDeprecatedCopy");
+    const popUpInfo = game.i18n.localize("ep2e.actorSheet.popUp.itemDeprecatedInfo");
+    const popUpTarget = null
+    const popUpPrimary = game.i18n.localize("ep2e.actorSheet.button.thankYouLaph");
+    const singleButton = true
+    confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton);
+    return false;
+  }
 });
 
 

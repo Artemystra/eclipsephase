@@ -34,9 +34,7 @@
 
         <!-- Description Tab -->
         <div class="tab description" data-group="primary" data-tab="description" style="padding: none;">
-            <div class="textAreaDescription">
-                <textarea class="description" name="system.description" rows="14" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea>
-            </div>
+            {{editor item.system.description target="system.description" button=true owner=owner editable=this.options.editable}}
         </div>
 
         <!-- Effects Tab -->
