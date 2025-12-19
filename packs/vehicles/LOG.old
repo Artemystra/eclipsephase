@@ -1,7 +1,7 @@
-2025/12/18-12:43:54.789385 310079000 Recovering log #905
-2025/12/18-12:43:54.789661 310079000 Delete type=0 #905
-2025/12/18-12:43:54.789690 310079000 Delete type=3 #903
-2025/12/18-12:59:04.909927 31d493000 Level-0 table #910: started
-2025/12/18-12:59:04.909949 31d493000 Level-0 table #910: 0 bytes OK
-2025/12/18-12:59:04.910073 31d493000 Delete type=0 #908
-2025/12/18-12:59:04.910484 31d493000 Manual compaction at level-0 from '!items!0hG5VJieUcAqD7WW' @ 72057594037927935 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at (end)
+2025/12/18-19:32:52.162327 30a58c000 Recovering log #912
+2025/12/18-19:32:52.162657 30a58c000 Delete type=0 #912
+2025/12/18-19:32:52.162686 30a58c000 Delete type=3 #911
+2025/12/18-21:01:11.525965 3191ae000 Level-0 table #916: started
+2025/12/18-21:01:11.526071 3191ae000 Level-0 table #916: 0 bytes OK
+2025/12/18-21:01:11.526267 3191ae000 Delete type=0 #914
+2025/12/18-21:01:11.528612 3191ae000 Manual compaction at level-0 from '!items!0hG5VJieUcAqD7WW' @ 72057594037927935 : 1 .. '!items!znq17lMEMESDOHco' @ 0 : 0; will stop at (end)

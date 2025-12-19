@@ -164,7 +164,7 @@
       "flags": {}
     },
     {
-      "banner": "systems/eclipsephase/resources/img/bannerAnimals.webp",
+      "banner": "systems/eclipsephase/resources/img/bannerMorphs.webp",
       "name": "morphs",
       "label": "Morphs",
       "system": "eclipsephase",
