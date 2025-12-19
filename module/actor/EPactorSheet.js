@@ -616,12 +616,12 @@ export default class EPactorSheet extends ActorSheet {
             bodies[boundTo].gearCount += 1;
             path.push(item);
         }
-        else if (item.type === 'morphFlaw' && itemModel.boundTo  && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
+        else if (item.type === 'traits' && itemModel.traitType === "flaw" && itemModel.boundTo  && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
             const path = bodies[boundTo].morphflaws;
             bodies[boundTo].flawsCount += 1;
             path.push(item);
         }
-        else if (item.type === 'morphTrait' && itemModel.boundTo && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
+        else if (item.type === 'traits' && itemModel.traitType === "trait" && itemModel.boundTo && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
             const path = bodies[boundTo].morphtraits;
             bodies[boundTo].traitsCount += 1;
             path.push(item);
