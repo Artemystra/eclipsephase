@@ -14,7 +14,18 @@
                         <a data-tab="{{morphdetails.0.id}}" class="item">
                             <div class="label truncateMulti">{{morphdetails.0.name}}</div>
                             <div style="min-height: 20px; width: 100%;">
-                                <button class="resource-label editWithLabel button sheetButton sleeveButton" title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" data-item-id="{{body.morphdetails.0._id}}" data-name="{{body.morphdetails.0.name}}">{{localize "ep2e.actorSheet.button.sleeveMorph"}}</button>
+                                <button 
+                                    class="resource-label editWithLabel button sheetButton sleeveButton" 
+                                    title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" 
+                                    data-item-id="{{body.morphdetails.0._id}}" 
+                                    data-name="{{body.morphdetails.0.name}}" 
+                                    data-type="skill" 
+                                    data-name="{{localize aptitude.name}}" 
+                                    data-key="system.aptitudes.{{key}}.value" 
+                                    data-apttype="{{key}}" 
+                                    data-rollvalue="{{aptitude.roll}}">
+                                    {{localize "ep2e.actorSheet.button.sleeveMorph"}}
+                                </button>
                             </div>
                         </a>
                     {{/if}}

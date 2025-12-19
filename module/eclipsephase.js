@@ -463,7 +463,7 @@ Hooks.once("ready", async function() {
   if (before150) {
     endMigration = false;
     const messageCopy = "ep2e.migration.150";
-    let migration = await migrationStart(endMigration, messageHeadline, messageCopy);
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
 
     if (migration.cancelled) return;
     startMigration = migration.start;
@@ -478,9 +478,10 @@ Hooks.once("ready", async function() {
 
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
-  async function migrationStart(endMigration, messageHeadline, messageCopy) {
+  async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
     const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+    const options = messageWidth ? {width: [messageWidth]} : {width:600};
 
     return new Promise(resolve => {
         const data = {
@@ -499,7 +500,6 @@ Hooks.once("ready", async function() {
             default: "normal",
             close: () => resolve ({cancelled: true})
         };
-        let options = {width:600}
         new Dialog(data, options).render(true);
     });
   }
