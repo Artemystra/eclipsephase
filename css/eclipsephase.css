@@ -825,6 +825,10 @@ textarea:focus{
   padding-left: 5px;
 }
 
+input[type="text"].title {
+  font-size: 24px;
+}
+
 input[type="healthPanel"],
 .healthPanel,
 .healthPanelInvisible{
@@ -1304,6 +1308,18 @@ optgroup .Default .Roll .Mode,
 
 .sheet.journal-entry .journal-entry-content {
   background: none!important;
+}
+
+.journal-entry-page h1 {
+  border-bottom:  solid var(--accentBackground) 2px;
+}
+
+.sheet.journal-entry.application .journal-sidebar .toc li.page.active {
+  border-color: var(--highlight)
+}
+
+.sheet.journal-entry.application .journal-sidebar .toc li.page.active + :not(.active){
+  border-top-color: var(--highlight);
 }
 
 .dark button {
