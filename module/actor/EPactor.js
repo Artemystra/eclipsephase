@@ -35,6 +35,7 @@ export default class EPactor extends Actor {
     if (this.getFlag("eclipsephase", "migrating")) return super.prepareData();
     const actorWhole = this;
     const actorModel = actorWhole.system;
+    const actorPools = actorModel.pools
     const activeMorph = actorModel.activeMorph;
     let morphData = null;
     if(activeMorph){
@@ -172,6 +173,11 @@ export default class EPactor extends Actor {
         else
           value.roll = (Number(value.value) + aptSelect)<100 ? Number(value.value) + aptSelect : 100;
       }
+    }
+
+    if (actorWhole.getFlag("eclipsephase", "resleeving") === true){
+        await actorWhole.update({ "flags.eclipsephase.resleeving": false });
+        await actorWhole.update({"system.pools.insight.value": actorPools.insight.totalInsight, "system.pools.vigor.value": actorPools.vigor.totalVigor, "system.pools.moxie.value": actorPools.moxie.totalMoxie, "system.pools.flex.value": actorPools.flex.totalFlex})
     }
   }
 

@@ -151,7 +151,8 @@ export default class EPactorSheet extends ActorSheet {
     if (item.type === "morph" && actor.type !== "character"){
       await morphFunction.replaceMorph(actor, currentMorph, item)
       const newDroppedItem = await super._onDropItemCreate(item)
-      return await actor.update({"system.activeMorph": newDroppedItem[0].id});
+      await actor.update({"system.activeMorph": newDroppedItem[0].id});
+      await actor.update({ "flags.eclipsephase.resleeving": true });
     }
 
     //Shows a pop-up if a trait has both a morph and a ego variant
@@ -1036,7 +1037,6 @@ export default class EPactorSheet extends ActorSheet {
 
       //More Information Dialog
       html.on('click', 'a.moreInfoDialog', moreInfo);
-
   }
 
   /**

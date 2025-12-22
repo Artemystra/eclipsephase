@@ -1,6 +1,9 @@
 import * as sheetFunction from "../common/common-sheet-functions.js"
+import * as resleeving from "../rolls/resleeving.js"
 
 export async function resleeveMorph(actor, currentTarget){
+    const actorModel = actor.system;
+    const actorPools = actorModel.pools;
     const dataset = currentTarget[0].dataset;
     const itemID = dataset.itemId;
     const itemName = dataset.name;
@@ -9,11 +12,14 @@ export async function resleeveMorph(actor, currentTarget){
     const popUpCopy = "ep2e.actorSheet.popUp.sleeveCopyGeneral";
     const popUpInfo = "ep2e.actorSheet.popUp.sleeveAdditionalInfo";
     const popUpPrimary = "ep2e.actorSheet.button.sleeveMorph";
+    const systemOptions = {"optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if(popUp.confirm === true){
-        await actor.update({"system.activeMorph": itemID})
+        //await resleeving.integrationTest (dataset, systemOptions);
+        await actor.update({"system.activeMorph": itemID});
+        await actor.update({ "flags.eclipsephase.resleeving": true });
     }
     else{
         return

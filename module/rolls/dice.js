@@ -541,6 +541,8 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
+
+        return outputData
     }
 }
 
