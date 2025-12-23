@@ -1496,6 +1496,15 @@ export async function migrationPre150(startMigration, endMigration) {
   // Item types to delete (both on actors AND from world Items directory)
   const DELETE_ITEM_TYPES = new Set(["morphTrait", "trait", "flaw", "morphFlaw"]);
 
+
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+  const total = actors.length || 1;
+
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
   // Load compendium fallback morph once
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) {
@@ -1534,6 +1543,12 @@ export async function migrationPre150(startMigration, endMigration) {
   // -----------------------------
   for (const actor of game.actors) {
     if (!ACTOR_TYPES.has(actor.type)) continue;
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
 
     await actor.update({ "flags.eclipsephase.migrating": true });
 
@@ -1582,9 +1597,20 @@ export async function migrationPre150(startMigration, endMigration) {
     }
 
     await actor.update({ "flags.eclipsephase.migrating": false });
-  }
 
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+
+    // give the UI a moment to repaint on very heavy loops
+    await new Promise(r => setTimeout(r, 0));
+
+  }
   game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
   return { endMigration: true };
 }
 
@@ -1836,4 +1862,43 @@ function _ep150_emptyMorphItemSystem() {
 function itemDeletion(actor, itemID){
   let itemDelete = [itemID]
   actor.deleteEmbeddedDocuments("Item", itemDelete);
+}
+
+function epCreateProgressDialog(title = "Migration") {
+  const content = `
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div class="ep-mig-label">Starting…</div>
+      <progress class="ep-mig-progress" value="0" max="100" style="width:100%; height:18px;"></progress>
+      <div class="ep-mig-sub" style="opacity:.8; font-size:12px;"></div>
+    </div>
+  `;
+
+  //A general progress bar dialog
+  const dlg = new Dialog({
+    title,
+    content,
+    buttons: {},
+    close: () => {}
+  }, { width: 420 });
+
+  dlg.render(true);
+
+  const getEl = () => dlg.element?.[0];
+  const set = (pct, label = "", sub = "") => {
+    const el = getEl();
+    if (!el) return;
+    el.querySelector(".ep-mig-progress")?.setAttribute("value", String(pct));
+    const lab = el.querySelector(".ep-mig-label");
+    if (lab) lab.textContent = label || `${pct}%`;
+    const s = el.querySelector(".ep-mig-sub");
+    if (s) s.textContent = sub;
+  };
+
+  const done = (label = "Done") => {
+    set(100, label, "");
+    // optional: auto-close after a short delay
+    setTimeout(() => dlg.close(), 600);
+  };
+
+  return { dlg, set, done };
 }

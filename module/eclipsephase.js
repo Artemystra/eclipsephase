@@ -552,6 +552,18 @@ Hooks.once("ready", async function() {
   }
 });
 
+//Progressbar for migration purposes
+Hooks.once("ready", () => {
+  // Create/attach the system socket
+  game.socket.on("system.eclipsephase", (msg) => {
+    if (!msg || msg.type !== "migration-progress") return;
+
+    const text = `[EP Migration ${msg.version}] ${msg.label} (${msg.pct}%)`;
+    // Show to everyone (you can gate this if you only want players)
+    ui.notifications?.info(text);
+  });
+});
+
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
 Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.addChatListeners(html, data);
