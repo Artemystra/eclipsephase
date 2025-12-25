@@ -446,6 +446,18 @@
           "placeholder": "Novo Morfo"
         }
       },
+      "sleeving": {
+        "title": {
+          "resleevingIntegration": "Resleeving: Integration",
+          "resleevingStress": "Resleeving: Stress Test",
+          "jammingIntegration": "Jamming: Integration"
+        },
+        "result": {
+          "taskResleeve": "Resleeve",
+          "taskIntegration": "Integration",
+          "taskStress": "Stress Test"
+        }
+      },
       "traitsLabel": "Traços do Morfo",
       "wareLabel": "Ware do Morfo",
       "noMorphTraits": "Este Morfo não possui traços",

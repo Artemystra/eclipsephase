@@ -1,0 +1,43 @@
+
+<div class="alignCenter">
+
+    {{#if (eq type "resleeve")}}
+        <p>Resleeved<span class="resource-value"></span></p>
+
+        <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
+            <span style="font-size: 14px;">I resleeved into a new morph:<br></span>
+            <span><b>Morphname</b></span><br>
+        </div>
+        <div class="item privateChatButton" style="min-width: 100%; cursor: pointer; background-color: var(--mainBackground);" data-ownerid={{actor.id}}>
+            <button 
+                class="chatButton resleeve" 
+                data-type = "{{type}}"    
+                data-integrationtitle = "{{integrationtitle}}"
+                data-stresstitle = "{{stresstitle}}"
+                data-morphtype = "{{morphtype}}"
+                data-rolltype = "{{rolltype}}"
+                data-actorid = "{{actor.id}}">
+                Roll Integration & Stress
+            </button>
+            <button 
+                class="chatButton resleeve"  
+                data-type = "stress"   
+                data-stresstitle = "{{stresstitle}}"
+                data-morphtype = "{{morphtype}}"
+                data-rolltype = "{{rolltype}}"
+                data-actorid = "{{actor.id}}">
+                Roll Stress Only
+            </button>
+            <button 
+                class="chatButton resleeve"  
+                data-type = "integration"   
+                data-integrationtitle = "{{integrationtitle}}"
+                data-morphtype = "{{morphtype}}"
+                data-rolltype = "{{rolltype}}"
+                data-actorid = "{{actor.id}}">
+                Roll Integration Only
+            </button>
+        </div>
+    {{/if}}
+
+</div>

@@ -486,6 +486,18 @@
           "placeholder": "New Morph"
         }
       },
+      "sleeving": {
+        "title": {
+          "resleevingIntegration": "Resleeving: Integration",
+          "resleevingStress": "Resleeving: Stress Test",
+          "jammingIntegration": "Jamming: Integration"
+        },
+        "result": {
+          "taskResleeve": "Resleeve",
+          "taskIntegration": "Integration",
+          "taskStress": "Stress Test"
+        }
+      },
       "traitsLabel": "Morph Traits",
       "wareLabel": "Morph Ware",
       "noMorphTraits": "This Morph is Traitless",

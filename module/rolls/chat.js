@@ -2,6 +2,7 @@ import { moreInfo, registerCommonHandlers } from "../common/common-sheet-functio
 import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
+import * as resleeving from "./resleeving.js";
 
 /**
  * Hides GM info from players
@@ -54,6 +55,7 @@ export async function addChatListeners($html){
     html.on('click', 'button.usePool', poolFunctions.usePoolFromChat);
     html.on('click', 'button.psiEffect', psiFunctions.preparePsi);
     html.on('click', 'button.weaponDamage', damageFunctions.prepareWeapon);
+    html.on('click', 'button.resleeve', resleeving.sleevingTest);
 
     registerCommonHandlers(html);
 }

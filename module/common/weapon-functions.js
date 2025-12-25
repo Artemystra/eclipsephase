@@ -442,7 +442,7 @@ export async function reloadWeapon(html, actor) {
             
             html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
 
-            if(actor.type === "charachter"){
+            if(actor.type === "character"){
               ChatMessage.create({
                   speaker: ChatMessage.getSpeaker({actor: actor}),
                   content: html

@@ -6,6 +6,8 @@ export async function resleeveMorph(actor, currentTarget){
     const actorPools = actorModel.pools;
     const dataset = currentTarget[0].dataset;
     const itemID = dataset.itemId;
+    const newMorph = actor.items.get(itemID);
+    const morphType = newMorph.type
     const itemName = dataset.name;
     const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
     const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.sleeveMorph"))+ ": " +(itemName?itemName:"");
@@ -13,13 +15,28 @@ export async function resleeveMorph(actor, currentTarget){
     const popUpInfo = "ep2e.actorSheet.popUp.sleeveAdditionalInfo";
     const popUpPrimary = "ep2e.actorSheet.button.sleeveMorph";
     const systemOptions = {"optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
+    const RESLEEVING_MESSAGE = 'systems/eclipsephase/templates/chat/resleeving.html';
 
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if(popUp.confirm === true){
-        //await resleeving.integrationTest (dataset, systemOptions);
         await actor.update({"system.activeMorph": itemID});
         await actor.update({ "flags.eclipsephase.resleeving": true });
+        
+        let message = {
+        type : "resleeve",
+        actor : actor,
+        morphtype : morphType,
+        };
+        
+        let html = await renderTemplate(RESLEEVING_MESSAGE, message)
+
+        if(actor.type === "character"){
+            ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({actor: actor}),
+                content: html
+            })
+        }
     }
     else{
         return

@@ -5,8 +5,6 @@ import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
-import  EPnpcSheet from "./actor/EPnpcSheet.js";
-import  EPgoonSheet from "./actor/EPgoonSheet.js";
 import  EPgearSheet from "./item/EPgearSheet.js";
 import  EPtraitSheet  from "./item/EPtraitSheet.js";
 import  EPaspectSheet  from "./item/EPaspectSheet.js";

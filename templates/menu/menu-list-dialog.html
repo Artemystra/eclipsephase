@@ -16,7 +16,7 @@
       {{#each activeChars as |char|}}
       <div class="checkbox-label">
         <label>{{char.actor.name}}</label>
-        <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor._id}}" {{checkedIf char.ownedByPlayer}}>
+        <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor.id}}" {{checkedIf char.ownedByPlayer}}>
       </div>
       {{/each}}
     </div>
@@ -33,7 +33,7 @@
       {{#each otherChars as |char|}}
       <div class="checkbox-label">
         <label>{{char.actor.name}}</label>
-        <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor._id}}" {{checkedIf char.ownedByPlayer}}>
+        <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor.id}}" {{checkedIf char.ownedByPlayer}}>
       </div>
       {{/each}}
     </div>

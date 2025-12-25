@@ -132,7 +132,7 @@ function defineRoll(dataset, actorWhole){
     let sleight = {}
     let template
     let templateSize = {width: 276}
-    let title = game.i18n.localize('ep2e.roll.dialog.title.check')
+    let title = dataset.dialogTitle ?? game.i18n.localize('ep2e.roll.dialog.title.check')
 
     switch (type) {
         case 'fray':
@@ -483,7 +483,8 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         options[entry] = values[entry] || false
     }
 
-    let numberOfTargets = options.numberOfTargets ? parseInt(options.numberOfTargets) : 1
+    let numberOfTargets = 1
+    if(options.numberOfTargets) numberOfTargets = parseInt(options.numberOfTargets);
 
     for(let repitition = 1; repitition <= numberOfTargets; repitition++){
 
@@ -536,13 +537,14 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
+
+        //Returns a roll without producing the output directly to the chat
+        if(dataset.specialRollResult) return outputData;
         
         await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
         
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
-
-        return outputData
     }
 }
 

@@ -37,8 +37,8 @@ export function createDroplist(html, callerobj){
 export function registerEffectHandlers(html,callerobj){
     html.find('.effect-create').click(ev => {
         callerobj.createEmbeddedDocuments('ActiveEffect', [{
-          name: "test",
-          label: 'Active Effect',
+          name: callerobj.name,
+          label: callerobj.name,
           icon: '/icons/svg/mystery-man.svg'
         }]);
         

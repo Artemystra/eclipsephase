@@ -446,6 +446,18 @@
           "placeholder": "新义体"
         }
       },
+      "sleeving": {
+        "title": {
+          "resleevingIntegration": "Resleeving: Integration",
+          "resleevingStress": "Resleeving: Stress Test",
+          "jammingIntegration": "Jamming: Integration"
+        },
+        "result": {
+          "taskResleeve": "Resleeve",
+          "taskIntegration": "Integration",
+          "taskStress": "Stress Test"
+        }
+      },
       "traitsLabel": "义体特征",
       "wareLabel": "义体插件",
       "noMorphTraits": "这具义体没有特征",

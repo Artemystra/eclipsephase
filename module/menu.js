@@ -83,7 +83,7 @@ class EPmenuLayer extends PlaceablesLayer {
 
                 if (resetCount > 0){
                   for (let actor of game.actors){
-                    let actorID = actor._id;
+                    let actorID = actor.id;
                     for (let id of charSelect.resetList){
                       if (actorID === id){
                           actor.update({"system.rest.long" : false, "system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false});

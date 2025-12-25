@@ -16,7 +16,7 @@
   <p></p><div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
     <span class="{{resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize resultText}}</span> <p>
 
-      <div class="item privateChatButton" style="min-width: 100%; cursor: pointer; background-color: var(--mainBackground);" data-ownerid={{actor._id}}>
+      <div class="item privateChatButton" style="min-width: 100%; cursor: pointer; background-color: var(--mainBackground);" data-ownerid={{actor.id}}>
         {{#if alternatives.options.swap}}
         <div class="slideShow">
           <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
@@ -25,7 +25,7 @@
         </div>
         <div class="showMore noShow">
           <div class="chatControls">
-            {{#if (eq actor.type "character")}}
+            {{#if (ne actor.type "goon")}}
               {{#if (gt pools.skillPoolValue 0)}}
                 <button class="chatButton usePool autoClose" data-actorid="{{actor.uuid}}" data-userid="{{userID}}" data-usepool="pool" data-usagetype="swapped" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}" data-newresult="{{alternatives.result}}" data-newvalue="{{alternatives.value}}" data-rollmode="{{rollMode}}" data-weaponid="{{itemdata.weaponID}}" data-weaponmode="{{itemdata.weaponMode}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-rolledfrom="{{rolledFrom}}" data-touchonly="{{options.touchOnly}}">{{localize pools.useMessage}}</button>
               {{else}}
@@ -50,7 +50,7 @@
         </div>
         <div class="showMore noShow">
           <div class="chatControls">
-            {{#if (eq actor.type "character")}}
+            {{#if (ne actor.type "goon")}}
               {{#if (gt pools.skillPoolValue 0)}}
                 <button class="chatButton usePool autoClose" data-actorid="{{actor.uuid}}" data-userid="{{userID}}" data-usepool="pool" data-usagetype="upgraded" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}" data-newresult="{{alternatives.result}}" data-rollmode="{{rollMode}}" data-weaponid="{{itemdata.weaponID}}" data-weaponmode="{{itemdata.weaponMode}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-rolledfrom="{{rolledFrom}}" data-touchonly="{{options.touchOnly}}">{{localize pools.useMessage}}</button>
               {{else}}
@@ -75,7 +75,7 @@
         </div>
         <div class="showMore noShow">
           <div class="chatControls">
-            {{#if (eq actor.type "character")}}
+            {{#if (ne actor.type "goon")}}
               {{#if (gt pools.skillPoolValue 0)}}
                 <button class="chatButton usePool autoClose" data-actorid="{{actor.uuid}}" data-userid="{{userID}}" data-usepool="pool" data-usagetype="mitigated" data-pooltype="{{pools.poolType}}" data-updatepoolpath="{{pools.updatePoolPath}}" data-resultclass="{{alternatives.resultClass}}" data-resulttext="{{alternatives.resultText}}" data-skillpoolvalue="{{pools.skillPoolValue}}" data-newresult="{{alternatives.result}}" data-rollmode="{{rollMode}}" data-attackmode="{{options.attackMode}}" data-biomorphtarget="{{options.biomorphTarget}}" data-rolledfrom="{{rolledFrom}}" data-touchonly="{{options.touchOnly}}">{{localize pools.useMessage}}</button>
               {{else}}
