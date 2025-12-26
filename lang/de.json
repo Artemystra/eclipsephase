@@ -485,6 +485,20 @@
           "taskResleeve": "Resleeve",
           "taskIntegration": "Integration",
           "taskStress": "Stress Test"
+        },
+        "announce": {
+          "title": {
+            "sleeved": "Resleeved",
+            "jammed": "Jammed"
+          },
+          "copy": {
+            "sleeved": "Ich habe den Morph gewechselt",
+            "jammed": "Ich bin in eine Drohne gesprungen"
+          },
+          "moreInfo": {
+            "title": "Trait 'Morph Familiarity' verfügbar",
+            "copy": "Der Charakter ist an einen bestimmten Morphtypen gewöhnt (z.B., Bouncer, Ruster, Agents etc.) und muss keine Integrationstests mehr durchführen, wenn er ihn bezieht. In diesem Fall wird einzig noch der Stress Test fällig."
+          }
         }
       },
       "traitsLabel": "Morph Eigenschaften",
@@ -1177,6 +1191,9 @@
             "poor": "Schlecht",
             "harsh": "Hart"
           }
+        },
+        "sleeving": {
+          "exoticMorphology": "Exotische Morphologie"
         }
       },
       "successType": {
@@ -1220,6 +1237,10 @@
         "total": "Resultat",
         "damageDone": "Schaden gesamt",
         "infectionRaise": "Ienfektion steigt auf",
+        "sleeving": {
+          "exoticMorphology": "Exotische Morphologie",
+          "aversion": "Morph-Abneigung"
+        },
         "rest": {
           "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
           "long": "Ich habe meine<p/><strong>lange Rast<p/></strong>um zu regenerieren<p/>"

@@ -965,6 +965,18 @@ body.game .app button:focus {
   max-height: 20px;
 }
 
+.privateChatButton {
+  min-width: 100%; 
+  background-color: var(--mainBackground);
+}
+
+.privateChatButton.horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+}
+
 .eclipsephase .item.active .sleeveButton {
   display: flex;
   opacity: 100;

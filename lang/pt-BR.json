@@ -456,6 +456,20 @@
           "taskResleeve": "Resleeve",
           "taskIntegration": "Integration",
           "taskStress": "Stress Test"
+        },
+        "announce": {
+          "title": {
+            "sleeved": "Resleeved",
+            "jammed": "Jammed"
+          },
+          "copy": {
+            "sleeved": "I resleeved into a new morph",
+            "jammed": "I jammed a new drone"
+          },
+          "moreInfo": {
+            "title": "Trait 'Morph Familiarity' present",
+            "copy": "You are accustomed to one specific type of morph (e.g., bouncers, rusters, agents, or flexbots) and do not need to make Integration Tests when sleeving them. You may take this trait more than once for different morphs. In this case you are just rolling a stress test for these morphs instead."
+          }
         }
       },
       "traitsLabel": "Traços do Morfo",
@@ -1139,6 +1153,9 @@
             "poor": "Poor",
             "harsh": "Harsh"
           }
+        },
+        "sleeving": {
+          "exoticMorphology": "Exotic Morphology"
         }
       },
       "successType": {
@@ -1182,6 +1199,10 @@
         "total": "Result",
         "damageDone": "Damage Done",
         "infectionRaise": "Infecção elevada para",
+        "sleeving": {
+          "exoticMorphology": "Exotic Morphology",
+          "aversion": "Morph Aversion"
+        },
         "rest": {
           "short": "Eu usei um<p/><strong>Descanso Curto<p/></strong>para recuperar alguns pontos de parada<p/>",
           "long": "Eu usei o meu<p/><strong>Descanso Longo<p/></strong>para recuperar todas as paradas<p/>"

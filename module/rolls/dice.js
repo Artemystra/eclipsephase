@@ -128,7 +128,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
 function defineRoll(dataset, actorWhole){
     
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode']
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -474,7 +474,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let specName = dataset.specname || "";
     let roll = defineRoll(dataset, actorWhole)
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type)
-    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole.type, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom)
+    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom)
     
     if(values.cancelled)
         return
@@ -507,7 +507,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             options.totalInfection = await psi.infectionUpdate(actorWhole, options)
         
         if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
-            addTaskModifiers(actorModel, options, task, roll.type, rolledFrom, weaponSelected)
+            addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
         
         await task.performRoll()
 
@@ -560,13 +560,14 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
  * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
  * @returns {Promise<Object>} - The values of the form when submitted
  */
-async function showOptionsDialog(rollData, rollType, specName, pool, actorType, traits, rolledFrom) {
+async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom) {
 
     let specialEffects
+    const actorType = actorWhole.type
     if(traits)
         specialEffects = Object.keys(traits.confirmationEffects).length
 
-    const html = await renderTemplate(rollData.template, {specName, pool, actorType, rollType, traits, specialEffects, rolledFrom, rollData})
+    const html = await renderTemplate(rollData.template, {specName, pool, actorWhole, actorType, rollType, traits, specialEffects, rolledFrom, rollData})
 
     function extractFormValues(html) {
     let form = html[0].querySelector("form")
@@ -612,7 +613,7 @@ async function showOptionsDialog(rollData, rollType, specName, pool, actorType, 
  * in the dialog before.
  * @param {Object} options - The options selected in the dialog
  */
-function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weaponSelected){
+function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolledFrom, weaponSelected){
     let modValue
     let addition
     let announce
@@ -878,6 +879,29 @@ function addTaskModifiers(actorModel, options, task, rollType, rolledFrom, weapo
             announce = "ep2e.roll.announce.combat.ranged.weaponFixated";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
+    }
+
+    /* Resleeving & Jamming */
+
+    if (rolledFrom === "integration"){
+        const newMorph = actorWhole.items.get(actorModel.activeMorph);
+        const aversionType = actorModel.additionalSystems.sleeving.aversion ? actorModel.additionalSystems.sleeving.aversion.type : "none";
+        const aversionValue = actorModel.additionalSystems.sleeving.aversion ? eval(actorModel.additionalSystems.sleeving.aversion.value) : 0;
+        const exoticMorphMod = actorModel.additionalSystems.sleeving.exotic ? eval(actorModel.additionalSystems.sleeving.exotic) : 0;
+
+        if(aversionType === newMorph.system.type){
+            modValue = aversionValue
+            announce = "ep2e.roll.announce.sleeving.aversion";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+        if(options.exoticMorphology){
+            modValue = exoticMorphMod
+            announce = "ep2e.roll.announce.sleeving.exoticMorphology";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+    }
+    if (rolledFrom === "stressTest"){
+        console.log("Pong - I'm a taskModifier")
     }
 
 }

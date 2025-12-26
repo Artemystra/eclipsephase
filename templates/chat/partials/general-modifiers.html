@@ -16,6 +16,14 @@
         </div>
         {{/if}}
     {{/if}}
+    {{#if (eq rolledFrom "integration")}}
+        {{#if actorWhole.system.additionalSystems.sleeving.exotic}}
+            <div class="form-group listBackgroundMain">
+                <input type="checkbox" name="exoticMorphology" checked>
+                <label class="resource-label">{{localize "ep2e.roll.dialog.sleeving.exoticMorphology"}} ({{actorWhole.system.additionalSystems.sleeving.exotic}})</label>
+            </div>
+        {{/if}}
+    {{/if}}
     {{#if (ne actorType "goon")}}
         {{#if pool.skillPoolValue}}
             {{#if pool.flexPoolValue}}

@@ -1,43 +1,80 @@
 
 <div class="alignCenter">
-
+    <!-- Sleeving -->
     {{#if (eq type "resleeve")}}
-        <p>Resleeved<span class="resource-value"></span></p>
+        <p>{{localize "ep2e.morph.sleeving.announce.title.sleeved"}}<span class="resource-value"></span></p>
 
         <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
-            <span style="font-size: 14px;">I resleeved into a new morph:<br></span>
-            <span><b>Morphname</b></span><br>
+            <span style="font-size: 14px;">{{localize "ep2e.morph.sleeving.announce.copy.sleeved"}}:<br></span>
+            <span><b>{{morphname}}</b></span><br>
         </div>
-        <div class="item privateChatButton" style="min-width: 100%; cursor: pointer; background-color: var(--mainBackground);" data-ownerid={{actor.id}}>
-            <button 
-                class="chatButton resleeve" 
-                data-type = "{{type}}"    
-                data-integrationtitle = "{{integrationtitle}}"
-                data-stresstitle = "{{stresstitle}}"
-                data-morphtype = "{{morphtype}}"
-                data-rolltype = "{{rolltype}}"
-                data-actorid = "{{actor.id}}">
-                Roll Integration & Stress
-            </button>
-            <button 
-                class="chatButton resleeve"  
-                data-type = "stress"   
-                data-stresstitle = "{{stresstitle}}"
-                data-morphtype = "{{morphtype}}"
-                data-rolltype = "{{rolltype}}"
-                data-actorid = "{{actor.id}}">
-                Roll Stress Only
-            </button>
+        <div class="item privateChatButton horizontal" data-ownerid={{actor.id}}>
+            {{#if (or (and (eq actor.system.additionalSystems.sleeving.ignoreBio true) (eq morphtype "bio"))(and (eq actor.system.additionalSystems.sleeving.ignoreSynth true) (eq morphtype "synth"))(and (eq actor.system.additionalSystems.sleeving.ignoreInfo true) (eq morphtype "info")))}}
+                <button 
+                    class="chatButton resleeve"  
+                    data-type = "stress"   
+                    data-stresstitle = "{{stresstitle}}"
+                    data-morphtype = "{{morphtype}}"
+                    data-actorid = "{{actor.id}}">
+                    Roll Stress Only
+                </button>
+            {{else if actor.system.additionalSystems.sleeving.familiarity}}
+                <div class="flexrow" style="width: 100%;">
+                    <button style="flex: 1 1 70%"
+                        class="chatButton resleeve"  
+                        data-type = "stress"   
+                        data-stresstitle = "{{stresstitle}}"
+                        data-morphtype = "{{morphtype}}"
+                        data-actorid = "{{actor.id}}">
+                        Familiar Morph
+                    </button>
+                    <p><a class="GMinfo">
+                        <i class="fa-regular fa-circle-info moreInfo awesomeIcon" 
+                            data-title="ep2e.morph.sleeving.announce.moreInfo.title" 
+                            data-description= "ep2e.morph.sleeving.announce.moreInfo.copy" 
+                            data-rolledfrom="info" 
+                            data-dialogType="information">
+                        </i>
+                    </a></p>
+                </div>
+                <button 
+                    class="chatButton resleeve" 
+                    data-type = "{{type}}"    
+                    data-integrationtitle = "{{integrationtitle}}"
+                    data-stresstitle = "{{stresstitle}}"
+                    data-morphtype = "{{morphtype}}"
+                    data-actorid = "{{actor.id}}">
+                    Roll Integration & Stress
+                </button>
+            {{else}}
+                <button 
+                    class="chatButton resleeve" 
+                    data-type = "{{type}}"    
+                    data-integrationtitle = "{{integrationtitle}}"
+                    data-stresstitle = "{{stresstitle}}"
+                    data-morphtype = "{{morphtype}}"
+                    data-actorid = "{{actor.id}}">
+                    Roll Integration & Stress
+                </button>
+            {{/if}}
+        </div>
+    <!-- Jamming -->
+    {{else}}
+        <p>{{localize "ep2e.morph.sleeving.announce.title.resleeved"}}<span class="resource-value"></span></p>
+
+        <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
+            <span style="font-size: 14px;">{{localize "ep2e.morph.sleeving.announce.copy.resleeved"}}:<br></span>
+            <span><b>{{morphname}}</b></span><br>
+        </div>
+        <div class="item privateChatButton horizontal" data-ownerid={{actor.id}}>
             <button 
                 class="chatButton resleeve"  
                 data-type = "integration"   
                 data-integrationtitle = "{{integrationtitle}}"
                 data-morphtype = "{{morphtype}}"
-                data-rolltype = "{{rolltype}}"
                 data-actorid = "{{actor.id}}">
                 Roll Integration Only
             </button>
         </div>
     {{/if}}
-
 </div>

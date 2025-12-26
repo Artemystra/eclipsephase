@@ -30,7 +30,7 @@ export async function sleevingTest (data) {
 
         if (btndata.type !== "resleeve") chatData.taskType = "ep2e.morph.sleeving.result.taskIntegration"
 
-        integrationTest = await Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, false, false)
+        integrationTest = await Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, false, "integration")
     }
 
     if (btndata.type === "resleeve" || btndata.type === "stress"){
@@ -47,7 +47,7 @@ export async function sleevingTest (data) {
 
         if (btndata.type !== "resleeve") chatData.taskType = "ep2e.morph.sleeving.result.taskStress"
 
-        stressTest = await Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, false, false)
+        stressTest = await Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, false, "stressTest")
     }
     
     chatData.stressTest = stressTest;

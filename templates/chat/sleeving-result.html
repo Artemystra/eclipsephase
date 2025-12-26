@@ -11,7 +11,7 @@
         <p></p><div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
         <span class="{{integrationTest.resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize integrationTest.resultText}}</span> <p>
 
-            <div class="item privateChatButton" style="min-width: 100%; cursor: pointer; background-color: var(--mainBackground);" data-ownerid={{integrationTest.actor.id}}>
+            <div class="item privateChatButton" data-ownerid={{integrationTest.actor.id}}>
             {{#if integrationTest.alternatives.options.swap}}
             <div class="slideShow">
                 <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
@@ -74,7 +74,7 @@
                 {{#if (gt integrationTest.modValue 0)}}
                 <strong style="color: var(--positive);">+{{integrationTest.modValue}}</strong>
                 {{/if}}
-                {{#if (lt modValue 0)}}
+                {{#if (lt integrationTest.modValue 0)}}
                 <strong style="color: var(--negative);">{{integrationTest.modValue}}</strong>
                 {{/if}}
             </div>
@@ -92,17 +92,17 @@
                 {{#each integrationTest.modifiers}}
                 <tr>
                 <td class="table-dice-label">
-                    {{localize integrationTest.text}}
-                    {{#if integrationTest.comment}}
-                    <br><label style="font-size: 12px">{{localize integrationTest.comment}}</label>
+                    {{localize text}}
+                    {{#if comment}}
+                    <br><label style="font-size: 12px">{{localize comment}}</label>
                     {{/if}}
                 </td>
                 <td class="table-dice-result">
-                    {{#if (gt integrationTest.value 0)}}
-                    <strong style="color: var(--positive);">{{integrationTest.value}}</strong>
+                    {{#if (gt value 0)}}
+                    <strong style="color: var(--positive);">{{value}}</strong>
                     {{/if}}
-                    {{#if (lt integrationTest.value 0)}}
-                    <strong style="color: var(--negative);">{{integrationTest.value}}</strong>
+                    {{#if (lt value 0)}}
+                    <strong style="color: var(--negative);">{{value}}</strong>
                     {{/if}}
                 </td>
                 </tr>
@@ -119,7 +119,7 @@
         <p></p><div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
         <span class="{{stressTest.resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize stressTest.resultText}}</span> <p>
 
-            <div class="item privateChatButton" style="min-width: 100%; cursor: pointer; background-color: var(--mainBackground);" data-ownerid={{stressTest.actor.id}}>
+            <div class="item privateChatButton" data-ownerid={{stressTest.actor.id}}>
             {{#if stressTest.alternatives.options.swap}}
             <div class="slideShow">
                 <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
@@ -182,7 +182,7 @@
                 {{#if (gt stressTest.modValue 0)}}
                 <strong style="color: var(--positive);">+{{stressTest.modValue}}</strong>
                 {{/if}}
-                {{#if (lt modValue 0)}}
+                {{#if (lt stressTest.modValue 0)}}
                 <strong style="color: var(--negative);">{{stressTest.modValue}}</strong>
                 {{/if}}
             </div>
@@ -200,17 +200,17 @@
                 {{#each stressTest.modifiers}}
                 <tr>
                 <td class="table-dice-label">
-                    {{localize stressTest.text}}
-                    {{#if stressTest.comment}}
-                    <br><label style="font-size: 12px">{{localize stressTest.comment}}</label>
+                    {{localize text}}
+                    {{#if comment}}
+                    <br><label style="font-size: 12px">{{localize comment}}</label>
                     {{/if}}
                 </td>
                 <td class="table-dice-result">
-                    {{#if (gt stressTest.value 0)}}
-                    <strong style="color: var(--positive);">{{stressTest.value}}</strong>
+                    {{#if (gt value 0)}}
+                    <strong style="color: var(--positive);">{{value}}</strong>
                     {{/if}}
-                    {{#if (lt stressTest.value 0)}}
-                    <strong style="color: var(--negative);">{{stressTest.value}}</strong>
+                    {{#if (lt value 0)}}
+                    <strong style="color: var(--negative);">{{value}}</strong>
                     {{/if}}
                 </td>
                 </tr>
