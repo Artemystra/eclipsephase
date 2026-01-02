@@ -1275,7 +1275,10 @@
         "infectionRaise": "Infection raised to",
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
-          "aversion": "Morph Aversion"
+          "aversion": "Morph Aversion",
+          "bodyDysmorphia": "Disorder: Body Dysmorphia",
+          "morphingDisorder": "Morphing Disorder",
+          "adaptability": "Adaptability"
         },
         "rest": {
           "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",

@@ -472,7 +472,13 @@
           },
           "result": {
             "stressCopy": "Changing my body stresses me out.",
-            "integrationCopy": "I'm feeling uncomfortable in my new body and receive -10 to all actions."
+            "integrationCopy": "I'm feeling uncomfortable in my new body and receive -10 to all actions.",
+            "effectIntegrationIssues": {
+              "title": "Integration Issues",
+              "oneDay": "1 day",
+              "twoDay": "2 days",
+              "threeDay": "3 days"
+            }
           }
         }
       },
@@ -1199,7 +1205,10 @@
         "infectionRaise": "感染加深至",
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
-          "aversion": "Morph Aversion"
+          "aversion": "Morph Aversion",
+          "bodyDysmorphia": "Disorder: Body Dysmorphia",
+          "morphingDisorder": "Morphing Disorder",
+          "adaptability": "Adaptability"
         },
         "rest": {
           "short": "我使用一次<p/><strong>短填充<p/></strong>恢复了部分能力池<p/>",

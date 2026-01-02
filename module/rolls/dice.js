@@ -884,7 +884,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Resleeving & Jamming */
     
-    if (actorModel.additionalSystems.sleeving.integrationIssues){
+    if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
             modValue = actorModel.additionalSystems.sleeving.integrationIssues.value
             announce = actorModel.additionalSystems.sleeving.integrationIssues.title;
             task.addModifier(new TaskRollModifier(announce, modValue))
@@ -892,23 +892,36 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     if (rolledFrom === "integration"){
         const newMorph = actorWhole.items.get(actorModel.activeMorph);
-        const aversionType = actorModel.additionalSystems.sleeving.aversion ? actorModel.additionalSystems.sleeving.aversion.type : "none";
-        const aversionValue = actorModel.additionalSystems.sleeving.aversion ? eval(actorModel.additionalSystems.sleeving.aversion.value) : 0;
-        const exoticMorphMod = actorModel.additionalSystems.sleeving.exotic ? eval(actorModel.additionalSystems.sleeving.exotic) : 0;
 
-        if(aversionType === newMorph.system.type){
-            modValue = aversionValue
+        if(actorModel?.additionalSystems?.sleeving?.aversion?.type === newMorph.system.type){
+            modValue = eval(actorModel.additionalSystems.sleeving.aversion.value)
             announce = "ep2e.roll.announce.sleeving.aversion";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
         if(options.exoticMorphology){
-            modValue = exoticMorphMod
+            modValue = eval(actorModel.additionalSystems.sleeving.exotic)
             announce = "ep2e.roll.announce.sleeving.exoticMorphology";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }
     }
     if (rolledFrom === "stressTest"){
-        console.log("Pong - I'm a taskModifier")
+        
+        if(actorModel?.additionalSystems?.sleeving?.bodyDysmorphia !== undefined){
+            modValue = actorModel.additionalSystems.sleeving.bodyDysmorphia;
+            announce = "ep2e.roll.announce.sleeving.bodyDysmorphia";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+        if(actorModel?.additionalSystems?.sleeving?.morphingDisorder !== undefined){
+            modValue = actorModel.additionalSystems.sleeving.morphingDisorder
+            announce = "ep2e.roll.announce.sleeving.morphingDisorder";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+        if(actorModel?.additionalSystems?.sleeving?.adaptability !== undefined){
+            modValue = actorModel.additionalSystems.sleeving.adaptability
+            announce = "ep2e.roll.announce.sleeving.adaptability";
+            task.addModifier(new TaskRollModifier(announce, modValue))
+        }
+
     }
 
 }

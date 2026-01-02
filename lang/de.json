@@ -501,7 +501,13 @@
           },
           "result": {
             "stressCopy": "Den Körper zu wechseln versetzt mich in Stress",
-            "integrationCopy": "Ich fühle mich noch unwohl in meinem Körper und erhalte -10 auf alle Aktionen."
+            "integrationCopy": "Ich fühle mich noch unwohl in meinem Körper und erhalte -10 auf alle Aktionen.",
+            "effectIntegrationIssues": {
+              "title": "Integrationsprobleme",
+              "oneDay": "1 Tag",
+              "twoDay": "2 Tage",
+              "threeDay": "3 Tage"
+            }
           }
         }
       },
@@ -1243,7 +1249,10 @@
         "infectionRaise": "Ienfektion steigt auf",
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie",
-          "aversion": "Morph-Abneigung"
+          "aversion": "Morph-Abneigung",
+          "bodyDysmorphia": "Disorder: Body Dysmorphia",
+          "morphingDisorder": "Morphing Disorder",
+          "adaptability": "Adaptability"
         },
         "rest": {
           "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
