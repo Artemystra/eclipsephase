@@ -119,8 +119,6 @@ export default class EPgearSheet extends ItemSheet {
     }
 
     sheetData.itemList = itemList;
-    console.log("this is my wareList", item.wareList)
-    console.log("This is my item:", sheetData)
   }
 
   /** @override */

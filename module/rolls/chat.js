@@ -50,12 +50,14 @@ export async function ownerVision(html){
 
 export async function addChatListeners($html){
     const html = await bridgeJQuery($html);
+    const vanilla = $html
     html.on('click', 'i.moreInfo', moreInfo);
     html.on('click', 'a.moreInfoDialog', moreInfo);
     html.on('click', 'button.usePool', poolFunctions.usePoolFromChat);
     html.on('click', 'button.psiEffect', psiFunctions.preparePsi);
     html.on('click', 'button.weaponDamage', damageFunctions.prepareWeapon);
     html.on('click', 'button.resleeve', resleeving.sleevingTest);
+    html.on('click', 'button.resleeveResult', resleeving.result);
 
     registerCommonHandlers(html);
 }

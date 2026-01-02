@@ -477,9 +477,9 @@
       },
       "sleeving": {
         "title": {
-          "resleevingIntegration": "Resleeving: Integration",
+          "resleevingIntegration": "Resleeving: Integrationstest",
           "resleevingStress": "Resleeving: Stress Test",
-          "jammingIntegration": "Jamming: Integration"
+          "jammingIntegration": "Jamming: Integrationstest"
         },
         "result": {
           "taskResleeve": "Resleeve",
@@ -498,6 +498,10 @@
           "moreInfo": {
             "title": "Trait 'Morph Familiarity' verfügbar",
             "copy": "Der Charakter ist an einen bestimmten Morphtypen gewöhnt (z.B., Bouncer, Ruster, Agents etc.) und muss keine Integrationstests mehr durchführen, wenn er ihn bezieht. In diesem Fall wird einzig noch der Stress Test fällig."
+          },
+          "result": {
+            "stressCopy": "Den Körper zu wechseln versetzt mich in Stress",
+            "integrationCopy": "Ich fühle mich noch unwohl in meinem Körper und erhalte -10 auf alle Aktionen."
           }
         }
       },
@@ -1373,6 +1377,14 @@
       "selectTrait": {
         "header": "Trait Typ Wählen",
         "copy": "Hinweis: Diese Eigenschaft kann für Egos oder Morphs gewählt werden. Morpheigenschaften sind an den derzeitig bewohnten Körper gebunden, während Egoeigenschaften immer erhalten bleiben, auch wenn der Körper gewechselt wird."
+      },
+      "selectStress": {
+        "dialogTitle": "Stressauswirkungen",
+        "copy": "Der Vorgang des körperwechsels hat seine Spuren hinterlassen. Die Höhe des Stressschadens wird anhand der traumatischsten Erinnerung in diesem Zusammenhang bestimmt.",
+        "minorLabel": "Wenig Stress",
+        "majorLabel": "Extremer Stress",
+        "minorDescription": "Stress aufgrund der fremdartigkeit des neuen Körpers, des Faktes, dass ein Backup geweckt wurde oder des schieren Zeitverlust-Gefühls.",
+        "majorDescription": "Stress aufgrund der Erinnerung an den eigenen Tod oder weil mehr als 3 Monate seit der Reinsanzierung Vergangen sind."
       }
     },
     "chat": {

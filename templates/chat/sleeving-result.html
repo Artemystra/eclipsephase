@@ -1,6 +1,6 @@
 
 <div class="alignCenter">
-    <p>{{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{localize taskType}}</span></p>
+    <p></p>
     {{#if (eq rollMode "gmroll")}}
     <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.private"}} <i class='fas fa-eye-slash awesomeIcon'></i></h5>
     {{else if (eq rollMode "blindroll")}}
@@ -8,53 +8,9 @@
     {{/if}}
 
     {{#if integrationTest}}
-        <p></p><div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
-        <span class="{{integrationTest.resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize integrationTest.resultText}}</span> <p>
-
-            <div class="item privateChatButton" data-ownerid={{integrationTest.actor.id}}>
-            {{#if integrationTest.alternatives.options.swap}}
-            <div class="slideShow">
-                <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
-                <strong>{{localize "ep2e.chat.buttonLabel.swapResult"}} <i class="fa-solid fa-rotate"></i></strong>
-                </div>
-            </div>
-            <div class="showMore noShow">
-                <div class="chatControls">
-                    {{#if (gt integrationTest.pools.skillPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{integrationTest.actor.uuid}}" data-userid="{{integrationTest.userID}}" data-usepool="pool" data-usagetype="swapped" data-pooltype="{{integrationTest.pools.poolType}}" data-updatepoolpath="{{integrationTest.pools.updatePoolPath}}" data-resultclass="{{integrationTest.alternatives.resultClass}}" data-resulttext="{{integrationTest.alternatives.resultText}}" data-skillpoolvalue="{{integrationTest.pools.skillPoolValue}}" data-newresult="{{integrationTest.alternatives.result}}" data-newvalue="{{integrationTest.alternatives.value}}" data-rollmode="{{integrationTest.rollMode}}" data-weaponid="" data-weaponmode="" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{integrationTest.rolledFrom}}" data-touchonly="">{{localize integrationTest.pools.useMessage}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize integrationTest.pools.useMessage}}</button>
-                    {{/if}}
-                    {{#if (gt integrationTest.pools.flexPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{integrationTest.actor.uuid}}" data-userid="{{integrationTest.userID}}" data-usepool="flex" data-usagetype="swapped" data-updateflexpath="{{integrationTest.pools.updateFlexPath}}" data-resultclass="{{integrationTest.alternatives.resultClass}}" data-resulttext="{{integrationTest.alternatives.resultText}}" data-flexpoolvalue="{{integrationTest.pools.flexPoolValue}}" data-newresult="{{integrationTest.alternatives.result}}" data-newvalue="{{integrationTest.alternatives.value}}" data-rollmode="{{integrationTest.rollMode}}" data-weaponid="" data-weaponmode="" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{integrationTest.rolledFrom}}" data-touchonly="">{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{/if}}
-                </div>
-            </div>
-
-            {{else if integrationTest.alternatives.options.mitigate}}
-            <div class="slideShow">
-                <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
-                <strong>{{localize "ep2e.chat.buttonLabel.mitigateResult"}} <i class="fa-solid fa-bolt"></i></strong>
-                </div>
-            </div>
-            <div class="showMore noShow">
-                <div class="chatControls">
-                    {{#if (gt integrationTest.pools.skillPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{integrationTest.actor.uuid}}" data-userid="{{integrationTest.userID}}" data-usepool="pool" data-usagetype="mitigated" data-pooltype="{{integrationTest.pools.poolType}}" data-updatepoolpath="{{integrationTest.pools.updatePoolPath}}" data-resultclass="{{integrationTest.alternatives.resultClass}}" data-resulttext="{{integrationTest.alternatives.resultText}}" data-skillpoolvalue="{{integrationTest.pools.skillPoolValue}}" data-newresult="{{integrationTest.alternatives.result}}" data-rollmode="{{integrationTest.rollMode}}" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{integrationTest.rolledFrom}}" data-touchonly="">{{localize integrationTest.pools.useMessage}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize integrationTest.pools.useMessage}}</button>
-                    {{/if}}
-                    {{#if (gt integrationTest.pools.flexPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{integrationTest.actor.uuid}}" data-userid="{{integrationTest.userID}}" data-usepool="flex" data-usagetype="mitigated" data-updateflexpath="{{integrationTest.pools.updateFlexPath}}" data-resultclass="{{integrationTest.alternatives.resultClass}}" data-resulttext="{{integrationTest.alternatives.resultText}}" data-flexpoolvalue="{{integrationTest.pools.flexPoolValue}}" data-newresult="{{integrationTest.alternatives.result}}" data-rollmode="{{integrationTest.rollMode}}" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{integrationTest.rolledFrom}}" data-touchonly="">{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{/if}}
-                </div>
-            </div>
-            {{/if}}
-            </div>
+        <div class="resource-value"  style="margin: 20px 0 10px 0;">{{localize integrationTest.taskName}}</div>
+        <div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
+            <span class="{{integrationTest.resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize integrationTest.resultText}}</span> <p>
         </div>
 
         {{#if integrationTest.modifiers}}
@@ -111,61 +67,19 @@
             </div>
         </div>
         {{/if}}
-
-        {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=integrationTest.targetNumber diceBreakdown=integrationTest.diceBreakdown formula=integrationTest.formula total=integrationTest.total resultClass=integrationTest.resultClass}}
+        {{#if integrationTest.diceBreakdown}}
+            {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=integrationTest.targetNumber diceBreakdown=integrationTest.diceBreakdown formula=integrationTest.formula total=integrationTest.total resultClass=integrationTest.resultClass}}
+        {{/if}}
     {{/if}}
 
     {{#if stressTest}}
-        <p></p><div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
-        <span class="{{stressTest.resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize stressTest.resultText}}</span> <p>
-
-            <div class="item privateChatButton" data-ownerid={{stressTest.actor.id}}>
-            {{#if stressTest.alternatives.options.swap}}
-            <div class="slideShow">
-                <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
-                <strong>{{localize "ep2e.chat.buttonLabel.swapResult"}} <i class="fa-solid fa-rotate"></i></strong>
-                </div>
-            </div>
-            <div class="showMore noShow">
-                <div class="chatControls">
-                    {{#if (gt stressTest.pools.skillPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{stressTest.actor.uuid}}" data-userid="{{stressTest.userID}}" data-usepool="pool" data-usagetype="swapped" data-pooltype="{{stressTest.pools.poolType}}" data-updatepoolpath="{{stressTest.pools.updatePoolPath}}" data-resultclass="{{stressTest.alternatives.resultClass}}" data-resulttext="{{stressTest.alternatives.resultText}}" data-skillpoolvalue="{{stressTest.pools.skillPoolValue}}" data-newresult="{{stressTest.alternatives.result}}" data-newvalue="{{stressTest.alternatives.value}}" data-rollmode="{{stressTest.rollMode}}" data-weaponid="" data-weaponmode="" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{stressTest.rolledFrom}}" data-touchonly="">{{localize stressTest.pools.useMessage}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize stressTest.pools.useMessage}}</button>
-                    {{/if}}
-                    {{#if (gt stressTest.pools.flexPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{stressTest.actor.uuid}}" data-userid="{{stressTest.userID}}" data-usepool="flex" data-usagetype="swapped" data-updateflexpath="{{stressTest.pools.updateFlexPath}}" data-resultclass="{{stressTest.alternatives.resultClass}}" data-resulttext="{{stressTest.alternatives.resultText}}" data-flexpoolvalue="{{stressTest.pools.flexPoolValue}}" data-newresult="{{stressTest.alternatives.result}}" data-newvalue="{{stressTest.alternatives.value}}" data-rollmode="{{stressTest.rollMode}}" data-weaponid="" data-weaponmode="" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{stressTest.rolledFrom}}" data-touchonly="">{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{/if}}
-                </div>
-            </div>
-
-            {{else if stressTest.alternatives.options.mitigate}}
-            <div class="slideShow">
-                <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
-                <strong>{{localize "ep2e.chat.buttonLabel.mitigateResult"}} <i class="fa-solid fa-bolt"></i></strong>
-                </div>
-            </div>
-            <div class="showMore noShow">
-                <div class="chatControls">
-                    {{#if (gt stressTest.pools.skillPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{stressTest.actor.uuid}}" data-userid="{{stressTest.userID}}" data-usepool="pool" data-usagetype="mitigated" data-pooltype="{{stressTest.pools.poolType}}" data-updatepoolpath="{{stressTest.pools.updatePoolPath}}" data-resultclass="{{stressTest.alternatives.resultClass}}" data-resulttext="{{stressTest.alternatives.resultText}}" data-skillpoolvalue="{{stressTest.pools.skillPoolValue}}" data-newresult="{{stressTest.alternatives.result}}" data-rollmode="{{stressTest.rollMode}}" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{stressTest.rolledFrom}}" data-touchonly="">{{localize stressTest.pools.useMessage}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize stressTest.pools.useMessage}}</button>
-                    {{/if}}
-                    {{#if (gt stressTest.pools.flexPoolValue 0)}}
-                    <button class="chatButton usePool autoClose" data-actorid="{{stressTest.actor.uuid}}" data-userid="{{stressTest.userID}}" data-usepool="flex" data-usagetype="mitigated" data-updateflexpath="{{stressTest.pools.updateFlexPath}}" data-resultclass="{{stressTest.alternatives.resultClass}}" data-resulttext="{{stressTest.alternatives.resultText}}" data-flexpoolvalue="{{stressTest.pools.flexPoolValue}}" data-newresult="{{stressTest.alternatives.result}}" data-rollmode="{{stressTest.rollMode}}" data-attackmode="" data-biomorphtarget="" data-rolledfrom="{{stressTest.rolledFrom}}" data-touchonly="">{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{else}}
-                    <button class="chatButton" disabled>{{localize "ep2e.skills.pool.use.flex"}}</button>
-                    {{/if}}
-                </div>
-            </div>
-            {{/if}}
-            </div>
+        <div class="resource-value" style="margin: 20px 0 10px 0;">{{localize stressTest.taskName}}</div>
+        <div style="display: flex; flex-wrap: wrap; margin-bottom: 20px; padding-top: 20px; background-color: var(--pitchBorder); align-items: center; justify-content: center;">
+            <span class="{{stressTest.resultClass}}" style="min-width: 100%; margin-bottom: 20px;">{{localize stressTest.resultText}}</span> <p>
         </div>
 
         {{#if stressTest.modifiers}}
+        <p></p>
         <div class="item" style="cursor: pointer; background-color: var(--focusBackground); padding: 0.75em 0;">
             <div class="slideShow">
             <div class="showFlex" style="padding: 0 10px; justify-content: space-between;">
@@ -219,9 +133,68 @@
             </div>
         </div>
         {{/if}}
-
-        {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=stressTest.targetNumber diceBreakdown=stressTest.diceBreakdown formula=stressTest.formula total=stressTest.total resultClass=stressTest.resultClass}}
+        {{#if stressTest.diceBreakdown}}
+            {{> systems/eclipsephase/templates/chat/partials/roll-results.html targetNumber=stressTest.targetNumber diceBreakdown=stressTest.diceBreakdown formula=stressTest.formula total=stressTest.total resultClass=stressTest.resultClass}}
+        {{/if}}
     {{/if}}
-
+    {{#if (or integrationTest.diceBreakdown stressTest.diceBreakdown)}}
+        <div class="privateChatButton horizontal" data-ownerid={{stressTest.actor.id}}  style="margin-top: 20px; padding: 0px;">
+            {{#if (or (and (eq stressTest.alternatives.options.swap true)(eq stressTest.resultClass "fail")) (and (eq integrationTest.alternatives.options.swap true)(eq integrationTest.resultClass "fail")))}}
+                <div class="item" style="width: 100%; display: flex; flex-wrap: wrap; gap: 10px; background-color: var(--pitchBorder); padding: 10px;">
+                    <div class="slideShow" style="width: 100%;">
+                        <div class="showFlex" style="padding: 5px 10px; justify-content: center;">
+                        <strong>{{localize "ep2e.chat.buttonLabel.modifyResult"}} <i class="fa-solid fa-rotate"></i></strong>
+                        </div>
+                    </div>
+                    <div class="showMore noShow" style="gap: 10px; width: 100%;">
+                        <select name="poolUsage" style="text-align: center;">
+                            {{#if (and (eq stressTest.resultClass "fail") (eq integrationTest.resultClass "fail") (eq integrationTest.alternatives.options.swap true) (eq stressTest.alternatives.options.swap true))}}
+                                {{#if (and (gt integrationTest.pools.skillPoolValue 0) (gt stressTest.pools.skillPoolValue 0))}}
+                                    <option value="poolpool">Integration: Vigor ; Stress Test: Moxie</option>
+                                {{/if}}
+                                {{#if (gt integrationTest.pools.flexPoolValue 1)}}
+                                    <option value="flexflex">Flex for both</option>
+                                {{/if}}
+                                {{#if (and (gt integrationTest.pools.flexPoolValue 0) (gt stressTest.pools.skillPoolValue 0))}}
+                                    <option value="flexpool">Integration: Flex ; Stress Test: Moxie</option>
+                                {{/if}}
+                                {{#if (and (gt integrationTest.pools.skillPoolValue 0) (gt stressTest.pools.flexPoolValue 0))}}
+                                    <option value="poolflex">Integration: Vigor ; Stress Test: Flex</option>
+                                {{/if}}
+                            {{/if}}
+                            {{#if (and (eq integrationTest.alternatives.options.swap true)(eq integrationTest.resultClass "fail"))}}
+                                {{#if (and (eq stressTest.resultClass "fail") (gt integrationTest.pools.skillPoolValue 0))}}
+                                    <option value="poolnone">Integration: Vigor ; Stress Test: None</option>
+                                {{else if (and (eq stressTest.resultClass "success") (gt integrationTest.pools.skillPoolValue 0))}}
+                                    <option value="poolnone">Integration: Vigor</option>
+                                {{/if}}
+                                {{#if (and (eq stressTest.resultClass "fail") (gt integrationTest.pools.flexPoolValue 0))}}
+                                    <option value="flexnone">Integration: Flex ; Stress Test: None</option>
+                                {{else if (and (eq stressTest.resultClass "success") (gt integrationTest.pools.flexPoolValue 0))}}
+                                    <option value="flexnone">Integration: Flex</option>
+                                {{/if}}
+                            {{/if}}
+                            {{#if (and (eq stressTest.alternatives.options.swap true)(eq stressTest.resultClass "fail"))}}
+                                {{#if (and (eq integrationTest.resultClass "fail")(gt stressTest.pools.skillPoolValue 0))}}
+                                    <option value="nonepool">Integration: None ; Stress Test: Moxie</option>
+                                {{else if (and (eq integrationTest.resultClass "success")(gt stressTest.pools.skillPoolValue 0))}}
+                                    <option value="nonepool">Stress Test: Moxie</option>
+                                {{/if}}
+                                {{#if (and (eq integrationTest.resultClass "fail")(gt stressTest.pools.flexPoolValue 0))}}
+                                    <option value="noneflex">Integration: None ; Stress Test: Flex</option>
+                                {{else if (and (eq integrationTest.resultClass "success")(gt stressTest.pools.flexPoolValue 0))}}
+                                    <option value="noneflex">Stress Test: Flex</option>
+                                {{/if}}
+                            {{/if}}
+                        </select>
+                        <button class="resleeveResult autoClose" style="width: 100%;" data-actorid="{{stressTest.actor.id}}" data-poolUsed="true" data-integrationTestTaskName="{{integrationTest.taskName}}" data-integrationTestResultText="{{integrationTest.alternatives.resultText}}" data-oldIntegrationTestResultText="{{integrationTest.resultText}}" data-integrationTestResultClass="{{integrationTest.alternatives.resultClass}}" data-oldIntegrationTestResultClass="{{integrationTest.resultClass}}" data-integrationTestResult="{{integrationTest.alternatives.result}}" data-oldIntegrationTestResult="{{integrationTest.alternatives.originalResult}}" data-stressTestTaskName="{{stressTest.taskName}}" data-stressTestResultText="{{stressTest.alternatives.resultText}}" data-oldStressTestResultText="{{stressTest.resultText}}" data-stressTestResultClass="{{stressTest.alternatives.resultClass}}" data-oldStressTestResultClass="{{stressTest.resultClass}}" data-stressTestResult="{{stressTest.alternatives.result}}" data-oldStressTestResult="{{stressTest.alternatives.originalResult}}">Use Pools & Accept Results</button>
+                    </div>
+                </div>
+            {{/if}}
+            <div style="padding: 0 10px 10px 10px; width: 100%;">
+                <button class="resleeveResult test" style="width: 100%;"data-actorid="{{stressTest.actor.id}}" data-oldIntegrationTestResult="{{integrationTest.alternatives.originalResult}}" data-oldStressTestResult="{{stressTest.alternatives.originalResult}}">Accept Results</button>
+            </div>
+        </div>
+    {{/if}}
 </div>
 

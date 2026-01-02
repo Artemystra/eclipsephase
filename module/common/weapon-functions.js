@@ -184,7 +184,7 @@ export async function traitSubSetConstructor(weapon){
 export async function weaponListConstructor(actor, skillKey){
   
   let flatRollLabel = game.i18n.localize('ep2e.roll.dialog.button.withoutWeapon');
-  let weaponslist = [{"_id":1, "name": flatRollLabel},{"_id":"", "name": ""}];
+  let weaponslist = [{"id":1, "name": flatRollLabel},{"id":"", "name": ""}];
   let actorType = actor.type;
   let checkWeapon = "";
   let weaponID = null;
@@ -199,7 +199,7 @@ export async function weaponListConstructor(actor, skillKey){
             let traits = await traitSubSetConstructor(weapon)
             let calculated = await damageValueCalc(weapon, weapon.system.mode1, traits.curatedList.mode1.automatedEffects, "weapon")
       
-            let weaponEntry = skillKey === "guns" ? {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv} : {"_id":weapon._id, "name": weapon.name, "dv": calculated.dv};
+            let weaponEntry = skillKey === "guns" ? {"id":weapon.id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv} : {"id":weapon.id, "name": weapon.name, "dv": calculated.dv};
             weaponslist.push(weaponEntry)
         }
     }
@@ -208,12 +208,12 @@ export async function weaponListConstructor(actor, skillKey){
         let traits = await traitSubSetConstructor(weapon)
         let calculated = await damageValueCalc(weapon, weapon.system.mode1, traits.curatedList.mode1.automatedEffects, "weapon")
 
-        let weaponEntry = skillKey === "guns" ? {"_id":weapon._id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv} : {"_id":weapon._id, "name": weapon.name, "dv": calculated.dv};
+        let weaponEntry = skillKey === "guns" ? {"id":weapon.id, "name": weapon.name, "ammoCur": weapon.system.ammoMin, "ammoMax": weapon.system.ammoMax, "dv": calculated.dv} : {"id":weapon.id, "name": weapon.name, "dv": calculated.dv};
         weaponslist.push(weaponEntry)
     }
   }
   if (weaponslist.length > 2){
-    checkWeapon = await listSelection(weaponslist, "weaponList")
+    checkWeapon = await listSelection(weaponslist, "weaponList", 536)
     weaponID = checkWeapon.selection ? checkWeapon.selection : weaponID = "0";
   }
   else {
@@ -232,7 +232,7 @@ export async function weaponListConstructor(actor, skillKey){
 
     else {
       for (let weaponObj of actorWeapons){        
-        if (weaponObj._id === weaponID){
+        if (weaponObj.id === weaponID){
           let weaponName = weaponObj.name;
           let weaponMode = "1";
           let rolledFrom = weaponObj.type;
@@ -274,9 +274,9 @@ export async function weaponListConstructor(actor, skillKey){
     let mode1calculated = await damageValueCalc(weapon, weapon.system.mode1, traits.mode1.automatedEffects, "weapon");
     let mode2calculated = await damageValueCalc(weapon, weapon.system.mode2, traits.mode2.automatedEffects, "weapon");
 
-    let weaponModes = [{"_id": 1, "name": weapon.system.mode1.name, "range": weapon.system.mode1.range, "firingModes": weapon.system.mode1.firingMode, "dv": mode1calculated.dv},{"_id": 2, "name": weapon.system.mode2.name, "range": weapon.system.mode2.range, "firingModes": weapon.system.mode2.firingMode, "dv": mode2calculated.dv}];
+    let weaponModes = [{"id": 1, "name": weapon.system.mode1.name, "range": weapon.system.mode1.range, "firingModes": weapon.system.mode1.firingMode, "dv": mode1calculated.dv},{"id": 2, "name": weapon.system.mode2.name, "range": weapon.system.mode2.range, "firingModes": weapon.system.mode2.firingMode, "dv": mode2calculated.dv}];
     if(!selectedWeaponMode)
-      selectedWeaponMode = await listSelection(weaponModes, "weaponList" , "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline");
+      selectedWeaponMode = await listSelection(weaponModes, "weaponList" , 536, "ep2e.roll.dialog.ranged.weaponSelect.modeSelectionHeadline");
   
     if(selectedWeaponMode.cancelled){
       let cancel = selectedWeaponMode.cancelled
@@ -325,7 +325,7 @@ export async function reloadWeapon(html, actor) {
         const usesDrugs = weapon.system.mode1.traits.specialAmmoDrugs.value;
         const usesBugs = weapon.system.mode1.traits.specialAmmoBugs.value;
         const ammoType = usesDrugs ? "chemical" : (usesBugs ? "swarm" : weapon.system.ammoType);
-        const ammoPresent = weapon.system.ammoSelected._id ? weapon.system.ammoSelected._id : "-"
+        const ammoPresent = weapon.system.ammoSelected.id ? weapon.system.ammoSelected.id : "-"
         const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html';
         let currentAmmo = weapon.system.ammoMin;
         let difference = maxAmmo - currentAmmo;
@@ -336,14 +336,13 @@ export async function reloadWeapon(html, actor) {
         let calculated = null;
         let traits = null;
         let dv = "";
-
         //Checks whether fitting ammo is present at all
         if (numberOfPacks >= 1 || selfReplenishing){
           //Creates a list of all applicable ammo available
           if (numberOfPacks > 1 || selfReplenishing && numberOfPacks >= 1){
               if (selfReplenishing){
                 let ammoName = "ep2e.item.weapon.table.selfReplenish"
-                let ammoEntry = {"_id":weapon.system.ammoSelected._id, "name": ammoName, "traits": weapon.system.ammoSelected.traits, "dv": weapon.system.ammoSelected.dvModifier.calculated}
+                let ammoEntry = {"id":weapon.system.ammoSelected.id, "name": ammoName, "traits": weapon.system.ammoSelected.traits, "dv": weapon.system.ammoSelected.dvModifier.calculated}
                 ammoList.push(ammoEntry)
               }
             for (let ammo of actor.ammo[ammoType]){
@@ -352,18 +351,18 @@ export async function reloadWeapon(html, actor) {
                 traits = ammoType != "chemical" ? ammo.system.traits : {};
                 dv = ammoType != "chemical" ? calculated.dv : "ep2e.item.weapon.table.noDamageValueModifier";
 
-                let ammoEntry = {"_id":ammo._id, "name": ammo.name, "traits": traits, "dv": dv}
+                let ammoEntry = {"id":ammo.id, "name": ammo.name, "traits": traits, "dv": dv}
                 ammoList.push(ammoEntry)
             }
   
-            let selectedAmmo = await listSelection(ammoList, "ammoList");
+            let selectedAmmo = await listSelection(ammoList, "ammoList", 536);
       
             if(selectedAmmo.cancelled){
               let cancel = selectedAmmo.cancelled
               return {cancel};
             }
             
-            if(selectedAmmo.selection === weapon.system.ammoSelected._id && selfReplenishing){
+            if(selectedAmmo.selection === weapon.system.ammoSelected.id && selfReplenishing){
 
               await selfReplenish (actor, maxAmmo, weaponID, weaponName, weapon, difference, WEAPON_DAMAGE_OUTPUT);
 
@@ -395,7 +394,7 @@ export async function reloadWeapon(html, actor) {
 
           calculated = await damageValueCalc(ammoSelected, ammoSelected.system.dv, traits, "ammo")
 
-          if (difference>0 || ammoPresent != ammoSelected._id){
+          if (difference>0 || ammoPresent != ammoSelected.id){
             weaponUpdate.push({
               "_id" : weaponID,
               "system.ammoSelected.traits": {},
@@ -406,27 +405,27 @@ export async function reloadWeapon(html, actor) {
           //Automatic ammo deduction (based on the setting chosen in eclipsephase.js)
           //Survival mode (deduction/deletion)
           if (ammoRules === "survival" && actor.type === "character"){
-            if (difference>0 || ammoPresent != ammoSelected._id){
-              await itemReduction(actor, ammoSelected._id, ammoSelected.system.quantity)
+            if (difference>0 || ammoPresent != ammoSelected.id){
+              await itemReduction(actor, ammoSelected.id, ammoSelected.system.quantity)
             }
           }
 
           //Grenades only mode (deduction/deletion)
           if (ammoRules === "grenadesOnly" && actor.type === "character"){
             if(ammoSelected.system.type === "seeker" || ammoSelected.type === "chemical" ){
-              if (difference>0 || ammoPresent != ammoSelected._id){
-                await itemReduction(actor, ammoSelected._id, ammoSelected.system.quantity)
+              if (difference>0 || ammoPresent != ammoSelected.id){
+                await itemReduction(actor, ammoSelected.id, ammoSelected.system.quantity)
               }
             }
           }
 
-          if (difference>0 || ammoPresent != ammoSelected._id){
+          if (difference>0 || ammoPresent != ammoSelected.id){
             currentAmmo = maxAmmo;
 
             weaponUpdate.push({
               "_id" : weaponID,
               "system.ammoMin": currentAmmo,
-              "system.ammoSelected._id": ammoSelected._id,
+              "system.ammoSelected.id": ammoSelected.id,
               "system.ammoSelected.name": ammoSelected.name,
               "system.ammoSelected.dvModifier": ammoType != "chemical" ? ammoSelected.system.dv : {"d10": 0, "d6" : 0, "bonus" : 0},
               "system.ammoSelected.description": ammoSelected.system.description,
@@ -471,7 +470,7 @@ export async function reloadWeapon(html, actor) {
             ChatMessage.create({
                 speaker: ChatMessage.getSpeaker({actor: actor}),
                 content: html,
-                whisper: [game.user._id]
+                whisper: [game.user.id]
             })
 
           }
@@ -489,7 +488,7 @@ export async function reloadWeapon(html, actor) {
           ChatMessage.create({
               speaker: ChatMessage.getSpeaker({actor: actor}),
               content: html,
-              whisper: [game.user._id]
+              whisper: [game.user.id]
           })
 
         }
@@ -520,7 +519,6 @@ export async function reloadWeapon(html, actor) {
           speaker: ChatMessage.getSpeaker({actor: actor}),
           content: html
       })
-
       return actor.updateEmbeddedDocuments("Item", weaponUpdate);
     }
     else{
@@ -536,7 +534,7 @@ export async function reloadWeapon(html, actor) {
       ChatMessage.create({
           speaker: ChatMessage.getSpeaker({actor: actor}),
           content: html,
-          whisper: [game.user._id]
+          whisper: [game.user.id]
       })
 
       return;

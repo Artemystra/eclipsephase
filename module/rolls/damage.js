@@ -4,7 +4,6 @@ import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat } from "./dice.j
 import { prepareRecipients } from "../common/common-sheet-functions.js"
 
 export async function prepareWeapon(data, result, preparedData){
-
     /*const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
     console.log("messageID: ", game.messages.get(messageID))*/
     const dataset = preparedData ? preparedData : data.currentTarget.dataset;
@@ -65,7 +64,7 @@ export async function prepareWeapon(data, result, preparedData){
 
         let roll = await new Roll(rollFormula).evaluate();
 
-        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput")
+        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput")
 
     }
 
@@ -110,7 +109,6 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
     else {
         rollFormula = "ceil((" + criticalModifier + (intermediateRollFormula) + ")/2)";
     }
-    
     //The message is built
     let message = {}
     
@@ -119,7 +117,7 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
     message.ammoLoadedName = weaponSelected.rolledFrom === "rangedWeapon" ? weaponSelected.weapon.system.ammoSelected.name : null
     message.rollTitle = "ep2e.roll.announce.damageDone"
 
-    //Weapon traits are added
+    //Weapon traits that are applied on the roll result
     message.weaponTraits = weaponSelected.weaponTraits.additionalEffects;
     if (biomorphTarget){
         message.weaponTraits["bioMorphsOnly"] = weaponSelected.weaponTraits.confirmationEffects["bioMorphsOnly"]
@@ -133,13 +131,13 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
     if (!weaponSelected.weaponTraits.automatedEffects.noDamage && weaponDamage != "ep2e.item.weapon.table.noDamage"){
         let roll = await new Roll(rollFormula).evaluate();
 
-        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput")
+        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput")
 
     }
     else {
         message.total = false
 
-        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, false, actorWhole.name, recipientList, blind, "rollOutput")
+        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, false, actorWhole.name, recipientList, blind, "rollOutput")
 
     }
 }
@@ -190,14 +188,14 @@ export async function healthBarChange(actor, html){
     //Physical health bar animation
     //Physical damage Animation
     if(barModifier === "physicalUp"){
-      barUp(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
+      await barUp(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
   
     }
     //Physical Heal Animation
     else if (barModifier === "physicalDown"){
       physicalHealthBar[0].style.width = oldHealthBarValue + "%";
       physicalDeathBar[0].style.width = oldDeathBarValue + "%";
-      barDown(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
+      await barDown(physicalHealthBar, physicalDeathBar, oldHealthBarValue, oldDeathBarValue, healthBarValue, deathBarValue, actor, "physical")
   
     }
     //No change/Open sheet
@@ -210,14 +208,14 @@ export async function healthBarChange(actor, html){
     if(actor.type != "goon"){
       //Mental damage Animation
       if(barModifier === "mentalUp"){
-        barUp(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
+        await barUp(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
   
       }
       //Mental Heal Animation
       else if (barModifier === "mentalDown"){
         mentalStressBar[0].style.width = oldStressBarValue + "%";
         mentalInsanityBar[0].style.width = oldInsanityBarValue + "%";
-        barDown(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
+        await barDown(mentalStressBar, mentalInsanityBar, oldStressBarValue, oldInsanityBarValue, stressBarValue, insanityBarValue, actor, "mental")
     
       }
       //No Change/Open Sheet
@@ -247,10 +245,9 @@ export async function healthBarChange(actor, html){
   }
   
     //Take Damage through character sheet
-    async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth) {
-        
+    export async function takeDamage (receiveDamage, currentDamage, bar, overBar, currentModifier, threshold, damageTarget, modifierTarget, actor, barTarget, maxHealth) {
+      
       let inputValue = Number(receiveDamage[0].value) < maxHealth ? Number(receiveDamage[0].value) : maxHealth;
-  
       let oldDamageBarTarget = ""
       let oldOverBarTarget = ""
   
@@ -293,7 +290,6 @@ export async function healthBarChange(actor, html){
               flavor: html
           })
         }
-  
         return actor.update({[damageTarget] : newDamage, [modifierTarget] : newModifier,[oldDamageBarTarget] : bar,[oldOverBarTarget] : overBar, [barModifierTarget] : barModifier})
   
       }
@@ -449,9 +445,9 @@ export async function healthBarChange(actor, html){
 
           if (healRoll.length > 0){
             if (healRoll.length === 1)
-              await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll[0], actor.name, game.user._id, false, "rollOutput")
+              await rollToChat(null, message, DAMAGE_STATUS_OUTPUT, healRoll[0], actor.name, game.user._id, false, "rollOutput")
             else
-              await rollToChat(message, DAMAGE_STATUS_OUTPUT, healRoll, actor.name, game.user._id, false, "rollOutput")
+              await rollToChat(null, message, DAMAGE_STATUS_OUTPUT, healRoll, actor.name, game.user._id, false, "rollOutput")
           }     
   
           newDamage = damageCount;

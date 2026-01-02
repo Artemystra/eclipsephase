@@ -448,9 +448,9 @@
       },
       "sleeving": {
         "title": {
-          "resleevingIntegration": "Resleeving: Integration",
+          "resleevingIntegration": "Resleeving: Integration Test",
           "resleevingStress": "Resleeving: Stress Test",
-          "jammingIntegration": "Jamming: Integration"
+          "jammingIntegration": "Jamming: Integration Test"
         },
         "result": {
           "taskResleeve": "Resleeve",
@@ -469,6 +469,10 @@
           "moreInfo": {
             "title": "Trait 'Morph Familiarity' present",
             "copy": "You are accustomed to one specific type of morph (e.g., bouncers, rusters, agents, or flexbots) and do not need to make Integration Tests when sleeving them. You may take this trait more than once for different morphs. In this case you are just rolling a stress test for these morphs instead."
+          },
+          "result": {
+            "stressCopy": "Changing my body stresses me out.",
+            "integrationCopy": "I'm feeling uncomfortable in my new body and receive -10 to all actions."
           }
         }
       },
@@ -1327,6 +1331,14 @@
       "selectTrait": {
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
+      },
+      "selectStress": {
+        "dialogTitle": "Stress Response",
+        "copy": "You are stressed out by the sensation of being resleeved. The Stress Value is based on the most stressful aspect of resleeving.",
+        "minorLabel": "Minor Stress",
+        "majorLabel": "Major Stress",
+        "minorDescription": "Stress due to alienation with the new body, continuity loss of yur ego or the lack of time since you have been reinstated.",
+        "majorDescription": "Stress due to the fact that you're actively remembering your own death, or if you were offline for over 3 months of time."
       }
     },
     "chat": {

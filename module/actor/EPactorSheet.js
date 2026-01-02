@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,itemCreate,registerItemHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo} from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection} from "../common/common-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder, IDprep } from "../common/sheet-preparation.js";
@@ -157,7 +157,10 @@ export default class EPactorSheet extends ActorSheet {
 
     //Shows a pop-up if a trait has both a morph and a ego variant
     if(item.type === "traits" && item.system.morph === true && item.system.ego === true){
-      traitSelection = await selectTraitType()
+      const dialogName = game.i18n.localize('ep2e.dialog.selectTrait.header')
+      const dialogCopy = "ep2e.dialog.selectTrait.copy";
+      const listOptions = [{"id" : "ego", "label" : "ep2e.actorSheet.leftTabs.egoTab"}, {"id" : "morph", "label" : "ep2e.actorSheet.rightTabs.morphTab"}]
+      traitSelection = await listSelection(listOptions, "standardSelectionList", 250, dialogName, "", dialogCopy)
 
     if(traitSelection.cancelled)
       return
@@ -857,9 +860,9 @@ export default class EPactorSheet extends ActorSheet {
       newPoolValue = poolValue - poolChange
 
       if (newPoolValue >= 0) {
-
+        let changes = [{"key" : effectTarget, "mode" : effectMode, "value" : effectVal*poolChange}]
         if (inputType === "woundIgnore" || inputType === "traumaIgnore"){
-          await _tempEffectCreation(actor, poolChange, effectLabel, effectIcon, effectTarget, effectMode, effectVal);
+          await _tempEffectCreation(actor, effectLabel, effectIcon, changes );
         }
   
         let dialogData = {type : dialogType, poolName : poolName, subtitle : subtitle, copy : copy, number : poolChange}
@@ -944,7 +947,7 @@ export default class EPactorSheet extends ActorSheet {
         message.rollTitle = "ep2e.roll.announce.total"
         message.mainMessage = "ep2e.roll.announce.rest.short"
 
-        await Dice.rollToChat(message, Dice.DEFAULT_ROLL, roll, actorWhole.name, null, false, "rollOutput")
+        await Dice.rollToChat(null, message, Dice.DEFAULT_ROLL, roll, actorWhole.name, null, false, "rollOutput")
 
         restValue = roll.total
         
@@ -1196,36 +1199,6 @@ function _poolUsageModifiers(form) {
     return {
         modifier: form.modifier ? form.modifier.value : null
     }
-}
-
-async function selectTraitType() {
-  const dialog = 'systems/eclipsephase/templates/chat/list-dialog.html';
-  const dialogType = "selectTraitType";
-  let dialogName = game.i18n.localize('ep2e.dialog.selectTrait.header');
-  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
-  let confirmButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
-  const html = await renderTemplate(dialog, {dialogType});
-
-  return new Promise(resolve => {
-      const data = {
-          title: dialogName,
-          content: html,
-          buttons: {
-              cancel: {
-                  label: cancelButton,
-                  callback: html => resolve ({cancelled: true})
-              },
-              normal: {
-                  label: confirmButton,
-                  callback: html => resolve(_traitSelection(html[0].querySelector("form")))
-              }
-          },
-          default: "normal",
-          close: () => resolve ({cancelled: true})
-      };
-      let options = {width:315}
-      new Dialog(data, options).render(true);
-  });
 }
 
 //Pool usage confirmation check results

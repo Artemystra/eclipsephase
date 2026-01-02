@@ -1,4 +1,4 @@
-<form>
+<form class="eclipsephase">
     {{#if (eq dialogType "weaponCategorization")}}
 
         <div class="listBackgroundMain">
@@ -14,7 +14,7 @@
                         <div class="grid wantToKnowMore" style="display: flex; align-items: center;">
                             <label class="resource-label truncate trunContainer">{{weapon.name}}</label>
                             <label class="tooltipText">{{weapon.name}}</label>
-                            <select name="{{weapon._id}}" title="{{char._id}}">
+                            <select name="{{weapon.id}}" title="{{char.id}}">
                                 <option value="beam">{{localize "ep2e.item.weapon.table.ammoUsed.beam"}}</option>
                                 <option value="kinetic">{{localize "ep2e.item.weapon.table.ammoUsed.kinetic"}}</option>
                                 <option value="seeker">{{localize "ep2e.item.weapon.table.ammoUsed.seeker"}}</option>
@@ -39,28 +39,28 @@
         <div class="grid" style="margin-bottom: 20px;">
             {{#each objectList}}
             <div style="min-height: 40px; display: flex;">
-                {{#if _id}}
+                {{#if id}}
                 <div>
-                    <input type="radio" name="WeaponSelect" value="{{_id}}" id="{{_id}}">
+                    <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                 </div>
                     {{#if dv}}
                         {{#if ammoCur}}
                             <div style="display: block;">
-                                <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
+                                <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{name}}</b> </label><br>
                                 <div style="display: flex; align-items: center; padding-left: 10px;">
                                     <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
                                 </div>
                             </div>
                         {{else}}
                         <div style="display: block;">
-                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b> </label><br>
+                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{name}}</b> </label><br>
                             <div style="display: flex; align-items: center; padding-left: 10px;">
                                 <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
                             </div>
                         </div>
                         {{/if}}
                     {{else}}
-                        <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{name}}</b></label>
+                        <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{name}}</b></label>
                     {{/if}}
                 {{/if}}
             </div>
@@ -76,27 +76,27 @@
         <div class="grid" style="margin-bottom: 20px;">
             {{#each objectList}}
             <div style="min-height: 40px; display: flex; flex-wrap: wrap;">
-                {{#if _id}}
+                {{#if id}}
                 <div>
-                    <input type="radio" name="WeaponSelect" value="{{_id}}" id="{{_id}}">
+                    <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                 </div>
                     {{#if dv}}
                         {{#if ammoCur}}
                             <div style="display: block;">
-                                <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{localize name}}</b> </label><br>
+                                <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{localize name}}</b> </label><br>
                                 <div style="display: flex; align-items: center; padding-left: 10px;">
                                     <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
                                 </div>
                         {{else}}
                         <div style="display: block;">
-                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{localize name}}</b> </label><br>
+                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{localize name}}</b> </label><br>
                             <div style="display: flex; align-items: center; padding-left: 10px;">
                                 <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
                             </div>
                         {{/if}}
                     {{else}}
                         <div style="display: block;">
-                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{_id}}"><b>{{localize name}}</b></label>
+                            <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{localize name}}</b></label>
                     {{/if}}
                         <div style="display: flex; flex-wrap: wrap;">
                             {{#each traits as |item key|}}
@@ -146,21 +146,37 @@
             </div>
             {{/each}}
         </div>
+    
+    {{else if (eq dialogType "standardSelectionList")}}
 
-        {{else if (eq dialogType "selectTraitType")}}
-        
-        {{localize "ep2e.dialog.selectTrait.copy"}}
-
-        <div style="min-height: 60px; display: flex; align-items: center; justify-content: space-evenly;">
-            <div>
-                <input type="radio" name="TraitTypeSelection" value="ego" id="ego" checked>
-                <label for="ego">{{localize "ep2e.actorSheet.leftTabs.egoTab"}}</label>
+        {{#if copy}}
+            <div style="padding: 10px 0;">
+                {{#if headline}}
+                    <span class="headline5">{{localize headline}}</span><br>
+                {{/if}}
+                {{localize copy}}
             </div>
-            <div>
-                <input type="radio" name="TraitTypeSelection" value="morph" id="morph">
-                <label for="morph">{{localize "ep2e.actorSheet.rightTabs.morphTab"}}</label>
-            </div>
+        {{/if}}
+        <div style="min-height: 60px; display: flex; align-items: center; justify-content: left; flex-wrap: wrap; padding: 10px 0; gap: 10px;">
+            {{#each objectList as |object key|}}
+                <div class="flexrow flex-group-left" style="width: 100%; align-items: flex-start;">
+                    <div style="max-width: 40px;">
+                        {{#if (eq key 0)}}
+                            <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
+                        {{else}}
+                            <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                        {{/if}}
+                    </div>
+                    <div style="width: 100%; display: flex; flex-wrap: wrap;">
+                        <div>
+                            <label for="{{id}}" style="min-width: 100%;">{{localize label}}</label>
+                        </div>
+                        <div style="padding: 0 0 10px 0;">
+                            <label for="{{id}}" style="font-size: 10px;"><i>{{localize description}}</i></label>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
         </div>
-
     {{/if}}
 </form>

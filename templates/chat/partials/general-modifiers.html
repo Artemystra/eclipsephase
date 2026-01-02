@@ -6,8 +6,8 @@
     {{#if (ne rollType "rep")}}
         {{#if specName}}
         <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="useSpec">
-            <label class="resource-label">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
+            <input type="checkbox" name="useSpec" id="useSpec">
+            <label class="resource-label" for="useSpec">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
         </div>
         {{else}}
         <div class="form-group listBackgroundMain">
@@ -19,8 +19,8 @@
     {{#if (eq rolledFrom "integration")}}
         {{#if actorWhole.system.additionalSystems.sleeving.exotic}}
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="exoticMorphology" checked>
-                <label class="resource-label">{{localize "ep2e.roll.dialog.sleeving.exoticMorphology"}} ({{actorWhole.system.additionalSystems.sleeving.exotic}})</label>
+                <input type="checkbox" name="exoticMorphology" id="exoticMorphology" checked>
+                <label class="resource-label" for="exoticMorphology">{{localize "ep2e.roll.dialog.sleeving.exoticMorphology"}} ({{actorWhole.system.additionalSystems.sleeving.exotic}})</label>
             </div>
         {{/if}}
     {{/if}}

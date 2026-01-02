@@ -537,14 +537,15 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-
-        //Returns a roll without producing the output directly to the chat
-        if(dataset.specialRollResult) return outputData;
         
-        await rollToChat(outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
+        const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
         
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
+
+        //Returns a rollResult in case it's needed
+        
+        if(dataset.preventPrintToChat === true) return rollResult;
     }
 }
 
@@ -882,6 +883,12 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     }
 
     /* Resleeving & Jamming */
+    
+    if (actorModel.additionalSystems.sleeving.integrationIssues){
+            modValue = actorModel.additionalSystems.sleeving.integrationIssues.value
+            announce = actorModel.additionalSystems.sleeving.integrationIssues.title;
+            task.addModifier(new TaskRollModifier(announce, modValue))
+    }
 
     if (rolledFrom === "integration"){
         const newMorph = actorWhole.items.get(actorModel.activeMorph);
@@ -964,7 +971,7 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
 }
 
 /**
- * 
+ * @param {Object} dataset - contains special data to manipulate the roll in a special way (e.g. render it in a specific way to the chat)
  * @param {Object} message - Provides all values to the html template
  * @param {Class} task - Result of the TaskRoll class 
  * @param {Array} recipientList - List of users to whisper the result to (empty if public)
@@ -975,9 +982,9 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  * @param {String} rollType - The type of roll
  * @param {String} rollTitle - The title of the roll
  */
-export async function rollToChat(message, htmlTemplate, roll, alias, recipientList, blind, rollType){
+export async function rollToChat(dataset, message, htmlTemplate, roll, alias, recipientList, blind, rollType){
     const diceArray = []
-
+    let specialRules = dataset ? dataset : false;
     const showTo = recipientList != null ? recipientList.length > 0 ? recipientList : null : null
     if(roll){
         if(roll.length > 1){
@@ -1020,6 +1027,10 @@ export async function rollToChat(message, htmlTemplate, roll, alias, recipientLi
 
     let html = await renderTemplate(htmlTemplate, message)
 
+    
+    //Returns a roll without producing the output directly to the chat
+    if(specialRules.preventPrintToChat) return message;
+
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: alias}),
         content: html,
@@ -1033,7 +1044,6 @@ function breakdown(roll){
     
     let diceBreakdown = {"hundreds": {}, "tens": {}, "sixes": {}}
     let i = 0
-
     for(let dice of roll.dice){
         if(dice.faces === 6)
             for(let roll of dice.results){

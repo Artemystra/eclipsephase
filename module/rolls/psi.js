@@ -66,7 +66,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
 
     
 
-    await rollToChat(message, TASK_RESULT_OUTPUT, roll, actingPerson, recipientList, false)
+    await rollToChat(null, message, TASK_RESULT_OUTPUT, roll, actingPerson, recipientList, false)
 
 
     //Effect in case virus was successful
@@ -140,7 +140,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
 
         let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");        
     
-        await rollToChat(message, PSI_INFLUENCE_OUTPUT, d6, actingPerson, recipientList, false)
+        await rollToChat(null, message, PSI_INFLUENCE_OUTPUT, d6, actingPerson, recipientList, false)
 
     }
     
@@ -158,10 +158,11 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
 
         let message = {
             "psiDamageValue": physicalDamage.total,
-            "type": "psiDamage"
+            "type": "defaultDamage",
+            "rollTitle": "ep2e.roll.announce.damageDone"
         }
 
-        await rollToChat(message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false)
+        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false)
 
         durUpdate += physicalDamage.total;
 

@@ -82,20 +82,21 @@ export function registerEffectHandlers(html,callerobj){
  * Function to create temporary effects. These effects are used to be automatically 
  * deleted under certain circumstances. Therefore they're marked accordingly
  * @param {Object} actor - The actor object effects are added to
- * @param {Number} numberOfRuns - Defines how many times the effect is deleted
+ * @param {Number} numberOfRuns - Serves as a multiplier to the effect value (tempEffVal)
  * @param {String} tempEffLabel - The label of the temporary effect
  * @param {String} tempEffIcon - The icon of the temporary effect
  * @param {String} tempEffTar - The target value of the temporary effect
  * @param {String} tempEffMode - The mode of the temporary effect
+ * @param {Array} changes - An array with all changes in objects => {key, mode, value}
  * @param {*} tempEffVal - The value of the temporary effect
  * @returns 
  */
-export async function _tempEffectCreation(actor, numberOfRuns, tempEffLabel, tempEffIcon, tempEffTar, tempEffMode, tempEffVal){
+export async function _tempEffectCreation(actor, tempEffLabel, tempEffIcon, effChanges){
     return actor.createEmbeddedDocuments('ActiveEffect', [{
+      name: tempEffLabel,
       label: tempEffLabel,
       icon: tempEffIcon,
-      type: "ep2e",
-      changes: [{key : tempEffTar, mode : tempEffMode, value : tempEffVal*numberOfRuns}]
+      changes: effChanges
     }]);
 }
 
@@ -417,20 +418,23 @@ export function itemToggle(html, item){
 
 /**
  * The standard constructor for lists throughout the system (e.g. weapon selection)
- * @param {Array} objectList - An array with objects to be listed
- * @param {String} dialogType - The type of dialog to be displayed. This defines which part of the list-dialog.html is displayed
- * @param {String} headline - The headline of the dialog
+ * @param {Array} objectList - An array with objects to be listed (for "standardSelectionList": {id, label, description})
+ * @param {String} dialogType - The type of dialog to be displayed. This defines which part of the list-dialog.html is displayed ("standardSelectionList" for standard)
+ * @param {number} width - defines the overlays' total width
+ * @param {String} dialogTitle - The title displayed in the dialog. Has a fallback if none.
+ * @param {String} headline - The headline within the dialog
+ * @param {String} copy - The copy within the dialog
  * @returns 
  */
-export async function listSelection(objectList, dialogType, headline){
-  let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy){
+  let title = dialogTitle ? game.i18n.localize(dialogTitle) : game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
   let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
   let useButton = game.i18n.localize('ep2e.actorSheet.button.select');
   const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-  const html = await renderTemplate(template, {objectList, dialogType, headline});
+  const html = await renderTemplate(template, {objectList, dialogType, headline, copy});
   return new Promise(resolve => {
       const data = {
-          title: dialogName,
+          title: title,
           content: html,
           buttons: {
               cancel: {
@@ -439,19 +443,19 @@ export async function listSelection(objectList, dialogType, headline){
               },
               normal: {
                   label: useButton,
-                  callback: html => resolve(_proListSelection(html[0].querySelector("form")))
+                  callback: html => resolve(listSelectionOutcome(html[0].querySelector("form")))
               }
           },
           default: "normal",
           close: () => resolve ({cancelled: true})
       };
-      let options = {width:536}
+      let options = {width}
       new Dialog(data, options).render(true);
   });
 }
-function _proListSelection(form) {
+function listSelectionOutcome(form) {
   return {
-      selection: form.WeaponSelect.value
+      selection: form.ItemSelect.value
   }
 }
 
@@ -526,11 +530,10 @@ export function prepareRecipients(rollMode){
 //DV calculator (this translates the three given integers into a human readable roll formula)
 export async function damageValueCalc (object, dvPath, traits, calcType){
   let dv = "";
-  
   if(calcType === "ammo"){
     //Ammo Damage Calculation
     dv = "ep2e.item.weapon.table.noDamageValueModifier"
-    const d10 = object.type != "drug" ? dvPath.d10 : 0;
+    const d10 = object.type != "drug" ? Number(dvPath.d10) : 0;
     const d6 = object.type != "drug" ? dvPath.d6 : 0;
     const bonus = object.type != "drug" ? dvPath.bonus : 0;
     let bonusValue = bonus ? "+"  + bonus : "";
