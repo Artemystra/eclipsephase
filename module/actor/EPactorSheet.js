@@ -702,7 +702,6 @@ export default class EPactorSheet extends ActorSheet {
 
     const actor = this.actor;
     const actorModel = actor.system;
-    const allEffects = this.object.effects;
     const currentMorph = actorModel.activeMorph;
 
     // Everything below here is only needed if the sheet is editable
@@ -1020,7 +1019,7 @@ export default class EPactorSheet extends ActorSheet {
       reloadWeapon(html, actor);
 
       //Edit Item Checkboxes
-      embeddedItemToggle(html, actor, allEffects);
+      embeddedItemToggle(html, actor);
 
       //show on hover
       html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));

@@ -338,9 +338,8 @@ export async function moreInfo(event){
  * toggle on morph switch.
  * @param {Object} html - The html object of the actor sheet
  * @param {Object} actor - The actor object
- * @param {Array} allEffects - An array of the actor's active effects
  */
-export function embeddedItemToggle(html, actor, allEffects){
+export function embeddedItemToggle(html, actor){
   html.find('.equipped.checkBox').click(async ev => {
     let updateData = {};
     let toggle;
@@ -377,23 +376,6 @@ export function embeddedItemToggle(html, actor, allEffects){
     updateData[path] = toggle
     const updated = item.update(updateData);
     
-    //handles activation/deactivation of values provided by effects inherited from items
-    let effUpdateData=[];
-    for(let effectScan of allEffects){
-  
-      if (effectScan.origin){
-        let parentItem = await fromUuid(effectScan.origin);
-        if (itemId === parentItem._id){
-  
-          effUpdateData.push({
-            "_id" : effectScan._id,
-            disabled: !toggle
-          });
-  
-        }
-      }
-    }
-    actor.updateEmbeddedDocuments("ActiveEffect", effUpdateData);
   });
 }
 

@@ -175,7 +175,7 @@
 }
 
 .contentleft {
-  height: 291px;
+  height: 310px;
   overflow: auto;
   padding: 0;
   background-color: var(--mainBackground);
@@ -313,7 +313,7 @@
   min-width: 100%;
   min-height: 339px;
   border: solid var(--pitchBorder) 5px;
-  margin-top: 20px;
+  margin-top: -3px;
 }
 
 .eclipsephase.reset-rest-all-dialog .form-group-stacked {

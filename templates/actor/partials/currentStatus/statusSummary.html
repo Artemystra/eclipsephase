@@ -91,6 +91,34 @@
                                 </div>
                             </div>
                         {{/if}}
+                        {{#if (ne actor.system.currentStatus.specialModifierSum 0)}}
+                            <label class="resource-value">{{localize "ep2e.sideCar.currentStatus.specialModifiers"}}</label>
+                            <div class="listBackgroundMain" style="min-height: 0px; margin-bottom: 10px;">
+                                {{#each actor.system.currentStatus.specialModifiers}}
+                                    <div class="grid grid-4col-status" style="margin: 0;">  
+                                        <div style="grid-area: left">
+                                            <span class="resource-label alignLeft">{{localize label}}</span><br>
+                                        </div>
+                                        <div style="grid-area: center">
+                                            <div class="flexrow alignRight" style="padding-right: 10px;">
+                                                {{#if (lt modifier 0)}}  
+                                                    <span class="resource-value">{{modifier}}</span><br>
+                                                {{else}}
+                                                    <span class="resource-value">+{{modifier}}</span><br>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                                <div class="grid grid-4col-status" style="margin: 0;">
+                                    <div style="grid-area: center">
+                                        <div class="flexrow alignRight" style="padding-right: 10px; border-top: 2px dashed var(--mainText);">  
+                                            <span class="resource-value">{{actor.system.currentStatus.specialModifierSum}}</span><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
                         {{#if actor.system.homebrew}}
                             {{#if actor.system.currentStatus.encumberanceModifier}}
                                 <label class="resource-value">{{localize "ep2e.sideCar.currentStatus.gearModifiers"}}</label>

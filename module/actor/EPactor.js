@@ -486,6 +486,10 @@ export default class EPactor extends Actor {
     let armorSomCumberance = actorModel.physical.armorSomMalus;
     let bulky = actorModel.currentStatus.bulkyModifier;
 
+    //Special modifications calculated
+    actorModel.currentStatus.specialModifiers = [];
+    actorModel.currentStatus.specialModifierSum = 0;
+
     //Encumberance(Homebrew) gets calculated
     let weapon = actorModel.physical.totalWeaponMalus;
     let gear = actorModel.currentStatus.gearModifier;
@@ -502,7 +506,7 @@ export default class EPactor extends Actor {
     actorModel.currentStatus.armorLayerSum = 0;
     actorModel.currentStatus.encumberanceModifier = false;
     actorModel.currentStatus.encumberanceModifierSum = 0;
-    actorModel.currentStatus.statusPresent = false
+    actorModel.currentStatus.statusPresent = false;
 
     if(wounds > 0 || trauma > 0){
       actorModel.currentStatus.generalModifier = true;
@@ -525,11 +529,20 @@ export default class EPactor extends Actor {
       }
     }
 
-    if(actorModel.currentStatus.generalModifier || actorModel.currentStatus.generalModifier || actorModel.currentStatus.armorModifier || actorModel.currentStatus.encumberanceModifier){
-      actorModel.currentStatus.statusPresent = true
+    if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
+      actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value});
     }
 
-    actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum;
+    if(actorModel.currentStatus.generalModifier || actorModel.currentStatus.generalModifier || actorModel.currentStatus.armorModifier || actorModel.currentStatus.encumberanceModifier || actorModel.currentStatus.specialModifiers.length >= 1){
+      actorModel.currentStatus.statusPresent = true
+    }
+    
+    //Sums all spcial modifiers into one (this can be use to refactor the whole calc into a far easier method and is something fo future me)
+    for(let mod of actorModel.currentStatus.specialModifiers){
+      actorModel.currentStatus.specialModifierSum += mod.modifier;
+    }
+
+    actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum + actorModel.currentStatus.specialModifierSum;
   }
 
   _calculateArmor(actorModel, actorWhole) {

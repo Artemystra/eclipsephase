@@ -58,7 +58,7 @@ export async function sleevingTest (data) {
     console.log("the chatData:", chatData)
 
     ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({actor: this.actor}),
+        speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
         flavor: html,
         sound: chatData.integrationTest.sound
     })
@@ -132,7 +132,7 @@ export async function result (data) {
         let html = await renderTemplate(SLEEVE_NEW_RESULT, chatData)
         
         ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({actor: this.actor}),
+            speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
             flavor: html
         })
     }
@@ -179,7 +179,7 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
         }
         let html = await renderTemplate(Dice.WEAPON_DAMAGE_OUTPUT, message);
         ChatMessage.create({    
-            speaker: ChatMessage.getSpeaker({actor: actorWhole.name}),
+            speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
             content: html
         })
     }

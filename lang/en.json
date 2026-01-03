@@ -695,6 +695,7 @@
         "generalModifiers": "General Modifiers",
         "armorModifiers": "Armor Encumberance",
         "gearModifiers": "Gear Encumberance",
+        "specialModifiers": "Special Modifiers",
         "noModifiersSubHeader": "No modifiers present",
         "noModifiersCopy": "Whenever you receive any negative modifiers while exploring the world, you'll find them here. Just give it a bit of time and we'll see each other soon...",
         "statuses": {
