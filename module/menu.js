@@ -59,32 +59,38 @@ class EPmenuLayer extends PlaceablesLayer {
             const active = game.settings.get("eclipsephase", "GMmenu")
             const EPmenu = html.querySelector('.fa-bookmark').parentElement
 
-            const menuItem = document.createElement("button");
-            menuItem.classList.add("scene-control", "ep-menu", "ep-restore-rest", "control", "ui-control", "layer", "icon", "fa-regular", "fa-battery-bolt");
-            menuItem.title = "Restore Rest (All Players)";
-            menuItem.role = "tab"
+            //Defines the rest menu item
+            const restMenu = document.createElement("button");
+            restMenu.classList.add("scene-control", "ep-menu", "ep-restore-rest", "control", "ui-control", "layer", "icon", "fa-regular", "fa-battery-bolt");
+            restMenu.title = game.i18n.localize('ep2e.systemMessage.resetRest.title');
+            restMenu.role = "tab"
+            
+            //Defines the rez menu item
+            const rezMenu = document.createElement("button");
+            rezMenu.classList.add("scene-control", "ep-menu", "ep-provide-rez", "control", "ui-control", "layer", "icon", "fa-regular", "fa-circle-up");
+            rezMenu.title = game.i18n.localize('ep2e.systemMessage.addRez.title');
+            rezMenu.role = "tab"
             
             if (!isGM) return;
 
-            if (html.querySelector('ep-menu.ep-restore-rest')) return;
+            EPmenu.insertAdjacentElement("afterend", restMenu)
+            EPmenu.insertAdjacentElement("afterend", rezMenu)
 
-            EPmenu.insertAdjacentElement("afterend", menuItem)
-
-            menuItem.addEventListener("click", async (event) => {
+            restMenu.addEventListener("click", async (event) => {
                 let charList = getActorsWithOwners()
 
-                let charSelect = await selectChars(charList)
+                let charSelect = await selectCharsToRest(charList)
 
                 if(charSelect.cancelled){
                   return
                 }
 
-                let resetCount = charSelect.resetList.length
+                let resetCount = charSelect.updateList.length
 
                 if (resetCount > 0){
                   for (let actor of game.actors){
                     let actorID = actor.id;
-                    for (let id of charSelect.resetList){
+                    for (let id of charSelect.updateList){
                       if (actorID === id){
                           actor.update({"system.rest.long" : false, "system.rest.short1" : false, "system.rest.short2" : false, "system.rest.shortExtra" : false});
                           for (let effect of actor.effects){
@@ -99,17 +105,39 @@ class EPmenuLayer extends PlaceablesLayer {
                 }
             })
 
-            async function selectChars(charList){
+            rezMenu.addEventListener("click", async (event) => {
+                let charList = getActorsWithOwners()
+
+                let charSelect = await selectCharsToRez(charList)
+
+                if(charSelect.cancelled){
+                  return
+                }
+                
+                let resetCount = charSelect.updateList.length;
+                const generalRez = Number(charSelect?.updateList[0]?.value ?? 0);
+                for (let entry=1; entry<resetCount; entry++){
+                    const actor = game.actors.get(charSelect.updateList[entry].id);
+                    const currentRez = actor.system.rezPoints.value;
+                    const updateValue = Number(charSelect?.updateList[entry]?.value ?? 0);
+                    if(generalRez > 0 || updateValue > 0){
+                      actor.update({"system.rezPoints.value" : newRez})
+                    }
+                  }
+            })
+
+            async function selectCharsToRest(charList){
               let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
               let resetButton = game.i18n.localize('ep2e.actorSheet.button.reset');
               let closeButton = game.i18n.localize('ep2e.actorSheet.button.close');
               let title = game.i18n.localize('ep2e.systemMessage.resetRest.title');
+              const menuType = "restMenu";
               const activeChars = charList[0];
               const otherChars = charList[1];
               const activeCharsCount = charList[0].length;
               const otherCharsCount = charList[1].length;
               const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
-              const html = await renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount});
+              const html = await renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
 
               if(activeCharsCount + otherCharsCount > 0){
                 return new Promise(resolve => {
@@ -123,7 +151,7 @@ class EPmenuLayer extends PlaceablesLayer {
                           },
                           normal: {
                               label: resetButton,
-                              callback: html => resolve(_proResetPlayerList(html[0].querySelector("form")))
+                              callback: html => resolve(_updatePlayerCharacter(html[0].querySelector("form")))
                           }
                         },
                         default: "normal",
@@ -132,7 +160,7 @@ class EPmenuLayer extends PlaceablesLayer {
                           selectAllCheckbox.on('change', (e) => {
                             checkAllCharacters(html, (! e.target.checked));
                           });
-                          const charCheckBoxes = getCharacterCheckboxes(html);
+                          const charCheckBoxes = getCharacterCheckboxes(html, charList);
                           charCheckBoxes.on('change', (e) => {
                             const checkedBoxes = charCheckBoxes.toArray().reduce((cnt, el) => (cnt + el.checked), 0);
                             selectAllCheckbox.get(0).checked = (charCheckBoxes.length === checkedBoxes);
@@ -165,16 +193,76 @@ class EPmenuLayer extends PlaceablesLayer {
 
             }
 
+            
+            async function selectCharsToRez(charList){
+              let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
+              let resetButton = game.i18n.localize('ep2e.systemMessage.addRez.confirm');
+              let closeButton = game.i18n.localize('ep2e.actorSheet.button.close');
+              let title = game.i18n.localize('ep2e.systemMessage.addRez.title');
+              const menuType = "rezMenu";
+              const activeChars = charList[0];
+              const otherChars = charList[1];
+              const activeCharsCount = charList[0].length;
+              const otherCharsCount = charList[1].length;
+              const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
+              const html = await renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
+
+              if(activeCharsCount + otherCharsCount > 0){
+                return new Promise(resolve => {
+                    const data = {
+                        title: title,
+                        content: html,
+                        buttons: {
+                          cancel: {
+                            label: cancelButton,
+                            callback: html => resolve ({cancelled: true})
+                          },
+                          normal: {
+                              label: resetButton,
+                              callback: html => resolve(_updatePlayerCharacter(html[0].querySelector("form")))
+                          }
+                        },
+                        default: "normal",
+                        close: () => resolve ({cancelled: true})
+                    };
+                    let options = {width:536}
+                    new Dialog(data, options).render(true);
+                });
+              }
+              else{
+                return new Promise(resolve => {
+                    const data = {
+                        title: title,
+                        content: html,
+                        buttons: {
+                          cancel: {
+                            label: closeButton,
+                            callback: html => resolve ({cancelled: true})
+                          }
+                        },
+                        default: "normal",
+                        close: () => resolve ({cancelled: true})
+                    };
+                    let options = {width:536}
+                    new Dialog(data, options).render(true);
+                });
+              }
+
+            }
+
             //selectChars results
-            function _proResetPlayerList(form) {
-              let resetList = [];
+            function _updatePlayerCharacter(form) {
+              let updateList = [];
               for (let key of Object.entries(form)){
                 if(key[1].checked === true){
-                    resetList.push(key[1].name)
+                    updateList.push(key[1].name)
+                }
+                else{
+                  updateList.push({"value" : key[1].value, "id" : key[1].name})
                 }
               }
               return {
-                  resetList
+                  updateList
               }
 
           }

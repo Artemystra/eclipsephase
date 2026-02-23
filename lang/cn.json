@@ -1410,13 +1410,21 @@
       "done": "<label class='resource-label'>请愉快地开始对抗TITAN并拯救宇宙吧！或做任何你想做的事情！</i></p></label>"
     },
     "systemMessage": {
+      "general": {
+        "activeCharacters": "Active Characters",
+        "otherCharacters": "Other Characters",
+        "headline": "Player Characters"
+      },
       "resetRest": {
         "title": "Reset Rest",
-        "copy": "This dialog resets ALL rest for the selected, active characters. If a character is not actively controlled by any player, it will not show in this list. Players can change their active character by using the player menu in the lower left of foundry.",
-        "checkBoxLabelAll": "Toggle All Characters",
-        "headline": "Player Characters",
-        "activeCharacters": "Active Characters",
-        "otherCharacters": "Other Characters"
+        "copy": "This dialog resets ALL rest for the selected characters. If a character is actively controlled by a player, it will be selected by default. Check the All players box to select all characters or uncheck it to select only the active characters.",
+        "inputLabelAll": "Toggle All Characters"
+      },
+      "addRez": {
+        "title": "Update Rez",
+        "copy": "This dialog lets you add Rez to every active player character in game. If a character is not active you can still add Rez to them. Please be aware that the 'Add REZ to all characters' option will add the same amount of Rez to all characters, no matter if they're active or not. Rez added to specific characters will therefore count on top of this value.",
+        "inputLabelAll": "Add REZ to all characters",
+        "confirm": "Add Rez"
       }
     }
   }

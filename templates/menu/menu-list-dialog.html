@@ -1,43 +1,72 @@
 <form class="eclipsephase reset-rest-all-dialog">
-  <div class="form-group listBackgroundMain">
-    <p>{{{localize "ep2e.systemMessage.resetRest.copy"}}}</p>
-  </div>
-  {{#if (gt activeCharsCount 0)}}
-  <div class="flexrow subheader">
-    <h3 class="subheader dialog">{{localize "ep2e.systemMessage.resetRest.headline"}}</h3>
-    <div class="checkbox-label">
-      <label style="max-width: fit-content;">{{localize "ep2e.systemMessage.resetRest.checkBoxLabelAll"}}</label>
-      <input type="checkbox" id="resetRestSelectAll">
+    <div class="form-group listBackgroundMain">
+      {{#if (eq menuType "restMenu")}}
+      <p>{{{localize "ep2e.systemMessage.resetRest.copy"}}}</p>
+      {{else if (eq menuType "rezMenu")}}
+      <p>{{{localize "ep2e.systemMessage.addRez.copy"}}}</p>
+      {{/if}}
     </div>
-  </div>
-  <h3 class="subheader dialog" style="margin-top: 10px;">{{localize "ep2e.systemMessage.resetRest.activeCharacters"}}</h3>
-  <div class="form-group-stacked">
-    <div class="grid" style="margin-top: 0;">
-      {{#each activeChars as |char|}}
-      <div class="checkbox-label">
-        <label>{{char.actor.name}}</label>
-        <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor.id}}" {{checkedIf char.ownedByPlayer}}>
+    {{#if (gt activeCharsCount 0)}}
+    <div class="flexrow subheader">
+      <h3 class="subheader dialog">{{localize "ep2e.systemMessage.general.headline"}}</h3>
+      {{#if (eq menuType "restMenu")}}
+        <div class="checkbox-label">
+          <label style="max-width: fit-content;" for="resetRestSelectAll">{{localize "ep2e.systemMessage.resetRest.inputLabelAll"}}</label>
+          <input type="checkbox" id="resetRestSelectAll">
+        </div>
+      {{else if (eq menuType "rezMenu")}}
+        <div class="checkbox-label">
+          <label style="max-width: fit-content;">{{localize "ep2e.systemMessage.addRez.inputLabelAll"}}</label>
+          <input class="input-small" onfocus="this.select()" type="number" data-dtype="Number" placeholder="0" id="addGeneralRez" name="generalRez">
+        </div>
+      {{/if}}
+    </div>
+    <h3 class="subheader dialog" style="margin-top: 10px;">{{localize "ep2e.systemMessage.general.activeCharacters"}}</h3>
+    <div class="form-group-stacked">
+      <div class="grid" style="margin-top: 0;">
+        {{#if (eq menuType "restMenu")}}
+          {{#each activeChars as |char|}}
+          <div class="checkbox-label">
+            <label for="{{char.ownedByPlayer}}">{{char.actor.name}}</label>
+            <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" id="{{char.ownedByPlayer}}" name="{{char.actor.id}}" {{checkedIf char.ownedByPlayer}}>
+          </div>
+          {{/each}}
+        {{else if (eq menuType "rezMenu")}}
+          {{#each activeChars as |char|}}
+          <div class="checkbox-label">
+            <label>{{char.actor.name}}</label>
+            <input class="input-small" onfocus="this.select()" type="number" data-dtype="Number" placeholder="0" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor.id}}">
+          </div>
+          {{/each}}
+        {{/if}}
       </div>
-      {{/each}}
     </div>
-  </div>
-  {{else}}
-  <div style="height: 190px">
-    <img src="systems/eclipsephase/resources/img/userConfiguration.webp"/>
-  </div>
-  {{/if}}
-  {{#if (gt otherCharsCount 0)}}
-  <h3 class="subheader dialog" style="margin-top: 10px;">{{localize "ep2e.systemMessage.resetRest.otherCharacters"}}</h3>
-  <div class="form-group-stacked">
-    <div class="grid" style="margin-top: 0;">
-      {{#each otherChars as |char|}}
-      <div class="checkbox-label">
-        <label>{{char.actor.name}}</label>
-        <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor.id}}" {{checkedIf char.ownedByPlayer}}>
+    {{else}}
+    <div style="height: 190px">
+      <img src="systems/eclipsephase/resources/img/userConfiguration.webp"/>
+    </div>
+    {{/if}}
+    {{#if (gt otherCharsCount 0)}}
+    <h3 class="subheader dialog" style="margin-top: 10px;">{{localize "ep2e.systemMessage.general.otherCharacters"}}</h3>
+    <div class="form-group-stacked">
+      <div class="grid" style="margin-top: 0;">
+        {{#if (eq menuType "restMenu")}}
+          {{#each otherChars as |char|}}
+          <div class="checkbox-label">
+            <label for="{{char.ownedByPlayer}}">{{char.actor.name}}</label>
+            <input type="checkbox" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" id="{{char.ownedByPlayer}}" name="{{char.actor.id}}" {{checkedIf char.ownedByPlayer}}>
+          </div>
+          {{/each}}
+        {{else if (eq menuType "rezMenu")}}
+          {{#each otherChars as |char|}}
+          <div class="checkbox-label">
+            <label>{{char.actor.name}}</label>
+            <input class="input-small" onfocus="this.select()" type="number" data-dtype="Number" placeholder="0" data-checkbox-type="player-character" data-owner-id="{{char.ownedByPlayer}}" name="{{char.actor.id}}" {{checkedIf char.ownedByPlayer}}>
+          </div>
+          {{/each}}
+        {{/if}}
       </div>
-      {{/each}}
     </div>
-  </div>
-  {{else}}
-  {{/if}}
+    {{else}}
+    {{/if}}
 </form>

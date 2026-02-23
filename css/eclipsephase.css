@@ -29,10 +29,10 @@
   --highlightBackground: #414141;
   --accentBackground: #24485d;
   --color-bg-option: #1f1f1f;
-  --color-shadow-primary: #36aee9;
-  --color-border-highlight: #36aee9;
-  --color-underline-header: #36aee9;
-  --color-underline-active: #36aee9;
+  --color-shadow-primary: #36aee9!important;
+  --color-border-highlight: #36aee9!important;
+  --color-underline-header: #36aee9!important;
+  --color-underline-active: #36aee9!important;
   --color-bg-btn-minor-inactive: #414141;
 }
 
@@ -2678,13 +2678,11 @@ button#world-anvil img {
 
 /* Scrollbar */
 
-/* === Scrollbars (Foundry v13 desktop / Chromium) === */
 body.system-eclipsephase {
   --color-scrollbar: var(--highlight);
   --color-scrollbar-track: transparent;
 }
 
-/* Force on the actual scrolling containers Foundry uses */
 body.system-eclipsephase .window-content,
 body.system-eclipsephase #sidebar,
 body.system-eclipsephase #chat-log,
@@ -2693,12 +2691,12 @@ body.system-eclipsephase .items-list,
 body.system-eclipsephase .contentleft,
 body.system-eclipsephase .contentcenter,
 body.system-eclipsephase .contentright,
-body.system-eclipsephase .wrapperright {
-  scrollbar-color: var(--iconBlue) transparent; /* harmless in Chromium */
-  scrollbar-width: thin;                        /* harmless in Chromium */
+body.system-eclipsephase .wrapperright,
+body.system-eclipsephase .contentBox {
+  scrollbar-color: var(--iconBlue) transparent;
+  scrollbar-width: thin;                       
 }
 
-/* Chromium pseudo-elements */
 body.system-eclipsephase .window-content::-webkit-scrollbar,
 body.system-eclipsephase #sidebar::-webkit-scrollbar,
 body.system-eclipsephase #chat-log::-webkit-scrollbar,
@@ -2707,7 +2705,8 @@ body.system-eclipsephase .items-list::-webkit-scrollbar,
 body.system-eclipsephase .contentleft::-webkit-scrollbar,
 body.system-eclipsephase .contentcenter::-webkit-scrollbar,
 body.system-eclipsephase .contentright::-webkit-scrollbar,
-body.system-eclipsephase .wrapperright::-webkit-scrollbar {
+body.system-eclipsephase .wrapperright::-webkit-scrollbar,
+body.system-eclipsephase .contentBox::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
@@ -2720,7 +2719,8 @@ body.system-eclipsephase .items-list::-webkit-scrollbar-track,
 body.system-eclipsephase .contentleft::-webkit-scrollbar-track,
 body.system-eclipsephase .contentcenter::-webkit-scrollbar-track,
 body.system-eclipsephase .contentright::-webkit-scrollbar-track,
-body.system-eclipsephase .wrapperright::-webkit-scrollbar-track {
+body.system-eclipsephase .wrapperright::-webkit-scrollbar-track,
+body.system-eclipsephase .contentBox::-webkit-scrollbar-track {
   background: transparent;
 }
 
@@ -2732,7 +2732,8 @@ body.system-eclipsephase .items-list::-webkit-scrollbar-thumb,
 body.system-eclipsephase .contentleft::-webkit-scrollbar-thumb,
 body.system-eclipsephase .contentcenter::-webkit-scrollbar-thumb,
 body.system-eclipsephase .contentright::-webkit-scrollbar-thumb,
-body.system-eclipsephase .wrapperright::-webkit-scrollbar-thumb {
+body.system-eclipsephase .wrapperright::-webkit-scrollbar-thumb,
+body.system-eclipsephase .contentBox::-webkit-scrollbar-thumb  {
   background-color: var(--iconBlue);
   border-radius: 8px;
   border: 2px solid transparent;

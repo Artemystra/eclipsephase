@@ -1455,13 +1455,20 @@
       }
     },
     "systemMessage": {
+      "general": {
+        "headline": "Spielercharaktere",
+        "activeCharacters": "Aktive Charaktere",
+        "otherCharacters": "Inactive Charaktere"
+      },
       "resetRest": {
         "title": "Rast Zurücksetzen",
         "copy": "Dieser Dialog setzt ALLE Rast der ausgewählten, aktiven Charaktere zurück. Wenn ein Charakter nicht aktiv von einem/einer Spieler:in kontrolliert wird, wird diese:r hier nicht aufgeführt. Spieler:innen können ihren aktiven Charakter wechseln, indem sie das Spieler-Menü in der unteren linken Ecke von Foundry benutzen.",
-        "checkBoxLabelAll": "Alle Charaktere An/Abwählen",
-        "headline": "Spielercharaktere",
-        "activeCharacters": "Aktive Charaktere",
-        "otherCharacters": "Andere Charaktere"
+        "checkBoxLabelAll": "Alle Charaktere An/Abwählen"
+      },
+      "addRez": {
+        "title": "Rez Verteilen",
+        "copy": "Dieser Dialog ermöglicht es dir, jedem aktiven Spielercharakter im Spiel Rez hinzuzufügen. Wenn ein Charakter nicht aktiv ist, kannst du ihm dennoch Rez hinzufügen. Bitte beachte, dass die Option „Allen Charakteren REZ hinzufügen“ allen Charakteren denselben Rez-Wert hinzufügt, unabhängig davon, ob sie aktiv sind oder nicht. Rez, das einzelnen Charakteren spezifisch hinzugefügt wird, wird zusätzlich zu diesem Wert angerechnet.",
+        "checkBoxLabelAll": "Allen Charakteren REZ hinzufügen"
       }
     }
   }
