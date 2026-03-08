@@ -175,7 +175,7 @@ export default class EPactor extends Actor {
       }
     }
 
-    if (actorWhole.getFlag("eclipsephase", "resleeving") === true){
+    if (actorWhole.getFlag("eclipsephase", "resleeving") === true && actorModel.isOwner){
         await actorWhole.update({ "flags.eclipsephase.resleeving": false });
         await actorWhole.update({"system.pools.insight.value": actorPools.insight.totalInsight, "system.pools.vigor.value": actorPools.vigor.totalVigor, "system.pools.moxie.value": actorPools.moxie.totalMoxie, "system.pools.flex.value": actorPools.flex.totalFlex})
     }
