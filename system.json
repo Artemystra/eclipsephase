@@ -204,8 +204,8 @@
   "gridUnits": "m",
   "primaryTokenAttribute": "system.health.physical",
   "secondaryTokenAttribute": "system.health.mental",
-  "url": "https://github.com/DerDiemen/eclipsephase",
-  "manifest": "https://github.com/DerDiemen/eclipsephase2e-foundryVTT/raw/master/system.json",
-  "download": "https://github.com/DerDiemen/eclipsephase/archive/master/eclipsephase-master.zip",
+  "url": "https://github.com/Artemystra/eclipsephase",
+  "manifest": "https://github.com/Artemystra/eclipsephase/raw/master/system.json",
+  "download": "https://github.com/Artemystra/eclipsephase/archive/master/eclipsephase-master.zip",
   "license": "LICENSE.txt"
 }
