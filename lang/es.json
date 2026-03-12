@@ -136,22 +136,123 @@
       "tooltip": {
         "physical": {
           "headline": "Physical Fitness",
-          "dur": "Durability Damage",
-          "durDescription": "Durability defines how many bruises, cuts and wholes",
+          "damageThresholdsSubheadline": "Damage Thresholds",
+          "woundsSubheadline": "Wound Monitor",
+          "curDmg": "Current Damage",
+          "dur": "Durability",
+          "durDescription": "Durability defines how many bruises, cuts and wholes one can compensate for.",
           "dr": "Death Rating",
-          "drDescription": "Death Rating",
+          "drDescription": "Not much time before the body is beyond repair, you are cowering on death's doorstep. That is here.",
+          "curWounds": "Current Wounds",
           "wt": "Wound Threshold",
-          "wtDescription": "Wound Threshold"
+          "wtDescription": "Wound threshold tells you when your body breaks and bruises turn into something far more serious.",
+          "takeDamage": "Take Physical Damage"
         },
         "mental": {
           "headline": "Mental Fitness",
-          "str": "Stress",
-          "strDescription": "Your mental stress. To much and you might go insane.",
+          "stressThresholdsSubheadline": "Stress Thresholds",
+          "traumaSubheadline": "Trauma Monitor",
+          "curStr": "Current Stress",
+          "luc": "Lucidity",
+          "lucDescription": "Your mental stress. To much and you might go insane.",
           "ir": "Insanity Rating",
           "irDescription": "You are already a babbling bundle if you are here. Keep it coming and you might never come back to your senses.",
+          "curTrauma": "Current Trauma",
           "tt": "Trauma Threshold",
-          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma."
+          "ttDescription": "The trauma threshold defines when your stress is going to become a serious trauma.",
+          "takeDamage": "Take Mental Damage"
         },
+        "heal": {
+          "bodyFull":{
+            "bio": "Full Heal",
+            "synth": "Full Repair",
+            "info": "Full Defragmentation"
+          },
+          "bodyPartial": {
+            "bio": "Roll Heal",
+            "synth": "Roll Repair",
+            "info": "Roll Defrag"
+          },
+          "mindFull": "Heal Full",
+          "mindPartial": "Roll Heal"
+        },
+        "spendRez": {
+          "label": "Spend Rez",
+          "rep": {
+            "label" : "x 5 Rep Points",
+            "description": " (1 Rez each)"
+          },
+          "skill": {
+            "label" : "x 5 Skill Points",
+            "description": " (1 Rez each)"
+          },
+          "spec": {
+            "label" : "x 1 Specialization",
+            "description": " (1 Rez each)"
+          },
+          "psi": {
+            "label" : "x 1 Psi Slieght",
+            "description": " (1 Rez each)"
+          },
+          "lang": {
+            "label" : "x 1 Language",
+            "description": " (1 Rez each)"
+          },
+          "apt": {
+            "label" : "x 1 Aptitude",
+            "description": " (1 Rez each)"
+          },
+          "flex": {
+            "label" : "x 1 Ego-Flex (To a total of 3)",
+            "description": " (2 Rez each)"
+          },
+          "traits": {
+            "label" : "Any number of traits",
+            "description": " (Put in the summed cost)"
+          },
+          "homebrew": {
+            "rep": {
+              "label" : "x 1 Rep Points",
+              "description": " (1 Rez each)"
+            },
+            "spec": {
+              "label" : "x 1 Specialization",
+              "description": " (5 Rez each)"
+            },
+            "psi": {
+              "label" : "x 1 Psi Slieght",
+              "description": " (5 Rez each)"
+            },
+            "lang": {
+              "label" : "x 1 Language",
+              "description": " (5 Rez each)"
+            },
+            "apt": {
+              "label" : "x 1 Aptitude",
+              "description": " (5 Rez each)"
+            },
+            "flex": {
+              "label" : "x 1 Ego-Flex (To a total of 3)",
+              "description": " (10 Rez each)"
+            },
+            "traits": {
+              "label" : "Any number of traits",
+              "description": " (Put in the summed cost)"
+            },
+            "skill33": {
+              "label" : "x 2 Skill Points (Skill < 34)",
+              "description": " (1 Rez each)"
+            },
+            "skill3366": {
+              "label" : "x 1 Skill Points (Skill 34 - 66)",
+              "description": " (1 Rez each)"
+            },
+            "skill66": {
+              "label" : "x 1 Skill Points (Skill > 66)",
+              "description": " (2 Rez each)"
+            }
+        }
+        }, 
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",
         "stressluc": "Stress/Luc",
@@ -159,7 +260,11 @@
         "initiative": "Initiative",
         "threat": "Threat",
         "stressTest": "Stress Test",
-        "iniMod": "Ini Mod"
+        "iniMod": "Ini Mod",
+        "rezPoints": "Rez Points",
+        "rezTotal": "Total",
+        "rezCurrent": "Current",
+        "rezSpent": "Spent"
       }
     },
     "ego": {
@@ -1206,6 +1311,10 @@
         "rest": {
           "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
           "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+        },
+        "spendRez": {
+          "spent": "You overspent your rez. <br> Spent:", 
+          "available": "<br> Available:"
         },
         "heal": {
           "full": {

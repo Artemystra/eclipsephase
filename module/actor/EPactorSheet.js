@@ -3,8 +3,9 @@ import { registerEffectHandlers,registerCommonHandlers,_tempEffectCreation,confi
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder, IDprep } from "../common/sheet-preparation.js";
-import * as Dice from "../rolls/dice.js";
-import * as morphFunction from "../common/morp-functions.js"
+import * as COMMON from "../common/common-sheet-functions.js"
+import * as DICE from "../rolls/dice.js";
+import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 
 
@@ -149,7 +150,7 @@ export default class EPactorSheet extends ActorSheet {
      * as they only have one morph at a time instead of a number of morphs
      */
     if (item.type === "morph" && actor.type !== "character"){
-      await morphFunction.replaceMorph(actor, currentMorph, item)
+      await MORPHFUNCTION.replaceMorph(actor, currentMorph, item)
       const newDroppedItem = await super._onDropItemCreate(item)
       await actor.update({"system.activeMorph": newDroppedItem[0].id});
       await actor.update({ "flags.eclipsephase.resleeving": true });
@@ -703,6 +704,7 @@ export default class EPactorSheet extends ActorSheet {
     const actor = this.actor;
     const actorModel = actor.system;
     const currentMorph = actorModel.activeMorph;
+    const brewStatus = game.settings.get("eclipsephase", "superBrew");
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -739,7 +741,7 @@ export default class EPactorSheet extends ActorSheet {
         let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
 
         if (popUp.confirm === true && item.type === "morph"){
-          await morphFunction.deleteMorph(actor, li.data("itemId"))
+          await MORPHFUNCTION.deleteMorph(actor, li.data("itemId"))
         }
         else if(popUp.confirm === true){
           actor.deleteEmbeddedDocuments("Item", [li.data("itemId")]);
@@ -765,7 +767,6 @@ export default class EPactorSheet extends ActorSheet {
     html.find('.poolUse').click(async f => {
       const dialog = 'systems/eclipsephase/templates/chat/pop-up.html';
       const result = 'systems/eclipsephase/templates/chat/pool-usage.html';
-      const brewStatus = game.settings.get("eclipsephase", "superBrew");
       const element = f.currentTarget;
       const dataset = element.dataset;
       const type = dataset.type;
@@ -946,7 +947,7 @@ export default class EPactorSheet extends ActorSheet {
         message.rollTitle = "ep2e.roll.announce.total"
         message.mainMessage = "ep2e.roll.announce.rest.short"
 
-        await Dice.rollToChat(null, message, Dice.DEFAULT_ROLL, roll, actorWhole.name, null, false, "rollOutput")
+        await DICE.rollToChat(null, message, DICE.DEFAULT_ROLL, roll, actorWhole.name, null, false, "rollOutput")
 
         restValue = roll.total
         
@@ -1000,7 +1001,7 @@ export default class EPactorSheet extends ActorSheet {
   });
 
   html.find('.sleeveButton').click( ev => {
-    (morphFunction.resleeveMorph(actor, $(ev.currentTarget)));
+    (MORPHFUNCTION.resleeveMorph(actor, $(ev.currentTarget)));
   })
 
     // Drag events for macros.
@@ -1036,6 +1037,94 @@ export default class EPactorSheet extends ActorSheet {
       html.find(".healthPanelNoSubmit").change(this.autoSubmitPrevention.bind(this))
 
       damage.healthBarChange(actor, html);
+
+      html.find("#spendRez").click(async ev =>  {
+        let object = {}
+        const availableRez = actorModel.rezPoints.value;
+        const spentRez = actorModel.rezPoints.spent;
+        const ledger = actorModel.rezPoints.ledger;
+        if(!brewStatus){
+          object = {
+            0: { id: 'rep', label: 'ep2e.healthbar.tooltip.spendRez.rep.label', description: 'ep2e.healthbar.tooltip.spendRez.rep.description', type: "input"},
+            1: { id: 'skill', label: 'ep2e.healthbar.tooltip.spendRez.skill.label', description: 'ep2e.healthbar.tooltip.spendRez.skill.description', type: "input"},
+            2: { id: 'spec', label: 'ep2e.healthbar.tooltip.spendRez.spec.label', description: 'ep2e.healthbar.tooltip.spendRez.spec.description', type: "input"},
+            3: { id: 'psi', label: 'ep2e.healthbar.tooltip.spendRez.psi.label', description: 'ep2e.healthbar.tooltip.spendRez.psi.description', type: "input"},
+            4: { id: 'lang', label: 'ep2e.healthbar.tooltip.spendRez.lang.label', description: 'ep2e.healthbar.tooltip.spendRez.lang.description', type: "input"},
+            5: { id: 'apt', label: 'ep2e.healthbar.tooltip.spendRez.apt.label', description: 'ep2e.healthbar.tooltip.spendRez.apt.description', type: "input"},
+            6: { id: 'flex', label: 'ep2e.healthbar.tooltip.spendRez.flex.label', description: 'ep2e.healthbar.tooltip.spendRez.flex.description', type: "input"},
+            7: { id: 'traits', label: 'ep2e.healthbar.tooltip.spendRez.traits.label', description: 'ep2e.healthbar.tooltip.spendRez.traits.description', type: "input"}
+          } 
+        }
+        else {
+          object = {
+            0: { id: 'repH', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.rep.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.rep.description', type: "input"},
+            1: { id: 'skill33', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.skill33.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.skill33.description', type: "input"},
+            2: { id: 'skill3366', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.description', type: "input"},
+            3: { id: 'skill66', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.skill66.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.skill66.description', type: "input"},
+            4: { id: 'specH', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.spec.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.spec.description', type: "input"},
+            5: { id: 'psiH', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.psi.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.psi.description', type: "input"},
+            6: { id: 'langH', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.lang.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.lang.description', type: "input"},
+            7: { id: 'aptH', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.apt.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.apt.description', type: "input"},
+            8: { id: 'flexH', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.flex.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.flex.description', type: "input"},
+            9: { id: 'traitsH', label: 'ep2e.healthbar.tooltip.spendRez.homebrew.traits.label', description: 'ep2e.healthbar.tooltip.spendRez.homebrew.traits.description', type: "input"}
+          } 
+        }
+
+        const costMatrix = {
+          'rep' : 1,
+          'skill' : 1,
+          'spec' : 1,
+          'psi' : 1,
+          'lang' : 1,
+          'apt' : 1,
+          'flex' : 2,
+          'traits' : 1,
+          'repH' : 1,
+          'skill33' : 1,
+          'skill3366' : 1,
+          'skill66' : 1,
+          'specH' : 5,
+          'psiH' : 5,
+          'langH' : 5,
+          'aptH' : 5,
+          'flexH' : 10,
+          'traitsH' : 1
+        }
+
+        let total = 0;
+        const date = new Date().toLocaleDateString("en-EN")
+
+        const spending = await COMMON.listSelection(object, "standardSelectionList", 350, "Spend Rez", "", "This dialog lets you spend your rez. It will document everything for the DM in the background")
+
+        if(spending.cancelled) return;
+
+        for (let item in spending.selection){
+          total += spending.selection[item] * costMatrix[item]
+        }
+
+        const ledgerUpdate = {date: date, ...spending.selection, cost : total}
+
+        if (ledgerUpdate["cost"] <= availableRez){
+          ledger.push(ledgerUpdate);
+          actor.update({"system.rezPoints.value" : availableRez - total, "system.rezPoints.spent" : spentRez + total, "system.rezPoints.ledger" : ledger});
+        }
+        else {
+          
+            let message = {};
+            message.type = "general";
+            message.headline = "Rez Not spent";
+            message.subheadline = "Reason";
+            message.copy = game.i18n.localize('ep2e.roll.announce.spendRez.spent') + ledgerUpdate["cost"] + game.i18n.localize('ep2e.roll.announce.spendRez.available') + availableRez;
+            
+            html = await renderTemplate('systems/eclipsephase/templates/chat/general-chat-message.html', message)
+
+            ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({actor: actor}),
+                content: html,
+                whisper: [game.user.id]
+            })
+        }
+      })
 
       //More Information Dialog
       html.on('click', 'a.moreInfoDialog', moreInfo);
@@ -1159,7 +1248,7 @@ export default class EPactorSheet extends ActorSheet {
   }
   
   _onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
-    Dice.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
+    DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
   }
 }
 

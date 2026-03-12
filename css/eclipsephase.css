@@ -2140,7 +2140,8 @@ h3.healthSubheadline {
 
 .tooltip div[role=tooltip],
 .tooltip div[role=tooltipNegative],
-.tooltip div[role=healthOverlay]{
+.tooltip div[role=healthOverlay],
+.tooltip div[role=rezOverlay]{
   display: none;
   opacity: 0;
 }
@@ -2178,7 +2179,8 @@ button.epTextlink:hover{
   color: var(--mainText);
 }
 
-.tooltip:hover div[role=healthOverlay] {
+.tooltip:hover div[role=healthOverlay],
+.tooltip:hover div[role=rezOverlay] {
   opacity: 1;
   font-family: 'Cousine', monospace;
   max-width: 320px;

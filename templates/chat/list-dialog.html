@@ -161,17 +161,24 @@
             {{#each objectList as |object key|}}
                 <div class="flexrow flex-group-left" style="width: 100%; align-items: flex-start;">
                     <div style="max-width: 40px;">
-                        {{#if (eq key 0)}}
-                            <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
+                        {{#if (eq type "input")}}
+                            <div style=" padding-right: 10px;">
+                                <input style="background-color: var(--highlightBackground);" type="number" name="Input" id="{{id}}">
+                            </div>
                         {{else}}
-                            <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                            {{#if (eq key 0)}}
+                                <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
+                            {{else}}
+                                <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                            {{/if}} 
                         {{/if}}
                     </div>
-                    <div style="width: 100%; display: flex; flex-wrap: wrap;">
+                    <div style="width: 100%; display: flex; flex-wrap: wrap; padding-top: 2px;">
                         <div>
-                            <label for="{{id}}" style="min-width: 100%;">{{localize label}}</label>
+                            <label for="{{id}}" style="min-width: 100%; margin-right: 10px;">{{localize label}}</label>
                         </div>
-                        <div style="padding: 0 0 10px 0;">
+                        <div style="margin-top: 5px;"></div>
+                        <div>
                             <label for="{{id}}" style="font-size: 10px;"><i>{{localize description}}</i></label>
                         </div>
                     </div>

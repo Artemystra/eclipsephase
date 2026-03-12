@@ -72,7 +72,8 @@
         "rezPoints": {
           "value": 0,
           "spent": 0,
-          "display": 0
+          "display": 0,
+          "ledger": []
         },
         "mods": {
           "globalMod": null,

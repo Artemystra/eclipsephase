@@ -120,6 +120,7 @@ class EPmenuLayer extends PlaceablesLayer {
                     const actor = game.actors.get(charSelect.updateList[entry].id);
                     const currentRez = actor.system.rezPoints.value;
                     const updateValue = Number(charSelect?.updateList[entry]?.value ?? 0);
+                    const newRez = generalRez + currentRez;
                     if(generalRez > 0 || updateValue > 0){
                       actor.update({"system.rezPoints.value" : newRez})
                     }

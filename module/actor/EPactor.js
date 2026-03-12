@@ -100,6 +100,7 @@ export default class EPactor extends Actor {
     this._calculatePhysicalHealth(actorModel, morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole);
     this._calculateInitiative(actorModel, chiMultiplier);
+    this._calculateRez(actorModel)
 
     if (this.type === "character"){  
       this._calculateHomebrewEncumberance(actorModel);
@@ -186,6 +187,13 @@ export default class EPactor extends Actor {
    */
   _prepareCharacterData(actorModel) {
     // const data = actorModel.data;
+  }
+
+  _calculateRez(actorModel){
+    const rezCurrent = actorModel.rezPoints.value;
+    const rezSpent = actorModel.rezPoints.spent;
+
+    actorModel.rezPoints.total = rezCurrent + rezSpent;
   }
 
   _calculateInitiative(actorModel, chiMultiplier) {

@@ -180,6 +180,83 @@
           "mindFull": "Voll Heilen",
           "mindPartial": "Heil Wurf"
         },
+        "spendRez": {
+          "label": "Rez Ausgeben",
+          "rep": {
+            "label" : "x 5 Rep Punkte",
+            "description": " (1 Rez pro)"
+          },
+          "skill": {
+            "label" : "x 5 Skill Punkte",
+            "description": " (1 Rez pro)"
+          },
+          "spec": {
+            "label" : "x 1 Spezialisierung",
+            "description": " (1 Rez pro)"
+          },
+          "psi": {
+            "label" : "x 1 Psi Sleight",
+            "description": " (1 Rez pro)"
+          },
+          "lang": {
+            "label" : "x 1 Sprache",
+            "description": " (1 Rez pro)"
+          },
+          "apt": {
+            "label" : "x 1 Anlage",
+            "description": " (1 Rez pro)"
+          },
+          "flex": {
+            "label" : "x 1 Ego-Flex (Maximum 3)",
+            "description": " (2 Rez pro)"
+          },
+          "traits": {
+            "label" : "Beliebige Anzahl von Vorteilen",
+            "description": " (Summe der Kosten eintragen)"
+          },
+          "homebrew": {
+            "rep": {
+              "label" : "x 1 Rep Punkt",
+              "description": " (1 Rez pro)"
+            },
+            "spec": {
+              "label" : "x 1 Spezialisierung",
+              "description": " (5 Rez pro)"
+            },
+            "psi": {
+              "label" : "x 1 Psi Sleight",
+              "description": " (5 Rez pro)"
+            },
+            "lang": {
+              "label" : "x 1 Sprache",
+              "description": " (5 Rez pro)"
+            },
+            "apt": {
+              "label" : "x 1 Anlage",
+              "description": " (5 Rez pro)"
+            },
+            "flex": {
+              "label" : "x 1 Ego-Flex (Maximum 3)",
+              "description": " (10 Rez pro)"
+            },
+            "traits": {
+              "label" : "Beliebige Anzahl von Vorteilen",
+              "description": " (Summe der Kosten eintragen)"
+            },
+            "skill33": {
+              "label" : "x 2 Skill Punkte (Skill < 34)",
+              "description": " (1 Rez pro)"
+            },
+            "skill3366": {
+              "label" : "x 1 Skill Punkt (Skill 34 - 66)",
+              "description": " (1 Rez pro)"
+            },
+            "skill66": {
+              "label" : "x 1 Skill Punkt (Skill > 66)",
+              "description": " (2 Rez pro)"
+            }
+        }
+        }, 
         "durdr": "Aus/Tr",
         "woundswt": "Wunden/(WG)",
         "stressluc": "Stress/Kla",
@@ -187,7 +264,11 @@
         "initiative": "Initiative",
         "threat": "Bedrohung",
         "stressTest": "Belastungs-Probe",
-        "iniMod": "Ini Mod"
+        "iniMod": "Ini Mod",
+        "rezPoints": "Rez Punkte",
+        "rezTotal": "Gesamt",
+        "rezCurrent": "Offen",
+        "rezSpent": "Verteilt"
       }
     },
     "ego": {
@@ -1257,6 +1338,10 @@
         "rest": {
           "short": "Ich habe eine <p/><strong>kurze Rast <p/></strong>verwendet um zu regenerieren<p/>",
           "long": "Ich habe meine<p/><strong>lange Rast<p/></strong>um zu regenerieren<p/>"
+        },
+        "spendRez": {
+          "spent": "Zuviel Rez verteilt. <br> Ausgegeben:", 
+          "available": "<br> Verfügbar:"
         },
         "heal": {
           "full": {

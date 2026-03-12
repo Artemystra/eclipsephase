@@ -189,6 +189,83 @@
           "mindFull": "Heal Full",
           "mindPartial": "Roll Heal"
         },
+        "spendRez": {
+          "label": "Spend Rez",
+          "rep": {
+            "label" : "x 5 Rep Points",
+            "description": " (1 Rez each)"
+          },
+          "skill": {
+            "label" : "x 5 Skill Points",
+            "description": " (1 Rez each)"
+          },
+          "spec": {
+            "label" : "x 1 Specialization",
+            "description": " (1 Rez each)"
+          },
+          "psi": {
+            "label" : "x 1 Psi Slieght",
+            "description": " (1 Rez each)"
+          },
+          "lang": {
+            "label" : "x 1 Language",
+            "description": " (1 Rez each)"
+          },
+          "apt": {
+            "label" : "x 1 Aptitude",
+            "description": " (1 Rez each)"
+          },
+          "flex": {
+            "label" : "x 1 Ego-Flex (To a total of 3)",
+            "description": " (2 Rez each)"
+          },
+          "traits": {
+            "label" : "Any number of traits",
+            "description": " (Put in the summed cost)"
+          },
+          "homebrew": {
+            "rep": {
+              "label" : "x 1 Rep Points",
+              "description": " (1 Rez each)"
+            },
+            "spec": {
+              "label" : "x 1 Specialization",
+              "description": " (5 Rez each)"
+            },
+            "psi": {
+              "label" : "x 1 Psi Slieght",
+              "description": " (5 Rez each)"
+            },
+            "lang": {
+              "label" : "x 1 Language",
+              "description": " (5 Rez each)"
+            },
+            "apt": {
+              "label" : "x 1 Aptitude",
+              "description": " (5 Rez each)"
+            },
+            "flex": {
+              "label" : "x 1 Ego-Flex (To a total of 3)",
+              "description": " (10 Rez each)"
+            },
+            "traits": {
+              "label" : "Any number of traits",
+              "description": " (Put in the summed cost)"
+            },
+            "skill33": {
+              "label" : "x 2 Skill Points (Skill < 34)",
+              "description": " (1 Rez each)"
+            },
+            "skill3366": {
+              "label" : "x 1 Skill Points (Skill 34 - 66)",
+              "description": " (1 Rez each)"
+            },
+            "skill66": {
+              "label" : "x 1 Skill Points (Skill > 66)",
+              "description": " (2 Rez each)"
+            }
+        }
+        }, 
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",
         "stressluc": "Stress/Luc",
@@ -197,7 +274,10 @@
         "threat": "Threat",
         "stressTest": "Stress Test",
         "iniMod": "Ini Mod",
-        "rezPoints": "Rez Points"
+        "rezPoints": "Rez Points",
+        "rezTotal": "Total",
+        "rezCurrent": "Current",
+        "rezSpent": "Spent"
       }
     },
     "ego": {
@@ -1284,6 +1364,10 @@
         "rest": {
           "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
           "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+        },
+        "spendRez": {
+          "spent": "You overspent your rez. <br> Spent:", 
+          "available": "<br> Available:"
         },
         "heal": {
           "full": {

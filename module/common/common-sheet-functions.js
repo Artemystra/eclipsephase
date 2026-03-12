@@ -400,7 +400,7 @@ export function itemToggle(html, item){
 
 /**
  * The standard constructor for lists throughout the system (e.g. weapon selection)
- * @param {Array} objectList - An array with objects to be listed (for "standardSelectionList": {id, label, description})
+ * @param {Array} objectList - An array with objects to be listed (for "standardSelectionList": {id, label, description, type, groupID}). !type = radio
  * @param {String} dialogType - The type of dialog to be displayed. This defines which part of the list-dialog.html is displayed ("standardSelectionList" for standard)
  * @param {number} width - defines the overlays' total width
  * @param {String} dialogTitle - The title displayed in the dialog. Has a fallback if none.
@@ -436,10 +436,22 @@ export async function listSelection(objectList, dialogType, width, dialogTitle, 
   });
 }
 function listSelectionOutcome(form) {
+      let returnValue;
+      if(form.ItemSelect){
+        returnValue = form.ItemSelect.value
+      }
+      else {
+        returnValue = {}
+        for (let entry of form.Input){
+          if(entry.value) returnValue[entry.id] = entry.type === "number" ? Number(entry.value) : entry.value;
+        }
+      }
   return {
-      selection: form.ItemSelect.value
+      selection: returnValue
   }
 }
+
+
 
 /**
  * A powerful constructor of joined rolls for the chat.

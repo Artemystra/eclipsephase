@@ -181,11 +181,65 @@
             <span class="resource-label alignCenter" style="margin-left: 5px;">{{actor.system.initiative.display}}</span>
         </div>
         <!-- Rez Points -->
+        <div class="tooltip"  style="z-index: 20;">
+            <div role="rezOverlay">
+                <div class="healthtipOverTheTopBorder">
+                    <div class="healthtipOverTheTop">
+                    </div>
+                </div>
+                <div class="healthtipTopBorder">
+                </div>
+                <!--Here goes the content-->
+                <div class="mentalHealth">
+                    <h3 class="healthSubheadline" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.rezPoints"}}</h3>
+                    <div  class="healthOverlayRow">
+                        <div class="healthOverlayItem">
+                            {{#if (eq isGM true)}}
+                            <input type="healthPanel" onFocus="this.select()" name="system.rezPoints.value" value="{{actor.system.rezPoints.value}}" data-dtype="Number" placeholder="0"/>
+                            {{else}}
+                            <div class="healthPanel">{{actor.system.rezPoints.value}}</div>
+                            {{/if}}
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.rezCurrent"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            {{#if (eq isGM true)}}
+                            <input type="healthPanel" onFocus="this.select()" name="system.rezPoints.spent" value="{{actor.system.rezPoints.spent}}" data-dtype="Number" placeholder="0"/>
+                            {{else}}
+                            <div class="healthPanel">{{actor.system.rezPoints.spent}}</div>
+                            {{/if}}
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.rezSpent"}}
+                            </div>
+                        </div>
+                        <div class="healthOverlayItem">
+                            <div class="healthPanel">{{actor.system.rezPoints.total}}</div>
+                            <div class="healthOverlayLabel">
+                                {{localize "ep2e.healthbar.tooltip.rezTotal"}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="healthOverlayRow" style="margin-top: 20px; padding-bottom: 0;">
+                        <button class="epStandard" id="spendRez" style="max-width: 50%;">{{localize "ep2e.healthbar.tooltip.spendRez.label"}}</button>
+                    </div>
+                </div>
+                <div class="healthtipBottomBorder">
+                    <div class="tooltipBottom"></div>
+                </div>
+            </div>
+            <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none; z-index: 130;">
+                <i class="fa-regular fa-circle-up awesomeIcon icon-space" style="font-size: 18px;"></i>
+                <label class="resource-label alignCenter" style="margin-left: 5px;">{{actor.system.rezPoints.value}}</label>
+            </div>
+        </div>
+        <!--
         <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none; z-index: 21;">
             <i class="fa-regular fa-circle-up awesomeIcon icon-space" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.rezPoints"}}</span>
             <input class="input-medium" style="text-align: center" type="number" name="system.rezPoints.value" value="{{actor.system.rezPoints.value}}" placeholder="e.g 10"/>
         </div>
+        -->
 
         {{else if (eq actor.type "npc")}}
         <div class="tooltip"  style="z-index: 20;">
