@@ -103,7 +103,8 @@
         "inventoryTab": "物品栏",
         "peripheralsTab": "外设",
         "psiTab": "灵能",
-        "effectsTab": "效果"
+        "effectsTab": "效果",
+        "gmInfoTab": "GM Info"
       },
       "button": {
         "edit": "编辑",
@@ -749,6 +750,23 @@
           "playWithPrey": "玩弄猎物",
           "protectTribe": "保护部落"
         }
+      }
+    },
+    "gmInfo": {
+      "rezLedger": {
+        "label": "Rez Ledger",
+        "skill": "Skill",
+        "skill33": "sLow",
+        "skill3366": "sMed",
+        "skill66": "sHigh",
+        "rep": "Rep",
+        "apt": "Apt",
+        "lang": "Lang",
+        "psi": "Psi",
+        "spec": "Spec",
+        "flex": "Flex",
+        "traits": "Traits"
+
       }
     },
     "sideCar": {

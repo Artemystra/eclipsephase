@@ -103,7 +103,8 @@
         "inventoryTab": "Inventory",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
-        "effectsTab": "Effects"
+        "effectsTab": "Effects",
+        "gmInfoTab": "GM Info"
       },
       "button": {
         "edit": "Edit",
@@ -750,6 +751,23 @@
           "playWithPrey": "Play with Prey",
           "protectTribe": "Protect Tribe"
         }
+      }
+    },
+    "gmInfo": {
+      "rezLedger": {
+        "label": "Rez Ledger",
+        "skill": "Skill",
+        "skill33": "sLow",
+        "skill3366": "sMed",
+        "skill66": "sHigh",
+        "rep": "Rep",
+        "apt": "Apt",
+        "lang": "Lang",
+        "psi": "Psi",
+        "spec": "Spec",
+        "flex": "Flex",
+        "traits": "Traits"
+
       }
     },
     "sideCar": {

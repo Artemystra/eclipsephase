@@ -21,7 +21,7 @@
                     <a class="item" data-tab="psi">Psi</a>
                     {{/if}}
                     {{#if actor.showEffectsTab}}
-                    <a class="item" data-tab="effects">Effects</a>
+                    <a class="item" data-tab="effects">{{localize "ep2e.actorSheet.rightTabs.gmInfoTab"}}</a>
                     {{/if}}
                 </nav>
             {{!-- Health Overview --}}
@@ -40,7 +40,7 @@
                     {{!-- Psi Tab --}}
                         {{> systems/eclipsephase/templates/actor/partials/tabs/psi-tab.html }}
                     {{!-- Effects Tab --}}
-                        {{> systems/eclipsephase/templates/actor/partials/tabs/effects-tab.html }}
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
                 </section>
             </form>
             </div>

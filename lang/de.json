@@ -106,7 +106,8 @@
         "inventoryTab": "Inventar",
         "peripheralsTab": "Peripherie",
         "psiTab": "Psi",
-        "effectsTab": "Effekte"
+        "effectsTab": "Effekte",
+        "gmInfoTab": "GM Info"
       },
       "button": {
         "edit": "Editieren",
@@ -754,6 +755,23 @@
           "playWithPrey": "Mit der Beute spielen",
           "protectTribe": "Den Stamm schützen"
         }
+      }
+    },
+    "gmInfo": {
+      "rezLedger": {
+        "label": "Rez Konto",
+        "skill": "Skill",
+        "skill33": "sLow",
+        "skill3366": "sMed",
+        "skill66": "sHigh",
+        "rep": "Rep",
+        "apt": "Apt",
+        "lang": "Lang",
+        "psi": "Psi",
+        "spec": "Spec",
+        "flex": "Flex",
+        "traits": "Traits"
+
       }
     },
     "sideCar": {

@@ -1105,7 +1105,7 @@ export default class EPactorSheet extends ActorSheet {
         const ledgerUpdate = {date: date, ...spending.selection, cost : total}
 
         if (ledgerUpdate["cost"] <= availableRez){
-          ledger.push(ledgerUpdate);
+          ledger.unshift(ledgerUpdate);
           actor.update({"system.rezPoints.value" : availableRez - total, "system.rezPoints.spent" : spentRez + total, "system.rezPoints.ledger" : ledger});
         }
         else {

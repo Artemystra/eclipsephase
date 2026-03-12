@@ -1,0 +1,213 @@
+{{!-- GM Info Tab --}}
+<div class="tab effects" data-group="primary" data-tab="effects">
+
+    <div class="flexrow item" style="padding: 10px 0 0 0;">
+        <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
+            <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.actorSheet.button.addNew"}}</a>
+        </div>
+    </div>
+    
+    <div class="itemBackground">
+        {{#each item.effects as |item id|}}
+        <div class="item effect flexrow flex-group-center reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="margin-bottom: 10px;">
+        
+            <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+            <!-- in case we need a collapsible space beneath the effects again
+            <div class="flex-group-right slideShow">
+                <a><i class="fas fa-plus icon-small awesomeIcon"></i></a>
+                <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
+            </div>
+            -->
+            <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
+                <a class="item-control effect-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                <a class="item-control effect-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
+            </div>
+            <!-- in case we need a collapsible space beneath the effects again
+            <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                <div class="flexrow flex-between item-controls">
+                    <a class="item-control effect-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle awesomeIcon"></i></a>
+                    <a class="item-control effect-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit awesomeIcon"></i></a>
+                </div>
+            </div>
+            -->
+        </div>
+    {{/each}}
+    </div>
+</div>
+
+<div class="tab effects" data-group="primary" data-tab="gmInfo">
+    <div style="display: flex;">
+        <div style="width: 35%;">
+            <span class="headline5">{{localize "ep2e.actorSheet.rightTabs.effectsTab"}}</span>
+            <div class="flexrow item" style="padding: 10px 0 0 0;">
+                <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
+                    <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.actorSheet.button.addNew"}}</a>
+                </div>
+            </div>
+                
+            <div style="height: 620px; overflow-y: scroll; overflow-x: hidden; background-color: var(--pitchBorder);">
+                <div class="itemBox">
+                {{#each actor.effects as |item id|}}
+                    <div class="item effect flexrow flex-group-center reveal wantToKnowMore" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="margin-bottom: 10px;">
+                        
+                        <span class="tooltipText">{{item.name}}</span>
+                        <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
+                        <!-- in case we need a collapsible space beneath the effects again
+                        <div class="flex-group-right slideShow">
+                            <a><i class="fas fa-plus icon-small awesomeIcon"></i></a>
+                            <a class="noShow"><i class="fas fa-minus icon-small awesomeIcon"></i></a>
+                        </div>
+                        -->
+                        <div class="flexrow item-controls flex-group-right" style="max-width: 50px;">
+                            <a class="item-control effect-delete resource-label editWithLabel input-xs alignRight" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                            <a class="item-control effect-edit resource-label editWithLabel  input-xs alignRight" title="Edit Item"><i class="far fa-edit awesomeIcon"></i></a>
+                        </div>
+                        <!-- in case we need a collapsible space beneath the effects again
+                        <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
+                            <div class="flexrow flex-between item-controls">
+                                <a class="item-control effect-delete resource-label editWithLabel" title="Delete Item"> Delete <i class="far fa-times-circle awesomeIcon"></i></a>
+                                <a class="item-control effect-edit resource-label editWithLabel alignRight" title="Edit Item"> Edit <i class="far fa-edit awesomeIcon"></i></a>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                {{/each}}
+                </div>
+            </div>
+        </div>
+        <div style="width: 65%;">
+            <span class="headline5">{{localize "ep2e.gmInfo.rezLedger.label"}}</span>
+            <div style="height: 666px; overflow-y: scroll; overflow-x: hidden;">
+                {{#each actor.system.rezPoints.ledger as |entry key|}}
+                    <div style="display: flex; justify-content: space-between; background-color: var(--accentBackground); width: 100%; padding: 2px 10px;">
+                        <span class="headline6">{{entry.date}}</span>
+                        <span class="headline6">{{localize "ep2e.healthbar.tooltip.rezSpent"}}: {{entry.cost}}</span>
+                    </div>
+                    <div>
+                        <table style="margin: 0;">
+                            {{#if @root.actor.system.homebrew}}
+                            <tr style="height: 30px;">
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.skill33"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.skill3366"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.skill66"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.rep"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.spec"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.lang"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.psi"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.apt"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.flex"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.traits"}}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <span>{{entry.skill33}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.skill3366}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.skill66}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.repH}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.specH}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.langH}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.psiH}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.aptH}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.flexH}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.traitsH}}</span>
+                                </td>
+                            </tr>
+                            {{else}}
+                            <tr style="height: 30px;">
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.skill"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.rep"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.spec"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.lang"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.psi"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.apt"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.flex"}}</span>
+                                </td>
+                                <td>
+                                    <span>{{localize "ep2e.gmInfo.rezLedger.traits"}}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <span>{{entry.skill}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.rep}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.spec}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.lang}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.psi}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.apt}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.flex}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span>{{entry.traits}}</span>
+                                </td>
+                            </tr>
+                            {{/if}}
+                        </table>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

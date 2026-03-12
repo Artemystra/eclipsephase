@@ -102,7 +102,8 @@
         "inventoryTab": "Inventário",
         "peripheralsTab": "Periféricos",
         "psiTab": "Psi",
-        "effectsTab": "Efeitos"
+        "effectsTab": "Efeitos",
+        "gmInfoTab": "GM Info"
       },
       "button": {
         "edit": "Editar",
@@ -749,6 +750,23 @@
           "playWithPrey": "Brincar com a Presa",
           "protectTribe": "Proteger a Tribo"
         }
+      }
+    },
+    "gmInfo": {
+      "rezLedger": {
+        "label": "Rez Ledger",
+        "skill": "Skill",
+        "skill33": "sLow",
+        "skill3366": "sMed",
+        "skill66": "sHigh",
+        "rep": "Rep",
+        "apt": "Apt",
+        "lang": "Lang",
+        "psi": "Psi",
+        "spec": "Spec",
+        "flex": "Flex",
+        "traits": "Traits"
+
       }
     },
     "sideCar": {
