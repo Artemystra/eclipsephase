@@ -958,7 +958,9 @@ body.game .app button:focus {
   box-shadow: 0 0 5px 2px var(--highlight);
 }
 
-.eclipsephase .sleeveButton {
+.eclipsephase .sleeveButton,
+.eclipsephase .changeIdentityButton,
+.eclipsephase .thinButton {
   opacity: 0;
   display: none;
   min-height: 20px! important;
@@ -977,7 +979,9 @@ body.game .app button:focus {
   padding: 10px;
 }
 
-.eclipsephase .item.active .sleeveButton {
+.eclipsephase .item.active .sleeveButton,
+.eclipsephase .item.active .changeIdentityButton,
+.eclipsephase .item.active .thinButton {
   display: flex;
   opacity: 100;
   transition: 300ms;

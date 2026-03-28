@@ -284,6 +284,7 @@ Hooks.once("ready", async function() {
   let before0992 = foundry.utils.isNewerVersion("0.9.9.2", gameVersion);
   let before110 = foundry.utils.isNewerVersion("1.1.0", gameVersion);
   let before150 = foundry.utils.isNewerVersion("1.5", gameVersion);
+  let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -474,6 +475,23 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
+  //1.7.0 Migration
+  if (before170) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.170";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration170 = await update.migrationPre170(startMigration);
+    endMigration = Migration170["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
@@ -583,16 +601,22 @@ Hooks.on('renderSceneControls', EPmenu.renderControls)
 //Gives every character a flat-morph from start using the compendiumpack as a source
 Hooks.on("createActor", async (actor, options, userId) => {
   if (actor.getFlag("eclipsephase", "defaultMorphAdded")) return;
+  if (actor.getFlag("eclipsephase", "defaultIdAdded")) return;
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) return;
   const morph = await pack.getDocument("suPRftVdLzcNhOH4");
   if (!morph) return;
+  const idData = {
+    name: "Default ID",
+    type: "id"
+  };
   
   //adds the morph to items
   const [standardMorph] = await actor.createEmbeddedDocuments("Item", [morph.toObject()]);
+  const [standardID] = await actor.createEmbeddedDocuments("Item", [idData])
 
   //adds the id of the freshly created morph to the system.activeMorph
-  await actor.update({"system.activeMorph": standardMorph.id, "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"});
+  await actor.update({"system.activeMorph": standardMorph.id, "system.activeID": standardID.id, "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"});
 
   await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
 });

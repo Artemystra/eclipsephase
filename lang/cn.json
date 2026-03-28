@@ -114,6 +114,7 @@
         "select": "选择",
         "showDetails": "展示细节",
         "hideDetails": "隐藏细节",
+        "changeID": "Activate ID",
         "sleeveMorph": "Sleeve Morph"
       },
       "dialogHeadline": {

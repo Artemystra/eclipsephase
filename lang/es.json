@@ -115,6 +115,7 @@
         "reset": "Reset",
         "showDetails": "Show Details",
         "hideDetails": "Hide Details",
+        "changeID": "Activate ID",
         "sleeveMorph": "Sleeve Morph"
       },
       "dialogHeadline": {

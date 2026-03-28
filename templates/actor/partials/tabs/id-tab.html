@@ -1,14 +1,111 @@
 <div class="tab idtab" data-group="secondary" data-tab="identification">
-    <div class="contentBox" style="margin-bottom: 10px;">
-        <div class="flexrow subheader colorV1">
-            <h3 class="subheader colorV1">{{localize "ep2e.id.headline"}}</h3>
-            <div class="alignRight flexGrowHalf">
-                <select class="selectSpecApt input-XL" name="system.ego.idSelected" data-type="String">
-                    {{selectOptions IDcollection selected=actor.system.ego.idSelected valueAttr="key" labelAttr=label localize=true}}
-                </select>
-            </div>
+    <div class="contentBox noMargin" style="max-height: 850px; height: 100%;">
+        <!-- Subnav Area -->
+        <div style="display: flex; max-height: 685px; overflow: scroll; flex-wrap: wrap;">
+            <nav class="id-tabs subtabs" data-group="id-details" style="display: flex;">
+                {{#each actor.ids as |idValues key|}}
+                <!-- "Active" id has it's own data-tab, as it needs to be identified this way during defaultOptions setup in EPactorSheet.js -->
+                    {{#if (eq @root.actor.system.activeID idValues.id)}}
+                        <a data-tab="active" class="item" style="padding: 0 5px; min-height: 40px; display: flex; gap: 5px; flex-wrap: nowrap;">
+                            <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
+                            <div style="background-color: var(--highlight); height: 10px; min-width: 10px; border-radius: 100px;"></div>
+                        </a>
+                    {{else}}
+                        <a data-tab="{{idValues.id}}" class="item" style="padding: 0 5px; min-height: 40px;">
+                            <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
+                        </a>
+                    {{/if}}
+                {{/each}}
+            </nav>
         </div>
-        {{!-- ID and reputation --}}
-        {{> systems/eclipsephase/templates/actor/partials/tabs/id-details.html id=actor.system.ego.idSelected}}
+        <!-- Content Area -->
+        <div style="background-color: var(--pitchBorder); padding: 10px;">
+            <section class="id-details">
+            {{#each actor.ids as |idValues key|}}
+                <!-- "Active" id has it's own data-tab -->
+                {{#if (eq @root.actor.system.activeID idValues.id)}}
+                    <div class="tab body item" data-group="id-details" data-tab="active">
+                    <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
+                        <label class="ressource-label"><strong>{{idValues.name}}</strong></label>
+                        <div class="item" style="min-width: 100%; display: flex;" data-item-id="{{idValues.id}}">
+                            <button 
+                                class="resource-label button sheetButton thinButton item-edit" 
+                                title="{{localize 'ep2e.actorSheet.button.changeID'}}" 
+                                data-item-id="{{idValues._id}}"
+                                data-actorid="{{@root.actor.id}}">
+                                <i class="far fa-edit awesomeIcon"></i>
+                                {{localize "Edit"}}
+                            </button>
+                        </div>
+                    </div>
+                {{else}}
+                    <div class="tab body item" data-group="id-details" data-tab="{{idValues.id}}">
+                    <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
+                        <label class="ressource-label"><strong>{{idValues.name}}</strong></label>
+                        <div class="item" style="min-width: 100%; display: flex;" data-item-id="{{idValues.id}}" data-item-name="{{localize 'ep2e.actorSheet.leftTabs.idTab'}} ({{idValues.name}})">
+                            <button 
+                                class="resource-label button sheetButton changeIdentityButton" 
+                                title="{{localize 'ep2e.actorSheet.button.changeID'}}" 
+                                data-item-id="{{idValues._id}}"
+                                data-actorid="{{@root.actor.id}}">
+                                {{localize "ep2e.actorSheet.button.changeID"}}
+                            </button>
+                            <button 
+                                class="resource-label button sheetButton thinButton item-delete" 
+                                title="{{localize 'ep2e.actorSheet.button.changeID'}}">
+                                <i class="far fa-times-circle awesomeIcon"></i>
+                                {{localize "Delete"}}
+                            </button>
+                            <button 
+                                class="resource-label button sheetButton thinButton item-edit" 
+                                title="{{localize 'ep2e.actorSheet.button.changeID'}}">
+                                <i class="far fa-edit awesomeIcon"></i>
+                                {{localize "Edit"}}
+                            </button>
+                        </div>
+                    </div>
+                {{/if}}
+                    <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
+                        {{#each idValues.system.rep as |rep key|}}
+                            <div style="display: flex; justify-content: center; flex-wrap: wrap; max-width: 40px;">
+                                <div class="reveal item" style="display: flex; gap: 5px; max-width: 40px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
+                                    <span class="toggle input-medium resource-label" >{{localize rep.name}}</span>
+                                    <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
+                                        <img data-type="skill" data-key="rep" data-name="{{key}}" data-rollvalue="{{rep.value}}"
+                                        src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
+                                    </div>
+                                </div>
+                                <div class="flex-group-center item" data-item-id="{{idValues._id}}" >      
+                                    <input class="input-small sheet-inline-edit" onFocus="this.select()" type="text" data-field="system.rep.{{key}}.value" name="system.rep.{{key}}.value" 
+                                        value="{{rep.value}}" placeholder="0" style="text-align: center"/>
+                                </div> 
+                            </div>
+                        {{/each}}
+                    </div>
+                    <!-- Favor content area -->
+                        <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
+                            {{#each idValues.system.rep as |rep key|}}
+                                <div style="display: flex; gap: 5px; max-width: 40px; flex-wrap: wrap; justify-content: center;">
+                                    {{localize "ep2e.id.complexity.min"}}
+                                    <div style="display: flex; max-width: 20px; flex-wrap: wrap; gap: 5px; justify-content: center;">
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small1" name="system.rep.{{key}}.small1" {{checked rep.small1}}>
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small2" name="system.rep.{{key}}.small2" {{checked rep.small2}}>
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small3" name="system.rep.{{key}}.small3" {{checked rep.small3}}>
+                                    </div> 
+                                    {{localize "ep2e.id.complexity.mod"}}
+                                    <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.med1" name="system.rep.{{key}}.med1" {{checked rep.med1}}>
+                                    </div>
+                                    {{localize "ep2e.id.complexity.maj"}}
+                                    <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.large" name="system.rep.{{key}}.large" {{checked rep.large}}>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+            {{/each}}
+            </section>
+        </div>
     </div>
 </div>

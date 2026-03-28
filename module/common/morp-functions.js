@@ -11,10 +11,7 @@ export async function resleeveMorph(actor, currentTarget){
     const popUpCopy = "ep2e.actorSheet.popUp.sleeveCopyGeneral";
     const popUpInfo = "ep2e.actorSheet.popUp.sleeveAdditionalInfo";
     const popUpPrimary = "ep2e.actorSheet.button.sleeveMorph";
-    const RESLEEVING_MESSAGE = 'systems/eclipsephase/templates/chat/resleeving.html';
-    console.log("This is my morph", newMorph)
-    console.log("This is my morph.system", newMorph.system)
-    console.log("This is my morph.system.type", newMorph.system.type)
+    const RESLEEVING_MESSAGE = 'systems/eclipsephase/templates/chat/change.html';
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if(popUp.confirm === true){

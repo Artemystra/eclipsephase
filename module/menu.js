@@ -73,6 +73,15 @@ class EPmenuLayer extends PlaceablesLayer {
             
             if (!isGM) return;
 
+            const controlsRoot = html instanceof HTMLElement ? html : html[0] ?? html;
+            const bookmarkButton = controlsRoot.querySelector('.fa-bookmark')?.parentElement;
+            if (!bookmarkButton) return;
+
+            // Prevent duplicates
+            if (controlsRoot.querySelector('.ep-restore-rest') || controlsRoot.querySelector('.ep-provide-rez')) {
+              return;
+  }
+
             EPmenu.insertAdjacentElement("afterend", restMenu)
             EPmenu.insertAdjacentElement("afterend", rezMenu)
 
@@ -119,9 +128,9 @@ class EPmenuLayer extends PlaceablesLayer {
                 for (let entry=1; entry<resetCount; entry++){
                     const actor = game.actors.get(charSelect.updateList[entry].id);
                     const currentRez = actor.system.rezPoints.value;
-                    const updateValue = Number(charSelect?.updateList[entry]?.value ?? 0);
-                    const newRez = generalRez + currentRez;
-                    if(generalRez > 0 || updateValue > 0){
+                    const privateRez = Number(charSelect?.updateList[entry]?.value ?? 0);
+                    const newRez = generalRez + privateRez + currentRez;
+                    if(generalRez > 0 || privateRez > 0){
                       actor.update({"system.rezPoints.value" : newRez})
                     }
                   }

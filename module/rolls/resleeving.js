@@ -16,9 +16,7 @@ export async function sleevingTest (data) {
     let dataset = {}
     let chatData = {"taskType" : "ep2e.morph.sleeving.result.taskResleeve"}
     const SLEEVE_RESULT = 'systems/eclipsephase/templates/chat/sleeving-result.html';
-    console.log("btndata here", btndata)
     if (btndata.type === "resleeve" || btndata.type === "integration"){
-        console.log("DING")
         dataset = {
             "name" : "ep2e.morph.sleeving.title.resleevingIntegration",
             "rolltype" : "skill",
@@ -54,8 +52,6 @@ export async function sleevingTest (data) {
     chatData.stressTest = stressTest;
     chatData.integrationTest = integrationTest;
     let html = await renderTemplate(SLEEVE_RESULT, chatData)
-
-    console.log("the chatData:", chatData)
 
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
@@ -153,7 +149,6 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
         if(integrationResult === 1) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.twoDay";
         if (integrationResult === 2) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.oneDay";
 
-        console.log("effectMultiplier", effectMultiplier)
         let effectName = game.i18n.localize("ep2e.morph.sleeving.announce.result.effectIntegrationIssues.title") + ": " + game.i18n.localize(effectMultiplier);
         let effectIcon = "systems/eclipsephase/resources/icons/substract.png";
         let changes = [{"key" : "system.additionalSystems.sleeving.integrationIssues.title", "mode" : 2, "value" : effectName}, {"key" : "system.additionalSystems.sleeving.integrationIssues.value", "mode" : 2, "value" : -10}]
@@ -166,7 +161,6 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
                 if (effect.name === actorModel.additionalSystems.sleeving.integrationIssues.title){
                     let effectID = effect._id;
                     await actorWhole.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
-                    console.log("deleted:", effect)
                 }
             }
             let newEffect = await _tempEffectCreation(actorWhole, effectName, effectIcon, changes);
@@ -193,7 +187,7 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
         let traumaThreshold = actorModel.mental.tt
         let mentalDamageRoll = "1d6"
 
-        if (dialog.selection === "majorStress") mentalDamageRoll = "1d10"; console.log("PONG", mentalDamageRoll, "mentalDamage is = majorStress is:", dialog.selection === "majorStress")
+        if (dialog.selection === "majorStress") mentalDamageRoll = "1d10";
         const mentalDamage = await new Roll(mentalDamageRoll).evaluate();
         
         

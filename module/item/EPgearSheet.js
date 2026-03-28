@@ -1,4 +1,5 @@
 import { registerEffectHandlers,registerCommonHandlers,itemToggle,moreInfo } from "../common/common-sheet-functions.js";
+import * as DICE from "../rolls/dice.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -147,6 +148,20 @@ export default class EPgearSheet extends ItemSheet {
 
     registerEffectHandlers(html, this.item);
     registerCommonHandlers(html, this.item);
+
+    html.find(".reveal").on("mouseover mouseout", this._onToggleReveal.bind(this));
+    
+  }
+
+  _onToggleReveal(event) {
+    const reveals = event.currentTarget.getElementsByClassName("info");
+    $.each(reveals, function (index, value){
+      $(value).toggleClass("icon-hidden");
+    })
+    const revealer = event.currentTarget.getElementsByClassName("toggle");
+    $.each(revealer, function (index, value){
+      $(value).toggleClass("noShow");
+    })
   }
 
     async _prepareRenderedHTMLContent(sheetData) {

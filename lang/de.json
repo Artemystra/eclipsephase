@@ -119,7 +119,8 @@
         "addNew": "Hinzufügen",
         "showDetails": "Mehr Details",
         "hideDetails": "Weniger Details",
-        "sleeveMorph": "Morph Wechseln"
+        "sleeveMorph": "Morph Wechseln",
+        "changeID": "Activate ID"
       },
       "dialogHeadline": {
         "warning": "Warnung",

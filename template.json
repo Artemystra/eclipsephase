@@ -383,7 +383,8 @@
             "description": ""
           }
         },
-        "activeMorph": null
+        "activeMorph": null,
+        "activeID": null
       },  
       "threat": {
         "threatLevel": {
@@ -1383,6 +1384,9 @@
       }      
     },
     "id": {
+      "templates": [
+        "base"
+      ],
       "rep": {
         "@-rep": {
           "name": "ep2e.id.repType.@rep",

@@ -1,0 +1,72 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
+        <a class="item" data-tab="description">{{localize "ep2e.item.general.table.description"}}</a>
+        {{#if item.showEffectsTab}}
+        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
+        {{/if}}
+    </nav>
+    {{!-- Sheet Body --}}
+
+    <section class="item-sheet-body" style="min-height: 245px; height: fit-content;">
+        <div class="tab details" data-group="primary" data-tab="details">
+            
+            <div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+                <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0; min-width: 100%; justify-content: space-between;">
+                
+                {{#each item.system.rep as |repType key|}}
+                    <div style="display: flex; justify-content: center; flex-wrap: wrap; max-width: 40px;">
+                        <div class="reveal item" style="display: flex; gap: 10px; max-width: 40px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
+                            <span class="toggle input-medium resource-label" >{{localize repType.name}}</span>
+                            <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
+                                <img data-type="skill" data-key="rep" data-name="{{key}}" data-rollvalue="{{repType.value}}"
+                                src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
+                             </div>
+                        </div>
+                        <div class="flex-group-center">      
+                            <input class="input-small" type="text" name="system.rep.{{key}}.value" 
+                                value="{{repType.value}}" placeholder="0" style="text-align: center"/>
+                        </div> 
+                    </div>
+                {{/each}}
+            
+
+                </div>
+
+                    <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
+                        {{#each item.system.rep as |repType key|}}
+                            <div style="display: flex; gap: 10px; max-width: 40px; flex-wrap: wrap; justify-content: center;">
+                                {{localize "ep2e.id.complexity.min"}}
+                                <div style="display: flex; max-width: 20px; flex-wrap: wrap; gap: 5px;">
+                                    <input type="checkbox" class="sheet" name="system.rep.{{key}}.small1" {{checked repType.small1}}>
+                                    <input type="checkbox" class="sheet" name="system.rep.{{key}}.small2" {{checked repType.small2}}>
+                                    <input type="checkbox" class="sheet" name="system.rep.{{key}}.small3" {{checked repType.small3}}>
+                                </div> 
+                                {{localize "ep2e.id.complexity.mod"}}
+                                <div style="display: flex; max-width: 20px; flex-wrap: wrap;">
+                                    <input type="checkbox" class="sheet" name="system.rep.{{key}}.med1" {{checked repType.med1}}>
+                                </div>
+                                {{localize "ep2e.id.complexity.maj"}}
+                                <div style="display: flex; max-width: 20px; flex-wrap: wrap;">
+                                    <input type="checkbox" class="sheet" name="system.rep.{{key}}.large" {{checked repType.large}}>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+            </div>
+            
+        </div>
+
+    <div class="tab description" data-group="primary" data-tab="description">
+        {{editor item.system.description target="system.description" button=true owner=owner editable=this.options.editable}}
+    </div>
+
+    {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
+    </section>
+</form>

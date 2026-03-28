@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection} from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList} from "../common/common-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder, IDprep } from "../common/sheet-preparation.js";
@@ -57,7 +57,7 @@ export default class EPactorSheet extends ActorSheet {
       return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ["eclipsephase", "sheet", "actor"],
         resizable: false,
-        tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "ego" },{ navSelector: ".morph-tabs", contentSelector: ".morph-details", initial: "sleeved" }]
+        tabs: [{ navSelector: ".primary-tabs", contentSelector: ".primary-body", initial: "skills" },{ navSelector: ".secondary-tabs", contentSelector: ".secondary-body", initial: "ego" },{ navSelector: ".morph-tabs", contentSelector: ".morph-details", initial: "sleeved" },{ navSelector: ".id-tabs", contentSelector: ".id-details", initial: "active" }]
       });
     }
 
@@ -222,6 +222,7 @@ export default class EPactorSheet extends ActorSheet {
       chemical: [],
       swarm: []
     };
+    const id = [];
     const know = [];
     const special = [];
     const trait = [];
@@ -253,7 +254,7 @@ export default class EPactorSheet extends ActorSheet {
     };
     const bodies = {};
     const morph = [];
-    //this will become more important once morphs are items themselves
+    //section is marked to be deleted due to being deprecated since morphs are items now
     const morphtrait = {
         morph1: [],
         morph2: [],
@@ -278,11 +279,12 @@ export default class EPactorSheet extends ActorSheet {
         morph5: [],
         morph6: []
     };
-    let test = 0;
+
+    let migrationBridge = 0;
     for (let item of sheetData.actor.items){
       if (item.type === "morph"){
         let morphID
-        test += 1;
+        migrationBridge += 1;
         if (actor.type === "character") morphID = item.id
         if (actor.type !== "character") morphID = "activeMorph"
         bodies[morphID] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
@@ -290,7 +292,7 @@ export default class EPactorSheet extends ActorSheet {
 
       
     }
-    if (test === 0){
+    if (migrationBridge === 0){
       bodies["migrationBody"] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
     }
     actor.bodies = bodies;
@@ -348,6 +350,10 @@ export default class EPactorSheet extends ActorSheet {
           item.roll = (Number(itemModel.value) + aptSelect)<100 ? Number(itemModel.value) + aptSelect : 100;
           item.specroll = ((Number(itemModel.value) + aptSelect)<100 ? Number(itemModel.value) + aptSelect : 100) + 10;
           know.push(item);
+        }
+        else if (item.type === "id"){
+          item.system.displayNumber =  id.length + 1;
+          id.push(item);
         }
         else if (item.type === 'trait' || item.system.traitType === "trait" && item.system.ego) {
           trait.push(item);
@@ -662,6 +668,7 @@ export default class EPactorSheet extends ActorSheet {
     actor.actorType = "PC";
     actor.ammo = ammo;
     actor.morph = morph;
+    actor.ids = id;
 
     // Check if sleights are present and toggle Psi Tab based on this
     if (actor.aspect.chi.length>0){
@@ -1004,6 +1011,41 @@ export default class EPactorSheet extends ActorSheet {
     (MORPHFUNCTION.resleeveMorph(actor, $(ev.currentTarget)));
   })
 
+  html.find('.changeIdentityButton').click(async func => {
+        const dataset = func.currentTarget.dataset;
+        const itemID = dataset.itemId;
+        const newID = actor.items.get(itemID);
+        const itemName = newID.name;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.changeID"))+ ": " +(itemName?itemName:"");
+        const popUpCopy = "ep2e.actorSheet.popUp.IDswitchCopyGeneral";
+        const popUpInfo = "ep2e.actorSheet.popUp.IDswitchAdditionalInfo";
+        const popUpPrimary = "ep2e.actorSheet.button.changeID";
+        const RESLEEVING_MESSAGE = 'systems/eclipsephase/templates/chat/change.html';
+        let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
+    
+        if(popUp.confirm === true){
+            await actor.update({"system.activeID": itemID});
+            
+            let message = {
+            type : "identification",
+            actor : actor,
+            morphname : newID.name,
+            whisper: gmList()
+            };
+            
+            let html = await renderTemplate(RESLEEVING_MESSAGE, message)
+    
+            ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({actor: actor}),
+                content: html
+            })
+        }
+        else{
+            return
+        }
+    })
+
     // Drag events for macros.
     if (actor.isOwner) {
         let handler = ev => this._onDragItemStart(ev);
@@ -1233,6 +1275,7 @@ export default class EPactorSheet extends ActorSheet {
     let itemId = element.closest(".item").dataset.itemId;
     let item = this.actor.items.get(itemId);
     let field = element.dataset.field;
+    console.log("This is my field", field, "of the id", itemId, "of the item", item)
     return item.update({ [field]: element.value });
   }
 

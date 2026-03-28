@@ -1858,6 +1858,248 @@ function _ep150_emptyMorphItemSystem() {
   };
 }
 
+export async function migrationPre170(startMigration, endMigration) {
+  const latestUpdate = "1.7";
+  if (!startMigration) return { endMigration: false };
+
+  // Actor types we touch
+  const ACTOR_TYPES = new Set(["character"]);
+
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+  const total = actors.length || 1;
+
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (const actor of game.actors) {
+    if (!ACTOR_TYPES.has(actor.type)) continue;
+
+    await actor.update({ "flags.eclipsephase.migrating": true });
+
+    try {
+      // IDs only exist on characters
+      if (actor.type === "character") {
+        const idResult = await _ep170_createIdsFromLegacy(actor);
+
+        console.log(
+          `[EP Migration ${latestUpdate}] ${actor.name}: created ids=${(idResult?.createdIds ?? []).join(", ")}`
+        );
+
+        // Delete legacy ID data after successful migration
+        await _ep170_deleteLegacyIdData(actor);
+
+        console.log(
+          `[EP Migration ${latestUpdate}] ${actor.name}: deleted legacy ego.ids data`
+        );
+      }
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
+    }
+
+    await actor.update({ "flags.eclipsephase.migrating": false });
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+  }
+
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+/**
+ * Migrates legacy actor.system.ego.ids into embedded Items of type "id"
+ *
+ * Legacy:
+ * actor.system.ego.ids.id1 ... id5
+ *
+ * New:
+ * embedded Items of type "id"
+ * and actor.system.ego.idSelected rewritten from "id1" etc. to the new embedded item id
+ */
+async function _ep170_createIdsFromLegacy(actor) {
+  const ego = actor.system?.ego ?? {};
+  const legacyIds = ego.ids ?? {};
+  const selectedLegacyKey = ego.idSelected ?? null;
+
+  const idKeys = ["id1", "id2", "id3", "id4", "id5"];
+  const docsToCreate = [];
+  const keyToIndex = new Map();
+
+  for (const key of idKeys) {
+    const legacyId = legacyIds[key];
+    if (!legacyId) continue;
+
+    // Skip completely empty placeholder IDs like "none"
+    const rep = legacyId.rep ?? {};
+    const hasAnyRepValue = Object.values(rep).some((r) => {
+      const v = r?.value;
+      return v !== null && v !== undefined && v !== "";
+    });
+
+    const hasMeaningfulName =
+      legacyId.name &&
+      legacyId.name !== "none" &&
+      legacyId.name.trim() !== "";
+
+    if (!hasMeaningfulName && !hasAnyRepValue) continue;
+
+    const systemData = _ep170_mapLegacyIdToItemSystem(legacyId);
+
+    keyToIndex.set(key, docsToCreate.length);
+    docsToCreate.push({
+      name: legacyId.name || "ID",
+      type: "id",
+      system: systemData
+    });
+  }
+
+  if (!docsToCreate.length) {
+    return { createdIds: [], keyToItemId: {} };
+  }
+
+  const created = await actor.createEmbeddedDocuments("Item", docsToCreate);
+  const createdIds = created.map((d) => d.id);
+
+  const keyToItemId = {};
+  for (const [key, idx] of keyToIndex.entries()) {
+    keyToItemId[key] = createdIds[idx];
+  }
+
+  // Remap selected ID from legacy key ("id1") to actual embedded item id
+  if (selectedLegacyKey && keyToItemId[selectedLegacyKey]) {
+    await actor.update({
+      "system.ego.idSelected": keyToItemId[selectedLegacyKey]
+    });
+  } else if (createdIds.length) {
+    // fallback: if old selected key no longer exists, pick the first created ID
+    await actor.update({
+      "system.ego.idSelected": createdIds[0]
+    });
+  }
+
+  return { createdIds, keyToItemId };
+}
+
+/**
+ * Deletes the old legacy ID structure after migration
+ */
+async function _ep170_deleteLegacyIdData(actor) {
+  // If your system supports key deletion syntax, this fully removes ego.ids
+  await actor.update({
+    "system.ego.-=ids": null
+  });
+}
+
+/**
+ * Maps one legacy ego.ids.idX object to the new Item(type="id").system structure
+ */
+function _ep170_mapLegacyIdToItemSystem(legacyId) {
+  return {
+    tags: [],
+    additionalSystems: {},
+    description: "",
+    active: true,
+    displayCategory: "",
+    updated: "",
+    rep: _ep170_fullIdRep(legacyId.rep ?? {})
+  };
+}
+
+/**
+ * Creates a fully populated rep object and overlays legacy values onto it
+ */
+function _ep170_fullIdRep(legacyRep = {}) {
+  const rep = {
+    "@-rep": {
+      name: "ep2e.id.repType.@rep",
+      value: null,
+      small1: false,
+      small2: false,
+      small3: false,
+      med1: false,
+      med2: false,
+      large: false
+    },
+    "c-rep": {
+      name: "ep2e.id.repType.crep",
+      value: null,
+      small1: false,
+      small2: false,
+      small3: false,
+      med1: false,
+      med2: false,
+      large: false
+    },
+    "f-rep": {
+      name: "ep2e.id.repType.frep",
+      value: null,
+      small1: false,
+      small2: false,
+      small3: false,
+      med1: false,
+      med2: false,
+      large: false
+    },
+    "g-rep": {
+      name: "ep2e.id.repType.grep",
+      value: null,
+      small1: false,
+      small2: false,
+      small3: false,
+      med1: false,
+      med2: false,
+      large: false
+    },
+    "i-rep": {
+      name: "ep2e.id.repType.irep",
+      value: null,
+      small1: false,
+      small2: false,
+      small3: false,
+      med1: false,
+      med2: false,
+      large: false
+    },
+    "r-rep": {
+      name: "ep2e.id.repType.rrep",
+      value: null,
+      small1: false,
+      small2: false,
+      small3: false,
+      med1: false,
+      med2: false,
+      large: false
+    },
+    "x-rep": {
+      name: "ep2e.id.repType.xrep",
+      value: null,
+      small1: false,
+      small2: false,
+      small3: false,
+      med1: false,
+      med2: false,
+      large: false
+    }
+  };
+
+  for (const [key, value] of Object.entries(legacyRep)) {
+    if (!rep[key]) continue;
+    rep[key] = {
+      ...rep[key],
+      ...(value ?? {})
+    };
+  }
+
+  return rep;
+}
+
 //A general item deleter
 function itemDeletion(actor, itemID){
   let itemDelete = [itemID]
