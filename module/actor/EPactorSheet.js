@@ -166,18 +166,18 @@ export default class EPactorSheet extends ActorSheet {
     if(traitSelection.cancelled)
       return
 
-    if(traitSelection.value === "morph")
+    if(traitSelection.selection === "morph")
       itemModel.ego = false;
     else
       itemModel.morph = false;
 
     }
     // Binds a morph-trait/ware to the currently active morph
-    if (item.type === "morphFlaw" || item.type === "morphTrait" || item.type === "ware" || item.system.morph === true) {
+    if (item.type === "traits" && itemModel.morph === true || item.type === "ware" || item.system.morph === true) {
       if (actor.type === "character") itemModel.boundTo = currentMorph
       if (actor.type !== "character") itemModel.boundTo = "activeMorph"
     }
-
+    
     //Loading weapons with Standard Ammo
     if (item.type === "rangedWeapon"){
       if (item.system.ammoType != "seeker" && !item.system.mode1.traits.specialAmmoDrugs.value && !item.system.mode1.traits.specialAmmoBugs.value){
@@ -622,21 +622,21 @@ export default class EPactorSheet extends ActorSheet {
           itemModel.ir = Math.round(itemModel.luc * 2);
           vehicle[itemModel.type].push(item)
         }
-      else if (item.type === 'ware' && itemModel.boundTo && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
+      else if (item.type === 'ware' && itemModel.boundTo) {
             const path = bodies[boundTo].morphgear;
             bodies[boundTo].gearCount += 1;
             path.push(item);
-        }
-        else if (item.type === 'traits' && itemModel.traitType === "flaw" && itemModel.boundTo  && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
-            const path = bodies[boundTo].morphflaws;
-            bodies[boundTo].flawsCount += 1;
-            path.push(item);
-        }
-        else if (item.type === 'traits' && itemModel.traitType === "trait" && itemModel.boundTo && itemModel.boundTo !== "morph1" && itemModel.boundTo !== "morph2" && itemModel.boundTo !== "morph3" && itemModel.boundTo !== "morph4" && itemModel.boundTo !== "morph5" && itemModel.boundTo !== "morph6") {
-            const path = bodies[boundTo].morphtraits;
-            bodies[boundTo].traitsCount += 1;
-            path.push(item);
-        }
+      }
+      else if (item.type === "traits" && itemModel.traitType === "flaw" && itemModel.boundTo) {
+          const path = bodies[boundTo].morphflaws;
+          bodies[boundTo].flawsCount += 1;
+          path.push(item);
+      }
+      else if (item.type === "traits" && itemModel.traitType === "trait" && itemModel.boundTo) {
+          const path = bodies[boundTo].morphtraits;
+          bodies[boundTo].traitsCount += 1;
+          path.push(item);
+      }
     }
 
     actor.showEffectsTab=false
@@ -1273,7 +1273,7 @@ export default class EPactorSheet extends ActorSheet {
     let itemId = element.closest(".item").dataset.itemId;
     let item = this.actor.items.get(itemId);
     let field = element.dataset.field;
-    console.log("This is my field", field, "of the id", itemId, "of the item", item)
+    
     return item.update({ [field]: element.value });
   }
 

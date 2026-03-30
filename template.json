@@ -1174,7 +1174,8 @@
       "statChange": null,
       "traitType": "trait",
       "ego": false,
-      "morph": false
+      "morph": false,
+      "boundTo": null
     },
     "ware": {
       "templates": [

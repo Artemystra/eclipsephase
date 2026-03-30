@@ -171,6 +171,6 @@
         </div>
     </div>
     <h2>{{localize "ep2e.item.general.table.description"}}</h2>
-    <div class="textAreaDescription"><textarea class="description" name="system.description" rows="10" cols="60" placeholder="{{localize 'ep2e.item.general.table.descriptionPlaceholder'}}">{{item.system.description}}</textarea></div>
+    {{editor item.system.description target="system.description" button=true owner=owner editable=this.options.editable}}
 </section>
 </form>
