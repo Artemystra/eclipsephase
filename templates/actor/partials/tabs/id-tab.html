@@ -2,20 +2,21 @@
     <div class="contentBox noMargin" style="max-height: 850px; height: 100%;">
         <!-- Subnav Area -->
         <div style="display: flex; max-height: 685px; overflow: scroll; flex-wrap: wrap;">
-            <nav class="id-tabs subtabs" data-group="id-details" style="display: flex;">
+            <nav class="id-tabs subtabs scrollx" data-group="id-details" style="display: flex; max-width: 293px;">
                 {{#each actor.ids as |idValues key|}}
                 <!-- "Active" id has it's own data-tab, as it needs to be identified this way during defaultOptions setup in EPactorSheet.js -->
                     {{#if (eq @root.actor.system.activeID idValues.id)}}
-                        <a data-tab="active" class="item" style="padding: 0 5px; min-height: 40px; display: flex; gap: 5px; flex-wrap: nowrap;">
+                        <a data-tab="active" class="item" style="padding: 0 5px; min-height: 40px; min-width: 70px; display: flex; gap: 5px; flex-wrap: nowrap;">
                             <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
                             <div style="background-color: var(--highlight); height: 10px; min-width: 10px; border-radius: 100px;"></div>
                         </a>
                     {{else}}
-                        <a data-tab="{{idValues.id}}" class="item" style="padding: 0 5px; min-height: 40px;">
+                        <a data-tab="{{idValues.id}}" class="item" style="padding: 0 5px; min-height: 40px; min-width: 70px;">
                             <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
                         </a>
                     {{/if}}
                 {{/each}}
+                <button class="item-control item-create sheetButton" data-type="id" style="width: 40px; font-size: 20px;">+</button>
             </nav>
         </div>
         <!-- Content Area -->

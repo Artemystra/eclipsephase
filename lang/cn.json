@@ -355,13 +355,9 @@
         "mod": "中级",
         "maj": "上级"
       },
-      "idSelector": {
-        "id1": "ID1",
-        "id2": "ID2",
-        "id3": "ID3",
-        "id4": "ID4",
-        "id5": "ID5",
-        "id6": "ID6"
+      "announce": {
+        "idChanged": "Changed ID",
+        "newID": "My new ID is"
       }
     },
     "muse": {

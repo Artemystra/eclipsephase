@@ -1883,6 +1883,12 @@ export async function migrationPre170(startMigration, endMigration) {
       if (actor.type === "character") {
         const idResult = await _ep170_createIdsFromLegacy(actor);
 
+        if (idResult.createdIds.length) {
+          await actor.update({
+            "system.activeID": idResult.createdIds[0]
+          });
+        }
+
         console.log(
           `[EP Migration ${latestUpdate}] ${actor.name}: created ids=${(idResult?.createdIds ?? []).join(", ")}`
         );

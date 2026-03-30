@@ -188,17 +188,30 @@
 
 .contentcenter {
   height: 685px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   background-color: var(--mainBackground);
 }
 
-.npcVariant1 {
-  height: 545px;
+.scrolly {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-.npcVariant2 {
-  height: 435px;
+.scrollx {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.scrollf {
+  overflow: scroll;
+}
+
+.main-tab-npc {
+  max-height: 435px;
+}
+
+.main-tab-pc {
+  max-height: 680px;
 }
 
 .wrapperright {
@@ -2178,7 +2191,7 @@ button.epTextlink:hover{
   text-align: left;
   position: absolute;
   top: 1em;
-  left: -268px;
+  left: -230px;
   z-index: 100;
   color: var(--mainText);
 }
@@ -2689,59 +2702,7 @@ body.system-eclipsephase {
   --color-scrollbar-track: transparent;
 }
 
-body.system-eclipsephase .window-content,
-body.system-eclipsephase #sidebar,
-body.system-eclipsephase #chat-log,
-body.system-eclipsephase .directory-list,
-body.system-eclipsephase .items-list,
-body.system-eclipsephase .contentleft,
-body.system-eclipsephase .contentcenter,
-body.system-eclipsephase .contentright,
-body.system-eclipsephase .wrapperright,
-body.system-eclipsephase .contentBox {
+body.system-eclipsephase * {
   scrollbar-color: var(--iconBlue) transparent;
-  scrollbar-width: thin;                       
-}
-
-body.system-eclipsephase .window-content::-webkit-scrollbar,
-body.system-eclipsephase #sidebar::-webkit-scrollbar,
-body.system-eclipsephase #chat-log::-webkit-scrollbar,
-body.system-eclipsephase .directory-list::-webkit-scrollbar,
-body.system-eclipsephase .items-list::-webkit-scrollbar,
-body.system-eclipsephase .contentleft::-webkit-scrollbar,
-body.system-eclipsephase .contentcenter::-webkit-scrollbar,
-body.system-eclipsephase .contentright::-webkit-scrollbar,
-body.system-eclipsephase .wrapperright::-webkit-scrollbar,
-body.system-eclipsephase .contentBox::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-body.system-eclipsephase .window-content::-webkit-scrollbar-track,
-body.system-eclipsephase #sidebar::-webkit-scrollbar-track,
-body.system-eclipsephase #chat-log::-webkit-scrollbar-track,
-body.system-eclipsephase .directory-list::-webkit-scrollbar-track,
-body.system-eclipsephase .items-list::-webkit-scrollbar-track,
-body.system-eclipsephase .contentleft::-webkit-scrollbar-track,
-body.system-eclipsephase .contentcenter::-webkit-scrollbar-track,
-body.system-eclipsephase .contentright::-webkit-scrollbar-track,
-body.system-eclipsephase .wrapperright::-webkit-scrollbar-track,
-body.system-eclipsephase .contentBox::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-body.system-eclipsephase .window-content::-webkit-scrollbar-thumb,
-body.system-eclipsephase #sidebar::-webkit-scrollbar-thumb,
-body.system-eclipsephase #chat-log::-webkit-scrollbar-thumb,
-body.system-eclipsephase .directory-list::-webkit-scrollbar-thumb,
-body.system-eclipsephase .items-list::-webkit-scrollbar-thumb,
-body.system-eclipsephase .contentleft::-webkit-scrollbar-thumb,
-body.system-eclipsephase .contentcenter::-webkit-scrollbar-thumb,
-body.system-eclipsephase .contentright::-webkit-scrollbar-thumb,
-body.system-eclipsephase .wrapperright::-webkit-scrollbar-thumb,
-body.system-eclipsephase .contentBox::-webkit-scrollbar-thumb  {
-  background-color: var(--iconBlue);
-  border-radius: 8px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+  scrollbar-width: none;                       
 }

@@ -77,11 +77,11 @@
             </button>
         </div>
     {{else if (eq type "identification")}}
-        <p>{{localize "ep2e.morph.sleeving.announce.title.sleeved"}}<span class="resource-value"></span></p>
+        <p>{{localize "ep2e.id.announce.idChanged"}}<span class="resource-value"></span></p>
 
         <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
-            <span style="font-size: 14px;">{{localize "ep2e.morph.sleeving.announce.copy.sleeved"}}:<br></span>
-            <span><b>{{morphname}}</b></span><br>
+            <span style="font-size: 14px;">{{localize "ep2e.id.announce.newID"}}:<br></span>
+            <span><b>{{idName}}</b></span><br>
         </div>
     {{/if}}
 </div>

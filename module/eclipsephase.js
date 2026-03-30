@@ -184,7 +184,6 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/tabs/psi-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-details.html",
     "systems/eclipsephase/templates/actor/partials/tabs/id-tab.html",
-    "systems/eclipsephase/templates/actor/partials/tabs/id-details.html",
     "systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html",

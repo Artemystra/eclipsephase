@@ -1,7 +1,7 @@
-<div class="tab body" data-group="primary" data-tab="morph">
+<div class="tab body main-tab-pc" data-group="primary" data-tab="morph">
     <div class="flexrow contentBox noMargin" style="max-height: 850px; height: 100%;">
         <!-- Subnav Area -->
-        <div style="flex-grow: 0.3; max-height: 685px; overflow: scroll;">
+        <div class="scrolly" style="flex-grow: 0.3; max-height: 685px;">
             <nav class="morph-tabs subtabs" data-group="morph-details">
                 {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab, as it needs to be identified this way during defaultOptions setup in EPactorSheet.js -->
@@ -28,7 +28,7 @@
             </nav>
         </div>
         <!-- Content Area -->
-        <div style="background-color: var(--pitchBorder); min-height: 680px; padding: 10px;">
+        <div class="scrolly" style="background-color: var(--pitchBorder); min-height: 680px; max-height: 680px; padding: 10px;">
             <section class="morph-details">
             {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab -->

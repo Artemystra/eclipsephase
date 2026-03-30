@@ -1,5 +1,5 @@
 import * as Dice from "../rolls/dice.js"
-import { _tempEffectCreation, listSelection } from "../common/common-sheet-functions.js"
+import { tempEffectCreation, listSelection, tempEffectDeletion } from "../common/common-sheet-functions.js"
 
 /**
  * Function to automatically test for SOM and WIL when a body is changed by a player.
@@ -132,8 +132,8 @@ export async function result (data) {
             flavor: html
         })
     }
-
-    await calcEffects (actorWhole, actorModel, resultData[0].result, resultData[1].result)
+    console.log("resultData", resultData)
+    await calcEffects (actorWhole, actorModel, Number(resultData[0].result), Number(resultData[1].result))
 }
 
 async function calcEffects(actorWhole, actorModel, integrationResult, stressResult) {
@@ -144,28 +144,25 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
     if (integrationResult <= 2 || integrationResult === 6 || integrationResult === 8){
 
         let effectMultiplier
+        
+        if(integrationResult < 1 || integrationResult === 6 || integrationResult === 8) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.threeDay";
 
-        if(integrationResult <= 2 || integrationResult === 6 || integrationResult === 8) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.threeDay";
         if(integrationResult === 1) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.twoDay";
-        if (integrationResult === 2) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.oneDay";
+
+        if(integrationResult === 2) effectMultiplier = "ep2e.morph.sleeving.announce.result.effectIntegrationIssues.oneDay";
 
         let effectName = game.i18n.localize("ep2e.morph.sleeving.announce.result.effectIntegrationIssues.title") + ": " + game.i18n.localize(effectMultiplier);
         let effectIcon = "systems/eclipsephase/resources/icons/substract.png";
-        let changes = [{"key" : "system.additionalSystems.sleeving.integrationIssues.title", "mode" : 2, "value" : effectName}, {"key" : "system.additionalSystems.sleeving.integrationIssues.value", "mode" : 2, "value" : -10}]
+        let changes = [
+            {"key" : "system.additionalSystems.sleeving.integrationIssues.title", "mode" : 2, "value" : effectName}, 
+            {"key" : "system.additionalSystems.sleeving.integrationIssues.value", "mode" : 2, "value" : -10}, 
+            {"key" : "system.additionalSystems.sleeving.integrationIssues.appeal", "mode" : 2, "value" : true}, 
+            {"key" : "system.additionalSystems.sleeving.integrationIssues.identifier", "mode" : 2, "value" : "integrationIssues"}
+        ]
 
-        if(!actorModel.additionalSystems.sleeving.integrationIssues){
-            await _tempEffectCreation(actorWhole, effectName, effectIcon, changes);
-        }
-        else {
-            for (let effect of actorWhole.effects){
-                if (effect.name === actorModel.additionalSystems.sleeving.integrationIssues.title){
-                    let effectID = effect._id;
-                    await actorWhole.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
-                }
-            }
-            let newEffect = await _tempEffectCreation(actorWhole, effectName, effectIcon, changes);
-            console.log("created:",newEffect)
-        }
+        await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", ["integrationIssues"]);
+
+        await tempEffectCreation(actorWhole, effectName, effectIcon, changes, "integrationIssues");
 
         message = {
             "type": "defaultDamage",

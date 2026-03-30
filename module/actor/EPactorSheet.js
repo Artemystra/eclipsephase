@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerEffectHandlers,registerCommonHandlers,_tempEffectCreation,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList} from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList} from "../common/common-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder, IDprep } from "../common/sheet-preparation.js";
@@ -766,6 +766,14 @@ export default class EPactorSheet extends ActorSheet {
       }
     });
 
+    html.find('.deleteEffect').click(async f => {
+      const element = f.currentTarget;
+      const dataset = element.dataset;
+      const actorWhole = actor;
+      const target = dataset.target;
+
+      await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", [target])
+    })
 
     // Rollable abilities.
     html.find('.task-check').click(this._onTaskCheck.bind(this));
@@ -869,7 +877,7 @@ export default class EPactorSheet extends ActorSheet {
       if (newPoolValue >= 0) {
         let changes = [{"key" : effectTarget, "mode" : effectMode, "value" : effectVal*poolChange}]
         if (inputType === "woundIgnore" || inputType === "traumaIgnore"){
-          await _tempEffectCreation(actor, effectLabel, effectIcon, changes );
+          await tempEffectCreation(actor, effectLabel, effectIcon, changes, inputType);
         }
   
         let dialogData = {type : dialogType, poolName : poolName, subtitle : subtitle, copy : copy, number : poolChange}
@@ -921,20 +929,10 @@ export default class EPactorSheet extends ActorSheet {
       await actorWhole.update({"system.pools.update.insight" : null, "system.pools.update.vigor" : null, "system.pools.update.moxie" : null, "system.pools.update.flex" : null});
 
       if (!restReset && restType === "long"){
-        for (let effect of actor.effects){
-          if (effect.name === "Temp Ignore Trauma" || effect.name === "Temp Ignore Wound"){
-            let effectID = effect._id;
-            actor.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
-          }
-        }
+        await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", ["woundIgnore", "traumaIgnore"])
       }
       else if (restReset) {
-        for (let effect of actor.effects){
-          if (effect.name === "Temp Ignore Trauma" || effect.name === "Temp Ignore Wound"){
-            let effectID = effect._id;
-            actor.deleteEmbeddedDocuments('ActiveEffect', [effectID]);
-          }
-        }
+        await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", ["woundIgnore", "traumaIgnore"])
       }
 
       if (!brewStatus){
@@ -1021,7 +1019,7 @@ export default class EPactorSheet extends ActorSheet {
         const popUpCopy = "ep2e.actorSheet.popUp.IDswitchCopyGeneral";
         const popUpInfo = "ep2e.actorSheet.popUp.IDswitchAdditionalInfo";
         const popUpPrimary = "ep2e.actorSheet.button.changeID";
-        const RESLEEVING_MESSAGE = 'systems/eclipsephase/templates/chat/change.html';
+        const ID_CHANGE_MESSAGE = 'systems/eclipsephase/templates/chat/change.html';
         let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
     
         if(popUp.confirm === true){
@@ -1030,15 +1028,15 @@ export default class EPactorSheet extends ActorSheet {
             let message = {
             type : "identification",
             actor : actor,
-            morphname : newID.name,
-            whisper: gmList()
+            idName : newID.name
             };
             
-            let html = await renderTemplate(RESLEEVING_MESSAGE, message)
+            let html = await renderTemplate(ID_CHANGE_MESSAGE, message)
     
             ChatMessage.create({
                 speaker: ChatMessage.getSpeaker({actor: actor}),
-                content: html
+                content: html,
+                whisper: gmList()
             })
         }
         else{
