@@ -1,16 +1,16 @@
-<form class="{{cssClass}} flexcol" autocomplete="off">
+<form class="{{cssClass}} flexcol" autocomplete="off" style="margin-top: 30px;">
   
   {{!-- New Limited Sheet --}}
-  <div class="grid grid-3col-limited1" style="margin-bottom: 0;">
+  <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: -3px; z-index: 1; height: 68px;">
+    <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+  </div>
+  <div class="centerBackground" style="position: absolute; top: 14px; background-color: var(--highlightBackground); width: 98%; border-bottom: 5px solid var(--pitchBorder); height: 51px;">
+    <h3 style="flex-grow: 10; border: none; text-align: center;">About {{actor.name}}</h3>
+  </div>
+  <div class="grid grid-3col-limited1" style="margin-bottom: 0; gap: 0;">
     <div style="grid-area: left;">
-      <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: -3px; z-index: 1; height: 68px;">
-          <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
-      </div>
       <div>
           <img class="profile-goon-img" style="margin-top: 18px;" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
-      </div>
-      <div class="centerBackground" style="position: absolute; top: 14px; left: 23px; background-color: var(--highlightBackground); width: 240px; padding-left: 22px; border-bottom: 5px solid var(--pitchBorder); height: 51px;">
-          
       </div>
     </div>
     <div style="grid-area: center;">
@@ -18,7 +18,6 @@
         <div class="flexrow">
           <div>
           </div>
-          <h3 class="subheaderMirror" style="flex-grow: 10;">About {{actor.name}}</h3>
         </div>
         {{#if (eq actor.type "character")}}
         <div class="limited-editor">
@@ -47,96 +46,34 @@
     </div>
   </div>
   {{#if (eq actor.type "character")}}
-  <div class="grid grid-3col-limited2">
-    <div style="grid-area: left;">
-      <div>
-        <div class="flexrow">
-            <h3 class="subheader" style="flex-grow: 10;">{{actor.name}}'s Sleeve</h3>
+    {{#each actor.bodies as |body key|}}
+      <!-- "Sleeved" morph has it's own data-tab -->
+      {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
+      <div class="centerBackground" style="background-color: var(--highlightBackground); width: 100%; border-top: 5px solid var(--pitchBorder); border-bottom: 5px solid var(--pitchBorder); height: 51px;">
+        <h3 style="flex-grow: 10; border: none; text-align: center;">{{@root.actor.name}}'s Sleeve</h3>
+      </div>
+        <div class="grid grid-3col-limited2" style="margin-top: 0; gap: 0;">
+          <div style="grid-area: left;">
             <div>
+              <div class="limited-editor">
+                  {{editor
+                    body.morphdetails.0.system.description
+                    target="body.morphdetails.0.system.description"
+                    button=false
+                    owner=owner
+                    editable=this.options.editable
+                  }}
+              </div>    
             </div>
+          </div>
+          <div style="grid-area: center;">
+            <div class="limited-sheet">
+              <img class="profile-goon-img" src="{{body.morphdetails.0.img}}"
+              title="{{actor.name}}'s {{body.morphdetails.0.name}}"/>
+            </div>
+          </div>
         </div>
-        <div class="limited-editor">
-            {{#if (eq activeMorph.key "morph1")}}
-            {{editor
-              activeMorph.description
-              target="system.bodies.morph1.description"
-              button=true
-              owner=owner
-              editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph2")}}
-            {{editor
-              activeMorph.description
-              target="system.bodies.morph2.description"
-              button=true
-              owner=owner
-              editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph3")}}
-            {{editor
-              activeMorph.description
-              target="system.bodies.morph3.description"
-              button=true
-              owner=owner
-              editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph4")}}
-            {{editor
-              activeMorph.description
-              target="system.bodies.morph4.description"
-              button=true
-              owner=owner
-              editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph5")}}
-            {{editor
-              activeMorph.description
-              target="system.bodies.morph5.description"
-              button=true
-              owner=owner
-              editable=this.options.editable
-            }}
-            {{else if (eq activeMorph.key "morph6")}}
-            {{editor
-              activeMorph.description
-              target="system.bodies.morph6.description"
-              button=true
-              owner=owner
-              editable=this.options.editable
-            }}
-            {{/if}}
-        </div>    
-      </div>
-    </div>
-    <div style="grid-area: center;">
-      <div class="limited-sheet">
-        {{#if (eq actor.system.bodies.activeMorph "morph1")}}
-        <img class="morph-img" src="{{actor.system.bodies.morph1.img}}"
-        data-edit="system.bodies.morph1.img" title="{{actor.name}}'s
-        {{actor.system.bodies.morph1.name}}"/>
-        {{else if (eq actor.system.bodies.activeMorph "morph2")}}
-        <img class="morph-img" src="{{actor.system.bodies.morph2.img}}"
-        data-edit="system.bodies.morph2.img" title="{{actor.name}}'s
-        {{actor.system.bodies.morph2.name}}"/>
-        {{else if (eq actor.system.bodies.activeMorph "morph3")}}
-        <img class="morph-img" src="{{actor.system.bodies.morph3.img}}"
-        data-edit="system.bodies.morph3.img" title="{{actor.name}}'s
-        {{actor.system.bodies.morph3.name}}"/>
-        {{else if (eq actor.system.bodies.activeMorph "morph4")}}
-        <img class="morph-img" src="{{actor.system.bodies.morph4.img}}"
-        data-edit="system.bodies.morph4.img" title="{{actor.name}}'s
-        {{actor.system.bodies.morph4.name}}"/>
-        {{else if (eq actor.system.bodies.activeMorph "morph5")}}
-        <img class="morph-img" src="{{actor.system.bodies.morph5.img}}"
-        data-edit="system.bodies.morph5.img" title="{{actor.name}}'s
-        {{actor.system.bodies.morph5.name}}"/>
-        {{else if (eq actor.system.bodies.activeMorph "morph6")}}
-        <img class="morph-img" src="{{actor.system.bodies.morph6.img}}"
-        data-edit="system.bodies.morph6.img" title="{{actor.name}}'s
-        {{actor.system.bodies.morph6.name}}"/>
-        {{/if}}
-      </div>
-    </div>
-  </div>
+      {{/if}}
+    {{/each}}
   {{/if}}
 </form>

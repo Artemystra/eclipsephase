@@ -175,8 +175,6 @@ Hooks.once('init', async function() {
   var templates = [
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/health-bar.html",
-    "systems/eclipsephase/templates/actor/partials/morph-details.html",
-    "systems/eclipsephase/templates/actor/partials/morph-traits.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html",

@@ -26,7 +26,7 @@ export default class EPactorSheet extends ActorSheet {
         }
         else {
           if (!game.user.isGM && !this.actor.isOwner){
-            this.position.height = 650;
+            this.position.height = 682;
             this.position.width = 800;
           }
           else{
@@ -37,12 +37,12 @@ export default class EPactorSheet extends ActorSheet {
       }
       else {
         if (hideNPCs && !game.user.isGM && !this.actor.isOwner){
-          this.position.height = 340;
+          this.position.height = 366;
           this.position.width = 800;
         }
         else {
           if (!game.user.isGM && !this.actor.isOwner){
-            this.position.height = 340;
+            this.position.height = 366;
             this.position.width = 800;
           }
           else{
