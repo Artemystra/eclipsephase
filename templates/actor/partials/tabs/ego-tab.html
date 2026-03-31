@@ -119,12 +119,14 @@
         </ol>
     </div>
     {{/if}}
-    {{editor
-        actor.system.biography
-        target="system.biography"
-        button=true
-        owner=owner
-        editable=this.options.editable
-    }}
+    <div class="npc-editor">
+        {{editor
+            actor.system.biography
+            target="system.biography"
+            button=true
+            owner=owner
+            editable=this.options.editable
+        }}
+    </div>
 </div>
 {{/if}}

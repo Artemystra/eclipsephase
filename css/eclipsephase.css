@@ -1994,6 +1994,11 @@ h3.subheaderBlank {
   height: 95%;
 }
 
+.npc-editor .editor {
+  max-height: 312px;
+  overflow-x: hidden;
+}
+
 .item-create {
   margin-left: none;
 }
