@@ -1857,6 +1857,12 @@ h3.subheaderBlank {
   clip-path: polygon(100% 0, 0 0, 0 75%, 5% 85%, 25% 85%, 35% 100%, 95% 100%, 100% 85%);
 }
 
+.endPieceShape1 {
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+  min-width: 100%;
+  min-height: 10px;
+}
+
 .roll-label {
   max-width: 26px;
   max-height: 26px;

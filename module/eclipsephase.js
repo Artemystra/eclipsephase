@@ -195,7 +195,6 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/currentStatus/statusSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html",
-    "systems/eclipsephase/templates/actor/partials/item-partials/consumable.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gear.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/weapons.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/gamma-sleight.html",

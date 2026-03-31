@@ -1,7 +1,7 @@
 
     <div class="itemBackground">
         <div class="grid grid-2col">
-            {{#each actor.gear as |item id|}}
+            {{#each item as |item id|}}
                 <div>
                     {{#if this.system.active}}
                     <div class="item flexrow flex-group-center atHand wantToKnowMore" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
@@ -20,9 +20,10 @@
                             <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" style="padding-bottom: 10px;">
-                            <div class="itemDescription shape3" style="min-width: 100%;">
+                            <div class="itemDescription" style="min-width: 100%;">
                                 {{{item.system.description}}}
                             </div>
+                            <div class="itemDescription endPieceShape1"></div>
                         </div>
                     </div>
                     {{else}}
@@ -42,9 +43,10 @@
                             <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" style="padding-bottom: 10px;">
-                            <div class="itemDescription shape3" style="min-width: 100%;">
+                            <div class="itemDescription" style="min-width: 100%;">
                                 {{{item.system.description}}}
                             </div>
+                            <div class="itemDescription endPieceShape1"></div>
                         </div>
                     </div>
                     {{/if}}
