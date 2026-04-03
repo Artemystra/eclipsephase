@@ -1904,7 +1904,11 @@ export async function migrationPre170(startMigration, endMigration) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
     }
 
-    await actor.update({ "flags.eclipsephase.migrating": false });
+    await actor.update({ 
+      "flags.eclipsephase.defaultMorphAdded": true,
+      "flags.eclipsephase.defaultIdAdded": true,
+      "flags.eclipsephase.migrating": false 
+    });
     doneCount++;
     uiBar.set(
       Math.floor((doneCount / total) * 100),

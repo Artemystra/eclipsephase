@@ -596,8 +596,11 @@ Hooks.on('renderSceneControls', EPmenu.renderControls)
 
 //Gives every character a flat-morph from start using the compendiumpack as a source
 Hooks.on("createActor", async (actor, options, userId) => {
-  if (actor.getFlag("eclipsephase", "defaultMorphAdded")) return;
-  if (actor.getFlag("eclipsephase", "defaultIdAdded")) return;
+  if (actor.system.activeMorph || actor.system.activeID) {
+    await actor.setFlag("eclipsephase", "defaultIdAdded", true);
+    await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
+  }
+  if (actor.getFlag("eclipsephase", "defaultMorphAdded") || actor.getFlag("eclipsephase", "defaultIdAdded")) return;
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) return;
   const morph = await pack.getDocument("suPRftVdLzcNhOH4");
@@ -614,6 +617,7 @@ Hooks.on("createActor", async (actor, options, userId) => {
   //adds the id of the freshly created morph to the system.activeMorph
   await actor.update({"system.activeMorph": standardMorph.id, "system.activeID": standardID.id, "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"});
 
+  await actor.setFlag("eclipsephase", "defaultIdAdded", true);
   await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
 });
 
