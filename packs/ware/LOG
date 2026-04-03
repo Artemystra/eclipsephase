@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 2026/04/03-13:26:07.996714 30f8b6000 Recovering log #1004
 2026/04/03-13:26:07.997066 30f8b6000 Delete type=0 #1004
 2026/04/03-13:26:07.997098 30f8b6000 Delete type=3 #1003
+=======
+2026/04/03-17:18:40.534867 313bb4000 Recovering log #1002
+2026/04/03-17:18:40.535218 313bb4000 Delete type=3 #1001
+2026/04/03-17:18:40.535256 313bb4000 Delete type=0 #1002
+>>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)

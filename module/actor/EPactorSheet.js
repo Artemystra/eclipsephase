@@ -1216,6 +1216,7 @@ export default class EPactorSheet extends ActorSheet {
   }
 
   _onItemCreate(event) {
+    console.log("New Item create triggered!", event.currentTarget.dataset)
     event.preventDefault();
     const header = event.currentTarget;
     const type = header.dataset.type;
@@ -1299,6 +1300,7 @@ export default class EPactorSheet extends ActorSheet {
     let element = event.currentTarget;
     let itemId = element.closest(".item").dataset.itemId;
     let item = this.actor.items.get(itemId);
+    console.log("This is my item", item)
     let field = element.dataset.field;
     
     return item.update({ [field]: element.value });

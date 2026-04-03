@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 MANIFEST-001009
+=======
+MANIFEST-001007
+>>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
