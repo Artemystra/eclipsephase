@@ -2,7 +2,7 @@ import { eclipsephase } from "../config.js";
 import { registerEffectHandlers,registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList} from "../common/common-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
-import { traitAndAccessoryFinder, IDprep } from "../common/sheet-preparation.js";
+import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as COMMON from "../common/common-sheet-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
@@ -128,8 +128,6 @@ export default class EPactorSheet extends ActorSheet {
 
     //Prepare dropdowns
     sheetData.config = CONFIG.eclipsephase;
-
-    //sheetData.IDcollection = IDprep(actor, sheetData);
 
     return foundry.utils.mergeObject(sheetData, {
       isGM: game.user.isGM
