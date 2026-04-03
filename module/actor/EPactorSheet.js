@@ -1130,21 +1130,50 @@ export default class EPactorSheet extends ActorSheet {
         }
 
         let total = 0;
-        const date = new Date().toLocaleDateString("en-EN")
+        const date = new Date().toLocaleDateString("en-EN");
 
-        const spending = await COMMON.listSelection(object, "standardSelectionList", 350, "Spend Rez", "", "This dialog lets you spend your rez. It will document everything for the DM in the background")
+        const spending = await COMMON.listSelection(
+          object,
+          "standardSelectionList",
+          350,
+          "Spend Rez",
+          "",
+          "This dialog lets you spend your rez. It will document everything for the DM in the background"
+        );
 
-        if(spending.cancelled) return;
+        if (spending.cancelled) return;
 
-        for (let item in spending.selection){
-          total += spending.selection[item] * costMatrix[item]
+        for (const item in spending.selection) {
+          total += spending.selection[item] * costMatrix[item];
         }
 
-        const ledgerUpdate = {date: date, ...spending.selection, cost : total}
+        const ledgerUpdate = {
+          date: date,
+          ...spending.selection,
+          cost: total
+        };
 
-        if (ledgerUpdate["cost"] <= availableRez){
-          ledger.unshift(ledgerUpdate);
-          actor.update({"system.rezPoints.value" : availableRez - total, "system.rezPoints.spent" : spentRez + total, "system.rezPoints.ledger" : ledger});
+        if (ledgerUpdate.cost <= availableRez) {
+          // Find existing ledger entry for the same date
+          const existingEntry = ledger.find(entry => entry.date === date);
+
+          if (existingEntry) {
+            // Add new values onto the existing entry
+            for (const [key, value] of Object.entries(spending.selection)) {
+              existingEntry[key] = (existingEntry[key] ?? 0) + value;
+            }
+
+            existingEntry.cost = (existingEntry.cost ?? 0) + total;
+          } else {
+            // No entry for this date yet, create a new one
+            ledger.unshift(ledgerUpdate);
+          }
+
+          await actor.update({
+            "system.rezPoints.value": availableRez - total,
+            "system.rezPoints.spent": spentRez + total,
+            "system.rezPoints.ledger": ledger
+          });
         }
         else {
           
