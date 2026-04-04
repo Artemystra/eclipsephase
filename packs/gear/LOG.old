@@ -1,8 +1,1 @@
-2026/04/04-16:51:11.268477 30fb0b000 Log #992: 0 ops saved to Table #995 OK
-2026/04/04-16:51:11.268761 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/000992.log: OK
-2026/04/04-16:51:11.268810 30fb0b000 Log #994: 0 ops saved to Table #996 OK
-2026/04/04-16:51:11.268857 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/000994.log: OK
-2026/04/04-16:51:11.269130 30fb0b000 Table #806: 100 entries OK
-2026/04/04-16:51:11.269246 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/MANIFEST-000991: OK
-2026/04/04-16:51:11.269294 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear/MANIFEST-000993: OK
-2026/04/04-16:51:11.269474 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/gear; recovered 1 files; 19526 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.271856 30fb0b000 Delete type=3 #1

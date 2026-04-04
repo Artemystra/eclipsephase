@@ -776,18 +776,18 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.sizeXL";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-
-    if (options.range === "range" && prone) {
+    console.log("My options", options)
+    if (options.range === "range" && options.prone) {
         modValue = -20
         announce = "ep2e.roll.announce.combat.ranged.rangeProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "beyond" && prone) {
+    else if (options.range === "beyond" && options.prone) {
         modValue = -30
         announce = "ep2e.roll.announce.combat.ranged.beyondProne";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    else if (options.range === "beyond+" && prone) {
+    else if (options.range === "beyond+" && options.prone) {
         modValue = -40
         announce = "ep2e.roll.announce.combat.ranged.beyondPlusProne";
         task.addModifier(new TaskRollModifier(announce, modValue))

@@ -1,8 +1,1 @@
-2026/04/04-16:51:11.241965 310b11000 Log #1008: 0 ops saved to Table #1011 OK
-2026/04/04-16:51:11.242182 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/001008.log: OK
-2026/04/04-16:51:11.242225 310b11000 Log #1010: 0 ops saved to Table #1012 OK
-2026/04/04-16:51:11.242276 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/001010.log: OK
-2026/04/04-16:51:11.244200 310b11000 Table #822: 63 entries OK
-2026/04/04-16:51:11.244350 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/MANIFEST-001007: OK
-2026/04/04-16:51:11.244400 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons/MANIFEST-001009: OK
-2026/04/04-16:51:11.244613 310b11000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/weapons; recovered 1 files; 88419 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.247627 310b11000 Delete type=3 #1

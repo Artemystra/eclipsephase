@@ -1,9 +1,1 @@
-2026/04/04-16:51:11.360183 310b11000 Log #992: 0 ops saved to Table #995 OK
-2026/04/04-16:51:11.360249 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/000992.log: OK
-2026/04/04-16:51:11.360284 310b11000 Log #994: 0 ops saved to Table #996 OK
-2026/04/04-16:51:11.360328 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/000994.log: OK
-2026/04/04-16:51:11.372582 310b11000 Table #971: 553 entries OK
-2026/04/04-16:51:11.393495 310b11000 Table #805: 553 entries OK
-2026/04/04-16:51:11.393747 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/MANIFEST-000991: OK
-2026/04/04-16:51:11.393804 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters/MANIFEST-000993: OK
-2026/04/04-16:51:11.393999 310b11000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/samplecharacters; recovered 2 files; 521494 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.396235 310b11000 Delete type=3 #1

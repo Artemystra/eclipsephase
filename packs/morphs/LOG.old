@@ -1,8 +1,1 @@
-2026/04/04-16:51:11.419432 30fb0b000 Log #173: 0 ops saved to Table #176 OK
-2026/04/04-16:51:11.419535 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/000173.log: OK
-2026/04/04-16:51:11.419582 30fb0b000 Log #175: 0 ops saved to Table #177 OK
-2026/04/04-16:51:11.419651 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/000175.log: OK
-2026/04/04-16:51:11.419874 30fb0b000 Table #63: 4 entries OK
-2026/04/04-16:51:11.419998 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/MANIFEST-000174: OK
-2026/04/04-16:51:11.420060 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/MANIFEST-000172: OK
-2026/04/04-16:51:11.420251 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs; recovered 1 files; 3423 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.423430 30fb0b000 Delete type=3 #1

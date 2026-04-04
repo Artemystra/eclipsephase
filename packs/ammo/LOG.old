@@ -1,8 +1,1 @@
-2026/04/04-16:51:11.308590 30fb0b000 Log #996: 0 ops saved to Table #999 OK
-2026/04/04-16:51:11.308832 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/000996.log: OK
-2026/04/04-16:51:11.308862 30fb0b000 Log #998: 0 ops saved to Table #1000 OK
-2026/04/04-16:51:11.308901 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/000998.log: OK
-2026/04/04-16:51:11.309632 30fb0b000 Table #810: 44 entries OK
-2026/04/04-16:51:11.309780 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/MANIFEST-000997: OK
-2026/04/04-16:51:11.309840 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/MANIFEST-000995: OK
-2026/04/04-16:51:11.310012 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo; recovered 1 files; 37007 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.311656 30fb0b000 Delete type=3 #1

@@ -1,8 +1,1 @@
-2026/04/04-16:51:11.337265 31030e000 Log #997: 0 ops saved to Table #998 OK
-2026/04/04-16:51:11.337337 31030e000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/000997.log: OK
-2026/04/04-16:51:11.337364 31030e000 Log #995: 0 ops saved to Table #999 OK
-2026/04/04-16:51:11.337406 31030e000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/000995.log: OK
-2026/04/04-16:51:11.337621 31030e000 Table #809: 10 entries OK
-2026/04/04-16:51:11.337739 31030e000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/MANIFEST-000996: OK
-2026/04/04-16:51:11.337787 31030e000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades/MANIFEST-000994: OK
-2026/04/04-16:51:11.337955 31030e000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/grenades; recovered 1 files; 4914 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.340430 31030e000 Delete type=3 #1

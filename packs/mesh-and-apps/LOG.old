@@ -1,8 +1,1 @@
-2026/04/04-16:51:11.345449 310b11000 Log #694: 0 ops saved to Table #695 OK
-2026/04/04-16:51:11.345517 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/000694.log: OK
-2026/04/04-16:51:11.345544 310b11000 Log #692: 0 ops saved to Table #696 OK
-2026/04/04-16:51:11.345585 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/000692.log: OK
-2026/04/04-16:51:11.345784 310b11000 Table #506: 25 entries OK
-2026/04/04-16:51:11.345981 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/MANIFEST-000693: OK
-2026/04/04-16:51:11.346037 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps/MANIFEST-000691: OK
-2026/04/04-16:51:11.346251 310b11000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/mesh-and-apps; recovered 1 files; 6562 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.350038 310b11000 Delete type=3 #1

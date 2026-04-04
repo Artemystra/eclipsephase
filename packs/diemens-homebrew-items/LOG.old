@@ -1,9 +1,1 @@
-2026/04/04-16:51:11.353583 310b11000 Log #1000: 0 ops saved to Table #1001 OK
-2026/04/04-16:51:11.353667 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/diemens-homebrew-items/001000.log: OK
-2026/04/04-16:51:11.353728 310b11000 Log #998: 0 ops saved to Table #1002 OK
-2026/04/04-16:51:11.353792 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/diemens-homebrew-items/000998.log: OK
-2026/04/04-16:51:11.354071 310b11000 Table #977: 14 entries OK
-2026/04/04-16:51:11.354440 310b11000 Table #811: 41 entries OK
-2026/04/04-16:51:11.354588 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/diemens-homebrew-items/MANIFEST-000997: OK
-2026/04/04-16:51:11.354634 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/diemens-homebrew-items/MANIFEST-000999: OK
-2026/04/04-16:51:11.354815 310b11000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/diemens-homebrew-items; recovered 2 files; 22605 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.357017 310b11000 Delete type=3 #1

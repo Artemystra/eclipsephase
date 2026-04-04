@@ -1,8 +1,1 @@
-2026/04/04-16:51:11.408786 30fb0b000 Log #991: 0 ops saved to Table #994 OK
-2026/04/04-16:51:11.408880 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/000991.log: OK
-2026/04/04-16:51:11.408924 30fb0b000 Log #993: 0 ops saved to Table #995 OK
-2026/04/04-16:51:11.408971 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/000993.log: OK
-2026/04/04-16:51:11.409232 30fb0b000 Table #805: 15 entries OK
-2026/04/04-16:51:11.409361 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/MANIFEST-000990: OK
-2026/04/04-16:51:11.409417 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals/MANIFEST-000992: OK
-2026/04/04-16:51:11.409589 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/animals; recovered 1 files; 13671 bytes. Some data may have been lost. ****
+2026/04/04-16:51:11.414213 30fb0b000 Delete type=3 #1
