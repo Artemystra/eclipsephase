@@ -1,9 +1,9 @@
-<<<<<<< HEAD
-2026/04/03-08:35:05.317652 30fd18000 Recovering log #996
-2026/04/03-08:35:05.318052 30fd18000 Delete type=0 #996
-2026/04/03-08:35:05.318087 30fd18000 Delete type=3 #995
-=======
-2026/03/31-00:27:16.015371 3137a9000 Recovering log #994
-2026/03/31-00:27:16.015997 3137a9000 Delete type=0 #994
-2026/03/31-00:27:16.016125 3137a9000 Delete type=3 #993
->>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
+2026/04/04-16:51:11.254291 30fb0b000 Log #1000: 0 ops saved to Table #1001 OK
+2026/04/04-16:51:11.254377 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/001000.log: OK
+2026/04/04-16:51:11.254423 30fb0b000 Log #998: 0 ops saved to Table #1002 OK
+2026/04/04-16:51:11.254483 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/000998.log: OK
+2026/04/04-16:51:11.254730 30fb0b000 Table #977: 20 entries OK
+2026/04/04-16:51:11.255152 30fb0b000 Table #811: 81 entries OK
+2026/04/04-16:51:11.255307 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/MANIFEST-000997: OK
+2026/04/04-16:51:11.255364 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights/MANIFEST-000999: OK
+2026/04/04-16:51:11.255569 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/psi-sleights; recovered 2 files; 37434 bytes. Some data may have been lost. ****

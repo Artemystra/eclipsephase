@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-2026/04/03-08:35:05.311206 30ed12000 Recovering log #989
-2026/04/03-08:35:05.311473 30ed12000 Delete type=0 #989
-2026/04/03-08:35:05.311494 30ed12000 Delete type=3 #988
-=======
-2026/03/31-00:27:16.003277 313fac000 Recovering log #987
-2026/03/31-00:27:16.003888 313fac000 Delete type=0 #987
-2026/03/31-00:27:16.003944 313fac000 Delete type=3 #986
->>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
+2026/04/04-16:51:11.220642 310b11000 Log #991: 0 ops saved to Table #994 OK
+2026/04/04-16:51:11.220859 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/armor/000991.log: OK
+2026/04/04-16:51:11.220894 310b11000 Log #993: 0 ops saved to Table #995 OK
+2026/04/04-16:51:11.220942 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/armor/000993.log: OK
+2026/04/04-16:51:11.221205 310b11000 Table #805: 31 entries OK
+2026/04/04-16:51:11.221328 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/armor/MANIFEST-000990: OK
+2026/04/04-16:51:11.221378 310b11000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/armor/MANIFEST-000992: OK
+2026/04/04-16:51:11.221546 310b11000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/armor; recovered 1 files; 5310 bytes. Some data may have been lost. ****

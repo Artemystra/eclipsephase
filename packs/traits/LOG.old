@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-2026/04/03-08:35:05.308467 30e50f000 Recovering log #672
-2026/04/03-08:35:05.308743 30e50f000 Delete type=0 #672
-2026/04/03-08:35:05.308766 30e50f000 Delete type=3 #671
-=======
-2026/03/31-00:27:15.994268 3127a3000 Recovering log #670
-2026/03/31-00:27:15.994903 3127a3000 Delete type=3 #669
-2026/03/31-00:27:15.994971 3127a3000 Delete type=0 #670
->>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
+2026/04/04-16:51:11.202514 311314000 Log #676: 0 ops saved to Table #677 OK
+2026/04/04-16:51:11.202838 311314000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/000676.log: OK
+2026/04/04-16:51:11.202873 311314000 Log #674: 0 ops saved to Table #678 OK
+2026/04/04-16:51:11.202917 311314000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/000674.log: OK
+2026/04/04-16:51:11.209665 311314000 Table #654: 365 entries OK
+2026/04/04-16:51:11.209852 311314000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/MANIFEST-000675: OK
+2026/04/04-16:51:11.209926 311314000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits/MANIFEST-000673: OK
+2026/04/04-16:51:11.210130 311314000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/traits; recovered 1 files; 131087 bytes. Some data may have been lost. ****

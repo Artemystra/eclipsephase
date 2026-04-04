@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-2026/04/03-08:35:05.325236 30f515000 Recovering log #994
-2026/04/03-08:35:05.327258 30f515000 Delete type=0 #994
-2026/04/03-08:35:05.327281 30f515000 Delete type=3 #993
-=======
-2026/03/31-00:27:16.048823 312fa6000 Recovering log #992
-2026/03/31-00:27:16.049417 312fa6000 Delete type=3 #991
-2026/03/31-00:27:16.049486 312fa6000 Delete type=0 #992
->>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
+2026/04/04-16:51:11.308590 30fb0b000 Log #996: 0 ops saved to Table #999 OK
+2026/04/04-16:51:11.308832 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/000996.log: OK
+2026/04/04-16:51:11.308862 30fb0b000 Log #998: 0 ops saved to Table #1000 OK
+2026/04/04-16:51:11.308901 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/000998.log: OK
+2026/04/04-16:51:11.309632 30fb0b000 Table #810: 44 entries OK
+2026/04/04-16:51:11.309780 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/MANIFEST-000997: OK
+2026/04/04-16:51:11.309840 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo/MANIFEST-000995: OK
+2026/04/04-16:51:11.310012 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/ammo; recovered 1 files; 37007 bytes. Some data may have been lost. ****

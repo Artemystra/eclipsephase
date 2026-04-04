@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-2026/04/03-08:35:05.322770 30ed12000 Recovering log #990
-2026/04/03-08:35:05.323048 30ed12000 Delete type=0 #990
-2026/04/03-08:35:05.323073 30ed12000 Delete type=3 #989
-=======
-2026/03/31-00:27:16.031364 313fac000 Recovering log #988
-2026/03/31-00:27:16.032186 313fac000 Delete type=3 #987
-2026/03/31-00:27:16.032392 313fac000 Delete type=0 #988
->>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
+2026/04/04-16:51:11.278582 30fb0b000 Log #992: 0 ops saved to Table #995 OK
+2026/04/04-16:51:11.278790 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/vehicles/000992.log: OK
+2026/04/04-16:51:11.278826 30fb0b000 Log #994: 0 ops saved to Table #996 OK
+2026/04/04-16:51:11.278871 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/vehicles/000994.log: OK
+2026/04/04-16:51:11.289080 30fb0b000 Table #806: 39 entries OK
+2026/04/04-16:51:11.289296 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/vehicles/MANIFEST-000991: OK
+2026/04/04-16:51:11.289349 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/vehicles/MANIFEST-000993: OK
+2026/04/04-16:51:11.289578 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/vehicles; recovered 1 files; 36161 bytes. Some data may have been lost. ****

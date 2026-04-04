@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-2026/04/03-08:35:05.329071 30fd18000 Recovering log #989
-2026/04/03-08:35:05.329488 30fd18000 Delete type=0 #989
-2026/04/03-08:35:05.329512 30fd18000 Delete type=3 #988
-=======
-2026/03/31-00:27:16.058044 3137a9000 Recovering log #987
-2026/03/31-00:27:16.062431 3137a9000 Delete type=0 #987
-2026/03/31-00:27:16.062486 3137a9000 Delete type=3 #986
->>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
+2026/04/04-16:51:11.325272 30fb0b000 Log #991: 0 ops saved to Table #994 OK
+2026/04/04-16:51:11.325343 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/000991.log: OK
+2026/04/04-16:51:11.325381 30fb0b000 Log #993: 0 ops saved to Table #995 OK
+2026/04/04-16:51:11.325463 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/000993.log: OK
+2026/04/04-16:51:11.325707 30fb0b000 Table #805: 49 entries OK
+2026/04/04-16:51:11.325818 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/MANIFEST-000990: OK
+2026/04/04-16:51:11.325865 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins/MANIFEST-000992: OK
+2026/04/04-16:51:11.326022 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/drugs-and-toxins; recovered 1 files; 14448 bytes. Some data may have been lost. ****

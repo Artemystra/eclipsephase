@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-2026/04/03-08:35:05.347434 30f515000 Recovering log #171
-2026/04/03-08:35:05.347986 30f515000 Delete type=0 #171
-2026/04/03-08:35:05.348129 30f515000 Delete type=3 #170
-=======
-2026/03/31-00:27:16.316526 3137a9000 Recovering log #169
-2026/03/31-00:27:16.317799 3137a9000 Delete type=3 #168
-2026/03/31-00:27:16.317920 3137a9000 Delete type=0 #169
->>>>>>> 6034237 (- Fixed a bug that led to a new ID being created whenever a field changed by the sheet-inline-edit function)
+2026/04/04-16:51:11.419432 30fb0b000 Log #173: 0 ops saved to Table #176 OK
+2026/04/04-16:51:11.419535 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/000173.log: OK
+2026/04/04-16:51:11.419582 30fb0b000 Log #175: 0 ops saved to Table #177 OK
+2026/04/04-16:51:11.419651 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/000175.log: OK
+2026/04/04-16:51:11.419874 30fb0b000 Table #63: 4 entries OK
+2026/04/04-16:51:11.419998 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/MANIFEST-000174: OK
+2026/04/04-16:51:11.420060 30fb0b000 Archiving /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs/MANIFEST-000172: OK
+2026/04/04-16:51:11.420251 30fb0b000 **** Repaired leveldb /Users/artemystra/Library/Application Support/FoundryVTT/Data/systems/eclipsephase/packs/morphs; recovered 1 files; 3423 bytes. Some data may have been lost. ****
