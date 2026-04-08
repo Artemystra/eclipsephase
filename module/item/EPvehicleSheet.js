@@ -3,7 +3,7 @@ import { registerEffectHandlers,registerCommonHandlers,itemToggle,moreInfo } fro
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export default class EPvehicleSheet extends ItemSheet {
+export default class EPvehicleSheet extends foundry.appv1.sheets.ItemSheet {
 
   /** @override */
   static get defaultOptions() {

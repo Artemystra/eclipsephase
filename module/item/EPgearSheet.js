@@ -5,7 +5,7 @@ import * as DICE from "../rolls/dice.js";
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export default class EPgearSheet extends ItemSheet {
+export default class EPgearSheet extends foundry.appv1.sheets.ItemSheet {
   constructor(...args) {
     super(...args);
 

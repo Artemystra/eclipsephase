@@ -1,4 +1,4 @@
-class EPmenuLayer extends PlaceablesLayer {
+class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
     constructor () {
       super()
       this.objects = {}

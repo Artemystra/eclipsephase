@@ -1,6 +1,12 @@
 <form class="{{cssClass}} flexcol" autocomplete="off">
-    <div class="grid grid-12col">
-        <div class="wrapperleft">
+    
+    {{#if (eq actor.type 'character')}}
+        <div class="grid grid-12col">
+            <div class="wrapperleft">
+    {{else}}
+        <div class="grid grid-9col">
+            <div class="wrapperleft npcVariant1">
+    {{/if}}
             {{!-- Sheet Header --}}
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
             {{!-- Secondary Tab Navigation --}}
@@ -21,48 +27,66 @@
                 </section>
             </div>
         </div>
-        <div class="wrappercenter">
+        {{#if (eq actor.type 'character')}}
+            <div class="wrappercenter">
+        {{else}}
+            <div class="wrappercenter npcVariant1">
+        {{/if}}
             {{!-- Primary Tab Navigation --}}
-                <nav class="primary-tabs tabs" data-group="primary">
-                    <a class="item" data-tab="skills">{{localize "ep2e.actorSheet.rightTabs.skillsTab"}}</a>
-                    <a class="item" data-tab="morph">{{localize "ep2e.actorSheet.rightTabs.morphTab"}}</a>
-                    <a class="item" data-tab="weapons">{{localize "ep2e.actorSheet.rightTabs.inventoryTab"}}</a>
-                    {{#if actor.vehicle.vehicle}}
-                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
-                    {{else if actor.vehicle.robot}}
-                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
-                    {{else if actor.vehicle.animal}}
-                    <a class="item" data-tab="vehicles">{{localize "ep2e.actorSheet.rightTabs.peripheralsTab"}}</a>
-                    {{/if}}
-                    {{#if actor.system.additionalSystems.hasPsi}}
-                    <a class="item" data-tab="psi">{{localize "ep2e.actorSheet.rightTabs.psiTab"}}</a>
-                    {{/if}}
-                    {{#if actor.showEffectsTab}}
-                    <a class="item" data-tab="gmInfo">{{localize "ep2e.actorSheet.rightTabs.gmInfoTab"}}</a>
-                    {{/if}}
+                <nav class="primary-tabs tabs">
+                    {{#each tabs.primary as |tab|}}
+                        {{#if (eq @root.actor.type 'character')}}
+                        <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                            {{tab.label}}
+                        </a>
+                        {{else}}
+                            {{#if (ne tab.id 'morph')}}
+                                <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                                    {{tab.label}}
+                                </a>
+                            {{else}}
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
                 </nav>
                 {{!-- Health Overview --}}
                     {{> systems/eclipsephase/templates/actor/partials/health-bar.html }}
             {{!-- Center Body --}}
-            <div class="contentcenter">
+            {{#if (eq actor.type 'character')}}
+                <div class="contentcenter">
+            {{else}}
+                <div class="contentcenter npcVariant2">
+            {{/if}}
                 <section class="primary-body">
-                    {{!--Skills Tab--}}
-                    {{> systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html }}
-                    {{!-- Morph Tab --}}
+                    <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="primary" data-tab="skills">
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html }}
+                    </div>
+                    <div class="tab {{#if tabs.primary.morph.active}}active{{/if}}" data-group="primary" data-tab="morph">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html }}
-                    {{!-- Peripherals Tab --}}
+                    </div>
+                    <div class="tab {{#if tabs.primary.vehicles.active}}active{{/if}}" data-group="primary" data-tab="vehicles">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html }}
-                    {{!-- Gear Tab --}}
-                        {{> systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html }}
-                    {{!-- Psi Tab --}}                    
+                    </div>
+                    <div class="tab {{#if tabs.primary.weapons.active}}active{{/if}}" data-group="primary" data-tab="weapons">
+                        {{#if (eq actor.type 'character')}}
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html }}
+                        {{else}}
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/npcgear.html }}
+                        {{/if}}
+                    </div>
+                    <div class="tab {{#if tabs.primary.psi.active}}active{{/if}}" data-group="primary" data-tab="psi">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/psi-tab.html }}
-                    {{!-- Effects Tab --}}    
+                    </div>
+                    <div class="tab {{#if tabs.primary.gmInfo.active}}active{{/if}}" data-group="primary" data-tab="gmInfo">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
+                    </div> 
                 </section>
             </div>
         </div>
-        <div class="wrapperright">
-            {{> systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html }}
-        </div>
+        {{#if (eq actor.type 'character')}}
+            <div class="wrapperright">
+                {{> systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html }}
+            </div>
+        {{/if}}
     </div>
 </form>
