@@ -10,20 +10,27 @@
             {{!-- Sheet Header --}}
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
             {{!-- Secondary Tab Navigation --}}
-                <nav class="secondary-tabs tabs" data-group="secondary">
-                    <a class="item" data-tab="ego">{{localize "ep2e.actorSheet.leftTabs.egoTab"}}</a>
-                    <a class="item" data-tab="identification">{{localize "ep2e.actorSheet.leftTabs.idTab"}}</a>
-                    <a class="item" data-tab="muse">{{localize "ep2e.actorSheet.leftTabs.museTab"}}</a>
+                <nav class="secondary-tabs tabs">
+                    {{#each tabs.secondary as |tab|}}
+                        {{#if (eq @root.actor.type 'character')}}
+                        <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="secondary" data-tab="{{tab.id}}">
+                            {{localize tab.label}}
+                        </a>
+                        {{/if}}
+                    {{/each}}
                 </nav>
             <div class="contentleft">
                 {{!-- Left Body --}}
                 <section class="secondary-body">
-                    {{!-- Ego Tab --}}
+                    <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="secondary" data-tab="ego">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
-                    {{!-- ID Tab --}}
+                    </div>
+                    <div class="tab {{#if tabs.primary.morph.active}}active{{/if}}" data-group="secondary" data-tab="identification">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/id-tab.html }}
-                    {{!-- Muse Tab --}}
+                    </div>
+                    <div class="tab {{#if tabs.primary.vehicles.active}}active{{/if}}" data-group="secondary" data-tab="muse">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html }}
+                    </div>
                 </section>
             </div>
         </div>
@@ -37,12 +44,12 @@
                     {{#each tabs.primary as |tab|}}
                         {{#if (eq @root.actor.type 'character')}}
                         <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
-                            {{tab.label}}
+                            {{localize tab.label}}
                         </a>
                         {{else}}
                             {{#if (ne tab.id 'morph')}}
                                 <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
-                                    {{tab.label}}
+                                    {{localize tab.label}}
                                 </a>
                             {{else}}
                             {{/if}}

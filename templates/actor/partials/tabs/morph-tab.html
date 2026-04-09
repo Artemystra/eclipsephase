@@ -2,27 +2,27 @@
     <div class="flexrow contentBox noMargin" style="max-height: 850px; height: 100%;">
         <!-- Subnav Area -->
         <div class="scrolly" style="flex-grow: 0.3; max-height: 685px;">
-            <nav class="morph-tabs subtabs" data-group="morph-details">
+            <nav class="morph-tabs subtabs" data-group="morph">
                 {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab, as it needs to be identified this way during defaultOptions setup in EPactorSheet.js -->
                     {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
-                        <a data-tab="sleeved" class="item">
-                            <div class="label truncateMulti">{{morphdetails.0.name}}</div>
+                        <a data-action="tab" data-group="morph" data-tab="sleeved" class="item {{#if (eq @root.tabGroups.morph 'sleeved')}}active{{/if}}">
+                            <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
                             <div class="state">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</div>
                         </a>
                     {{else}}
-                        <a data-tab="{{morphdetails.0.id}}" class="item">
-                            <div class="label truncateMulti">{{morphdetails.0.name}}</div>
+                        <a data-action="tab" data-group="morph" data-tab="{{body.morphdetails.0.id}}" class="item {{#if (eq @root.tabGroups.morph body.morphdetails.0.id)}}active{{/if}}">
+                            <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
                             <div style="min-height: 20px; width: 100%;">
-                                <button 
-                                    class="resource-label editWithLabel button sheetButton sleeveButton" 
-                                    title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" 
-                                    data-item-id="{{body.morphdetails.0._id}}"
-                                    data-actorid="{{@root.actor.id}}">
-                                    {{localize "ep2e.actorSheet.button.sleeveMorph"}}
-                                </button>
                             </div>
                         </a>
+                        <button type="button" 
+                            class="resource-label editWithLabel button sheetButton sleeveButton" 
+                            title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" 
+                            data-item-id="{{body.morphdetails.0._id}}"
+                            data-actorid="{{@root.actor.id}}">
+                            {{localize "ep2e.actorSheet.button.sleeveMorph"}}
+                        </button>
                     {{/if}}
                 {{/each}}
             </nav>
@@ -33,18 +33,18 @@
             {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab -->
                 {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
-                    <div class="tab body" data-group="morph-details" data-tab="sleeved">
+                    <div class="tab body {{#if (eq @root.tabGroups.morph 'sleeved')}}active{{/if}}" data-group="morph" data-tab="sleeved">
                 {{else}}
-                    <div class="tab body" data-group="morph-details" data-tab="{{morphdetails.0.id}}">
+                    <div class="tab body {{#if (eq @root.tabGroups.morph body.morphdetails.0.id)}}active{{/if}}" data-group="morph" data-tab="{{body.morphdetails.0.id}}">
                 {{/if}}
                         <div class="contentBox item flexrow" data-item-id="{{body.morphdetails.0._id}}" data-item-name="{{body.morphdetails.0.name}}" style="flex-wrap: wrap; gap: 10px;">
                             <div class="contentBox flexrow" style="align-items: flex-start;">
                                 <div style="flex: 0.3;">
-                                    <img src="{{morphdetails.0.img}}" style="max-width: 10rem;"/>
+                                    <img src="{{body.morphdetails.0.img}}" style="max-width: 10rem;"/>
                                     <div style="display: flex;">
-                                        <button class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
+                                        <button type="button" class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
                                         {{#if (ne @root.actor.system.activeMorph body.morphdetails.0.id)}}
-                                            <button class="item-delete resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
+                                            <button type="button" class="item-delete resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
                                         {{/if}}
                                     </div>
                                 </div>
@@ -53,12 +53,12 @@
                                         <div class="itemGroup wantToKnowMore">
                                             <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
                                             <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
-                                            <label class="resource-value">{{morphdetails.0.system.dur}}</label>
+                                            <label class="resource-value">{{body.morphdetails.0.system.dur}}</label>
                                         </div>
                                         <div class="itemGroup wantToKnowMore">
                                             <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
                                             <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.morphType.tooltip"}}</label>
-                                            <label class="resource-value">{{#if (eq morphdetails.0.system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq morphdetails.0.system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
+                                            <label class="resource-value">{{#if (eq body.morphdetails.0.system.type "bio")}}{{localize "ep2e.morph.currentMorph.morphType.bio"}}{{else if (eq morphdetails.0.system.type "synth")}}{{localize "ep2e.morph.currentMorph.morphType.synth"}}{{else}}{{localize "ep2e.morph.currentMorph.morphType.info"}}{{/if}}</label>
                                         </div>
                                     </div>
                                     {{#if body.morphdetails.0.system.description}}

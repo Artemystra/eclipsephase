@@ -10,7 +10,7 @@
         </div>
         <div class="item privateChatButton horizontal" data-ownerid={{actor.id}}>
             {{#if (or (and (eq actor.system.additionalSystems.sleeving.ignoreBio true) (eq morphtype "bio"))(and (eq actor.system.additionalSystems.sleeving.ignoreSynth true) (eq morphtype "synth"))(and (eq actor.system.additionalSystems.sleeving.ignoreInfo true) (eq morphtype "info")))}}
-                <button 
+                <button type="button" 
                     class="chatButton resleeve"  
                     data-type = "stress"   
                     data-stresstitle = "{{stresstitle}}"
@@ -20,7 +20,7 @@
                 </button>
             {{else if actor.system.additionalSystems.sleeving.familiarity}}
                 <div class="flexrow" style="width: 100%;">
-                    <button style="flex: 1 1 70%"
+                    <button type="button" style="flex: 1 1 70%"
                         class="chatButton resleeve"  
                         data-type = "stress"   
                         data-stresstitle = "{{stresstitle}}"
@@ -37,7 +37,7 @@
                         </i>
                     </a></p>
                 </div>
-                <button 
+                <button type="button" 
                     class="chatButton resleeve" 
                     data-type = "{{type}}"    
                     data-integrationtitle = "{{integrationtitle}}"
@@ -47,7 +47,7 @@
                     Roll Integration & Stress
                 </button>
             {{else}}
-                <button 
+                <button type="button" 
                     class="chatButton resleeve" 
                     data-type = "{{type}}"    
                     data-integrationtitle = "{{integrationtitle}}"
@@ -67,7 +67,7 @@
             <span><b>{{morphname}}</b></span><br>
         </div>
         <div class="item privateChatButton horizontal" data-ownerid={{actor.id}}>
-            <button 
+            <button type="button" 
                 class="chatButton resleeve"  
                 data-type = "integration"   
                 data-integrationtitle = "{{integrationtitle}}"

@@ -40,35 +40,59 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     primary: {
       initial: "skills",
       tabs: [
-        { id: "skills", label: "Skills" },
-        { id: "morph", label: "Morph" },
-        { id: "weapons", label: "Weapons" },
-        { id: "vehicles", label: "Vehicles" },
-        { id: "psi", label: "Psi" },
-        { id: "gmInfo", label: "GM Info" }
+        { id: "skills", label: "ep2e.actorSheet.rightTabs.skillsTab" },
+        { id: "morph", label: "ep2e.actorSheet.rightTabs.morphTab" },
+        { id: "weapons", label: "ep2e.actorSheet.rightTabs.inventoryTab" },
+        { id: "vehicles", label: "ep2e.actorSheet.rightTabs.peripheralsTab" },
+        { id: "psi", label: "ep2e.actorSheet.rightTabs.psiTab" },
+        { id: "gmInfo", label: "ep2e.actorSheet.rightTabs.gmInfoTab" }
       ]
     },
     secondary: {
       initial: "ego",
       tabs: [
-        { id: "ego" },
-        { id: "identification" },
-        { id: "muse" }
-      ]
-    },
-    morph: {
-      initial: "sleeved",
-      tabs: [
-        { id: "sleeved" }
-      ]
-    },
-    id: {
-      initial: "active",
-      tabs: [
-        { id: "active" }
+        { id: "ego", label: "ep2e.actorSheet.leftTabs.egoTab" },
+        { id: "identification", label: "ep2e.actorSheet.leftTabs.idTab" },
+        { id: "muse", label: "ep2e.actorSheet.leftTabs.museTab" }
       ]
     }
   };
+
+  _getTabsConfig(group) {
+  if (group === "morph") {
+    const tabs = [];
+
+    for (const body of Object.values(this.document.bodies ?? {})) {
+      const morphId = body?.morphdetails?.[0]?.id;
+      if (!morphId) continue;
+
+      tabs.push({
+        id: this.document.system.activeMorph === morphId ? "sleeved" : morphId
+      });
+    }
+
+    return {
+      initial: "sleeved",
+      tabs
+    };
+  }
+
+  if (group === "id") {
+    const tabs = [];
+
+    for (const item of this.document.ids ?? []) {
+      const idTab = this.document.system.activeID === item.id ? "active" : item.id;
+      tabs.push({ id: idTab });
+    }
+
+    return {
+      initial: "active",
+      tabs
+    };
+  }
+
+  return super._getTabsConfig(group);
+}
 
   tabGroups = {
     primary: "skills",
@@ -82,17 +106,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     context.config = CONFIG.eclipsephase;
     context.isGM = game.user.isGM;
 
+    await this._prepareCharacterItems(context);
+    await this._prepareRenderedHTMLContent(context);
+
+    //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
     context.tabs = {
       primary: this._prepareTabs("primary"),
       secondary: this._prepareTabs("secondary"),
       morph: this._prepareTabs("morph"),
       id: this._prepareTabs("id")
     };
-
+    
     context.tabGroups = this.tabGroups;
-
-    await this._prepareCharacterItems(context);
-    await this._prepareRenderedHTMLContent(context);
 
     return context;
   }
@@ -109,8 +134,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
 
     const actorSheet = "systems/eclipsephase/templates/actor/actor-sheet.html";
-    const npcSheet = "systems/eclipsephase/templates/actor/npc-sheet.html";
-    const goonSheet = "systems/eclipsephase/templates/actor/goon-sheet.html";
     const limitedSheet = "systems/eclipsephase/templates/actor/sheet-limited.html";
 
     if (actor.type === "character") {
@@ -606,7 +629,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
       actor.showEffectsTab=false
       if(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM){
-        var effectList=this.actor.getEmbeddedCollection('ActiveEffect');
+        const effectList = this.document.getEmbeddedCollection("ActiveEffect");
         for(let item of effectList){
           effects.push(item);
         }
@@ -650,12 +673,21 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   }
 
   async _onRender(context, options) {
+    const actor = this.document;
+
     await super._onRender(context, options);
 
     await this.changeTab(this.tabGroups.primary, "primary", { force: true });
-    //await this.changeTab(this.tabGroups.secondary, "secondary", { force: true });
-    //await this.changeTab(this.tabGroups.morph, "morph", { force: true });
-    //await this.changeTab(this.tabGroups.id, "id", { force: true });
+
+    //Sets the opened tab for PC sheets
+    if (actor.type === "character"){
+      await this.changeTab(this.tabGroups.secondary, "secondary", { force: true });
+
+      this._syncManualTabGroup("morph");
+      this._syncManualTabGroup("id");
+
+      
+    }
 
     const html = this.element;
     if (!html) return;
@@ -667,6 +699,49 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     //this._activateItemListeners(html);
   }
+
+async _onClickTab(event) {
+  const target = event.target.closest("[data-action='tab'][data-group][data-tab]");
+  if (!target) return;
+
+  const group = target.dataset.group;
+  const tab = target.dataset.tab;
+
+  // Let Foundry handle the normal top-level static groups
+  if (group === "primary" || group === "secondary") {
+    return super._onClickTab(event);
+  }
+
+  // Handle nested dynamic groups manually
+  if (group === "morph" || group === "id") {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.tabGroups[group] = tab;
+    this._syncManualTabGroup(group);
+    return;
+  }
+
+  return super._onClickTab(event);
+}
+
+_syncManualTabGroup(group) {
+  const root = this.element;
+  if (!root) return;
+
+  const activeTab = this.tabGroups[group];
+  if (!activeTab) return;
+
+  // Update nav items
+  root.querySelectorAll(`nav[data-group="${group}"] [data-action="tab"][data-tab]`).forEach(el => {
+    el.classList.toggle("active", el.dataset.tab === activeTab);
+  });
+
+  // Update tab panes
+  root.querySelectorAll(`.tab[data-group="${group}"][data-tab]`).forEach(el => {
+    el.classList.toggle("active", el.dataset.tab === activeTab);
+  });
+}
 
 }
 
