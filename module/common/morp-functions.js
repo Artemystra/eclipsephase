@@ -1,8 +1,8 @@
-import * as sheetFunction from "../common/common-sheet-functions.js"
+import * as sheetFunction from "./general-sheet-functions.js"
 import * as resleeving from "../rolls/resleeving.js"
 
-export async function resleeveMorph(actor, currentTarget){
-    const dataset = currentTarget[0].dataset;
+export async function resleeveMorph(actor, currentTarget, sheet){
+    const dataset = currentTarget.dataset;
     const itemID = dataset.itemId;
     const newMorph = actor.items.get(itemID);
     const itemName = dataset.name;
@@ -15,6 +15,7 @@ export async function resleeveMorph(actor, currentTarget){
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if(popUp.confirm === true){
+        sheet.tabGroups.morph = "sleeved";
         await actor.update({"system.activeMorph": itemID});
         await actor.update({ "flags.eclipsephase.resleeving": true });
         
@@ -25,7 +26,7 @@ export async function resleeveMorph(actor, currentTarget){
         morphname : newMorph.name
         };
         
-        let html = await renderTemplate(RESLEEVING_MESSAGE, message)
+        let html = await foundry.applications.handlebars.renderTemplate(RESLEEVING_MESSAGE, message)
 
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: actor}),

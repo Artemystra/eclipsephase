@@ -99,13 +99,19 @@
         <div class="alignRight flexGrowQuarter">
         </div>
     </div>
-        {{editor
-        htmlBiography
-        target="system.biography"
-        button=true
-        owner=owner
-        editable=this.options.editable
-        }}
+        {{#if editable}}
+            <prose-mirror
+                id="pcBio"
+                name="system.biography"
+                button="true"
+                editable="true"
+                toggled="false"
+                value="{{biographyValue}}">
+                {{{htmlBiography}}}
+            </prose-mirror>
+        {{else}}
+            {{{htmlBiography}}}
+        {{/if}}
 </div>
 {{else}}
 <div class="tab ego" data-group="primary" data-tab="ego">
@@ -120,13 +126,19 @@
     </div>
     {{/if}}
     <div class="npc-editor">
-        {{editor
-            actor.system.biography
-            target="system.biography"
-            button=true
-            owner=owner
-            editable=this.options.editable
-        }}
+        {{#if editable}}
+            <prose-mirror
+                id="npcBio"
+                name="system.biography"
+                button="true"
+                editable="true"
+                toggled="false"
+                value="{{biographyValue}}">
+                {{{htmlBiography}}}
+            </prose-mirror>
+        {{else}}
+            {{{htmlBiography}}}
+        {{/if}}
     </div>
 </div>
 {{/if}}

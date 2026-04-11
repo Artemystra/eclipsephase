@@ -1,4 +1,4 @@
-import { registerEffectHandlers,registerCommonHandlers } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers } from "../common/general-sheet-functions.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}

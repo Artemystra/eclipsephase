@@ -1,5 +1,5 @@
 import * as Dice from "../rolls/dice.js"
-import { tempEffectCreation, listSelection, tempEffectDeletion } from "../common/common-sheet-functions.js"
+import { tempEffectCreation, listSelection, tempEffectDeletion } from "../common/general-sheet-functions.js"
 
 /**
  * Function to automatically test for SOM and WIL when a body is changed by a player.
@@ -51,7 +51,7 @@ export async function sleevingTest (data) {
     
     chatData.stressTest = stressTest;
     chatData.integrationTest = integrationTest;
-    let html = await renderTemplate(SLEEVE_RESULT, chatData)
+    let html = await foundry.applications.handlebars.renderTemplate(SLEEVE_RESULT, chatData)
 
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
@@ -125,7 +125,7 @@ export async function result (data) {
         chatData.integrationTest = resultData[0]
         chatData.stressTest = resultData[1]
 
-        let html = await renderTemplate(SLEEVE_NEW_RESULT, chatData)
+        let html = await foundry.applications.handlebars.renderTemplate(SLEEVE_NEW_RESULT, chatData)
         
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
@@ -168,7 +168,7 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
             "type": "defaultDamage",
             "copy": "ep2e.morph.sleeving.announce.result.integrationCopy"
         }
-        let html = await renderTemplate(Dice.WEAPON_DAMAGE_OUTPUT, message);
+        let html = await foundry.applications.handlebars.renderTemplate(Dice.WEAPON_DAMAGE_OUTPUT, message);
         ChatMessage.create({    
             speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
             content: html

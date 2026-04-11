@@ -1,7 +1,6 @@
 <form>
   <div class="alignCenter">
 
-    <!-- heal damage partially from health bar (common-sheet-functions.js healDamage())-->
     {{#if (eq dialogType "healDamage")}}
       <div class="contentBoxMargin">
         <div class="flexrow subheader">
@@ -122,7 +121,6 @@
       {{/if}}
     {{/if}}
 
-    <!-- Bring a rule text button in the Chat (common-sheet-functions.js line 183 onwards)-->
     {{#if (eq dialogType "information")}}
       <!-- if not rolled from a skill/item)-->
       {{#if (eq rolledfrom "info")}}
@@ -262,7 +260,6 @@
       </div>
       {{/if}}
 
-      <!-- Ask for confirmation (Confirm/Cancel) (common-sheet-functions.js line 135 onwards)-->
       {{#if (eq dialogType "confirmation")}}
       <div class="item" style="margin-bottom: 10px;">
           <!--Only show headline if defined-->

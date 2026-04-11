@@ -1,4 +1,4 @@
-import { registerEffectHandlers,registerCommonHandlers,itemToggle,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemToggle,moreInfo } from "../common/general-sheet-functions.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -185,7 +185,7 @@ async function autoBot(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTar
   let deleteButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
   const dialogType = "autoBot"
   const template = "systems/eclipsephase/templates/chat/pop-up.html";
-  const html = await renderTemplate(template, {popUpHeadline, popUpCopy, dialogType, popUpInfo, popUpTarget});
+  const html = await foundry.applications.handlebars.renderTemplate(template, {popUpHeadline, popUpCopy, dialogType, popUpInfo, popUpTarget});
 
   return new Promise(resolve => {
       const data = {

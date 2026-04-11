@@ -19,20 +19,22 @@
                         {{/if}}
                     {{/each}}
                 </nav>
-            <div class="contentleft">
-                {{!-- Left Body --}}
-                <section class="secondary-body">
-                    <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="secondary" data-tab="ego">
-                        {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
-                    </div>
-                    <div class="tab {{#if tabs.primary.morph.active}}active{{/if}}" data-group="secondary" data-tab="identification">
-                        {{> systems/eclipsephase/templates/actor/partials/tabs/id-tab.html }}
-                    </div>
-                    <div class="tab {{#if tabs.primary.vehicles.active}}active{{/if}}" data-group="secondary" data-tab="muse">
-                        {{> systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html }}
-                    </div>
-                </section>
-            </div>
+            {{#if (eq actor.type 'character')}}
+                <div class="contentleft">
+                    {{!-- Left Body --}}
+                    <section class="secondary-body">
+                        <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="secondary" data-tab="ego">
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
+                        </div>
+                        <div class="tab {{#if tabs.primary.morph.active}}active{{/if}}" data-group="secondary" data-tab="identification">
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/id-tab.html }}
+                        </div>
+                        <div class="tab {{#if tabs.primary.vehicles.active}}active{{/if}}" data-group="secondary" data-tab="muse">
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html }}
+                        </div>
+                    </section>
+                </div>
+            {{/if}}
         </div>
         {{#if (eq actor.type 'character')}}
             <div class="wrappercenter">
@@ -42,18 +44,42 @@
             {{!-- Primary Tab Navigation --}}
                 <nav class="primary-tabs tabs">
                     {{#each tabs.primary as |tab|}}
-                        {{#if (eq @root.actor.type 'character')}}
-                        <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
-                            {{localize tab.label}}
-                        </a>
-                        {{else}}
-                            {{#if (ne tab.id 'morph')}}
-                                <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
-                                    {{localize tab.label}}
-                                </a>
+
+                        
+                            <!-- Character Actor tabs-->
+                            {{#if (eq tab.id 'psi')}}
+                                {{#if @root.actor.system.additionalSystems.hasPsi}}
+                                    <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                                        {{localize tab.label}}
+                                    </a>
+                                {{else}}
+                                {{/if}}
+                            {{else if (eq tab.id 'vehicles')}}
+                                {{#if (or @root.actor.vehicle.vehicle.length @root.actor.vehicle.robot.length @root.actor.vehicle.animal.length)}}
+                                    <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                                        {{localize tab.label}}
+                                    </a>
+                                {{else}}
+                                {{/if}}
                             {{else}}
+                                {{#if (eq @root.actor.type 'character')}}
+                                    {{#if (ne tab.id 'ego')}}
+                                        <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                                            {{localize tab.label}}
+                                        </a>
+                                    {{else}}
+                                    {{/if}}
+                                {{else}}
+                                    {{#if (ne tab.id 'morph')}}
+                                        <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                                            {{localize tab.label}}
+                                        </a>
+                                    {{else}}
+                                    {{/if}}
+                                {{/if}}
                             {{/if}}
-                        {{/if}}
+
+                                
                     {{/each}}
                 </nav>
                 {{!-- Health Overview --}}
@@ -65,6 +91,11 @@
                 <div class="contentcenter npcVariant2">
             {{/if}}
                 <section class="primary-body">
+                    {{#if (ne actor.type 'character')}}
+                    <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="primary" data-tab="ego">
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
+                    </div>
+                    {{/if}}
                     <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="primary" data-tab="skills">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html }}
                     </div>

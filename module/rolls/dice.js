@@ -1,6 +1,6 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
-import { prepareRecipients } from "../common/common-sheet-functions.js";
+import { prepareRecipients } from "../common/general-sheet-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -568,7 +568,7 @@ async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole,
     if(traits)
         specialEffects = Object.keys(traits.confirmationEffects).length
 
-    const html = await renderTemplate(rollData.template, {specName, pool, actorWhole, actorType, rollType, traits, specialEffects, rolledFrom, rollData})
+    const html = await foundry.applications.handlebars.renderTemplate(rollData.template, {specName, pool, actorWhole, actorType, rollType, traits, specialEffects, rolledFrom, rollData})
 
     function extractFormValues(html) {
     let form = html[0].querySelector("form")
@@ -971,7 +971,7 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
         message.weaponName = weaponSelected.weaponName;
         message.ammoLoadedName = weaponSelected.weapon.system.ammoSelected.name
     
-        let html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+        let html = await foundry.applications.handlebars.renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
     
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: actorWhole}),
@@ -1038,7 +1038,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
         message.rollType = rollType
     }
 
-    let html = await renderTemplate(htmlTemplate, message)
+    let html = await foundry.applications.handlebars.renderTemplate(htmlTemplate, message)
 
     
     //Returns a roll without producing the output directly to the chat

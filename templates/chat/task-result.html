@@ -23,7 +23,7 @@
             <strong>{{localize "ep2e.chat.buttonLabel.swapResult"}} <i class="fa-solid fa-rotate"></i></strong>
           </div>
         </div>
-        <div class="showMore noShow">
+        <div class="showMore noShow" data-display="flex">
           <div class="chatControls">
             {{#if (ne actor.type "goon")}}
               {{#if (gt pools.skillPoolValue 0)}}
@@ -48,7 +48,7 @@
             <strong>{{localize "ep2e.chat.buttonLabel.upgradeResult"}} <i class="fa-regular fa-circle-up"></i></strong>
           </div>
         </div>
-        <div class="showMore noShow">
+        <div class="showMore noShow" data-display="flex">
           <div class="chatControls">
             {{#if (ne actor.type "goon")}}
               {{#if (gt pools.skillPoolValue 0)}}
@@ -73,7 +73,7 @@
             <strong>{{localize "ep2e.chat.buttonLabel.mitigateResult"}} <i class="fa-solid fa-bolt"></i></strong>
           </div>
         </div>
-        <div class="showMore noShow">
+        <div class="showMore noShow" data-display="flex">
           <div class="chatControls">
             {{#if (ne actor.type "goon")}}
               {{#if (gt pools.skillPoolValue 0)}}
@@ -117,7 +117,7 @@
           {{/if}}
         </div>
       </div>
-      <div class="showMore noShow">
+      <div class="showMore noShow"  data-display="flex">
         <table style="margin-bottom: 0px;">
           <tr>
             <td class="table-dice-label">

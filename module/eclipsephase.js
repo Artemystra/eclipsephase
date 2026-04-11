@@ -15,8 +15,8 @@ import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
-import  { confirmation } from "./common/common-sheet-functions.js"
-import  * as helperFunction from "./common/common-helper-functions.js"
+import  { confirmation } from "./common/general-sheet-functions.js"
+import  * as helperFunction from "./common/general-helper-functions.js"
 import  * as update from "./common/migration.js";
 
 async function registerSystemSettings() {
@@ -492,7 +492,7 @@ Hooks.once("ready", async function() {
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+    const html = await foundry.applications.handlebars.renderTemplate(template, {endMigration, messageHeadline, messageCopy});
     const options = messageWidth ? {width: [messageWidth]} : {width:600};
 
     return new Promise(resolve => {
@@ -518,7 +518,7 @@ Hooks.once("ready", async function() {
 
   async function informationStart(endMigration, messageHeadline, messageCopy) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+    const html = await foundry.applications.handlebars.renderTemplate(template, {endMigration, messageHeadline, messageCopy});
 
     return new Promise(resolve => {
         const data = {
@@ -543,7 +543,7 @@ Hooks.once("ready", async function() {
     const messageHeadline = "ep2e.migration.headlineEnd"
     const messageCopy = "ep2e.migration.done"
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
+    const html = await foundry.applications.handlebars.renderTemplate(template, {endMigration, messageHeadline, messageCopy});
 
     return new Promise(resolve => {
         const data = {

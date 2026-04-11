@@ -147,7 +147,7 @@ class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
               const activeCharsCount = charList[0].length;
               const otherCharsCount = charList[1].length;
               const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
-              const html = await renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
+              const html = await foundry.applications.handlebars.renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
 
               if(activeCharsCount + otherCharsCount > 0){
                 return new Promise(resolve => {
@@ -215,7 +215,7 @@ class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
               const activeCharsCount = charList[0].length;
               const otherCharsCount = charList[1].length;
               const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
-              const html = await renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
+              const html = await foundry.applications.handlebars.renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
 
               if(activeCharsCount + otherCharsCount > 0){
                 return new Promise(resolve => {

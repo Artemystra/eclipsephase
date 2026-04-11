@@ -1,6 +1,6 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
-import { prepareRecipients } from "../common/common-sheet-functions.js";
+import { prepareRecipients } from "../common/general-sheet-functions.js";
 import { prepareWeapon } from "./damage.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
@@ -37,7 +37,7 @@ export async function usePoolFromChat(data){
         message.newValue = dataset.newvalue ? parseInt(dataset.newvalue) : false;
         message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
         
-        let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+        let html = await foundry.applications.handlebars.renderTemplate(POOL_USAGE_OUTPUT, message)
         let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: recipientList} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
 
         ChatMessage.create(attr)
@@ -109,7 +109,7 @@ export async function update(options, pool, task, actorWhole){
         message.type = "notEnoughPool";
         message.poolName = poolType;
 
-        let html = await renderTemplate(POOL_USAGE_OUTPUT, message)
+        let html = await foundry.applications.handlebars.renderTemplate(POOL_USAGE_OUTPUT, message)
         
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: actorWhole}),

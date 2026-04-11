@@ -678,7 +678,7 @@ async function autoPushSelector(dialogType) {
   let dialog = 'systems/eclipsephase/templates/chat/pop-up.html';
   let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
   let selectButton = game.i18n.localize('ep2e.actorSheet.button.select');
-  const html = await renderTemplate(dialog, {dialogType});
+  const html = await foundry.applications.handlebars.renderTemplate(dialog, {dialogType});
 
   return new Promise(resolve => {
       const data = {

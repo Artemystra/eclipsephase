@@ -1,7 +1,7 @@
 <div class="tab body main-tab-pc" data-group="primary" data-tab="morph">
     <div class="flexrow contentBox noMargin" style="max-height: 850px; height: 100%;">
         <!-- Subnav Area -->
-        <div class="scrolly" style="flex-grow: 0.3; max-height: 685px;">
+        <div class="scrolly" style="flex-grow: 0.3; max-height: 678px; min-height: 678px;">
             <nav class="morph-tabs subtabs" data-group="morph">
                 {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab, as it needs to be identified this way during defaultOptions setup in EPactorSheet.js -->
@@ -14,15 +14,15 @@
                         <a data-action="tab" data-group="morph" data-tab="{{body.morphdetails.0.id}}" class="item {{#if (eq @root.tabGroups.morph body.morphdetails.0.id)}}active{{/if}}">
                             <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
                             <div style="min-height: 20px; width: 100%;">
+                                <button type="button" 
+                                    class="resource-label editWithLabel button sheetButton sleeveButton" 
+                                    title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" 
+                                    data-item-id="{{body.morphdetails.0._id}}"
+                                    data-actorid="{{@root.actor.id}}">
+                                    {{localize "ep2e.actorSheet.button.sleeveMorph"}}
+                                </button>
                             </div>
                         </a>
-                        <button type="button" 
-                            class="resource-label editWithLabel button sheetButton sleeveButton" 
-                            title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}" 
-                            data-item-id="{{body.morphdetails.0._id}}"
-                            data-actorid="{{@root.actor.id}}">
-                            {{localize "ep2e.actorSheet.button.sleeveMorph"}}
-                        </button>
                     {{/if}}
                 {{/each}}
             </nav>

@@ -1,4 +1,4 @@
-import { registerEffectHandlers,registerCommonHandlers,itemToggle,moreInfo } from "../common/common-sheet-functions.js";
+import { registerEffectHandlers,registerCommonHandlers,itemToggle,moreInfo } from "../common/general-sheet-functions.js";
 import * as DICE from "../rolls/dice.js";
 
 /**

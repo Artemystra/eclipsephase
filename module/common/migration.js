@@ -941,7 +941,7 @@ export async function migrationPre093(startMigration, endMigration){
     let dialogType = "weaponCategorization";
     let title = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
     const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-    const html = await renderTemplate(template, {actorsInQuestion, dialogType});
+    const html = await foundry.applications.handlebars.renderTemplate(template, {actorsInQuestion, dialogType});
 
     
     return new Promise(resolve => {
