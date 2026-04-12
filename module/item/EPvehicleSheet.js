@@ -205,7 +205,7 @@ async function autoBot(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTar
           close: () => resolve ({confirm: false})
       };
       let options = {width:250}
-      new Dialog(data, options).render(true);
+      new foundry.applications.api.DialogV2(data, options).render(true);
   });
 }
 

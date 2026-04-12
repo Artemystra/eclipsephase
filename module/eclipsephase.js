@@ -492,75 +492,94 @@ Hooks.once("ready", async function() {
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await foundry.applications.handlebars.renderTemplate(template, {endMigration, messageHeadline, messageCopy});
-    const options = messageWidth ? {width: [messageWidth]} : {width:600};
-
-    return new Promise(resolve => {
-        const data = {
-            title: "Migration Needed",
-            content: html,
-            buttons: {
-                cancel: {
-                    label: "Cancel",
-                    callback: html => resolve ({cancelled: true})
-                },
-                normal: {
-                    label: "Start Migration",
-                    callback: html => resolve ({start: true})
-                }
-            },
-            default: "normal",
-            close: () => resolve ({cancelled: true})
-        };
-        new Dialog(data, options).render(true);
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      endMigration,
+      messageHeadline,
+      messageCopy
     });
+
+    const width = messageWidth ?? 600;
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: "Migration Needed" },
+      content,
+      buttons: [
+        {
+          action: "cancel",
+          label: "Cancel",
+          callback: () => ({ cancelled: true })
+        },
+        {
+          action: "start",
+          label: "Start Migration",
+          default: true,
+          callback: () => ({ start: true })
+        }
+      ],
+      modal: true,
+      rejectClose: false,
+      position: { width }
+    });
+
+    return result ?? { cancelled: true };
   }
 
   async function informationStart(endMigration, messageHeadline, messageCopy) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await foundry.applications.handlebars.renderTemplate(template, {endMigration, messageHeadline, messageCopy});
-
-    return new Promise(resolve => {
-        const data = {
-            title: "Migration Needed",
-            content: html,
-            buttons: {
-                normal: {
-                    label: "Close",
-                    callback: html => resolve ({start: true})
-                }
-            },
-            default: "normal",
-            close: () => resolve ({cancelled: true})
-        };
-        let options = {width:600}
-        new Dialog(data, options).render(true);
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      endMigration,
+      messageHeadline,
+      messageCopy
     });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: "Migration Needed" },
+      content,
+      buttons: [
+        {
+          action: "close",
+          label: "Close",
+          default: true,
+          callback: () => ({ start: true })
+        }
+      ],
+      modal: true,
+      rejectClose: false,
+      position: { width: 600 }
+    });
+
+    return result ?? { cancelled: true };
   }
 
 
   async function migrationEnd(endMigration) {
-    const messageHeadline = "ep2e.migration.headlineEnd"
-    const messageCopy = "ep2e.migration.done"
+    const messageHeadline = "ep2e.migration.headlineEnd";
+    const messageCopy = "ep2e.migration.done";
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await foundry.applications.handlebars.renderTemplate(template, {endMigration, messageHeadline, messageCopy});
 
-    return new Promise(resolve => {
-        const data = {
-            title: "Migration Needed",
-            content: html,
-            buttons: {
-                normal: {
-                    label: "Thank you!",
-                    callback: html => resolve ({start: true})
-                }
-            },
-            default: "normal",
-            close: () => resolve ({cancelled: true})
-        };
-        let options = {width:250}
-        new Dialog(data, options).render(true);
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      endMigration,
+      messageHeadline,
+      messageCopy
     });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: "Migration Needed" },
+      content,
+      buttons: [
+        {
+          action: "close",
+          label: "Thank you!",
+          default: true,
+          callback: () => ({ start: true })
+        }
+      ],
+      modal: true,
+      rejectClose: false,
+      position: { width: 250 }
+    });
+
+    return result ?? { cancelled: true };
   }
 });
 

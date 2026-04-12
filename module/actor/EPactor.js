@@ -675,32 +675,33 @@ export default class EPactor extends Actor {
 }
 
 async function autoPushSelector(dialogType) {
-  let dialog = 'systems/eclipsephase/templates/chat/pop-up.html';
-  let dialogName = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
-  let selectButton = game.i18n.localize('ep2e.actorSheet.button.select');
-  const html = await foundry.applications.handlebars.renderTemplate(dialog, {dialogType});
+  const dialog = "systems/eclipsephase/templates/chat/pop-up.html";
+  const dialogName = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+  const selectButton = game.i18n.localize("ep2e.actorSheet.button.select");
+  const content = await foundry.applications.handlebars.renderTemplate(dialog, { dialogType });
 
-  return new Promise(resolve => {
-      const data = {
-          title: dialogName,
-          content: html,
-          buttons: {
-              normal: {
-                  label: selectButton,
-                  callback: html => resolve(_autoPushSelection(html[0].querySelector("form")))
-              }
-          },
-          default: "normal",
-          close: () => resolve ({cancelled: true})
-      };
-      let options = {width:315}
-      new Dialog(data, options).render(true);
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: dialogName },
+    content,
+    buttons: [
+      {
+        action: "select",
+        label: selectButton,
+        default: true,
+        callback: (event, button) => _autoPushSelection(button.form)
+      }
+    ],
+    position: { width: 315 },
+    modal: true,
+    rejectClose: false
   });
+
+  return result ?? { cancelled: true };
 }
 
 //General skill check results
 function _autoPushSelection(form) {
-    return {
-        pushType: form.autoPush ? form.autoPush.value : false
-    }
+  return {
+    pushType: form?.autoPush ? form.autoPush.value : false
+  };
 }

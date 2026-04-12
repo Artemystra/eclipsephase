@@ -562,51 +562,78 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
  * @returns {Promise<Object>} - The values of the form when submitted
  */
 async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom) {
+let specialEffects;
+const actorType = actorWhole.type;
 
-    let specialEffects
-    const actorType = actorWhole.type
-    if(traits)
-        specialEffects = Object.keys(traits.confirmationEffects).length
+if (traits) {
+    specialEffects = Object.keys(traits.confirmationEffects).length;
+}
 
-    const html = await foundry.applications.handlebars.renderTemplate(rollData.template, {specName, pool, actorWhole, actorType, rollType, traits, specialEffects, rolledFrom, rollData})
+const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
+    specName,
+    pool,
+    actorWhole,
+    actorType,
+    rollType,
+    traits,
+    specialEffects,
+    rolledFrom,
+    rollData
+});
 
-    function extractFormValues(html) {
-    let form = html[0].querySelector("form")
+function extractFormValues(form) {
+    const values = {};
 
-    let values = {}
+    for (const name of rollData.names) {
+    const field = form?.elements?.[name];
 
-    for(let name of rollData.names)
-        if (form[name] === undefined){
-            values[name] = null
-        }
-        else{
-            values[name] = form[name].value === "on" ? form[name].checked : form[name].value;
-        }
-        return values
+    if (field === undefined || field === null) {
+        values[name] = null;
+        continue;
     }
 
-  return new Promise((resolve, reject) => {
-    let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
-    let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
-    const data = {
-        title: rollData.title,
-        content: html,
-        buttons: {
-            cancel: {
-                label: cancelButton.title,
-                callback: (html) => resolve({cancelled: true})
-            },
-            normal: {
-                label: rollButton.title,
-                callback: (html) => resolve(extractFormValues(html))
-            }
-        },
-        default: 'normal',
-        close: () => resolve({cancelled: true})
+    if (field instanceof RadioNodeList) {
+        values[name] = field.value ?? null;
+        continue;
     }
-    let options = rollData.templateSize
-    new Dialog(data, options).render(true);
-    })
+
+    if (field.type === "checkbox") {
+        values[name] = field.checked;
+        continue;
+    }
+
+    values[name] = field.value;
+    }
+
+    return values;
+}
+
+const cancelButton = new Localizer("ep2e.roll.dialog.button.cancel");
+const rollButton = new Localizer("ep2e.roll.dialog.button.roll");
+
+const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: rollData.title },
+    content,
+    buttons: [
+    {
+        action: "cancel",
+        label: cancelButton.title,
+        callback: () => ({ cancelled: true })
+    },
+    {
+        action: "roll",
+        label: rollButton.title,
+        default: true,
+        callback: (event, button) => extractFormValues(button.form)
+    }
+    ],
+    modal: true,
+    rejectClose: false,
+    ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
+    ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
+});
+
+return result ?? { cancelled: true };
 }
 
 /**

@@ -583,35 +583,41 @@ async function barDown(bar, overBar, oldBarValue, oldOverBarValue, barValue, ove
 //Special Dialogs
 
 async function healingDialog(dialog, type, dialogType, enhancements, enhancementsCount) {
-  let dialogName = game.i18n.localize("ep2e.skills.pool.dialogHeadline");
-  let cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
-  let confirmButton = game.i18n.localize("ep2e.actorSheet.button.confirm");
-  const renderedHtml = await foundry.applications.handlebars.renderTemplate(dialog, { type, dialogType, enhancements, enhancementsCount });
+  const dialogName = game.i18n.localize("ep2e.skills.pool.dialogHeadline");
+  const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
+  const confirmButton = game.i18n.localize("ep2e.actorSheet.button.confirm");
 
-  return new Promise(resolve => {
-    const data = {
-      title: dialogName,
-      content: renderedHtml,
-      buttons: {
-        cancel: {
-          label: cancelButton,
-          callback: () => resolve({ cancelled: true })
-        },
-        normal: {
-          label: confirmButton,
-          callback: dialogHtml => {
-            const root = dialogHtml instanceof HTMLElement ? dialogHtml : dialogHtml?.[0];
-            const form = root?.querySelector("form");
-            resolve(_healingResult(form, enhancements, type));
-          }
-        }
-      },
-      default: "normal",
-      close: () => resolve({ cancelled: true })
-    };
-    let options = { width: 315 };
-    new Dialog(data, options).render(true);
+  const content = await foundry.applications.handlebars.renderTemplate(dialog, {
+    type,
+    dialogType,
+    enhancements,
+    enhancementsCount
   });
+
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: dialogName },
+    content,
+    buttons: [
+      {
+        action: "cancel",
+        label: cancelButton,
+        callback: () => ({ cancelled: true })
+      },
+      {
+        action: "confirm",
+        label: confirmButton,
+        default: true,
+        callback: (event, button) => {
+          return _healingResult(button.form, enhancements, type);
+        }
+      }
+    ],
+    position: { width: 315 },
+    modal: true,
+    rejectClose: false
+  });
+
+  return result ?? { cancelled: true };
 }
 
 //Healing configurator

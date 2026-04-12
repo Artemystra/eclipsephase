@@ -715,6 +715,10 @@ span.neutral {
   backdrop-filter: blur(4px);
 }
 
+.dialog .window-content{
+  padding: 0.5rem;
+}
+
 #sidebar {
   background-color: rgba(0,0,0,0.5)!important;
   backdrop-filter: blur(6px);
@@ -919,7 +923,7 @@ input[type="healthPanel"],
 .healthOverlayRow{
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding-bottom: 10px;
 }
 
@@ -1173,7 +1177,7 @@ a:hover,
 .eclipsephase .psi-circle {
   display: flex;
   border: 2px solid var(--inactive);
-  font-size: 16px;
+  font-size: 14px;
   max-width: 24px;
   max-height: 24px;
   margin-right: 10px;
@@ -1195,7 +1199,7 @@ a:hover,
 .eclipsephase .psiFreeTextElement {
   text-align: left; 
   min-height: 40px; 
-  font-size: 16px;
+  font-size: 14px;
   max-width: 88%;
 }
 
@@ -1475,7 +1479,7 @@ button.restReset {
 
 table {
   border: none;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.3rem 0;
 }
 
 table tr:nth-child(odd){
@@ -1531,7 +1535,7 @@ h3.subheader {
   padding: 0.3em 0.5em 0.2em 0.5em;
   font-weight: bold;
   border: 0;
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   margin-bottom: -3px;
@@ -1556,7 +1560,7 @@ h3.subheaderMirror {
   font-weight: bold;
   text-align: end;
   border: 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 h3.subheaderBlank {
@@ -1564,7 +1568,7 @@ h3.subheaderBlank {
   font-weight: bold;
   text-align: center;
   border: 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .flexGrowThreeQuarter {
@@ -2223,6 +2227,7 @@ h3.healthSubheadline {
 button.epStandard{
   min-height: 25px;
   margin-right: 10px;
+  font-size: var(--font-h6-size);
 }
 
 button.epTextlink{

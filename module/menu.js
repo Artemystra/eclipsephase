@@ -114,27 +114,30 @@ class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
                 }
             })
 
-            rezMenu.addEventListener("click", async (event) => {
-                let charList = getActorsWithOwners()
+            rezMenu.addEventListener("click", async event => {
+              const charList = getActorsWithOwners();
+              const charSelect = await selectCharsToRez(charList);
 
-                let charSelect = await selectCharsToRez(charList)
+              if (charSelect.cancelled) return;
 
-                if(charSelect.cancelled){
-                  return
+              const generalRez = Number(charSelect?.updateList?.[0]?.value ?? 0);
+
+              for (const row of charSelect.updateList.slice(1)) {
+
+                if (!row?.id) continue;
+
+                const actor = game.actors.get(row.id);
+                if (!actor) continue;
+
+                const currentRez = Number(actor.system?.rezPoints?.value ?? 0);
+                const privateRez = Number(row.value ?? 0);
+                const newRez = generalRez + privateRez + currentRez;
+
+                if (generalRez > 0 || privateRez > 0) {
+                  await actor.update({ "system.rezPoints.value": newRez });
                 }
-                
-                let resetCount = charSelect.updateList.length;
-                const generalRez = Number(charSelect?.updateList[0]?.value ?? 0);
-                for (let entry=1; entry<resetCount; entry++){
-                    const actor = game.actors.get(charSelect.updateList[entry].id);
-                    const currentRez = actor.system.rezPoints.value;
-                    const privateRez = Number(charSelect?.updateList[entry]?.value ?? 0);
-                    const newRez = generalRez + privateRez + currentRez;
-                    if(generalRez > 0 || privateRez > 0){
-                      actor.update({"system.rezPoints.value" : newRez})
-                    }
-                  }
-            })
+              }
+            });
 
             async function selectCharsToRest(charList){
               let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
@@ -149,57 +152,82 @@ class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
               const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
               const html = await foundry.applications.handlebars.renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
 
-              if(activeCharsCount + otherCharsCount > 0){
-                return new Promise(resolve => {
-                    const data = {
-                        title: title,
-                        content: html,
-                        buttons: {
-                          cancel: {
-                            label: cancelButton,
-                            callback: html => resolve ({cancelled: true})
-                          },
-                          normal: {
-                              label: resetButton,
-                              callback: html => resolve(_updatePlayerCharacter(html[0].querySelector("form")))
-                          }
-                        },
-                        default: "normal",
-                        render: (html) => {
-                          const selectAllCheckbox = html.find('#resetRestSelectAll');
-                          selectAllCheckbox.on('change', (e) => {
-                            checkAllCharacters(html, (! e.target.checked));
-                          });
-                          const charCheckBoxes = getCharacterCheckboxes(html, charList);
-                          charCheckBoxes.on('change', (e) => {
-                            const checkedBoxes = charCheckBoxes.toArray().reduce((cnt, el) => (cnt + el.checked), 0);
-                            selectAllCheckbox.get(0).checked = (charCheckBoxes.length === checkedBoxes);
-                          });
-                        },
-                        close: () => resolve ({cancelled: true})
-                    };
-                    let options = {width:536}
-                    new Dialog(data, options).render(true);
+              if (activeCharsCount + otherCharsCount > 0) {
+                const result = await foundry.applications.api.DialogV2.wait({
+                  window: { title },
+                  content: html,
+                  buttons: [
+                    {
+                      action: "cancel",
+                      label: cancelButton,
+                      callback: () => ({ cancelled: true })
+                    },
+                    {
+                      action: "confirm",
+                      label: resetButton,
+                      default: true,
+                      callback: (event, button) => _updatePlayerCharacter(button.form)
+                    }
+                  ],
+                  position: { width: 536 },
+                  modal: true,
+                  rejectClose: false,
+                  render: (event, dialog) => {
+                    const root = dialog.element;
+                    if (!root) return;
+
+                    const selectAllCheckbox = root.querySelector("#resetRestSelectAll");
+                    const charCheckBoxes = getCharacterCheckboxes(root);
+
+                    if (selectAllCheckbox) {
+                      selectAllCheckbox.addEventListener("change", e => {
+                        checkAllCharacters(root, !e.currentTarget.checked);
+                      });
+                    }
+
+                    charCheckBoxes.forEach(box => {
+                      box.addEventListener("change", () => {
+                        const checkedBoxes = charCheckBoxes.reduce((cnt, el) => {
+                          return cnt + (el.checked ? 1 : 0);
+                        }, 0);
+
+                        if (selectAllCheckbox) {
+                          selectAllCheckbox.checked = charCheckBoxes.length === checkedBoxes;
+                        }
+                      });
+                    });
+                  }
                 });
+
+                return result ?? { cancelled: true };
               }
-              else{
-                return new Promise(resolve => {
-                    const data = {
-                        title: title,
-                        content: html,
-                        buttons: {
-                          cancel: {
-                            label: closeButton,
-                            callback: html => resolve ({cancelled: true})
-                          }
-                        },
-                        default: "normal",
-                        close: () => resolve ({cancelled: true})
-                    };
-                    let options = {width:536}
-                    new Dialog(data, options).render(true);
+              else {
+                const result = await foundry.applications.api.DialogV2.wait({
+                  window: { title },
+                  content: html,
+                  buttons: [
+                    {
+                      action: "close",
+                      label: closeButton,
+                      default: true,
+                      callback: () => ({ cancelled: true })
+                    }
+                  ],
+                  position: { width: 536 },
+                  modal: true,
+                  rejectClose: false
                 });
+
+                return result ?? { cancelled: true };
               }
+
+function checkAllCharacters(root, inverseCheckedState) {
+  const checkboxes = getCharacterCheckboxes(root);
+
+  checkboxes.forEach(box => {
+    box.checked = !inverseCheckedState;
+  });
+}
 
             }
 
@@ -217,45 +245,48 @@ class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
               const template = "systems/eclipsephase/templates/menu/menu-list-dialog.html";
               const html = await foundry.applications.handlebars.renderTemplate(template, {activeChars, otherChars, activeCharsCount, otherCharsCount, menuType});
 
-              if(activeCharsCount + otherCharsCount > 0){
-                return new Promise(resolve => {
-                    const data = {
-                        title: title,
-                        content: html,
-                        buttons: {
-                          cancel: {
-                            label: cancelButton,
-                            callback: html => resolve ({cancelled: true})
-                          },
-                          normal: {
-                              label: resetButton,
-                              callback: html => resolve(_updatePlayerCharacter(html[0].querySelector("form")))
-                          }
-                        },
-                        default: "normal",
-                        close: () => resolve ({cancelled: true})
-                    };
-                    let options = {width:536}
-                    new Dialog(data, options).render(true);
+              if (activeCharsCount + otherCharsCount > 0) {
+                const result = await foundry.applications.api.DialogV2.wait({
+                  window: { title },
+                  content: html,
+                  buttons: [
+                    {
+                      action: "cancel",
+                      label: cancelButton,
+                      callback: () => ({ cancelled: true })
+                    },
+                    {
+                      action: "confirm",
+                      label: resetButton,
+                      default: true,
+                      callback: (event, button) => _updatePlayerCharacter(button.form)
+                    }
+                  ],
+                  position: { width: 536 },
+                  modal: true,
+                  rejectClose: false
                 });
+
+                return result ?? { cancelled: true };
               }
-              else{
-                return new Promise(resolve => {
-                    const data = {
-                        title: title,
-                        content: html,
-                        buttons: {
-                          cancel: {
-                            label: closeButton,
-                            callback: html => resolve ({cancelled: true})
-                          }
-                        },
-                        default: "normal",
-                        close: () => resolve ({cancelled: true})
-                    };
-                    let options = {width:536}
-                    new Dialog(data, options).render(true);
+              else {
+                const result = await foundry.applications.api.DialogV2.wait({
+                  window: { title },
+                  content: html,
+                  buttons: [
+                    {
+                      action: "close",
+                      label: closeButton,
+                      default: true,
+                      callback: () => ({ cancelled: true })
+                    }
+                  ],
+                  position: { width: 536 },
+                  modal: true,
+                  rejectClose: false
                 });
+
+                return result ?? { cancelled: true };
               }
 
             }
@@ -327,8 +358,10 @@ class EPmenuLayer extends foundry.canvas.layers.PlaceablesLayer {
            * @param html {jQuery}
            * @returns {jQuery}
            */
-          function getCharacterCheckboxes(html) {
-            return html.find('input[data-checkbox-type="player-character"][data-owner-id]');
+          function getCharacterCheckboxes(root) {
+            return Array.from(
+              root.querySelectorAll('input[data-checkbox-type="player-character"][data-owner-id]')
+            );
           }
         }
     }

@@ -936,30 +936,36 @@ export async function migrationPre093(startMigration, endMigration){
       return {endMigration}
   }
 
-  async function weaponCategorization(actorsInQuestion){
-    let resetButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
-    let dialogType = "weaponCategorization";
-    let title = game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
+  async function weaponCategorization(actorsInQuestion) {
+    const resetButton = game.i18n.localize("ep2e.actorSheet.button.confirm");
+    const dialogType = "weaponCategorization";
+    const title = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
     const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-    const html = await foundry.applications.handlebars.renderTemplate(template, {actorsInQuestion, dialogType});
 
-    
-    return new Promise(resolve => {
-        const data = {
-            title: title,
-            content: html,
-            buttons: {
-              normal: {
-                  label: resetButton,
-                  callback: html => resolve(_proWeaponCategorization(html[0].querySelector("form")))
-              }
-            },
-            default: "normal",
-            close: () => resolve ({cancelled: true})
-        };
-        let options = {width:791}
-        new Dialog(data, options).render(true);
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      actorsInQuestion,
+      dialogType
     });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title },
+      content,
+      buttons: [
+        {
+          action: "confirm",
+          label: resetButton,
+          default: true,
+          callback: (event, button) => {
+            return _proWeaponCategorization(button.form);
+          }
+        }
+      ],
+      modal: true,
+      rejectClose: false,
+      position: { width: 791 }
+    });
+
+    return result ?? { cancelled: true };
   }
 
   //selectChars results
@@ -1496,7 +1502,6 @@ export async function migrationPre150(startMigration, endMigration) {
   // Item types to delete (both on actors AND from world Items directory)
   const DELETE_ITEM_TYPES = new Set(["morphTrait", "trait", "flaw", "morphFlaw"]);
 
-
   const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
   const total = actors.length || 1;
 
@@ -1509,12 +1514,14 @@ export async function migrationPre150(startMigration, endMigration) {
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) {
     console.error(`[EP Migration ${latestUpdate}] Pack eclipsephase.morphs not found`);
+    uiBar.fail("Migration cancelled: morph pack not found");
     return { endMigration: false };
   }
 
   const baseMorphDoc = await pack.getDocument("suPRftVdLzcNhOH4");
   if (!baseMorphDoc) {
     console.error(`[EP Migration ${latestUpdate}] Morph suPRftVdLzcNhOH4 not found in pack`);
+    uiBar.fail("Migration cancelled: base morph not found");
     return { endMigration: false };
   }
 
@@ -1541,13 +1548,18 @@ export async function migrationPre150(startMigration, endMigration) {
   // -----------------------------
   // Actors loop
   // -----------------------------
-  for (const actor of game.actors) {
-    if (!ACTOR_TYPES.has(actor.type)) continue;
+  for (let i = 0; i < actors.length; i++) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    const actor = actors[i];
 
     uiBar.set(
       Math.floor((doneCount / total) * 100),
       `Processing: ${actor.name}`,
-      `${doneCount}/${total}`
+      `${doneCount + 1}/${total}`
     );
 
     await actor.update({ "flags.eclipsephase.migrating": true });
@@ -1565,7 +1577,10 @@ export async function migrationPre150(startMigration, endMigration) {
           );
         }
       } catch (err) {
-        console.error(`[EP Migration ${latestUpdate}] ${actor.name}: deleting ActiveEffects failed`, err);
+        console.error(
+          `[EP Migration ${latestUpdate}] ${actor.name}: deleting ActiveEffects failed`,
+          err
+        );
       }
 
       // -----------------------------
@@ -1588,9 +1603,7 @@ export async function migrationPre150(startMigration, endMigration) {
       const result = await _ep150_createMorphsFromLegacy(actor, baseMorphDoc);
 
       console.log(
-        `[EP Migration ${latestUpdate}] ${actor.name}: created morphs=${(result?.createdIds ?? []).join(
-          ", "
-        )}`
+        `[EP Migration ${latestUpdate}] ${actor.name}: created morphs=${(result?.createdIds ?? []).join(", ")}`
       );
     } catch (err) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
@@ -1605,11 +1618,16 @@ export async function migrationPre150(startMigration, endMigration) {
       `${doneCount}/${total}`
     );
 
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
     // give the UI a moment to repaint on very heavy loops
     await new Promise(r => setTimeout(r, 0));
-
   }
-  game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   uiBar.done(`Migration finished (${doneCount}/${total})`);
   return { endMigration: true };
 }
@@ -1873,8 +1891,19 @@ export async function migrationPre170(startMigration, endMigration) {
 
   let doneCount = 0;
 
-  for (const actor of game.actors) {
-    if (!ACTOR_TYPES.has(actor.type)) continue;
+  for (let i = 0; i < actors.length; i++) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    const actor = actors[i];
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
 
     await actor.update({ "flags.eclipsephase.migrating": true });
 
@@ -1904,19 +1933,25 @@ export async function migrationPre170(startMigration, endMigration) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
     }
 
-    await actor.update({ 
+    await actor.update({
       "flags.eclipsephase.defaultMorphAdded": true,
       "flags.eclipsephase.defaultIdAdded": true,
-      "flags.eclipsephase.migrating": false 
+      "flags.eclipsephase.migrating": false
     });
+
     doneCount++;
+
     uiBar.set(
       Math.floor((doneCount / total) * 100),
       `Processed: ${actor.name}`,
       `${doneCount}/${total}`
     );
-  }
 
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+  }
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   uiBar.done(`Migration finished (${doneCount}/${total})`);
@@ -2117,6 +2152,8 @@ function itemDeletion(actor, itemID){
 }
 
 function epCreateProgressDialog(title = "Migration") {
+  const state = { cancelled: false };
+
   const content = `
     <div style="display:flex; flex-direction:column; gap:8px;">
       <div class="ep-mig-label">Starting…</div>
@@ -2125,32 +2162,49 @@ function epCreateProgressDialog(title = "Migration") {
     </div>
   `;
 
-  //A general progress bar dialog
-  const dlg = new Dialog({
-    title,
+  const dlg = new foundry.applications.api.DialogV2({
+    window: { title },
     content,
-    buttons: {},
+    buttons: [
+      {
+        action: "cancel",
+        label: "Cancel",
+        callback: () => {
+          state.cancelled = true;
+          return false;
+        }
+      }
+    ],
+    position: { width: 420 },
     close: () => {}
-  }, { width: 420 });
+  });
 
-  dlg.render(true);
+  dlg.render({ force: true });
 
-  const getEl = () => dlg.element?.[0];
+  const getEl = () => dlg.element;
+
   const set = (pct, label = "", sub = "") => {
     const el = getEl();
     if (!el) return;
+
     el.querySelector(".ep-mig-progress")?.setAttribute("value", String(pct));
+
     const lab = el.querySelector(".ep-mig-label");
     if (lab) lab.textContent = label || `${pct}%`;
+
     const s = el.querySelector(".ep-mig-sub");
     if (s) s.textContent = sub;
   };
 
   const done = (label = "Done") => {
     set(100, label, "");
-    // optional: auto-close after a short delay
     setTimeout(() => dlg.close(), 600);
   };
 
-  return { dlg, set, done };
+  const fail = (label = "Cancelled") => {
+    set(100, label, "");
+    setTimeout(() => dlg.close(), 300);
+  };
+
+  return { dlg, set, done, fail, state };
 }

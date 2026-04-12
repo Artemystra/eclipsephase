@@ -48,49 +48,49 @@ export async function ownerVision(html){
     }
 }
 
-export async function addChatListeners(html){
-    html.addEventListener("click", event => {
-        const moreInfoIcon = event.target.closest("i.moreInfo");
-        if (moreInfoIcon) {
-            moreInfo(event);
-            return;
-        }
+export async function addChatListeners(html) {
+  html.addEventListener("click", event => {
+    const moreInfoIcon = event.target.closest("i.moreInfo");
+    if (moreInfoIcon) {
+      moreInfo({ currentTarget: moreInfoIcon });
+      return;
+    }
 
-        const moreInfoDialog = event.target.closest("a.moreInfoDialog");
-        if (moreInfoDialog) {
-            moreInfo(event);
-            return;
-        }
+    const moreInfoDialog = event.target.closest("a.moreInfoDialog");
+    if (moreInfoDialog) {
+      moreInfo({ currentTarget: moreInfoDialog });
+      return;
+    }
 
-        const usePool = event.target.closest("button.usePool");
-        if (usePool) {
-            poolFunctions.usePoolFromChat(event);
-            return;
-        }
+    const usePool = event.target.closest("button.usePool");
+    if (usePool) {
+      poolFunctions.usePoolFromChat({ currentTarget: usePool });
+      return;
+    }
 
-        const psiEffect = event.target.closest("button.psiEffect");
-        if (psiEffect) {
-            psiFunctions.preparePsi(event);
-            return;
-        }
+    const psiEffect = event.target.closest("button.psiEffect");
+    if (psiEffect) {
+      psiFunctions.preparePsi({ currentTarget: psiEffect });
+      return;
+    }
 
-        const weaponDamage = event.target.closest("button.weaponDamage");
-        if (weaponDamage) {
-            damageFunctions.prepareWeapon(event);
-            return;
-        }
+    const weaponDamage = event.target.closest("button.weaponDamage");
+    if (weaponDamage) {
+      damageFunctions.prepareWeapon({ currentTarget: weaponDamage });
+      return;
+    }
 
-        const resleeve = event.target.closest("button.resleeve");
-        if (resleeve) {
-            resleeving.sleevingTest(event);
-            return;
-        }
+    const resleeve = event.target.closest("button.resleeve");
+    if (resleeve) {
+      resleeving.sleevingTest({ currentTarget: resleeve });
+      return;
+    }
 
-        const resleeveResult = event.target.closest("button.resleeveResult");
-        if (resleeveResult) {
-            resleeving.result(event);
-        }
-    });
+    const resleeveResult = event.target.closest("button.resleeveResult");
+    if (resleeveResult) {
+      resleeving.result({ currentTarget: resleeveResult });
+    }
+  });
 
-    registerCommonHandlers(html);
+  registerCommonHandlers(html);
 }

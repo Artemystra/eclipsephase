@@ -1589,38 +1589,49 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 //Special Dialogs
 
 async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, copy, poolName, inputType, inputNeeded) {
-  let dialogName = game.i18n.localize('ep2e.skills.pool.dialogHeadline') + " (" + game.i18n.localize(poolName) +")";
-  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
-  let confirmButton = game.i18n.localize('ep2e.actorSheet.button.confirm');
-  const html = await foundry.applications.handlebars.renderTemplate(dialog, {type, pool, dialogType, subtitle, copy, poolName, inputType, inputNeeded});
-
-  return new Promise(resolve => {
-      const data = {
-          title: dialogName,
-          content: html,
-          buttons: {
-              cancel: {
-                  label: cancelButton,
-                  callback: html => resolve ({cancelled: true})
-              },
-              normal: {
-                  label: confirmButton,
-                  callback: html => resolve(_poolUsageModifiers(html[0].querySelector("form")))
-              }
-          },
-          default: "normal",
-          close: () => resolve ({cancelled: true})
-      };
-      let options = {width:315}
-      new Dialog(data, options).render(true);
+  const dialogName = game.i18n.localize("ep2e.skills.pool.dialogHeadline") + " (" + game.i18n.localize(poolName) + ")";
+  const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
+  const confirmButton = game.i18n.localize("ep2e.actorSheet.button.confirm");
+  const content = await foundry.applications.handlebars.renderTemplate(dialog, {
+    type,
+    pool,
+    dialogType,
+    subtitle,
+    copy,
+    poolName,
+    inputType,
+    inputNeeded
   });
+
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: dialogName },
+    content,
+    buttons: [
+      {
+        action: "cancel",
+        label: cancelButton,
+        callback: () => ({ cancelled: true })
+      },
+      {
+        action: "confirm",
+        label: confirmButton,
+        default: true,
+        callback: (event, button) => _poolUsageModifiers(button.form)
+      }
+    ],
+    position: { width: 315 },
+    modal: true,
+    rejectClose: false
+  });
+
+  return result ?? { cancelled: true };
 }
 
 //Pool usage confirmation check results
 function _poolUsageModifiers(form) {
-    return {
-        modifier: form.modifier ? form.modifier.value : null
-    }
+  return {
+    modifier: form?.modifier ? form.modifier.value : null
+  };
 }
 
 //Pool usage confirmation check results

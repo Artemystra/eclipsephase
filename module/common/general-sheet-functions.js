@@ -143,7 +143,6 @@ export function registerCommonHandlers(html, callerobj) {
   //Toggle sheet items (gear/weapons/flaws/traits etc.)
   html.querySelectorAll(".slideShow").forEach(element => {
     element.addEventListener("click", ev => {
-      console.log("PING");
       const current = ev.currentTarget;
       const first = current.firstElementChild;
       const last = current.lastElementChild;
@@ -288,110 +287,121 @@ export async function itemReduction(actor, itemID, itemQuantity){
  * @param {String} popUpTarget - The target of the pop-up (e.g. the item that is deleted)
  * @returns - Returns a promise that resolves to true if the user confirms the dialog, false if the user cancels it.
  */
-export async function confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton) {
-  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
-  let primaryButton = popUpPrimary ? game.i18n.localize(popUpPrimary) : game.i18n.localize('ep2e.actorSheet.button.delete');
-  const buttonLayout = singleButton ?? false;
-  const dialogType = "confirmation"
-  const template = "systems/eclipsephase/templates/chat/pop-up.html";
-  const html = await foundry.applications.handlebars.renderTemplate(template, {popUpHeadline, popUpCopy, dialogType, popUpInfo, popUpTarget});
+  export async function confirmation(
+    popUpTitle,
+    popUpHeadline,
+    popUpCopy,
+    popUpInfo,
+    popUpTarget,
+    popUpPrimary,
+    singleButton
+  ) {
+    const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
+    const primaryButton = popUpPrimary
+      ? game.i18n.localize(popUpPrimary)
+      : game.i18n.localize("ep2e.actorSheet.button.delete");
 
-  return new Promise(resolve => {
-      let data
-      if (buttonLayout === false){
-      data = {
-          title: popUpTitle,
-          content: html,
-          buttons: {
-              cancel: {
-                label: cancelButton,
-                callback: html => resolve ({confirm: false})
-              },
-              normal: {
-                  label: primaryButton,
-                  callback: html => resolve ({confirm: true})
-              }
-          },
-          default: "normal",
-          close: () => resolve ({confirm: false})
-      };}
-      else {
-      data = {
-          title: popUpTitle,
-          content: html,
-          buttons: {
-              normal: {
-                  label: primaryButton,
-                  callback: html => resolve ({confirm: true})
-              }
-          },
-          default: "normal",
-          close: () => resolve ({confirm: false})
-      };}
-      let options = {width:250}
-      new Dialog(data, options).render(true);
-  });
-}
+    const buttonLayout = singleButton ?? false;
+    const dialogType = "confirmation";
+    const template = "systems/eclipsephase/templates/chat/pop-up.html";
+
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      popUpHeadline,
+      popUpCopy,
+      dialogType,
+      popUpInfo,
+      popUpTarget
+    });
+
+    const buttons = [];
+
+    if (!buttonLayout) {
+      buttons.push({
+        action: "cancel",
+        label: cancelButton,
+        callback: () => false
+      });
+    }
+
+    buttons.push({
+      action: "confirm",
+      label: primaryButton,
+      default: true,
+      callback: () => true
+    });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: popUpTitle },
+      content,
+      buttons,
+      modal: true,
+      rejectClose: false,
+      position: { width: 250 }
+    });
+
+    return { confirm: result === true || result === "confirm" };
+  }
 
 /**
  * A simple dialog with only the option to confirm. This is used for simple information messages.
  * @param {*} event 
  */
-export async function moreInfo(event) {
-  const element = event.currentTarget;
-  const dataset = element.dataset;
-  const template = "systems/eclipsephase/templates/chat/pop-up.html";
-  let dialogData = {};
-  dialogData.dialogType = "information";
+  export async function moreInfo(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const template = "systems/eclipsephase/templates/chat/pop-up.html";
+    let dialogData = {};
+    dialogData.dialogType = "information";
 
-  //This builds the dataset if objects are needed from the item (I'm not entirely sure why item is needed, but a smarter me figured this out at some point in time...)
-  if (dataset.uuid) {
-    const item = await fromUuid(dataset.uuid);
-    const path = dataset.datapath
-      ? dataset.datapath.split(".").reduce((obj, key) => obj?.[key], item)
-      : undefined;
+    //This builds the dataset if objects are needed from the item
+    if (dataset.uuid) {
+      const item = await fromUuid(dataset.uuid);
+      const path = dataset.datapath
+        ? dataset.datapath.split(".").reduce((obj, key) => obj?.[key], item)
+        : undefined;
 
-    if (path && typeof path === "object") {
-      for (const key in path) {
-        dialogData[key] = path[key];
+      if (path && typeof path === "object") {
+        for (const key in path) {
+          dialogData[key] = path[key];
+        }
+      }
+
+      dialogData.rolledfrom = dataset.rolledfrom;
+    }
+
+    //This uses the data provided by handlebars datasets
+    else {
+      for (const key in dataset) {
+        dialogData[key] = dataset[key];
       }
     }
 
-    dialogData.rolledfrom = dataset.rolledfrom;
-  }
+    await moreInformation(template, dialogData);
 
-  //This uses the data provided by handlebars datasets
-  else {
-    for (const key in dataset) {
-      dialogData[key] = dataset[key];
+    async function moreInformation(template, dialogData) {
+      const dialogName = game.i18n.localize("ep2e.actorSheet.dialogHeadline.information");
+      const closeButton = game.i18n.localize("ep2e.actorSheet.button.close");
+      const content = await foundry.applications.handlebars.renderTemplate(template, dialogData);
+
+      const result = await foundry.applications.api.DialogV2.wait({
+        window: { title: dialogName },
+        content,
+        buttons: [
+          {
+            action: "close",
+            label: closeButton,
+            default: true,
+            callback: () => ({ cancelled: true })
+          }
+        ],
+        position: { width: 325 },
+        modal: true,
+        rejectClose: false
+      });
+
+      return result ?? { cancelled: true };
     }
   }
-
-  let dialog = await moreInformation(template, dialogData);
-
-  async function moreInformation(template, dialogData) {
-    let dialogName = game.i18n.localize("ep2e.actorSheet.dialogHeadline.information");
-    let closeButton = game.i18n.localize("ep2e.actorSheet.button.close");
-    let html = await foundry.applications.handlebars.renderTemplate(template, dialogData);
-
-    return new Promise(resolve => {
-      const data = {
-        title: dialogName,
-        content: html,
-        buttons: {
-          cancel: {
-            label: closeButton,
-            callback: () => resolve({ cancelled: true })
-          }
-        },
-        default: "normal",
-        close: () => resolve({ cancelled: true })
-      };
-      let options = { width: 325 };
-      new Dialog(data, options).render(true);
-    });
-  }
-}
 
 /**
  * Toggles the active state of an item and its effects.
@@ -476,48 +486,67 @@ export function itemToggle(html, item) {
  * @param {String} copy - The copy within the dialog
  * @returns 
  */
-export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy){
-  let title = dialogTitle ? game.i18n.localize(dialogTitle) : game.i18n.localize('ep2e.actorSheet.dialogHeadline.confirmationNeeded');
-  let cancelButton = game.i18n.localize('ep2e.roll.dialog.button.cancel');
-  let useButton = game.i18n.localize('ep2e.actorSheet.button.select');
-  const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-  const html = await foundry.applications.handlebars.renderTemplate(template, {objectList, dialogType, headline, copy});
-  return new Promise(resolve => {
-      const data = {
-          title: title,
-          content: html,
-          buttons: {
-              cancel: {
-                  label: cancelButton,
-                  callback: html => resolve ({cancelled: true})
-              },
-              normal: {
-                  label: useButton,
-                  callback: html => resolve(listSelectionOutcome(html[0].querySelector("form")))
-              }
-          },
-          default: "normal",
-          close: () => resolve ({cancelled: true})
-      };
-      let options = {width}
-      new Dialog(data, options).render(true);
-  });
-}
-function listSelectionOutcome(form) {
-      let returnValue;
-      if(form.ItemSelect){
-        returnValue = form.ItemSelect.value
-      }
-      else {
-        returnValue = {}
-        for (let entry of form.Input){
-          if(entry.value) returnValue[entry.id] = entry.type === "number" ? Number(entry.value) : entry.value;
+  export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy) {
+    const title = dialogTitle
+      ? game.i18n.localize(dialogTitle)
+      : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
+    const useButton = game.i18n.localize("ep2e.actorSheet.button.select");
+    const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      objectList,
+      dialogType,
+      headline,
+      copy
+    });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title },
+      content,
+      buttons: [
+        {
+          action: "cancel",
+          label: cancelButton,
+          callback: () => ({ cancelled: true })
+        },
+        {
+          action: "select",
+          label: useButton,
+          default: true,
+          callback: (event, button) => listSelectionOutcome(button.form)
+        }
+      ],
+      position: { width },
+      modal: true,
+      rejectClose: false
+    });
+
+    return result ?? { cancelled: true };
+  }
+
+  function listSelectionOutcome(form) {
+    let returnValue;
+
+    if (form?.ItemSelect) {
+      returnValue = form.ItemSelect.value;
+    } else {
+      returnValue = {};
+      const inputs = form?.elements?.Input
+        ? Array.from(form.elements.Input instanceof RadioNodeList ? form.elements.Input : [form.elements.Input])
+        : [];
+
+      for (const entry of inputs) {
+        if (entry.value) {
+          returnValue[entry.id] = entry.type === "number" ? Number(entry.value) : entry.value;
         }
       }
-  return {
+    }
+
+    return {
       selection: returnValue
+    };
   }
-}
 
 
 
