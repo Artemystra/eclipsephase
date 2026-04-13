@@ -1230,10 +1230,11 @@ a:hover,
   min-height: -webkit-fill-available;
 }
 
-.eclipsephase .tabs .item.active {
+.eclipsephase .tabs .item.active,
+.eclipsephase .tabs a.active {
   text-shadow: none;
   background-color: var(--mainBackground);
-  border-top: solid 4px var(--highlight);
+  border-top: solid 4px var(--highlight)!important;
   color: var(--mainText);
 }
 
@@ -1827,12 +1828,7 @@ h3.subheaderBlank {
 }
 
 .itemHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--pitchBorder);
-  border-top: 2px var(--accentBackground) solid;
-  padding: 5px 0.5em 5px 0.5em;
+  max-height: fit-content;
 }
 
 .itemRow {
@@ -2546,7 +2542,7 @@ button.epTextlink:hover{
   padding: 0 10px; 
   position: fixed;
   z-index: 100;
-  top: 250px;
+  top: 565px;
   margin-right: 14px
 }
 

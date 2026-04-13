@@ -5,6 +5,7 @@ import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
+import EPitemSheet from "./item/EPitemSheet.js";
 import  EPgearSheet from "./item/EPgearSheet.js";
 import  EPtraitSheet  from "./item/EPtraitSheet.js";
 import  EPaspectSheet  from "./item/EPaspectSheet.js";
@@ -152,7 +153,7 @@ Hooks.once('init', async function() {
   foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo", "id", "morph"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph"], makeDefault: true });
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPtraitSheet, {types: ["traits"], makeDefault: true });
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
@@ -201,9 +202,9 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
-    "systems/eclipsephase/templates/item/partials/weapon-mode.html",
-    "systems/eclipsephase/templates/item/partials/grenade-details.html",
-    "systems/eclipsephase/templates/item/partials/item-traits.html",
+    "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
+    "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
+    "systems/eclipsephase/templates/item/partials/item-traits.hbs",
     "systems/eclipsephase/templates/item/partials/additions-tab.html"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);

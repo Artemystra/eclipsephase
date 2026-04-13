@@ -78,7 +78,7 @@
         <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
             <a class="resource-label slideShow"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.item.weapon.table.addTrait"}}</a>
         </div>
-        <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute; top: 255px; left: 13px">
+        <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute;{{#if (eq type 'ranged')}} margin-top: -225px;{{else}}margin-top: -140px;{{/if}} left: 20px">
             <div class="grid grid-5col">
                 {{#each item.system.mode1.traits as |item key|}}
                     {{#if (eq item.value false)}}
@@ -147,9 +147,9 @@
             <a class="resource-label slideShow"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.item.weapon.table.addAccessory"}}</a>
         </div>
         {{#if (eq type "ranged")}}
-        <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute; margin-top: -139px; left: 13px">
+        <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute; margin-top: -180px; left: 20px">
         {{else}}
-        <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute; margin-top: -48px; left: 13px">
+        <div class="flexrow noShow" style="background-color: var(--pitchBorder); padding: 0 10px; position: absolute; margin-top: 80px; left: 20px">
         {{/if}}
             <div class="grid grid-5col">
                 {{#each item.system.accessories as |item key|}}

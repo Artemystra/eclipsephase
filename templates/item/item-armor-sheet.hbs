@@ -1,21 +1,31 @@
 <form class="{{cssClass}}" autocomplete="off">
-    <header class="sheet-header">
+    <header class="sheet-header itemHeader">
         <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
         <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+            </h1>
         </div>
     </header>
-    <nav class="sheet-tabs itemnav tabs" data-group="primary">
-        <a class="item" data-tab="details">{{localize "ep2e.item.general.tabs.detailsTab"}}</a>
-        <a class="item" data-tab="description">{{localize "ep2e.item.general.table.description"}}</a>
-        {{#if item.showEffectsTab}}
-        <a class="item" data-tab="effects">{{localize "ep2e.item.general.tabs.effectsTab"}}</a>
-        {{/if}}
-    </nav>
-    {{!-- Sheet Body --}}
-    <section class="item-sheet-body" style="min-height: 240px; height: fit-content;">
-        <div class="tab details" data-group="primary" data-tab="details">
 
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        {{#each tabs.primary as |tab|}}
+            {{#if (eq tab.id "effects")}}
+                {{#if @root.item.showEffectsTab}}
+                    <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                        {{localize tab.label}}
+                    </a>
+                {{/if}}
+            {{else}}
+                <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                    {{localize tab.label}}
+                </a>
+            {{/if}}
+        {{/each}}
+    </nav>
+
+    <section class="item-sheet-body" style="min-height: 240px; height: fit-content;">
+        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details">
             <div class="flexrow flex-group-center">
                 <table>
                     <tr>
@@ -54,10 +64,23 @@
             </div>
         </div>
 
-        <div class="tab description" data-group="primary" data-tab="description">
-            {{editor item.system.description target="system.description" button=true owner=owner editable=this.options.editable}}
+        <div class="tab {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description">
+            {{#if editable}}
+                <prose-mirror
+                    name="system.description"
+                    button="true"
+                    editable="true"
+                    toggled="false"
+                    value="{{item.system.description}}">
+                    {{{htmlDescription}}}
+                </prose-mirror>
+            {{else}}
+                {{{htmlDescription}}}
+            {{/if}}
         </div>
 
+        <div class="tab {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-group="primary" data-tab="effects">
             {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
+        </div>
     </section>
 </form>
