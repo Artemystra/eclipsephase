@@ -1831,6 +1831,15 @@ h3.subheaderBlank {
   max-height: fit-content;
 }
 
+.itemRowHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--pitchBorder);
+  border-top: 2px var(--accentBackground) solid;
+  padding: 5px 0.5em 5px 0.5em;
+}
+
 .itemRow {
   display: flex;
   justify-content: space-between;

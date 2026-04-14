@@ -38,6 +38,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       tabs: [
         { id: "details", label: "ep2e.item.general.tabs.detailsTab" },
         { id: "details2", label: "ep2e.item.general.tabs.weaponMode2" },
+        { id: "additions", label: "ep2e.roll.dialog.heal.additions.label" },
         { id: "description", label: "ep2e.item.general.table.description" },
         { id: "effects", label: "ep2e.item.general.tabs.effectsTab" }
       ]
@@ -63,11 +64,17 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     else if (item.type === "morph") {
       return { width: 620, height: 500 };
     }
+    else if (item.type === "specialSkill" || item.type === "knowSkill") {
+      return { width: 600, height: 140 };
+    }
     else if (item.system?.type === "seeker" || item.type === "grenade") {
       return { width: 680, height: 415 };
     }
     else if (item.system?.type !== "seeker" && item.type === "ammo") {
       return { width: 520, height: 415 };
+    }
+    else if (item.type === "vehicle"){
+      return { width: 1010, height: 505 };
     }
 
     return { width: 520, height: 415 };
@@ -88,25 +95,38 @@ async _prepareContext(options) {
   const context = await super._prepareContext(options);
   const item = this.document;
 
+  /**
+   * In case we need item
+   */
+  //console.log(item);
+
   context.config = CONFIG.eclipsephase;
   context.item = item;
   context.editable = this.isEditable;
 
-  let primaryTabs = Object.values(this._prepareTabs("primary"));
 
-  // Only weapons should show details2
-  if (item.type !== "ccWeapon" && item.type !== "rangedWeapon") {
-    primaryTabs = primaryTabs.filter(tab => tab.id !== "details2");
+  if(item.type !== "knowSkill" && item.type !== "specialSkill"){
+    let primaryTabs = Object.values(this._prepareTabs("primary"));
+
+    // Only weapons should show details2
+    if (item.type !== "ccWeapon" && item.type !== "rangedWeapon") {
+      primaryTabs = primaryTabs.filter(tab => tab.id !== "details2");
+    }
+
+    // Only morphs should show additions
+    if (item.type !== "morph") {
+      primaryTabs = primaryTabs.filter(tab => tab.id !== "additions");
+    }
+
+    context.tabs = {
+      primary: primaryTabs
+    };
+  
+
+    context.tabGroups = this.tabGroups;
+
+    item.showEffectsTab = !!(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM);
   }
-
-  context.tabs = {
-    primary: primaryTabs
-  };
-
-  context.tabGroups = this.tabGroups;
-
-  item.showEffectsTab = !!(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM);
-
   if (item.type === "ccWeapon" || item.type === "rangedWeapon") {
     item.system.costName = "ep2e.item.general.table.cost." + item.system.cost;
     item.system.slotName = "ep2e.item.weapon.table.slot." + item.system.slotType;
@@ -141,26 +161,28 @@ async _onRender(context, options) {
   const item = this.document;
   if (!html) return;
 
-  // Fallback logic for sheets that do not render every static tab
-  const availableTabs = Array.from(
-    html.querySelectorAll('[data-action="tab"][data-group="primary"][data-tab]')
-  ).map(tab => tab.dataset.tab);
+  if(item.type !== "knowSkill" && item.type !== "specialSkill"){
+    // Fallback logic for sheets that do not render every static tab
+    const availableTabs = Array.from(
+      html.querySelectorAll('[data-action="tab"][data-group="primary"][data-tab]')
+    ).map(tab => tab.dataset.tab);
 
-  // If details2 is currently selected but not actually shown, fall back to details
-  if (!availableTabs.includes(this.tabGroups.primary)) {
-    this.tabGroups.primary = availableTabs.includes("details") ? "details" : availableTabs[0];
+    // If details2 is currently selected but not actually shown, fall back to details
+    if (!availableTabs.includes(this.tabGroups.primary)) {
+      this.tabGroups.primary = availableTabs.includes("details") ? "details" : availableTabs[0];
+    }
+
+    // Extra safeguard for weapons with hidden second mode
+    if (
+      (item.type === "ccWeapon" || item.type === "rangedWeapon") &&
+      !item.system.additionalMode &&
+      this.tabGroups.primary === "details2"
+    ) {
+      this.tabGroups.primary = "details";
+    }
+
+    await this.changeTab(this.tabGroups.primary, "primary", { force: true });
   }
-
-  // Extra safeguard for weapons with hidden second mode
-  if (
-    (item.type === "ccWeapon" || item.type === "rangedWeapon") &&
-    !item.system.additionalMode &&
-    this.tabGroups.primary === "details2"
-  ) {
-    this.tabGroups.primary = "details";
-  }
-
-  await this.changeTab(this.tabGroups.primary, "primary", { force: true });
 
   itemToggle(html, item);
 

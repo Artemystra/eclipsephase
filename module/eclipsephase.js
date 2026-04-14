@@ -6,14 +6,7 @@ import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
-import  EPgearSheet from "./item/EPgearSheet.js";
-import  EPtraitSheet  from "./item/EPtraitSheet.js";
-import  EPaspectSheet  from "./item/EPaspectSheet.js";
-import  EPprogramSheet  from "./item/EPprogramSheet.js";
-import  EPspecialSkillSheet  from "./item/EPspecialSkillSheet.js";
-import  EPknowSkillSheet  from "./item/EPknowSkillSheet.js";
 import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
-import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  { confirmation } from "./common/general-sheet-functions.js"
@@ -153,16 +146,8 @@ Hooks.once('init', async function() {
   foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPtraitSheet, {types: ["traits"], makeDefault: true });
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPknowSkillSheet, {types: ["knowSkill"], makeDefault: true });
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPspecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPvehicleSheet, {types: ["vehicle"], makeDefault: true });
-  //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
-  // If you need to add Handlebars helpers, here are a few useful examples:
   Handlebars.registerHelper('concat', function() {
 
     var outStr = '';
@@ -205,7 +190,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
     "systems/eclipsephase/templates/item/partials/item-traits.hbs",
-    "systems/eclipsephase/templates/item/partials/additions-tab.html"
+    "systems/eclipsephase/templates/item/partials/additions-tab.hbs"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
