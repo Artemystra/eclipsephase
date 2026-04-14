@@ -195,6 +195,10 @@ async _onRender(context, options) {
   registerEffectHandlers(html, item);
   registerCommonHandlers(html, item);
 
+  if (item.type === "vehicle") {
+    this._activateVehicleListeners(html, item);
+  }
+
   html.querySelectorAll(".reveal").forEach(element => {
     element.addEventListener("mouseover", this._onToggleReveal.bind(this));
     element.addEventListener("mouseout", this._onToggleReveal.bind(this));
@@ -212,4 +216,149 @@ async _onRender(context, options) {
       value.classList.toggle("noShow");
     }
   }
+
+  _activateVehicleListeners(html, item) {
+    html.querySelectorAll(".autoBot").forEach(element => {
+      element.addEventListener("click", this._onAutoBot.bind(this));
+    });
+  }
+
+  async _onAutoBot(event) {
+    const askForOptions = event.shiftKey;
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const itemID = dataset.id;
+    const itemName = dataset.name;
+
+    const targetItem = await ownerCheck(itemID);
+
+    const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.confirm");
+    const popUpCopy = "ep2e.actorSheet.popUp.autoBotCopyGeneral";
+    const popUpInfo = "ep2e.actorSheet.popUp.autoBotAdditionalInfo";
+
+    let itemType = null;
+    let popUp = { type: "none", confirm: true };
+
+    if (!askForOptions) {
+      popUp = await autoBot(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
+
+      if (popUp.confirm === false) return;
+
+      if (popUp.type !== "none") {
+        itemType = game.i18n.localize("ep2e.item.vehicle.table.habitat." + popUp.type);
+      } else {
+        itemType = game.i18n.localize("ep2e.item.vehicle.skillFieldDefault");
+      }
+    } else {
+      itemType = game.i18n.localize("ep2e.item.vehicle.table.habitat.none");
+    }
+
+    const hardware = game.i18n.localize("ep2e.item.additionalSkill.table.defaultHardwareLabel") + itemType;
+
+    let pilotType = "";
+    if (popUp.type === "air" || popUp.type === "space") {
+      pilotType = game.i18n.localize("ep2e.item.vehicle.table.habitat.aerospace");
+    } else if (popUp.type !== "none") {
+      pilotType = game.i18n.localize("ep2e.item.vehicle.table.habitat." + popUp.type);
+    } else {
+      pilotType = game.i18n.localize("ep2e.item.vehicle.skillFieldDefault");
+    }
+
+    const pilot = game.i18n.localize("ep2e.item.additionalSkill.table.defaultPilotLabel") + pilotType;
+    const know = game.i18n.localize("ep2e.item.additionalSkill.table.defaultKnowLabel") + itemName + " Specs";
+
+    const autoBotUpdate = {
+      "system.skills.1.name": game.i18n.localize("ep2e.skills.vigorSkills.fray"),
+      "system.skills.1.value": 30,
+      "system.skills.2.name": game.i18n.localize("ep2e.skills.vigorSkills.guns"),
+      "system.skills.2.value": 30,
+      "system.skills.3.name": hardware,
+      "system.skills.3.value": 20,
+      "system.skills.3.specname": itemName,
+      "system.skills.4.name": game.i18n.localize("ep2e.skills.insightSkills.infosec"),
+      "system.skills.4.value": 20,
+      "system.skills.5.name": game.i18n.localize("ep2e.skills.insightSkills.interface"),
+      "system.skills.5.value": 30,
+      "system.skills.6.name": game.i18n.localize("ep2e.skills.insightSkills.perceive"),
+      "system.skills.6.value": 40,
+      "system.skills.7.name": pilot,
+      "system.skills.7.value": 60,
+      "system.skills.7.specname": itemName,
+      "system.skills.8.name": game.i18n.localize("ep2e.skills.insightSkills.research"),
+      "system.skills.8.value": 20,
+      "system.skills.9.name": know,
+      "system.skills.9.value": 80
+    };
+
+    if (targetItem.isOwned) {
+      const actorWhole = this.item?.parent;
+      if (!actorWhole) return;
+
+      autoBotUpdate._id = itemID;
+      await actorWhole.updateEmbeddedDocuments("Item", [autoBotUpdate]);
+    } 
+    else {
+      const itemWhole = game.items.get(itemID);
+      if (!itemWhole) return;
+
+      await itemWhole.update(autoBotUpdate);
+    }
+  }
+}
+
+async function autoBot(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget) {
+  const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
+  const confirmButton = game.i18n.localize("ep2e.actorSheet.button.confirm");
+  const dialogType = "autoBot";
+  const template = "systems/eclipsephase/templates/chat/pop-up.html";
+
+  const content = await foundry.applications.handlebars.renderTemplate(template, {
+    popUpHeadline,
+    popUpCopy,
+    dialogType,
+    popUpInfo,
+    popUpTarget
+  });
+
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: popUpTitle },
+    content,
+    buttons: [
+      {
+        action: "cancel",
+        label: cancelButton,
+        callback: () => ({ confirm: false })
+      },
+      {
+        action: "confirm",
+        label: confirmButton,
+        default: true,
+        callback: (event, button) => _autoBotResults(button.form)
+      }
+    ],
+    modal: true,
+    rejectClose: false,
+    position: { width: 250 }
+  });
+
+  return result ?? { confirm: false };
+}
+
+function _autoBotResults(form) {
+  return {
+    confirm: true,
+    type: form?.type?.value ?? "none"
+  };
+}
+
+async function ownerCheck(itemID) {
+  for (const character of game.actors) {
+    for (const item of character.items) {
+      if (item.id === itemID) {
+        return { isOwned: true };
+      }
+    }
+  }
+  return { isOwned: false };
 }
