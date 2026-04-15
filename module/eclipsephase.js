@@ -5,18 +5,12 @@ import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
-import  EPgearSheet from "./item/EPgearSheet.js";
-import  EPtraitSheet  from "./item/EPtraitSheet.js";
-import  EPaspectSheet  from "./item/EPaspectSheet.js";
-import  EPprogramSheet  from "./item/EPprogramSheet.js";
-import  EPspecialSkillSheet  from "./item/EPspecialSkillSheet.js";
-import  EPknowSkillSheet  from "./item/EPknowSkillSheet.js";
+import EPitemSheet from "./item/EPitemSheet.js";
 import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
-import  EPvehicleSheet  from "./item/EPvehicleSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
-import  { confirmation } from "./common/common-sheet-functions.js"
-import  * as helperFunction from "./common/common-helper-functions.js"
+import  { confirmation } from "./common/general-sheet-functions.js"
+import  * as helperFunction from "./common/general-helper-functions.js"
 import  * as update from "./common/migration.js";
 
 async function registerSystemSettings() {
@@ -149,19 +143,11 @@ Hooks.once('init', async function() {
   CONFIG.Item.documentClass = EPitem;
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("eclipsephase", EPgearSheet, {types: ["gear","ccWeapon","grenade","armor","ware","drug","rangedWeapon","ammo", "id", "morph"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPtraitSheet, {types: ["traits"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPaspectSheet, {types: ["aspect"], makeDefault: true});
-  Items.registerSheet("eclipsephase", EPprogramSheet, {types: ["program"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPknowSkillSheet, {types: ["knowSkill"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPspecialSkillSheet, {types: ["specialSkill"], makeDefault: true });
-  Items.registerSheet("eclipsephase", EPvehicleSheet, {types: ["vehicle"], makeDefault: true });
-  //Handlebars.registerPartial('NPCSkills', `{{> "systems/eclipsephase/templates/actor/npc-skills-tab.html"}}`);
-  // If you need to add Handlebars helpers, here are a few useful examples:
+  foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
+  foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
+  foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
+  foundry.documents.collections.Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   Handlebars.registerHelper('concat', function() {
 
     var outStr = '';
@@ -201,12 +187,12 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
-    "systems/eclipsephase/templates/item/partials/weapon-mode.html",
-    "systems/eclipsephase/templates/item/partials/grenade-details.html",
-    "systems/eclipsephase/templates/item/partials/item-traits.html",
-    "systems/eclipsephase/templates/item/partials/additions-tab.html"
+    "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
+    "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
+    "systems/eclipsephase/templates/item/partials/item-traits.hbs",
+    "systems/eclipsephase/templates/item/partials/additions-tab.hbs"
   ];
-  await loadTemplates(templates);
+  await foundry.applications.handlebars.loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
     return str.toLowerCase();
   });
@@ -492,75 +478,94 @@ Hooks.once("ready", async function() {
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
-    const options = messageWidth ? {width: [messageWidth]} : {width:600};
-
-    return new Promise(resolve => {
-        const data = {
-            title: "Migration Needed",
-            content: html,
-            buttons: {
-                cancel: {
-                    label: "Cancel",
-                    callback: html => resolve ({cancelled: true})
-                },
-                normal: {
-                    label: "Start Migration",
-                    callback: html => resolve ({start: true})
-                }
-            },
-            default: "normal",
-            close: () => resolve ({cancelled: true})
-        };
-        new Dialog(data, options).render(true);
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      endMigration,
+      messageHeadline,
+      messageCopy
     });
+
+    const width = messageWidth ?? 600;
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: "Migration Needed" },
+      content,
+      buttons: [
+        {
+          action: "cancel",
+          label: "Cancel",
+          callback: () => ({ cancelled: true })
+        },
+        {
+          action: "start",
+          label: "Start Migration",
+          default: true,
+          callback: () => ({ start: true })
+        }
+      ],
+      modal: true,
+      rejectClose: false,
+      position: { width }
+    });
+
+    return result ?? { cancelled: true };
   }
 
   async function informationStart(endMigration, messageHeadline, messageCopy) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
-
-    return new Promise(resolve => {
-        const data = {
-            title: "Migration Needed",
-            content: html,
-            buttons: {
-                normal: {
-                    label: "Close",
-                    callback: html => resolve ({start: true})
-                }
-            },
-            default: "normal",
-            close: () => resolve ({cancelled: true})
-        };
-        let options = {width:600}
-        new Dialog(data, options).render(true);
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      endMigration,
+      messageHeadline,
+      messageCopy
     });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: "Migration Needed" },
+      content,
+      buttons: [
+        {
+          action: "close",
+          label: "Close",
+          default: true,
+          callback: () => ({ start: true })
+        }
+      ],
+      modal: true,
+      rejectClose: false,
+      position: { width: 600 }
+    });
+
+    return result ?? { cancelled: true };
   }
 
 
   async function migrationEnd(endMigration) {
-    const messageHeadline = "ep2e.migration.headlineEnd"
-    const messageCopy = "ep2e.migration.done"
+    const messageHeadline = "ep2e.migration.headlineEnd";
+    const messageCopy = "ep2e.migration.done";
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
-    const html = await renderTemplate(template, {endMigration, messageHeadline, messageCopy});
 
-    return new Promise(resolve => {
-        const data = {
-            title: "Migration Needed",
-            content: html,
-            buttons: {
-                normal: {
-                    label: "Thank you!",
-                    callback: html => resolve ({start: true})
-                }
-            },
-            default: "normal",
-            close: () => resolve ({cancelled: true})
-        };
-        let options = {width:250}
-        new Dialog(data, options).render(true);
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      endMigration,
+      messageHeadline,
+      messageCopy
     });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: "Migration Needed" },
+      content,
+      buttons: [
+        {
+          action: "close",
+          label: "Thank you!",
+          default: true,
+          callback: () => ({ start: true })
+        }
+      ],
+      modal: true,
+      rejectClose: false,
+      position: { width: 250 }
+    });
+
+    return result ?? { cancelled: true };
   }
 });
 

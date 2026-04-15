@@ -1,4 +1,4 @@
-import { moreInfo, registerCommonHandlers } from "../common/common-sheet-functions.js";
+import { moreInfo, registerCommonHandlers } from "../common/general-sheet-functions.js";
 import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
@@ -48,25 +48,49 @@ export async function ownerVision(html){
     }
 }
 
-export async function addChatListeners($html){
-    const html = await bridgeJQuery($html);
-    const vanilla = $html
-    html.on('click', 'i.moreInfo', moreInfo);
-    html.on('click', 'a.moreInfoDialog', moreInfo);
-    html.on('click', 'button.usePool', poolFunctions.usePoolFromChat);
-    html.on('click', 'button.psiEffect', psiFunctions.preparePsi);
-    html.on('click', 'button.weaponDamage', damageFunctions.prepareWeapon);
-    html.on('click', 'button.resleeve', resleeving.sleevingTest);
-    html.on('click', 'button.resleeveResult', resleeving.result);
+export async function addChatListeners(html) {
+  html.addEventListener("click", event => {
+    const moreInfoIcon = event.target.closest("i.moreInfo");
+    if (moreInfoIcon) {
+      moreInfo({ currentTarget: moreInfoIcon });
+      return;
+    }
 
-    registerCommonHandlers(html);
-}
+    const moreInfoDialog = event.target.closest("a.moreInfoDialog");
+    if (moreInfoDialog) {
+      moreInfo({ currentTarget: moreInfoDialog });
+      return;
+    }
 
-/**
- * Bridges jQuery for the time being
- * @param {*} html
- */
-async function bridgeJQuery(html) {
-    html instanceof HTMLElement ? console.log("jQuery found - Fix needed!") : 0 ;
-    return html instanceof HTMLElement ? $(html) : html;
+    const usePool = event.target.closest("button.usePool");
+    if (usePool) {
+      poolFunctions.usePoolFromChat({ currentTarget: usePool });
+      return;
+    }
+
+    const psiEffect = event.target.closest("button.psiEffect");
+    if (psiEffect) {
+      psiFunctions.preparePsi({ currentTarget: psiEffect });
+      return;
+    }
+
+    const weaponDamage = event.target.closest("button.weaponDamage");
+    if (weaponDamage) {
+      damageFunctions.prepareWeapon({ currentTarget: weaponDamage });
+      return;
+    }
+
+    const resleeve = event.target.closest("button.resleeve");
+    if (resleeve) {
+      resleeving.sleevingTest({ currentTarget: resleeve });
+      return;
+    }
+
+    const resleeveResult = event.target.closest("button.resleeveResult");
+    if (resleeveResult) {
+      resleeving.result({ currentTarget: resleeveResult });
+    }
+  });
+
+  registerCommonHandlers(html);
 }

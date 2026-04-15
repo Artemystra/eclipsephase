@@ -1,0 +1,79 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header itemHeader">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+            </h1>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        <a class="item {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="details">
+            {{#if (ne item.system.additionalMode true)}}
+                {{localize "ep2e.item.general.tabs.detailsTab"}}
+            {{else}}
+                {{#if item.system.mode1.name}}
+                    {{localize item.system.mode1.name}}
+                {{else}}
+                    {{localize "ep2e.item.general.tabs.weaponMode1"}}
+                {{/if}}
+            {{/if}}
+        </a>
+
+        {{#if (ne item.system.additionalMode true)}}
+            <div class="itemSmall wantToKnowMore toggleItem" data-path="system.additionalMode" style="margin: 0 10px; background-color: var(--accentBackground); max-width: 55px; min-height: 50px; cursor: pointer">
+                <i class="fas fa-plus awesomeIcon"></i>
+                <label class="tooltipText">{{localize "ep2e.item.general.tabs.addMode"}}</label>
+            </div>
+        {{else}}
+            <div class="item" style="display: flex; align-items: center; max-width: 25%;">
+                <a class="{{#if (eq tabGroups.primary 'details2')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="details2" style="width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; border-top: solid 4px rgba(65, 65, 65, 0); padding: 0px 30px 0 10px">
+                    {{#if item.system.mode2.name}}
+                        {{localize item.system.mode2.name}}
+                    {{else}}
+                        {{localize "ep2e.item.general.tabs.weaponMode2"}}
+                    {{/if}}
+                </a>
+            </div>
+            <div class="itemSmall wantToKnowMore toggleItem" data-path="system.additionalMode" style="max-width: 25px;justify-content: flex-end;cursor: pointer;position: absolute;left: 340px; min-height: fit-content;">
+                <a><i class="far fa-times-circle awesomeIcon" style="margin-bottom: 6px;"></i></a>
+            </div>
+        {{/if}}
+
+        <a class="item {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="description">
+            {{localize "ep2e.item.general.table.description"}}
+        </a>
+
+        {{#if item.showEffectsTab}}
+            <a class="item {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-action="tab" data-group="primary" data-tab="effects">
+                {{localize "ep2e.item.general.tabs.effectsTab"}}
+            </a>
+        {{/if}}
+    </nav>
+
+    <section class="item-sheet-body" style="min-height: 275px; height: fit-content;">
+        
+        {{> systems/eclipsephase/templates/item/partials/weapon-mode.hbs item=item type="ranged"}}
+
+        <div class="tab description {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description" style="padding: none;">
+            {{#if editable}}
+                <prose-mirror
+                    name="system.description"
+                    button="true"
+                    editable="true"
+                    toggled="false"
+                    value="{{item.system.description}}">
+                    {{{htmlDescription}}}
+                </prose-mirror>
+            {{else}}
+                {{{htmlDescription}}}
+            {{/if}}
+        </div>
+
+        <div class="tab effects {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-group="primary" data-tab="effects">
+            {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
+        </div>
+        
+    </section>
+</form>

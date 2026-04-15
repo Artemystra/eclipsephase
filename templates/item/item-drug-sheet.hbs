@@ -1,0 +1,149 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header itemHeader">
+        <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+            </h1>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs itemnav tabs" data-group="primary">
+        {{#each tabs.primary as |tab|}}
+            {{#if (eq tab.id "effects")}}
+                {{#if @root.item.showEffectsTab}}
+                    <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                        {{localize tab.label}}
+                    </a>
+                {{/if}}
+            {{else}}
+                <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                    {{localize tab.label}}
+                </a>
+            {{/if}}
+        {{/each}}
+    </nav>
+
+    <section class="item-sheet-body" style="min-height: 245px; height: fit-content;">
+        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details">
+
+            <div class="flexrow flex-group-center">
+                <table>
+                    <tr>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.category.label"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.type.label"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.general.table.cost.label"}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="system.category" data-type="String">
+                                {{selectOptions config.drugCategories selected=item.system.category localize=true}}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="system.drugType" data-type="String">
+                                {{selectOptions config.drugTypes selected=item.system.drugType localize=true}}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="system.cost" data-type="String">
+                                {{selectOptions config.costTypes selected=item.system.cost localize=true}}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
+                <table>
+                    <tr>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.duration"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.addictionModifier"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.addictionType"}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="input-large alignCenter" type="text" name="system.duration" value="{{item.system.duration}}" placeholder="e.g. 1 hours"/>
+                        </td>
+                        <td>
+                            <input class="input-large alignCenter" type="text" name="system.addictionMod" value="{{item.system.addictionMod}}" placeholder="-10"/>
+                        </td>
+                        <td>
+                            <select name="system.addictionType" data-type="String">
+                                {{selectOptions config.drugAddicitonTypes selected=item.system.addictionType localize=true}}
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <p></p>
+            <div class="flexrow flex-group-center">
+                <h3>{{localize "ep2e.item.drug.table.applicationVectors.headline"}}</h2>
+            </div>
+
+            <div class="flexrow flex-group-center">
+                <table>
+                    <tr>
+                        <td>
+                            <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.dermalLabel"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.inhalationLabel"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.injectionLabel"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-sub-label">{{localize "ep2e.item.drug.table.applicationVectors.oralLabel"}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.dermal" {{checked item.system.dermal}}/>
+                        </td>
+                        <td>
+                            <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.inhalation" {{checked item.system.inhalation}}/>
+                        </td>
+                        <td>
+                            <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.injection" {{checked item.system.injection}}/>
+                        </td>
+                        <td>
+                            <input style="margin:auto; display:flex" type="checkbox" class="rest" name="system.oral" {{checked item.system.oral}}/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description">
+            {{#if editable}}
+                <prose-mirror
+                    name="system.description"
+                    button="true"
+                    editable="true"
+                    toggled="false"
+                    value="{{item.system.description}}">
+                    {{{htmlDescription}}}
+                </prose-mirror>
+            {{else}}
+                {{{htmlDescription}}}
+            {{/if}}
+        </div>
+
+        <div class="tab {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-group="primary" data-tab="effects">
+            {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
+        </div>
+
+    </section>
+</form>

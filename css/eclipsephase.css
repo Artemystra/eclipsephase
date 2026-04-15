@@ -2,9 +2,32 @@
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 /* Global styles */
-.window-app {
-  font-family: 'Cousine', monospace;
-  font-size: 13px;
+
+.eclipsephase {
+  --font-sans: "Cousine", monospace;
+  --font-body: "Cousine", monospace;
+  --font-monospace: "Cousine", monospace;
+
+  --font-h1: "Cousine", monospace;
+  --font-h2: "Cousine", monospace;
+  --font-h3: "Cousine", monospace;
+  --font-h4: "Cousine", monospace;
+  --font-h5: "Cousine", monospace;
+  --font-h6: "Cousine", monospace;
+
+  --font-h1-size: 2.5rem;
+  --font-h2-size: 2rem;
+  --font-h3-size: 1.17rem;
+  --font-h4-size: 0.875rem;
+  --font-h5-size: 0.85rem;
+  --font-h6-size: 0.8rem;
+  --font-body-size: 0.75rem;
+}
+
+.eclipsephase.window-app,
+.eclipsephase .window-content {
+  font-family: var(--font-body);
+  font-size: var(--font-body-size);
 }
 
 :root {
@@ -288,7 +311,7 @@
 }
 
 .eclipsephase .item-form {
-  font-family: 'Cousine', monospace;
+  font-family: 'Cousine', monospace!important;
 }
 
 .eclipsephase .sheet-header {
@@ -625,8 +648,7 @@ a.entity-link {
 .itemBox {
   background: var(--pitchBackground);
   margin: 1px 0;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 0 5px;
   min-height: 36px;
 }
 
@@ -693,6 +715,10 @@ span.neutral {
   backdrop-filter: blur(4px);
 }
 
+.dialog .window-content{
+  padding: 0.5rem;
+}
+
 #sidebar {
   background-color: rgba(0,0,0,0.5)!important;
   backdrop-filter: blur(6px);
@@ -705,6 +731,8 @@ span.neutral {
   color: var(--mainText);
   border: #131313 2px solid;
 }
+
+
 
 .table-draw .table-description {
   color: var(--inactive);
@@ -756,6 +784,17 @@ input[class="rest"] {
   min-width: 13px;
   max-height: 13px;
   max-width: 13px;
+}
+
+input[class="rest"]::before,
+input[class="rest"]::after,
+input[class="sheet"]::before,
+input[class="sheet"]::before,
+input[class="sheet equipped checkBox"]::before,
+input[class="sheet equipped checkBox"]::after,
+input[class="check-inline-edit"]::before,
+input[class="check-inline-edit"]::after{
+  display: none;
 }
 
 input[type="text"]::placeholder, 
@@ -884,7 +923,7 @@ input[type="healthPanel"],
 .healthOverlayRow{
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding-bottom: 10px;
 }
 
@@ -899,11 +938,6 @@ input[class="rest"]:checked{
   padding:4px;
   border: var(--focusBackground) 1px solid;
   filter: none;
-}
-
-input[class="sheet equipped checkBox"],
-input[class="sheet equipped checkBox"]:checked{
-  margin: 0 5px 0 0;
 }
 
 input [class="leftField"],
@@ -1138,7 +1172,7 @@ a:hover,
 .eclipsephase .psi-circle {
   display: flex;
   border: 2px solid var(--inactive);
-  font-size: 16px;
+  font-size: 14px;
   max-width: 24px;
   max-height: 24px;
   margin-right: 10px;
@@ -1160,7 +1194,7 @@ a:hover,
 .eclipsephase .psiFreeTextElement {
   text-align: left; 
   min-height: 40px; 
-  font-size: 16px;
+  font-size: 14px;
   max-width: 88%;
 }
 
@@ -1191,10 +1225,11 @@ a:hover,
   min-height: -webkit-fill-available;
 }
 
-.eclipsephase .tabs .item.active {
+.eclipsephase .tabs .item.active,
+.eclipsephase .tabs a.active {
   text-shadow: none;
   background-color: var(--mainBackground);
-  border-top: solid 4px var(--highlight);
+  border-top: solid 4px var(--highlight)!important;
   color: var(--mainText);
 }
 
@@ -1243,11 +1278,12 @@ a:hover,
   background: #fff;
 }
 
-.sheet .editor-content{
-  background: var(--pitchBorder);
-  padding: 1em;
-  overflow-x: hidden;
-  min-height: 273px;
+.sheet prose-mirror#pcBio{
+  height: 273px;
+}
+
+.sheet prose-mirror#npcBio{
+  height: 312px;
 }
 
 .sheet .morph .editor-content{
@@ -1394,7 +1430,7 @@ button.restReset {
 }
 
 #pause figcaption {
-  font-family: 'Cousine', monospace;
+  font-family: 'Cousine', monospace!important;
 }
 
 #keybindings .binding .key.uneditable{
@@ -1439,7 +1475,7 @@ button.restReset {
 
 table {
   border: none;
-  margin-bottom: 10px;
+  margin: 0 0 0.3rem 0;
 }
 
 table tr:nth-child(odd){
@@ -1476,6 +1512,14 @@ table tr:nth-child(even){
   font-size: 14px;
 }
 
+table tr.dice-result {
+  background-color: var(--pitchBorder);
+  display: flex;
+  min-width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
 h1, h2, h3, h4 {
   margin: -0.5px;
 }
@@ -1487,7 +1531,7 @@ h3.subheader {
   padding: 0.3em 0.5em 0.2em 0.5em;
   font-weight: bold;
   border: 0;
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   margin-bottom: -3px;
@@ -1512,7 +1556,7 @@ h3.subheaderMirror {
   font-weight: bold;
   text-align: end;
   border: 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 h3.subheaderBlank {
@@ -1520,7 +1564,7 @@ h3.subheaderBlank {
   font-weight: bold;
   text-align: center;
   border: 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .flexGrowThreeQuarter {
@@ -1618,6 +1662,7 @@ h3.subheaderBlank {
 
 .input-xs {
   max-width: 25px!important;
+  min-width: 1px;
   padding: 0!important;
 }
 
@@ -1778,6 +1823,10 @@ h3.subheaderBlank {
 }
 
 .itemHeader {
+  max-height: fit-content;
+}
+
+.itemRowHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1861,6 +1910,7 @@ h3.subheaderBlank {
   clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
   min-width: 100%;
   min-height: 10px;
+  margin-bottom: 5px;
 }
 
 .roll-label {
@@ -1921,7 +1971,7 @@ h3.subheaderBlank {
 }
 
 .noShow {
-  display: none!important;
+  display: none;
 }
 
 .showFlex {
@@ -1982,9 +2032,10 @@ h3.subheaderBlank {
   overflow-x: hidden;
 }
 
-.limited-editor .editor {
+.limited-editor {
   max-height: 263px;
   overflow-x: hidden;
+  padding: 0 10px;
 }
 
 .journal-sheet form .editor,
@@ -2039,7 +2090,8 @@ h3.subheaderBlank {
 .itemDescription {
   text-align: center;
   padding: 5px;
-  background-color: var(--highlightBackground);
+  margin-bottom: 5px;
+  background-image: url(../resources/img/background3.webp);
 }
 
 .descriptionContainer {
@@ -2176,6 +2228,7 @@ h3.healthSubheadline {
 button.epStandard{
   min-height: 25px;
   margin-right: 10px;
+  font-size: var(--font-h6-size);
 }
 
 button.epTextlink{
@@ -2194,7 +2247,7 @@ button.epTextlink:hover{
 
 .tooltip:hover div[role=tooltip] {
   opacity: 1;
-  font-family: 'Cousine', monospace;
+  font-family: 'Cousine', monospace!important;
   max-width: 320px;
   min-width: 320px;
   display: block;
@@ -2209,7 +2262,7 @@ button.epTextlink:hover{
 .tooltip:hover div[role=healthOverlay],
 .tooltip:hover div[role=rezOverlay] {
   opacity: 1;
-  font-family: 'Cousine', monospace;
+  font-family: 'Cousine', monospace!important;
   max-width: 320px;
   min-width: 320px;
   display: block;
@@ -2223,7 +2276,7 @@ button.epTextlink:hover{
 
 .tooltip:hover div[role=tooltipNegative] {
   opacity: 1;
-  font-family: 'Cousine', monospace;
+  font-family: 'Cousine', monospace!important;
   display: block;
   text-align: left;
   position: absolute;
@@ -2494,7 +2547,7 @@ button.epTextlink:hover{
   padding: 0 10px; 
   position: fixed;
   z-index: 100;
-  top: 250px;
+  top: 565px;
   margin-right: 14px
 }
 

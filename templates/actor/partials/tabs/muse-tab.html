@@ -28,6 +28,18 @@
         <div class="alignRight flexGrowHalf">
         </div>
     </div>
-    {{editor htmlMuseDescription target="system.muse.description" button=true owner=owner editable=this.options.editable}}
+    {{#if editable}}
+        <prose-mirror
+            id="museDescription"
+            name="system.muse.description"
+            button="true"
+            editable="true"
+            toggled="false"
+            value="{{museDescriptionValue}}">
+            {{{htmlMuseDescription}}}
+        </prose-mirror>
+    {{else}}
+        {{{htmlMuseDescription}}}
+    {{/if}}
 
 </div>

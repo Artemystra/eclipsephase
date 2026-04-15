@@ -1,6 +1,6 @@
         <div class="tab scrolly main-tab-pc" data-group="primary" data-tab="skills">
             {{#if (eq actor.type "npc")}}
-                <div class="itemHeader" style="margin-bottom: 10px;">
+                <div class="itemRowHeader" style="margin-bottom: 10px;">
                         <div class="itemGroup">
                             <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
                             <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
@@ -503,13 +503,13 @@
                             {{#if isGM}}
                                 <div class="flex-group-center" style="margin-bottom: 0px;">
                                     <div style="display: inline-block;">
-                                        <button class="restReset sheetButton" style="min-width: 280px;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
+                                        <button type="button" class="restReset sheetButton" style="min-width: 280px;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
                                     </div>
                                 </div>
                             {{else if (eq actor.system.editAll true)}}
                                 <div class="flex-group-center" style="margin-bottom: 0px;">
                                     <div style="display: inline-block;">
-                                        <button class="restReset sheetButton" style="min-width: 280px;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
+                                        <button type="button" class="restReset sheetButton" style="min-width: 280px;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</button>
                                     </div>
                                 </div>
                             {{/if}}
@@ -602,9 +602,9 @@
                             <div class="flex-group-center" style="margin-bottom: 0px;">
                                 <div style="display: inline-block;">
                                     {{#if (eq actor.system.pools.update.possible 0)}}
-                                    <button class="distribute">{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
+                                    <button type="button" class="distribute">{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
                                     {{else}}
-                                    <button class="distribute" disabled>{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
+                                    <button type="button" class="distribute" disabled>{{localize "ep2e.skills.restingMenu.button.distribute"}}</button>
                                     {{/if}}
                                 </div>
                             </div>

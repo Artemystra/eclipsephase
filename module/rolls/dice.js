@@ -1,6 +1,6 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
-import { prepareRecipients } from "../common/common-sheet-functions.js";
+import { prepareRecipients } from "../common/general-sheet-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -169,14 +169,17 @@ function defineRoll(dataset, actorWhole){
  * Interprets the roll visibility setting and returns the appropriate roll mode 
  */
 function setRollVisibility(activeRollTarget){
+    const rollModes = CONFIG.ChatMessage?.modes ?? CONST.DICE_ROLL_MODES;
     let rollModeSelection = null
+
     if (activeRollTarget === "" || activeRollTarget === "public") {
-        rollModeSelection = CONST.DICE_ROLL_MODES.PUBLIC
+        rollModeSelection = rollModes.PUBLIC
     } else if (activeRollTarget === "private") {
-        rollModeSelection = CONST.DICE_ROLL_MODES.PRIVATE
+        rollModeSelection = rollModes.GM ?? rollModes.PRIVATE
     } else if (activeRollTarget === "blind") {
-        rollModeSelection = CONST.DICE_ROLL_MODES.BLIND
+        rollModeSelection = rollModes.BLIND
     }
+
     return rollModeSelection
 }
 
@@ -562,51 +565,78 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
  * @returns {Promise<Object>} - The values of the form when submitted
  */
 async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom) {
+let specialEffects;
+const actorType = actorWhole.type;
 
-    let specialEffects
-    const actorType = actorWhole.type
-    if(traits)
-        specialEffects = Object.keys(traits.confirmationEffects).length
+if (traits) {
+    specialEffects = Object.keys(traits.confirmationEffects).length;
+}
 
-    const html = await renderTemplate(rollData.template, {specName, pool, actorWhole, actorType, rollType, traits, specialEffects, rolledFrom, rollData})
+const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
+    specName,
+    pool,
+    actorWhole,
+    actorType,
+    rollType,
+    traits,
+    specialEffects,
+    rolledFrom,
+    rollData
+});
 
-    function extractFormValues(html) {
-    let form = html[0].querySelector("form")
+function extractFormValues(form) {
+    const values = {};
 
-    let values = {}
+    for (const name of rollData.names) {
+    const field = form?.elements?.[name];
 
-    for(let name of rollData.names)
-        if (form[name] === undefined){
-            values[name] = null
-        }
-        else{
-            values[name] = form[name].value === "on" ? form[name].checked : form[name].value;
-        }
-        return values
+    if (field === undefined || field === null) {
+        values[name] = null;
+        continue;
     }
 
-  return new Promise((resolve, reject) => {
-    let cancelButton = new Localizer ('ep2e.roll.dialog.button.cancel');
-    let rollButton = new Localizer ('ep2e.roll.dialog.button.roll');
-    const data = {
-        title: rollData.title,
-        content: html,
-        buttons: {
-            cancel: {
-                label: cancelButton.title,
-                callback: (html) => resolve({cancelled: true})
-            },
-            normal: {
-                label: rollButton.title,
-                callback: (html) => resolve(extractFormValues(html))
-            }
-        },
-        default: 'normal',
-        close: () => resolve({cancelled: true})
+    if (field instanceof RadioNodeList) {
+        values[name] = field.value ?? null;
+        continue;
     }
-    let options = rollData.templateSize
-    new Dialog(data, options).render(true);
-    })
+
+    if (field.type === "checkbox") {
+        values[name] = field.checked;
+        continue;
+    }
+
+    values[name] = field.value;
+    }
+
+    return values;
+}
+
+const cancelButton = new Localizer("ep2e.roll.dialog.button.cancel");
+const rollButton = new Localizer("ep2e.roll.dialog.button.roll");
+
+const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: rollData.title },
+    content,
+    buttons: [
+    {
+        action: "cancel",
+        label: cancelButton.title,
+        callback: () => ({ cancelled: true })
+    },
+    {
+        action: "roll",
+        label: rollButton.title,
+        default: true,
+        callback: (event, button) => extractFormValues(button.form)
+    }
+    ],
+    modal: true,
+    rejectClose: false,
+    ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
+    ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
+});
+
+return result ?? { cancelled: true };
 }
 
 /**
@@ -971,7 +1001,7 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
         message.weaponName = weaponSelected.weaponName;
         message.ammoLoadedName = weaponSelected.weapon.system.ammoSelected.name
     
-        let html = await renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
+        let html = await foundry.applications.handlebars.renderTemplate(WEAPON_DAMAGE_OUTPUT, message)
     
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: actorWhole}),
@@ -1038,7 +1068,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
         message.rollType = rollType
     }
 
-    let html = await renderTemplate(htmlTemplate, message)
+    let html = await foundry.applications.handlebars.renderTemplate(htmlTemplate, message)
 
     
     //Returns a roll without producing the output directly to the chat
