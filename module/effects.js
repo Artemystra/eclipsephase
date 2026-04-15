@@ -1,11 +1,18 @@
+const EP2eActiveEffectBaseDataModel =
+  foundry.data?.ActiveEffectTypeDataModel ??
+  foundry.abstract.TypeDataModel;
+
 //Effect-Supression on Morph Switch
-export class EP2eActiveEffectData extends foundry.abstract.TypeDataModel {
+export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
   static defineSchema() {
+    if (foundry.data?.ActiveEffectTypeDataModel) {
+      return super.defineSchema();
+    }
     return {};
   }
 
   /** @returns {boolean} */
-    get isSuppressed() {
+  get isSuppressed() {
     const effect = this.parent;
     const item = effect.parent;
     if (!(item instanceof Item)) return false;

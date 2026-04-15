@@ -1,13 +1,13 @@
 <form class="{{cssClass}} flexcol" autocomplete="off" style="margin-top: 30px;">
   
   {{!-- New Limited Sheet --}}
-  <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: -3px; z-index: 1; height: 68px;">
+  <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: 18px; z-index: 1; height: 68px;">
     <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
   </div>
-  <div class="centerBackground" style="position: absolute; top: 14px; background-color: var(--highlightBackground); width: 98%; border-bottom: 5px solid var(--pitchBorder); height: 51px;">
+  <div class="centerBackground" style="position: absolute; top: 39px; background-color: var(--highlightBackground); width: 98%; border-bottom: 5px solid var(--pitchBorder); height: 51px;">
     <h3 style="flex-grow: 10; border: none; text-align: center;">About {{actor.name}}</h3>
   </div>
-  <div class="grid grid-3col-limited1" style="margin-bottom: 0; gap: 0;">
+  <div class="grid grid-3col-limited1" style="margin-bottom: 0; gap: 0; margin-top: 25px;">
     <div style="grid-area: left;">
       <div>
           <img class="profile-goon-img" style="margin-top: 18px;" src="{{actor.img}}" data-edit="img" title="{{actor.name}}"/>
@@ -19,29 +19,9 @@
           <div>
           </div>
         </div>
-        {{#if (eq actor.type "character")}}
-        <div class="limited-editor">
-          {{editor
-            htmlBiography
-            target="system.biography"
-            button=true
-            owner=owner
-            class=special
-            editable=this.options.editable
-          }}
-        </div>
-        {{else}}
-        <div class="limited-editor">
-          {{editor
-            actor.system.biography
-            target="system.biography"
-            button=true
-            owner=owner
-            class=special
-            editable=this.options.editable
-          }}
-        </div>
-        {{/if}}
+          <div class="limited-editor">
+            {{{actor.system.biography}}}
+          </div>
       </div>
     </div>
   </div>

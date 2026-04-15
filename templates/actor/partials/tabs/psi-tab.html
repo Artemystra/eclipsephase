@@ -20,14 +20,23 @@
                 <div class="listBackground noMargin item noShow showMore">
                     <div class="flexrow grid" style="min-width: 100%;">
                         <ol>
-                            <li class="skills"><input type="text" name="system.psiStrain.name" class="psiFormElement" value="{{actor.system.psiStrain.name}}" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}"/></li>
-                            <li><div style="max-height: 415px; overflow-y: scroll;">{{editor
-                                actor.system.psiStrain.description
-                                target="system.psiStrain.description"
-                                button=true
-                                owner=owner
-                                editable=this.options.editable
-                            }}</div></li>
+                            <li>
+                                <div style="max-height: 415px; overflow-y: scroll;">
+                                    {{#if editable}}
+                                        <prose-mirror
+                                            name="system.psiStrain.description"
+                                            button="true"
+                                            editable="true"
+                                            toggled="false"
+                                            value="{{actor.system.psiStrain.description}}"
+                                            style="min-height: 400px">
+                                            {{{htmlPsiStrainDescription}}}
+                                        </prose-mirror>
+                                    {{else}}
+                                        {{{htmlPsiStrainDescription}}}
+                                    {{/if}}
+                                </div>
+                            </li>
                             <li style="display: flex; align-items: center; margin-top: 20px;"><input class="checkBox" name="system.additionalSystems.psiAutoClose" data-dtype="Boolean" type="checkbox" {{checked actor.system.additionalSystems.psiAutoClose}}/>{{localize "ep2e.psi.autoClose"}}</li>
                         </ol>
                         <ol>
@@ -58,14 +67,23 @@
                 <div class="listBackground noMargin item noShow showMore showFlex">
                     <div class="flexrow grid" style="min-width: 100%;">
                         <ol>
-                            <li class="skills"><input type="text" name="system.psiStrain.name" class="psiFormElement" value="{{actor.system.psiStrain.name}}" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}"/></li>
-                            <li><div style="max-height: 415px; overflow-y: scroll;">{{editor
-                                actor.system.psiStrain.description
-                                target="system.psiStrain.description"
-                                button=true
-                                owner=owner
-                                editable=this.options.editable
-                            }}</div></li>
+                            <li>
+                                <div style="max-height: 415px; overflow-y: scroll;">
+                                    {{#if editable}}
+                                        <prose-mirror
+                                            name="system.psiStrain.description"
+                                            button="true"
+                                            editable="true"
+                                            toggled="false"
+                                            value="{{actor.system.psiStrain.description}}"
+                                            style="min-height: 400px">
+                                            {{{htmlPsiStrainDescription}}}
+                                        </prose-mirror>
+                                    {{else}}
+                                        {{{htmlPsiStrainDescription}}}
+                                    {{/if}}
+                                </div>
+                            </li>
                             <li style="display: flex; align-items: center; margin-top: 20px;"><input class="checkBox" name="system.additionalSystems.psiAutoClose" data-dtype="Boolean" type="checkbox" {{checked actor.system.additionalSystems.psiAutoClose}}/>{{localize "ep2e.psi.autoClose"}}</li>
                         </ol>
                         <ol>

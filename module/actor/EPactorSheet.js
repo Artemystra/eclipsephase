@@ -111,6 +111,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
   //Preparation of the whole Sheet context
   async _prepareContext(options) {
+    const actor = this.document
     const context = await super._prepareContext(options);
     context.config = CONFIG.eclipsephase;
     context.isGM = game.user.isGM;
@@ -119,16 +120,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     await this._prepareRenderedHTMLContent(context);
 
     context.editable = this.isEditable;
-
-    //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
-    context.tabs = {
-      primary: this._prepareTabs("primary"),
-      secondary: this._prepareTabs("secondary"),
-      morph: this._prepareTabs("morph"),
-      id: this._prepareTabs("id")
-    };
     
-    context.tabGroups = this.tabGroups;
+    //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
+    if (game.user.isGM || actor.isOwner){
+      context.tabs = {
+        primary: this._prepareTabs("primary"),
+        secondary: this._prepareTabs("secondary"),
+        morph: this._prepareTabs("morph"),
+        id: this._prepareTabs("id")
+      };
+
+      context.tabGroups = this.tabGroups;
+    }
 
     return context;
   }
@@ -205,6 +208,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     sheetData.htmlBiography = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
       biographyRaw,
+      { async: true }
+    );
+
+    sheetData.htmlPsiStrainDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+      actorModel.psiStrain?.description ?? "",
       { async: true }
     );
 
@@ -776,20 +784,22 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
   //Code that runs every time the sheet renders anew (e.g. open a formerly closed sheet)
   async _onRender(context, options) {
-    const actor = this.document;
+      const actor = this.document;
 
-    await super._onRender(context, options);
+      await super._onRender(context, options);
 
-    await this.changeTab(this.tabGroups.primary, "primary", { force: true });
+      if (game.user.isGM || actor.isOwner){
+      await this.changeTab(this.tabGroups.primary, "primary", { force: true });
 
-    //Sets the opened tab for PC sheets
-    if (actor.type === "character"){
-      await this.changeTab(this.tabGroups.secondary, "secondary", { force: true });
+      //Sets the opened tab for PC sheets
+      if (actor.type === "character"){
+        await this.changeTab(this.tabGroups.secondary, "secondary", { force: true });
 
-      this._syncManualTabGroup("morph");
-      this._syncManualTabGroup("id");
+        this._syncManualTabGroup("morph");
+        this._syncManualTabGroup("id");
 
-      
+        
+      }
     }
 
     const html = this.element;

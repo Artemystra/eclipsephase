@@ -940,11 +940,6 @@ input[class="rest"]:checked{
   filter: none;
 }
 
-input[class="sheet equipped checkBox"],
-input[class="sheet equipped checkBox"]:checked{
-  margin: 0 5px 0 0;
-}
-
 input [class="leftField"],
 input [class="leftField"]:focus,
 input [class="leftField"]::placeholder{
@@ -2037,9 +2032,10 @@ h3.subheaderBlank {
   overflow-x: hidden;
 }
 
-.limited-editor .editor {
+.limited-editor {
   max-height: 263px;
   overflow-x: hidden;
+  padding: 0 10px;
 }
 
 .journal-sheet form .editor,
