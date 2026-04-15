@@ -171,7 +171,7 @@ function defineRoll(dataset, actorWhole){
 function setRollVisibility(activeRollTarget){
     const rollModes = CONFIG.ChatMessage?.modes ?? CONST.DICE_ROLL_MODES;
     let rollModeSelection = null
-
+    console.log(activeRollTarget)
     if (activeRollTarget === "" || activeRollTarget === "public") {
         rollModeSelection = rollModes.PUBLIC
     } else if (activeRollTarget === "private") {
@@ -838,7 +838,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
     else if (options.range === "pointBlank" || options.range === "pointBlank" && options.prone){
-        if (!weaponTraits.automatedEffects.long){
+        if (!weaponTraits?.automatedEffects?.long){
             modValue = 10
             announce = "ep2e.roll.announce.combat.ranged.pointBlank";
             task.addModifier(new TaskRollModifier(announce, modValue))

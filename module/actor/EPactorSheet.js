@@ -29,6 +29,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     },
     window: {
       resizable: false
+    },
+    actions: {
+      editImage: this._onEditImage
     }
   });
 
@@ -108,6 +111,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     morph: "sleeved",
     id: "active"
   };
+
+  static async _onEditImage(event, target) {
+    const field = target.dataset.field || "img";
+    const current = foundry.utils.getProperty(this.document, field) || "";
+
+    const FilePickerClass =
+      foundry.applications?.apps?.FilePicker?.implementation ?? FilePicker;
+
+    const fp = new FilePickerClass({
+      type: "image",
+      current,
+      callback: async (path) => {
+        await this.document.update({ [field]: path });
+      }
+    });
+
+    return fp.browse();
+  }
 
   //Preparation of the whole Sheet context
   async _prepareContext(options) {
@@ -798,7 +819,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         this._syncManualTabGroup("morph");
         this._syncManualTabGroup("id");
 
-        
       }
     }
 
