@@ -17,6 +17,9 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     position: {
       width: 520,
       height: 415
+    },
+    actions: {
+      editImage: this._onEditImage
     }
   });
 
@@ -89,6 +92,24 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
   async _onFirstRender(context, options) {
     await super._onFirstRender(context, options);
     this.setPosition(this._getSheetDimensions());
+  }
+
+  static async _onEditImage(event, target) {
+    const field = target.dataset.field || "img";
+    const current = foundry.utils.getProperty(this.document, field) || "";
+
+    const FilePickerClass =
+      foundry.applications?.apps?.FilePicker?.implementation ?? FilePicker;
+
+    const fp = new FilePickerClass({
+      type: "image",
+      current,
+      callback: async (path) => {
+        await this.document.update({ [field]: path });
+      }
+    });
+
+    return fp.browse();
   }
 
 async _prepareContext(options) {
