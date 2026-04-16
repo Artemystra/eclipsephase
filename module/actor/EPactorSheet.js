@@ -1497,11 +1497,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
    */
 
   _onItemCreate(event) {
-    console.log("New Item create triggered!", event.currentTarget.dataset)
     event.preventDefault();
     const header = event.currentTarget;
     const type = header.dataset.type;
-    const data = duplicate(header.dataset);
+    const data = foundry.utils.deepClone?.(header.dataset) ?? foundry.utils.duplicate(header.dataset);
     const name = `New ${type.capitalize()}`;
     const itemData = {
       name: name,

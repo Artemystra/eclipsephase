@@ -1149,6 +1149,7 @@ a:hover,
   border-bottom: 3px solid var(--mainBackground);
   padding: 0;
   margin: 0;
+  gap: 0;
   background-color: rgba(65,65,65,0);
 }
 
