@@ -112,59 +112,54 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     return fp.browse();
   }
 
-async _prepareContext(options) {
-  const context = await super._prepareContext(options);
-  const item = this.document;
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const item = this.document;
 
-  /**
-   * In case we need item
-   */
-  //console.log(item);
+    context.config = CONFIG.eclipsephase;
+    context.item = item;
+    context.editable = this.isEditable;
 
-  context.config = CONFIG.eclipsephase;
-  context.item = item;
-  context.editable = this.isEditable;
+    if(item.type !== "knowSkill" && item.type !== "specialSkill"){
+      let primaryTabs = Object.values(this._prepareTabs("primary"));
 
+      if (item.type !== "ccWeapon" && item.type !== "rangedWeapon") {
+        primaryTabs = primaryTabs.filter(tab => tab.id !== "details2");
+      }
 
-  if(item.type !== "knowSkill" && item.type !== "specialSkill"){
-    let primaryTabs = Object.values(this._prepareTabs("primary"));
+      if (item.type !== "morph") {
+        primaryTabs = primaryTabs.filter(tab => tab.id !== "additions");
+      }
 
-    // Only weapons should show details2
-    if (item.type !== "ccWeapon" && item.type !== "rangedWeapon") {
-      primaryTabs = primaryTabs.filter(tab => tab.id !== "details2");
+      context.tabs = {
+        primary: primaryTabs
+      };
+
+      context.tabGroups = this.tabGroups;
+      item.showEffectsTab = !!(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM);
     }
 
-    // Only morphs should show additions
-    if (item.type !== "morph") {
-      primaryTabs = primaryTabs.filter(tab => tab.id !== "additions");
+    if (item.type === "ccWeapon" || item.type === "rangedWeapon") {
+      item.system.costName = "ep2e.item.general.table.cost." + item.system.cost;
+      item.system.slotName = "ep2e.item.weapon.table.slot." + item.system.slotType;
     }
 
-    context.tabs = {
-      primary: primaryTabs
-    };
-  
+    if (item.type === "rangedWeapon") {
+      item.system.ammoName = "ep2e.item.weapon.table.ammoUsed." + item.system.ammoType;
+    }
 
-    context.tabGroups = this.tabGroups;
+    if (item.type === "morph") {
+      context.itemList = CONFIG.compendiumList ?? {
+        ware: { none: "--Select--" },
+        flaw: { none: "--Select--" },
+        trait: { none: "--Select--" }
+      };
+    }
 
-    item.showEffectsTab = !!(game.settings.get("eclipsephase", "effectPanel") && game.user.isGM);
+    await this._prepareRenderedHTMLContent(context);
+
+    return context;
   }
-  if (item.type === "ccWeapon" || item.type === "rangedWeapon") {
-    item.system.costName = "ep2e.item.general.table.cost." + item.system.cost;
-    item.system.slotName = "ep2e.item.weapon.table.slot." + item.system.slotType;
-  }
-
-  if (item.type === "rangedWeapon") {
-    item.system.ammoName = "ep2e.item.weapon.table.ammoUsed." + item.system.ammoType;
-  }
-
-  if (item.type === "morph") {
-    context.itemList = CONFIG.compendiumList;
-  }
-
-  await this._prepareRenderedHTMLContent(context);
-
-  return context;
-}
 
   async _prepareRenderedHTMLContent(context) {
     const itemModel = context.item.system;
