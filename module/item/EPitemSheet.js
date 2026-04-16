@@ -150,9 +150,9 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
 
     if (item.type === "morph") {
       context.itemList = CONFIG.compendiumList ?? {
-        ware: { none: "--Select--" },
-        flaw: { none: "--Select--" },
-        trait: { none: "--Select--" }
+        ware: { none: "Calculating..." },
+        flaw: { none: "Calculating..." },
+        trait: { none: "Calculating..." }
       };
     }
 
