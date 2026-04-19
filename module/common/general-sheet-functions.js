@@ -1,4 +1,5 @@
 import * as HELPER from "./general-helper-functions.js"
+import * as DICE from "../rolls/dice.js";
 
 /**
  * Foundry VTTs item creation & deletion functions
@@ -583,6 +584,49 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
       return msg.toObject();
   }
 }
+
+  export async function rollBuilder (actorWhole, dataset, rolledFrom, weaponID, systemOptions){
+    if(dataset.type === 'skill') {
+      
+      let skillKey
+      let weaponPrep
+      let weaponSelected
+      const actorModel = actorWhole.system;
+
+      if (rolledFrom === "psiSleight") {
+        skillKey = "psi";
+        dataset.rollvalue = actorModel.skillsMox.psi.roll;
+        dataset.specname = actorModel.skillsMox.psi.specname;
+        dataset.pooltype = "Moxie";
+      }
+
+      if (rolledFrom === "rangedWeapon") {
+        skillKey = "guns";
+        dataset.rollvalue = actorModel.skillsVig.guns.roll;
+        dataset.specname = actorModel.skillsVig.guns.specname;
+        dataset.pooltype = "Vigor";
+      }
+      else if (rolledFrom === "ccWeapon") {
+        skillKey = "melee";
+        dataset.rollvalue = actorModel.skillsVig.melee.roll;
+        dataset.specname = actorModel.skillsVig.melee.specname;
+        dataset.pooltype = "Vigor";
+      }
+
+      if (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon"){
+    
+        weaponPrep = await weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID)
+        
+        if (!weaponPrep || weaponPrep.cancel){
+          return;
+        }
+        weaponSelected = weaponPrep
+        rolledFrom = weaponPrep.rolledFrom
+      }
+
+      DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
+    }
+  }
 
 /**
  * Creator for GM lists
