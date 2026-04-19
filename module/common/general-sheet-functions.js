@@ -682,3 +682,48 @@ export async function damageValueCalc (object, dvPath, traits, calcType){
 
   return {dv};
 }
+
+export async function transferItemBetweenActors({
+  sourceActor,
+  targetActor,
+  item,
+  quantity = 1
+} = {}) {
+  if (!sourceActor || !targetActor || !item) return null;
+
+  const sourceQty = Number(item.system.quantity ?? 1);
+  const transferQty = Math.max(1, Number(quantity) || 1);
+
+  const itemData = item.toObject();
+  delete itemData._id;
+
+  if (foundry.utils.hasProperty(itemData, "system.quantity")) {
+    itemData.system.quantity = Math.min(sourceQty, transferQty);
+  }
+
+  const existing = targetActor.items.find(i =>
+    i.type === item.type &&
+    i.name === item.name
+  );
+
+  let createdOrUpdated;
+  if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
+    const currentQty = Number(existing.system.quantity ?? 0);
+    await existing.update({
+      "system.quantity": currentQty + Math.min(sourceQty, transferQty)
+    });
+    createdOrUpdated = existing;
+  } else {
+    [createdOrUpdated] = await targetActor.createEmbeddedDocuments("Item", [itemData]);
+  }
+
+  if (sourceQty <= transferQty) {
+    await sourceActor.deleteEmbeddedDocuments("Item", [item.id]);
+  } else {
+    await item.update({
+      "system.quantity": sourceQty - transferQty
+    });
+  }
+
+  return createdOrUpdated;
+}

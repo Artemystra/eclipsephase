@@ -6,10 +6,9 @@ import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
-import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
-import  { confirmation } from "./common/general-sheet-functions.js"
+import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
 import  * as update from "./common/migration.js";
 
@@ -147,7 +146,6 @@ Hooks.once('init', async function() {
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   Handlebars.registerHelper('concat', function() {
 
     var outStr = '';
@@ -581,6 +579,11 @@ Hooks.once("ready", () => {
   });
 });
 
+// Helper to handle item transfers between players
+Hooks.once("ready", () => {
+  helperFunction.registerItemTransferSocket();
+});
+
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
 Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.addChatListeners(html, data);
@@ -641,7 +644,7 @@ Hooks.on("preCreateItem", (item, data, options, userId) => {
     const popUpTarget = null
     const popUpPrimary = game.i18n.localize("ep2e.actorSheet.button.thankYouLaph");
     const singleButton = true
-    confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton);
+    sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton);
     return false;
   }
 });

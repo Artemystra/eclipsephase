@@ -11,9 +11,17 @@
                 <div class="itemBackground">
                     {{#each actor.armor as |item id|}}
                         {{#if item.system.active}}
-                        <div class="item flexrow flex-group-center atHand" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+                        <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                             <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" data-path="system.active"  type="checkbox" {{checked item.system.active}}>
-                            <div class="item-image flex-group-center input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                            <div style="max-width: 25px!important;">
+                                <div class="noShow toggle" style="padding-left: 4px;">
+                                    <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
+                                        <i class="fas fa-bars" style="text-align: left; font-size: 18px;"></i>
+                                    </a>
+                                </div>
+                                <div class="item-image flex-group-center input-small toggle"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                            </div>
+
                             <input class="sheet-inline-edit" data-field="name" type="text" name="item.system.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.armorPlaceholder'}}" style="text-align: left; font-weight: bold; min-width: 240px;"/>
                             <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
                             <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
@@ -35,16 +43,23 @@
                                 <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
                             </div>
                             {{/if}}
-                            <div class="item showMore descriptionContainer" style="padding-bottom: 10px; min-width: 100%;">
-                                <div class="itemDescription shape3" style="min-width: 100%;">
+                            <div class="item showMore descriptionContainer" style="min-width: 100%;">
+                                <div class="itemDescription" style="min-width: 100%;">
                                     {{item.system.description}}
                                 </div>
                             </div>
                         </div>
                         {{else}}
-                        <div class="item flexrow flex-group-center offHand" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+                        <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
                             <input class="sheet equipped checkBox" data-dtype="Boolean" data-item-id="{{item._id}}" data-path="system.active" type="checkbox" {{checked item.system.active}}>
-                            <div class="item-image flex-group-center input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                            <div style="max-width: 25px!important;">
+                                <div class="noShow toggle" style="padding-left: 4px;">
+                                    <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
+                                        <i class="fas fa-bars" style="text-align: left; font-size: 18px;"></i>
+                                    </a>
+                                </div>
+                                <div class="item-image flex-group-center input-small toggle"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                            </div>
                             <input class="sheet-inline-edit" data-field="name" type="text" name="item.name" value="{{item.name}}" placeholder="{{localize 'ep2e.inventory.armorPlaceholder'}}" style="text-align: left; font-weight: bold; min-width: 240px;"/>
                             <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
                             <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.energy}}</strong></label>
@@ -66,8 +81,8 @@
                                 <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
                             </div>
                             {{/if}}
-                            <div class="item showMore descriptionContainer" style="padding-bottom: 10px; min-width: 100%;">
-                                <div class="itemDescription shape3" style="min-width: 100%;">
+                            <div class="item showMore descriptionContainer" style="min-width: 100%;">
+                                <div class="itemDescription" style="min-width: 100%;">
                                     {{item.system.description}}
                                 </div>
                             </div>
@@ -162,7 +177,7 @@
                             <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
                         </div>
                         <div class="item showMore descriptionContainer" style="padding-bottom: 10px; min-width: 100%;">
-                            <div class="itemDescription shape3" style="min-width: 100%;">
+                            <div class="itemDescription" style="min-width: 100%;">
                                 {{item.system.description}}
                             </div>
                         </div>
@@ -180,7 +195,7 @@
             <div class="flexrow">
                 <h3 class="subheaderBlank">{{localize "ep2e.inventory.noGear.headline"}}</h3>
             </div>
-            <div class="listBackgroundPitch shape3 alignCenter" style="border-top: solid var(--accentBackground) 5px;">
+            <div class="listBackgroundPitch alignCenter" style="border-top: solid var(--accentBackground) 5px;">
                 <i style="font-size: 12px; margin-bottom: 10px;">{{{localize "ep2e.inventory.noGear.copy"}}}</i>
             </div>
         </div>

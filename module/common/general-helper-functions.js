@@ -1,3 +1,5 @@
+import * as SHEET from "./general-sheet-functions.js"
+
 /**
  * Sorts an object list alphabetically
  * Uses the value (label of a dropdown) to do so
@@ -196,4 +198,142 @@ export function _normalizeRichTextForProseMirror(content) {
 
   // Optional: convert stray <br><br> style blocks into paragraphs more cleanly later if needed
   return wrapper.innerHTML.trim();
+}
+
+// Helper to handle GM requests if items are traded
+const SOCKET_NAME = "system.eclipsephase";
+
+let transferSocketRegistered = false;
+
+export function registerItemTransferSocket() {
+  if (transferSocketRegistered) return;
+  transferSocketRegistered = true;
+  game.socket.on(SOCKET_NAME, async payload => {
+    if (!game.user.isGM) return;
+    if (!payload) return;
+    if (payload.action !== "transferItem") return;
+
+    const {
+      requestId,
+      sourceActorId,
+      targetActorId,
+      itemId,
+      quantity,
+      userId
+    } = payload;
+
+    const primaryGM = game.users.activeGM;
+    if (primaryGM && primaryGM.id !== game.user.id) return;
+
+    const sourceActor = game.actors.get(sourceActorId);
+    const targetActor = game.actors.get(targetActorId);
+    const item = sourceActor?.items.get(itemId);
+
+    if (!sourceActor || !targetActor || !item) {
+      return _replyToUser(userId, {
+        requestId,
+        ok: false,
+        error: "Transfer failed: source, target, or item was not found."
+      });
+    }
+
+    const requestingUser = game.users.get(userId);
+    const ownsSource = requestingUser
+      ? sourceActor.testUserPermission(requestingUser, "OWNER")
+      : false;
+
+    if (!requestingUser || !ownsSource) {
+      return _replyToUser(userId, {
+        requestId,
+        ok: false,
+        error: "Transfer failed: you do not own the source actor."
+      });
+    }
+
+    const blockedTypes = new Set(["morph"]);
+    if (blockedTypes.has(item.type)) {
+      return _replyToUser(userId, {
+        requestId,
+        ok: false,
+        error: "This item type cannot be transferred."
+      });
+    }
+
+    try {
+      await SHEET.transferItemBetweenActors({
+        sourceActor,
+        targetActor,
+        item,
+        quantity
+      });
+
+      _replyToUser(userId, {
+        requestId,
+        ok: true
+      });
+    } catch (err) {
+      console.error("EP item transfer failed", err);
+      _replyToUser(userId, {
+        requestId,
+        ok: false,
+        error: err?.message ?? "Unknown transfer error."
+      });
+    }
+  });
+}
+
+function _replyToUser(userId, payload) {
+  game.socket.emit(SOCKET_NAME, {
+    action: "transferItemResult",
+    userId,
+    ...payload
+  });
+}
+
+export function requestGMItemTransfer({
+  sourceActorId,
+  targetActorId,
+  itemId,
+  quantity = 1
+} = {}) {
+  return new Promise((resolve) => {
+    const requestId = foundry.utils.randomID();
+    let settled = false;
+
+    const finish = payload => {
+      if (settled) return;
+      settled = true;
+      game.socket.off(SOCKET_NAME, resultHandler);
+      resolve(payload);
+    };
+
+    const resultHandler = payload => {
+      if (!payload) return;
+      if (payload.action !== "transferItemResult") return;
+      if (payload.userId !== game.user.id) return;
+      if (payload.requestId !== requestId) return;
+
+      finish(payload);
+    };
+
+    game.socket.on(SOCKET_NAME, resultHandler);
+
+    game.socket.emit(SOCKET_NAME, {
+      action: "transferItem",
+      requestId,
+      userId: game.user.id,
+      sourceActorId,
+      targetActorId,
+      itemId,
+      quantity
+    });
+
+    window.setTimeout(() => {
+      finish({
+        requestId,
+        ok: false,
+        error: "No GM responded to the transfer request."
+      });
+    }, 5000);
+  });
 }
