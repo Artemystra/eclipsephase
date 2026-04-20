@@ -1,5 +1,6 @@
-import * as HELPER from "./general-helper-functions.js"
+import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
+import * as WEAPON from "./weapon-functions.js";
 
 /**
  * Foundry VTTs item creation & deletion functions
@@ -585,44 +586,43 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
   }
 }
 
-  export async function rollBuilder (actorWhole, dataset, rolledFrom, weaponID, systemOptions){
+  export async function rollFromSheet (actorWhole, dataset, rolledFrom, weaponID, systemOptions){
     if(dataset.type === 'skill') {
       
-      let skillKey
-      let weaponPrep
+      let skillKey = dataset.key
       let weaponSelected
       const actorModel = actorWhole.system;
 
+      console.log("I rolled from", rolledFrom)
+
       if (rolledFrom === "psiSleight") {
-        skillKey = "psi";
         dataset.rollvalue = actorModel.skillsMox.psi.roll;
         dataset.specname = actorModel.skillsMox.psi.specname;
         dataset.pooltype = "Moxie";
       }
 
       if (rolledFrom === "rangedWeapon") {
-        skillKey = "guns";
         dataset.rollvalue = actorModel.skillsVig.guns.roll;
         dataset.specname = actorModel.skillsVig.guns.specname;
         dataset.pooltype = "Vigor";
       }
       else if (rolledFrom === "ccWeapon") {
-        skillKey = "melee";
         dataset.rollvalue = actorModel.skillsVig.melee.roll;
         dataset.specname = actorModel.skillsVig.melee.specname;
         dataset.pooltype = "Vigor";
       }
 
       if (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon"){
-    
-        weaponPrep = await weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID)
+        weaponSelected = await WEAPON.weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID)
         
-        if (!weaponPrep || weaponPrep.cancel){
+        if (!weaponSelected || weaponSelected.cancel){
           return;
         }
-        weaponSelected = weaponPrep
-        rolledFrom = weaponPrep.rolledFrom
+
       }
+
+      console.log("my weapon", weaponSelected)
+      console.log("this is my dataset", dataset)
 
       DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }

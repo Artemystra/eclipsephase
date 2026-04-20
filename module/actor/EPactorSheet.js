@@ -795,6 +795,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const item = this.actor.items.get(itemId);
     if (!item) return;
 
+    const rolledFrom =
+    item.system?.displayCategory === "ranged" ? "rangedWeapon" :
+    item.system?.displayCategory === "ccweapon" ? "ccWeapon" :
+    null;
+
     const dragData = {
       type: "Item",
       uuid: item.uuid,
@@ -803,11 +808,14 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actorUuid: this.actor.uuid,
       itemType: item.type,
       systemId: game.system.id,
+      rolledFrom,
       epTransfer: {
         sourceActorId: this.actor.id,
         sourceActorUuid: this.actor.uuid
       }
     };
+
+    console.log("This is my dragData", dragData)
 
     event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
   }
@@ -1618,7 +1626,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     let weaponID = dataset.weaponid ? dataset.weaponid : "";
     const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 
-    SHEET.rollBuilder(actorWhole, dataset, rolledFrom, weaponID, systemOptions)
+    SHEET.rollFromSheet(actorWhole, dataset, rolledFrom, weaponID, systemOptions)
     
   }
 

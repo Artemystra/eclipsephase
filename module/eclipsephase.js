@@ -124,7 +124,8 @@ Hooks.once('init', async function() {
   game.eclipsephase = {
     EPactor,
     EPitem,
-    rollItemMacro
+    rollItemMacro,
+    rollWeaponMacro: sheetFunction.rollFromSheet
   };
 
   /**
@@ -663,6 +664,89 @@ Hooks.once('init', () => {
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
+
+Hooks.on("hotbarDrop", (bar, data, slot) => {
+  if (data.type !== "Item") return;
+
+  const isWeapon = data.itemType === "rangedWeapon" || data.itemType === "ccWeapon";
+  if (!isWeapon) return;
+
+  createEclipsePhaseWeaponMacro(data, slot);
+  return false;
+});
+
+/**
+ * A builder for automatically creating a drag & drop macro to the hotbar.
+ * @param {*} data 
+ * @param {*} slot 
+ * @returns 
+ */
+async function createEclipsePhaseWeaponMacro(data, slot) {
+  const actorId = data.actorId;
+  const itemId = data.itemId;
+  const rolledFrom = data.rolledFrom;
+
+  const actor = game.actors.get(actorId);
+  const item = actor?.items.get(itemId);
+  let skillName;
+  let skillKey;
+  console.log(item)
+  if (!actor || !item) {
+    ui.notifications.warn("Actor or weapon could not be found for this macro.");
+    return false;
+  }
+
+  if (rolledFrom === "rangedWeapon"){
+    skillKey="guns";
+    skillName="ep2e.skills.vigorSkills.guns";
+  }
+  else if (rolledFrom === "ccWeapon"){
+    skillKey="melee"; 
+    skillName="ep2e.skills.vigorSkills.melee";
+  }
+  const macroName = `Use ${item.name}`;
+
+  const command = `
+    const actor = game.actors.get("${actorId}");
+    if (!actor) return ui.notifications.warn("Actor not found.");
+
+    const item = actor.items.get("${itemId}");
+    if (!item) return ui.notifications.warn("Weapon not found.");
+
+    const dataset = {
+      name: "${skillName}",
+      key: "${skillKey}",
+      type: "skill",
+      rolledfrom: "${rolledFrom}",
+      weaponid: "${itemId}"
+    };
+    
+    const systemOptions = {
+      askForOptions: false,
+      optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
+      brewStatus: game.settings.get("eclipsephase", "superBrew")
+    };
+
+    await game.eclipsephase.rollWeaponMacro(actor, dataset, "${rolledFrom}", "${itemId}", systemOptions);
+    `.trim();
+
+  let macro = game.macros.find(m =>
+    m.name === macroName &&
+    m.command === command
+  );
+
+  if (!macro) {
+    macro = await Macro.create({
+      name: macroName,
+      type: "script",
+      img: item.img,
+      command
+    });
+  }
+
+  await game.user.assignHotbarMacro(macro, slot);
+  return false;
+}
 
 /**
  * Create a Macro from an Item drop.
