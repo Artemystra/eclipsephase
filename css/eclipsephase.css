@@ -757,13 +757,60 @@ input[class="sheet equipped checkBox"],
 input[class="rest"]{
   -webkit-appearance:none;
   appearance: none;
-  flex: 0 0 10px;
-  height: 10px;
+  flex: 0 0 13px;
+  height: 13px;
   background-color: #fff;
   border: var(--focusBackground) 1px solid;
   display:block;
-  border-radius: 100px;
   margin: 0 5px;
+}
+
+body.system-eclipsephase dialog.application input[type="radio"],
+body.system-eclipsephase .application.dialog input[type="radio"],
+body.system-eclipsephase dialog.application input[type="checkbox"],
+body.system-eclipsephase .application.dialog input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  min-height: 15px;
+  margin: 0;
+  padding: 0;
+
+  border: none;
+  background: var(--highlightBackground);
+  box-shadow: none;
+  outline: none;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+body.system-eclipsephase dialog.application input[type="radio"],
+body.system-eclipsephase .application.dialog input[type="radio"]{
+  border-radius: 50%;
+}
+
+body.system-eclipsephase dialog.application input[type="radio"]:checked,
+body.system-eclipsephase .application.dialog input[type="radio"]:checked,
+body.system-eclipsephase dialog.application input[type="checkbox"]:checked,
+body.system-eclipsephase .application.dialog input[type="checkbox"]:checked {
+  background: var(--highlight);
+}
+
+body.system-eclipsephase dialog.application input[type="radio"]::before,
+body.system-eclipsephase dialog.application input[type="radio"]::after,
+body.system-eclipsephase .application.dialog input[type="radio"]::before,
+body.system-eclipsephase .application.dialog input[type="radio"]::after,
+body.system-eclipsephase dialog.application input[type="checkbox"]::before,
+body.system-eclipsephase .application.dialog input[type="checkbox"]::before,
+body.system-eclipsephase dialog.application input[type="checkbox"]::after,
+body.system-eclipsephase .application.dialog input[type="checkbox"]::after {
+  display: none !important;
+  content: none !important;
 }
 
 input[class="check-inline-edit"]{

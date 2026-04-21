@@ -41,7 +41,7 @@
             <div style="min-height: 40px; display: flex;">
                 {{#if id}}
                 <div>
-                    <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                    <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                 </div>
                     {{#if dv}}
                         {{#if ammoCur}}
@@ -78,7 +78,7 @@
             <div style="min-height: 40px; display: flex; flex-wrap: wrap;">
                 {{#if id}}
                 <div>
-                    <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                    <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                 </div>
                     {{#if dv}}
                         {{#if ammoCur}}
@@ -167,9 +167,9 @@
                             </div>
                         {{else}}
                             {{#if (eq key 0)}}
-                                <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
+                                <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
                             {{else}}
-                                <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                                <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                             {{/if}} 
                         {{/if}}
                     </div>
