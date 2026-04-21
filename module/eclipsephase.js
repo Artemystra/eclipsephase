@@ -681,16 +681,18 @@ Hooks.on("hotbarDrop", (bar, data, slot) => {
  * @param {*} slot 
  * @returns 
  */
+
 async function createEclipsePhaseWeaponMacro(data, slot) {
-  const actorId = data.actorId;
+  const actorUuid = data.actorUuid;
+  const itemUuid = data.uuid;
   const itemId = data.itemId;
   const rolledFrom = data.rolledFrom;
+  let skillKey
+  let skillName
 
-  const actor = game.actors.get(actorId);
-  const item = actor?.items.get(itemId);
-  let skillName;
-  let skillKey;
-  console.log(item)
+  const actor = actorUuid ? await fromUuid(actorUuid) : null;
+  const item = itemUuid ? await fromUuid(itemUuid) : null;
+
   if (!actor || !item) {
     ui.notifications.warn("Actor or weapon could not be found for this macro.");
     return false;
@@ -704,31 +706,32 @@ async function createEclipsePhaseWeaponMacro(data, slot) {
     skillKey="melee"; 
     skillName="ep2e.skills.vigorSkills.melee";
   }
+
   const macroName = `Use ${item.name}`;
 
   const command = `
-    const actor = game.actors.get("${actorId}");
-    if (!actor) return ui.notifications.warn("Actor not found.");
+const actor = await fromUuid("${actorUuid}");
+if (!actor) return ui.notifications.warn("Actor not found.");
 
-    const item = actor.items.get("${itemId}");
-    if (!item) return ui.notifications.warn("Weapon not found.");
+const item = await fromUuid("${itemUuid}");
+if (!item) return ui.notifications.warn("Weapon not found.");
 
-    const dataset = {
-      name: "${skillName}",
-      key: "${skillKey}",
-      type: "skill",
-      rolledfrom: "${rolledFrom}",
-      weaponid: "${itemId}"
-    };
-    
-    const systemOptions = {
-      askForOptions: false,
-      optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
-      brewStatus: game.settings.get("eclipsephase", "superBrew")
-    };
+const dataset = {
+  name: "${skillName}",
+  key: "${skillKey}",
+  type: "skill",
+  rolledfrom: "${rolledFrom}",
+  weaponid: "${itemId}"
+};
 
-    await game.eclipsephase.rollWeaponMacro(actor, dataset, "${rolledFrom}", "${itemId}", systemOptions);
-    `.trim();
+const systemOptions = {
+  askForOptions: false,
+  optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
+  brewStatus: game.settings.get("eclipsephase", "superBrew")
+};
+
+await game.eclipsephase.rollWeaponMacro(actor, dataset, "${rolledFrom}", "${itemId}", systemOptions);
+  `.trim();
 
   let macro = game.macros.find(m =>
     m.name === macroName &&

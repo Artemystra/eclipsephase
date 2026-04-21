@@ -17,13 +17,13 @@
             </div>
 {{else}}
         <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-path="system.active" data-item-name="{{item.name}}">
-            <div>
+            <div style="max-width: 30px;">
                 <div class="noShow toggle" style="padding-left: 4px;">
-                    <a class="item-drag flexrow flex-group-left input-small" draggable="true" data-action="dragItem" title="Drag item">
+                    <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
                         <i class="fas fa-bars" style="text-align: left; font-size: 18px;"></i>
                     </a>
                 </div>
-                <div class="item-image flex-group-center input-small toggle" style="margin-left: 14px;">
+                <div class="item-image flex-group-center input-small toggle">
                     <img src="{{item.img}}" title="{{item.name}}" class="item-image flex-group-left icon-small"/>
                 </div>
             </div>
