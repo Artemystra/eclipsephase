@@ -1622,7 +1622,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const element = event.currentTarget;
     const dataset = element.dataset;
     const actorWhole = this.actor;
-    let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : "";
+    let rolledFrom = dataset.rolledfrom? dataset.rolledfrom : "";
+    console.log("This is my rolled from", rolledFrom, "because my skillKey is", dataset.key)
     let weaponID = dataset.weaponid ? dataset.weaponid : "";
     const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 

@@ -612,12 +612,14 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
         dataset.pooltype = "Vigor";
       }
 
-      if (rolledFrom === "rangedWeapon" || rolledFrom === "ccWeapon"){
+      if (skillKey === "guns" || skillKey === "melee"){
         weaponSelected = await WEAPON.weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID)
         
         if (!weaponSelected || weaponSelected.cancel){
           return;
         }
+
+        rolledFrom = weaponSelected.rolledFrom
 
       }
 
