@@ -1,6 +1,6 @@
 
 <div class="alignCenter">
-  <p>{{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{taskName}}</span></p>
+  <p>{{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{localize taskName}}</span></p>
   {{#if (eq rolledFrom "psiSleight")}}
     <p><span class="resource-value">{{itemdata.name}} </span><a class="GMinfo"><i class="fa-regular fa-circle-info moreInfo awesomeIcon" data-title="{{itemdata.name}}" data-resource="{{options.raiseInfection}}" data-description="{{itemdata.description}}" data-action="{{itemdata.action}}" data-duration="{{itemdata.duration}}"  data-rolledfrom="{{rolledFrom}}"></i></a></p>
   {{/if}}
