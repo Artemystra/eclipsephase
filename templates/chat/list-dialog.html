@@ -41,21 +41,21 @@
             <div style="min-height: 40px; display: flex;">
                 {{#if id}}
                 <div>
-                    <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                    <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                 </div>
                     {{#if dv}}
                         {{#if ammoCur}}
                             <div style="display: block;">
                                 <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{name}}</b> </label><br>
                                 <div style="display: flex; align-items: center; padding-left: 10px;">
-                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
+                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
                                 </div>
                             </div>
                         {{else}}
                         <div style="display: block;">
                             <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{name}}</b> </label><br>
                             <div style="display: flex; align-items: center; padding-left: 10px;">
-                                <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
+                                <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
                             </div>
                         </div>
                         {{/if}}
@@ -78,20 +78,20 @@
             <div style="min-height: 40px; display: flex; flex-wrap: wrap;">
                 {{#if id}}
                 <div>
-                    <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                    <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                 </div>
                     {{#if dv}}
                         {{#if ammoCur}}
                             <div style="display: block;">
                                 <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{localize name}}</b> </label><br>
                                 <div style="display: flex; align-items: center; padding-left: 10px;">
-                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
+                                    <img src="systems/eclipsephase/resources/icons/ammo.png" class="icon-small" style="margin-right: 5px;"/>{{ammoCur}}/{{ammoMax}}<i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon" style="margin-right: 5px; margin-left: 10px;"></i>{{localize dv}}
                                 </div>
                         {{else}}
                         <div style="display: block;">
                             <label class="resource-label" style="padding-left: 10px; font-size: 15px;" for="{{id}}"><b>{{localize name}}</b> </label><br>
                             <div style="display: flex; align-items: center; padding-left: 10px;">
-                                <i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
+                                <i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon" style="margin-right: 5px;"></i>{{localize dv}}
                             </div>
                         {{/if}}
                     {{else}}
@@ -167,9 +167,9 @@
                             </div>
                         {{else}}
                             {{#if (eq key 0)}}
-                                <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
+                                <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
                             {{else}}
-                                <input type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
+                                <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
                             {{/if}} 
                         {{/if}}
                     </div>

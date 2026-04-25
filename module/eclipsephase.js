@@ -6,10 +6,9 @@ import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
-import  EPmorphTraitSheet  from "./item/EPmorphTraitSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
-import  { confirmation } from "./common/general-sheet-functions.js"
+import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
 import  * as update from "./common/migration.js";
 
@@ -125,7 +124,8 @@ Hooks.once('init', async function() {
   game.eclipsephase = {
     EPactor,
     EPitem,
-    rollItemMacro
+    rollItemMacro,
+    rollWeaponMacro: sheetFunction.rollFromSheet
   };
 
   /**
@@ -147,7 +147,6 @@ Hooks.once('init', async function() {
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
-  foundry.documents.collections.Items.registerSheet("eclipsephase", EPmorphTraitSheet, {types: ["morphTrait","trait","flaw","morphFlaw"], makeDefault: true });
   Handlebars.registerHelper('concat', function() {
 
     var outStr = '';
@@ -581,6 +580,11 @@ Hooks.once("ready", () => {
   });
 });
 
+// Helper to handle item transfers between players
+Hooks.once("ready", () => {
+  helperFunction.registerItemTransferSocket();
+});
+
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
 Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.addChatListeners(html, data);
@@ -641,7 +645,7 @@ Hooks.on("preCreateItem", (item, data, options, userId) => {
     const popUpTarget = null
     const popUpPrimary = game.i18n.localize("ep2e.actorSheet.button.thankYouLaph");
     const singleButton = true
-    confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton);
+    sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTarget, popUpPrimary, singleButton);
     return false;
   }
 });
@@ -660,6 +664,92 @@ Hooks.once('init', () => {
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
+
+Hooks.on("hotbarDrop", (bar, data, slot) => {
+  if (data.type !== "Item") return;
+
+  const isWeapon = data.itemType === "rangedWeapon" || data.itemType === "ccWeapon";
+  if (!isWeapon) return;
+
+  createEclipsePhaseWeaponMacro(data, slot);
+  return false;
+});
+
+/**
+ * A builder for automatically creating a drag & drop macro to the hotbar.
+ * @param {*} data 
+ * @param {*} slot 
+ * @returns 
+ */
+
+async function createEclipsePhaseWeaponMacro(data, slot) {
+  const actorUuid = data.actorUuid;
+  const itemUuid = data.uuid;
+  const itemId = data.itemId;
+  const rolledFrom = data.rolledFrom;
+  let skillKey
+  let skillName
+
+  const actor = actorUuid ? await fromUuid(actorUuid) : null;
+  const item = itemUuid ? await fromUuid(itemUuid) : null;
+
+  if (!actor || !item) {
+    ui.notifications.warn("Actor or weapon could not be found for this macro.");
+    return false;
+  }
+
+  if (rolledFrom === "rangedWeapon"){
+    skillKey="guns";
+    skillName="ep2e.skills.vigorSkills.guns";
+  }
+  else if (rolledFrom === "ccWeapon"){
+    skillKey="melee"; 
+    skillName="ep2e.skills.vigorSkills.melee";
+  }
+
+  const macroName = `Use ${item.name}`;
+
+  const command = `
+const actor = await fromUuid("${actorUuid}");
+if (!actor) return ui.notifications.warn("Actor not found.");
+
+const item = await fromUuid("${itemUuid}");
+if (!item) return ui.notifications.warn("Weapon not found.");
+
+const dataset = {
+  name: "${skillName}",
+  key: "${skillKey}",
+  type: "skill",
+  rolledfrom: "${rolledFrom}",
+  weaponid: "${itemId}"
+};
+
+const systemOptions = {
+  askForOptions: false,
+  optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
+  brewStatus: game.settings.get("eclipsephase", "superBrew")
+};
+
+await game.eclipsephase.rollWeaponMacro(actor, dataset, "${rolledFrom}", "${itemId}", systemOptions);
+  `.trim();
+
+  let macro = game.macros.find(m =>
+    m.name === macroName &&
+    m.command === command
+  );
+
+  if (!macro) {
+    macro = await Macro.create({
+      name: macroName,
+      type: "script",
+      img: item.img,
+      command
+    });
+  }
+
+  await game.user.assignHotbarMacro(macro, slot);
+  return false;
+}
 
 /**
  * Create a Macro from an Item drop.

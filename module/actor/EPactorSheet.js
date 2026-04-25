@@ -3,7 +3,7 @@ import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmati
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
-import * as GENERAL from "../common/general-sheet-functions.js"
+import * as SHEET from "../common/general-sheet-functions.js"
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
@@ -32,7 +32,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     },
     actions: {
       editImage: this._onEditImage
-    }
+    },
+    dragDrop: [
+      {
+        dragSelector: ".item-drag",
+        dropSelector: ".window-content"
+      }
+    ]
   });
 
   //Fallback template for sheets in general
@@ -729,8 +735,145 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
   }
 
+  //Code that runs every time the sheet renders anew (e.g. open a formerly closed sheet)
+  async _onRender(context, options) {
+      const actor = this.document;
+
+      await super._onRender(context, options);
+
+      if (game.user.isGM || actor.isOwner){
+      await this.changeTab(this.tabGroups.primary, "primary", { force: true });
+
+      //Sets the opened tab for PC sheets
+      if (actor.type === "character"){
+        await this.changeTab(this.tabGroups.secondary, "secondary", { force: true });
+
+        this._syncManualTabGroup("morph");
+        this._syncManualTabGroup("id");
+
+      }
+    }
+
+   for (const el of this.element.querySelectorAll(".item-drag")) {
+      el.setAttribute("draggable", "true");
+      el.addEventListener("dragstart", this._onNativeItemDragStart.bind(this));
+    }
+
+    const html = this.element;
+    const actorModel = actor.system;
+    const brewStatus = game.settings.get("eclipsephase", "superBrew");
+    if (!html) return;
+
+    SHEET.registerEffectHandlers(html, this.actor);
+    SHEET.registerCommonHandlers(html, this.actor);
+
+    if (!this.isEditable) return;
+
+    this._activItemListeners(html, actor, brewStatus);
+    this._activPoolListeners(html, actor, brewStatus);
+    this._activSupportListeners(html, actor, brewStatus);
+    this._activIdentityListeners(html, actor, brewStatus);
+    this._activHealthListeners(html, actor, actorModel, brewStatus);
+  }
+
+    _canDragStart(selector) {
+    return this.isEditable;
+  }
+
+  _canDragDrop(selector) {
+    return true;
+  }
+
+
+  //Drag Items
+  _onNativeItemDragStart(event) {
+
+    const dragHandle = event.currentTarget;
+    const itemId = dragHandle.dataset.itemid;
+    if (!itemId) return;
+
+    const item = this.actor.items.get(itemId);
+    if (!item) return;
+
+    const rolledFrom =
+    item.system?.displayCategory === "ranged" ? "rangedWeapon" :
+    item.system?.displayCategory === "ccweapon" ? "ccWeapon" :
+    null;
+
+    const dragData = {
+      type: "Item",
+      uuid: item.uuid,
+      itemId: item.id,
+      actorId: this.actor.id,
+      actorUuid: this.actor.uuid,
+      itemType: item.type,
+      systemId: game.system.id,
+      rolledFrom,
+      epTransfer: {
+        sourceActorId: this.actor.id,
+        sourceActorUuid: this.actor.uuid
+      }
+    };
+
+    console.log("This is my dragData", dragData)
+
+    event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+  }
+
+  async _onDrop(event) {
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
+    return super._onDrop(event);
+  }
+
   async _onDropItem(event, item) {
-    const actor = this.document;
+    const targetActor = this.actor;
+    const sourceActor = item.parent instanceof Actor ? item.parent : null;
+
+    // Dropped back onto the same actor sheet: do nothing
+    if (sourceActor && sourceActor.id === targetActor.id) {
+      return null;
+    }
+
+    // Cross-actor transfer
+    if (sourceActor && sourceActor.id !== targetActor.id) {
+      const quantity = 1;
+
+      const canEditSource = sourceActor.isOwner;
+      const canEditTarget = targetActor.isOwner;
+      // Direct transfer if current user owns both sides
+      if (canEditSource && canEditTarget) {
+        return SHEET.transferItemBetweenActors({
+          sourceActor,
+          targetActor,
+          item,
+          quantity
+        });
+      }
+
+      // Fallback: ask a GM to execute the transfer
+      const activeGM = game.users.activeGM;
+      if (!activeGM) {
+        ui.notifications.warn("No GM is connected, so the transfer cannot be completed.");
+        return null;
+      }
+
+      const result = await HELPER.requestGMItemTransfer({
+        sourceActorId: sourceActor.id,
+        targetActorId: targetActor.id,
+        itemId: item.id,
+        quantity
+      });
+
+      if (!result?.ok) {
+        ui.notifications.warn(result?.error ?? "The transfer could not be completed.");
+        return null;
+      }
+
+      return null;
+    }
+
+    // External drop handling only
+    const actor = this.actor;
     const actorModel = actor.system;
     const itemData = item.toObject();
     const itemModel = itemData.system;
@@ -738,7 +881,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const currentMorph = actorModel.activeMorph;
 
-    // Replacing the current morph with a new one for NPCs & Threats
     if (itemData.type === "morph" && actor.type !== "character") {
       await MORPHFUNCTION.replaceMorph(actor, currentMorph, itemData);
       const created = await actor.createEmbeddedDocuments("Item", [itemData]);
@@ -749,7 +891,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       return created[0];
     }
 
-    // Shows a pop-up if a trait has both a morph and an ego variant
     if (itemData.type === "traits" && itemModel.morph === true && itemModel.ego === true) {
       const dialogName = game.i18n.localize("ep2e.dialog.selectTrait.header");
       const dialogCopy = "ep2e.dialog.selectTrait.copy";
@@ -773,7 +914,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       else itemModel.morph = false;
     }
 
-    // Binds a morph-trait/ware to the currently active morph
     if (
       (itemData.type === "traits" && itemModel.morph === true) ||
       itemData.type === "ware" ||
@@ -782,7 +922,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       itemModel.boundTo = actor.type === "character" ? currentMorph : "activeMorph";
     }
 
-    // Loading weapons with Standard Ammo
     if (itemData.type === "rangedWeapon") {
       if (
         itemModel.ammoType !== "seeker" &&
@@ -796,47 +935,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     }
 
-    // Timestamp newly created items
     itemModel.updated = game.system.version;
 
     const created = await actor.createEmbeddedDocuments("Item", [itemData]);
     return created[0] ?? null;
-  }
-
-  //Code that runs every time the sheet renders anew (e.g. open a formerly closed sheet)
-  async _onRender(context, options) {
-      const actor = this.document;
-
-      await super._onRender(context, options);
-
-      if (game.user.isGM || actor.isOwner){
-      await this.changeTab(this.tabGroups.primary, "primary", { force: true });
-
-      //Sets the opened tab for PC sheets
-      if (actor.type === "character"){
-        await this.changeTab(this.tabGroups.secondary, "secondary", { force: true });
-
-        this._syncManualTabGroup("morph");
-        this._syncManualTabGroup("id");
-
-      }
-    }
-
-    const html = this.element;
-    const actorModel = actor.system;
-    const brewStatus = game.settings.get("eclipsephase", "superBrew");
-    if (!html) return;
-
-    GENERAL.registerEffectHandlers(html, this.actor);
-    GENERAL.registerCommonHandlers(html, this.actor);
-
-    if (!this.isEditable) return;
-
-    this._activItemListeners(html, actor, brewStatus);
-    this._activPoolListeners(html, actor, brewStatus);
-    this._activSupportListeners(html, actor, brewStatus);
-    this._activIdentityListeners(html, actor, brewStatus);
-    this._activHealthListeners(html, actor, actorModel, brewStatus);
   }
 
   //Registering own tab click behavior (This is important since some tabGroups are dynamically created)
@@ -1244,16 +1346,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
   _activSupportListeners(html, actor, brewStatus) {
 
-    // Drag events for macros.
-    if (actor.isOwner) {
-      let handler = ev => this._onDragItemStart(ev);
-      html.querySelectorAll("li.item").forEach(li => {
-        if (li.classList.contains("inventory-header")) return;
-        li.setAttribute("draggable", true);
-        li.addEventListener("dragstart", handler, false);
-      });
-    }
-
     //Edit Item Input Fields
     html.querySelectorAll(".sheet-inline-edit").forEach(element => {
       element.addEventListener("change", this._onSkillEdit.bind(this));
@@ -1427,7 +1519,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         let total = 0;
         const date = new Date().toLocaleDateString("en-EN");
 
-        const spending = await GENERAL.listSelection(
+        const spending = await SHEET.listSelection(
           object,
           "standardSelectionList",
           350,
@@ -1530,48 +1622,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const element = event.currentTarget;
     const dataset = element.dataset;
     const actorWhole = this.actor;
-    const actorModel = this.actor.system;
-    let skillKey = dataset.key ? dataset.key.toLowerCase() : null;
-    let weaponPrep = null;
-    let rolledFrom = dataset.rolledfrom ? dataset.rolledfrom : null;
-    let weaponSelected = null;
+    let rolledFrom = dataset.rolledfrom? dataset.rolledfrom : "";
+    console.log("This is my rolled from", rolledFrom, "because my skillKey is", dataset.key)
+    let weaponID = dataset.weaponid ? dataset.weaponid : "";
     const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 
-    if(dataset.type === 'skill') {
-
-      if (rolledFrom === "psiSleight") {
-        skillKey = "psi";
-        dataset.rollvalue = actorModel.skillsMox.psi.roll;
-        dataset.specname = actorModel.skillsMox.psi.specname;
-        dataset.pooltype = "Moxie";
-      }
-
-      if (rolledFrom === "rangedWeapon") {
-        skillKey = "guns";
-        dataset.rollvalue = actorModel.skillsVig.guns.roll;
-        dataset.specname = actorModel.skillsVig.guns.specname;
-        dataset.pooltype = "Vigor";
-      }
-      else if (rolledFrom === "ccWeapon") {
-        skillKey = "melee";
-        dataset.rollvalue = actorModel.skillsVig.melee.roll;
-        dataset.specname = actorModel.skillsVig.melee.specname;
-        dataset.pooltype = "Vigor";
-      }
-
-      if (skillKey === "guns" || skillKey === "melee"){
-    
-        weaponPrep = await weaponPreparation(actorWhole, skillKey, rolledFrom, dataset.weaponid)
-        
-        if (!weaponPrep || weaponPrep.cancel){
-          return;
-        }
-        weaponSelected = weaponPrep
-        rolledFrom = weaponPrep.rolledFrom
-      }
-
-      this._onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
-    }
+    SHEET.rollFromSheet(actorWhole, dataset, rolledFrom, weaponID, systemOptions)
     
   }
 
@@ -1587,8 +1643,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const item = this.actor.items.get(itemId);
     if (!item) return;
-
-    console.log("This is my item", item);
 
     const field = element.dataset.field;
     if (!field) return;
@@ -1606,10 +1660,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     for (const value of revealer) {
       value.classList.toggle("noShow");
     }
-  }
-  
-  _onRollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom) {
-    DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
   }
 
 }

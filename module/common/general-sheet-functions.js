@@ -1,4 +1,6 @@
-import * as HELPER from "./general-helper-functions.js"
+import * as HELPER from "./general-helper-functions.js";
+import * as DICE from "../rolls/dice.js";
+import * as WEAPON from "./weapon-functions.js";
 
 /**
  * Foundry VTTs item creation & deletion functions
@@ -584,6 +586,50 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
   }
 }
 
+  export async function rollFromSheet (actorWhole, dataset, rolledFrom, weaponID, systemOptions){
+    if(dataset.type === 'skill') {
+      
+      let skillKey = dataset.key
+      let weaponSelected
+      const actorModel = actorWhole.system;
+
+      console.log("I rolled from", rolledFrom)
+
+      if (rolledFrom === "psiSleight") {
+        dataset.rollvalue = actorModel.skillsMox.psi.roll;
+        dataset.specname = actorModel.skillsMox.psi.specname;
+        dataset.pooltype = "Moxie";
+      }
+
+      if (rolledFrom === "rangedWeapon") {
+        dataset.rollvalue = actorModel.skillsVig.guns.roll;
+        dataset.specname = actorModel.skillsVig.guns.specname;
+        dataset.pooltype = "Vigor";
+      }
+      else if (rolledFrom === "ccWeapon") {
+        dataset.rollvalue = actorModel.skillsVig.melee.roll;
+        dataset.specname = actorModel.skillsVig.melee.specname;
+        dataset.pooltype = "Vigor";
+      }
+
+      if (skillKey === "guns" || skillKey === "melee"){
+        weaponSelected = await WEAPON.weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID)
+        
+        if (!weaponSelected || weaponSelected.cancel){
+          return;
+        }
+
+        rolledFrom = weaponSelected.rolledFrom
+
+      }
+
+      console.log("my weapon", weaponSelected)
+      console.log("this is my dataset", dataset)
+
+      DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
+    }
+  }
+
 /**
  * Creator for GM lists
  * @returns - a list of all currently active (in the sense of being online) GMs
@@ -681,4 +727,49 @@ export async function damageValueCalc (object, dvPath, traits, calcType){
   }
 
   return {dv};
+}
+
+export async function transferItemBetweenActors({
+  sourceActor,
+  targetActor,
+  item,
+  quantity = 1
+} = {}) {
+  if (!sourceActor || !targetActor || !item) return null;
+
+  const sourceQty = Number(item.system.quantity ?? 1);
+  const transferQty = Math.max(1, Number(quantity) || 1);
+
+  const itemData = item.toObject();
+  delete itemData._id;
+
+  if (foundry.utils.hasProperty(itemData, "system.quantity")) {
+    itemData.system.quantity = Math.min(sourceQty, transferQty);
+  }
+
+  const existing = targetActor.items.find(i =>
+    i.type === item.type &&
+    i.name === item.name
+  );
+
+  let createdOrUpdated;
+  if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
+    const currentQty = Number(existing.system.quantity ?? 0);
+    await existing.update({
+      "system.quantity": currentQty + Math.min(sourceQty, transferQty)
+    });
+    createdOrUpdated = existing;
+  } else {
+    [createdOrUpdated] = await targetActor.createEmbeddedDocuments("Item", [itemData]);
+  }
+
+  if (sourceQty <= transferQty) {
+    await sourceActor.deleteEmbeddedDocuments("Item", [item.id]);
+  } else {
+    await item.update({
+      "system.quantity": sourceQty - transferQty
+    });
+  }
+
+  return createdOrUpdated;
 }

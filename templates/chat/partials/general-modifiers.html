@@ -1,17 +1,17 @@
 <div class="contentBoxMargin">
     <div class="form-group listBackgroundMain">
         <label class="resource-labelDialog" style="min-width: 140px;">{{localize "ep2e.roll.dialog.globalModLabel"}}</label>
-        <input type="number" name="globalMod" placeholder="e.g. -20" />
+        <input type="text" name="globalMod" placeholder="e.g. -20" />
     </div>
     {{#if (ne rollType "rep")}}
         {{#if specName}}
         <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="useSpec" id="useSpec">
+            <input type="checkbox" class="sheet" name="useSpec" id="useSpec">
             <label class="resource-label" for="useSpec">{{localize "ep2e.roll.dialog.usePool"}} "{{specName}}" (+10)</label>
         </div>
         {{else}}
         <div class="form-group listBackgroundMain">
-            <input type="checkbox" name="useSpec" disabled>
+            <input type="checkbox" class="sheet" name="useSpec" disabled>
             <label class="resource-label epInactive">{{localize "ep2e.roll.dialog.noSpecLabel"}}</label>
         </div>
         {{/if}}
@@ -19,7 +19,7 @@
     {{#if (eq rolledFrom "integration")}}
         {{#if actorWhole.system.additionalSystems.sleeving.exotic}}
             <div class="form-group listBackgroundMain">
-                <input type="checkbox" name="exoticMorphology" id="exoticMorphology" checked>
+                <input type="checkbox" class="sheet" name="exoticMorphology" id="exoticMorphology" checked>
                 <label class="resource-label" for="exoticMorphology">{{localize "ep2e.roll.dialog.sleeving.exoticMorphology"}} ({{actorWhole.system.additionalSystems.sleeving.exotic}})</label>
             </div>
         {{/if}}
@@ -111,7 +111,7 @@
     </div>
     <div class="form-group listBackgroundMain">
         <label class="resource-value">{{localize "ep2e.roll.dialog.dodgeRangedLabel"}}</label>
-        <input class="item-standard-margin-both-large" type="checkbox" checked name="rangedFray">
+        <input class="item-standard-margin-both-large sheet" type="checkbox" checked name="rangedFray">
     </div>
 </div>
 {{/if}}

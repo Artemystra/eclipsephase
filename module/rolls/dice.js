@@ -540,7 +540,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        
+        console.log("My outputData", outputData)
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
         
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
@@ -656,7 +656,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
 
     if(options.globalMod)
-        task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', eval(options.globalMod)))
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', Number(options.globalMod)))
 
     if(options.useSpec === true)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.specialization', 10))

@@ -1,6 +1,14 @@
 import { itemReduction, listSelection, gmList } from "./general-sheet-functions.js";
 import { damageValueCalc } from "./general-sheet-functions.js";
-//End-to-end weapon preparation
+/**
+ * End-to-end weapon preparation
+ * @param {*} actorWhole The actor document
+ * @param {*} skillKey either "guns" or "melee" - Important for skill rolls while weapons are present
+ * @param {*} rolledFrom either "rangedWeapon" or "ccWeapon". Circumvents the weapon selection and moves directly to the roll
+ * @param {*} weaponID the ID of the weapon to use. Keep empty if rolled directly from a skill
+ * @param {*} mode the mode of the weapon to use. Keep empty if rolled directly from a skill
+ * @returns 
+ */
 export async function weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, mode){
   
   let selection = {};

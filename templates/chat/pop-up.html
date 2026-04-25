@@ -63,7 +63,7 @@
             {{/if}}
             {{#if (eq type "mental")}}
             <div class="flexrow" style="align-items: center; min-width: 100%;">
-              <input name="addition" type="checkbox" checked id="therapy" style="margin: 5px 10px 5px 0px"/>
+              <input name="addition" type="checkbox" class="sheet" checked id="therapy" style="margin: 5px 10px 5px 0px"/>
               <label class="resource-label" for="therapy">{{localize "ep2e.roll.dialog.heal.additions.therapy"}}</label>
             </div>
             <div class="flexrow" style="align-items: center; min-width: 100%;">
@@ -183,7 +183,7 @@
                 <div class="flexrow flex-group-center wantToKnowMore" style="min-height: 40px; min-width: 100%; background-color: var(--pitchBorder); margin-top: -3px;">
                     <div class="flexrow flex-group-center">
                         <span class="tooltipText" style="left: auto;">{{localize "ep2e.item.weapon.table.damageValueModifier"}}</span>
-                        <label><i class="fa-solid fa-explosion icon-small alignCenter awesomeIcon" style="margin-right: 5px;"></i><strong>{{localize dvModifier.calculated}}</strong></label>
+                        <label><i class="fa-solid fa-explosion icon-xsmall alignCenter awesomeIcon" style="margin-right: 5px;"></i><strong>{{localize dvModifier.calculated}}</strong></label>
                     </div>
                 </div>
                 <div class="itemDescription" style="display: flex; flex-wrap: wrap;">
