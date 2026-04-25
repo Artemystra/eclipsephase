@@ -656,7 +656,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
 
     if(options.globalMod)
-        task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', eval(options.globalMod)))
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.global', Number(options.globalMod)))
 
     if(options.useSpec === true)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.specialization', 10))
