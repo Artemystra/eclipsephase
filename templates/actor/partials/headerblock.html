@@ -14,22 +14,6 @@
             <input name="name" type="text" onFocus="this.select()" value="{{actor.name}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.actorName'}}" style="width: auto; font-size: 17px; text-shadow: 0 0 5px #161616"/>
         </div>
     </div>
-    <div class="contentBox" style="background-color: var(--pitchBorder);">
-        <div class="flexrow">
-            <h3 class="subheader colorV1">{{localize 'ep2e.actorSheet.aptitudes.headline'}}</h3>
-        </div>
-        <div class="listBackground shape2 grid grid-3col noMargin">
-            {{#each actor.system.aptitudes as |aptitude key|}}
-            <div class="flexrow flex-group-center reveal standard-height">
-                <div class="flexrow flex-group-center input-small">
-                    <span class="toggle resource-value alignCenter" style=" min-width: 26px;">{{localize aptitude.label}}</span>
-                    <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-                </div>
-                <input class="input-small" type="number" onFocus="this.select()" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-            </div>
-            {{/each}}
-        </div>
-    </div>
 </header>
     {{else}}
 <header style="margin-top: 27px">

@@ -24,7 +24,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       closeOnSubmit: false
     },
     position: {
-      width: 1400,
+      width: 1050,
       height: 870
     },
     window: {
@@ -64,12 +64,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       ]
     },
     secondary: {
-      initial: "ego",
-      tabs: [
-        { id: "ego", label: "ep2e.actorSheet.leftTabs.egoTab" },
-        { id: "identification", label: "ep2e.actorSheet.leftTabs.idTab" },
-        { id: "muse", label: "ep2e.actorSheet.leftTabs.museTab" }
-      ]
+      initial: "",
+      tabs: []
     }
   };
 
@@ -113,7 +109,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   //Config of tab groups
   tabGroups = {
     primary: "skills",
-    secondary: "ego",
     morph: "sleeved",
     id: "active"
   };
@@ -208,10 +203,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const hideNPCs = game.settings.get("eclipsephase", "hideNPCs");
 
     if (actor.type === "character") {
-      if (showEverything) return { width: 1400, height: 870 };
+      if (showEverything) return { width: 1050, height: 870 };
       return (!game.user.isGM && !actor.isOwner)
         ? { width: 800, height: 682 }
-        : { width: 1400, height: 870 };
+        : { width: 1050, height: 870 };
     }
 
     if (hideNPCs && !game.user.isGM && !actor.isOwner) {
@@ -746,8 +741,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
       //Sets the opened tab for PC sheets
       if (actor.type === "character"){
-        await this.changeTab(this.tabGroups.secondary, "secondary", { force: true });
-
         this._syncManualTabGroup("morph");
         this._syncManualTabGroup("id");
 
