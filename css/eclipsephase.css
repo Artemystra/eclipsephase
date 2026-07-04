@@ -1059,7 +1059,9 @@ body.game .app button:focus {
 
 .eclipsephase .sleeveButton,
 .eclipsephase .changeIdentityButton,
-.eclipsephase .thinButton {
+.eclipsephase .thinButton,
+.eclipsephase .jammButton,
+.eclipsephase .unjammButton {
   opacity: 0;
   display: none;
   min-height: 20px! important;
@@ -1080,10 +1082,16 @@ body.game .app button:focus {
 
 .eclipsephase .item.active .sleeveButton,
 .eclipsephase .item.active .changeIdentityButton,
-.eclipsephase .item.active .thinButton {
+.eclipsephase .item.active .thinButton,
+.eclipsephase .item.active .jammButton,
+.eclipsephase .item.active .unjammButton {
   display: flex;
   opacity: 100;
   transition: 300ms;
+}
+
+.eclipsephase .item.active .jammed-state {
+  display: none;
 }
 
 .dialog .dialog-content {

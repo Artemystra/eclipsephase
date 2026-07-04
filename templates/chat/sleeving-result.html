@@ -138,7 +138,7 @@
         {{/if}}
     {{/if}}
     {{#if (or integrationTest.diceBreakdown stressTest.diceBreakdown)}}
-        <div class="privateChatButton horizontal" data-ownerid={{stressTest.actor.id}}  style="margin-top: 20px; padding: 0px;">
+        <div class="privateChatButton horizontal" data-ownerid="{{#if stressTest}}{{stressTest.actor.id}}{{else}}{{integrationTest.actor.id}}{{/if}}"  style="margin-top: 20px; padding: 0px;">
             {{#if (or (and (eq stressTest.alternatives.options.swap true)(eq stressTest.resultClass "fail")) (and (eq integrationTest.alternatives.options.swap true)(eq integrationTest.resultClass "fail")))}}
                 <div class="item" style="width: 100%; display: flex; flex-wrap: wrap; gap: 10px; background-color: var(--pitchBorder); padding: 10px;">
                     <div class="slideShow" style="width: 100%;">
@@ -187,12 +187,12 @@
                                 {{/if}}
                             {{/if}}
                         </select>
-                        <button type="button" class="resleeveResult autoClose" style="width: 100%;" data-actorid="{{stressTest.actor.id}}" data-poolused="true" data-integrationtesttaskname="{{integrationTest.taskName}}" data-integrationtestresulttext="{{integrationTest.alternatives.resultText}}" data-oldintegrationtestresulttext="{{integrationTest.resultText}}" data-integrationtestresultclass="{{integrationTest.alternatives.resultClass}}" data-oldintegrationtestresultclass="{{integrationTest.resultClass}}" data-integrationtestresult="{{integrationTest.alternatives.result}}" data-oldintegrationtestresult="{{integrationTest.alternatives.originalResult}}" data-stresstesttaskName="{{stressTest.taskName}}" data-stresstestresulttext="{{stressTest.alternatives.resultText}}" data-oldstresstestresulttext="{{stressTest.resultText}}" data-stresstestresultclass="{{stressTest.alternatives.resultClass}}" data-oldstresstestresultclass="{{stressTest.resultClass}}" data-stresstestresult="{{stressTest.alternatives.result}}" data-oldstresstestresult="{{stressTest.alternatives.originalResult}}">Use Pools & Accept Results</button>
+                        <button type="button" class="resleeveResult autoClose" style="width: 100%;" data-actorid="{{#if stressTest}}{{stressTest.actor.id}}{{else}}{{integrationTest.actor.id}}{{/if}}" data-poolused="true" data-integrationtesttaskname="{{integrationTest.taskName}}" data-integrationtestresulttext="{{integrationTest.alternatives.resultText}}" data-oldintegrationtestresulttext="{{integrationTest.resultText}}" data-integrationtestresultclass="{{integrationTest.alternatives.resultClass}}" data-oldintegrationtestresultclass="{{integrationTest.resultClass}}" data-integrationtestresult="{{integrationTest.alternatives.result}}" data-oldintegrationtestresult="{{integrationTest.alternatives.originalResult}}" data-stresstesttaskName="{{stressTest.taskName}}" data-stresstestresulttext="{{stressTest.alternatives.resultText}}" data-oldstresstestresulttext="{{stressTest.resultText}}" data-stresstestresultclass="{{stressTest.alternatives.resultClass}}" data-oldstresstestresultclass="{{stressTest.resultClass}}" data-stresstestresult="{{stressTest.alternatives.result}}" data-oldstresstestresult="{{stressTest.alternatives.originalResult}}">Use Pools & Accept Results</button>
                     </div>
                 </div>
             {{/if}}
             <div style="padding: 0 10px 10px 10px; width: 100%;">
-                <button type="button" class="resleeveResult test" style="width: 100%;"data-actorid="{{stressTest.actor.id}}" data-oldintegrationtestresult="{{integrationTest.alternatives.originalResult}}" data-oldstresstestresult="{{stressTest.alternatives.originalResult}}">Accept Results</button>
+                <button type="button" class="resleeveResult test" style="width: 100%;" data-actorid="{{#if stressTest}}{{stressTest.actor.id}}{{else}}{{integrationTest.actor.id}}{{/if}}" data-oldintegrationtestresult="{{integrationTest.alternatives.originalResult}}" data-oldstresstestresult="{{stressTest.alternatives.originalResult}}">Accept Results</button>
             </div>
         </div>
     {{/if}}

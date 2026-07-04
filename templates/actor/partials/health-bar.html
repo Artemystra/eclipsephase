@@ -1,4 +1,17 @@
 <div style="background-color: var(--mainBackground); padding: 10px 0 10px 0;">
+    {{#if (eq actor.type "character")}}
+    <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0; padding: 2px 0;">
+        {{#each actor.system.aptitudes as |aptitude key|}}
+        <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
+            <div class="flexrow flex-group-center input-small">
+                <span class="toggle resource-value alignCenter" style="min-width: 26px; font-size: 11px;">{{localize aptitude.label}}</span>
+                <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
+            </div>
+            <input class="input-small" type="number" onFocus="this.select()" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
     <div class="flexrow flex-group-center listBackground health grid grid-4col" style="background-color: var(--pitchBorder); margin: 0;">
         <!-- Physical Health Overlay -->
         <div class="tooltip" style="z-index: 19;">
@@ -349,18 +362,4 @@
         </div>
         {{/if}}
     </div>
-    {{#if (eq actor.type "character")}}
-    <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0; padding: 2px 0;">
-        <span class="resource-label" style="font-size: 11px; padding: 0 8px; white-space: nowrap;">{{localize 'ep2e.actorSheet.aptitudes.headline'}}</span>
-        {{#each actor.system.aptitudes as |aptitude key|}}
-        <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
-            <div class="flexrow flex-group-center input-small">
-                <span class="toggle resource-value alignCenter" style="min-width: 26px; font-size: 11px;">{{localize aptitude.label}}</span>
-                <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
-            </div>
-            <input class="input-small" type="number" onFocus="this.select()" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
-        </div>
-        {{/each}}
-    </div>
-    {{/if}}
 </div>

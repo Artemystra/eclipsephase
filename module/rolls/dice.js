@@ -65,10 +65,14 @@ const POOL_SUM = {
     NON: { poolType: "ep2e.roll.dialog.ranged.attacker.visual.none", useMessage: "-", skillPoolValue: 0, updatePoolPath: "-", flexPoolValue: 0, poolUsageCount: 0 }
 }
 
-async function poolCalc(actorType, actorModel, aptType, poolType, rollType){
+async function poolCalc(actorType, actorModel, aptType, poolType, rollType, rolledFrom){
 
     let pool
-    if (actorType === "goon"){
+    if (rolledFrom === "vehicleSkill") {
+        pool = POOL_SUM.NON
+    }
+
+    else if (actorType === "goon"){
         pool = POOL_SUM.THR
     }
 
@@ -476,7 +480,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let options = {}
     let specName = dataset.specname || "";
     let roll = defineRoll(dataset, actorWhole)
-    let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type)
+    let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
     let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom)
     
     if(values.cancelled)
@@ -664,16 +668,16 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     if(options.favorMod)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.favor', eval(options.favorMod)))
     
-    if(wounds > 0)
+    if(wounds > 0 && rolledFrom !== "vehicleSkill")
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.woundModifier', -wounds))
 
-    if(trauma > 0)
+    if(trauma > 0 && rolledFrom !== "vehicleSkill")
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
 
-    
+
     /* Encumberance (Armor) Malus */
 
-    if(actorModel.physical.additionalArmorMalus || actorModel.physical.mainArmorMalus || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus || actorModel.physical.armorSomMalus ){
+    if(rolledFrom !== "vehicleSkill" && (actorModel.physical.additionalArmorMalus || actorModel.physical.mainArmorMalus || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus || actorModel.physical.armorSomMalus)){
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - actorModel.physical.additionalArmorMalus - actorModel.physical.mainArmorMalus - actorModel.physical.totalWeaponMalus - actorModel.physical.totalGearMalus - actorModel.physical.armorSomMalus))
     }
 
@@ -914,13 +918,13 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Resleeving & Jamming */
 
-    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration") {
+    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill") {
         modValue = -10;
         announce = "ep2e.roll.announce.jamming.penalty";
         task.addModifier(new TaskRollModifier(announce, modValue));
     }
 
-    if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
+    if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined && rolledFrom !== "vehicleSkill"){
             modValue = actorModel.additionalSystems.sleeving.integrationIssues.value
             announce = actorModel.additionalSystems.sleeving.integrationIssues.title;
             task.addModifier(new TaskRollModifier(announce, modValue))
