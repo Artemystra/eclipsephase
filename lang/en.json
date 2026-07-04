@@ -121,6 +121,8 @@
         "showDetails": "Show Details",
         "hideDetails": "Hide Details",
         "sleeveMorph": "Sleeve Morph",
+        "jamVehicle": "Jam",
+        "unjamVehicle": "Unjam",
         "changeID": "Activate ID",
         "thankYouLaph": "Thank You, Laph!"
       },
@@ -143,6 +145,9 @@
         "sleeveReplaceHeadline": "You are replacing your current morph with a new one!",
         "sleeveReplaceCopyOld": "<p><b>Old Morph:</b></p>",
         "sleeveReplaceCopyNew": "<p><b>New Morph:</b></p>",
+        "jamCopyGeneral": "<b>Warning:</b>You are about to jam into this remote body. Your morph's pools will be replaced with this body's pools.",
+        "jamAdditionalInfo": "<i><p style='font-size: 11px;'>You will receive a -10 modifier to all actions while jamming. An Integration Test will be rolled automatically.</p></i>",
+        "unjamCopyGeneral": "<b>Warning:</b>You are about to disengage from this remote body and return to your own morph.",
         "sleeveReplaceInfo": "<i><p style='font-size: 11px;'><b>Warning:</b>The old sleeve and all it's ware and traits will be automatically deleted. All calculations will be automatically based on your new sleeve</p></i>",
         "itemDeprecatedHeadline": "Sorry, Agent. I can't let you do this...",
         "itemDeprecatedCopy": "<p><b>Morphflaws, Morphtraits, Flaws and Traits are no longer supported. Please create the new 'traits & flaws'-item instead!</b></p>",
@@ -605,7 +610,12 @@
       "traitsLabel": "Morph Traits",
       "wareLabel": "Morph Ware",
       "noMorphTraits": "This Morph is Traitless",
-      "noMorphWare": "Your Morph is Flat"
+      "noMorphWare": "Your Morph is Flat",
+      "jamming": {
+        "headline": "Remote Bodies",
+        "jammed": "Jammed",
+        "noSkillsWhileJammed": "Jammed — Use your own skills instead"
+      }
     },
     "inventory": {
       "armorLabel": "Armor",
@@ -1371,6 +1381,9 @@
         "damageDone": "Damage Done",
         "stressReceived": "Stress Received",
         "infectionRaise": "Infection raised to",
+        "jamming": {
+          "penalty": "Jamming Penalty"
+        },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
           "aversion": "Morph Aversion",

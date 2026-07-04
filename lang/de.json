@@ -120,6 +120,8 @@
         "showDetails": "Mehr Details",
         "hideDetails": "Weniger Details",
         "sleeveMorph": "Morph Wechseln",
+        "jamVehicle": "Jammen",
+        "unjamVehicle": "Unjammen",
         "changeID": "Activate ID"
       },
       "dialogHeadline": {
@@ -135,7 +137,10 @@
         "autoBotCopyGeneral": "<p><b>Vorsicht:</b>Dies ersetzt alle manuell eingetragenen Skills mit den Standard Skills & Skillwerten für Bot AIs.</p><p><b>Wähle den Fahrzeugtyp:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Halte SHIFT gedrückt während du den 'Auto-Bot'-button drückst um diese Nachricht nicht zu sehen.</p></i>",
         "sleeveCopyGeneral": "<b>Vorsicht:</b>Dies wechselt den Morph des Charakters",
-        "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>Alle Berechnungen & Tests werden automatisch vorgenommen. Neue Ware, Vor- und Nachteile werden hernach automatisch dem neuen Morph zugeordnet.</p></i>"
+        "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>Alle Berechnungen & Tests werden automatisch vorgenommen. Neue Ware, Vor- und Nachteile werden hernach automatisch dem neuen Morph zugeordnet.</p></i>",
+        "jamCopyGeneral": "<b>Vorsicht:</b>Du verbindest dich mit diesem Fernkörper. Deine Morph-Pools werden durch die Pools dieses Körpers ersetzt.",
+        "jamAdditionalInfo": "<i><p style='font-size: 11px;'>Du erhältst einen -10 Malus auf alle Aktionen während du jammst. Ein Integrationstest wird automatisch gewürfelt.</p></i>",
+        "unjamCopyGeneral": "<b>Vorsicht:</b>Du trennst dich von diesem Fernkörper und kehrst in deinen eigenen Körper zurück."
       }
     },
     "healthbar": {
@@ -593,7 +598,12 @@
       "traitsLabel": "Morph Eigenschaften",
       "wareLabel": "Morph Modifikation",
       "noMorphTraits": "Dieser Morph ist eigenschaftslos",
-      "noMorphWare": "Dieser Morph ist flat"
+      "noMorphWare": "Dieser Morph ist flat",
+      "jamming": {
+        "headline": "Ferngesteuerte Körper",
+        "jammed": "Gejammt",
+        "noSkillsWhileJammed": "Gejammt — Nutze stattdessen deine eigenen Skills"
+      }
     },
     "inventory": {
       "armorLabel": "Rüstung",
@@ -1343,6 +1353,9 @@
         "total": "Resultat",
         "damageDone": "Schaden gesamt",
         "infectionRaise": "Ienfektion steigt auf",
+        "jamming": {
+          "penalty": "Jamming-Malus"
+        },
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie",
           "aversion": "Morph-Abneigung",

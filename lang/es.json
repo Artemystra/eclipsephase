@@ -116,7 +116,9 @@
         "showDetails": "Show Details",
         "hideDetails": "Hide Details",
         "changeID": "Activate ID",
-        "sleeveMorph": "Sleeve Morph"
+        "sleeveMorph": "Sleeve Morph",
+        "jamVehicle": "Jam",
+        "unjamVehicle": "Unjam"
       },
       "dialogHeadline": {
         "warning": "Warning",

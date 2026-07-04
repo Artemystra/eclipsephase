@@ -59,6 +59,56 @@ export async function replaceMorph(actor, activeMorph, newMorph){
     }
 }
 
+export async function jammVehicle(actor, currentTarget, sheet) {
+    const dataset = currentTarget.dataset;
+    const itemID = dataset.itemId;
+    const vehicle = actor.items.get(itemID);
+    const itemName = dataset.name;
+    const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.jamVehicle")) + ": " + (itemName ? itemName : "");
+    const popUpCopy = "ep2e.actorSheet.popUp.jamCopyGeneral";
+    const popUpInfo = "ep2e.actorSheet.popUp.jamAdditionalInfo";
+    const popUpPrimary = "ep2e.actorSheet.button.jamVehicle";
+    const JAM_MESSAGE = 'systems/eclipsephase/templates/chat/change.html';
+
+    let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
+
+    if (popUp.confirm === true) {
+        sheet.tabGroups.morph = itemID;
+        await actor.update({ "system.activeJam": itemID });
+        await actor.update({ "flags.eclipsephase.resleeving": true });
+
+        let message = {
+            type: "jamming",
+            actor: actor,
+            morphtype: vehicle.system.type,
+            morphname: vehicle.name
+        };
+
+        let html = await foundry.applications.handlebars.renderTemplate(JAM_MESSAGE, message);
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: actor }),
+            content: html
+        });
+    }
+}
+
+export async function unjamVehicle(actor, currentTarget, sheet) {
+    const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.unjamVehicle");
+    const popUpCopy = "ep2e.actorSheet.popUp.unjamCopyGeneral";
+    const popUpInfo = "";
+    const popUpPrimary = "ep2e.actorSheet.button.unjamVehicle";
+
+    let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
+
+    if (popUp.confirm === true) {
+        sheet.tabGroups.morph = "sleeved";
+        await actor.update({ "system.activeJam": null });
+        await actor.update({ "flags.eclipsephase.resleeving": true });
+    }
+}
+
 export async function deleteMorph(actor, activeMorph){
     const deletionList = [];
     const morphCollection = actor.type === "character" ? actor.bodies[activeMorph] : actor.bodies["activeMorph"];

@@ -42,6 +42,17 @@ export default class EPactor extends Actor {
       morphData = actorWhole.items.get(actorModel.activeMorph);
     }
     const morphValues = morphData?.system ?? EPactor.STANDARD_MORPH;
+
+    // Jamming: resolve jammed vehicle and flag it for pools & dice
+    const activeJam = actorModel.activeJam;
+    let jammedVehicleData = null;
+    if (activeJam) {
+      jammedVehicleData = actorWhole.items.get(activeJam);
+      if (jammedVehicleData) {
+        actorModel.additionalSystems.isJamming = true;
+      }
+    }
+
     const flags = actorModel.flags;
     const items = this.items;
     let gammaCount = 0;
@@ -109,7 +120,16 @@ export default class EPactor extends Actor {
       this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     }
     if (this.type === "npc" || this.type === "character"){
-      this._calculatePools(actorModel, morphValues, chiMultiplier)
+      // When jamming, use the drone's pools instead of the morph's
+      const poolSource = jammedVehicleData
+        ? {
+            vigor:   jammedVehicleData.system.pools?.vig?.max  ?? 0,
+            insight: jammedVehicleData.system.pools?.ins?.max  ?? 0,
+            moxie:   jammedVehicleData.system.pools?.mox?.max  ?? 0,
+            flex:    jammedVehicleData.system.pools?.flex?.max ?? 0
+          }
+        : morphValues;
+      this._calculatePools(actorModel, poolSource, chiMultiplier)
       this._calculateMentalHealth(actorModel, chiMultiplier)
       this._minimumInfection(actorModel, gammaCount, chiCount);
     }

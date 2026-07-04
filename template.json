@@ -384,7 +384,8 @@
           }
         },
         "activeMorph": null,
-        "activeID": null
+        "activeID": null,
+        "activeJam": null
       },  
       "threat": {
         "threatLevel": {

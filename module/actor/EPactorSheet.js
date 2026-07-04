@@ -58,8 +58,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         { id: "skills", label: "ep2e.actorSheet.rightTabs.skillsTab" },
         { id: "morph", label: "ep2e.actorSheet.rightTabs.morphTab" },
         { id: "weapons", label: "ep2e.actorSheet.rightTabs.inventoryTab" },
-        { id: "vehicles", label: "ep2e.actorSheet.rightTabs.peripheralsTab" },
-        { id: "psi", label: "ep2e.actorSheet.rightTabs.psiTab" },
+          { id: "psi", label: "ep2e.actorSheet.rightTabs.psiTab" },
         { id: "gmInfo", label: "ep2e.actorSheet.rightTabs.gmInfoTab" }
       ]
     },
@@ -81,6 +80,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       tabs.push({
         id: this.document.system.activeMorph === morphId ? "sleeved" : morphId
       });
+    }
+
+    for (const vehicle of (this.document.remoteVehicles ?? [])) {
+      tabs.push({ id: vehicle.id });
     }
 
     return {
@@ -710,6 +713,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.knowSkill = know;
       actor.specialSkill = special;
       actor.vehicle = vehicle;
+      actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal];
       actor.activeEffects=effects;
       actor.actorType = "PC";
       actor.ammo = ammo;
@@ -1371,6 +1375,21 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       element.addEventListener("click", this._onTaskCheck.bind(this));
     });
 
+    // Vehicle AI skill rolls (non-jammed drones acting autonomously)
+    html.querySelectorAll(".vehicle-task-check").forEach(element => {
+      element.addEventListener("click", ev => {
+        ev.preventDefault();
+        const dataset = ev.currentTarget.dataset;
+        const systemOptions = { "askForOptions": ev.shiftKey, "optionsSettings": game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus": game.settings.get("eclipsephase", "superBrew") };
+        DICE.RollCheck({
+          "name": dataset.name,
+          "rolltype": "skill",
+          "rollvalue": Number(dataset.rollvalue),
+          "dialogTitle": dataset.name
+        }, this.actor.system, this.actor, systemOptions, false, "vehicleSkill");
+      });
+    });
+
   };
 
   _activIdentityListeners(html, actor, brewStatus) {
@@ -1378,6 +1397,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     html.querySelectorAll(".sleeveButton").forEach(element => {
       element.addEventListener("click", ev => {
         MORPHFUNCTION.resleeveMorph(actor, ev.currentTarget, this);
+      });
+    });
+
+    html.querySelectorAll(".jammButton").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.jammVehicle(actor, ev.currentTarget, this);
+      });
+    });
+
+    html.querySelectorAll(".unjammButton").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.unjamVehicle(actor, ev.currentTarget, this);
       });
     });
 

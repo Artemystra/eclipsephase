@@ -913,7 +913,13 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     }
 
     /* Resleeving & Jamming */
-    
+
+    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration") {
+        modValue = -10;
+        announce = "ep2e.roll.announce.jamming.penalty";
+        task.addModifier(new TaskRollModifier(announce, modValue));
+    }
+
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
             modValue = actorModel.additionalSystems.sleeving.integrationIssues.value
             announce = actorModel.additionalSystems.sleeving.integrationIssues.title;
