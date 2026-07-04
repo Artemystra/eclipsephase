@@ -1,5 +1,35 @@
 {{#if (eq actor.type "character")}}
 <div class="tab ego" data-group="secondary" data-tab="ego">
+
+    {{!-- Sheet Header --}}
+                {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
+            {{!-- Secondary Tab Navigation --}}
+                <nav class="secondary-tabs tabs">
+                    {{#each tabs.secondary as |tab|}}
+                        {{#if (eq @root.actor.type 'character')}}
+                        <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="secondary" data-tab="{{tab.id}}">
+                            {{localize tab.label}}
+                        </a>
+                        {{/if}}
+                    {{/each}}
+                </nav>
+            {{#if (eq actor.type 'character')}}
+                <div class="contentleft">
+                    {{!-- Left Body --}}
+                    <section class="secondary-body">
+                        <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="secondary" data-tab="ego">
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
+                        </div>
+                        <div class="tab {{#if tabs.primary.morph.active}}active{{/if}}" data-group="secondary" data-tab="identification">
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/id-tab.html }}
+                        </div>
+                        <div class="tab {{#if tabs.primary.vehicles.active}}active{{/if}}" data-group="secondary" data-tab="muse">
+                            {{> systems/eclipsephase/templates/actor/partials/tabs/muse-tab.html }}
+                        </div>
+                    </section>
+                </div>
+            {{/if}}
+
     <div class="contentBox" style="margin-bottom: 10px;">
         <div class="flexrow subheader colorV1">
             <h3 class="subheader colorV1">{{localize "ep2e.ego.general.headline"}}</h3>
