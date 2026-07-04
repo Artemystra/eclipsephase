@@ -1,0 +1,2014 @@
+{
+  "name": "Njal",
+  "type": "character",
+  "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+  "items": [
+    {
+      "_id": "waEf0Hb5j6210NOM",
+      "name": "HW: Robotics",
+      "type": "specialSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 20,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.waEf0Hb5j6210NOM"
+    },
+    {
+      "_id": "OaKhZZBc9lBUzSAI",
+      "name": "Computer Science",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 40,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.OaKhZZBc9lBUzSAI"
+    },
+    {
+      "_id": "zxLTjaB6YsbWLMj8",
+      "name": "Cryptography",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 55,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.zxLTjaB6YsbWLMj8"
+    },
+    {
+      "_id": "YCDyHELp97dTIiXe",
+      "name": "Raven Mythology",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 30,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.YCDyHELp97dTIiXe"
+    },
+    {
+      "_id": "FQ0DfSQnskYLHluT",
+      "name": "System Administration",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 35,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.FQ0DfSQnskYLHluT"
+    },
+    {
+      "_id": "o7lxCQT1ssPbSNg0",
+      "name": "Titanians",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 35,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.o7lxCQT1ssPbSNg0"
+    },
+    {
+      "_id": "yxpscrdJod0hG1GU",
+      "name": "Uplift Rights",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 55,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.yxpscrdJod0hG1GU"
+    },
+    {
+      "_id": "YkwDo76FHdmpmJLn",
+      "name": "Pilot: Space",
+      "type": "specialSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 40,
+        "aptitude": "Reflexes",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.YkwDo76FHdmpmJLn"
+    },
+    {
+      "_id": "fKxBJwoPoKBlWMy2",
+      "name": "Digital Speed",
+      "type": "morphTrait",
+      "img": "systems/eclipsephase/resources/icons/add.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.morph-traits.To8VJ9bXHapXVprV",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "Mesh task timeframes reduced 25%. Infomorphs only.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "qualityType": "",
+        "boundTo": "morph1"
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.fKxBJwoPoKBlWMy2"
+    },
+    {
+      "_id": "8jO9XDmQ70bYI56N",
+      "name": "Exotic Morphology 3",
+      "type": "morphFlaw",
+      "img": "systems/eclipsephase/resources/icons/subtract.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.morph-traits.WLVmVS6sxxMkIXdm",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "–10 per level on Integration Tests.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "qualityType": "",
+        "boundTo": "morph1"
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.8jO9XDmQ70bYI56N"
+    },
+    {
+      "_id": "jAOTJ10Yylk9OpVJ",
+      "name": "Drone Rig",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/mental.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ware.DeEJIxskw4qNKWEY",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Ignore the –10 modifier when jamming.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.jAOTJ10Yylk9OpVJ"
+    },
+    {
+      "_id": "VKSrFhejYVfqU92g",
+      "name": "Mnemonics",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/everyday.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ware.daXAuOrqhwK7fntD",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Enhanced memory; +20 memory-related COG checks.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.VKSrFhejYVfqU92g"
+    },
+    {
+      "_id": "F480zMwcv2xzJVnf",
+      "name": "Enhanced Security",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.4lKr7UxRXTh8eNoz",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "–10 Infosec to hack, –30 in defensive mode but no \nInsight pool and –3 INIT",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.F480zMwcv2xzJVnf"
+    },
+    {
+      "_id": "y62he1IZRzhk7ayc",
+      "name": "E-Veil",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.rDpLoRz6LxcQDbDq",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Obfuscates apps, opposes Interface w/Program 80",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.y62he1IZRzhk7ayc"
+    },
+    {
+      "_id": "xP5nSI1oBqo39zTc",
+      "name": "Anonymoizer",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.g8RhWf8iQCxIIWar",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You have an account with an anonymizing proxy\nservice that masks your Mesh ID",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.xP5nSI1oBqo39zTc"
+    },
+    {
+      "_id": "MZck3m4qJoT4hXog",
+      "name": "Fake Ego ID",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/add.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.p8QHcD293iF0skAi",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "This forged ID will pass in most inner system and\nJovian Republic habitats, and sometimes others. It gives you a rep score in one network with that ID at 10",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.MZck3m4qJoT4hXog"
+    },
+    {
+      "_id": "O9lu9zKATnmFdCyA",
+      "name": "VPN",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.4idHqgk75AKfhqBQ",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Creates virtual private network",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.O9lu9zKATnmFdCyA"
+    },
+    {
+      "_id": "0zfwLJFn37gEPL9J",
+      "name": "Exploit",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.5HO6BwSmuRGgy9xX",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "A hacker library/tool for taking advantage of known\nsoftware vulnerabilities. Required for hacking.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Moderate",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.0zfwLJFn37gEPL9J"
+    },
+    {
+      "_id": "w2dRixkmQQur0qbS",
+      "name": "Sniffer",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.eJxKZazOYlFu6aYr",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Sniffer apps collect all of the traffic passing between or\nthrough targeted systems",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Moderate",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.w2dRixkmQQur0qbS"
+    },
+    {
+      "_id": "jNXi9lTxO4brUGCe",
+      "name": "AR Illusion",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.8mkLNak6f5PuI7Z2",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "A media library and editing suite you can use to\ncreate realistic entoptic illusions.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Moderate",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.jNXi9lTxO4brUGCe"
+    },
+    {
+      "_id": "9oAwUuDuW2lg0QmH",
+      "name": "Spoofer",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.AYsgVVKSudRtmNkj",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Use spoof apps to fake transmissions and mesh IDs",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Moderate",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.9oAwUuDuW2lg0QmH"
+    },
+    {
+      "_id": "Is1EOZdFJPH7ay0c",
+      "name": "Tracker",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.AH6TZ4aPsCJAhoNm",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "This app traces people’s connections online to their\norigin",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Moderate",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.Is1EOZdFJPH7ay0c"
+    },
+    {
+      "_id": "syGIVulWb1n4aiA1",
+      "name": "Gray Box",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/binoculars.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.gear.WRiMYD0oq20Q6J25",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Establishes a wireless mesh link.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Accessory",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.syGIVulWb1n4aiA1"
+    },
+    {
+      "_id": "Vm4v5iBhIihlVqwS",
+      "name": "Radio Booster",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/sensory.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.gear.bNZjsP068j7iTVae",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Extends radio ranges, 25/250km range.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Accessory",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.Vm4v5iBhIihlVqwS"
+    },
+    {
+      "_id": "67BQe2gDGUoEFxuy",
+      "name": "TacNet",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.gear.Uc1qspCGS9QXkGe2",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Share tactical data in real-time.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Moderate",
+        "slotType": "Accessory",
+        "quantity": 1
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.67BQe2gDGUoEFxuy"
+    },
+    {
+      "_id": "aIpJfOn9ioqYrnik",
+      "name": "Hyper Linguistics 2",
+      "type": "trait",
+      "img": "systems/eclipsephase/resources/icons/add.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ego-traits.SiFaZt2RaZNHWKTJ",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "+10 per level to INT Checks to understand languages you don’t know.",
+        "active": false,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "traitType": "",
+        "ego": false,
+        "morph": false,
+        "qualityType": ""
+      },
+      "_key": "!actors.items!aD8FSBY8hRz2pM5N.aIpJfOn9ioqYrnik"
+    }
+  ],
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "aD8FSBY8hRz2pM5N",
+  "_stats": {
+    "coreVersion": "14.356",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": "Actor.16qIVecUELpfbYCD",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "system": {
+    "biography": "<p>Has Guardian Angel</p>\n<p>&nbsp;</p>\n<p><span class=\"fontstyle0\">Your security AI can&rsquo;t fi nd me; your gun-fl ies can&rsquo;t catch me.<br />I&rsquo;ll pluck your eye out, shiftless sysop; you can&rsquo;t outfl y a bird who&rsquo;s all-thought.<br /></span><span class=\"fontstyle2\">You were hatched in a Titanian aviary, part of a Science<br />Ministry uplift project. On adulthood, you ditched your body<br />for virtual space. With your skills fl ying ships and running<br />infosec, someone always gives you server space. You like the<br />human myths of trickster ravens and prefer misdirection to<br />brute force. Firewall recruited you through Magnus Ming, your<br />favorite professor at Titan Autonomous University before<br />you got bored and left. When he o\u001d ered membership in<br />&ldquo;a society that tackles challenging puzzles,&rdquo; you jumped<br />at the chance. Firewall hasn&rsquo;t disappointed. It&rsquo;s weird,<br />dangerous, and best of all, a challenge</span> </p>",
+    "mental": {
+      "trauma": null,
+      "stress": null,
+      "luc": null,
+      "ir": null,
+      "tt": null,
+      "min": 0
+    },
+    "physical": {
+      "wounds": null,
+      "damage": null,
+      "dr": null,
+      "wt": null,
+      "min": 0,
+      "energyArmorTotal": null,
+      "kineticArmorTotal": null
+    },
+    "health": {
+      "physical": {
+        "value": 40,
+        "max": 0
+      },
+      "mental": {
+        "value": 20,
+        "max": 0
+      },
+      "death": {
+        "value": 0,
+        "max": 0
+      },
+      "insanity": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "rezPoints": {
+      "value": 0,
+      "spent": 0,
+      "display": 0,
+      "ledger": []
+    },
+    "mods": {
+      "globalMod": null,
+      "traumaMod": null,
+      "woundMod": null,
+      "woundMultiplier": 1,
+      "chiMultiplier": 1,
+      "iniMod": null,
+      "durmod": null,
+      "lucmod": null,
+      "ttMod": null,
+      "energyMod": null,
+      "kineticMod": null,
+      "meleeDamageMod": null
+    },
+    "additionalSystems": {
+      "hasPsi": null,
+      "hasGear": null,
+      "psiAutoClose": false
+    },
+    "initiative": {
+      "value": null,
+      "display": ""
+    },
+    "pools": {
+      "insight": {
+        "value": null,
+        "mod": null
+      },
+      "moxie": {
+        "value": null,
+        "mod": null
+      },
+      "vigor": {
+        "value": null,
+        "mod": null
+      },
+      "flex": {
+        "value": null,
+        "mod": null
+      },
+      "update": {
+        "insight": null,
+        "vigor": null,
+        "moxie": null,
+        "flex": null
+      }
+    },
+    "aptitudes": {
+      "cog": {
+        "name": "ep2e.actorSheet.aptitudes.cog",
+        "value": 25,
+        "label": "cognition",
+        "roll": null,
+        "mod": null
+      },
+      "int": {
+        "name": "ep2e.actorSheet.aptitudes.int",
+        "value": 20,
+        "label": "intuition",
+        "roll": null,
+        "mod": null
+      },
+      "ref": {
+        "name": "ep2e.actorSheet.aptitudes.ref",
+        "value": 20,
+        "label": "reflexes",
+        "roll": null,
+        "mod": null
+      },
+      "sav": {
+        "name": "ep2e.actorSheet.aptitudes.sav",
+        "value": 10,
+        "label": "savvy",
+        "roll": null,
+        "mod": null
+      },
+      "som": {
+        "name": "ep2e.actorSheet.aptitudes.som",
+        "value": 10,
+        "label": "somatics",
+        "roll": null,
+        "mod": null
+      },
+      "wil": {
+        "name": "ep2e.actorSheet.aptitudes.wil",
+        "value": 10,
+        "label": "willpower",
+        "roll": null,
+        "mod": null
+      }
+    },
+    "skillsIns": {
+      "infosec": {
+        "name": "ep2e.skills.insightSkills.infosec",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "interface": {
+        "name": "ep2e.skills.insightSkills.interface",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "perceive": {
+        "name": "ep2e.skills.insightSkills.perceive",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "program": {
+        "name": "ep2e.skills.insightSkills.program",
+        "value": 40,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "research": {
+        "name": "ep2e.skills.insightSkills.research",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "survival": {
+        "name": "ep2e.skills.insightSkills.survival",
+        "value": 10,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      }
+    },
+    "skillsMox": {
+      "deceive": {
+        "name": "ep2e.skills.moxieSkills.deceive",
+        "value": 40,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "kinesics": {
+        "name": "ep2e.skills.moxieSkills.kinesics",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "persuade": {
+        "name": "ep2e.skills.moxieSkills.persuade",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "provoke": {
+        "name": "ep2e.skills.moxieSkills.provoke",
+        "value": 40,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "psi": {
+        "name": "ep2e.skills.moxieSkills.psi",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      }
+    },
+    "skillsVig": {
+      "athletics": {
+        "name": "ep2e.skills.vigorSkills.athletics",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "fray": {
+        "name": "ep2e.skills.vigorSkills.fray",
+        "value": 10,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "free fall": {
+        "name": "ep2e.skills.vigorSkills.free fall",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "guns": {
+        "name": "ep2e.skills.vigorSkills.guns",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "infiltrate": {
+        "name": "ep2e.skills.vigorSkills.infiltrate",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "melee": {
+        "name": "ep2e.skills.vigorSkills.melee",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      }
+    },
+    "ego": {
+      "sex": "Male",
+      "gender": "Agender",
+      "age": "",
+      "origin": "Titanian",
+      "languages": "English, Japanese, Mandarin, Skandinaviska",
+      "motivations": {
+        "motivation1": "+Adventure",
+        "motivation2": "+Open Source",
+        "motivation3": "+Titanian Interests"
+      },
+      "idSelected": "ID1",
+      "egoFlex": 1,
+      "ids": {
+        "id1": {
+          "name": "Njall Hrafnsson",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": "45",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": "35",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": "30",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id2": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id3": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id4": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id5": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        }
+      }
+    },
+    "psiStrain": {
+      "name": "",
+      "strainType": "",
+      "description": "",
+      "infection": ""
+    },
+    "subStrain": {
+      "label": "",
+      "influence2": {
+        "label": "",
+        "description": ""
+      },
+      "influence3": {
+        "label": "",
+        "description": ""
+      },
+      "influence4": {
+        "label": "",
+        "description": ""
+      },
+      "influence5": {
+        "label": "",
+        "description": ""
+      },
+      "influence6": {
+        "label": "",
+        "description": ""
+      }
+    },
+    "strainInfluence": {
+      "influence1": {
+        "number": "1 ",
+        "label": "ep2e.psi.effect.physicalDamage",
+        "description": "Physical Damage. Take 1d6"
+      },
+      "influence2": {
+        "number": "2 ",
+        "label": "",
+        "description": ""
+      },
+      "influence3": {
+        "number": "3 ",
+        "label": "",
+        "description": ""
+      },
+      "influence4": {
+        "number": "4 ",
+        "label": "",
+        "description": ""
+      },
+      "influence5": {
+        "number": "5 ",
+        "label": "",
+        "description": ""
+      },
+      "influence6": {
+        "number": "6 ",
+        "label": "",
+        "description": ""
+      }
+    },
+    "activeMorph": null,
+    "muse": {
+      "name": "Sarcastic Halli",
+      "img": "systems/eclipsephase/resources/img/clippy.png",
+      "description": null,
+      "knowledgeskillname": null,
+      "knowledgeskillvalue": null,
+      "skills": {
+        "skill1": {
+          "value": 30,
+          "skillname": "ep2e.skills.additionalSkills.electronics",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill2": {
+          "value": 30,
+          "skillname": "ep2e.skills.insightSkills.infosec",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill3": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.interface",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill4": {
+          "value": 60,
+          "skillname": "ep2e.skills.additionalSkills.accounting",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill5": {
+          "value": 60,
+          "skillname": "ep2e.skills.additionalSkills.psychology",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill6": {
+          "value": 60,
+          "skillname": "ep2e.skills.additionalSkills.psychosurgery",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill7": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.perceive",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill8": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.program",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill9": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.research",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill10": {
+          "value": null,
+          "skillname": "",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        }
+      },
+      "knowledgeskill": null
+    },
+    "rest": {
+      "short1": false,
+      "short2": false,
+      "shortExtra": false,
+      "long": false,
+      "restValue": null
+    },
+    "bodies": {
+      "activeMorph": "morph1",
+      "allMorphs": [],
+      "morph1": {
+        "templates": [
+          "morph"
+        ],
+        "name": "Agent",
+        "type": "synth",
+        "dur": "40",
+        "movement": "",
+        "movetype": "boat",
+        "movement2": "",
+        "movetype2": "boat",
+        "insight": 4,
+        "moxie": null,
+        "vigor": null,
+        "flex": null,
+        "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"
+      },
+      "morph2": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph3": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph4": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph5": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph6": {
+        "templates": [
+          "morph"
+        ]
+      }
+    },
+    "morph": {
+      "name": "",
+      "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+      "type": "",
+      "dur": null,
+      "insight": null,
+      "moxie": null,
+      "vigor": null,
+      "flex": null,
+      "movement1": {
+        "type": null,
+        "base": null,
+        "full": null
+      },
+      "movement2": null,
+      "movement3": {
+        "type": null,
+        "base": null,
+        "full": null
+      },
+      "description": "",
+      "movement": null,
+      "movetype": null,
+      "movetype2": null
+    },
+    "bodyTypes": {
+      "synth": {
+        "label": "Synthetic"
+      },
+      "bio": {
+        "label": "Biologic"
+      }
+    },
+    "bodyType": {
+      "value": ""
+    }
+  },
+  "prototypeToken": {
+    "name": "Njal",
+    "displayName": 0,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": "data.health.physical"
+    },
+    "bar2": {
+      "attribute": "data.health.mental"
+    },
+    "flags": {},
+    "randomImg": false,
+    "light": {
+      "dim": 0,
+      "bright": 0,
+      "angle": 360,
+      "alpha": 0.25,
+      "animation": {
+        "speed": 5,
+        "intensity": 5,
+        "type": null,
+        "reverse": false
+      },
+      "negative": false,
+      "priority": 0,
+      "color": null,
+      "coloration": 1,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "texture": {
+      "src": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+      "scaleX": 1,
+      "scaleY": 1,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "sight": {
+      "angle": 360,
+      "enabled": false,
+      "range": 0,
+      "brightness": 1,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "appendNumber": false,
+    "prependAdjective": false,
+    "detectionModes": {},
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "depth": 1
+  },
+  "_key": "!actors!aD8FSBY8hRz2pM5N"
+}

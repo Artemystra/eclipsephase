@@ -1,0 +1,39 @@
+{
+  "folder": "TpVWCtLAiWqurwSP",
+  "name": "Implant Mask",
+  "type": "ware",
+  "_id": "TvylJuAZ4YnQ0UpA",
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "One C/H ware made concealable, −30 to detect with sensors.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713654601100,
+    "modifiedTime": 1713654804692,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!TvylJuAZ4YnQ0UpA"
+}

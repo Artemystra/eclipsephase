@@ -1,0 +1,39 @@
+{
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "name": "Boomscatter",
+  "type": "ware",
+  "_id": "BjAcol3yWy4OOvAL",
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Scatter apart to halve damage from impact/explosion. Requires shape adjusting.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603854847,
+    "modifiedTime": 1713654507700,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!BjAcol3yWy4OOvAL"
+}

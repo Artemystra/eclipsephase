@@ -1,0 +1,41 @@
+{
+  "name": "Vacuum Sealing",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Can survive exposure to vacuum.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585509,
+    "modifiedTime": 1689415902641,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.E4XBBzHNqJp28BBv",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "vZWnGDZztkbgQ4KE",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 1600000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!vZWnGDZztkbgQ4KE"
+}

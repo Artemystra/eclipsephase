@@ -1,0 +1,194 @@
+{
+  "name": "Manipulator",
+  "type": "vehicle",
+  "img": "systems/eclipsephase/resources/icons/drone.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "360-Degree Vision, Access Jacks, Bot AI, Lidar, Mesh Inserts, Puppet Sock, Grip Pads, Magnetic System, Telescoping Limb, Utilimod",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "s",
+    "aptitudes": {
+      "cog": {
+        "name": "ep2e.actorSheet.aptitudes.cog",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.cognition"
+      },
+      "int": {
+        "name": "ep2e.actorSheet.aptitudes.int",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.intuition"
+      },
+      "ref": {
+        "name": "ep2e.actorSheet.aptitudes.ref",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.reflexes"
+      },
+      "sav": {
+        "name": "ep2e.actorSheet.aptitudes.sav",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.savvy"
+      },
+      "som": {
+        "name": "ep2e.actorSheet.aptitudes.som",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.somatics"
+      },
+      "wil": {
+        "name": "ep2e.actorSheet.aptitudes.wil",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.willpower"
+      }
+    },
+    "pools": {
+      "vig": {
+        "max": 1,
+        "current": null
+      },
+      "mox": {
+        "max": null,
+        "current": null
+      },
+      "ins": {
+        "max": null,
+        "current": null
+      },
+      "flex": {
+        "max": null,
+        "current": null
+      },
+      "threat": {
+        "max": null,
+        "current": null
+      }
+    },
+    "movement": {
+      "1": {
+        "speed": "4/12",
+        "type": "walker"
+      },
+      "2": {
+        "speed": "",
+        "type": "none"
+      },
+      "3": {
+        "speed": "",
+        "type": "none"
+      },
+      "4": {
+        "speed": "",
+        "type": "none"
+      }
+    },
+    "armor": {
+      "energy": 6,
+      "kinetic": 4
+    },
+    "init": null,
+    "type": "robot",
+    "luc": null,
+    "dur": 15,
+    "wounds": null,
+    "trauma": null,
+    "curDur": null,
+    "curLuc": null,
+    "pass": null,
+    "autoControl": null,
+    "controlType": null,
+    "skills": {
+      "1": {
+        "name": "Fray",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "2": {
+        "name": "Guns",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "3": {
+        "name": "Hardware: Groundcraft",
+        "value": 20,
+        "specname": "Manipulator",
+        "spec": false,
+        "mod": null
+      },
+      "4": {
+        "name": "Infosec",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "5": {
+        "name": "Interface",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "6": {
+        "name": "Perceive",
+        "value": 40,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "7": {
+        "name": "Pilot: Groundcraft",
+        "value": 60,
+        "specname": "Manipulator",
+        "spec": false,
+        "mod": null
+      },
+      "8": {
+        "name": "Research",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "9": {
+        "name": "Know: Manipulator Specs",
+        "value": 80,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "10": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      }
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.8",
+    "coreVersion": "13.346",
+    "createdTime": 1680894178938,
+    "modifiedTime": 1680895242466,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "ze8HPoOsnd5DBrkT",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!ze8HPoOsnd5DBrkT"
+}

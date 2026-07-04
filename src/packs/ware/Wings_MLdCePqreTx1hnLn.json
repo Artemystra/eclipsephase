@@ -1,0 +1,41 @@
+{
+  "name": "Wings",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Enable flight if small or in low gravities.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585610,
+    "modifiedTime": 1689415907962,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.wUS6bACxaiy7bQnJ",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "MLdCePqreTx1hnLn",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 1700000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!MLdCePqreTx1hnLn"
+}

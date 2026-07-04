@@ -1,0 +1,41 @@
+{
+  "name": "Dead Switch",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Wipes and melts your cortical stack if killed.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585517,
+    "modifiedTime": 1689415684240,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.difeWaHIoNFzs8kv",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "JPqoetAFQ3XBGPJF",
+  "folder": "BqAuWSEWfisfuXXd",
+  "sort": 125000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!JPqoetAFQ3XBGPJF"
+}

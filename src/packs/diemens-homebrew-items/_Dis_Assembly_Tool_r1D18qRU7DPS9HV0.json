@@ -1,0 +1,38 @@
+{
+  "name": "(Dis)Assembly Tool",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 100000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "r1D18qRU7DPS9HV0",
+  "system": {
+    "additionalSystems": {},
+    "description": "Schwere Ausrüstung die Strukturen auflösen und mit dem eingebauten Nanitenhive zu neuen Strukturen zusammensetzen kann. Dauer der Aktion hängt von der Grösse ab (Beispiel: Ein Loch in die Wand schneiden und es danach wieder schliessen)",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "bulky",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441506994,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.q1xQQMDahAOdzXfu",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!r1D18qRU7DPS9HV0"
+}

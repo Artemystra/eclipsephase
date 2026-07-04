@@ -1,0 +1,41 @@
+{
+  "name": "Hibernation",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Reduce metabolism, need only 5% normal amount of food, water, and air.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585511,
+    "modifiedTime": 1689415718103,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.PEHTHJTiiT94YxjQ",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "2cDM51kgGnTUzKeA",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 100098,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!2cDM51kgGnTUzKeA"
+}

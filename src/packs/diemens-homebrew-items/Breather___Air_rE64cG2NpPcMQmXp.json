@@ -1,0 +1,38 @@
+{
+  "name": "Breather + Air",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 106250,
+  "flags": {
+    "core": {}
+  },
+  "_id": "rE64cG2NpPcMQmXp",
+  "system": {
+    "additionalSystems": {},
+    "description": "12 Stunden Atemluft",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441523736,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.BOaktMoUGCKYAV7Y",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!rE64cG2NpPcMQmXp"
+}

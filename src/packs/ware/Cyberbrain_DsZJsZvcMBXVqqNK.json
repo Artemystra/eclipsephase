@@ -1,0 +1,41 @@
+{
+  "name": "Cyberbrain",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Synthetic brain, runs infomorph mind-state.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585521,
+    "modifiedTime": 1689415602152,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.yFZBkHpLMX1iSqit",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "DsZJsZvcMBXVqqNK",
+  "folder": "HH8yFs1RZM7Wmw3U",
+  "sort": 125000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!DsZJsZvcMBXVqqNK"
+}

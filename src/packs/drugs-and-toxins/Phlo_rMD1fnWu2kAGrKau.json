@@ -1,0 +1,47 @@
+{
+  "name": "Phlo",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "rMD1fnWu2kAGrKau",
+  "system": {
+    "additionalSystems": {},
+    "description": "+1 Vigor, can use Vigor twice on same test.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "consumable",
+    "category": "combat",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "3 hours",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425113344,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.o2VQ7sTVoUYqWY5x",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!rMD1fnWu2kAGrKau"
+}

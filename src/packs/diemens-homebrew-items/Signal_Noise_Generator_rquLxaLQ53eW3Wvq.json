@@ -1,0 +1,38 @@
+{
+  "name": "Signal Noise Generator",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 111524,
+  "flags": {
+    "core": {}
+  },
+  "_id": "rquLxaLQ53eW3Wvq",
+  "system": {
+    "additionalSystems": {},
+    "description": "Generiert ein feines, kaum hörbares Rauschen das Audioaufnahmen stört und Meshübertragungen blockt.\n\n- 30 auf Perceive durch jedwede Mikrofonierung und auf Meshaktionen während das Gerät aktiv ist. 5 Meter Radius.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441570024,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.qytHhQsaG3VXhPW1",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!rquLxaLQ53eW3Wvq"
+}

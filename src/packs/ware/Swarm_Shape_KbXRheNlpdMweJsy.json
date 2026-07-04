@@ -1,0 +1,39 @@
+{
+  "folder": "zY1KfJUcBGEXsHk7",
+  "name": "Swarm Shape",
+  "type": "ware",
+  "_id": "KbXRheNlpdMweJsy",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Create physical shapes and manipulate Very Small objects. Swarm morphs only.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713657493967,
+    "modifiedTime": 1713694935740,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!KbXRheNlpdMweJsy"
+}

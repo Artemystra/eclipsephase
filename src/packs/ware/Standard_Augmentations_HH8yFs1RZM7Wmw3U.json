@@ -1,0 +1,19 @@
+{
+  "name": "Standard Augmentations",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "HH8yFs1RZM7Wmw3U",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "11.305",
+    "createdTime": 1689415560357,
+    "modifiedTime": 1689415560357,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!HH8yFs1RZM7Wmw3U"
+}

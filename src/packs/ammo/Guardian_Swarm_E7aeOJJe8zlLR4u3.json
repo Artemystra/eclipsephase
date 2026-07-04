@@ -1,0 +1,109 @@
+{
+  "folder": "0ArrDr2gjWdko2AE",
+  "name": "Guardian Swarm",
+  "type": "ammo",
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Guardians watch for and attack other unauthorized swarms. These mites neutralize other nanobots by physically latching on to them, effectively disabling both. This war of attrition takes its toll on the guardian swarm as well. Every action turn, both the guardian and targeted swarm take DV 1d10 [6]. Guardians can be programmed or instructed to release captured mites, allowing you to temporarily disable a swarm and then release it afterwards.",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "type": "spray",
+    "areaeffect": null,
+    "dv": {
+      "d10": 1,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": false
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": false
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": true
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.8",
+    "coreVersion": "13.346",
+    "createdTime": 1696403232812,
+    "modifiedTime": 1696404540849,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "E7aeOJJe8zlLR4u3",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!E7aeOJJe8zlLR4u3"
+}

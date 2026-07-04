@@ -1,0 +1,88 @@
+{
+  "name": "Endocrine Control",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [
+    {
+      "_id": "MPEfCIbLCJQY8NO4",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Endocrine Control",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.pools.moxie.mod",
+            "value": "+2",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!I2Huc5mrofI0AA5Z.MPEfCIbLCJQY8NO4"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Control over hormones and emotions. +2 Moxie.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bm"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1665426585514,
+    "modifiedTime": 1689415697639,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.XKJXBA9VhTIpiBXW",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "I2Huc5mrofI0AA5Z",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 125000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!I2Huc5mrofI0AA5Z"
+}

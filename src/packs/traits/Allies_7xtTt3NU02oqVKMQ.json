@@ -1,0 +1,38 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Allies",
+  "type": "traits",
+  "_id": "7xtTt3NU02oqVKMQ",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You are either part of or have a relationship with a group that has your back. This could be your old gatecrashing crew, former research lab co-workers, a criminal gang, a mercenary squad, an elite social clique, or something similar. The group itself should be small - 5 to 20 members is best, and certainly no more than 50 — though it may be part of a larger organization (such as a cartel or hypercorp).\n\nIt should also not be overly influential or powerful (no Ozma leaders, hypercorp boards, or secret league of oligarchs). Work with your GM to establish your history and relationship with this group and why you can call on them for aid.\n\nOnce per session, you may rely on this group for support. Treat this as analogous to an automatically successful moderate rep favor. Your connection with this group\nis a two-way street — you will be expected to\nperform duties for the group on occasion as\nwell. GMs should take care that allies are not\noverused or abused and can use them as a\nsource of plot hooks and side missions.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "sort": 6300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!7xtTt3NU02oqVKMQ"
+}

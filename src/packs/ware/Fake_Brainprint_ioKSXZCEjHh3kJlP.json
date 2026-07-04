@@ -1,0 +1,39 @@
+{
+  "folder": "BqAuWSEWfisfuXXd",
+  "name": "Fake Brainprint",
+  "type": "ware",
+  "_id": "ioKSXZCEjHh3kJlP",
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Alters prints; 5% detection with quick scans, 10% full scans.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "m"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713655064227,
+    "modifiedTime": 1713656228965,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!ioKSXZCEjHh3kJlP"
+}

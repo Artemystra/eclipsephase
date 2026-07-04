@@ -1,0 +1,88 @@
+{
+  "name": "Biomods",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [
+    {
+      "name": "Biomods",
+      "_id": "hLanhsYmPKaTO5BC",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "transfer": true,
+      "statuses": [],
+      "flags": {},
+      "tint": "#ffffff",
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.healing.biomods",
+            "value": true,
+            "priority": null,
+            "type": "override"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!hDfb8XzgU9odt4Md.hLanhsYmPKaTO5BC"
+    }
+  ],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Genetic tweaks for health, faster healing, immunities, and more",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.9",
+    "coreVersion": "14.356",
+    "createdTime": 1665426585507,
+    "modifiedTime": 1700764376790,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.ilMDI6wqX7WwZhaL",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "hDfb8XzgU9odt4Md",
+  "folder": "HH8yFs1RZM7Wmw3U",
+  "sort": 200000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!hDfb8XzgU9odt4Md"
+}

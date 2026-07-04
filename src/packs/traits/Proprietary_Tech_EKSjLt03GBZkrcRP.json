@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Proprietary Tech",
+  "type": "traits",
+  "_id": "EKSjLt03GBZkrcRP",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This trait is only available to synthmorphs. This morph was built with non-standard specifications, making most modern tools and software incompatible. This is a conscious design decision to make the user dependent upon the manufacturer for repairs and updates.\n\nFixer nanoswarms will not work on this morph and Hardware:\nRobotics Tests suffer a –20 modifier.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!EKSjLt03GBZkrcRP"
+}

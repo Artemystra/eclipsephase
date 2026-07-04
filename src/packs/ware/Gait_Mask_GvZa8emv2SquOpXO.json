@@ -1,0 +1,39 @@
+{
+  "folder": "TpVWCtLAiWqurwSP",
+  "name": "Gait Mask",
+  "type": "ware",
+  "_id": "GvZa8emv2SquOpXO",
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "–30 to gait-detection sensors.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "rare",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713654586877,
+    "modifiedTime": 1713654833246,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!GvZa8emv2SquOpXO"
+}

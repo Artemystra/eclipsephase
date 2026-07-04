@@ -1,0 +1,47 @@
+{
+  "name": "Neuropath",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/toxic-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "Kne4ELzSf2tc6BRC",
+  "system": {
+    "additionalSystems": {},
+    "description": "Agony, –30 actions, WIL Check vs incapacitation.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "category": "nanotox",
+    "dermal": true,
+    "inhalation": false,
+    "injection": true,
+    "oral": true,
+    "drugType": "nano",
+    "duration": "8 hours",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425215963,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.aGHGbURyrHCxNE3h",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!Kne4ELzSf2tc6BRC"
+}

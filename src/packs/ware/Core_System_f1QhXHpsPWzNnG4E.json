@@ -1,0 +1,39 @@
+{
+  "folder": "BqAuWSEWfisfuXXd",
+  "name": "Core System",
+  "type": "ware",
+  "_id": "f1QhXHpsPWzNnG4E",
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Cyberbrain for ships/habitats/infrastructure.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "rare",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713655030398,
+    "modifiedTime": 1713655425552,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!f1QhXHpsPWzNnG4E"
+}

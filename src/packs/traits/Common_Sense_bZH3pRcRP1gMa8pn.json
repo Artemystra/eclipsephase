@@ -1,0 +1,38 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Common Sense",
+  "type": "traits",
+  "_id": "bZH3pRcRP1gMa8pn",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Your innate sense of judgment cuts through distractions and other factors that might cloud a decision. \n\nOnce per game session, you may ask the GM what choice to make or course of action to take; the GM will give you solid advice based on what your character knows. Alternatively, if you are about to make a disastrous decision, the GM can use your free hint to warn you that you are making a grave mistake.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "sort": 9900000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!bZH3pRcRP1gMa8pn"
+}

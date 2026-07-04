@@ -1,0 +1,38 @@
+{
+  "name": "Artful Dodger",
+  "type": "traits",
+  "_id": "cKDDZM0En5nFMNt4",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "When using Fray, can use Vigor to flip-flop attacker’s dice roll.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "folder": "hV09BrpxHnLOea0b",
+  "sort": 5200000,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766083335977,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_key": "!items!cKDDZM0En5nFMNt4"
+}

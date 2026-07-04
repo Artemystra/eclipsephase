@@ -1,0 +1,38 @@
+{
+  "name": "Data Control III",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "–10 modifier per level to Research/Rep Tests to track and find info on you online.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "folder": "hV09BrpxHnLOea0b",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766133763064,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_id": "JYvyXAk0M89CRytZ",
+  "sort": 800000,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!JYvyXAk0M89CRytZ"
+}

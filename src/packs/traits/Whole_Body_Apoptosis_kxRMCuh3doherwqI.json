@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Whole Body Apoptosis",
+  "type": "traits",
+  "_id": "kxRMCuh3doherwqI",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This trait may only be applied to biomorphs. This morph is genetically programmed to suffer a sudden and lethal massive cellular failure at some point in the future, usually within a given 10-year period, though it is possible to target a specific date, give or take\na few months. Bioconservatives favor this ware to die quickly and naturally. The cellular failure takes about 10 minutes to complete, giving you just enough time to send final messages. \n\nIt only applies an MP Bonus if you agree that the GM may at any point turn a critical failure you roll into a regular failure and then trigger the apoptosis within the next 24 hours (in-game).",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!kxRMCuh3doherwqI"
+}

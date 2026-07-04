@@ -1,0 +1,47 @@
+{
+  "name": "Nervex",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/toxic-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "mVSXCYZrRpXpwbFl",
+  "system": {
+    "additionalSystems": {},
+    "description": "–20 actions, SOM Check vs. incapacitation, death.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "consumable",
+    "category": "toxins",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "-",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425223870,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.nHQ9rHCO9P4PeMKE",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!mVSXCYZrRpXpwbFl"
+}

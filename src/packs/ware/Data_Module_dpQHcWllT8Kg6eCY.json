@@ -1,0 +1,41 @@
+{
+  "name": "Data Module",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Encrypted data storage.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585513,
+    "modifiedTime": 1689415670892,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.WfBvwcGxZqvVyb2X",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "dpQHcWllT8Kg6eCY",
+  "folder": "BqAuWSEWfisfuXXd",
+  "sort": 200000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!dpQHcWllT8Kg6eCY"
+}

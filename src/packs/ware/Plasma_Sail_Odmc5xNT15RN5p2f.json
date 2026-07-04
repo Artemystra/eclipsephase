@@ -1,0 +1,39 @@
+{
+  "folder": "zY1KfJUcBGEXsHk7",
+  "name": "Plasma Sail",
+  "type": "ware",
+  "_id": "Odmc5xNT15RN5p2f",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Thrust-Vector 8/40; use Pilot: Space.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713657447288,
+    "modifiedTime": 1713694920515,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!Odmc5xNT15RN5p2f"
+}

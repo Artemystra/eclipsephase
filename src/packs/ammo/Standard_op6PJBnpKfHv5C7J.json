@@ -1,0 +1,19 @@
+{
+  "name": "Standard",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "op6PJBnpKfHv5C7J",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "11.305",
+    "createdTime": 1694770987267,
+    "modifiedTime": 1694802974165,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!op6PJBnpKfHv5C7J"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Heavy Frame Armor",
+  "type": "armor",
+  "img": "systems/eclipsephase/resources/icons/Additional Armor.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "kYTsesczMUP7ukeH",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": "Item.Zo21S0oJyLBK5qoe",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "main",
+    "energy": "12",
+    "kinetic": "10"
+  },
+  "_key": "!items!kYTsesczMUP7ukeH"
+}

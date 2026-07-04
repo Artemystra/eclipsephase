@@ -1,0 +1,213 @@
+{
+  "name": "Fur Coat",
+  "type": "vehicle",
+  "img": "systems/eclipsephase/resources/icons/smart-animal.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "vs",
+    "aptitudes": {
+      "cog": {
+        "name": "ep2e.actorSheet.aptitudes.cog",
+        "value": 1,
+        "label": "ep2e.actorSheet.aptitudes.cognition"
+      },
+      "int": {
+        "name": "ep2e.actorSheet.aptitudes.int",
+        "value": 1,
+        "label": "ep2e.actorSheet.aptitudes.intuition"
+      },
+      "ref": {
+        "name": "ep2e.actorSheet.aptitudes.ref",
+        "value": 5,
+        "label": "ep2e.actorSheet.aptitudes.reflexes"
+      },
+      "sav": {
+        "name": "ep2e.actorSheet.aptitudes.sav",
+        "value": 1,
+        "label": "ep2e.actorSheet.aptitudes.savvy"
+      },
+      "som": {
+        "name": "ep2e.actorSheet.aptitudes.som",
+        "value": 1,
+        "label": "ep2e.actorSheet.aptitudes.somatics"
+      },
+      "wil": {
+        "name": "ep2e.actorSheet.aptitudes.wil",
+        "value": 1,
+        "label": "ep2e.actorSheet.aptitudes.willpower"
+      }
+    },
+    "pools": {
+      "vig": {
+        "max": null,
+        "current": null
+      },
+      "mox": {
+        "max": null,
+        "current": null
+      },
+      "ins": {
+        "max": null,
+        "current": null
+      },
+      "flex": {
+        "max": null,
+        "current": null
+      },
+      "threat": {
+        "max": null,
+        "current": null
+      }
+    },
+    "movement": {
+      "1": {
+        "speed": "",
+        "type": "none"
+      },
+      "2": {
+        "speed": "",
+        "type": "none"
+      },
+      "3": {
+        "speed": "",
+        "type": "none"
+      },
+      "4": {
+        "speed": "",
+        "type": "none"
+      }
+    },
+    "armor": {
+      "energy": null,
+      "kinetic": null
+    },
+    "init": 1,
+    "type": "animal",
+    "luc": null,
+    "dur": 15,
+    "wounds": null,
+    "trauma": null,
+    "curDur": null,
+    "curLuc": null,
+    "pass": null,
+    "autoControl": false,
+    "controlType": null,
+    "skills": {
+      "1": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "2": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "3": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "4": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "5": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "6": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "7": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "8": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "9": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "10": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      }
+    },
+    "mov": "-",
+    "cog": 1,
+    "int": 1,
+    "ref": 5,
+    "sav": 1,
+    "som": 1,
+    "wil": 1,
+    "vig": null,
+    "mox": null,
+    "ins": null,
+    "flex": null,
+    "threat": 0,
+    "curIns": null,
+    "curMox": null,
+    "curVig": null,
+    "curFlex": null,
+    "curThreat": null
+  },
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.8",
+    "coreVersion": "13.346",
+    "createdTime": 1669546407640,
+    "modifiedTime": 1680896371990,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Edxdua1woIXnGtRs",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "Edxdua1woIXnGtRs",
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!Edxdua1woIXnGtRs"
+}

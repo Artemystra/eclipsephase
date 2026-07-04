@@ -1,0 +1,39 @@
+{
+  "name": "Basilisk Stare",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You make eye contact with the target and immobilize them. As long as you keep your gaze locked on them (minor blinking aside), they cannot move, avert their eyes, or undertake any action (including mesh and mental actions). \n\nYou must also limit your movement, though you may move at half your base move and/or take quick physical actions, but you must make a REF Check to keep your eyes locked, and actions requiring a test and visual coordination suffer a\n–30 modifier. Likewise, if the target is attacked, moved, or otherwise jostled, eye contact is lost.\n\nYou may not affect extra targets with this sleight, unless you have more than one set of eyes.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 6,
+    "psiType": "gamma",
+    "actionType": "task",
+    "duration": "sustained"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "zXu469j4alW4HxcK",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!zXu469j4alW4HxcK"
+}

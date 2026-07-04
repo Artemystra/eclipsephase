@@ -1,0 +1,39 @@
+{
+  "folder": "zY1KfJUcBGEXsHk7",
+  "name": "Magnetic Generator",
+  "type": "ware",
+  "_id": "d8AdId0NrcAH87JK",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Thrust-Vector 8/40; use Pilot: Space; +15/+0 AV.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713657425911,
+    "modifiedTime": 1713694939643,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!d8AdId0NrcAH87JK"
+}

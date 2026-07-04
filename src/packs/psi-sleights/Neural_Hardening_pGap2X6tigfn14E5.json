@@ -1,0 +1,39 @@
+{
+  "name": "Neural Hardening",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You harden the target’s sensory input pathways and mechanisms. For WIL ÷ 5 minutes, they receive +10 to resist basilisk hacks, +10 per superior success.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 4,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "minutes"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "pGap2X6tigfn14E5",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!pGap2X6tigfn14E5"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Anonymizer",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 150000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "NW9dH8G9B4h3Semj",
+  "system": {
+    "additionalSystems": {},
+    "description": "Maskiert die Mesh ID",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441509963,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.OieFVs5XnKVV2QhV",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!NW9dH8G9B4h3Semj"
+}

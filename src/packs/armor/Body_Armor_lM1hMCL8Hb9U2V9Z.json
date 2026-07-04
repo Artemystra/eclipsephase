@@ -1,0 +1,37 @@
+{
+  "name": "Body Armor",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
+  "effects": [],
+  "_id": "lM1hMCL8Hb9U2V9Z",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "main",
+    "energy": "8",
+    "kinetic": "14"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!lM1hMCL8Hb9U2V9Z"
+}

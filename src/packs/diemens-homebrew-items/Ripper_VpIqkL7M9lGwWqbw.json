@@ -1,0 +1,38 @@
+{
+  "name": "Ripper",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/277_skill%20magic%20chain%20lightning.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 147657,
+  "flags": {
+    "core": {}
+  },
+  "_id": "VpIqkL7M9lGwWqbw",
+  "system": {
+    "additionalSystems": {},
+    "description": "Erzeugt einen EMP Dom der alle 30 Sekunden einen Schockstoss von sich gibt, der allen Micro- & Nanoschwärmen 3W10 + 10 Schaden zufügt. Hält 5 Minuten. Eine Anwendung.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441545008,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.wYzbwef1AaxuKctq",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!VpIqkL7M9lGwWqbw"
+}

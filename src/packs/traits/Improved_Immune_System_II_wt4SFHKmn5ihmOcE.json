@@ -1,0 +1,38 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Improved Immune System II",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "This trait is only available to biomorphs. Your immune system is robust. Apply a +10 modifier per level to resist the effects of chemicals, diseases, drugs, and toxins.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "_id": "wt4SFHKmn5ihmOcE",
+  "sort": 11600000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!wt4SFHKmn5ihmOcE"
+}

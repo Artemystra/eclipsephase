@@ -1,0 +1,39 @@
+{
+  "folder": "BqAuWSEWfisfuXXd",
+  "name": "Asymetric Sleep",
+  "type": "ware",
+  "_id": "weEqI8YERxdg5WHH",
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Remain vigilant, maintain position while sleeping.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bm"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713654995984,
+    "modifiedTime": 1713655393312,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!weEqI8YERxdg5WHH"
+}

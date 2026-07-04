@@ -1,0 +1,41 @@
+{
+  "name": "Weapon Mount",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Hardpoint holds one static/swiveling/articulated weapon. Concealable.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585510,
+    "modifiedTime": 1689415905606,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.MrZXWZ7xTajFLqad",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "9ODirit8oYFzPTY9",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 2000000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!9ODirit8oYFzPTY9"
+}

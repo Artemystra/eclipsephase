@@ -1,0 +1,41 @@
+{
+  "name": "App-Lock",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "–30 Infosec to remove apps without authorization",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585518,
+    "modifiedTime": 1689416440849,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.JdATWGFsLhpWRYNc",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "Ih50xvvZNdBbdn4x",
+  "folder": "Vaz2wnUwN7AmKotm",
+  "sort": 100000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!Ih50xvvZNdBbdn4x"
+}

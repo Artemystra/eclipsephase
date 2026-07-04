@@ -1,0 +1,41 @@
+{
+  "name": "Electrical Sense",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Sense electrical fields w/in 5 m.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585512,
+    "modifiedTime": 1689415632344,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.SVsSxop0lpbAGgbf",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "Lv5TBgwC2sqvROhE",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 112500,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!Lv5TBgwC2sqvROhE"
+}

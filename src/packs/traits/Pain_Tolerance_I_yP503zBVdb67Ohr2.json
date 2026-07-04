@@ -1,0 +1,84 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Pain Tolerance I",
+  "type": "traits",
+  "_id": "yP503zBVdb67Ohr2",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You have a high threshold for pain, enabling you to shrug off the effects of pain on your abilities and concentration. You ignore the –10 modifier for 1 wound per level. This trait is compatible with other pain-resistant effects, but a maximum of 3 wound effects may be ignored.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": true
+  },
+  "effects": [
+    {
+      "name": "Pain Tolerance I",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "lhTfVn5HvjIURrUk",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.woundMod",
+            "value": -1,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.1.3",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!yP503zBVdb67Ohr2.lhTfVn5HvjIURrUk"
+    }
+  ],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "sort": 11700000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!yP503zBVdb67Ohr2"
+}

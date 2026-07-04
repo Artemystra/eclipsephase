@@ -1,0 +1,47 @@
+{
+  "name": "Blab",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "sFkuWtxt7323mImD",
+  "system": {
+    "additionalSystems": {},
+    "description": "Neural Damage: Logorrhea, –30 Deceive,  –30 SAV/WIL Checks vs. interrogation.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "category": "social",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "1 hour",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425768840,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.DqVoj7m7xrY2cUz5",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!sFkuWtxt7323mImD"
+}

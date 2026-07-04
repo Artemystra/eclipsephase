@@ -1,0 +1,38 @@
+{
+  "name": "Gretel module",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 131250,
+  "flags": {
+    "core": {}
+  },
+  "_id": "2ma7TnejtUCWYjKE",
+  "system": {
+    "additionalSystems": {},
+    "description": "Distressbecon der Meshspuren und Signale verschiedener Intensität und Dauer erzeugen kann. Kann genutzt werden um verschlüsselte Spuren zu legen oder Notrufsignale mit einer Signalstärke von bis zu 500 Kilometern Reichweite aussenden.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441529038,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.40SnHckDUTYVJICC",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!2ma7TnejtUCWYjKE"
+}

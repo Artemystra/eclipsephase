@@ -1,0 +1,39 @@
+{
+  "folder": "zY1KfJUcBGEXsHk7",
+  "name": "Convertible Form",
+  "type": "ware",
+  "_id": "IRqEtyG7LBhtjFsM",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Transform into a pre-set configuration in 3 action turns.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713657244416,
+    "modifiedTime": 1713695174897,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!IRqEtyG7LBhtjFsM"
+}

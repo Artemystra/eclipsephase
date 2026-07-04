@@ -1,0 +1,88 @@
+{
+  "name": "Structural Enhancement",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [
+    {
+      "_id": "Dw4OdbsOtNmEZNwy",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Structural Enhancement",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.durmod",
+            "value": "+10",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!x7IYwgKwlTY00kfW.Dw4OdbsOtNmEZNwy"
+    }
+  ],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Tougher frame. +2 WT, +10 DUR, +20 DR.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1665426585516,
+    "modifiedTime": 1689415880039,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.dcb0GbbPNEYgXO2n",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "x7IYwgKwlTY00kfW",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 1700000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!x7IYwgKwlTY00kfW"
+}

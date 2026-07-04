@@ -1,0 +1,47 @@
+{
+  "name": "Psike-Out",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "yrGzAWPM2L0nZxvX",
+  "system": {
+    "additionalSystems": {},
+    "description": "+10 Psi skill.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "consumable",
+    "category": "psi",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "8 hours",
+    "addictionMod": "-10",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425065074,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.yQXaQPdTuk7B65tp",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!yrGzAWPM2L0nZxvX"
+}

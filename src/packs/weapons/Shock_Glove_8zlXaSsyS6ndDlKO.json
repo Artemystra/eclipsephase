@@ -1,0 +1,141 @@
+{
+  "folder": "xKfgD7BhutMA3H5S",
+  "name": "Shock Glove",
+  "type": "ccWeapon",
+  "_id": "8zlXaSsyS6ndDlKO",
+  "img": "systems/eclipsephase/resources/icons/277_skill%20magic%20chain%20lightning.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "When activated, this glove delivers an incapacitating shock along with every punch, grab, or touch.",
+    "active": true,
+    "displayCategory": "ccweapon",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "sidearm",
+    "additionalMode": false,
+    "accessories": {
+      "armSlide": {
+        "name": "ep2e.item.weapon.table.accessory.armSlide",
+        "value": false
+      },
+      "safetySystem": {
+        "name": "ep2e.item.weapon.table.accessory.safetySystem",
+        "value": false
+      },
+      "shockSafety": {
+        "name": "ep2e.item.weapon.table.accessory.shockSafety",
+        "value": false
+      }
+    },
+    "mode1": {
+      "name": "",
+      "d10": null,
+      "d6": 1,
+      "bonus": null,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": false,
+          "skillMod": null
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": true
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": true
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": false
+        }
+      }
+    },
+    "mode2": {
+      "name": "",
+      "d10": null,
+      "d6": null,
+      "bonus": null,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": false
+        }
+      }
+    }
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1689375997601,
+    "modifiedTime": 1689378274815,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!8zlXaSsyS6ndDlKO"
+}

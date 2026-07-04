@@ -1,0 +1,38 @@
+{
+  "name": "Ego Plasticity II",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Ignore psychosurgery SV (for one procedure), except treat crit fails as normal fails.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "folder": "hV09BrpxHnLOea0b",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766133763064,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_id": "IlI21DkFD6DSufck",
+  "sort": 700000,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!IlI21DkFD6DSufck"
+}

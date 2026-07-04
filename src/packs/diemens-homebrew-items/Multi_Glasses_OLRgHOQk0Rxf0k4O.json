@@ -1,0 +1,38 @@
+{
+  "name": "Multi Glasses",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/binoculars.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 140625,
+  "flags": {
+    "core": {}
+  },
+  "_id": "OLRgHOQk0Rxf0k4O",
+  "system": {
+    "additionalSystems": {},
+    "description": "Flexibles Aussehen (auffällig) mit 3 Sichtmodi aus folgender Liste:\n\n- Infrarot\n- Ultraschall\n- Ultraviolett\n- Restlichtverstärkung\n- 50x Zoom\n- Flexwire\n- Wärmebild\n- X-Ray Sense\n- Richtmikrophon + Kopfhörer\n- 360° View\n- Direction Sense\n- Radar\n- Sonar\n- Polarisationsfilter\n- Blendschutz\n- Ecto\n- Kamera",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441533645,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.2TkSccwbHrCcpiQF",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!OLRgHOQk0Rxf0k4O"
+}

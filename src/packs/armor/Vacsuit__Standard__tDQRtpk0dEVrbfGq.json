@@ -1,0 +1,37 @@
+{
+  "name": "Vacsuit (Standard)",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
+  "effects": [],
+  "_id": "tDQRtpk0dEVrbfGq",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "major",
+    "slotType": "main",
+    "energy": "8",
+    "kinetic": "6"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!tDQRtpk0dEVrbfGq"
+}

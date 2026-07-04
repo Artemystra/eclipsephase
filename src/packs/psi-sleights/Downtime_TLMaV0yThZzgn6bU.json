@@ -1,0 +1,39 @@
+{
+  "name": "Downtime",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You slip the target’s mind into a fugue-state regenerative downtime, to repair their psyche. You must sustain this sleight for 4 hours during which you may take no other complex actions. Downtime cannot be concurrent with a long recharge. This process heals 1d6 stress, +1d6 per superior success. Traumas and disorders are unaffected by this sleight. If interrupted, no stress is healed. For all sensory purposes, you and the target are catatonic during downtime, completely oblivious to the outside world. Only severe disturbances or physical shock (such as being wounded or hit by a shock weapon) will bring you or the target out of it. Any target of this sleight other than yourself must make a WIL Check; if they fail, sometime within the next 24 hours they will be subject to one of your influence effects.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 2,
+    "psiType": "gamma",
+    "actionType": "task",
+    "duration": "sustained"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "TLMaV0yThZzgn6bU",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!TLMaV0yThZzgn6bU"
+}

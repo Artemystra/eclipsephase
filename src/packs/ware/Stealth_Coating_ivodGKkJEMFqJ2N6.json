@@ -1,0 +1,39 @@
+{
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "name": "Stealth Coating",
+  "type": "ware",
+  "_id": "ivodGKkJEMFqJ2N6",
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Invisibility, −60 to Perceive, −30 to target, possible 50% miss chance.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "rare",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603935695,
+    "modifiedTime": 1713604040216,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!ivodGKkJEMFqJ2N6"
+}

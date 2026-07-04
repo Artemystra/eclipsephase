@@ -1,0 +1,39 @@
+{
+  "folder": "BqAuWSEWfisfuXXd",
+  "name": "Multi-Ego Controls",
+  "type": "ware",
+  "_id": "MkJa0tFfnw3Wv3H8",
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Multiple egos may control the same morph simultaneously.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "hm"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713655096230,
+    "modifiedTime": 1713656196954,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!MkJa0tFfnw3Wv3H8"
+}

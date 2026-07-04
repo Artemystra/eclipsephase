@@ -1,0 +1,19 @@
+{
+  "name": "Gamma",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "kp6gA22jUj1D588w",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "11.313",
+    "createdTime": 1713603223956,
+    "modifiedTime": 1713603750843,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!kp6gA22jUj1D588w"
+}

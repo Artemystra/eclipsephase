@@ -1,0 +1,38 @@
+{
+  "name": "Disabler",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/277_skill%20magic%20chain%20lightning.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 103125,
+  "flags": {
+    "core": {}
+  },
+  "_id": "WS3ntTCLyKHhhNKR",
+  "system": {
+    "additionalSystems": {},
+    "description": "Ein Diodennetz das mit gezielten Stromstössen biologische Gehirne ausser Gefecht setzt. Auch mit dem Access Jack zu verbinden um so die Verbindung zwischen dem Ego und dem Gehirn temporär zu stören.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441525838,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.fTkrzgaO9IsYQsIF",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!WS3ntTCLyKHhhNKR"
+}

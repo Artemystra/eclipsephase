@@ -1,0 +1,39 @@
+{
+  "name": "Sublimal",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You implant a single post-hypnotic suggestion into the target’s mind which they will carry out as if it was their own idea. \n\nImplanted suggestions must be short and simple; the GM may require suggestions be encompassed in a short sentence (for example: “open the airlock” or “hand over the weapon”). Suggestions may include a short trigger condition (“when the alarm goes off, ignore it”). \n\nThe target receives a WIL Check to resist any suggestion that is immediately life threatening (“jump off the bridge”) or that violates their motivations or personal strictures.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 10,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "hours"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "gtVAZ85vvKa1Emuf",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!gtVAZ85vvKa1Emuf"
+}

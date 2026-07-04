@@ -1,0 +1,38 @@
+{
+  "name": "Private Server Partition",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 100782,
+  "flags": {
+    "core": {}
+  },
+  "_id": "2ig01iF0WIb78BiT",
+  "system": {
+    "additionalSystems": {},
+    "description": "Home space for an infomorph on a protected cloud server",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417271040,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.oL5b7B2m86IRzcHA",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!2ig01iF0WIb78BiT"
+}

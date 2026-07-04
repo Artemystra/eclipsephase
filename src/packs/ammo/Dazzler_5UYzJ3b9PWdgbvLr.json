@@ -1,0 +1,110 @@
+{
+  "folder": "Zme0113ThA1HtjMv",
+  "name": "Dazzler",
+  "type": "ammo",
+  "_id": "5UYzJ3b9PWdgbvLr",
+  "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Dazzlers are spinning laser devices, designed to blind targets and defeat surveillance. Anyone within line of sight in the radius of effect (50 meters) who is not equipped with anti-glare mods must succeed in a REF Check or be blinded ▶226 for 1 action turn, +1 per superior failure. A critical failure results in permanent blindness (until repaired/healed). Any visual light/infrared cameras are overloaded for the dazzler’s duration. Unless set to a timed deactivation, dazzlers continue to blind for 1 hour or until wirelessly turned off or physically destroyed (DUR 10, AV 5/10).",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "type": "seeker",
+    "areaeffect": "Uniform (50m)",
+    "dv": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": true
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": false
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": false
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1,
+    "armorUsed": "none"
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "13.346",
+    "createdTime": 1694800555649,
+    "modifiedTime": 1694802974182,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!5UYzJ3b9PWdgbvLr"
+}

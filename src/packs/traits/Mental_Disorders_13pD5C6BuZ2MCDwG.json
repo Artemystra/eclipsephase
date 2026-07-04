@@ -1,0 +1,22 @@
+{
+  "name": "Mental Disorders",
+  "sorting": "a",
+  "folder": "DaSyiLnSD2LzihV0",
+  "type": "Item",
+  "_id": "13pD5C6BuZ2MCDwG",
+  "description": "",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195199,
+    "modifiedTime": 1742324195199,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!13pD5C6BuZ2MCDwG"
+}

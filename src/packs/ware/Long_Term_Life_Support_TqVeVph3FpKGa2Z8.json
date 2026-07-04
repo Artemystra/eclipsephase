@@ -1,0 +1,39 @@
+{
+  "folder": "zY1KfJUcBGEXsHk7",
+  "name": "Long-Term Life Support",
+  "type": "ware",
+  "_id": "TqVeVph3FpKGa2Z8",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Survive without air, food, or water up to one year.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "n"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713657412571,
+    "modifiedTime": 1713694950467,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!TqVeVph3FpKGa2Z8"
+}

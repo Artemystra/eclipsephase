@@ -1,0 +1,36 @@
+{
+  "name": "Invisibility Cloak",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/binoculars.png",
+  "effects": [],
+  "_id": "1ajvYLheeoTt5og5",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Metamaterial cloak, makes invisible, –60 Perceive to spot.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!1ajvYLheeoTt5og5"
+}

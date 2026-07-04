@@ -1,0 +1,37 @@
+{
+  "name": "Heavy Combat Armor",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Additional%20Armor.png",
+  "effects": [],
+  "_id": "8m6V78XjCsY7KhPY",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "major",
+    "slotType": "additional",
+    "energy": "+16",
+    "kinetic": "+14"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!8m6V78XjCsY7KhPY"
+}

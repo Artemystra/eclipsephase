@@ -1,0 +1,37 @@
+{
+  "folder": "13pD5C6BuZ2MCDwG",
+  "name": "Bipolar Disorder",
+  "type": "traits",
+  "_id": "LdcUmnjNxBv8oiyA",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Triggers: Grief, helplessness, sleep deprivation, violence\n\nWith manic depression, your periods of depression are interrupted by brief (a matter of days at most) periods of mania with heightened energy and a general disregard for consequences. The depressive stages are similar in all ways to depression. When manic, you will take risks, spend wildly, and engage in behavior without forethought or consideration of long-term consequences.\n\nEffect: Similar to depression, but when manic you must make a WIL Check to stop yourself from undertaking a risky endeavor. You will also try to convince others to go along with the idea.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!LdcUmnjNxBv8oiyA"
+}

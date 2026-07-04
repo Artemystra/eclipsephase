@@ -1,0 +1,110 @@
+{
+  "folder": "Zme0113ThA1HtjMv",
+  "name": "EMP",
+  "type": "ammo",
+  "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "EMP munitions fire off a strong electromagnetic pulse when they “detonate.” Since most electronics in Eclipse Phase are built with optical technology, and power supplies and sensitive microcircuits are shielded and surge-protected, this has no major damaging effect. Antennas, however, are vulnerable, especially finer wires like those used with mesh inserts, as are nanobots and microbots. Every radio within the blast radius (50 meters) is disabled until repaired with an appropriate Hardware or Medicine: Biotech Test or a fixer nanoswarm. Every nanoswarm within range suffers DV 2d10 + 5.",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "major",
+    "slotType": "consumable",
+    "type": "seeker",
+    "areaeffect": "Uniform (50 m)",
+    "dv": {
+      "d10": 2,
+      "d6": null,
+      "bonus": 6
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": false
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": true
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": false
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1,
+    "armorUsed": "none"
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "13.346",
+    "createdTime": 1694800555649,
+    "modifiedTime": 1694802974182,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "CEwJ8jcIpSwd6ZhS",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!CEwJ8jcIpSwd6ZhS"
+}

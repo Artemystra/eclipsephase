@@ -1,0 +1,94 @@
+{
+  "name": "Reflex Boosters",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [
+    {
+      "_id": "ysnYa2VVeIKMV1DC",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Reflex Boosters",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.iniMod",
+            "value": "+3",
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.aptitudes.ref.mod",
+            "value": "+10",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!DCtJcW5nGCLD34ZN.ysnYa2VVeIKMV1DC"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Spine and nervous system rewired. +3 INIT, +10 REF Check.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1665426585508,
+    "modifiedTime": 1689415831381,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.AeBmugXcfP6dNRsw",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "DCtJcW5nGCLD34ZN",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 1300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!DCtJcW5nGCLD34ZN"
+}

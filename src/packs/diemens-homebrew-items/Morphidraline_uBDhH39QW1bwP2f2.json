@@ -1,0 +1,38 @@
+{
+  "name": "Morphidraline",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 187500,
+  "flags": {
+    "core": {}
+  },
+  "_id": "uBDhH39QW1bwP2f2",
+  "system": {
+    "additionalSystems": {},
+    "description": "Negiert alle Effekte von SOM/5 Wunden für 6 Stunden. Nach dieser Zeit muss dem Anwender eine SOM Probe gelingen. Zählen alle Mali durch Wunden für die Dauer einer Stunde doppelt.\n\nBeinhaltet auch eine digitale Routine, die auf Synthmorphs wirkt, den chemischen Stoff bei Anwendung jedoch neutralisiert.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441532599,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.CKydnZBWjUnzw143",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!uBDhH39QW1bwP2f2"
+}

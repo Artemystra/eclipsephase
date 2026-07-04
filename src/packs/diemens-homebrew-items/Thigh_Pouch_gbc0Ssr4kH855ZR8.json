@@ -1,0 +1,95 @@
+{
+  "name": "Thigh Pouch",
+  "type": "gear",
+  "_id": "gbc0Ssr4kH855ZR8",
+  "img": "systems/eclipsephase/resources/icons/knife.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "effects": [
+    {
+      "name": "Thigh Pouch",
+      "_id": "QPxC8qGjEyhsK3EO",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "transfer": true,
+      "statuses": [],
+      "flags": {},
+      "tint": "#ffffff",
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.weaponScoreMod",
+            "value": 1,
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.mods.consumableCountMod",
+            "value": -2,
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.mods.accessoryCountMod",
+            "value": -1,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!gbc0Ssr4kH855ZR8.QPxC8qGjEyhsK3EO"
+    }
+  ],
+  "folder": "9EfyVqG4AgtTMSbA",
+  "sort": 150000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1688734572347,
+    "modifiedTime": 1689441646808,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!gbc0Ssr4kH855ZR8"
+}

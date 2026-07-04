@@ -1,0 +1,41 @@
+{
+  "name": "Skillware",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Can use 120 points of skillsofts.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "chm"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585519,
+    "modifiedTime": 1689416018775,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.klleqJA14kaEhZee",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "JpYGa0xqeXFgBTII",
+  "folder": "BqAuWSEWfisfuXXd",
+  "sort": 118750,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!JpYGa0xqeXFgBTII"
+}

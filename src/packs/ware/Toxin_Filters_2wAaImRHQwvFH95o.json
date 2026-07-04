@@ -1,0 +1,41 @@
+{
+  "name": "Toxin Filters",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "+30 to apt checks to resist drugs/toxins, effect/duration halved.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585511,
+    "modifiedTime": 1689415897516,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.Nc78mWiNyGczYBrM",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "2wAaImRHQwvFH95o",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 1900000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!2wAaImRHQwvFH95o"
+}

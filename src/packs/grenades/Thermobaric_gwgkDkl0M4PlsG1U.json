@@ -1,0 +1,77 @@
+{
+  "name": "Thermobaric",
+  "type": "grenade",
+  "img": "systems/eclipsephase/resources/icons/grenade-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "gwgkDkl0M4PlsG1U",
+  "system": {
+    "additionalSystems": {},
+    "description": "Armor-Piercing, Knockdown",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "consumable",
+    "areaeffect": "Uniform (10m)",
+    "dv": {
+      "d10": 2,
+      "d6": null,
+      "bonus": 6
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "value": false
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": "energy",
+    "quantity": 1,
+    "armorUsed": "energy"
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1694213038195,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Dg0KmyktCDh85pFc",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!gwgkDkl0M4PlsG1U"
+}

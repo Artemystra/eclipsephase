@@ -1,0 +1,47 @@
+{
+  "name": "Stiff",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "vZMum4poV13eY3Px",
+  "system": {
+    "additionalSystems": {},
+    "description": "+10 SAV/WIL Checks vs. Persuade/Provoke,  Enhanced Behavior: Stubborn (Level 2).",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "social",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "8 hours",
+    "addictionMod": "-10",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674424952517,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.2l9Fic3VCYYmEYRH",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!vZMum4poV13eY3Px"
+}

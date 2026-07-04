@@ -1,0 +1,88 @@
+{
+  "name": "Mind Amp",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [
+    {
+      "_id": "3F0ViEYyCCutrX1Q",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Mind Amp",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.pools.insight.mod",
+            "value": "+2",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!13bHwIXiYXfZc78J.3F0ViEYyCCutrX1Q"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Accelerates mind. +2 Insight.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "hmn"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1665426585516,
+    "modifiedTime": 1689415977771,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.dU4wQqI1mVXTh39A",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "13bHwIXiYXfZc78J",
+  "folder": "BqAuWSEWfisfuXXd",
+  "sort": 500000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!13bHwIXiYXfZc78J"
+}

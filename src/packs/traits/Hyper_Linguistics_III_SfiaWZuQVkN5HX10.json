@@ -1,0 +1,38 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Hyper Linguistics III",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You have a natural gift with linguistic structures and syntax. You receive a +10 modifier to INT Checks per level to grasp the general meaning or intent of communication spoken in languages you don’t know — even alien tongues. This trait provides no bonuses to written texts or non-verbal communications (such as Factor spores).",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "_id": "SfiaWZuQVkN5HX10",
+  "sort": 8800000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!SfiaWZuQVkN5HX10"
+}

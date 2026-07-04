@@ -1,0 +1,19 @@
+{
+  "name": "Mesh Services",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "Fp0bUlBBAJMzON9V",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "11.305",
+    "createdTime": 1689417255618,
+    "modifiedTime": 1689417255618,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!Fp0bUlBBAJMzON9V"
+}

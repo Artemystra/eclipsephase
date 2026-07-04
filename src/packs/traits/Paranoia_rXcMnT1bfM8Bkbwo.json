@@ -1,0 +1,37 @@
+{
+  "folder": "13pD5C6BuZ2MCDwG",
+  "name": "Paranoia",
+  "type": "traits",
+  "_id": "rXcMnT1bfM8Bkbwo",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Triggers: Betrayal, conspiratorial behavior, the unknown, violence\n\nYou mistrust others. You are hypervigilant but also hypersensitive to perceived hostility and insults. You bear grudges for longer periods.\n\nEffect: –10 to Kinesics Tests. Paranoid NPCs have a +20 bonus to SAV Checks against Persuade, but a –20 against hostile Provoke Tests while the disorder is active.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!rXcMnT1bfM8Bkbwo"
+}

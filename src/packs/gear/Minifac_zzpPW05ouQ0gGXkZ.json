@@ -1,0 +1,36 @@
+{
+  "name": "Minifac",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "effects": [],
+  "_id": "zzpPW05ouQ0gGXkZ",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Industrial-scale nanofab.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "Rare",
+    "slotType": "Not Mobile",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!zzpPW05ouQ0gGXkZ"
+}

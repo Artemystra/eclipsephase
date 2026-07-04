@@ -1,0 +1,39 @@
+{
+  "name": "Mimic",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You telepathically ping the target, collecting an intuitive snapshot of their personality quirks and mannerisms. You may use this imprint of the target’s mind to your advantage when mimicking their behavior and social cues. Apply a +10 modifier to Deceive Tests to impersonate the target, +10 per superior success.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 4,
+    "psiType": "gamma",
+    "actionType": "quick",
+    "duration": "instant"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "O7O01Og1uuu7GZwm",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!O7O01Og1uuu7GZwm"
+}

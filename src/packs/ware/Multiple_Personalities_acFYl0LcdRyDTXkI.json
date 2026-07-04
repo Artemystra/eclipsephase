@@ -1,0 +1,41 @@
+{
+  "name": "Multiple Personalities",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Brain holds multiple egos.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bm"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585512,
+    "modifiedTime": 1689415982521,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.S9RDup2i0yCdzwGn",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "acFYl0LcdRyDTXkI",
+  "folder": "BqAuWSEWfisfuXXd",
+  "sort": 600000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!acFYl0LcdRyDTXkI"
+}

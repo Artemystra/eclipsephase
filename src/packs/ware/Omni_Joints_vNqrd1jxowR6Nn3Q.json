@@ -1,0 +1,98 @@
+{
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "name": "Omni-Joints",
+  "type": "ware",
+  "_id": "vNqrd1jxowR6Nn3Q",
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "+10 Athletics, Fray, and Melee. Requires shape adjusting.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "effects": [
+    {
+      "name": "Omni-Joints",
+      "_id": "1ECkrZv2hs8g4kZn",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "transfer": true,
+      "statuses": [],
+      "flags": {},
+      "tint": "#ffffff",
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.skillsVig.athletics.mod",
+            "value": "+10",
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.skillsVig.fray.mod",
+            "value": "+10",
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.skillsVig.melee.mod",
+            "value": "+10",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!vNqrd1jxowR6Nn3Q.1ECkrZv2hs8g4kZn"
+    }
+  ],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "14.356",
+    "createdTime": 1713603922103,
+    "modifiedTime": 1713654280912,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!vNqrd1jxowR6Nn3Q"
+}

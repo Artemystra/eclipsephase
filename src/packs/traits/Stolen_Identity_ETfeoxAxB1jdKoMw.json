@@ -1,0 +1,38 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Stolen Identity",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Ongoing complications from a previous stolen identity incident.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766135295410,
+    "modifiedTime": 1766135295410,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_id": "ETfeoxAxB1jdKoMw",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!ETfeoxAxB1jdKoMw"
+}

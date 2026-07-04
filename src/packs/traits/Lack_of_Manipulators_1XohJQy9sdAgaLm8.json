@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Lack of Manipulators",
+  "type": "traits",
+  "_id": "1XohJQy9sdAgaLm8",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This morph lacks hands or other limbs with a fine manipulation capability. It is a common trait with quadrupeds (as well as certain smart animals). A morph with this trait may not be able to manipulate objects at all or may only be able to do so with a very limited capacity.\n\nSome morphs can hold small-sized objects between their\npaws or in their mouths, for example, but unless these items have been specifically designed to operate with this morphology, you suffer a −30 modifier or may not be able to use them at all (GM discretion). \n\nObjects that don’t require physical manipulation, such as tools controlled by wireless commands, may be used normally. Some morphs with this trait — particularly quadrupeds — may be unable to hold an object between their paws and move at the same time or may require a REF Check to retain their balance while standing upright to hold something.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!1XohJQy9sdAgaLm8"
+}

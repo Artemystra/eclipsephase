@@ -1,0 +1,109 @@
+{
+  "folder": "0ArrDr2gjWdko2AE",
+  "name": "Saboteur Swarm",
+  "type": "ammo",
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Sab nanobots infiltrate electronics or machinery and sabotage them in small but difficult to discern ways: severed connections, disabled components, gummed up moving parts, etc. You may set them to target a specific device, a type of device (i.e., all case morphs), or any electronics or machinery they can find. Once an object is exposed, the saboteurs have a 50% chance of inflicting a wound (and the equivalent DV) every (Wound Threshold) action turns. This will continue until the target has suffered 5 wounds and is incapacitated. Armor has no effect, but the wounds can be repaired as normal. Saboteurs cannot sabotage other nanoswarms.",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "type": "spray",
+    "areaeffect": null,
+    "dv": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": false
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": false
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": true
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.8",
+    "coreVersion": "13.346",
+    "createdTime": 1696403232812,
+    "modifiedTime": 1696404540849,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "RBdMQqw6E5AwVSQ6",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!RBdMQqw6E5AwVSQ6"
+}

@@ -1,0 +1,88 @@
+{
+  "name": "Cyberlimb",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [
+    {
+      "_id": "YlIvj4L1mNkNPdpG",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Cyberlimb",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.aptitudes.som.mod",
+            "value": "+5",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!dxoIPQqHsvKhvlOb.YlIvj4L1mNkNPdpG"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Replacement limb. 6/4 AV when targeted, +5 SOM Check.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "c"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1665426585512,
+    "modifiedTime": 1689415621571,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.QKkrmzyVV0ZGseHO",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "dxoIPQqHsvKhvlOb",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 106250,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!dxoIPQqHsvKhvlOb"
+}

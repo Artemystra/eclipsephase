@@ -1,0 +1,38 @@
+{
+  "name": "ID-/Blueprint Copier",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 109375,
+  "flags": {
+    "core": {}
+  },
+  "_id": "Z6OSTMCXkkEtWlRw",
+  "system": {
+    "additionalSystems": {},
+    "description": "Überprüft die legitimität von Signaturen jeder Art und ist in der Lage IDs und Blueprints zu kopieren. Kopierte Blueprints können von einem Scanner als Fälschungen entlarvt werden, funktionieren sonst jedoch einwandfrei.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441530112,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Z7vmlPAaWDLQvEiD",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!Z6OSTMCXkkEtWlRw"
+}

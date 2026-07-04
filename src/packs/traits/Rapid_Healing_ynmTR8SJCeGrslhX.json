@@ -1,0 +1,38 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Rapid Healing",
+  "type": "traits",
+  "_id": "ynmTR8SJCeGrslhX",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "This trait is only available to biomorphs. The morph recovers from damage more quickly. \n\nReduce the timeframes for physical healing by half.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "sort": 11900000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!ynmTR8SJCeGrslhX"
+}

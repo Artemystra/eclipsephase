@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Addiction II",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "You have a pathological reliance on a drug ▶330, stimulus (e.g., XP, VR), or activity (e.g., mesh use, dying) to a degree that impacts your physical or mental health. \n\nAddiction comes in two forms: mental (affecting the ego) and physical (affecting the biomorph). Work with your GM to choose an addiction that is appropriate for your game. \n\nYou must indulge in your addiction at a regular frequency according to the level or go into withdrawal. Withdrawal inflicts a –10 modifier per level.\n\nLevel 2: Once per day. Your moderate addiction is in full swing and often causes you to neglect other aspects of your life.\n\nTo get more information consult pages 76 following",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "_id": "TDDEMPZEwKT2ouU9",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!TDDEMPZEwKT2ouU9"
+}

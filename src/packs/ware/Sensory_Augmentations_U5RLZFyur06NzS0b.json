@@ -1,0 +1,19 @@
+{
+  "name": "Sensory Augmentations",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "U5RLZFyur06NzS0b",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "11.305",
+    "createdTime": 1689415491820,
+    "modifiedTime": 1689415491820,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!U5RLZFyur06NzS0b"
+}

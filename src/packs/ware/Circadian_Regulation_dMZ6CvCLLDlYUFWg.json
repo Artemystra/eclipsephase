@@ -1,0 +1,41 @@
+{
+  "name": "Circadian Regulation",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Need only 2 hours of sleep. Long recharges take 2 hours.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bm"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585508,
+    "modifiedTime": 1689415612559,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.9fIl6yWNBPdY1Pog",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "dMZ6CvCLLDlYUFWg",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 200000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!dMZ6CvCLLDlYUFWg"
+}

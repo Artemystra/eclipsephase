@@ -1,0 +1,38 @@
+{
+  "name": "Data Control I",
+  "type": "traits",
+  "_id": "D20wqcVnpMvpf6Do",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "–10 modifier per level to Research/Rep Tests to track and find info on you online.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "folder": "hV09BrpxHnLOea0b",
+  "sort": 4700000,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766086666116,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_key": "!items!D20wqcVnpMvpf6Do"
+}

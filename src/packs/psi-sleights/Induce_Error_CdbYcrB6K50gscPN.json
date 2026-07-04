@@ -1,0 +1,39 @@
+{
+  "name": "Induce Error",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You create a glitch in the target’s mind that causes them to unconsciously do something wrong. The target automatically fails a random skill test (chosen by the GM) made in the next WIL ÷ 5 minutes. \n\nWith a superior success, you may choose which skill will\nfail the next time it is used (if that skill is not used within the duration, the sleight has no effect) or make the failure a superior failure. This usually manifests as the type of common mistake that even a seasoned professional might make. For example, in combat the target could forget to reload a weapon or alert an ally of a flanking foe. \n\nOut of combat, the target might save the wrong file, forget where they left something, mistake someone for someone else, or leave a security door unlocked.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 6,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "minutes"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "CdbYcrB6K50gscPN",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!CdbYcrB6K50gscPN"
+}

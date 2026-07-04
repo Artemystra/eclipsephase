@@ -1,0 +1,84 @@
+{
+  "name": "Danger Instinct",
+  "type": "traits",
+  "_id": "gZR4oZusG8y2TSRj",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "+2 Initiative. WIL Check to control action if surprised.\b ",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Danger Instinct",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "LPybRmUsp088DkyO",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.iniMod",
+            "value": "+2",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.5",
+        "createdTime": 1766083534007,
+        "modifiedTime": 1766083595059,
+        "lastModifiedBy": "As9MwNgJsGddtEep"
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!gZR4oZusG8y2TSRj.LPybRmUsp088DkyO"
+    }
+  ],
+  "folder": "hV09BrpxHnLOea0b",
+  "sort": 4800000,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766083523076,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_key": "!items!gZR4oZusG8y2TSRj"
+}

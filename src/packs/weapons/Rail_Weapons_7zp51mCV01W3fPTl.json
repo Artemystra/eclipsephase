@@ -1,0 +1,19 @@
+{
+  "name": "Rail Weapons",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "7zp51mCV01W3fPTl",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.7.5",
+    "coreVersion": "11.305",
+    "createdTime": 1695374944362,
+    "modifiedTime": 1695425231443,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!7zp51mCV01W3fPTl"
+}

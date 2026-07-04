@@ -1,0 +1,89 @@
+{
+  "name": "Ultra-Light Rail Mount",
+  "type": "gear",
+  "_id": "VbyZAdZCFxDPFvVd",
+  "img": "systems/eclipsephase/resources/icons/knife.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "A nanobot-based expert system that disassembles bulky and heavy equipment into its individual components and distributes them somewhere on the wearers body, keeping them ready for use within seconds, thanks to a built-in nanofabricator.\n\nHowever, due to its size, the wearer sacrifices two accessory slots.\n\nAllows carrying a bulky item without penalties.\n\nOnly one rail mount can be worn simultaneously.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "effects": [
+    {
+      "name": "Ultra-Light Rail Mount",
+      "_id": "pxq18W4R8V2eINW5",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "transfer": true,
+      "statuses": [],
+      "flags": {},
+      "tint": "#ffffff",
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.accessoryCountMod",
+            "value": "+1",
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.mods.bulkyCountMod",
+            "value": -1,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!VbyZAdZCFxDPFvVd.pxq18W4R8V2eINW5"
+    }
+  ],
+  "folder": "9EfyVqG4AgtTMSbA",
+  "sort": 125000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1688734830386,
+    "modifiedTime": 1689441648027,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!VbyZAdZCFxDPFvVd"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Klar",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "hu1ImLkGb4cgIpPa",
+  "system": {
+    "additionalSystems": {},
+    "description": "+10 Perceive, no distraction modifiers",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "cognitive",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "8 hours",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425360536,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.tDcg3kR5qRsnqPxT",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!hu1ImLkGb4cgIpPa"
+}

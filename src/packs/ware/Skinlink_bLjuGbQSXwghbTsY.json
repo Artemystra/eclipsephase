@@ -1,0 +1,41 @@
+{
+  "name": "Skinlink",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Create a “hardwired” mesh link by touch.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "hn"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585516,
+    "modifiedTime": 1689415849135,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.cxqvv34aZbOtBvRd",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "bLjuGbQSXwghbTsY",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 1300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!bLjuGbQSXwghbTsY"
+}

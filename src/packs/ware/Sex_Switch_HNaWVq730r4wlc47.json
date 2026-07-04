@@ -1,0 +1,41 @@
+{
+  "name": "Sex Switch",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Switch between male, female, intersex, or neuter in 1 week.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585510,
+    "modifiedTime": 1689415840156,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.HIC3mpci0POYL0Dm",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "HNaWVq730r4wlc47",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 600000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!HNaWVq730r4wlc47"
+}

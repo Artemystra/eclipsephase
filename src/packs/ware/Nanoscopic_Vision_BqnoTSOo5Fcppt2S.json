@@ -1,0 +1,41 @@
+{
+  "name": "Nanoscopic Vision",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "View nanoscale objects and nanobots.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585509,
+    "modifiedTime": 1689415759966,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.DfVUjFLVBE5L7ZcI",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "BqnoTSOo5Fcppt2S",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!BqnoTSOo5Fcppt2S"
+}

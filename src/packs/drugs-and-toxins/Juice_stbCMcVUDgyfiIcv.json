@@ -1,0 +1,47 @@
+{
+  "name": "Juice",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "stbCMcVUDgyfiIcv",
+  "system": {
+    "additionalSystems": {},
+    "description": "+30 SAV/WIL Checks vs. fear/negative emotions,  Enhanced Behavior: Happy (3).",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "social",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "1 hour",
+    "addictionMod": "-20",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425380967,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.nhyhQWnCfbX2B7VG",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!stbCMcVUDgyfiIcv"
+}

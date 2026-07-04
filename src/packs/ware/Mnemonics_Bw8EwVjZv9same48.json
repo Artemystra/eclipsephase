@@ -1,0 +1,41 @@
+{
+  "name": "Mnemonics",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/everyday.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Enhanced memory; +20 memory-related COG checks.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "chm"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585517,
+    "modifiedTime": 1689415744687,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.daXAuOrqhwK7fntD",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "Bw8EwVjZv9same48",
+  "folder": "HH8yFs1RZM7Wmw3U",
+  "sort": 300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!Bw8EwVjZv9same48"
+}

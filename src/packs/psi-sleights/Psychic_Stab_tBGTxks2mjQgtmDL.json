@@ -1,0 +1,39 @@
+{
+  "name": "Psychic Stab",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You trigger dangerous neurochemical impulses and biofeedback\nin the target’s brain and nervous system. You inflict 2d10 DV, +1d6 per superior success, reduced by mental armor.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 6,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "instant"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "tBGTxks2mjQgtmDL",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!tBGTxks2mjQgtmDL"
+}

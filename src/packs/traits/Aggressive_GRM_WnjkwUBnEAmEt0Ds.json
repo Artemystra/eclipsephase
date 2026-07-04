@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Aggressive GRM",
+  "type": "traits",
+  "_id": "WnjkwUBnEAmEt0Ds",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This trait is only available to biomorphs. The genetic rights management of this morph uses a number of atypical tricks to prevent the morph from breeding or being modified without authorization.\n\nUnless “unlocked” with further genehacking by someone with\ndetailed knowledge of the original design or by a Medicine: Biotech Test at −30, the morph is sterile and will reject all bioware, cyberware, and nanoware mods not included in the original design (if installed, treat as a wound until they are removed).",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!WnjkwUBnEAmEt0Ds"
+}

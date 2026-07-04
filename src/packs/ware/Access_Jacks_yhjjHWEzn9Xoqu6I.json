@@ -1,0 +1,41 @@
+{
+  "name": "Access Jacks",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "External sockets for direct interface with mesh inserts/cyberbrains.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "c"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585510,
+    "modifiedTime": 1689415579420,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.EqT6998IpUQnulgz",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "yhjjHWEzn9Xoqu6I",
+  "folder": "HH8yFs1RZM7Wmw3U",
+  "sort": 100000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!yhjjHWEzn9Xoqu6I"
+}

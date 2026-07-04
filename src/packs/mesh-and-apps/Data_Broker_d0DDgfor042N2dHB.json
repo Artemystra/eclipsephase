@@ -1,0 +1,38 @@
+{
+  "name": "Data Broker",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 150000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "d0DDgfor042N2dHB",
+  "system": {
+    "additionalSystems": {},
+    "description": "Both corporate marketers and black market cartels\npeddle people’s private data. Each broker focuses on a particular\ndemographic, such as a city or profession. Apply a +10 modifier to relevant Research Tests.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417266626,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.zL6kQe9ENuchBJ4U",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!d0DDgfor042N2dHB"
+}

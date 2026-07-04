@@ -1,0 +1,110 @@
+{
+  "folder": "Zme0113ThA1HtjMv",
+  "name": "Stun (Overload)",
+  "type": "ammo",
+  "img": "systems/eclipsephase/resources/icons/244_skill%20gun%20power%20shot.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Stun seekers/grenades can also be set into “overload mode,” inflicting an all-out sensory assault for a full minute. In addition to blinding glare, the device releases nausea-inducing malodorants and infrasonic frequencies that trigger unpleasant emotional responses (anxiety, uneasiness, extreme sorrow, revulsion, and fear).",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "type": "seeker",
+    "areaeffect": "Uniform (10 m)",
+    "dv": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": true
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": false
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": ""
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": false
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": true
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1,
+    "armorUsed": "kinetic"
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "13.346",
+    "createdTime": 1694800555649,
+    "modifiedTime": 1694802974182,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "YtRqBUGU62JS4gol",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!YtRqBUGU62JS4gol"
+}

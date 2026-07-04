@@ -1,0 +1,38 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Domineering Impulses",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "WIL Check to use Deceive/Persuade over intimidation or to not respond to threats in kind.\b ",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766135295410,
+    "modifiedTime": 1766135295410,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_id": "CIwSyy9z40NyI57S",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!CIwSyy9z40NyI57S"
+}

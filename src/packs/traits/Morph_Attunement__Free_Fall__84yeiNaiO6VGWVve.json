@@ -1,0 +1,84 @@
+{
+  "name": "Morph Attunement (Free Fall)",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "+10 to either Athletics, Fray, Free Fall, Infiltrate, or Pilot with one specific morph type.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Morph Attunement (Free Fall)",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "1kavy9gQWjohLUkg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.skillsVig.free fall.conditional.attuned",
+            "value": true,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.5",
+        "lastModifiedBy": null,
+        "createdTime": null,
+        "modifiedTime": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!84yeiNaiO6VGWVve.1kavy9gQWjohLUkg"
+    }
+  ],
+  "folder": "hV09BrpxHnLOea0b",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766667569189,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_id": "84yeiNaiO6VGWVve",
+  "sort": 300000,
+  "_key": "!items!84yeiNaiO6VGWVve"
+}

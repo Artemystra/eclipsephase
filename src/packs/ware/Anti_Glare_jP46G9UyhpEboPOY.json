@@ -1,0 +1,41 @@
+{
+  "name": "Anti-Glare",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "No glare penalties.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585519,
+    "modifiedTime": 1689415571326,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.jntwhrwp17XRROk1",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "jP46G9UyhpEboPOY",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 200000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!jP46G9UyhpEboPOY"
+}

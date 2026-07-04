@@ -1,0 +1,36 @@
+{
+  "name": "Enhanced Security",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "_id": "gMCIQPw2ERjlR4Oz",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "–10 Infosec to hack, –30 in defensive mode but no\nInsight pool and –3 INIT.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "Digital",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!gMCIQPw2ERjlR4Oz"
+}

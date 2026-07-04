@@ -1,0 +1,39 @@
+{
+  "name": "Implant Memory",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You implant a memory of up to an hour’s length inside the\ntarget’s mind. This memory may be completely fabricated, based on your real memories, or a combination of the two. \n\nImplanting real memories is useful for archiving important data with an ally, providing a literal alternate perspective, or simply making a memory dump for the target to peruse. Fake memories are often fuzzy and lacking detail, but bolstering them with real memories makes them more convincing. \n\nAt the GM’s discretion, a fake memory that contradicts the target’s other memories, is drastically out of character, or includes details that inspire skepticism may be identified as false with an INT Check. Particularly traumatic memories may inflict mental stress on the recipient when they are first experienced. Implanted memories do not overwrite real memories.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 6,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "instant"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "K7piWtcuml6q7HPM",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!K7piWtcuml6q7HPM"
+}

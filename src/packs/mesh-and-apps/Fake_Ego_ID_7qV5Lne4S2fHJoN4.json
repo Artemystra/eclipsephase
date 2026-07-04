@@ -1,0 +1,38 @@
+{
+  "name": "Fake Ego ID",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 112500,
+  "flags": {
+    "core": {}
+  },
+  "_id": "7qV5Lne4S2fHJoN4",
+  "system": {
+    "additionalSystems": {},
+    "description": "This forged ID will pass in most inner system and\nJovian Republic habitats, and sometimes others. It gives you a rep score in one network with that ID at 10",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417268171,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.p8QHcD293iF0skAi",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!7qV5Lne4S2fHJoN4"
+}

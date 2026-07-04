@@ -1,0 +1,2775 @@
+{
+  "name": "Hex",
+  "type": "character",
+  "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+  "items": [
+    {
+      "_id": "zWINclNZ4fAesK7R",
+      "name": "Black Markets",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 60,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.zWINclNZ4fAesK7R"
+    },
+    {
+      "_id": "UTtUJl610ny3Aaa4",
+      "name": "Drugs",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 30,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.UTtUJl610ny3Aaa4"
+    },
+    {
+      "_id": "NB0ny9D1PaTYTfA2",
+      "name": "Lunars/Orbitals",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 30,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.NB0ny9D1PaTYTfA2"
+    },
+    {
+      "_id": "EmMZhv5IRuRDwmd0",
+      "name": "Smuggling",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 40,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.EmMZhv5IRuRDwmd0"
+    },
+    {
+      "_id": "WYfyrukxK3Jpqizb",
+      "name": "Mind Hacks",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 30,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.WYfyrukxK3Jpqizb"
+    },
+    {
+      "_id": "hKIgG5xMz9ZMKFfH",
+      "name": "Psychology",
+      "type": "knowSkill",
+      "img": "icons/svg/item-bag.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "name": "",
+        "specname": "",
+        "value": 60,
+        "aptitude": "Cognition",
+        "roll": 0,
+        "isThreat": false
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.hKIgG5xMz9ZMKFfH"
+    },
+    {
+      "_id": "9EwKSsExsenZPbZh",
+      "name": "Biomods",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/technical-support.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.ilMDI6wqX7WwZhaL",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Genetic tweaks for health, faster healing, immunities, and more",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.9EwKSsExsenZPbZh"
+    },
+    {
+      "_id": "HBldnLl8zBMx5SXx",
+      "name": "Cortical Stack",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/technical-support.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.ilMDI6wqX7WwZhaL",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Memory diamond storage unit for ego backups.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.HBldnLl8zBMx5SXx"
+    },
+    {
+      "_id": "vtdWsUywPzSmYDcE",
+      "name": "Enhanced Hearing",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/sensory.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ware.jJQCmgcXuQRfAJsN",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Hear higher and lower frequencies. +10 hearing-based Perceive.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.vtdWsUywPzSmYDcE"
+    },
+    {
+      "_id": "KcQZpROtk8AYvLFE",
+      "name": "Enhanced Vision",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/sensory.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.foslFeoxXIe4GGuO",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Tetrachromatic vision, wider frequency range, better focus. +10 vision Perceive.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.KcQZpROtk8AYvLFE"
+    },
+    {
+      "_id": "zNUodLhuA2qzorpX",
+      "name": "Mesh Inserts",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/everyday.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.cOgkiJ1La9Xq4qu4",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "This network of implants is mandatory for people\nwho want to use augmented reality and link wirelessly to the mesh.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.zNUodLhuA2qzorpX"
+    },
+    {
+      "_id": "FJmZJGsOmpSnBCpx",
+      "name": "Neuromodulation",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/social.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ware.GPyyVyNPENCJS2Kx",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Control over neurotransmitters and emotions. +1 Moxie.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.FJmZJGsOmpSnBCpx"
+    },
+    {
+      "_id": "UZIXivJZNO2NYekl",
+      "name": "Skinflex",
+      "type": "ware",
+      "img": "systems/eclipsephase/resources/icons/social.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ware.yzS8r90V0lTe2M2d",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Disguise face, skin, hair. +30 to impersonation/disguise Deceive Tests.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "cost": "",
+        "slotType": "",
+        "bonus": null,
+        "malus": null,
+        "boundTo": "morph1",
+        "wareType": null
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.UZIXivJZNO2NYekl"
+    },
+    {
+      "_id": "fE8XgaoKzRHf21TO",
+      "name": "Enemy (Cognite)",
+      "type": "flaw",
+      "img": "systems/eclipsephase/resources/icons/subtract.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ego-traits.6DySgcD3XzRK2GWh",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "Enemy NPC haunts you.",
+        "active": false,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "qualityType": ""
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.fE8XgaoKzRHf21TO"
+    },
+    {
+      "_id": "aBrzV7Atfn0318Mi",
+      "name": "Enhanced Bahavior: Curiosity 2",
+      "type": "flaw",
+      "img": "systems/eclipsephase/resources/icons/subtract.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ego-traits.SIJrxhg8NFE6vhz2",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "Psychosurgically enhanced behavior/emotions.",
+        "active": false,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "qualityType": ""
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.aBrzV7Atfn0318Mi"
+    },
+    {
+      "_id": "pPEbwE4LMWLFEaIQ",
+      "name": "Mental Disorder (Paramnesia)",
+      "type": "flaw",
+      "img": "systems/eclipsephase/resources/icons/subtract.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ego-traits.tLNUoXYfCz6uDndr",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "Choose one disorder.",
+        "active": false,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "qualityType": ""
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.pPEbwE4LMWLFEaIQ"
+    },
+    {
+      "_id": "gNESdQGOGUvwEdZD",
+      "name": "Psi 2",
+      "type": "trait",
+      "img": "systems/eclipsephase/resources/icons/add.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ego-traits.6hGipYWeXjlu9N5v",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "May use Psi skill and sleights. See text for additional rules.",
+        "active": false,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "traitType": "",
+        "ego": false,
+        "morph": false,
+        "qualityType": ""
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.gNESdQGOGUvwEdZD"
+    },
+    {
+      "_id": "KFHRCDBwJXbrfaDj",
+      "name": "Resources 2",
+      "type": "trait",
+      "img": "systems/eclipsephase/resources/icons/add.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.ego-traits.wbacAU3IDiuzVLte",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "additionalSystems": {},
+        "description": "Wealth to acquire gear. See text.",
+        "active": false,
+        "displayCategory": "",
+        "updated": "",
+        "statChange": null,
+        "traitType": "",
+        "ego": false,
+        "morph": false,
+        "qualityType": ""
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.KFHRCDBwJXbrfaDj"
+    },
+    {
+      "_id": "rzJcSip5wmIe85d5",
+      "name": "Armor Vest (Light)",
+      "type": "armor",
+      "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.armor.J2A9Spdizf2rinlm",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Concealable",
+        "active": true,
+        "displayCategory": "armor",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Main Armor",
+        "energy": "4",
+        "kinetic": "10"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.rzJcSip5wmIe85d5"
+    },
+    {
+      "_id": "x9Hrapjbk7ZwdQ9g",
+      "name": "Unarmed (Biomorph)",
+      "type": "ccWeapon",
+      "img": "systems/eclipsephase/resources/icons/115_element%20normal.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.ahBCU70xej9Ymsa0",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "",
+        "active": true,
+        "displayCategory": "ccweapon",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "One Handed",
+        "additionalMode": false,
+        "accessories": {
+          "armSlide": {
+            "name": "ep2e.item.weapon.table.accessory.armSlide",
+            "value": false
+          },
+          "safetySystem": {
+            "name": "ep2e.item.weapon.table.accessory.safetySystem",
+            "value": false
+          },
+          "shockSafety": {
+            "name": "ep2e.item.weapon.table.accessory.shockSafety",
+            "value": false
+          }
+        },
+        "mode1": {
+          "name": "",
+          "d10": null,
+          "d6": null,
+          "bonus": null,
+          "dv": null,
+          "traits": {
+            "armorPiercing": {
+              "name": "ep2e.item.weapon.table.trait.armorPiercing",
+              "value": false
+            },
+            "concealable": {
+              "name": "ep2e.item.weapon.table.trait.concealable",
+              "value": false
+            },
+            "fragile": {
+              "name": "ep2e.item.weapon.table.trait.fragile",
+              "value": false
+            },
+            "pain": {
+              "name": "ep2e.item.weapon.table.trait.pain",
+              "value": false
+            },
+            "reach": {
+              "name": "ep2e.item.weapon.table.trait.reach",
+              "value": false,
+              "skillMod": null
+            },
+            "shock": {
+              "name": "ep2e.item.weapon.table.trait.shock",
+              "value": false
+            },
+            "stun": {
+              "name": "ep2e.item.weapon.table.trait.stun",
+              "value": false
+            },
+            "touchOnly": {
+              "name": "ep2e.item.weapon.table.trait.touchOnly",
+              "value": false
+            },
+            "twoHanded": {
+              "name": "ep2e.item.weapon.table.trait.twoHanded",
+              "value": false
+            }
+          }
+        },
+        "mode2": {
+          "name": "",
+          "d10": null,
+          "d6": null,
+          "bonus": null,
+          "dv": null,
+          "traits": {
+            "armorPiercing": {
+              "name": "ep2e.item.weapon.table.trait.armorPiercing",
+              "value": false
+            },
+            "concealable": {
+              "name": "ep2e.item.weapon.table.trait.concealable",
+              "value": false
+            },
+            "fragile": {
+              "name": "ep2e.item.weapon.table.trait.fragile",
+              "value": false
+            },
+            "pain": {
+              "name": "ep2e.item.weapon.table.trait.pain",
+              "value": false
+            },
+            "reach": {
+              "name": "ep2e.item.weapon.table.trait.reach",
+              "value": false
+            },
+            "shock": {
+              "name": "ep2e.item.weapon.table.trait.shock",
+              "value": false
+            },
+            "stun": {
+              "name": "ep2e.item.weapon.table.trait.stun",
+              "value": false
+            },
+            "touchOnly": {
+              "name": "ep2e.item.weapon.table.trait.touchOnly",
+              "value": false
+            },
+            "twoHanded": {
+              "name": "ep2e.item.weapon.table.trait.twoHanded",
+              "value": false
+            }
+          }
+        },
+        "dv": "1d6"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.x9Hrapjbk7ZwdQ9g"
+    },
+    {
+      "_id": "wcsVIf7yfw7oOe0n",
+      "name": "Medium Pistol",
+      "type": "rangedWeapon",
+      "img": "systems/eclipsephase/resources/icons/gun.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.weapons.sKZuHo4jzZu6Dmoo",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bYyHIjslCiShkdKL": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "",
+        "active": true,
+        "displayCategory": "ranged",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "One Handed",
+        "ammoSelected": {
+          "_id": "-",
+          "name": "",
+          "dvModifier": {
+            "d10": null,
+            "d6": null,
+            "bonus": null,
+            "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
+          },
+          "traits": {
+            "armorPiercing": {
+              "name": "ep2e.item.weapon.table.trait.armorPiercing",
+              "value": false
+            },
+            "blinding": {
+              "name": "ep2e.item.weapon.table.trait.blinding",
+              "value": false
+            },
+            "bioMorphsOnly": {
+              "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+              "value": false
+            },
+            "disablesRadio": {
+              "name": "ep2e.item.weapon.table.trait.disablesRadio",
+              "value": false
+            },
+            "dvHalved": {
+              "name": "ep2e.item.weapon.table.trait.dvHalved",
+              "value": false
+            },
+            "dvOnMiss": {
+              "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+              "value": false,
+              "dv": {
+                "d10": null,
+                "d6": null,
+                "bonus": null
+              }
+            },
+            "indirectOrBonus": {
+              "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+              "value": false,
+              "skillMod": null
+            },
+            "knockdown": {
+              "name": "ep2e.item.weapon.table.trait.knockdown",
+              "value": false,
+              "radius": null
+            },
+            "noDamage": {
+              "name": "ep2e.item.weapon.table.trait.noDamage",
+              "value": false
+            },
+            "pain": {
+              "name": "ep2e.item.weapon.table.trait.pain",
+              "value": false
+            },
+            "steady": {
+              "name": "ep2e.item.weapon.table.trait.steady",
+              "value": false
+            },
+            "stunBiomorphs": {
+              "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+              "value": false
+            },
+            "shock": {
+              "name": "ep2e.item.weapon.table.trait.shock",
+              "value": false
+            }
+          },
+          "description": "ep2e.item.weapon.table.ammoUsed.standardDescription"
+        },
+        "ammoType": "",
+        "ammoMin": "16",
+        "ammoMax": 16,
+        "additionalMode": false,
+        "accessories": {
+          "armSlide": {
+            "name": "ep2e.item.weapon.table.accessory.armSlide",
+            "value": false
+          },
+          "extendedMagazine": {
+            "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+            "value": false
+          },
+          "Gyromount": {
+            "name": "ep2e.item.weapon.table.accessory.Gyromount",
+            "value": false
+          },
+          "imagingScope": {
+            "name": "ep2e.item.weapon.table.accessory.imagingScope",
+            "value": false
+          },
+          "flashSuppressor": {
+            "name": "ep2e.item.weapon.table.accessory.flashSuppressor",
+            "value": false
+          },
+          "laserSight": {
+            "name": "ep2e.item.weapon.table.accessory.laserSight",
+            "value": false
+          },
+          "safetySystem": {
+            "name": "ep2e.item.weapon.table.accessory.safetySystem",
+            "value": false
+          },
+          "shockSafety": {
+            "name": "ep2e.item.weapon.table.accessory.shockSafety",
+            "value": false
+          },
+          "silencer": {
+            "name": "ep2e.item.weapon.table.accessory.silencer",
+            "value": false
+          },
+          "smartlink": {
+            "name": "ep2e.item.weapon.table.accessory.smartlink",
+            "value": false
+          },
+          "smartMagazine": {
+            "name": "ep2e.item.weapon.table.accessory.smartMagazine",
+            "value": false
+          }
+        },
+        "mode1": {
+          "name": "",
+          "range": null,
+          "d10": null,
+          "d6": null,
+          "bonus": null,
+          "dv": null,
+          "firingMode": "",
+          "traits": {
+            "armorPiercing": {
+              "name": "ep2e.item.weapon.table.trait.armorPiercing",
+              "value": false
+            },
+            "concealable": {
+              "name": "ep2e.item.weapon.table.trait.concealable",
+              "value": false
+            },
+            "entangling": {
+              "name": "ep2e.item.weapon.table.trait.entangling",
+              "value": false
+            },
+            "fixed": {
+              "name": "ep2e.item.weapon.table.trait.fixed",
+              "value": false
+            },
+            "knockdown": {
+              "name": "ep2e.item.weapon.table.trait.knockdown",
+              "value": false
+            },
+            "long": {
+              "name": "ep2e.item.weapon.table.trait.long",
+              "value": false
+            },
+            "noClose": {
+              "name": "ep2e.item.weapon.table.trait.noClose",
+              "value": false
+            },
+            "noPointBlank": {
+              "name": "ep2e.item.weapon.table.trait.noPointBlank",
+              "value": false
+            },
+            "noSmartlink": {
+              "name": "ep2e.item.weapon.table.trait.noSmartlink",
+              "value": false
+            },
+            "pain": {
+              "name": "ep2e.item.weapon.table.trait.pain",
+              "value": false
+            },
+            "shock": {
+              "name": "ep2e.item.weapon.table.trait.shock",
+              "value": false
+            },
+            "singleUse": {
+              "name": "ep2e.item.weapon.table.trait.singleUse",
+              "value": false
+            },
+            "steady": {
+              "name": "ep2e.item.weapon.table.trait.steady",
+              "value": false
+            },
+            "stun": {
+              "name": "ep2e.item.weapon.table.trait.stun",
+              "value": false
+            },
+            "twoHanded": {
+              "name": "ep2e.item.weapon.table.trait.twoHanded",
+              "value": false
+            },
+            "selfReplenishing": {
+              "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+              "value": false
+            },
+            "specialAmmoDrugs": {
+              "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+              "value": false
+            },
+            "specialAmmoBugs": {
+              "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+              "value": false
+            },
+            "multiShot": {
+              "name": "ep2e.item.weapon.table.trait.multiShot",
+              "value": false,
+              "number": null
+            }
+          }
+        },
+        "mode2": {
+          "name": "",
+          "range": null,
+          "d10": null,
+          "d6": null,
+          "bonus": null,
+          "dv": null,
+          "firingMode": "",
+          "traits": {
+            "armorPiercing": {
+              "name": "ep2e.item.weapon.table.trait.armorPiercing",
+              "value": false
+            },
+            "concealable": {
+              "name": "ep2e.item.weapon.table.trait.concealable",
+              "value": false
+            },
+            "entangling": {
+              "name": "ep2e.item.weapon.table.trait.entangling",
+              "value": false
+            },
+            "fixed": {
+              "name": "ep2e.item.weapon.table.trait.fixed",
+              "value": false
+            },
+            "knockdown": {
+              "name": "ep2e.item.weapon.table.trait.knockdown",
+              "value": false
+            },
+            "long": {
+              "name": "ep2e.item.weapon.table.trait.long",
+              "value": false
+            },
+            "noClose": {
+              "name": "ep2e.item.weapon.table.trait.noClose",
+              "value": false
+            },
+            "noPointBlank": {
+              "name": "ep2e.item.weapon.table.trait.noPointBlank",
+              "value": false
+            },
+            "noSmartlink": {
+              "name": "ep2e.item.weapon.table.trait.noSmartlink",
+              "value": false
+            },
+            "pain": {
+              "name": "ep2e.item.weapon.table.trait.pain",
+              "value": false
+            },
+            "shock": {
+              "name": "ep2e.item.weapon.table.trait.shock",
+              "value": false
+            },
+            "singleUse": {
+              "name": "ep2e.item.weapon.table.trait.singleUse",
+              "value": false
+            },
+            "steady": {
+              "name": "ep2e.item.weapon.table.trait.steady",
+              "value": false
+            },
+            "stun": {
+              "name": "ep2e.item.weapon.table.trait.stun",
+              "value": false
+            },
+            "twoHanded": {
+              "name": "ep2e.item.weapon.table.trait.twoHanded",
+              "value": false
+            },
+            "selfReplenishing": {
+              "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+              "value": false
+            },
+            "specialAmmoDrugs": {
+              "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+              "value": false
+            },
+            "specialAmmoBugs": {
+              "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+              "value": false
+            },
+            "multiShot": {
+              "name": "ep2e.item.weapon.table.trait.multiShot",
+              "value": false,
+              "number": null
+            }
+          }
+        },
+        "range": "30m",
+        "dv": "2d10",
+        "firingMode": "SA/BF/FA"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.wcsVIf7yfw7oOe0n"
+    },
+    {
+      "_id": "DfRQYMVCMIQWGyJW",
+      "name": "VPN",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.4idHqgk75AKfhqBQ",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Creates virtual private network",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.DfRQYMVCMIQWGyJW"
+    },
+    {
+      "_id": "su7bqqHlYEDPJhXo",
+      "name": "Anonymoizer",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/cpu.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.g8RhWf8iQCxIIWar",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You have an account with an anonymizing proxy\nservice that masks your Mesh ID",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.su7bqqHlYEDPJhXo"
+    },
+    {
+      "_id": "szJvksYzoJqYbv1D",
+      "name": "Fake Ego ID",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/add.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.p8QHcD293iF0skAi",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "This forged ID will pass in most inner system and\nJovian Republic habitats, and sometimes others. It gives you a rep score in one network with that ID at 10",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Digital",
+        "quantity": 1
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.szJvksYzoJqYbv1D"
+    },
+    {
+      "_id": "zyebjrgJQj8mhcj8",
+      "name": "Smart Clothing",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/technical-support.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.gear.axXjAkiHue8NXsaL",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Can change color, texture, and cut. +10 Infiltrate, +30 covered and stationary.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Accessory",
+        "quantity": 1
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.zyebjrgJQj8mhcj8"
+    },
+    {
+      "_id": "b7obNUttXCnheZqY",
+      "name": "Medium Fabber",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/nano.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.gear.SSKXirmO0kR2fG8c",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Fab small items.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Moderate",
+        "slotType": "Bulky",
+        "quantity": 1
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.b7obNUttXCnheZqY"
+    },
+    {
+      "_id": "airB4L4jVbL8sYZA",
+      "name": "Nanodetector",
+      "type": "gear",
+      "img": "systems/eclipsephase/resources/icons/nano.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.gear.fvNhOoeOL2Je4LD5",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "Detects nanobots, Exotic Skill: Nanobot Detection 40 (70 w/active swarm), Know: Nanotech 60.",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Accessory",
+        "quantity": 1
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.airB4L4jVbL8sYZA"
+    },
+    {
+      "_id": "gboDXbsBt1JGUhv6",
+      "name": "Stiff",
+      "type": "drug",
+      "img": "systems/eclipsephase/resources/icons/drug.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Item.2l9Fic3VCYYmEYRH",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "+10 SAV/WIL Checks vs. Persuade/Provoke,  Enhanced Behavior: Stubborn (Level 2).",
+        "active": true,
+        "displayCategory": "gear",
+        "updated": "",
+        "cost": "Minor",
+        "slotType": "Accessory",
+        "category": false,
+        "dermal": true,
+        "inhalation": true,
+        "injection": true,
+        "oral": true,
+        "drugType": "Biochem",
+        "duration": "8 hours",
+        "addictionMod": "-10",
+        "addictionType": "Mental",
+        "quantity": "5"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.gboDXbsBt1JGUhv6"
+    },
+    {
+      "_id": "FiTjw63KVkwnuzN5",
+      "name": "Basilisk Stare",
+      "type": "aspect",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.psi-sleights.UcBKgp8tyYDfi0cp",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You make eye contact with the target and immobilize them. As long as you keep your gaze locked on them (minor blinking aside), they cannot move, avert their eyes, or undertake any action (including mesh and mental actions). \n\nYou must also limit your movement, though you may move at half your base move and/or take quick physical actions, but you must make a REF Check to keep your eyes locked, and actions requiring a test and visual coordination suffer a\n–30 modifier. Likewise, if the target is attacked, moved, or otherwise jostled, eye contact is lost.\n\nYou may not affect extra targets with this sleight, unless you have more than one set of eyes.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "infection": 6,
+        "psiType": "Gamma",
+        "actionType": "Task",
+        "duration": "Sustained"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.FiTjw63KVkwnuzN5"
+    },
+    {
+      "_id": "SJxTV0C8UgVVsBw8",
+      "name": "Browse Thoughts",
+      "type": "aspect",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.psi-sleights.PBmFCJXJZ6W301Ng",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You scan the target’s surface thoughts, gaining a general sense of what is currently running through their mind. Superior successes provide deeper detail. This is not an invasive delve into the target’s mind for specific information like Deep Scan; instead, you simply get a read on what the target is currently thinking.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "infection": 4,
+        "psiType": "Gamma",
+        "actionType": "Complex",
+        "duration": "Sustained"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.SJxTV0C8UgVVsBw8"
+    },
+    {
+      "_id": "Y5sqBddKcjZeOulG",
+      "name": "Cloud Memory",
+      "type": "aspect",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.psi-sleights.XLLIytSWUeg2owEz",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You temporarily disrupt the target’s ability to form long-term memories. The target will retain short-term memories during the duration (WIL ÷ 5 minutes), but will soon (after d6 + 4 action turns) forget anything that occurred while this sleight was in effect.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "infection": 6,
+        "psiType": "Gamma",
+        "actionType": "Complex",
+        "duration": "Minutes"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.Y5sqBddKcjZeOulG"
+    },
+    {
+      "_id": "bt4z4Gbn1PGabrUQ",
+      "name": "Control Behavior",
+      "type": "aspect",
+      "img": "systems/eclipsephase/resources/icons/lotus.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.psi-sleights.CNNctOKYaZnVC2ru",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You can fine-tune your emotional state. Apply an Enhanced\nBehavior or Restricted Behavior (Level 2) trait ▶80 of your\nchoice at will. You may not change it again until you have taken a recharge action. \n\nAt the GM's discretion, this trait may apply a +/–10 modifier in some situations. Alternatively, use this to reduce an Enhanced/Restricted Behavior trait imposed on you by up to two levels. You can push this sleight",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "infection": null,
+        "psiType": "Chi",
+        "actionType": "",
+        "duration": ""
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.bt4z4Gbn1PGabrUQ"
+    },
+    {
+      "_id": "YRxr8o2tlxE0Ryph",
+      "name": "Short Circuit",
+      "type": "aspect",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.psi-sleights.YLUDTH4oT1jE3DJ4",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You force the target’s synapses to misfire. This functions like a shock attack; the target loses neuromuscular control, falls down, and is incapacitated for 1 action turn (+2 turns per superior success) and stunned for 3 minutes.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "infection": 6,
+        "psiType": "Gamma",
+        "actionType": "Complex",
+        "duration": "Instant"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.YRxr8o2tlxE0Ryph"
+    },
+    {
+      "_id": "m3Li1uovywQGPIic",
+      "name": "Sublimal",
+      "type": "aspect",
+      "img": "systems/eclipsephase/resources/icons/bond.png",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {
+        "core": {}
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": "Compendium.eclipsephase.psi-sleights.F1FmFu80kwdOMdpi",
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "4j5oR1x1MdY89nTc": 3,
+        "KR8BPH3pLwhjfZfZ": 3
+      },
+      "system": {
+        "tags": [],
+        "additionalSystems": {},
+        "description": "You implant a single post-hypnotic suggestion into the target’s mind which they will carry out as if it was their own idea. \n\nImplanted suggestions must be short and simple; the GM may require suggestions be encompassed in a short sentence (for example: “open the airlock” or “hand over the weapon”). Suggestions may include a short trigger condition (“when the alarm goes off, ignore it”). \n\nThe target receives a WIL Check to resist any suggestion that is immediately life threatening (“jump off the bridge”) or that violates their motivations or personal strictures.",
+        "active": true,
+        "displayCategory": "",
+        "updated": "",
+        "infection": 10,
+        "psiType": "Gamma",
+        "actionType": "Complex",
+        "duration": "Hours"
+      },
+      "_key": "!actors.items!caMaBuEj0UpPSb0m.m3Li1uovywQGPIic"
+    }
+  ],
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "caMaBuEj0UpPSb0m",
+  "_stats": {
+    "coreVersion": "14.356",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": "Actor.ZycC5Lw2Zfut9lMX",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "system": {
+    "biography": "<p><span class=\"fontstyle0\">has guardian angel bot</span></p>\n<p>&nbsp;</p>\n<p><span class=\"fontstyle0\">We both know you&rsquo;re going to make this deal.<br />Cut me in for 25%, and I&rsquo;ll make sure neither of the other parties fi nd out about your indiscretions last week.<br /></span><span class=\"fontstyle2\">You&rsquo;re from the Lost Generation. Your objective age is only<br />fi ve, but subjectively you&rsquo;re in your mid 20s. Around the<br />time others in your cr&egrave;che started exhibiting psychotic<br />behaviors, you &ldquo;convinced&rdquo; a Cognite technician to help<br />you escape. You&rsquo;ve been on the run since, using your async<br />talents to carve out a small domain as a black-market fi xer.<br />So far only Firewall&rsquo;s gotten close to you. Instead of hunting you<br />down like a rabid animal, they approached you with respect<br />for your talents. You&rsquo;re not as invested in the cause as other<br />sentinels, but the ops are wicked fun, and you&rsquo;ve established a<br />quid-pro-quo that you feel preserves your independence.<br /></span><span class=\"fontstyle3\">Sava&rsquo;s the type of grim hardass you know to keep <br />your eye on, but you admire their tenacity. <br />Qi and Dante are both a bit flippant for your </span></p>",
+    "mental": {
+      "trauma": null,
+      "stress": null,
+      "luc": null,
+      "ir": null,
+      "tt": null,
+      "min": 0
+    },
+    "physical": {
+      "wounds": null,
+      "damage": null,
+      "dr": null,
+      "wt": null,
+      "min": 0,
+      "energyArmorTotal": null,
+      "kineticArmorTotal": null
+    },
+    "health": {
+      "physical": {
+        "value": 35,
+        "max": 0
+      },
+      "mental": {
+        "value": 0,
+        "max": 0
+      },
+      "death": {
+        "value": 0,
+        "max": 0
+      },
+      "insanity": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "rezPoints": {
+      "value": 0,
+      "spent": 0,
+      "display": 0,
+      "ledger": []
+    },
+    "mods": {
+      "globalMod": null,
+      "traumaMod": null,
+      "woundMod": null,
+      "woundMultiplier": 1,
+      "chiMultiplier": 1,
+      "iniMod": null,
+      "durmod": null,
+      "lucmod": null,
+      "ttMod": null,
+      "energyMod": null,
+      "kineticMod": null,
+      "meleeDamageMod": null
+    },
+    "additionalSystems": {
+      "hasPsi": null,
+      "hasGear": null,
+      "psiAutoClose": false
+    },
+    "initiative": {
+      "value": null,
+      "display": ""
+    },
+    "pools": {
+      "insight": {
+        "value": null,
+        "mod": null
+      },
+      "moxie": {
+        "value": null,
+        "mod": null
+      },
+      "vigor": {
+        "value": null,
+        "mod": null
+      },
+      "flex": {
+        "value": null,
+        "mod": null
+      },
+      "update": {
+        "insight": null,
+        "vigor": null,
+        "moxie": null,
+        "flex": null
+      }
+    },
+    "aptitudes": {
+      "cog": {
+        "name": "ep2e.actorSheet.aptitudes.cog",
+        "value": 15,
+        "label": "cognition",
+        "roll": null,
+        "mod": null
+      },
+      "int": {
+        "name": "ep2e.actorSheet.aptitudes.int",
+        "value": 10,
+        "label": "intuition",
+        "roll": null,
+        "mod": null
+      },
+      "ref": {
+        "name": "ep2e.actorSheet.aptitudes.ref",
+        "value": 15,
+        "label": "reflexes",
+        "roll": null,
+        "mod": null
+      },
+      "sav": {
+        "name": "ep2e.actorSheet.aptitudes.sav",
+        "value": 20,
+        "label": "savvy",
+        "roll": null,
+        "mod": null
+      },
+      "som": {
+        "name": "ep2e.actorSheet.aptitudes.som",
+        "value": 10,
+        "label": "somatics",
+        "roll": null,
+        "mod": null
+      },
+      "wil": {
+        "name": "ep2e.actorSheet.aptitudes.wil",
+        "value": 20,
+        "label": "willpower",
+        "roll": null,
+        "mod": null
+      }
+    },
+    "skillsIns": {
+      "infosec": {
+        "name": "ep2e.skills.insightSkills.infosec",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "interface": {
+        "name": "ep2e.skills.insightSkills.interface",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "perceive": {
+        "name": "ep2e.skills.insightSkills.perceive",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": 10
+      },
+      "program": {
+        "name": "ep2e.skills.insightSkills.program",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "research": {
+        "name": "ep2e.skills.insightSkills.research",
+        "value": 25,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "survival": {
+        "name": "ep2e.skills.insightSkills.survival",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      }
+    },
+    "skillsMox": {
+      "deceive": {
+        "name": "ep2e.skills.moxieSkills.deceive",
+        "value": 70,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": 30
+      },
+      "kinesics": {
+        "name": "ep2e.skills.moxieSkills.kinesics",
+        "value": 50,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "persuade": {
+        "name": "ep2e.skills.moxieSkills.persuade",
+        "value": 60,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "provoke": {
+        "name": "ep2e.skills.moxieSkills.provoke",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "psi": {
+        "name": "ep2e.skills.moxieSkills.psi",
+        "value": 55,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      }
+    },
+    "skillsVig": {
+      "athletics": {
+        "name": "ep2e.skills.vigorSkills.athletics",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "fray": {
+        "name": "ep2e.skills.vigorSkills.fray",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "free fall": {
+        "name": "ep2e.skills.vigorSkills.free fall",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "guns": {
+        "name": "ep2e.skills.vigorSkills.guns",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "infiltrate": {
+        "name": "ep2e.skills.vigorSkills.infiltrate",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      },
+      "melee": {
+        "name": "ep2e.skills.vigorSkills.melee",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "roll": null,
+        "mod": null
+      }
+    },
+    "ego": {
+      "sex": "Male",
+      "gender": "Cisgender",
+      "age": "",
+      "origin": "Lunar/Orbital",
+      "languages": "Korean, Russian",
+      "motivations": {
+        "motivation1": "+Expand Influence",
+        "motivation2": "+Independence",
+        "motivation3": "+Thrill-Seeking"
+      },
+      "idSelected": "ID1",
+      "egoFlex": 1,
+      "ids": {
+        "id1": {
+          "name": "Fumiko Bogdanov",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": "45",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": "60",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": "50",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": "",
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id2": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id3": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id4": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        },
+        "id5": {
+          "name": "none",
+          "rep": {
+            "@-rep": {
+              "name": "ep2e.id.repType.@rep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "c-rep": {
+              "name": "ep2e.id.repType.crep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "f-rep": {
+              "name": "ep2e.id.repType.frep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "g-rep": {
+              "name": "ep2e.id.repType.grep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "i-rep": {
+              "name": "ep2e.id.repType.irep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "r-rep": {
+              "name": "ep2e.id.repType.rrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            },
+            "x-rep": {
+              "name": "ep2e.id.repType.xrep",
+              "value": null,
+              "small1": false,
+              "small2": false,
+              "small3": false,
+              "med1": false,
+              "med2": false,
+              "large": false
+            }
+          }
+        }
+      }
+    },
+    "psiStrain": {
+      "name": "Stranger",
+      "strainType": "",
+      "description": "Your infection is the shadow at your side, the whispering chant of\nits unusual desires echoing just below the limits of your perception.\nIt is omnipresent but patient, waiting for moments of vulnerability\nto steer you towards its inscrutable ends. Though its motivations\nare hazy, it seems to enjoy testing your limits — and those of transhumanity at large.\nNegative Trait (Choose one): Mental Disorder (Disassociative\nPersonality Disorder, Paramnesia, or Paranoia)\nFree Sleight (Choose One): Superior Kinesics, Basilisk Stare, or\nSubliminal",
+      "infection": ""
+    },
+    "subStrain": {
+      "label": "",
+      "influence2": {
+        "label": "",
+        "description": ""
+      },
+      "influence3": {
+        "label": "",
+        "description": ""
+      },
+      "influence4": {
+        "label": "",
+        "description": ""
+      },
+      "influence5": {
+        "label": "",
+        "description": ""
+      },
+      "influence6": {
+        "label": "",
+        "description": ""
+      }
+    },
+    "strainInfluence": {
+      "influence1": {
+        "number": "1 ",
+        "label": "ep2e.psi.effect.physicalDamage",
+        "description": "Physical Damage. Take 1d6"
+      },
+      "influence2": {
+        "number": "2 ",
+        "label": "",
+        "description": "Enhanced Behavior: Deceit. Truth becomes uninteresting, you  lie just to get the thrill of manipulating others, no matter the \nconsequences. You avoid blatant mis-truths, but take pleasure  in misleading others, even with trivial details. The rush when \nseeding doubt and uncertainty, even if it casts aspersions on  others, is intoxicating."
+      },
+      "influence3": {
+        "number": "3 ",
+        "label": "",
+        "description": "Enhanced Behavior: Self-Sabotage. You are your own worst enemy. You choose the worst options for yourself and always take the wrong path."
+      },
+      "influence4": {
+        "number": "4 ",
+        "label": "",
+        "description": "Motivation: +Foil Plans. You delight in spoiling the designs of others. You go out of your way to ensure that people fail their obligations, agendas self-destruct, and things do not go as \nplanned"
+      },
+      "influence5": {
+        "number": "5 ",
+        "label": "",
+        "description": "Motivation: +Manipulation. You get a thrill at steering people into actions and behaviors that fit your plans."
+      },
+      "influence6": {
+        "number": "6 ",
+        "label": "",
+        "description": "Motivation: +Test Limits. You like to see how far you can get things to go. You might bypass an opportunity to quickly resolve \na conflict, ignore fast solutions in order to drag an emergency out, or intentionally spread misinformation that you know will \naggravate tensions between already near-hostile parties. You will press buttons, fan the flames, exploit vulnerabilities, reveal \nhorrible truths, push boundaries, and stir things up, even if it puts you and your comrades at risk"
+      }
+    },
+    "activeMorph": null,
+    "muse": {
+      "name": "Mirror Mirror",
+      "img": "systems/eclipsephase/resources/img/clippy.png",
+      "description": null,
+      "knowledgeskillname": null,
+      "knowledgeskillvalue": null,
+      "skills": {
+        "skill1": {
+          "value": 30,
+          "skillname": "ep2e.skills.additionalSkills.electronics",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill2": {
+          "value": 30,
+          "skillname": "ep2e.skills.insightSkills.infosec",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill3": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.interface",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill4": {
+          "value": 60,
+          "skillname": "ep2e.skills.additionalSkills.accounting",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill5": {
+          "value": 60,
+          "skillname": "ep2e.skills.additionalSkills.psychology",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill6": {
+          "value": 60,
+          "skillname": "ep2e.skills.additionalSkills.psychosurgery",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill7": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.perceive",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill8": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.program",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill9": {
+          "value": 60,
+          "skillname": "ep2e.skills.insightSkills.research",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        },
+        "skill10": {
+          "value": null,
+          "skillname": "",
+          "spec": false,
+          "roll": null,
+          "mod": null
+        }
+      },
+      "knowledgeskill": null
+    },
+    "rest": {
+      "short1": false,
+      "short2": false,
+      "shortExtra": false,
+      "long": false,
+      "restValue": null
+    },
+    "bodies": {
+      "activeMorph": "morph1",
+      "allMorphs": [],
+      "morph1": {
+        "templates": [
+          "morph"
+        ],
+        "name": "Futura",
+        "type": "bio",
+        "dur": "35",
+        "movement": "4/20",
+        "movetype": "walker",
+        "movement2": "",
+        "movetype2": "boat",
+        "insight": 2,
+        "moxie": 5,
+        "vigor": 1,
+        "flex": 0,
+        "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"
+      },
+      "morph2": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph3": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph4": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph5": {
+        "templates": [
+          "morph"
+        ]
+      },
+      "morph6": {
+        "templates": [
+          "morph"
+        ]
+      }
+    },
+    "morph": {
+      "name": "",
+      "img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+      "type": "",
+      "dur": null,
+      "insight": null,
+      "moxie": null,
+      "vigor": null,
+      "flex": null,
+      "movement1": {
+        "type": null,
+        "base": null,
+        "full": null
+      },
+      "movement2": null,
+      "movement3": {
+        "type": null,
+        "base": null,
+        "full": null
+      },
+      "description": "",
+      "movement": null,
+      "movetype": null,
+      "movetype2": null
+    },
+    "bodyTypes": {
+      "synth": {
+        "label": "Synthetic"
+      },
+      "bio": {
+        "label": "Biologic"
+      }
+    },
+    "bodyType": {
+      "value": ""
+    }
+  },
+  "prototypeToken": {
+    "name": "Hex",
+    "displayName": 0,
+    "actorLink": false,
+    "width": 1,
+    "height": 1,
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": "data.health.physical"
+    },
+    "bar2": {
+      "attribute": "data.health.mental"
+    },
+    "flags": {},
+    "randomImg": false,
+    "light": {
+      "dim": 0,
+      "bright": 0,
+      "angle": 360,
+      "alpha": 0.25,
+      "animation": {
+        "speed": 5,
+        "intensity": 5,
+        "type": null,
+        "reverse": false
+      },
+      "negative": false,
+      "priority": 0,
+      "color": null,
+      "coloration": 1,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "texture": {
+      "src": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg",
+      "scaleX": 1,
+      "scaleY": 1,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "sight": {
+      "angle": 360,
+      "enabled": false,
+      "range": 0,
+      "brightness": 1,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "appendNumber": false,
+    "prependAdjective": false,
+    "detectionModes": {},
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "depth": 1
+  },
+  "_key": "!actors!caMaBuEj0UpPSb0m"
+}

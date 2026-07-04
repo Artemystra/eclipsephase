@@ -1,0 +1,36 @@
+{
+  "name": "Disassembly Tools",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/pickaxe.png",
+  "effects": [],
+  "_id": "IIIwbo1DYs0PUS9U",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Heavy and smart tools for taking things apart.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "bulky",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!IIIwbo1DYs0PUS9U"
+}

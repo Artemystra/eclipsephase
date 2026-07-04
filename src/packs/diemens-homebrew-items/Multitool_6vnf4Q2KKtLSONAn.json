@@ -1,0 +1,38 @@
+{
+  "name": "Multitool",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 110157,
+  "flags": {
+    "core": {}
+  },
+  "_id": "6vnf4Q2KKtLSONAn",
+  "system": {
+    "additionalSystems": {},
+    "description": "\"Handwerksgerät, das sich innerhalb von 30 Minuten an jede Aufgabe anpassen kann. \n\n+ 30 auf einen beliebigen Handwerksskill bei Reparaturen oder wenn das nötige Material vorhanden ist.\"",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441535863,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.kUgCrM4NvdM5jXFe",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!6vnf4Q2KKtLSONAn"
+}

@@ -1,0 +1,39 @@
+{
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "name": "Injectors",
+  "type": "ware",
+  "_id": "nl7BZGP4OwsOiRDC",
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Attacks can inflict 1 dose on any target in swarm. Swarm morphs only.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603896500,
+    "modifiedTime": 1713654426734,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!nl7BZGP4OwsOiRDC"
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Enhanced Smell",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "+10 smell-based Perceive, +10 Kinesics with biomorphs point-blank.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585518,
+    "modifiedTime": 1689415702786,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.gdiMdAQnr5ItTqXJ",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "McrVnwR80tq95nf3",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 103125,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!McrVnwR80tq95nf3"
+}

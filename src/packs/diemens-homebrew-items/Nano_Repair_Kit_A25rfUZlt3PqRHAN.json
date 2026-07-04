@@ -1,0 +1,38 @@
+{
+  "name": "Nano-Repair-Kit",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 111329,
+  "flags": {
+    "core": {}
+  },
+  "_id": "A25rfUZlt3PqRHAN",
+  "system": {
+    "additionalSystems": {},
+    "description": "Ein Spray welches sich auf eine Oberfläche legt, diese analysiert und versucht sie zu rekonstruieren. Heilt 1W10 Lebenspunkte pro Stunde im Verlauf von 12 Stunden. Eine Anwendung.\n\nAnwendbar auf Bio- und Synthmorphs",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441541634,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.E68VzS4QRaoa1Dm4",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!A25rfUZlt3PqRHAN"
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Auto-Erase",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Auto-erases infomorph when conditions are met.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585511,
+    "modifiedTime": 1689416442177,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Y2f6yJ9RJWHUtHcJ",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "gtZErTu7O0GD0CTW",
+  "folder": "Vaz2wnUwN7AmKotm",
+  "sort": 200000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!gtZErTu7O0GD0CTW"
+}

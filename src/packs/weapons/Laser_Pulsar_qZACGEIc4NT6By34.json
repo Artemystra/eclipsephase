@@ -1,0 +1,333 @@
+{
+  "folder": "ROEgOpI1TQGcvo7o",
+  "name": "Laser Pulsar",
+  "type": "rangedWeapon",
+  "img": "systems/eclipsephase/resources/icons/95_effect%20Slash%20damage.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "The pulser emits focused beams of light that burn into the target and cause its outer surface to vaporize and expand, creating an explosive effect. The beam is pulsed in order to bite into the target before it is diffused. When fired in stun mode, it shoots a pulse at the target to create a ball of plasma, quickly followed by a second pulse that strikes the plasma and creates a flash-bang shockwave to stun and disorient the target and anyone next to them. Pulsers are vulnerable to atmospheric effects like dust, mist, smoke, or rain, however — the GM should reduce their effective range as appropriate. Laser pulses are invisible, but they can be seen with enhanced vision in atmosphere (or in the visual spectrum in smoky/polluted air) or in the shooter’s entoptics.",
+    "active": true,
+    "displayCategory": "ranged",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "twoHanded",
+    "ammoSelected": {
+      "_id": "-",
+      "name": "",
+      "dvModifier": {
+        "d10": null,
+        "d6": null,
+        "bonus": null,
+        "calculated": "ep2e.item.weapon.table.noDamageValueModifier"
+      },
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "blinding": {
+          "name": "ep2e.item.weapon.table.trait.blinding",
+          "value": false
+        },
+        "bioMorphsOnly": {
+          "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+          "value": false
+        },
+        "disablesRadio": {
+          "name": "ep2e.item.weapon.table.trait.disablesRadio",
+          "value": false
+        },
+        "dvHalved": {
+          "name": "ep2e.item.weapon.table.trait.dvHalved",
+          "value": false
+        },
+        "dvOnMiss": {
+          "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+          "value": false,
+          "dv": {
+            "d10": null,
+            "d6": null,
+            "bonus": null
+          }
+        },
+        "indirectOrBonus": {
+          "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+          "value": false,
+          "skillMod": null
+        },
+        "knockdown": {
+          "name": "ep2e.item.weapon.table.trait.knockdown",
+          "value": false,
+          "radius": null
+        },
+        "noDamage": {
+          "name": "ep2e.item.weapon.table.trait.noDamage",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "steady": {
+          "name": "ep2e.item.weapon.table.trait.steady",
+          "value": false
+        },
+        "stunBiomorphs": {
+          "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        }
+      },
+      "description": "ep2e.item.weapon.table.ammoUsed.standardDescription"
+    },
+    "ammoType": "beam",
+    "ammoMin": 0,
+    "ammoMax": 30,
+    "additionalMode": true,
+    "accessories": {
+      "armSlide": {
+        "name": "ep2e.item.weapon.table.accessory.armSlide",
+        "value": false
+      },
+      "extendedMagazine": {
+        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "value": false
+      },
+      "Gyromount": {
+        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "value": false
+      },
+      "imagingScope": {
+        "name": "ep2e.item.weapon.table.accessory.imagingScope",
+        "value": false
+      },
+      "flashSuppressor": {
+        "name": "ep2e.item.weapon.table.accessory.flashSuppressor",
+        "value": false
+      },
+      "laserSight": {
+        "name": "ep2e.item.weapon.table.accessory.laserSight",
+        "value": false
+      },
+      "safetySystem": {
+        "name": "ep2e.item.weapon.table.accessory.safetySystem",
+        "value": false
+      },
+      "shockSafety": {
+        "name": "ep2e.item.weapon.table.accessory.shockSafety",
+        "value": false
+      },
+      "silencer": {
+        "name": "ep2e.item.weapon.table.accessory.silencer",
+        "value": false
+      },
+      "smartlink": {
+        "name": "ep2e.item.weapon.table.accessory.smartlink",
+        "value": true
+      },
+      "smartMagazine": {
+        "name": "ep2e.item.weapon.table.accessory.smartMagazine",
+        "value": false
+      }
+    },
+    "mode1": {
+      "name": "Lethal",
+      "range": "100m",
+      "d10": 2,
+      "d6": null,
+      "bonus": 2,
+      "dv": null,
+      "firingMode": "saBFfa",
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "entangling": {
+          "name": "ep2e.item.weapon.table.trait.entangling",
+          "value": false
+        },
+        "fixed": {
+          "name": "ep2e.item.weapon.table.trait.fixed",
+          "value": false
+        },
+        "knockdown": {
+          "name": "ep2e.item.weapon.table.trait.knockdown",
+          "value": true
+        },
+        "long": {
+          "name": "ep2e.item.weapon.table.trait.long",
+          "value": true
+        },
+        "noClose": {
+          "name": "ep2e.item.weapon.table.trait.noClose",
+          "value": false
+        },
+        "noPointBlank": {
+          "name": "ep2e.item.weapon.table.trait.noPointBlank",
+          "value": false
+        },
+        "noSmartlink": {
+          "name": "ep2e.item.weapon.table.trait.noSmartlink",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "singleUse": {
+          "name": "ep2e.item.weapon.table.trait.singleUse",
+          "value": false
+        },
+        "steady": {
+          "name": "ep2e.item.weapon.table.trait.steady",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": true
+        },
+        "selfReplenishing": {
+          "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+          "value": false
+        },
+        "specialAmmoDrugs": {
+          "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+          "value": false
+        },
+        "specialAmmoBugs": {
+          "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+          "value": false
+        },
+        "multiShot": {
+          "name": "ep2e.item.weapon.table.trait.multiShot",
+          "value": false,
+          "number": null
+        }
+      }
+    },
+    "mode2": {
+      "name": "Stun",
+      "range": "100m (AoE 1m)",
+      "d10": null,
+      "d6": 1,
+      "bonus": null,
+      "dv": null,
+      "firingMode": "ss",
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "entangling": {
+          "name": "ep2e.item.weapon.table.trait.entangling",
+          "value": false
+        },
+        "fixed": {
+          "name": "ep2e.item.weapon.table.trait.fixed",
+          "value": false
+        },
+        "knockdown": {
+          "name": "ep2e.item.weapon.table.trait.knockdown",
+          "value": false
+        },
+        "long": {
+          "name": "ep2e.item.weapon.table.trait.long",
+          "value": true
+        },
+        "noClose": {
+          "name": "ep2e.item.weapon.table.trait.noClose",
+          "value": false
+        },
+        "noPointBlank": {
+          "name": "ep2e.item.weapon.table.trait.noPointBlank",
+          "value": false
+        },
+        "noSmartlink": {
+          "name": "ep2e.item.weapon.table.trait.noSmartlink",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": true
+        },
+        "singleUse": {
+          "name": "ep2e.item.weapon.table.trait.singleUse",
+          "value": false
+        },
+        "steady": {
+          "name": "ep2e.item.weapon.table.trait.steady",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": true
+        },
+        "selfReplenishing": {
+          "name": "ep2e.item.weapon.table.trait.selfReplenishing",
+          "value": false
+        },
+        "specialAmmoDrugs": {
+          "name": "ep2e.item.weapon.table.trait.specialAmmoDrugs",
+          "value": false
+        },
+        "specialAmmoBugs": {
+          "name": "ep2e.item.weapon.table.trait.specialAmmoBugs",
+          "value": false
+        },
+        "multiShot": {
+          "name": "ep2e.item.weapon.table.trait.multiShot",
+          "value": false,
+          "number": null
+        }
+      }
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.7.5",
+    "coreVersion": "13.346",
+    "createdTime": 1695375128201,
+    "modifiedTime": 1695425231478,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "qZACGEIc4NT6By34",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!qZACGEIc4NT6By34"
+}

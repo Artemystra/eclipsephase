@@ -5,3 +5,9 @@
 # Node Modules
 node_modules/
 npm-debug.log
+
+# FoundryVTT Compendium Packs (LevelDB binary — use src/packs/ for versioned JSON)
+/packs/
+
+# fvtt CLI config
+.fvttrc.yml

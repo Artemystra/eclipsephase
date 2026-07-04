@@ -1,0 +1,39 @@
+{
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "name": "Diamond Buzzsaw",
+  "type": "ware",
+  "_id": "3icd9EuJBtGeBT8l",
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "DV 1d10 + 6, Armor-Piercing, Concealable.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603870208,
+    "modifiedTime": 1713654481568,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!3icd9EuJBtGeBT8l"
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Puppet Sock",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Puppet socks allow a morph to be remotely controlled, just like a drone.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585509,
+    "modifiedTime": 1689415829165,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.WzH1UhEi7lID4jNb",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "s8HHxjczED7PotEM",
+  "folder": "HH8yFs1RZM7Wmw3U",
+  "sort": 500000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!s8HHxjczED7PotEM"
+}

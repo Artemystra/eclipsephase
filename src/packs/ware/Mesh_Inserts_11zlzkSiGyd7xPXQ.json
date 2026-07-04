@@ -1,0 +1,41 @@
+{
+  "name": "Mesh Inserts",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/everyday.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "This network of implants is mandatory for people\nwho want to use augmented reality and link wirelessly to the mesh.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585512,
+    "modifiedTime": 1689415746872,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.cOgkiJ1La9Xq4qu4",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "11zlzkSiGyd7xPXQ",
+  "folder": "HH8yFs1RZM7Wmw3U",
+  "sort": 400000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!11zlzkSiGyd7xPXQ"
+}

@@ -1,0 +1,86 @@
+{
+  "name": "Predictive Boost",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/lotus.png",
+  "effects": [
+    {
+      "_id": "BMVRxx7oErsLPNVn",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Predictive Boost",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.iniChiMod",
+            "value": "+2",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!SAup1S1VzgUWE5ir.BMVRxx7oErsLPNVn"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Your brain’s bayesian probability functions are accelerated,\nenhancing your ability to estimate and predict the outcomes of events as they unfold in real-time around you. In effect, you have an intuitive sense for the most likely outcomes. +2 Initiative.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": null,
+    "psiType": "chi",
+    "actionType": "",
+    "duration": ""
+  },
+  "folder": "7VpBcB8nysG3tqmh",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "14.356",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "SAup1S1VzgUWE5ir",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!SAup1S1VzgUWE5ir"
+}

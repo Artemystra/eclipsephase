@@ -1,0 +1,38 @@
+{
+  "name": "License",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 106250,
+  "flags": {
+    "core": {}
+  },
+  "_id": "8kA2wT8asjkaYipK",
+  "system": {
+    "additionalSystems": {},
+    "description": "You acquire a license to carry a weapon or perform some\nother restricted activity. Requires an ID/background check.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417268888,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.M7nrtaMQN3EgaRUS",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!8kA2wT8asjkaYipK"
+}

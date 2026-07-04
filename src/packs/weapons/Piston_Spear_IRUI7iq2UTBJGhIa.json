@@ -1,0 +1,141 @@
+{
+  "folder": "xKfgD7BhutMA3H5S",
+  "name": "Piston Spear",
+  "type": "ccWeapon",
+  "_id": "IRUI7iq2UTBJGhIa",
+  "img": "systems/eclipsephase/resources/icons/334_weapon%20halberd.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This pneumatic-driven spike is triggered with an impact (usually a punch) and designed to pierce modern armor and synthetic frames. Most are designed for repeated use, though an alternative single-use model delivers a minigrenade (this grenade attack bypasses armor).\n\nThis is the spike attached to a spear.",
+    "active": true,
+    "displayCategory": "ccweapon",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "twoHanded",
+    "additionalMode": false,
+    "accessories": {
+      "armSlide": {
+        "name": "ep2e.item.weapon.table.accessory.armSlide",
+        "value": false
+      },
+      "safetySystem": {
+        "name": "ep2e.item.weapon.table.accessory.safetySystem",
+        "value": false
+      },
+      "shockSafety": {
+        "name": "ep2e.item.weapon.table.accessory.shockSafety",
+        "value": false
+      }
+    },
+    "mode1": {
+      "name": "",
+      "d10": 2,
+      "d6": null,
+      "bonus": 2,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": true
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": true,
+          "skillMod": "20"
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": true
+        }
+      }
+    },
+    "mode2": {
+      "name": "",
+      "d10": null,
+      "d6": null,
+      "bonus": null,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": false
+        }
+      }
+    }
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.8",
+    "coreVersion": "13.346",
+    "createdTime": 1689375963547,
+    "modifiedTime": 1696266710236,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!IRUI7iq2UTBJGhIa"
+}

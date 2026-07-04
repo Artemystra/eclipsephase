@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Real World Naiveté",
+  "type": "traits",
+  "_id": "reH9EMtG2Nw0nxT5",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "You either have very limited personal experience with the real (physical) world or have spent so much time in VR that your real-life functioning is impaired. You lack an understanding of many physical properties, social cues, and other factors that most people take for granted. This lack of common sense may lead you to misunderstand how a device works or misinterpret someone’s body language. Once per game session, the GM may intentionally mislead you when providing a description about some thing or social interaction. This falsehood represents your misunderstanding of the situation and should be roleplayed appropriately, even when the player is aware of the character’s mistake.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!reH9EMtG2Nw0nxT5"
+}

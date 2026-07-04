@@ -1,0 +1,36 @@
+{
+  "name": "Pressure Tent",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/knife.png",
+  "effects": [],
+  "_id": "nfLNNMOnmwypzVLm",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Self-erecting shelter for 4, built-in breather.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "bulky",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!nfLNNMOnmwypzVLm"
+}

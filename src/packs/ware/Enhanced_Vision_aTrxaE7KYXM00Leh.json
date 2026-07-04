@@ -1,0 +1,41 @@
+{
+  "name": "Enhanced Vision",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Tetrachromatic vision, wider frequency range, better focus. +10 vision Perceive.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585506,
+    "modifiedTime": 1689415704474,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.foslFeoxXIe4GGuO",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "aTrxaE7KYXM00Leh",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 101563,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!aTrxaE7KYXM00Leh"
+}

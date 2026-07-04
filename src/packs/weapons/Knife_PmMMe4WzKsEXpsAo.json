@@ -1,0 +1,141 @@
+{
+  "folder": "xKfgD7BhutMA3H5S",
+  "name": "Knife",
+  "type": "ccWeapon",
+  "_id": "PmMMe4WzKsEXpsAo",
+  "img": "systems/eclipsephase/resources/icons/201_skill%20knife%20mastery.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "A standard, commonly carried cutting implement.",
+    "active": true,
+    "displayCategory": "ccweapon",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "sidearm",
+    "additionalMode": false,
+    "accessories": {
+      "armSlide": {
+        "name": "ep2e.item.weapon.table.accessory.armSlide",
+        "value": false
+      },
+      "safetySystem": {
+        "name": "ep2e.item.weapon.table.accessory.safetySystem",
+        "value": false
+      },
+      "shockSafety": {
+        "name": "ep2e.item.weapon.table.accessory.shockSafety",
+        "value": false
+      }
+    },
+    "mode1": {
+      "name": "",
+      "d10": 1,
+      "d6": null,
+      "bonus": 2,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": false,
+          "skillMod": null
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": false
+        }
+      }
+    },
+    "mode2": {
+      "name": "",
+      "d10": null,
+      "d6": null,
+      "bonus": null,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": false
+        }
+      }
+    }
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1689375923911,
+    "modifiedTime": 1689377407309,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!PmMMe4WzKsEXpsAo"
+}

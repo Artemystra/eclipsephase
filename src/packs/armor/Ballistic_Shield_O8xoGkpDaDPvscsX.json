@@ -1,0 +1,37 @@
+{
+  "name": "Ballistic Shield",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Additional%20Armor.png",
+  "effects": [],
+  "_id": "O8xoGkpDaDPvscsX",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Two-Handed",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "additional",
+    "energy": "+6",
+    "kinetic": "+12"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!O8xoGkpDaDPvscsX"
+}

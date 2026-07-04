@@ -1,0 +1,39 @@
+{
+  "folder": "TpVWCtLAiWqurwSP",
+  "name": "Skeletal Disguise",
+  "type": "ware",
+  "_id": "mfy62JJXEB4oBKQK",
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "−30 modifier to match skeletal pattern with sensors.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "c"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713654642244,
+    "modifiedTime": 1713654663922,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!mfy62JJXEB4oBKQK"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Enhanced Server",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "_id": "oiYoL9xKdq3rP3zP",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Faster and more secure servers. –10 Infosec to hack.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "bulky",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!oiYoL9xKdq3rP3zP"
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Crash Suit (Inactive)",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
+  "effects": [],
+  "_id": "GlbWcnei7dVGkLmp",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Concealable",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "main",
+    "energy": "3",
+    "kinetic": "2"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!GlbWcnei7dVGkLmp"
+}

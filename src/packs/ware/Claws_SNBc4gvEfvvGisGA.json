@@ -1,0 +1,41 @@
+{
+  "name": "Claws",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Retractable combat claws. Concealable.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585513,
+    "modifiedTime": 1689415590858,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.UoFw7KPYafvrs2jA",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "SNBc4gvEfvvGisGA",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 200000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!SNBc4gvEfvvGisGA"
+}

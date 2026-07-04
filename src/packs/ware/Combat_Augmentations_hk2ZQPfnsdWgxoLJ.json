@@ -1,0 +1,19 @@
+{
+  "name": "Combat Augmentations",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "hk2ZQPfnsdWgxoLJ",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "11.305",
+    "createdTime": 1689415526179,
+    "modifiedTime": 1689415526179,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!hk2ZQPfnsdWgxoLJ"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Necrosis",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/toxic-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "uAYvTFVr6ZrhJCWF",
+  "system": {
+    "additionalSystems": {},
+    "description": "DV 1d6 per turn.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "category": "nanotox",
+    "dermal": false,
+    "inhalation": false,
+    "injection": true,
+    "oral": true,
+    "drugType": "nano",
+    "duration": "1 minutes",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425264137,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.IMPJMrt1OgfF7CCH",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!uAYvTFVr6ZrhJCWF"
+}

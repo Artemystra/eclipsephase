@@ -1,0 +1,39 @@
+{
+  "name": "Ego Sense",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You detect the presence and location (rough direction from yourself ) of other sentient and biological life forms (i.e., egos and animals) within Close range. \n\nEach life form makes an opposed test against your roll.\nYou suffer modifiers for size, the same as for ranged attacks. Superior successes provide additional details: approximate size, exact distance, type of creature, etc. If the target moves during the duration (WIL ÷ 5 action turns), you will have a rough idea of their speed and bearing.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 2,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "Actions Turns"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "YXR7kiITYgQRJp8F",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!YXR7kiITYgQRJp8F"
+}

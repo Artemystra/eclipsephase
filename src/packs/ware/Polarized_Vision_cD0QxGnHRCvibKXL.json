@@ -1,0 +1,41 @@
+{
+  "name": "Polarized Vision",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "See polarized light, ignore camo modifiers.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585520,
+    "modifiedTime": 1689415803604,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.oRsbr1fLPZXKV83o",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "cD0QxGnHRCvibKXL",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 600000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!cD0QxGnHRCvibKXL"
+}

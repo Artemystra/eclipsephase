@@ -1,0 +1,38 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Patron",
+  "type": "traits",
+  "_id": "3IfFI9iUvIRcVt5r",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "There is an influential person in your life who can be relied on for occasional support. This could be a wealthy hyperelite family member, a high-ranking triad boss, or an anarchist networker with an unbeatable reputation. When called upon, this patron can pull strings, supply resources, make introductions, or bail you out of\ntrouble. Work with your GM to define this NPC, your relationship, and why they support you (familial obligation? childhood buddies? you saved their life once?).\n\nThe patron provides one free major favor per story arc, no\ntest necessary. GMs should be careful that this trait does not get abused. Smaller favors are beneath the patron’s concern. If the character asks for too much, too often, the patron’s support may dry up. On occasion, the patron may call upon the character for favors as well.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "sort": 5900000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!3IfFI9iUvIRcVt5r"
+}

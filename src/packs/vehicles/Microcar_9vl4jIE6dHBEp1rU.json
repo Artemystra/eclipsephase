@@ -1,0 +1,205 @@
+{
+  "name": "Microcar",
+  "type": "vehicle",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/steering-wheel.png",
+  "effects": [],
+  "_id": "9vl4jIE6dHBEp1rU",
+  "system": {
+    "additionalSystems": {},
+    "description": "Access Jacks, Mesh Inserts, Puppet Sock, Radar",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "l",
+    "aptitudes": {
+      "cog": {
+        "name": "ep2e.actorSheet.aptitudes.cog",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.cognition"
+      },
+      "int": {
+        "name": "ep2e.actorSheet.aptitudes.int",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.intuition"
+      },
+      "ref": {
+        "name": "ep2e.actorSheet.aptitudes.ref",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.reflexes"
+      },
+      "sav": {
+        "name": "ep2e.actorSheet.aptitudes.sav",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.savvy"
+      },
+      "som": {
+        "name": "ep2e.actorSheet.aptitudes.som",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.somatics"
+      },
+      "wil": {
+        "name": "ep2e.actorSheet.aptitudes.wil",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.willpower"
+      }
+    },
+    "pools": {
+      "vig": {
+        "max": null,
+        "current": null
+      },
+      "mox": {
+        "max": null,
+        "current": null
+      },
+      "ins": {
+        "max": null,
+        "current": null
+      },
+      "flex": {
+        "max": 1,
+        "current": null
+      },
+      "threat": {
+        "max": null,
+        "current": null
+      }
+    },
+    "movement": {
+      "1": {
+        "speed": "8/40",
+        "type": "wheeled"
+      },
+      "2": {
+        "speed": "",
+        "type": "none"
+      },
+      "3": {
+        "speed": "",
+        "type": "none"
+      },
+      "4": {
+        "speed": "",
+        "type": "none"
+      }
+    },
+    "armor": {
+      "energy": 8,
+      "kinetic": 6
+    },
+    "init": null,
+    "type": "vehicle",
+    "luc": null,
+    "dur": 60,
+    "wounds": null,
+    "trauma": null,
+    "curDur": null,
+    "curLuc": null,
+    "pass": 1,
+    "autoControl": false,
+    "controlType": null,
+    "skills": {
+      "1": {
+        "name": "Fray",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "2": {
+        "name": "Guns",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "3": {
+        "name": "Hardware: Groundcraft",
+        "value": 20,
+        "specname": "Microcar",
+        "spec": false,
+        "mod": null
+      },
+      "4": {
+        "name": "Infosec",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "5": {
+        "name": "Interface",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "6": {
+        "name": "Perceive",
+        "value": 40,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "7": {
+        "name": "Pilot: Groundcraft",
+        "value": 60,
+        "specname": "Microcar",
+        "spec": false,
+        "mod": null
+      },
+      "8": {
+        "name": "Research",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "9": {
+        "name": "Know: Microcar Specs",
+        "value": 80,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "10": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      }
+    },
+    "mov": "8/40 Wheeled",
+    "vig": null,
+    "mox": null,
+    "ins": null,
+    "flex": 1,
+    "curIns": null,
+    "curMox": null,
+    "curVig": null,
+    "curFlex": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "folder": null,
+  "sort": 0,
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.8",
+    "coreVersion": "13.346",
+    "createdTime": 1680889570370,
+    "modifiedTime": 1680895242507,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.vehicles.9vl4jIE6dHBEp1rU",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!9vl4jIE6dHBEp1rU"
+}

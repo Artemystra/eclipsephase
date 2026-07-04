@@ -1,0 +1,38 @@
+{
+  "name": "Ego Writer",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 175000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "lcJNlCANBcEj4OXS",
+  "system": {
+    "additionalSystems": {},
+    "description": "Transferiert ein Bewusstsein aus einem biologischen Gehirn oder einem Stack in ein anderes Gehirn oder einen anderen Stack. Die Quelle wird bei dem Übertrag vernichtet sodass Forking nicht möglich ist.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441527525,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.A5DCn5rWLhnJBLMn",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!lcJNlCANBcEj4OXS"
+}

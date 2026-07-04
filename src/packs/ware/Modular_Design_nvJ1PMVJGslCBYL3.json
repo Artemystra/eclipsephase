@@ -1,0 +1,41 @@
+{
+  "name": "Modular Design",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Lock w/other modules to create gestalt forms. Flexbot Rules",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585511,
+    "modifiedTime": 1689415773082,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.NQ4If9s3NY0RRL5L",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "nvJ1PMVJGslCBYL3",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 400000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!nvJ1PMVJGslCBYL3"
+}

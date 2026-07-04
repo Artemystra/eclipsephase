@@ -1,0 +1,84 @@
+{
+  "name": "Morph Mastery (Infomorphs)",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "No Integration Tests sleeving biomorphs",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Morph Mastery (Infomorphs)",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "HKZqXsb0DnyZxDOP",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.sleeving.ignoreInfo",
+            "value": true,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.5",
+        "lastModifiedBy": "As9MwNgJsGddtEep",
+        "modifiedTime": 1766742462993,
+        "createdTime": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!paKm8R10LXR7XTrw.HKZqXsb0DnyZxDOP"
+    }
+  ],
+  "folder": "hV09BrpxHnLOea0b",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766665956202,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_id": "paKm8R10LXR7XTrw",
+  "sort": 600000,
+  "_key": "!items!paKm8R10LXR7XTrw"
+}

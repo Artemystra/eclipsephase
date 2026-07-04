@@ -1,0 +1,205 @@
+{
+  "name": "Zephyr",
+  "type": "vehicle",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/drone.png",
+  "effects": [],
+  "_id": "jS3oPRCpfIfA67ze",
+  "system": {
+    "additionalSystems": {},
+    "description": "360-Degree Vision, Access Jacks, Bot AI, Lidar, Mesh Inserts, Puppet Sock, Chameleon Skin, Enhanced Vision, Laser Link, Radar, Radar Absorbent, T-Ray Emitter, Weapon Mount (2 Static)",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "m",
+    "aptitudes": {
+      "cog": {
+        "name": "ep2e.actorSheet.aptitudes.cog",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.cognition"
+      },
+      "int": {
+        "name": "ep2e.actorSheet.aptitudes.int",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.intuition"
+      },
+      "ref": {
+        "name": "ep2e.actorSheet.aptitudes.ref",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.reflexes"
+      },
+      "sav": {
+        "name": "ep2e.actorSheet.aptitudes.sav",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.savvy"
+      },
+      "som": {
+        "name": "ep2e.actorSheet.aptitudes.som",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.somatics"
+      },
+      "wil": {
+        "name": "ep2e.actorSheet.aptitudes.wil",
+        "value": null,
+        "label": "ep2e.actorSheet.aptitudes.willpower"
+      }
+    },
+    "pools": {
+      "vig": {
+        "max": null,
+        "current": null
+      },
+      "mox": {
+        "max": null,
+        "current": null
+      },
+      "ins": {
+        "max": null,
+        "current": null
+      },
+      "flex": {
+        "max": 1,
+        "current": null
+      },
+      "threat": {
+        "max": null,
+        "current": null
+      }
+    },
+    "movement": {
+      "1": {
+        "speed": "8/32",
+        "type": "winged"
+      },
+      "2": {
+        "speed": "",
+        "type": "none"
+      },
+      "3": {
+        "speed": "",
+        "type": "none"
+      },
+      "4": {
+        "speed": "",
+        "type": "none"
+      }
+    },
+    "armor": {
+      "energy": 6,
+      "kinetic": 4
+    },
+    "init": null,
+    "type": "robot",
+    "luc": null,
+    "dur": 25,
+    "wounds": null,
+    "trauma": null,
+    "curDur": null,
+    "curLuc": null,
+    "pass": null,
+    "autoControl": false,
+    "controlType": null,
+    "skills": {
+      "1": {
+        "name": "Fray",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "2": {
+        "name": "Guns",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "3": {
+        "name": "Hardware: Aircraft",
+        "value": 20,
+        "specname": "Zephyr",
+        "spec": false,
+        "mod": null
+      },
+      "4": {
+        "name": "Infosec",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "5": {
+        "name": "Interface",
+        "value": 30,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "6": {
+        "name": "Perceive",
+        "value": 40,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "7": {
+        "name": "Pilot: Aircraft",
+        "value": 60,
+        "specname": "Zephyr",
+        "spec": false,
+        "mod": null
+      },
+      "8": {
+        "name": "Research",
+        "value": 20,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "9": {
+        "name": "Know: Zephyr Specs",
+        "value": 80,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      },
+      "10": {
+        "name": "",
+        "value": null,
+        "specname": "",
+        "spec": false,
+        "mod": null
+      }
+    },
+    "mov": "8/32 Winged",
+    "vig": null,
+    "mox": null,
+    "ins": null,
+    "flex": 1,
+    "curIns": null,
+    "curMox": null,
+    "curVig": null,
+    "curFlex": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "folder": null,
+  "sort": 0,
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.8",
+    "coreVersion": "13.346",
+    "createdTime": 1680889570379,
+    "modifiedTime": 1680895242509,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.vehicles.jS3oPRCpfIfA67ze",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!jS3oPRCpfIfA67ze"
+}

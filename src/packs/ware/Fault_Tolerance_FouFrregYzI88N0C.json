@@ -1,0 +1,41 @@
+{
+  "name": "Fault Tolerance",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "AV 5 vs. mesh attacks",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585518,
+    "modifiedTime": 1689416447700,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.reUYWcVvTYyo9KRE",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "FouFrregYzI88N0C",
+  "folder": "Vaz2wnUwN7AmKotm",
+  "sort": 600000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!FouFrregYzI88N0C"
+}

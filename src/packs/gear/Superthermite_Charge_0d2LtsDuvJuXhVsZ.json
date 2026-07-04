@@ -1,0 +1,36 @@
+{
+  "name": "Superthermite Charge",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/pickaxe.png",
+  "effects": [],
+  "_id": "0d2LtsDuvJuXhVsZ",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Nanometal explosive. DV 6d10 + 10, set/shaped with Hardware: Demolitions.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!0d2LtsDuvJuXhVsZ"
+}

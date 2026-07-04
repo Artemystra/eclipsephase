@@ -1,0 +1,47 @@
+{
+  "name": "Tongzhi",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "7EfjEqPOKnL6vvqp",
+  "system": {
+    "additionalSystems": {},
+    "description": "+10 Kinesics, +10 Persuade towards common interests,  Enhanced Behavior: Cooperative (2).",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "social",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "12 hours",
+    "addictionMod": "-10",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674424846677,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Jv7F1ARLWV79deJu",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!7EfjEqPOKnL6vvqp"
+}

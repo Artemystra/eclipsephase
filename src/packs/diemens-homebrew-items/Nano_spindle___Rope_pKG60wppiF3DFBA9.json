@@ -1,0 +1,38 @@
+{
+  "name": "Nano spindle + Rope",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 145313,
+  "flags": {
+    "core": {}
+  },
+  "_id": "pKG60wppiF3DFBA9",
+  "system": {
+    "additionalSystems": {},
+    "description": "Bis zu 150 Meter langes Graphenseil; Trägt bis zu 5 Tonnen; +30 auf Athletik beim Klettern",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441538067,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.1lZr2FFMa3yeyxvS",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!pKG60wppiF3DFBA9"
+}

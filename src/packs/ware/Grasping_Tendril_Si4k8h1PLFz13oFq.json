@@ -1,0 +1,39 @@
+{
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "name": "Grasping Tendril",
+  "type": "ware",
+  "_id": "Si4k8h1PLFz13oFq",
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Concealable, DV 1d10 +2, Reach (+10), +10 grappling.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603883256,
+    "modifiedTime": 1713654459114,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!Si4k8h1PLFz13oFq"
+}

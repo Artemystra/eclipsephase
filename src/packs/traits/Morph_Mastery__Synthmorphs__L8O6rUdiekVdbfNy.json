@@ -1,0 +1,84 @@
+{
+  "name": "Morph Mastery (Synthmorphs)",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "No Integration Tests sleeving biomorphs",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Morph Mastery (Synthmorphs)",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "HKZqXsb0DnyZxDOP",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.sleeving.ignoreSynth",
+            "value": true,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.5",
+        "lastModifiedBy": "As9MwNgJsGddtEep",
+        "modifiedTime": 1766742473023,
+        "createdTime": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!L8O6rUdiekVdbfNy.HKZqXsb0DnyZxDOP"
+    }
+  ],
+  "folder": "hV09BrpxHnLOea0b",
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766665953195,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_id": "L8O6rUdiekVdbfNy",
+  "sort": 500000,
+  "_key": "!items!L8O6rUdiekVdbfNy"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Prisonermask",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 111134,
+  "flags": {
+    "core": {}
+  },
+  "_id": "2OKzJjvwndyC7Idi",
+  "system": {
+    "additionalSystems": {},
+    "description": "Eine Maske die alle Sinne ausser dem Tastsinn um -40 einschränkt und Sicht sogar komplett unterbindet.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441542893,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.fhWZlmQ5BAObEs88",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!2OKzJjvwndyC7Idi"
+}

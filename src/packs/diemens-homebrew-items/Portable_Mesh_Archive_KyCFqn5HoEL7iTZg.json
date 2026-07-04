@@ -1,0 +1,38 @@
+{
+  "name": "Portable Mesh Archive",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 111719,
+  "flags": {
+    "core": {}
+  },
+  "_id": "KyCFqn5HoEL7iTZg",
+  "system": {
+    "additionalSystems": {},
+    "description": "Erlaubt Researchproben auf 3 Wissensskills auch ohne Meshzugang",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441540401,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.4EBij56kwCAuDdXV",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!KyCFqn5HoEL7iTZg"
+}

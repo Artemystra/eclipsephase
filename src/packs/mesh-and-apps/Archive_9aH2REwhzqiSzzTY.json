@@ -1,0 +1,38 @@
+{
+  "name": "Archive",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 200000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "9aH2REwhzqiSzzTY",
+  "system": {
+    "additionalSystems": {},
+    "description": "Each archive has a different focus (as Know skill fields).\nUsing a relevant archive provides a +10 modifier to Research Tests\ninvolving that subject",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417265803,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.pklwgRhUDuWY2UR7",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!9aH2REwhzqiSzzTY"
+}

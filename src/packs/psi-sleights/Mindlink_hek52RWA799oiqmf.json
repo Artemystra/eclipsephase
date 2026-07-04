@@ -1,0 +1,39 @@
+{
+  "name": "Mindlink",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You establish two-way mental communication with the target.\nIf mindlinked with more than one target simultaneously, you may act as a telepathic server so that everyone mindlinked with you can also telepathically communicate with each other (though you will overhear everything). Language is still a factor in mindlinked communications, but this barrier may be overcome by transmitting sounds, images, emotions, and other sensations.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 2,
+    "psiType": "gamma",
+    "actionType": "quick",
+    "duration": "sustained"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "hek52RWA799oiqmf",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!hek52RWA799oiqmf"
+}

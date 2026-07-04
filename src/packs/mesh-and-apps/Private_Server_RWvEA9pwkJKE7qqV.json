@@ -1,0 +1,38 @@
+{
+  "name": "Private Server",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 101563,
+  "flags": {
+    "core": {}
+  },
+  "_id": "RWvEA9pwkJKE7qqV",
+  "system": {
+    "additionalSystems": {},
+    "description": "Private server, self-administrated (Min) or managed by others (Mod).",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417270349,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Y4QaomnYQXu0OPJI",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!RWvEA9pwkJKE7qqV"
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Drone Rig",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Ignore the –10 modifier when jamming.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "chm"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585508,
+    "modifiedTime": 1689415676567,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.DeEJIxskw4qNKWEY",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "z3tPlA7ET15FGS3E",
+  "folder": "BqAuWSEWfisfuXXd",
+  "sort": 150000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!z3tPlA7ET15FGS3E"
+}

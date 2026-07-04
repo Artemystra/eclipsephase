@@ -1,0 +1,22 @@
+{
+  "name": "Negative",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "DaSyiLnSD2LzihV0",
+  "description": "",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "12.331",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195199,
+    "modifiedTime": 1742324195199,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!DaSyiLnSD2LzihV0"
+}

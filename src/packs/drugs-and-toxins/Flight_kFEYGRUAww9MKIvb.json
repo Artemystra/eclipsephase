@@ -1,0 +1,47 @@
+{
+  "name": "Flight",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/toxic-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "kFEYGRUAww9MKIvb",
+  "system": {
+    "additionalSystems": {},
+    "description": "SV 1d10, –30 resist intimidation/fear effects.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "toxins",
+    "dermal": false,
+    "inhalation": true,
+    "injection": false,
+    "oral": false,
+    "drugType": "biochem",
+    "duration": "1 hour",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425537681,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.LNnHJCKEuX9Hv5gM",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!kFEYGRUAww9MKIvb"
+}

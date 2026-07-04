@@ -1,0 +1,39 @@
+{
+  "name": "Enhanced Memory",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/lotus.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You have a perfect memory. Unlike transhumans with hyperthymesia, this is not strictly autobiographical. You can be asked a random date and immediately recall trivial details such as the day of the week it was, what you did that day, what the weather was like, and the exact wording of a paragraph you read. Your memory is always “on” — in fact, you perceive reality and memory much like a\nsplit screen and are often caught in reverie. Enhanced memory has no effect on psychosurgery memory editing.\n\nYou can push this sleight to recall your memories from a sort of third-person point of view, allowing you to make Perceive Tests to notice details you may have previously missed.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": null,
+    "psiType": "chi",
+    "actionType": "",
+    "duration": ""
+  },
+  "folder": "7VpBcB8nysG3tqmh",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "jbZGjv7k9vlz2OKB",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!jbZGjv7k9vlz2OKB"
+}

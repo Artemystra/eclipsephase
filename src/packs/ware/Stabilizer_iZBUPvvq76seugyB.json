@@ -1,0 +1,39 @@
+{
+  "folder": "BqAuWSEWfisfuXXd",
+  "name": "Stabilizer",
+  "type": "ware",
+  "_id": "iZBUPvvq76seugyB",
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Heal 1 stress per day.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "m"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713655146623,
+    "modifiedTime": 1713656118971,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!iZBUPvvq76seugyB"
+}

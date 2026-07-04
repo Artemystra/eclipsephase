@@ -1,0 +1,41 @@
+{
+  "name": "Lidar",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Use reflected laser light to image and judge range and speed.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585508,
+    "modifiedTime": 1689415762035,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.95smmUCTVPyk0pvb",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "BYdlE2yHd20XIkWZ",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 400000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!BYdlE2yHd20XIkWZ"
+}

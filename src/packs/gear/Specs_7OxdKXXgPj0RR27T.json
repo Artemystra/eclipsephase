@@ -1,0 +1,36 @@
+{
+  "name": "Specs",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "_id": "7OxdKXXgPj0RR27T",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Glasses/goggles that provide enhanced vision. +10 Perceive.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!7OxdKXXgPj0RR27T"
+}

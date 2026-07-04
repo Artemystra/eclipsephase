@@ -1,0 +1,47 @@
+{
+  "name": "Nutcracker",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/toxic-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "TT8T48eQzNJQ5qMA",
+  "system": {
+    "additionalSystems": {},
+    "description": "Destroys cortical stack.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "major",
+    "slotType": "consumable",
+    "category": "nanotox",
+    "dermal": false,
+    "inhalation": false,
+    "injection": true,
+    "oral": true,
+    "drugType": "nano",
+    "duration": "6 hours",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425157277,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.oogl00zzzKP3jIjS",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!TT8T48eQzNJQ5qMA"
+}

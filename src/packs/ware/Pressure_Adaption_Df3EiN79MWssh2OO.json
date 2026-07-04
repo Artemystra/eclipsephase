@@ -1,0 +1,41 @@
+{
+  "name": "Pressure Adaption",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Handle extreme pressure.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bh"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585510,
+    "modifiedTime": 1689415811715,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.KnZupxvR48SGqIEe",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "Df3EiN79MWssh2OO",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 900000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!Df3EiN79MWssh2OO"
+}

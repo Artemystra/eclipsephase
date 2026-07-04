@@ -1,0 +1,39 @@
+{
+  "name": "Psi Shield",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You rally the mind’s defenses against psychic attacks. Increase mental armor by 1d6, +1d6 per superior success.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 2,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "sustained"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "ESBeHpg3AbBGl5sz",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!ESBeHpg3AbBGl5sz"
+}

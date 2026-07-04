@@ -1,0 +1,47 @@
+{
+  "name": "Psi-Opener",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "6H3kkyNPaAOzYJHO",
+  "system": {
+    "additionalSystems": {},
+    "description": "Effects of 1 specific psi-chi sleight. SV 1d6.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "psi",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "1 hour",
+    "addictionMod": "-10",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425078830,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.ICTn8ysLLPkKu4rT",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!6H3kkyNPaAOzYJHO"
+}

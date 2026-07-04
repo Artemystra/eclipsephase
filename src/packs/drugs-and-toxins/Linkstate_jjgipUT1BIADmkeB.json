@@ -1,0 +1,47 @@
+{
+  "name": "Linkstate",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "jjgipUT1BIADmkeB",
+  "system": {
+    "additionalSystems": {},
+    "description": "Samples memories from others.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "narco",
+    "dermal": false,
+    "inhalation": false,
+    "injection": false,
+    "oral": false,
+    "drugType": "electronic",
+    "duration": "1 hour",
+    "addictionMod": "-10",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425334912,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.e69RIMCRdTHfAkQs",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!jjgipUT1BIADmkeB"
+}

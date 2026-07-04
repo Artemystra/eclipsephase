@@ -1,0 +1,36 @@
+{
+  "name": "Pocket Lab",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/flask.png",
+  "effects": [],
+  "_id": "hr5x8PyZj6ez6XZO",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Analyze gases, liquids, materials, Know: Chemistry 60.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!hr5x8PyZj6ez6XZO"
+}

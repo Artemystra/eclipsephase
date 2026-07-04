@@ -1,0 +1,111 @@
+{
+  "folder": "iGgBGEFbrsV51IlE",
+  "name": "Bug (Kinetic)",
+  "type": "ammo",
+  "img": "systems/eclipsephase/resources/icons/ammo.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Bug rounds are equipped with a microbug and medical sensor nanobots. They attempt to gather information on the target’s location (via standard mesh tracking), health (querying the target’s medichines), and surroundings (typically hindered by being inside the target’s body). They will transmit status reports in a pre-programmed manner via the mesh or a pre-chosen frequency band\neither continuously or in pre-set intervals.",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "type": "kinetic",
+    "areaeffect": null,
+    "dv": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": false
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": false
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": false
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1
+  },
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "13.346",
+    "createdTime": 1694779771934,
+    "modifiedTime": 1694802974182,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "e0Vx4qoaDZFaXDrs",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!e0Vx4qoaDZFaXDrs"
+}

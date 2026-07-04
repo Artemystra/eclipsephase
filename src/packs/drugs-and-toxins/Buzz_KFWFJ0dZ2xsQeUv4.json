@@ -1,0 +1,47 @@
+{
+  "name": "Buzz",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "KFWFJ0dZ2xsQeUv4",
+  "system": {
+    "additionalSystems": {},
+    "description": "Hallucinations, –30 suggestive SAV/WIL Checks.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "category": "rec",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": "36 hours",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674425691648,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.7LlCtHE0H0sXAQ4i",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!KFWFJ0dZ2xsQeUv4"
+}

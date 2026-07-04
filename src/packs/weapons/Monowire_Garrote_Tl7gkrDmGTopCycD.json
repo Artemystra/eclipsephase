@@ -1,0 +1,141 @@
+{
+  "folder": "xKfgD7BhutMA3H5S",
+  "name": "Monowire Garrote",
+  "type": "ccWeapon",
+  "_id": "Tl7gkrDmGTopCycD",
+  "img": "systems/eclipsephase/resources/icons/99_effect%20Damage%20circle.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This assassin’s weapon features a dangerous near-monomolecular wire wrapped around a contained spool with two handles. One handle grips the spool, while the other extends the wire so that it can be wrapped around targets (typically necks or limbs) and slice through them when pulled. Monofilament tensile strength is weak, however; it breaks on a superior failure. This weapon is wielded with Exotic Skill: Monowire Garrote.",
+    "active": true,
+    "displayCategory": "ccweapon",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "sidearm",
+    "additionalMode": false,
+    "accessories": {
+      "armSlide": {
+        "name": "ep2e.item.weapon.table.accessory.armSlide",
+        "value": false
+      },
+      "safetySystem": {
+        "name": "ep2e.item.weapon.table.accessory.safetySystem",
+        "value": false
+      },
+      "shockSafety": {
+        "name": "ep2e.item.weapon.table.accessory.shockSafety",
+        "value": false
+      }
+    },
+    "mode1": {
+      "name": "",
+      "d10": 3,
+      "d6": null,
+      "bonus": null,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": true
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": true
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": false,
+          "skillMod": null
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": false
+        }
+      }
+    },
+    "mode2": {
+      "name": "",
+      "d10": null,
+      "d6": null,
+      "bonus": null,
+      "dv": null,
+      "traits": {
+        "armorPiercing": {
+          "name": "ep2e.item.weapon.table.trait.armorPiercing",
+          "value": false
+        },
+        "concealable": {
+          "name": "ep2e.item.weapon.table.trait.concealable",
+          "value": false
+        },
+        "fragile": {
+          "name": "ep2e.item.weapon.table.trait.fragile",
+          "value": false
+        },
+        "pain": {
+          "name": "ep2e.item.weapon.table.trait.pain",
+          "value": false
+        },
+        "reach": {
+          "name": "ep2e.item.weapon.table.trait.reach",
+          "value": false
+        },
+        "shock": {
+          "name": "ep2e.item.weapon.table.trait.shock",
+          "value": false
+        },
+        "stun": {
+          "name": "ep2e.item.weapon.table.trait.stun",
+          "value": false
+        },
+        "touchOnly": {
+          "name": "ep2e.item.weapon.table.trait.touchOnly",
+          "value": false
+        },
+        "twoHanded": {
+          "name": "ep2e.item.weapon.table.trait.twoHanded",
+          "value": false
+        }
+      }
+    }
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1689375951924,
+    "modifiedTime": 1689377704294,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!Tl7gkrDmGTopCycD"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Rescue Pod",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 110548,
+  "flags": {
+    "core": {}
+  },
+  "_id": "wvGG1Xtbf8tIKN4C",
+  "system": {
+    "additionalSystems": {},
+    "description": "\"Selbsterrichtender Raum für bis zu sechs Personen.\n\nSauerstoff für 8 Stunden; Hitze-/Kälte Schutz zwischen -45 - 100°C\"",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "bulky",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441544040,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Bh1XbHDr9MhbdsSf",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!wvGG1Xtbf8tIKN4C"
+}

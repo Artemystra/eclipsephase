@@ -1,0 +1,37 @@
+{
+  "name": "Exowalker Frame",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Additional%20Armor.png",
+  "effects": [],
+  "_id": "NHmVclGTfoLf5Aan",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "major",
+    "slotType": "additional",
+    "energy": "+0",
+    "kinetic": "+2"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!NHmVclGTfoLf5Aan"
+}

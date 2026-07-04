@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Neurochemical Imbalance",
+  "type": "traits",
+  "_id": "bH2dLNhSCwLGiYy8",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Your morph’s neurochemistry (or its neurochemical simulators) is unbalanced. You suffer from sudden mood swings and strong, almost overwhelming, emotions. The GM makes a list of 6 Enhanced Behavior traits, all at Level 2. Examples include sadness, despair, frustration, anxiety, loneliness, euphoria, manic intensity, arousal, contrariness, and so on. \n\nEach time you spend a pool point or make a WIL Check, roll 1d6 to choose which of those Enhanced Behavior traits kicks in. The Enhanced Behaviors apply at Level 2 and affect you for 1d6 hours. You may use drugs, psychosurgery, or certain ware (such as neuromodulation or endocrine control) to counteract these Enhanced Behaviors, reducing them to Level 1 or blocking them entirely (GM discretion). \n\nHowever, ware used this way may not be used to trigger other emotions at the same time. At the GM’s discretion, certain situations may exacerbate or limit the Enhanced Behaviors (to Level 1 or Level 3 as appropriate).",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!bH2dLNhSCwLGiYy8"
+}

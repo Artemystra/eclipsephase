@@ -1,0 +1,36 @@
+{
+  "name": "Standard Battery",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "_id": "PxdM6zB7GUTyLg1J",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Rechargeable, good for hundreds of hours.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!PxdM6zB7GUTyLg1J"
+}

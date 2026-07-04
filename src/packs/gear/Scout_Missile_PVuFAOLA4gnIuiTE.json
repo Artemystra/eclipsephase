@@ -1,0 +1,36 @@
+{
+  "name": "Scout Missile",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/locator.png",
+  "effects": [],
+  "_id": "PVuFAOLA4gnIuiTE",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Maps 5 km radius or 10 km one direction in 20 minutes, Perceive 60.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!PVuFAOLA4gnIuiTE"
+}

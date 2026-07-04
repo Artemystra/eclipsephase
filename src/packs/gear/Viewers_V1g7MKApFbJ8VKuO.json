@@ -1,0 +1,36 @@
+{
+  "name": "Viewers",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "_id": "V1g7MKApFbJ8VKuO",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Long-range version of specs. 50x magnification, directional microphone. +10 Perceive.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!V1g7MKApFbJ8VKuO"
+}

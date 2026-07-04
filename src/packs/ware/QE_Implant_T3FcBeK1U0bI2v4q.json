@@ -1,0 +1,39 @@
+{
+  "folder": "TpVWCtLAiWqurwSP",
+  "name": "QE Implant",
+  "type": "ware",
+  "_id": "T3FcBeK1U0bI2v4q",
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "QE Comm + micro qubit reservoir; 1 min video/1 hr voice.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "effects": [],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713654628611,
+    "modifiedTime": 1713654716952,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!T3FcBeK1U0bI2v4q"
+}

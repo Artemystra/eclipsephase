@@ -1,0 +1,41 @@
+{
+  "name": "Nanophages",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "SOM Check negates nanodrugs/toxins, failure halves effects.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "n"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585521,
+    "modifiedTime": 1689415753811,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.sNivSg697Z9JCrfg",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "qtKe7IrJiIrIMnsf",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!qtKe7IrJiIrIMnsf"
+}

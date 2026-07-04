@@ -1,0 +1,41 @@
+{
+  "name": "Telescoping Limb",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Extending limbs. +1 Reach.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585514,
+    "modifiedTime": 1689415892246,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.XhOMNiWBAHnrlqkk",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "n7ZzROqOZ72t8bKs",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 1800000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!n7ZzROqOZ72t8bKs"
+}

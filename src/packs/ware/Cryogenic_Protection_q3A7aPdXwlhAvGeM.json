@@ -1,0 +1,41 @@
+{
+  "name": "Cryogenic Protection",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Handle temps as low as –120/–200 C (biomorphs) or lower (synthmorphs).",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585510,
+    "modifiedTime": 1689415616637,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.Igz9fJc1yiAr3x1Z",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "q3A7aPdXwlhAvGeM",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 125000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!q3A7aPdXwlhAvGeM"
+}

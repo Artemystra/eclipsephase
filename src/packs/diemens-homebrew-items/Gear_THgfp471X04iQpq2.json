@@ -1,0 +1,19 @@
+{
+  "name": "Gear",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "THgfp471X04iQpq2",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "11.305",
+    "createdTime": 1689441504102,
+    "modifiedTime": 1689441504102,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!THgfp471X04iQpq2"
+}

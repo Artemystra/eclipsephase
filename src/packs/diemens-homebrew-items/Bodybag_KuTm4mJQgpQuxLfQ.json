@@ -1,0 +1,38 @@
+{
+  "name": "Bodybag",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 112500,
+  "flags": {
+    "core": {}
+  },
+  "_id": "KuTm4mJQgpQuxLfQ",
+  "system": {
+    "additionalSystems": {},
+    "description": "Ein selbstaufblasender Sack samt Nährflüssigkeit, dereinen Körper von bis zu 2,5 Metern grösse halten kann und ihn für bis zu 72 Stunden stabilisiert, ehe ihm weitere Nährstoffe und Sauerstoff hinzugefügt werden muss.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441513945,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.nBy8gg41anDniLw3",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!KuTm4mJQgpQuxLfQ"
+}

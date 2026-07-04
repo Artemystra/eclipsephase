@@ -1,0 +1,19 @@
+{
+  "name": "Nano Swarms",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "0ArrDr2gjWdko2AE",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.8",
+    "coreVersion": "11.311",
+    "createdTime": 1696403202879,
+    "modifiedTime": 1696403202879,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!0ArrDr2gjWdko2AE"
+}

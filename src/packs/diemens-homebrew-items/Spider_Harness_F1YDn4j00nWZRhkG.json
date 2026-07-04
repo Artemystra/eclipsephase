@@ -1,0 +1,38 @@
+{
+  "name": "Spider Harness",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 112110,
+  "flags": {
+    "core": {}
+  },
+  "_id": "F1YDn4j00nWZRhkG",
+  "system": {
+    "additionalSystems": {},
+    "description": "Smartgeschirr das automatisiert hilft Stürze & Unfälle zu verhindern. +1 Vigor für Athletikproben die andernfalls lethale folgen hätten.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441571910,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.uNwR9gy05fzmfVO7",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!F1YDn4j00nWZRhkG"
+}

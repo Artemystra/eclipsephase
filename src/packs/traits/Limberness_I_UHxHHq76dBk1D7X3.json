@@ -1,0 +1,38 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Limberness I",
+  "type": "traits",
+  "_id": "UHxHHq76dBk1D7X3",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "The morph is especially flexible and supple, capable of graceful contortions and interesting positions. At Level 1 , you can do the splits, smoke with your toes, and squeeze into small, cramped spaces. At Level 2, you are a double-jointed escape artist. \n\nApply a +10 modifier per level to escape bonds, fit into small spaces, contort, or otherwise rely on flexibility.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "sort": 9100000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!UHxHHq76dBk1D7X3"
+}

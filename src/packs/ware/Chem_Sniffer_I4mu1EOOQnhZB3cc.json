@@ -1,0 +1,41 @@
+{
+  "name": "Chem Sniffer",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Detect gases, explosives, firearms, toxins. Know: Chemistry 60.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585518,
+    "modifiedTime": 1689415588709,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.hV2RE9iEiHTEQhel",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "I4mu1EOOQnhZB3cc",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 150000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!I4mu1EOOQnhZB3cc"
+}

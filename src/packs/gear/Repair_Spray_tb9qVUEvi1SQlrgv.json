@@ -1,0 +1,36 @@
+{
+  "name": "Repair Spray",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "effects": [],
+  "_id": "tb9qVUEvi1SQlrgv",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Heals 1d10 [5] damage an hour for 12 hours for synthmorphs. Single use.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!tb9qVUEvi1SQlrgv"
+}

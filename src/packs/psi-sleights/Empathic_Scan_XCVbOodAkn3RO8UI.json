@@ -1,0 +1,39 @@
+{
+  "name": "Empathic Scan",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You sense the target’s emotional state for WIL ÷ 5 action turns. This provides you with a +10 modifier for social skill tests against the target, +10 per superior success. This sleight will not automatically detect deceit, but it will pick up on nervousness, doubt, anxiety, etc. and provide a bonus to Kinesics Tests against Deceive.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 4,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "Actions Turns"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "XCVbOodAkn3RO8UI",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!XCVbOodAkn3RO8UI"
+}

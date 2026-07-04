@@ -1,0 +1,41 @@
+{
+  "name": "Drug Glands",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Produces one type of drug.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585507,
+    "modifiedTime": 1689415627346,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.6hokUHfz0bEyRYgg",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "uCvWbYko7OYRp3ji",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 150000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!uCvWbYko7OYRp3ji"
+}

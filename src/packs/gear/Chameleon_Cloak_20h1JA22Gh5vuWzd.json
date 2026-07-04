@@ -1,0 +1,36 @@
+{
+  "name": "Chameleon Cloak",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/binoculars.png",
+  "effects": [],
+  "_id": "20h1JA22Gh5vuWzd",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Camouflage, +10 Infiltrate, +30 stationary.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!20h1JA22Gh5vuWzd"
+}

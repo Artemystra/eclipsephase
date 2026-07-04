@@ -1,0 +1,37 @@
+{
+  "folder": "13pD5C6BuZ2MCDwG",
+  "name": "Cosmic Anxiety Disorder",
+  "type": "traits",
+  "_id": "TyBac5WzdyNt13ps",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Triggers: Alien/TITAN technology, the unknown, x-risks\n\nThis disorder arises from facing x-risks, aliens, and incomprehensibly advanced technology. It functions much like anxiety; you are helpless in the face of an uncaring and dangerous universe.\n\nEffect: Like anxiety, but when faced with an alien or TITAN\nthreat, make a WIL Check or either flee or collapse in panic.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!TyBac5WzdyNt13ps"
+}

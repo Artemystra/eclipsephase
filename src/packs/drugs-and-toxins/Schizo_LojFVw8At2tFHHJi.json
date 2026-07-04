@@ -1,0 +1,47 @@
+{
+  "name": "Schizo",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "LojFVw8At2tFHHJi",
+  "system": {
+    "additionalSystems": {},
+    "description": "Mental Disorder: Schizophrenia, Enhanced Behavior: Violent (2), SV 1d10.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "category": "nano",
+    "dermal": false,
+    "inhalation": false,
+    "injection": true,
+    "oral": true,
+    "drugType": "nano",
+    "duration": "3 hours",
+    "addictionMod": "-",
+    "addictionType": "none",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1674424999063,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.xSmuoAirhnPoZiQX",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!LojFVw8At2tFHHJi"
+}

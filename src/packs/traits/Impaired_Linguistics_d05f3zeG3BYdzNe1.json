@@ -1,0 +1,38 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Impaired Linguistics",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "CP/RP for languages doubled.\nMust make COG Checks with Stress Tests or lose language abilities for 1d6 minutes.\b ",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766135295410,
+    "modifiedTime": 1766135295410,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_id": "d05f3zeG3BYdzNe1",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!d05f3zeG3BYdzNe1"
+}

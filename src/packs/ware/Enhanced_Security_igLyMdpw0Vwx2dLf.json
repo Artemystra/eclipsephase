@@ -1,0 +1,41 @@
+{
+  "name": "Enhanced Security",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "–10 Infosec to hack, –30 in defensive mode but no \nInsight pool and –3 INIT",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585509,
+    "modifiedTime": 1689416446497,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.4lKr7UxRXTh8eNoz",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "igLyMdpw0Vwx2dLf",
+  "folder": "Vaz2wnUwN7AmKotm",
+  "sort": 500000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!igLyMdpw0Vwx2dLf"
+}

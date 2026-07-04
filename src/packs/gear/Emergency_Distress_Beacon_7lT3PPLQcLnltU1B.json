@@ -1,0 +1,36 @@
+{
+  "name": "Emergency Distress Beacon",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "_id": "7lT3PPLQcLnltU1B",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Powerful radio transmitter, 50/500 km range.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!7lT3PPLQcLnltU1B"
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Memory Lock",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Blocks memory retention/recording when activated.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "chm"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585513,
+    "modifiedTime": 1689415973165,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.Ug2YgCIDaaqIm28P",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "WMJXZOTP4bNWuxMJ",
+  "folder": "BqAuWSEWfisfuXXd",
+  "sort": 400000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!WMJXZOTP4bNWuxMJ"
+}

@@ -1,0 +1,90 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Synthmorph Aversion II",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "–10 per level to Integration and Resleeving Stress Tests with one category of morphs.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Synthmorph Aversion II",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "yAfP3s0uAMvmfKJt",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.sleeving.aversion.type",
+            "value": "synth",
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.additionalSystems.sleeving.aversion.value",
+            "value": -20,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.5",
+        "lastModifiedBy": null,
+        "createdTime": null,
+        "modifiedTime": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!JaflgdTcNzyziYRQ.yAfP3s0uAMvmfKJt"
+    }
+  ],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766669855787,
+    "modifiedTime": 1766669855787,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_id": "JaflgdTcNzyziYRQ",
+  "sort": 0,
+  "_key": "!items!JaflgdTcNzyziYRQ"
+}

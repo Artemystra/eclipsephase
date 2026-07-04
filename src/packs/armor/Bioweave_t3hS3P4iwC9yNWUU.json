@@ -1,0 +1,37 @@
+{
+  "name": "Bioweave",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Additional%20Armor.png",
+  "effects": [],
+  "_id": "t3hS3P4iwC9yNWUU",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "additional",
+    "energy": "+3",
+    "kinetic": "+3"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!t3hS3P4iwC9yNWUU"
+}

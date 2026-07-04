@@ -1,0 +1,39 @@
+{
+  "name": "Anti-Electronics Field",
+  "type": "aspect",
+  "img": "systems/eclipsephase/resources/icons/mushroom%20cloud.png",
+  "effects": [],
+  "folder": "e1OyVs1AMGsaTyXj",
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "All electronics within Close range lose power.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": null,
+    "psiType": "epsilon",
+    "actionType": "complex",
+    "duration": "sustained"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "lpap34mFGmO7Z2i9",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!lpap34mFGmO7Z2i9"
+}

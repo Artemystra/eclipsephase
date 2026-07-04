@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Impaired Hearing",
+  "type": "traits",
+  "_id": "gu3F8c1qkNzwsXZV",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This trait is most common with neo-octopi and other morphs derived from species that lack the full range of human hearing. The morph lacks the transgenic hearing mods of modern designs. \n\nIt can only hear sounds in the 400–1,000 kHz range (as opposed to the 20–20,000 kHz range of transhumans) and hears poorly when not underwater. \n\nApply a −30 to hearing-based Perceive Tests. Some medium- and high-frequency sounds may be entirely inaudible (GM discretion).",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!gu3F8c1qkNzwsXZV"
+}

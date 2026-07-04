@@ -1,0 +1,36 @@
+{
+  "name": "Persistence",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "_id": "RM5zK946i1XZJ8nH",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Keeps infomorph running, +10 DUR, +2 WT.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "Digital",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!RM5zK946i1XZJ8nH"
+}

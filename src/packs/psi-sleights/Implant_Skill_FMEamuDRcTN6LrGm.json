@@ -1,0 +1,39 @@
+{
+  "name": "Implant Skill",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You impart your expertise and implant it into the target’s mind. The target acquires your chosen existing skill at half value for WIL ÷ 5 hours. \n\nIf the target already has the skill, they use whichever\nvalue is higher. Specialization bonuses also apply. Psi skill may only be implanted if the target has the Psi trait. \n\nRecipients of skills will exercise them with the async’s flair and mannerisms.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 6,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "hours"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "FMEamuDRcTN6LrGm",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!FMEamuDRcTN6LrGm"
+}

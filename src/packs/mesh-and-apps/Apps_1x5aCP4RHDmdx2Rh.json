@@ -1,0 +1,19 @@
+{
+  "name": "Apps",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "1x5aCP4RHDmdx2Rh",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "11.305",
+    "createdTime": 1689417260962,
+    "modifiedTime": 1689417260962,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!1x5aCP4RHDmdx2Rh"
+}

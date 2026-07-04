@@ -1,0 +1,84 @@
+{
+  "name": "Morph Attunement (Athletics)",
+  "type": "traits",
+  "_id": "eZ5dkuOL2YDBx5fi",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "+10 to either Athletics, Fray, Free Fall, Infiltrate, or Pilot with one specific morph type.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Morph Attunement (Athletics)",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "1kavy9gQWjohLUkg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.skillsVig.athletics.conditional.attuned",
+            "value": true,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.5",
+        "createdTime": 1766666354291,
+        "modifiedTime": 1766667154655,
+        "lastModifiedBy": "As9MwNgJsGddtEep"
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!eZ5dkuOL2YDBx5fi.1kavy9gQWjohLUkg"
+    }
+  ],
+  "folder": "hV09BrpxHnLOea0b",
+  "sort": 2600000,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.5",
+    "createdTime": 1766087397849,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep"
+  },
+  "_key": "!items!eZ5dkuOL2YDBx5fi"
+}

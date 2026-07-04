@@ -1,0 +1,38 @@
+{
+  "name": "Dead Zone Map",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 125000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "Bugfc2i6K52b9Uz0",
+  "system": {
+    "additionalSystems": {},
+    "description": "This map shows areas in a neighborhood or\nsmall habitat that lack public and/or private surveillance coverage.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417267412,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.1mQav5mbf0jo2UXH",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!Bugfc2i6K52b9Uz0"
+}

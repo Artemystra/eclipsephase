@@ -1,0 +1,85 @@
+{
+  "name": "Dazzler",
+  "type": "grenade",
+  "img": "systems/eclipsephase/resources/icons/grenade-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "NcUAV7QnVSoBB9NU",
+  "system": {
+    "additionalSystems": {},
+    "description": "Blinding",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "areaeffect": "Uniform (50)",
+    "dv": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "value": false
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": [
+      "none",
+      "none"
+    ],
+    "quantity": 1,
+    "armorUsed": "none",
+    "mode1": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    }
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1694213701482,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.7ayt4VNstwNoOogv",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!NcUAV7QnVSoBB9NU"
+}

@@ -1,0 +1,41 @@
+{
+  "name": "Chameleon Skin",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Change skin color. +10 Infiltrate, +30 still and covered.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bh"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585507,
+    "modifiedTime": 1689415694513,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.2RiaDX6GJ2EdXWp0",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "RHimXpjmkhFg3xJI",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 200000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!RHimXpjmkhFg3xJI"
+}

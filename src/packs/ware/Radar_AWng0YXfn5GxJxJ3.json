@@ -1,0 +1,41 @@
+{
+  "name": "Radar",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Motion detector, can also judge size and composition.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585610,
+    "modifiedTime": 1689415816418,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.vm7H5kHp9DuYHoN1",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "AWng0YXfn5GxJxJ3",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 700000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!AWng0YXfn5GxJxJ3"
+}

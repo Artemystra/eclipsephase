@@ -1,0 +1,39 @@
+{
+  "name": "Light Frame Armor",
+  "type": "armor",
+  "img": "systems/eclipsephase/resources/icons/Additional Armor.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "puuTYYsKNXEW05FX",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": "Item.YUJusuhQ0yzNcZYm",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "main",
+    "energy": "6",
+    "kinetic": "4"
+  },
+  "_key": "!items!puuTYYsKNXEW05FX"
+}

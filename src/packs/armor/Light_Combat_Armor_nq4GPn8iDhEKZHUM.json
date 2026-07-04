@@ -1,0 +1,37 @@
+{
+  "name": "Light Combat Armor",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Additional%20Armor.png",
+  "effects": [],
+  "_id": "nq4GPn8iDhEKZHUM",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "additional",
+    "energy": "+10",
+    "kinetic": "+8"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!nq4GPn8iDhEKZHUM"
+}

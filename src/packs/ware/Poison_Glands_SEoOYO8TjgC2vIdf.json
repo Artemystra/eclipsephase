@@ -1,0 +1,41 @@
+{
+  "name": "Poison Glands",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/combat.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Produces one type of poison.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585610,
+    "modifiedTime": 1689415801586,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.wQr1hHJi6n2nbiHk",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "SEoOYO8TjgC2vIdf",
+  "folder": "hk2ZQPfnsdWgxoLJ",
+  "sort": 1100000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!SEoOYO8TjgC2vIdf"
+}

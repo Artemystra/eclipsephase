@@ -1,0 +1,37 @@
+{
+  "name": "Combat Armor",
+  "type": "armor",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
+  "effects": [],
+  "_id": "8q8ZertjDIQUxSTC",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "major",
+    "slotType": "main",
+    "energy": "12",
+    "kinetic": "16"
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!8q8ZertjDIQUxSTC"
+}

@@ -1,0 +1,86 @@
+{
+  "folder": "BqAuWSEWfisfuXXd",
+  "name": "Defrag",
+  "type": "ware",
+  "_id": "MwKF6JhXSRX8UVww",
+  "img": "systems/eclipsephase/resources/icons/mental.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Recover additional pool point with each short rest.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "m"
+  },
+  "effects": [
+    {
+      "name": "Defrag",
+      "_id": "h6zXr9z63uIuSjC1",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "transfer": true,
+      "statuses": [],
+      "flags": {},
+      "tint": "#ffffff",
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.recoverBonus",
+            "value": "+1",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!MwKF6JhXSRX8UVww.h6zXr9z63uIuSjC1"
+    }
+  ],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "14.356",
+    "createdTime": 1713655038600,
+    "modifiedTime": 1713695846552,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!MwKF6JhXSRX8UVww"
+}

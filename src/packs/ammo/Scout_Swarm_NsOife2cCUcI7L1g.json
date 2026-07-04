@@ -1,0 +1,109 @@
+{
+  "folder": "0ArrDr2gjWdko2AE",
+  "name": "Scout Swarm",
+  "type": "ammo",
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "A scout nanoswarm will systematically map and explore an area, sampling and chemically analyzing all materials and substances it encounters. Scouts can thoroughly map a room, identify all of the objects, and collect forensic evidence about who recently visited and what has gone on there. Scouts have Know: Chemistry 60 and Medicine: Forensics at 60. They can identify DNA, gunpowder residue from firearms, clothing fibers, smart animal dander, and similar evidence up to 2 weeks old. Scouts can penetrate inside drawers, closets, clothing, and other areas that are not air-tight.",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "type": "spray",
+    "areaeffect": null,
+    "dv": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": false
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": false
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": true
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.8",
+    "coreVersion": "13.346",
+    "createdTime": 1696403232812,
+    "modifiedTime": 1696404540849,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "NsOife2cCUcI7L1g",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!NsOife2cCUcI7L1g"
+}

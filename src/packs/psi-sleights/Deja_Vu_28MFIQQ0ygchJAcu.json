@@ -1,0 +1,39 @@
+{
+  "name": "Deja Vu",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Your force the target’s mind into recursive loop. They will repeat their actions from the previous 15–30 seconds (5–10 action turns) for the next WIL ÷ 5 minutes. They will repeat their actions as closely as possible, even if their environment and circumstances change. \n\nIf someone actively interrupts or restrains the target, or\notherwise disrupts the loop, they may make a WIL Check to break out of the loop, ending the sleight.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 8,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "minutes"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "28MFIQQ0ygchJAcu",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!28MFIQQ0ygchJAcu"
+}

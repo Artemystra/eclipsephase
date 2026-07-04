@@ -1,0 +1,19 @@
+{
+  "name": "Physical Augmentations",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "zY1KfJUcBGEXsHk7",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "11.305",
+    "createdTime": 1689415537688,
+    "modifiedTime": 1689415537688,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!zY1KfJUcBGEXsHk7"
+}

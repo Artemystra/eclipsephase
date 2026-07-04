@@ -1,0 +1,39 @@
+{
+  "name": "Browse Thoughts",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You scan the target’s surface thoughts, gaining a general sense of what is currently running through their mind. Superior successes provide deeper detail. This is not an invasive delve into the target’s mind for specific information like Deep Scan; instead, you simply get a read on what the target is currently thinking.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 4,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "sustained"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "xvWGl6LNAVGIgmzk",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!xvWGl6LNAVGIgmzk"
+}

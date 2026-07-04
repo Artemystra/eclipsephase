@@ -1,0 +1,77 @@
+{
+  "name": "Tactical Multipurpose (Frag)",
+  "type": "grenade",
+  "img": "systems/eclipsephase/resources/icons/grenade-512.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "vkQ4T5gd4VvWjyEi",
+  "system": {
+    "additionalSystems": {},
+    "description": "Knockdown (5 meter radius)",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "areaeffect": "Centered (-2DV/m)",
+    "dv": {
+      "d10": 3,
+      "d6": null,
+      "bonus": 6
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.accessory.extendedMagazine",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.accessory.Gyromount",
+        "value": false
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": "kinetic",
+    "quantity": 1,
+    "armorUsed": "kinetic"
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1694213081893,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.Dg0KmyktCDh85pFc",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!vkQ4T5gd4VvWjyEi"
+}

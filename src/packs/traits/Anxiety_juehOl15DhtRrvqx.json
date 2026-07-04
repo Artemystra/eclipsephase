@@ -1,0 +1,37 @@
+{
+  "folder": "13pD5C6BuZ2MCDwG",
+  "name": "Anxiety",
+  "type": "traits",
+  "_id": "juehOl15DhtRrvqx",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "Triggers: Bad news, boredom, helplessness, the unknown, violence\n\nWith general anxiety disorder, you are overcome with worry about nearly everything. Even simple tasks represent the potential for failure on a catastrophic scale and should be avoided or minimized. Negative outcomes are always assumed to be the only possibility.\n\nEffect: You must be convinced with a Persuade or Provoke Test to do almost anything, and even then will self-sabotage or give up after a short time.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!juehOl15DhtRrvqx"
+}

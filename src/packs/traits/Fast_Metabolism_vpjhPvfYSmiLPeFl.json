@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Fast Metabolism",
+  "type": "traits",
+  "_id": "vpjhPvfYSmiLPeFl",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This trait is only available to biomorphs and is typically only found in heavily enhanced ones. Your morph’s metabolism runs hot, requiring you to eat 2–3 times as much food as a similar morph of equivalent mass. While autocooks make food plentiful and cheap, this trait can pose a problem in remote locations or settlements with\nlimited resources. Treat this as a Minor complexity daily requirement in situations of food scarcity.\n\nIf you fail to acquire the amount of food you need more than 2 days in a row, lower your Wound Threshold by 1 and Durability by 5 (recalculating your DR as DUR x 1.5) until you resume your usual caloric intake. For every additional 2 days without enough food, reduce Wound Threshold and Durability by an equivalent amount. If Durability reaches 5, you will soon die without extended medical care.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!vpjhPvfYSmiLPeFl"
+}

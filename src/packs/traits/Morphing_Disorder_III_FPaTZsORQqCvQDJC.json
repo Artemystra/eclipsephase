@@ -1,0 +1,84 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Morphing Disorder III",
+  "type": "traits",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Adapting to new morphs is particularly challenging for you. Apply a –10 modifier per level to Integration Tests and Resleeving Stress Tests.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Morphing Disorder III",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "QG4bLyDdOHcBXHE1",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.sleeving.morphingDisorder",
+            "value": -30,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.5",
+        "createdTime": 1766669433820,
+        "modifiedTime": 1767395596156,
+        "lastModifiedBy": "As9MwNgJsGddtEep"
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!FPaTZsORQqCvQDJC.QG4bLyDdOHcBXHE1"
+    }
+  ],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "_id": "FPaTZsORQqCvQDJC",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!FPaTZsORQqCvQDJC"
+}

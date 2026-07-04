@@ -1,0 +1,41 @@
+{
+  "name": "T-Ray Emitter",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Use enhanced vision to see through materials.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585516,
+    "modifiedTime": 1689415889975,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.cY44Hf67Nwfwn4Wg",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "j8eZ9xRZbp7aPZJh",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 1000000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!j8eZ9xRZbp7aPZJh"
+}

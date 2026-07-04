@@ -1,0 +1,41 @@
+{
+  "name": "Synthetic Mask",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Faux skin for synthmorph. +30 disguise-based Deceive Tests.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585513,
+    "modifiedTime": 1689415886080,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.UTijkQAeoIqyi3ZG",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "1GvkRIDOBTNZySMY",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 900000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!1GvkRIDOBTNZySMY"
+}

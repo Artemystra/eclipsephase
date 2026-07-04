@@ -1,0 +1,86 @@
+{
+  "folder": "TpVWCtLAiWqurwSP",
+  "name": "Mimicry Module",
+  "type": "ware",
+  "_id": "phOYj0gysszIiIge",
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "+10 Deceive, +30 impersonating specific target after test.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "chm"
+  },
+  "effects": [
+    {
+      "name": "Mimicry Module",
+      "_id": "RkwxqrSG1jTRhB3Q",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "transfer": true,
+      "statuses": [],
+      "flags": {},
+      "tint": "#ffffff",
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.skillsMox.deceive.mod",
+            "value": "+10",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!phOYj0gysszIiIge.RkwxqrSG1jTRhB3Q"
+    }
+  ],
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "14.356",
+    "createdTime": 1713654613836,
+    "modifiedTime": 1713654772471,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!phOYj0gysszIiIge"
+}

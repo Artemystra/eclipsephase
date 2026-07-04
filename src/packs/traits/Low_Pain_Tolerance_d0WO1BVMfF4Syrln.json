@@ -1,0 +1,84 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Low Pain Tolerance",
+  "type": "traits",
+  "_id": "d0WO1BVMfF4Syrln",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Pain is your enemy. You have a very low threshold for pain tolerance; increase the modifier for each wound taken by an additional –10 (so the character suffers –20 with one wound, –40 with a second, –60 with a third, etc.).\n\nAdditionally, you suffer a –30 modifier on both SOM Checks and other tests that involve pain resistance. The morph version of this trait is only available for biomorphs.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": true
+  },
+  "effects": [
+    {
+      "name": "Low Pain Tolerance",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "mQsQx83pK61NKpV6",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.woundMultiplier",
+            "value": 1,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.1.3",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!d0WO1BVMfF4Syrln.mQsQx83pK61NKpV6"
+    }
+  ],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!d0WO1BVMfF4Syrln"
+}

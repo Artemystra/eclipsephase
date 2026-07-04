@@ -1,0 +1,90 @@
+{
+  "folder": "hV09BrpxHnLOea0b",
+  "name": "Hardening: Alienation",
+  "type": "traits",
+  "_id": "2H6IB4MP70yN1SF8",
+  "img": "systems/eclipsephase/resources/icons/add.png",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You are accustomed to trauma, but it has scarred you. You are immune to stress from alienation. However, your WIL Check is reduced by 10 and you suffer a –10 modifier on Persuade Tests. This trait may be taken multiple times for different types of stress; modifiers are cumulative.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "trait",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [
+    {
+      "name": "Hardening: Alienation",
+      "img": "/icons/svg/mystery-man.svg",
+      "_id": "D7APnYvedrtrAkWI",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.aptitudes.wil.mod",
+            "value": -10,
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.skillsMox.persuade.mod",
+            "value": -10,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "statuses": [],
+      "sort": 0,
+      "flags": {},
+      "_stats": {
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "coreVersion": "14.356",
+        "systemId": "eclipsephase",
+        "systemVersion": "1.1.3",
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "exportSource": null
+      },
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!2H6IB4MP70yN1SF8.D7APnYvedrtrAkWI"
+    }
+  ],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1766667572656,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "exportSource": null
+  },
+  "sort": 5700000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!2H6IB4MP70yN1SF8"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Analyzer",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 200000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "dzddJHYiYk6lTOug",
+  "system": {
+    "additionalSystems": {},
+    "description": "Tragbares, mobiles Labor. +20 auf zwei beliebige Wissens-/Medizin-/Handwerksskills. Kann nicht zur Behandlung/Reparatur genutzt werden.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "bulky",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441508308,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.xtIGdpD6euewWHFR",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!dzddJHYiYk6lTOug"
+}

@@ -1,0 +1,109 @@
+{
+  "folder": "op6PJBnpKfHv5C7J",
+  "name": "Beam (Standard)",
+  "type": "ammo",
+  "_id": "UMQzuwVto2k8yois",
+  "img": "systems/eclipsephase/resources/icons/95_effect%20Slash%20damage.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "The strength of beam weapons is based on the principle of converting pure electrical energy into destructive force. Whether it's a Particle Beam Bolter that accelerates molecules or a laser that focuses light so intensely that it can lead to deadly consequences, they all rely on having enough electrical energy available. That's why standard ammunition for these weapons is often available in the form of battery packs in various sizes and strengths. While there are no calibers here, most weapons' connectors are not compatible, leading to a similar dilemma as with conventional kinetic weapons.",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "consumable",
+    "type": "beam",
+    "areaeffect": null,
+    "dv": {
+      "d10": null,
+      "d6": null,
+      "bonus": null
+    },
+    "traits": {
+      "armorPiercing": {
+        "name": "ep2e.item.weapon.table.trait.armorPiercing",
+        "value": false
+      },
+      "blinding": {
+        "name": "ep2e.item.weapon.table.trait.blinding",
+        "value": false
+      },
+      "bioMorphsOnly": {
+        "name": "ep2e.item.weapon.table.trait.bioMorphsOnly",
+        "value": false
+      },
+      "disablesRadio": {
+        "name": "ep2e.item.weapon.table.trait.disablesRadio",
+        "value": false
+      },
+      "dvHalved": {
+        "name": "ep2e.item.weapon.table.trait.dvHalved",
+        "value": false
+      },
+      "dvOnMiss": {
+        "name": "ep2e.item.weapon.table.trait.dvOnMiss",
+        "value": false,
+        "dv": {
+          "d10": null,
+          "d6": null,
+          "bonus": null
+        }
+      },
+      "indirectOrBonus": {
+        "name": "ep2e.item.weapon.table.trait.indirectOrBonus",
+        "value": false,
+        "skillMod": null
+      },
+      "knockdown": {
+        "name": "ep2e.item.weapon.table.trait.knockdown",
+        "value": false,
+        "radius": null
+      },
+      "nanoSwarm": {
+        "name": "ep2e.item.weapon.table.trait.nanoSwarm",
+        "value": false
+      },
+      "noDamage": {
+        "name": "ep2e.item.weapon.table.trait.noDamage",
+        "value": false
+      },
+      "pain": {
+        "name": "ep2e.item.weapon.table.trait.pain",
+        "value": false
+      },
+      "steady": {
+        "name": "ep2e.item.weapon.table.trait.steady",
+        "value": false
+      },
+      "stunBiomorphs": {
+        "name": "ep2e.item.weapon.table.trait.stunBiomorphs",
+        "value": false
+      },
+      "shock": {
+        "name": "ep2e.item.weapon.table.trait.shock",
+        "value": false
+      }
+    },
+    "armorused": null,
+    "quantity": 1
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.8",
+    "coreVersion": "13.346",
+    "createdTime": 1696020755538,
+    "modifiedTime": 1696020873896,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!UMQzuwVto2k8yois"
+}

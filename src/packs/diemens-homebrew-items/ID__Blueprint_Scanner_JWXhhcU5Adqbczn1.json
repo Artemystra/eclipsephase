@@ -1,0 +1,38 @@
+{
+  "name": "ID-/Blueprint Scanner",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "folder": "THgfp471X04iQpq2",
+  "sort": 107813,
+  "flags": {
+    "core": {}
+  },
+  "_id": "JWXhhcU5Adqbczn1",
+  "system": {
+    "additionalSystems": {},
+    "description": "Dient zur Überprüfung der Legitimität von signierten Dokumenten aller Art. Perceive +60 um Fälschungen zu erkennen.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689441531160,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.3ALAKbTdyBWWEOca",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!JWXhhcU5Adqbczn1"
+}

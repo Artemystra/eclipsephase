@@ -1,0 +1,41 @@
+{
+  "name": "Cold Tolerance",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Handle temps as low as –80 C/–112 F.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585518,
+    "modifiedTime": 1689415614461,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.fNeTt9zkzrqFr2Wl",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "dabdHTTI2JFFuvLQ",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 150000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!dabdHTTI2JFFuvLQ"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Anonymizer",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 100000,
+  "flags": {
+    "core": {}
+  },
+  "_id": "Y2sdafoVrDVi2rxT",
+  "system": {
+    "additionalSystems": {},
+    "description": "You have an account with an anonymizing proxy\nservice that masks your Mesh ID",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417264737,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.g8RhWf8iQCxIIWar",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!Y2sdafoVrDVi2rxT"
+}

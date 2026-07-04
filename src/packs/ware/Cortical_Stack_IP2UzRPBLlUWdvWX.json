@@ -1,0 +1,41 @@
+{
+  "name": "Cortical Stack",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/technical-support.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Memory diamond storage unit for ego backups.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "chn"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585519,
+    "modifiedTime": 1689415593812,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.ilMDI6wqX7WwZhaL",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "IP2UzRPBLlUWdvWX",
+  "folder": "HH8yFs1RZM7Wmw3U",
+  "sort": 150000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!IP2UzRPBLlUWdvWX"
+}

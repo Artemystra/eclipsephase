@@ -1,0 +1,38 @@
+{
+  "name": "Private Sensor Feed",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 103125,
+  "flags": {
+    "core": {}
+  },
+  "_id": "zNyLk8Qd1NYMMcKT",
+  "system": {
+    "additionalSystems": {},
+    "description": "Each private sensor feed covers an area\nequivalent to a neighborhood or small habitat. Using it provides a +10 bonus to Perceive Tests when surveiling that area",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417269628,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.BvpUajrPjMFjgeUJ",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!zNyLk8Qd1NYMMcKT"
+}

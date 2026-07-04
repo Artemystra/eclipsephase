@@ -1,0 +1,19 @@
+{
+  "name": "Seeker",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "Zme0113ThA1HtjMv",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.6",
+    "coreVersion": "11.305",
+    "createdTime": 1694770948866,
+    "modifiedTime": 1694802974165,
+    "lastModifiedBy": "bYyHIjslCiShkdKL"
+  },
+  "_key": "!folders!Zme0113ThA1HtjMv"
+}

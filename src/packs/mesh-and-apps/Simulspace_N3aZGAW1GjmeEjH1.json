@@ -1,0 +1,38 @@
+{
+  "name": "Simulspace",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "folder": "Fp0bUlBBAJMzON9V",
+  "sort": 100391,
+  "flags": {
+    "core": {}
+  },
+  "_id": "N3aZGAW1GjmeEjH1",
+  "system": {
+    "additionalSystems": {},
+    "description": "You have access to a virtual game environment, private meeting space, interactive media service, unreal vacation library, or other simulspace environment.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "digital",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": 1689417271710,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.9gWI3FJS3Ypf4nA4",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!N3aZGAW1GjmeEjH1"
+}

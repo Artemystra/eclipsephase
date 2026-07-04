@@ -1,0 +1,41 @@
+{
+  "name": "Mobility System",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Additional specified movement type",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585507,
+    "modifiedTime": 1689415770568,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.51hQR4iRgcoAmyjb",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "AYkBbpL8vXV6Qrj5",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!AYkBbpL8vXV6Qrj5"
+}

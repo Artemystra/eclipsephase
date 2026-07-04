@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Grav Sickness",
+  "type": "traits",
+  "_id": "6qusk4dq5aYDE7uZ",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "This trait is only available to biomorphs. This morph is adapted for low-gravity environments (0.15 or less) and struggles in higher gravity. \n\nYou suffer the effects of high gravity for every 0.2 g over 0.15. On Mars or Mercury (0.38 g), you would suffer the effects of 1 wound; on Venus or Earth (1 g), you suffer the effects of 3 wounds.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": false,
+    "morph": true
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!6qusk4dq5aYDE7uZ"
+}

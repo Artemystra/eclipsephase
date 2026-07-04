@@ -1,0 +1,41 @@
+{
+  "name": "Oxygen Reserve",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Oxygen tank/rebreather with 4 hours of air.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "c"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585506,
+    "modifiedTime": 1689415788108,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.0OPbT5HWplFB7u2k",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "Qln6iQX9aSZnxPnL",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 500000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!Qln6iQX9aSZnxPnL"
+}

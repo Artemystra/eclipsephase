@@ -1,0 +1,41 @@
+{
+  "name": "Hidden Compartment",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Concealed, shielded compartment. +30 Infiltrate to hide items.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585511,
+    "modifiedTime": 1689415720139,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.QJ4L9o2z2RlYChk7",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "F0w1hABLyNe3unVm",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 100049,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!F0w1hABLyNe3unVm"
+}

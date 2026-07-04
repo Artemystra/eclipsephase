@@ -1,0 +1,41 @@
+{
+  "name": "Synthetic Cover",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Faux skin covering for cyberlimb.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "c"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585508,
+    "modifiedTime": 1689415883807,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.9b7fWfK0lDAcDChA",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "AgCXhnksCSP3Ad2e",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 800000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!AgCXhnksCSP3Ad2e"
+}

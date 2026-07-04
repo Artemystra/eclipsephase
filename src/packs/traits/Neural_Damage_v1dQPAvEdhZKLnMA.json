@@ -1,0 +1,37 @@
+{
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Neural Damage",
+  "type": "traits",
+  "_id": "v1dQPAvEdhZKLnMA",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
+  "system": {
+    "additionalSystems": {},
+    "description": "You suffered some type of neurological damage that cannot yet be cured. The affliction is part of your ego and remains even when resleeving. This damage may have been inherited, resulted from a poorly designed morph or implant, or inflicted by a nanovirus during the Fall. Work with your GM to agree on a specific disorder appropriate to your game. The GM may inflict impairment modifiers (usually –10) as appropriate, according to the affliction. Some\npossibilities are mentioned on page 79",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "statChange": null,
+    "traitType": "flaw",
+    "ego": true,
+    "morph": false
+  },
+  "effects": [],
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1.3",
+    "createdTime": 1742324195428,
+    "modifiedTime": 1742324195428,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "exportSource": null
+  },
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!v1dQPAvEdhZKLnMA"
+}

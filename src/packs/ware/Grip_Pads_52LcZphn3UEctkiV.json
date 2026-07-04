@@ -1,0 +1,41 @@
+{
+  "name": "Grip Pads",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "+30 climbing Athletics Tests.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585519,
+    "modifiedTime": 1689415713497,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.ln2fsdb5P2cA8JtT",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "52LcZphn3UEctkiV",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 100196,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!52LcZphn3UEctkiV"
+}

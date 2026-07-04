@@ -1,0 +1,39 @@
+{
+  "name": "Medium Frame Armor",
+  "type": "armor",
+  "img": "systems/eclipsephase/resources/icons/Additional Armor.png",
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "gcI69iI5CuFy2kjx",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": "Item.O4pDoWjy85vlLClx",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "",
+    "active": true,
+    "displayCategory": "armor",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "main",
+    "energy": "8",
+    "kinetic": "6"
+  },
+  "_key": "!items!gcI69iI5CuFy2kjx"
+}

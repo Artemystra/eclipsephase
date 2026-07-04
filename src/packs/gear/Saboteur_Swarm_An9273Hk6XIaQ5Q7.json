@@ -1,0 +1,36 @@
+{
+  "name": "Saboteur Swarm",
+  "type": "gear",
+  "flags": {},
+  "img": "systems/eclipsephase/resources/icons/nano.png",
+  "effects": [],
+  "_id": "An9273Hk6XIaQ5Q7",
+  "_stats": {
+    "coreVersion": "13.346",
+    "systemId": null,
+    "systemVersion": null,
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "ownership": {
+    "default": 0,
+    "4j5oR1x1MdY89nTc": 3
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Sabotages electronics/machinery; 50% chance of wound every WT turns.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "folder": null,
+  "sort": 0,
+  "_key": "!items!An9273Hk6XIaQ5Q7"
+}

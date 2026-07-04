@@ -1,0 +1,41 @@
+{
+  "name": "Bodysculpting",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Customized body mods.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585519,
+    "modifiedTime": 1689415692929,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.mzQ9IwVhxWco8vw3",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "rZvFBZKa55XXiUMJ",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 100000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!rZvFBZKa55XXiUMJ"
+}

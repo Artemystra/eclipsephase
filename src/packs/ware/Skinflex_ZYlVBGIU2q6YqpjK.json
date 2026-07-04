@@ -1,0 +1,41 @@
+{
+  "name": "Skinflex",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Disguise face, skin, hair. +30 to impersonation/disguise Deceive Tests.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "n"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585611,
+    "modifiedTime": 1689415846749,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.yzS8r90V0lTe2M2d",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "ZYlVBGIU2q6YqpjK",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 700000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!ZYlVBGIU2q6YqpjK"
+}

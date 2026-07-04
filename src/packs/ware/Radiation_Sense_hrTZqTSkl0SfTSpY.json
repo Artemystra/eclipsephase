@@ -1,0 +1,41 @@
+{
+  "name": "Radiation Sense",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/sensory.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "additionalSystems": {},
+    "description": "Detect radiation sources.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585611,
+    "modifiedTime": 1689415827256,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.y3SSARRO9QCBaBfT",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "hrTZqTSkl0SfTSpY",
+  "folder": "U5RLZFyur06NzS0b",
+  "sort": 800000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!hrTZqTSkl0SfTSpY"
+}

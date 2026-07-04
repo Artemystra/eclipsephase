@@ -1,0 +1,41 @@
+{
+  "name": "Nanotats",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/social.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "Mesh-controlled nanobot tattoos.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "n"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585513,
+    "modifiedTime": 1689415764538,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.V4Y1wCOYPM7I6M6Z",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "F8thV8sIttWjgd7G",
+  "folder": "TpVWCtLAiWqurwSP",
+  "sort": 300000,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!F8thV8sIttWjgd7G"
+}

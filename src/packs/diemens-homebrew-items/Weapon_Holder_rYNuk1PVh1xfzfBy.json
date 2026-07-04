@@ -1,0 +1,85 @@
+{
+  "name": "Weapon Holder",
+  "type": "gear",
+  "img": "systems/eclipsephase/resources/icons/knife.png",
+  "effects": [
+    {
+      "name": "Weapon Holder",
+      "_id": "Zef3BairnnPSBlDd",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "origin": null,
+      "transfer": true,
+      "statuses": [],
+      "flags": {},
+      "tint": "#ffffff",
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.weaponScoreMod",
+            "value": -2,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!rYNuk1PVh1xfzfBy.Zef3BairnnPSBlDd"
+    }
+  ],
+  "folder": "9EfyVqG4AgtTMSbA",
+  "sort": 106250,
+  "flags": {
+    "core": {}
+  },
+  "_id": "rYNuk1PVh1xfzfBy",
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "A practical additional weapon attachment in the form of a holster or weapon sheath/loop.\n\nAllows the wearer to carry an additional one-handed weapon.",
+    "active": true,
+    "displayCategory": "gear",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "accessory",
+    "quantity": 1
+  },
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "14.356",
+    "createdTime": 1688727118895,
+    "modifiedTime": 1689441650165,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Item.EC2syU1JG0C2lrvB",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!rYNuk1PVh1xfzfBy"
+}

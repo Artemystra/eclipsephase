@@ -1,0 +1,41 @@
+{
+  "name": "Fractal Digits",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "+10 Hardware Tests involving ultra-fine manipulation.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.9.5",
+    "coreVersion": "13.346",
+    "createdTime": 1665426585522,
+    "modifiedTime": 1689415707793,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": "Compendium.eclipsephase.ware.ueQqMZvooESEA1FU",
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "o55oqedqeoXKGJSG",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 101563,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!o55oqedqeoXKGJSG"
+}

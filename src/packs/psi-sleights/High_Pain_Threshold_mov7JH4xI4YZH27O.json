@@ -1,0 +1,86 @@
+{
+  "name": "High Pain Threshold",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/lotus.png",
+  "effects": [
+    {
+      "_id": "0OKMc1hoRoQqprD1",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "High Pain Threshold",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.woundChiMod",
+            "value": -1,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!mov7JH4xI4YZH27O.0OKMc1hoRoQqprD1"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You can block out, ignore, or otherwise isolate pain. Ignore the modifiers from a single wound (this is cumulative with other effects, up to a maximum of three wound effects).",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": null,
+    "psiType": "chi",
+    "actionType": "",
+    "duration": ""
+  },
+  "folder": "7VpBcB8nysG3tqmh",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "14.356",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "mov7JH4xI4YZH27O",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!mov7JH4xI4YZH27O"
+}

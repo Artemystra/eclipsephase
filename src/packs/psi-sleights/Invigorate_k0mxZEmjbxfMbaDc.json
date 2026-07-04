@@ -1,0 +1,39 @@
+{
+  "name": "Invigorate",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/bond.png",
+  "effects": [],
+  "system": {
+    "additionalSystems": {},
+    "description": "You trigger a rush of neurochemical energy in the target. They may expend their next complex action collecting themselves; this counts as a short recharge action, without needing to expend the full 10 minutes. Note that this sleight does not provide an extra recharge, it simply shortens the time frame.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "infection": 4,
+    "psiType": "gamma",
+    "actionType": "complex",
+    "duration": "instant"
+  },
+  "folder": "kp6gA22jUj1D588w",
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "1.1",
+    "coreVersion": "13.346",
+    "createdTime": 1713603316190,
+    "modifiedTime": 1713603750876,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "k0mxZEmjbxfMbaDc",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "bYyHIjslCiShkdKL": 3
+  },
+  "_key": "!items!k0mxZEmjbxfMbaDc"
+}
