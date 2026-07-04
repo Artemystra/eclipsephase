@@ -195,6 +195,10 @@
 .wrapperleft {
   height: 795px;
   grid-area: left;
+  overflow: hidden;
+  background-color: var(--mainBackground);
+  display: flex;
+  flex-direction: column;
 }
 
 .contentleft {
@@ -245,8 +249,9 @@
 }
 
 .contentright {
-  height: 621px;
-  overflow: auto;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .dialogWrapperLeft {
