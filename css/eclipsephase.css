@@ -2737,6 +2737,32 @@ button.epTextlink:hover{
   max-width: 70%;
 }
 
+.pool-entry-wrapper .dropdown {
+  position: relative;
+  z-index: 101;
+}
+
+.pool-entry-wrapper .tooltip {
+  padding-left: 5px;
+}
+
+.poolDroplistBelow {
+  top: -3px;
+  left: 0;
+  right: auto;
+  max-width: max-content;
+  z-index: 100;
+}
+
+.poolDroplistBelow .droplistBackground,
+.poolDroplistBelow .droplistHeader {
+  background-color: var(--accentBackground);
+}
+
+.poolDroplistBelow .droplistHeader {
+  clip-path: none;
+}
+
 .traitsDroplist {
   background-color: var(--pitchBorder); 
   padding: 0 10px; 

@@ -1,93 +1,9 @@
         <div class="tab scrolly main-tab-pc" data-group="primary" data-tab="skills">
-            {{#if (eq actor.type "npc")}}
-                <div class="itemRowHeader" style="margin-bottom: 10px;">
-                        <div class="itemGroup">
-                            <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
-                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
-                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
-                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>
-                        </div>
-                        <div class="itemGroup">
-                            <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
-                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
-                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
-                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>
-                        </div>
-                        <div class="itemGroup">
-                            <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
-                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
-                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/>
-                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>
-                        </div>
-                        <div class="itemGroup">
-                            <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
-                            <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
-                            <input class="input-xs" onFocus="this.select()" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
-                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
-                        </div>
-                </div> 
-            {{/if}}
             <div class="skills grid grid-2col" style="margin-top: 0px;">
                 <div class="contentBox">
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.insightSkills.insightHeadline"}}</h3>
-                        {{#if (eq isGM false)}}
-                        <div class="alignRight flexGrowHalf reveal dropdown">
-                        {{else}}
-                        <div class="alignRight flexGrowHalf reveal">
-                        {{/if}}
-                            {{#if (eq actor.type "character")}}
-                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
-                                <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
-                                    <div role="tooltip">
-                                        <div class="tooltipTopBorder">
-                                            <div class="tooltipTop"></div>
-                                        </div>
-                                        <div class="insight">
-                                            <h3 class="inline">{{localize "ep2e.skills.insightSkills.poolHeadline"}}</h3>
-                                            <ul>
-                                                <li>
-                                                    <label class="resource-value">{{localize "ep2e.skills.insightSkills.poolSubheadline1"}}: </label>{{localize "ep2e.skills.insightSkills.poolCopy1"}}
-                                                </li>
-                                                <p/>
-                                                <li>
-                                                    <label class="resource-value">{{localize "ep2e.skills.insightSkills.poolSubheadline2"}}: </label>{{localize "ep2e.skills.insightSkills.poolCopy2"}}
-                                                </li>
-                                                <p/>
-                                                <li>
-                                                    <label class="resource-value">{{localize "ep2e.skills.insightSkills.poolSubheadline3"}}: </label>{{localize "ep2e.skills.insightSkills.poolCopy3"}}
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="tooltipBottomBorder">
-                                            <div class="tooltipBottom"></div>
-                                        </div>
-                                    </div>
-                                </i>
-                            {{#if isGM}}
-                                <input class="input-xs" onFocus="this.select()" type="number" onFocus="this.select()" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
-                            {{else}}
-                                {{#if (eq actor.system.editAll false)}}
-                                <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.insight.value}}{{actor.system.pools.insight.value}}{{else}}0{{/if}}</label>
-                                {{else}}
-                                <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.insight.value" value="{{actor.system.pools.insight.value}}" placeholder="0"/>
-                                {{/if}}
-                            {{/if}}
-                            <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.insight.totalInsight}}{{actor.system.pools.insight.totalInsight}}{{else}}0{{/if}}</span>{{/if}}
-                            <i style="min-width: 30px; text-align: center;"></i>
-                        </div>
-                        {{#if (eq isGM false)}}
-                            <div id="droplist" class="poolDroplist" style="display: none;">
-                                <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
-                                    <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
-                                </div>
-                                <div class="droplistBackground">
-                                    <label class="droplistElement resource-value poolUse" data-type="1" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline1"}}</label>
-                                    <label class="droplistElement resource-value poolUse" data-type="2" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline2"}}</label>
-                                    <label class="droplistElement resource-value poolUse" data-type="3" data-pool="ins">{{localize "ep2e.skills.insightSkills.poolSubheadline3"}}</label>
-                                </div>
-                            </div>
-                        {{/if}}
+                        <div class="flexGrowHalf"></div>
                     </div>
                     <div class="listBackground edgeAbler">
                         {{#if (ne actor.type "goon")}}
@@ -121,63 +37,7 @@
                 <div class="contentBox">
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.vigorSkills.vigorHeadline"}}</h3>
-                        {{#if (eq isGM false)}}
-                        <div class="alignRight flexGrowHalf reveal dropdown">
-                        {{else}}
-                        <div class="alignRight flexGrowHalf reveal">
-                        {{/if}}
-                            {{#if (eq actor.type "character")}}
-                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
-                            <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
-                                <div role="tooltip">
-                                    <div class="tooltipTopBorder">
-                                        <div class="tooltipTop"></div>
-                                    </div>
-                                    <div class="vigor">
-                                        <h3 class="inline">{{localize "ep2e.skills.vigorSkills.poolHeadline"}}</h3>
-                                        <ul>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.vigorSkills.poolSubheadline1"}}: </label>{{localize "ep2e.skills.vigorSkills.poolCopy1"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.vigorSkills.poolSubheadline2"}}: </label>{{localize "ep2e.skills.vigorSkills.poolCopy2"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.vigorSkills.poolSubheadline3"}}: </label>{{localize "ep2e.skills.vigorSkills.poolCopy3"}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="tooltipBottomBorder">
-                                        <div class="tooltipBottom"></div>
-                                    </div>
-                                </div>
-                            </i>
-                            {{#if isGM}}
-                                <input class="input-xs -small" onFocus="this.select()" type="number"  name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/> 
-                                {{else}}
-                                    {{#if (eq actor.system.editAll false)}}
-                                    <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.vigor.value}}{{actor.system.pools.vigor.value}}{{else}}0{{/if}}</label>
-                                    {{else}}
-                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10; width: 40px" type="number" name="system.pools.vigor.value" value="{{actor.system.pools.vigor.value}}" placeholder="0"/>
-                                    {{/if}}
-                                {{/if}}
-                                <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.vigor.totalVigor}}{{actor.system.pools.vigor.totalVigor}}{{else}}0{{/if}}</span>{{/if}}
-                                <i style="min-width: 30px; text-align: center;"></i>
-                        </div>
-                        {{#if (eq isGM false)}}
-                            <div id="droplist" class="poolDroplist" style="display: none;">
-                                <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
-                                    <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
-                                </div>
-                                <div class="droplistBackground">
-                                <label class="droplistElement resource-value poolUse" data-type="1" data-pool="vig">{{localize "ep2e.skills.vigorSkills.poolSubheadline1"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="2" data-pool="vig">{{localize "ep2e.skills.vigorSkills.poolSubheadline2"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="3" data-pool="vig">{{localize "ep2e.skills.vigorSkills.poolSubheadline3"}}</label>
-                                </div>
-                            </div>
-                        {{/if}}
+                        <div class="flexGrowHalf"></div>
                     </div>
                     <div class="listBackground edgeAbler">
                         {{#if (ne actor.type "goon")}}
@@ -211,73 +71,7 @@
                 <div class="contentBox">
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.moxieSkills.moxieHeadline"}}</h3>
-                        {{#if (eq isGM false)}}
-                        <div class="alignRight flexGrowHalf reveal dropdown">
-                        {{else}}
-                        <div class="alignRight flexGrowHalf reveal">
-                        {{/if}}
-                            {{#if (eq actor.type "character")}}
-                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
-                            <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
-                                <div role="tooltip">
-                                    <div class="tooltipTopBorder">
-                                        <div class="tooltipTop"></div>
-                                    </div>
-                                    <div class="moxie">
-                                        <h3 class="inline">{{localize "ep2e.skills.moxieSkills.poolHeadline"}}</h3>
-                                        <ul>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.moxieSkills.poolSubheadline1"}}: </label>{{localize "ep2e.skills.moxieSkills.poolCopy1"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.moxieSkills.poolSubheadline2"}}: </label>{{localize "ep2e.skills.moxieSkills.poolCopy2"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.moxieSkills.poolSubheadline3"}}: </label>{{localize "ep2e.skills.moxieSkills.poolCopy3"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.moxieSkills.poolSubheadline4"}}: </label>{{localize "ep2e.skills.moxieSkills.poolCopy4"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.moxieSkills.poolSubheadline5"}}: </label>{{localize "ep2e.skills.moxieSkills.poolCopy5"}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="tooltipBottomBorder">
-                                        <div class="tooltipBottom"></div>
-                                    </div>
-                                </div>
-                            </i>
-                            {{#if isGM}}
-                                <input class="input-xs -small" onFocus="this.select()" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
-                                {{else}}
-                                    {{#if (eq actor.system.editAll false)}}
-                                    <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.moxie.value}}{{actor.system.pools.moxie.value}}{{else}}0{{/if}}</label>
-                                    {{else}}
-                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.moxie.value" value="{{actor.system.pools.moxie.value}}" placeholder="0"/>
-                                    {{/if}}
-                                {{/if}}
-                                <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.moxie.totalMoxie}}{{actor.system.pools.moxie.totalMoxie}}{{else}}0{{/if}}</span>{{/if}}
-                                <i style="min-width: 30px; text-align: center;"></i>
-                        </div>
-                        {{#if (eq isGM false)}}
-                        <div id="droplist" class="poolDroplist" style="display: none;">
-                            <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
-                                <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
-                            </div>
-                            <div class="droplistBackground">
-                                <label class="droplistElement resource-value poolUse" data-type="1" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline1"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="2" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline2"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="3" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline3"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="4" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline4"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="5" data-pool="mox">{{localize "ep2e.skills.moxieSkills.poolSubheadline5"}}</label>
-                            </div>
-                        </div>
-                        {{/if}}
+                        <div class="flexGrowHalf"></div>
                     </div>
                     <div class="listBackground edgeAbler">
                         {{#if (ne actor.type "goon")}}
@@ -372,68 +166,7 @@
                 <div class="contentBox noMargin">
                     <div class="flexrow subheader">
                         <h3 class="subheader">{{localize "ep2e.skills.flex.poolHeadline"}}</h3>
-                        {{#if (eq isGM false)}}
-                        <div class="alignRight flexGrowHalf reveal dropdown">
-                        {{else}}
-                        <div class="alignRight flexGrowHalf reveal">
-                        {{/if}}
-                            <label class="resource-label labelWidth-medium" style="position: relative; z-index: 10;">{{localize "ep2e.skills.pool.label"}} </label>
-                            <i class="far fa-question-circle icon-hidden info tooltip awesomeIcon">
-                                <div role="tooltip">
-                                    <div class="tooltipTopBorder">
-                                        <div class="tooltipTop"></div>
-                                    </div>
-                                    <div class="flex">
-                                        <h3 class="inline">{{localize "ep2e.skills.flex.flexHeadline"}}</h3>
-                                        <ul>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.flex.poolSubheadline1"}}</label>: {{localize "ep2e.skills.flex.poolCopy1"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.flex.poolSubheadline2"}}</label>: {{localize "ep2e.skills.flex.poolCopy2"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.flex.poolSubheadline3"}}</label>: {{localize "ep2e.skills.flex.poolCopy3"}}
-                                            </li>
-                                            <p/>
-                                            <li>
-                                                <label class="resource-value">{{localize "ep2e.skills.flex.poolSubheadline4"}}</label>: {{localize "ep2e.skills.flex.poolCopy4"}}
-                                            </li>
-                                            <p/>
-                                        </ul>
-                                    </div>
-                                    <div class="tooltipBottomBorder">
-                                        <div class="tooltipBottom"></div>
-                                    </div>
-                                </div>
-                            </i>
-                            {{#if isGM}}
-                                <input class="input-xs -small" onFocus="this.select()" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
-                                {{else}}
-                                    {{#if (eq actor.system.editAll false)}}
-                                    <label class="resource-label alignCenter" style="min-width: 25px; position: relative; z-index: 10;">{{#if actor.system.pools.flex.value}}{{actor.system.pools.flex.value}}{{else}}0{{/if}}</label>
-                                    {{else}}
-                                    <input class="input-xs" onFocus="this.select()" style="position: relative; z-index: 10;" type="number" name="system.pools.flex.value" value="{{actor.system.pools.flex.value}}" placeholder="0"/>
-                                    {{/if}}
-                                {{/if}}
-                                <span class="resource-value" style="position: relative; z-index: 10; width: 40px">/ {{#if actor.system.pools.flex.totalFlex}}{{actor.system.pools.flex.totalFlex}}{{else}}0{{/if}}</span>
-                                <i style="min-width: 30px; text-align: center;"></i>
-                        </div>
-                        {{#if (eq isGM false)}}
-                        <div id="droplist" class="poolDroplist" style="display: none;">
-                            <div class="droplistHeader closeButton reveal" style="display: flex; align-items: flex-start; position: relative; min-height: 31px;">
-                                <i style="min-width: 30px; text-align: right;" class="fa-solid fa-xmark awesomeIcon"></i>
-                            </div>
-                            <div class="droplistBackground">
-                                <label class="droplistElement resource-value poolUse" data-type="1" data-pool="flex">{{localize "ep2e.skills.flex.poolSubheadline1"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="2" data-pool="flex">{{localize "ep2e.skills.flex.poolSubheadline2"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="3" data-pool="flex">{{localize "ep2e.skills.flex.poolSubheadline3"}}</label>
-                                <label class="droplistElement resource-value poolUse" data-type="4" data-pool="flex">{{localize "ep2e.skills.flex.poolSubheadline4"}}</label>
-                            </div>
-                        </div>
-                        {{/if}}
+                        <div class="flexGrowHalf"></div>
                     </div>
                     <div class="listBackground" style="padding: 5px 0 5px 0; min-height: 137px;">
                         {{#if (eq actor.system.rest.restValue null)}}
