@@ -729,6 +729,72 @@ export async function damageValueCalc (object, dvPath, traits, calcType){
   return {dv};
 }
 
+/**
+ * Moves the native ApplicationV2 window header controls (button.header-control)
+ * into a custom container inside the given parent element.
+ * Safe to call on every render — no-op if controls are already present.
+ * @param {ApplicationV2} sheet - The sheet instance
+ * @param {HTMLElement} parent - The element to append controls into
+ */
+export function addWindowControls(sheet, parent) {
+  if (!parent || parent.querySelector(".ep-window-controls")) return;
+
+  const controls = document.createElement("div");
+  controls.classList.add("ep-window-controls");
+
+  // Clone native header controls — originals stay in .window-header (persist across re-renders),
+  // clones get data-action attributes so ApplicationV2's root-level event delegation handles clicks.
+  const nativeButtons = sheet.element?.querySelectorAll('.window-header button.header-control');
+  if (nativeButtons?.length) {
+    nativeButtons.forEach(btn => controls.appendChild(btn.cloneNode(true)));
+  } else {
+    // Fallback: manual close button
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.classList.add("ep-close-btn");
+    closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    closeBtn.addEventListener("click", () => sheet.close());
+    controls.appendChild(closeBtn);
+  }
+
+  parent.appendChild(controls);
+}
+
+/**
+ * Binds mouse-drag on the given handle element to move the sheet window,
+ * replicating the native window-header drag via sheet.setPosition().
+ * Only wired once — subsequent calls are no-ops via a data attribute guard.
+ * @param {ApplicationV2} sheet - The sheet instance
+ * @param {HTMLElement} handle - The element to use as drag handle
+ */
+export function addDragSupport(sheet, handle) {
+  if (!handle || handle.dataset.epDragBound) return;
+  handle.dataset.epDragBound = "1";
+
+  handle.addEventListener("mousedown", (event) => {
+    if (event.button !== 0) return;
+    if (event.target.closest('[data-action], button, input, select')) return;
+
+    event.preventDefault();
+
+    const pos = sheet.position;
+    const startX = event.clientX - pos.left;
+    const startY = event.clientY - pos.top;
+
+    function onMove(ev) {
+      sheet.setPosition({ left: ev.clientX - startX, top: ev.clientY - startY });
+    }
+
+    function onUp() {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    }
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  });
+}
+
 export async function transferItemBetweenActors({
   sourceActor,
   targetActor,

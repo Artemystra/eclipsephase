@@ -1202,6 +1202,7 @@ a:hover,
 
 .sheet nav.primary-tabs,
 .sheet nav.secondary-tabs {
+  position: relative;
   height: 50px;
   line-height: 50px;
   flex: 0 0 43px;
@@ -1416,6 +1417,119 @@ optgroup .Default .Roll .Mode,
 
 .window-app .window-header {
   background: #1d1d1d;
+}
+
+.window-app.eclipsephase.sheet .window-header {
+  display: none !important;
+}
+
+/* Remove the 1rem padding FoundryVTT V13 injects into .window-content */
+.application.eclipsephase.sheet .window-content {
+  padding: 0 !important;
+}
+
+/* Custom title bar spanning full sheet width */
+.ep-sheet-titlebar {
+  display: flex;
+  align-items: flex-end;
+  flex-shrink: 0;
+  height: 52px;
+  position: relative;
+  z-index: 1;
+  cursor: grab;
+  background-color: var(--pitchBorder);
+}
+
+.ep-sheet-titlebar input {
+  cursor: auto;
+}
+
+.ep-titlebar-logo {
+  clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%);
+  width: 120px;
+  padding-left: 0.5em;
+  height: 52px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.ep-titlebar-name {
+  background-color: var(--highlightBackground);
+  padding: 10px 0 0 22px;
+  box-shadow: 0 5px var(--pitchBorder);
+  height: 40px;
+  flex-grow: 1;
+}
+
+.ep-titlebar-name input[name="name"] {
+  font-size: 17px;
+  text-shadow: 0 0 5px #161616;
+  width: auto;
+}
+
+/* Controls injected into the title bar as a flex sibling */
+.ep-sheet-titlebar .ep-window-controls {
+  position: static;
+  transform: none;
+  align-self: flex-end;
+  height: 40px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: default;
+}
+
+/* Native header-control buttons inside the titlebar */
+.ep-sheet-titlebar .ep-window-controls button.header-control {
+  --button-text-color: var(--mainText, #ccc);
+  --button-background-color: transparent;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.ep-sheet-titlebar .ep-window-controls button.header-control:hover {
+  opacity: 1;
+}
+
+/* Controls inside item header (absolute positioning) */
+.itemHeader .ep-window-controls {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+  cursor: default;
+}
+
+.itemHeader .ep-window-controls button.header-control {
+  --button-text-color: var(--mainText, #ccc);
+  --button-background-color: transparent;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.itemHeader .ep-window-controls button.header-control:hover {
+  opacity: 1;
+}
+
+/* Fallback manual close button */
+.ep-close-btn {
+  background: none;
+  border: none;
+  color: var(--mainText, #ccc);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 8px;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+
+.ep-close-btn:hover {
+  opacity: 1;
 }
 
 .filepicker .display-modes a {
@@ -1884,6 +1998,7 @@ h3.subheaderBlank {
 }
 
 .itemHeader {
+  position: relative;
   max-height: fit-content;
 }
 

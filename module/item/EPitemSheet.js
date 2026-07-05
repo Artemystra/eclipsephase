@@ -1,4 +1,4 @@
-import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo } from "../common/general-sheet-functions.js";
+import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport } from "../common/general-sheet-functions.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -176,6 +176,13 @@ async _onRender(context, options) {
   const html = this.element;
   const item = this.document;
   if (!html) return;
+
+  const windowHeader = html.querySelector('.window-header');
+  if (windowHeader) windowHeader.style.display = 'none';
+
+  const itemHeader = html.querySelector(".sheet-header.itemHeader");
+  addWindowControls(this, itemHeader);
+  addDragSupport(this, itemHeader);
 
   if(item.type !== "knowSkill" && item.type !== "specialSkill"){
     // Fallback logic for sheets that do not render every static tab

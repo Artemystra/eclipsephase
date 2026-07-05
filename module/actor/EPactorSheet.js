@@ -764,6 +764,14 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     SHEET.registerEffectHandlers(html, this.actor);
     SHEET.registerCommonHandlers(html, this.actor);
 
+    // Hide native window header and wire custom title bar instead
+    const windowHeader = html.querySelector('.window-header');
+    if (windowHeader) windowHeader.style.display = 'none';
+
+    const titlebar = html.querySelector('.ep-sheet-titlebar');
+    SHEET.addWindowControls(this, titlebar);
+    SHEET.addDragSupport(this, titlebar);
+
     if (!this.isEditable) return;
 
     this._activItemListeners(html, actor, brewStatus);
