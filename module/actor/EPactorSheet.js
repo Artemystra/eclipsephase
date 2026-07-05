@@ -216,9 +216,15 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       return { width: 800, height: 366 };
     }
 
-    return (!game.user.isGM && !actor.isOwner)
-      ? { width: 800, height: 366 }
-      : { width: 1058, height: 600 };
+    if (!game.user.isGM && !actor.isOwner) {
+      return { width: 800, height: 366 };
+    }
+
+    if (actor.type === 'npc') {
+      return { width: 1058, height: 675 };
+    }
+
+    return { width: 1058, height: 630 };
   }
 
   //Registering HTML-editors to actor sheets

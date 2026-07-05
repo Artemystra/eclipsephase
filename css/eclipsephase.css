@@ -201,6 +201,11 @@
   flex-direction: column;
 }
 
+.wrapperleft.npcVariant1,
+.wrapperleft.goonVariant1 {
+  height: auto;
+}
+
 .contentleft {
   height: 310px;
   overflow: auto;
@@ -213,10 +218,63 @@
   grid-area: center;
 }
 
+.wrappercenter.npcVariant1 {
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.wrappercenter.goonVariant1 {
+  height: 555px;
+  display: flex;
+  flex-direction: column;
+}
+
 .contentcenter {
   height: 685px;
   overflow: hidden;
   background-color: var(--mainBackground);
+}
+
+.ep-health-bar {
+  flex-shrink: 0;
+}
+
+.contentcenter.npcVariant2,
+.contentcenter.goonVariant2 {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  overflow: hidden;
+}
+
+.contentcenter.npcVariant2 .primary-body,
+.contentcenter.goonVariant2 .primary-body {
+  height: 100%;
+}
+
+.contentcenter.npcVariant2 .tab,
+.contentcenter.goonVariant2 .tab {
+  min-height: unset;
+  max-height: unset;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.contentcenter.npcVariant2 [data-tab="ego"].active,
+.contentcenter.goonVariant2 [data-tab="ego"].active {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.contentcenter.npcVariant2 [data-tab="ego"] .npc-editor,
+.contentcenter.goonVariant2 [data-tab="ego"] .goon-editor {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .scrolly {
@@ -234,7 +292,7 @@
 }
 
 .main-tab-npc {
-  max-height: 435px;
+  max-height: 510px;
 }
 
 .main-tab-pc {
@@ -1346,7 +1404,8 @@ a:hover,
 }
 
 .sheet prose-mirror#npcBio{
-  height: 312px;
+  flex: 1;
+  min-height: 0;
 }
 
 .sheet .morph .editor-content{
@@ -2229,8 +2288,20 @@ h3.subheaderBlank {
   height: 95%;
 }
 
-.npc-editor .editor {
-  max-height: 312px;
+.npc-editor .editor,
+.goon-editor .editor {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.npc-editor .editor-content,
+.goon-editor .editor-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 

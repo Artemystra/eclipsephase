@@ -271,7 +271,7 @@
         </ol>
     </div>
     {{/if}}
-    <div class="npc-editor">
+    <div class="{{#if (eq actor.type 'npc')}}npc-editor{{else}}goon-editor{{/if}}">
         {{#if editable}}
             <prose-mirror
                 id="npcBio"

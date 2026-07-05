@@ -13,6 +13,9 @@
     {{#if (eq actor.type 'character')}}
         <div class="grid grid-9col">
             <div class="wrapperleft">
+    {{else if (eq actor.type 'goon')}}
+        <div class="grid grid-9col">
+            <div class="wrapperleft goonVariant1">
     {{else}}
         <div class="grid grid-9col">
             <div class="wrapperleft npcVariant1">
@@ -26,6 +29,8 @@
         </div>
         {{#if (eq actor.type 'character')}}
             <div class="wrappercenter">
+        {{else if (eq actor.type 'goon')}}
+            <div class="wrappercenter goonVariant1">
         {{else}}
             <div class="wrappercenter npcVariant1">
         {{/if}}
@@ -72,6 +77,8 @@
             {{!-- Center Body --}}
             {{#if (eq actor.type 'character')}}
                 <div class="contentcenter">
+            {{else if (eq actor.type 'goon')}}
+                <div class="contentcenter goonVariant2">
             {{else}}
                 <div class="contentcenter npcVariant2">
             {{/if}}
