@@ -352,10 +352,10 @@
 }
 
 .eclipsephase .profile-img {
-  min-width: 100%;
-  min-height: 339px;
-  border: solid var(--pitchBorder) 5px;
-  margin-top: -3px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
 }
 
 .eclipsephase.reset-rest-all-dialog .form-group-stacked {
@@ -2209,9 +2209,17 @@ h3.subheaderBlank {
   overflow-x: hidden;
 }
 
+.profile-goon-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+}
+
 .limited-editor {
   max-height: 263px;
   overflow-x: hidden;
+  overflow-y: auto;
   padding: 0 10px;
 }
 

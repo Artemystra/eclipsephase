@@ -1,13 +1,16 @@
-<form class="{{cssClass}} flexcol" autocomplete="off" style="margin-top: 30px;">
-  
-  {{!-- New Limited Sheet --}}
-  <div class="centerBackground" style="position: absolute; clip-path: polygon(0 25%, 85% 25%, 100% 100%, 0% 100%); width: 120px; padding-left: 0.5em; top: 18px; z-index: 1; height: 68px;">
-    <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+  {{!-- Custom title bar: replaces hidden native window-header --}}
+  <div class="ep-sheet-titlebar">
+      <div class="ep-titlebar-logo centerBackground">
+          <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+      </div>
+      <div class="ep-titlebar-name centerBackground">
+          <span style="font-size: 17px; text-shadow: 0 0 5px #161616;">About {{actor.name}}</span>
+      </div>
   </div>
-  <div class="centerBackground" style="position: absolute; top: 39px; background-color: var(--highlightBackground); width: 98%; border-bottom: 5px solid var(--pitchBorder); height: 51px;">
-    <h3 style="flex-grow: 10; border: none; text-align: center;">About {{actor.name}}</h3>
-  </div>
-  <div class="grid grid-3col-limited1" style="margin-bottom: 0; gap: 0; margin-top: 25px;">
+
+  <div class="grid grid-3col-limited1" style="margin-bottom: 0; gap: 0;">
     <div style="grid-area: left;">
       <div>
           <img class="profile-goon-img" style="margin-top: 18px;" src="{{actor.img}}" data-action="editImage" data-field="img" title="{{actor.name}}"/>
@@ -15,11 +18,7 @@
     </div>
     <div style="grid-area: center;">
       <div style="margin-top: 17px;">
-        <div class="flexrow">
-          <div>
-          </div>
-        </div>
-          <div class="limited-editor" style="margin-top: 30px; max-height: 233px;">
+          <div class="limited-editor">
             {{{actor.system.biography}}}
           </div>
       </div>
@@ -43,7 +42,7 @@
                     owner=owner
                     editable=this.options.editable
                   }}
-              </div>    
+              </div>
             </div>
           </div>
           <div style="grid-area: center;">
