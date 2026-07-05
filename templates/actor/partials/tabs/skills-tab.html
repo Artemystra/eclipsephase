@@ -200,43 +200,45 @@
                     </div>
                     {{/if}}
                 </div>
-                <div class="contentBox noMargin">
-                    {{#if actor.knowSkill}}
-                    <div class="flexrow subheader">
-                        <h3 class="subheader">{{localize "ep2e.skills.knowSkills.knowHeadline"}}</h3>
-                        <div class="alignRight flexGrowHalf">
-                            <div><a class="item-control item-create" title="Create item" data-type="knowSkill"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.addSkill"}}</a></div>
+                {{/if}}
+            </div>
+            {{#if (eq actor.type "character")}}
+            <div class="contentBox noMargin">
+                {{#if actor.knowSkill}}
+                <div class="flexrow subheader">
+                    <h3 class="subheader">{{localize "ep2e.skills.knowSkills.knowHeadline"}}</h3>
+                    <div class="alignRight flexGrowHalf">
+                        <div><a class="item-control item-create" title="Create item" data-type="knowSkill"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.addSkill"}}</a></div>
+                    </div>
+                </div>
+                <div class="listBackground" style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; position: relative; z-index: 2;">
+                    {{#each actor.knowSkill as |item id|}}
+                        <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+                            <span class="tooltipText">{{item.name}}</span>
+                            <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
+                            <label class="resource-label item-control item-edit hoverable truncate" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
+                            <input class="input-xs sheet-inline-edit" data-field="system.value" onFocus="this.select()" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
+                            {{#if item.system.aptitude}}
+                                <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
+                            {{#if item.system.specname}}
+                                <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large">{{item.system.specname}}</label>
+                            {{else}}
+                                <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
+                            {{/if}}
+                                <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-pooltype="Insight" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
+                            {{else}}
+                                <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
+                                <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">{{localize "ep2e.skills.chooseAptitude"}}</u></label>
+                                <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
+                            {{/if}}
                         </div>
-                    </div>
-                    <div class="listBackground" style="position: relative; z-index: 2;">
-                        {{#each actor.knowSkill as |item id|}}
-                            <div class="item flexrow flex-group-center reveal wantToKnowMore skill" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-                                <span class="tooltipText">{{item.name}}</span>
-                                <a class="item-control item-delete " style="max-width: 24px;" title="Delete Item"><i class="far fa-times-circle awesomeIcon"></i></a>
-                                <label class="resource-label item-control item-edit hoverable truncate" style="min-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</label>
-                                <input class="input-xs sheet-inline-edit" data-field="system.value" onFocus="this.select()" type="number" name="item.system.value" value="{{item.system.value}}" placeholder="0"/>
-                                {{#if item.system.aptitude}}
-                                    <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
-                                {{#if item.system.specname}}
-                                    <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large">{{item.system.specname}}</label>
-                                {{else}}
-                                    <label class="resource-label item-control item-edit hoverable truncate input-largeSpec item-standard-margin-both-large" style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</label>
-                                {{/if}}
-                                    <img src="icons/svg/d10-grey.svg" class="info input-small roll-label icon-dice task-check icon-hidden" data-type="skill" data-specname="{{item.system.specname}}" data-pooltype="Insight" data-key="{{item.name}}" data-name="{{item.name}}" data-rollvalue="{{item.roll}}"/>
-                                {{else}}
-                                    <label class="resource-value input-xs item-control item-edit hoverable">{{item.roll}}</label>
-                                    <label class="input-large item-control item-edit hoverable item-standard-margin-both-large alignLeft"><u style="color: var(--negative);">{{localize "ep2e.skills.chooseAptitude"}}</u></label>
-                                    <label class="roll-label"><img src="icons/svg/d10-grey.svg" class="icon-hidden"/></label>
-                                {{/if}}
-                            </div>
-                        {{/each}}
-                    </div>
-                    {{else}}
-                    <div class="separator">
-                        <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.knowSkills.addfirst"}}</a>
-                    </div>
-                    {{/if}}
+                    {{/each}}
+                </div>
+                {{else}}
+                <div class="separator">
+                    <a class="item-control item-create" title="Create item" data-type="knowSkill" style="max-height: 24px;"><i class="fas fa-plus awesomeIcon"></i> {{localize "ep2e.skills.knowSkills.addfirst"}}</a>
                 </div>
                 {{/if}}
             </div>
+            {{/if}}
         </div>
