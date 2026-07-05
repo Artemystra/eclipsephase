@@ -1,9 +1,10 @@
 <div class="ep-health-bar" style="background-color: var(--mainBackground); padding: 10px 0 10px 0;">
-    <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0; padding: 2px 0;">
+    <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0;">
         {{#each actor.system.aptitudes as |aptitude key|}}
+
         <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
             <div class="flexrow flex-group-center input-small">
-                <span class="toggle resource-value alignCenter" style="min-width: 26px; font-size: 11px;">{{localize aptitude.label}}</span>
+                <span class="toggle resource-value alignCenter" style="font-size: 11px;">{{localize aptitude.longLabel}}</span>
                 <label class="toggle roll-label task-check noShow" data-type="skill" data-name="{{localize aptitude.name}}" data-key="system.aptitudes.{{key}}.value" data-apttype="{{key}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
             </div>
             <input class="input-small" type="number" onFocus="this.select()" name="system.aptitudes.{{key}}.value" value="{{aptitude.value}}" data-dtype="Number" placeholder="0"/>
@@ -95,7 +96,7 @@
                     <div class="tooltipBottom"></div>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; position: inherit; z-index: 130;">
+            <div class="ep-health-visual" style="display: flex; align-items: center; position: inherit; z-index: 130;">
                 <i class="fa-solid fa-heart-pulse awesomeIcon" style="font-size: 18px;"></i>
                 <div class="healthBarContainer" id="physicalHealthBarContainer">
                     <div id="physicalHealthBar"></div>
@@ -173,7 +174,7 @@
                     <div class="tooltipBottom"></div>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; position: inherit; z-index: 130;">
+            <div class="ep-health-visual" style="display: flex; align-items: center; position: inherit; z-index: 130;">
                 <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
                 <div class="healthBarContainer" id="mentalStressBarContainer">
                     <div id="mentalStressBar"></div>
@@ -194,14 +195,12 @@
         <!-- Rez Points -->
         <div class="tooltip"  style="z-index: 20;">
             <div role="rezOverlay">
-                <div class="healthtipOverTheTopBorder">
-                    <div class="healthtipOverTheTop">
+                <div class="rez-tab-border">
+                    <div class="rez-tab">
                     </div>
                 </div>
-                <div class="healthtipTopBorder">
-                </div>
                 <!--Here goes the content-->
-                <div class="mentalHealth">
+                <div class="rez-body">
                     <h3 class="healthSubheadline" style="min-width: 100%;">{{localize "ep2e.healthbar.tooltip.rezPoints"}}</h3>
                     <div  class="healthOverlayRow">
                         <div class="healthOverlayItem">
@@ -235,8 +234,8 @@
                         <button type="button" class="epStandard" id="spendRez" style="max-width: 50%;">{{localize "ep2e.healthbar.tooltip.spendRez.label"}}</button>
                     </div>
                 </div>
-                <div class="healthtipBottomBorder">
-                    <div class="tooltipBottom"></div>
+                <div class="rez-bottom-border">
+                    <div class="rez-bottom"></div>
                 </div>
             </div>
             <div class="wantToKnowMore" style="display: flex; align-items: center; justify-content: center; max-width: none; z-index: 130;">
@@ -317,7 +316,7 @@
                     <div class="tooltipBottom"></div>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; position: inherit; z-index: 130;">
+            <div class="ep-health-visual" style="display: flex; align-items: center; position: inherit; z-index: 130;">
                 <i class="fa-solid fa-brain awesomeIcon" style="font-size: 18px;"></i>
                 <div class="healthBarContainer" id="mentalStressBarContainer">
                     <div id="mentalStressBar"></div>
@@ -335,7 +334,7 @@
             <span class="resource-label" style="margin-left: 5px;">{{actor.system.initiative.display}} + </span>
             <input class="input-xs" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.mods.manualIniMod" value="{{actor.system.mods.manualIniMod}}" data-dtype="Number" placeholder="0"/>
         </div>
-        <div class="wantToKnowMore">
+        <div class="wantToKnowMore" style="justify-content: center; min-width: 100%;">
             <i class="fa-solid fa-face-scream awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px; left: -20px;">{{localize "ep2e.healthbar.tooltip.stressTest"}}</span>
             <input class="input-medium" style="text-align: center" onFocus="this.select()" type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
@@ -347,13 +346,13 @@
             <span class="resource-label" style="margin-left: 5px;">{{actor.system.initiative.display}} + </span>
             <input class="input-xs" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.mods.manualIniMod" value="{{actor.system.mods.manualIniMod}}" data-dtype="Number" placeholder="0"/>
         </div>
-        <div class="wantToKnowMore">
+        <div class="wantToKnowMore" style="justify-content: center; min-width: 100%;">
             <i class="fa-solid fa-land-mine-on awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px;">{{localize "ep2e.healthbar.tooltip.threat"}}</span>
             <input class="input-xs standard-height" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.threatLevel.current" value="{{actor.system.threatLevel.current}}" placeholder="0"/>/
-            <input class="input-xs standard-height" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.threatLevel.total" value="{{actor.system.threatLevel.total}}" placeholder="0"/>  
+            <input class="input-xs standard-height" style="text-align: center" onFocus="this.select()" data-dtype="Number" type="number" name="system.threatLevel.total" value="{{actor.system.threatLevel.total}}" placeholder="0"/>
         </div>
-        <div class="wantToKnowMore">
+        <div class="wantToKnowMore" style="justify-content: center; min-width: 100%;">
             <i class="fa-solid fa-face-scream awesomeIcon" style="font-size: 18px;"></i>
             <span class="tooltipText resource-label" style="font-size: 13px; left: -20px;">{{localize "ep2e.healthbar.tooltip.stressTest"}}</span>
             <input class="input-medium" style="text-align: center" onFocus="this.select()" type="text" name="system.stresstest" value="{{actor.system.stresstest}}" placeholder="1d6"/>
@@ -362,7 +361,7 @@
     </div>
     {{!-- Pools row: display-only for characters (editing stays in skills tab), editable for NPCs --}}
     {{#if (ne actor.type "goon")}}
-    <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0; padding: 2px 0;">
+    <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0;">
         {{!-- Insight --}}
         <div class="pool-entry-wrapper" style="position: relative;">
             {{#if (eq isGM false)}}

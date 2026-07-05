@@ -240,6 +240,55 @@
   flex-shrink: 0;
 }
 
+.ep-health-bar .listBackground {
+  padding: 4px 0.75em;
+  min-height: 30px;
+  align-items: center;
+}
+
+.ep-health-bar .listBackground > div {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ep-health-bar .listBackground:first-child > div {
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.ep-health-bar .listBackground:first-child > div > div.input-small {
+  flex: 1;
+  max-width: unset !important;
+  min-width: unset !important;
+}
+
+.ep-health-bar .listBackground:first-child > div > input.input-small {
+  flex: 0 0 28px;
+  min-width: 28px !important;
+  max-width: 28px !important;
+}
+
+.listBackground.health .tooltip {
+  padding: 0 10px;
+}
+
+.listBackground.health .tooltip:has([role=rezOverlay]) {
+  justify-content: center;
+}
+
+.ep-health-visual {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.ep-health-visual .healthBarContainer {
+  flex: 1;
+  min-width: 0;
+  padding: 0 2px;
+}
+
 .contentcenter.npcVariant2,
 .contentcenter.goonVariant2 {
   flex: 1;
@@ -2053,8 +2102,8 @@ h3.subheaderBlank {
 }
 
 .listBackground.health{
-  padding: 5px 1.8em;
-  column-gap: 35px;
+  padding: 4px 0.75em;
+  column-gap: 0;
 }
 
 .itemHeader {
@@ -2524,7 +2573,8 @@ button.epTextlink:hover{
   text-align: left;
   position: absolute;
   top: -13px;
-  left: -23px;
+  left: 0;
+  right: 0;
   z-index: 100;
   color: var(--mainText);
 }
@@ -2532,20 +2582,58 @@ button.epTextlink:hover{
 .tooltip:hover div[role=rezOverlay] {
   opacity: 1;
   font-family: 'Cousine', monospace!important;
-  max-width: 320px;
-  min-width: 320px;
+  width: 320px;
   display: block;
   text-align: left;
   position: absolute;
   top: -13px;
+  right: 0;
   left: auto;
-  right: -23px;
   z-index: 100;
   color: var(--mainText);
 }
 
-.tooltip:hover div[role=rezOverlay] .healthtipOverTheTopBorder {
+/* Rez overlay tab — sits at top-right, right-aligned via margin-left: auto */
+.rez-tab-border {
+  width: 160px;
   margin-left: auto;
+  margin-bottom: -4px;
+  padding: 0.25em 0.25em 0 0.25em;
+  background-color: var(--pitchBorder);
+  position: relative;
+  z-index: 11;
+}
+
+.rez-tab {
+  min-height: 35px;
+  background-color: var(--focusBackground);
+  padding: 10px 20px;
+}
+
+/* Rez overlay body — framed with left/right dark borders */
+/* margin-top: 4px counteracts the -4px margin-bottom on rez-tab-border */
+.rez-body {
+  margin-top: 4px;
+  padding: 5px 1.5em 2em 1.5em;
+  background-color: var(--focusBackground);
+  border-left: solid 0.25em var(--pitchBorder);
+  border-right: solid 0.25em var(--pitchBorder);
+}
+
+/* Rez overlay bottom — same clipped shape as health overlays */
+.rez-bottom-border {
+  padding: 0 0.25em 0.25em 0.25em;
+  margin-top: -15px;
+  clip-path: polygon(0 0, 100% 0, 100% 30%, 95% 70%, 63% 70%, 60% 100%, 5% 100%, 0 46%);
+  background-color: var(--pitchBorder);
+  position: relative;
+  z-index: 10;
+}
+
+.rez-bottom {
+  clip-path: polygon(0 0, 100% 0, 100% 30%, 95% 70%, 63% 70%, 60% 100%, 5% 100%, 0 46%);
+  min-height: 35px;
+  background-color: var(--focusBackground);
 }
 
 .tooltip:hover div[role=tooltipNegative] {
@@ -2816,13 +2904,17 @@ button.epTextlink:hover{
   max-width: 70%;
 }
 
+.pool-entry-wrapper {
+  padding: 0 10px;
+}
+
 .pool-entry-wrapper .dropdown {
   position: relative;
   z-index: 101;
 }
 
 .pool-entry-wrapper .tooltip {
-  padding-left: 5px;
+  padding-left: 0;
 }
 
 .poolDroplistBelow {

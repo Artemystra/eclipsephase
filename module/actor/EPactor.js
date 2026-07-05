@@ -138,6 +138,7 @@ export default class EPactor extends Actor {
     for (let [key, aptitude] of Object.entries(actorModel.aptitudes)) {
       aptitude.calc = aptitude.value * 3 + eval(aptitude.mod) + (aptitude.chiMod ? (eval(aptitude.chiMod)*chiMultiplier) : 0);
       aptitude.roll = aptitude.calc;
+      aptitude.longLabel = "ep2e.actorSheet.aptitudes." + key;
     }
 
     // Insight Skills
