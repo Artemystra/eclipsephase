@@ -238,6 +238,7 @@
 }
 
 .main-tab-pc {
+  min-height: 680px;
   max-height: 680px;
 }
 
@@ -2293,7 +2294,7 @@ img {
 }
 
 .logo-img {
-  margin: 9px;
+  margin: 0px 9px;
   width: 75px;
   height: auto!important;
   display: block;
@@ -2435,8 +2436,7 @@ button.epTextlink:hover{
   color: var(--mainText);
 }
 
-.tooltip:hover div[role=healthOverlay],
-.tooltip:hover div[role=rezOverlay] {
+.tooltip:hover div[role=healthOverlay] {
   opacity: 1;
   font-family: 'Cousine', monospace!important;
   max-width: 320px;
@@ -2448,6 +2448,25 @@ button.epTextlink:hover{
   left: -23px;
   z-index: 100;
   color: var(--mainText);
+}
+
+.tooltip:hover div[role=rezOverlay] {
+  opacity: 1;
+  font-family: 'Cousine', monospace!important;
+  max-width: 320px;
+  min-width: 320px;
+  display: block;
+  text-align: left;
+  position: absolute;
+  top: -13px;
+  left: auto;
+  right: -23px;
+  z-index: 100;
+  color: var(--mainText);
+}
+
+.tooltip:hover div[role=rezOverlay] .healthtipOverTheTopBorder {
+  margin-left: auto;
 }
 
 .tooltip:hover div[role=tooltipNegative] {
