@@ -269,6 +269,9 @@
         "rezTotal": "Total",
         "rezCurrent": "Current",
         "rezSpent": "Spent"
+      },
+      "rest": {
+        "label": "Rest"
       }
     },
     "ego": {

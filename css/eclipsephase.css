@@ -2917,6 +2917,25 @@ button.epTextlink:hover{
   padding-left: 0;
 }
 
+.rest-reset-btn {
+  background: var(--pitchBorder);
+  border: 1px solid var(--highlightBackground);
+  color: var(--mainText);
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.rest-reset-btn:hover {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
 .poolDroplistBelow {
   top: -3px;
   left: 0;

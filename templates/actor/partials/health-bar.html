@@ -11,7 +11,7 @@
         </div>
         {{/each}}
     </div>
-    <div class="flexrow flex-group-center listBackground health grid grid-4col" style="background-color: var(--pitchBorder); margin: 0;">
+    <div class="flexrow flex-group-center listBackground health grid grid-4col" style="background-color: var(--highlightBackground); margin: 0;">
         <!-- Physical Health Overlay -->
         <div class="tooltip" style="z-index: 19;">
             <div role="healthOverlay">
@@ -575,6 +575,62 @@
             </div>
             {{/if}}
         </div>
+        {{!-- Rest (character actors only) --}}
+        {{#if (eq actor.type "character")}}
+        <div class="pool-entry-wrapper" style="position: relative; flex: 2;">
+            <div style="display: flex; align-items: center; justify-content: space-between; min-height: 24px; min-width: 100%;">
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span class="resource-label" style="font-size: 11px;">{{localize "ep2e.healthbar.rest.label"}}</span>
+                    <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
+                        <span class="tooltipText" style="font-size: 11px;">1. {{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</span>
+                        {{#if actor.system.rest.short1}}
+                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1" disabled {{checked actor.system.rest.short1}}>
+                        {{else}}
+                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short1" {{checked actor.system.rest.short1}}>
+                        {{/if}}
+                    </span>
+                    <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
+                        <span class="tooltipText" style="font-size: 11px;">2. {{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</span>
+                        {{#if actor.system.rest.short2}}
+                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" disabled {{checked actor.system.rest.short2}}>
+                        {{else}}
+                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.short2" {{checked actor.system.rest.short2}}>
+                        {{/if}}
+                    </span>
+                    {{#if actor.system.additionalSystems.extraRest}}
+                    <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
+                        <span class="tooltipText" style="font-size: 11px;">3. {{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</span>
+                        {{#if actor.system.rest.shortExtra}}
+                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra" disabled {{checked actor.system.rest.shortExtra}}>
+                        {{else}}
+                        <input type="checkbox" class="rest" data-resttype="short" name="system.rest.shortExtra" {{checked actor.system.rest.shortExtra}}>
+                        {{/if}}
+                    </span>
+                    {{/if}}
+                    <span style="color: var(--mainText); font-size: 11px;">|</span>
+                    <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
+                        <span class="tooltipText" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.restInfo.subheadline3"}}</span>
+                        {{#if actor.system.rest.long}}
+                        <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" disabled {{checked actor.system.rest.long}}>
+                        {{else}}
+                        <input type="checkbox" class="rest" data-resttype="long" name="system.rest.long" {{checked actor.system.rest.long}}>
+                        {{/if}}
+                    </span>
+                </div>
+                {{#if isGM}}
+                <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
+                    <span class="tooltipText" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</span>
+                    <button type="button" class="restReset rest-reset-btn"><i class="fa-solid fa-arrows-rotate"></i></button>
+                </span>
+                {{else if (eq actor.system.editAll true)}}
+                <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
+                    <span class="tooltipText" style="font-size: 11px; left: auto; right: 0;">{{localize "ep2e.skills.restingMenu.button.resetRest"}}</span>
+                    <button type="button" class="restReset rest-reset-btn"><i class="fa-solid fa-arrows-rotate"></i></button>
+                </span>
+                {{/if}}
+            </div>
+        </div>
+        {{/if}}
     </div>
     {{/if}}
 </div>

@@ -276,6 +276,9 @@
         "rezTotal": "Gesamt",
         "rezCurrent": "Offen",
         "rezSpent": "Verteilt"
+      },
+      "rest": {
+        "label": "Rast"
       }
     },
     "ego": {
