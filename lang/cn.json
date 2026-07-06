@@ -271,7 +271,8 @@
         "rezSpent": "Spent"
       },
       "rest": {
-        "label": "Rest"
+        "label": "Rest",
+        "jammedLabel": "干扰期间无法充能"
       }
     },
     "ego": {

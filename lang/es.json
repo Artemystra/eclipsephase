@@ -272,7 +272,8 @@
         "rezSpent": "Spent"
       },
       "rest": {
-        "label": "Rest"
+        "label": "Rest",
+        "jammedLabel": "Sin recarga durante el jamming"
       }
     },
     "ego": {

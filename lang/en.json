@@ -290,7 +290,8 @@
         "rezSpent": "Spent"
       },
       "rest": {
-        "label": "Rest"
+        "label": "Rest",
+        "jammedLabel": "No recharge while jamming"
       }
     },
     "ego": {

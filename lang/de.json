@@ -279,7 +279,8 @@
         "rezSpent": "Verteilt"
       },
       "rest": {
-        "label": "Rast"
+        "label": "Rast",
+        "jammedLabel": "Kein Rasten während des Jammens"
       }
     },
     "ego": {
