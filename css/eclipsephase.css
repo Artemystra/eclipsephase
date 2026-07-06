@@ -216,6 +216,8 @@
 .wrappercenter {
   height: 795px;
   grid-area: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .wrappercenter.npcVariant1 {
@@ -231,7 +233,9 @@
 }
 
 .contentcenter {
-  height: 685px;
+  flex: 1;
+  min-height: 0;
+  height: auto;
   overflow: hidden;
   background-color: var(--mainBackground);
 }
@@ -297,8 +301,7 @@
   overflow: hidden;
 }
 
-.contentcenter.npcVariant2 .primary-body,
-.contentcenter.goonVariant2 .primary-body {
+.contentcenter .primary-body {
   height: 100%;
 }
 
@@ -345,8 +348,9 @@
 }
 
 .main-tab-pc {
-  min-height: 680px;
-  max-height: 680px;
+  height: 100%;
+  min-height: unset;
+  max-height: 630px;
 }
 
 .wrapperright {
@@ -2915,6 +2919,18 @@ button.epTextlink:hover{
 
 .pool-entry-wrapper .tooltip {
   padding-left: 0;
+}
+
+.pool-entry-wrapper .tooltip:hover div[role=tooltip] {
+  left: auto;
+  right: -180px;
+  top: 1.5em;
+}
+
+/* Morph tab: constrain nav and content panels so they scroll within the available window height
+   (795px wrappercenter − 50px tab-nav − ~116px health-bar ≈ 629px contentcenter) */
+.contentcenter .tab[data-tab="morph"] .scrolly {
+  max-height: 630px;
 }
 
 .rest-reset-btn {

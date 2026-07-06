@@ -580,7 +580,29 @@
         <div class="pool-entry-wrapper" style="position: relative; flex: 2;">
             <div style="display: flex; align-items: center; justify-content: space-between; min-height: 24px; min-width: 100%;">
                 <div style="display: flex; align-items: center; gap: 5px;">
-                    <span class="resource-label" style="font-size: 11px;">{{localize "ep2e.healthbar.rest.label"}}</span>
+                    <span class="resource-label tooltip" style="font-size: 11px; cursor: default;">
+                        {{localize "ep2e.healthbar.rest.label"}}
+                        <div role="tooltip">
+                            <div class="tooltipTopBorder"><div class="tooltipTop"></div></div>
+                            <div class="restInfo">
+                                <h3 class="inline">{{localize "ep2e.skills.restingMenu.restInfo.headline"}}</h3>
+                                <ul>
+                                    <li>
+                                        <label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.subheadline1"}}</label>{{localize "ep2e.skills.restingMenu.restInfo.copy1"}}
+                                    </li>
+                                    <p/>
+                                    <li>
+                                        <label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</label>{{{localize "ep2e.skills.restingMenu.restInfo.copy2"}}}
+                                    </li>
+                                    <p/>
+                                    <li>
+                                        <label class="resource-value">{{localize "ep2e.skills.restingMenu.restInfo.subheadline3"}}</label>{{{localize "ep2e.skills.restingMenu.restInfo.copy3"}}}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tooltipBottomBorder"><div class="tooltipBottom"></div></div>
+                        </div>
+                    </span>
                     <span class="wantToKnowMore" style="display: inline-flex; align-items: center;">
                         <span class="tooltipText" style="font-size: 11px;">1. {{localize "ep2e.skills.restingMenu.restInfo.subheadline2"}}</span>
                         {{#if actor.system.rest.short1}}
