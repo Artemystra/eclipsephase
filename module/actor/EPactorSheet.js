@@ -55,7 +55,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     primary: {
       initial: "skills",
       tabs: [
-        { id: "ego", label: "ep2e.actorSheet.leftTabs.egoTab" },
+        { id: "ego", label: "ep2e.actorSheet.leftTabs.identityTab" },
         { id: "skills", label: "ep2e.actorSheet.rightTabs.skillsTab" },
         { id: "morph", label: "ep2e.actorSheet.rightTabs.morphTab" },
         { id: "weapons", label: "ep2e.actorSheet.rightTabs.inventoryTab" },
@@ -114,7 +114,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   tabGroups = {
     primary: "skills",
     morph: "sleeved",
-    id: "active"
+    id: "active",
+    ego: "traits-flaws"
   };
 
   static async _onEditImage(event, target) {
@@ -967,7 +968,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     }
 
     // Handle nested dynamic groups manually
-    if (group === "morph" || group === "id") {
+    if (group === "morph" || group === "id" || group === "ego") {
       event.preventDefault();
       event.stopPropagation();
 

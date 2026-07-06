@@ -92,7 +92,8 @@
         "soft": "Skillsoft"
       },
       "leftTabs": {
-        "egoTab": "Identidade",
+        "egoTab": "Ego",
+        "identityTab": "Identidade",
         "idTab": "ID",
         "museTab": "Musa"
       },
@@ -340,6 +341,11 @@
       },
       "personality": {
         "headline": "Personalidade"
+      },
+      "tabs": {
+        "traitsFlaws": "Traços & Falhas",
+        "identification": "Identificação",
+        "muse": "Muse"
       }
     },
     "id": {

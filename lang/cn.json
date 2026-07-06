@@ -93,7 +93,8 @@
         "soft": "Skillsoft"
       },
       "leftTabs": {
-        "egoTab": "身份",
+        "egoTab": "意识",
+        "identityTab": "身份",
         "idTab": "ID",
         "museTab": "缪斯"
       },
@@ -340,6 +341,11 @@
       },
       "personality": {
         "headline": "个人描述"
+      },
+      "tabs": {
+        "traitsFlaws": "正负特征",
+        "identification": "身份",
+        "muse": "助手"
       }
     },
     "id": {
