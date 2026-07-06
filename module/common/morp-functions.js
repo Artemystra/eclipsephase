@@ -75,7 +75,16 @@ export async function jammVehicle(actor, currentTarget, sheet) {
 
     if (popUp.confirm === true) {
         sheet.tabGroups.morph = itemID;
-        await actor.update({ "system.activeJam": itemID });
+        // Stash the real body's damage so it's untouched while jamming, then start the drone fresh
+        await actor.update({
+            "system.activeJam": itemID,
+            "flags.eclipsephase.jamHealthBackup": {
+                value: actor.system.health.physical.value,
+                wounds: actor.system.physical.wounds
+            },
+            "system.health.physical.value": 0,
+            "system.physical.wounds": 0
+        });
         await actor.update({ "flags.eclipsephase.resleeving": true });
 
         let message = {
@@ -104,7 +113,14 @@ export async function unjamVehicle(actor, currentTarget, sheet) {
 
     if (popUp.confirm === true) {
         sheet.tabGroups.morph = "sleeved";
-        await actor.update({ "system.activeJam": null });
+        // Restore the real body's damage from before jamming; the drone's damage is not kept
+        const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
+        await actor.update({
+            "system.activeJam": null,
+            "system.health.physical.value": backup?.value ?? 0,
+            "system.physical.wounds": backup?.wounds ?? 0,
+            "flags.eclipsephase.-=jamHealthBackup": null
+        });
         await actor.update({ "flags.eclipsephase.resleeving": true });
     }
 }

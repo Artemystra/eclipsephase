@@ -108,8 +108,12 @@ export default class EPactor extends Actor {
     }
 
     //actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
-    this._calculatePhysicalHealth(actorModel, morphValues, chiMultiplier);
-    this._calculateArmor(actorModel, actorWhole);
+    // When jamming, Durability/Armor come from the drone instead of the morph (drones/vehicles/robots count as synth, animals as bio)
+    const jammedHealthValues = jammedVehicleData
+      ? { dur: jammedVehicleData.system.dur, type: jammedVehicleData.system.type === "animal" ? "bio" : "synth" }
+      : null;
+    this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
+    this._calculateArmor(actorModel, actorWhole, jammedVehicleData);
     this._calculateInitiative(actorModel, chiMultiplier);
     this._calculateRez(actorModel)
 
@@ -578,7 +582,29 @@ export default class EPactor extends Actor {
     actorModel.currentStatus.currentModifiersSum = actorModel.currentStatus.generalModifierSum + actorModel.currentStatus.armorModifierSum + actorModel.currentStatus.encumberanceModifierSum + actorModel.currentStatus.specialModifierSum;
   }
 
-  _calculateArmor(actorModel, actorWhole) {
+  _calculateArmor(actorModel, actorWhole, jammedVehicleData) {
+    // While jamming, armor comes from the drone's own rating instead of the character's worn armor
+    if (jammedVehicleData) {
+      actorModel.physical.energyArmorTotal = Number(jammedVehicleData.system.armor?.energy) || 0;
+      actorModel.physical.kineticArmorTotal = Number(jammedVehicleData.system.armor?.kinetic) || 0;
+      actorModel.physical.mainArmorTotal = 0;
+      actorModel.physical.additionalArmorTotal = 0;
+      actorModel.physical.mainArmorMalus = 0;
+      actorModel.physical.additionalArmorMalus = 0;
+      actorModel.physical.armorMalusTotal = 0;
+      actorModel.physical.armorSomMalus = 0;
+      actorModel.physical.armorDurAnnounce = "";
+
+      const armorSomCheck = Math.max(actorModel.physical.energyArmorTotal, actorModel.physical.kineticArmorTotal);
+      if (actorModel.health.physical.max < armorSomCheck){
+        actorModel.physical.armorDurAnnounce = 1;
+      }
+      if (armorSomCheck > 11){
+        actorModel.physical.armorVisibilityAnnounce = 1;
+      }
+      return;
+    }
+
     let energyTotal = 0;
     let kineticTotal = 0;
     let mainArmorAmount = 0;
