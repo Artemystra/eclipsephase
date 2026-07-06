@@ -346,18 +346,19 @@ async function autoBot(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, popUpTar
 
   const result = await foundry.applications.api.DialogV2.wait({
     window: { title: popUpTitle },
+    classes: ["ep2e-primary-right"],
     content,
     buttons: [
-      {
-        action: "cancel",
-        label: cancelButton,
-        callback: () => ({ confirm: false })
-      },
       {
         action: "confirm",
         label: confirmButton,
         default: true,
         callback: (event, button) => _autoBotResults(button.form)
+      },
+      {
+        action: "cancel",
+        label: cancelButton,
+        callback: () => ({ confirm: false })
       }
     ],
     modal: true,

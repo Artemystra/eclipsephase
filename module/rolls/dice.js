@@ -620,7 +620,7 @@ const rollButton = new Localizer("ep2e.roll.dialog.button.roll");
 
 const result = await foundry.applications.api.DialogV2.wait({
     window: { title: rollData.title },
-    classes: ["ep2e-roll-dialog"],
+    classes: ["ep2e-primary-right"],
     content,
     buttons: [
     {

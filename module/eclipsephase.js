@@ -487,18 +487,19 @@ Hooks.once("ready", async function() {
 
     const result = await foundry.applications.api.DialogV2.wait({
       window: { title: "Migration Needed" },
+      classes: ["ep2e-primary-right"],
       content,
       buttons: [
-        {
-          action: "cancel",
-          label: "Cancel",
-          callback: () => ({ cancelled: true })
-        },
         {
           action: "start",
           label: "Start Migration",
           default: true,
           callback: () => ({ start: true })
+        },
+        {
+          action: "cancel",
+          label: "Cancel",
+          callback: () => ({ cancelled: true })
         }
       ],
       modal: true,

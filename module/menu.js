@@ -155,18 +155,19 @@ export class EPmenu {
       if (activeCharsCount + otherCharsCount > 0) {
         const result = await foundry.applications.api.DialogV2.wait({
           window: { title },
+          classes: ["ep2e-primary-right"],
           content: html,
           buttons: [
-            {
-              action: "cancel",
-              label: cancelButton,
-              callback: () => ({ cancelled: true })
-            },
             {
               action: "confirm",
               label: resetButton,
               default: true,
               callback: (event, button) => _updatePlayerCharacter(button.form)
+            },
+            {
+              action: "cancel",
+              label: cancelButton,
+              callback: () => ({ cancelled: true })
             }
           ],
           position: { width: 536 },
@@ -246,18 +247,19 @@ export class EPmenu {
       if (activeCharsCount + otherCharsCount > 0) {
         const result = await foundry.applications.api.DialogV2.wait({
           window: { title },
+          classes: ["ep2e-primary-right"],
           content: html,
           buttons: [
-            {
-              action: "cancel",
-              label: cancelButton,
-              callback: () => ({ cancelled: true })
-            },
             {
               action: "confirm",
               label: resetButton,
               default: true,
               callback: (event, button) => _updatePlayerCharacter(button.form)
+            },
+            {
+              action: "cancel",
+              label: cancelButton,
+              callback: () => ({ cancelled: true })
             }
           ],
           position: { width: 536 },

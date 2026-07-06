@@ -596,13 +596,9 @@ async function healingDialog(dialog, type, dialogType, enhancements, enhancement
 
   const result = await foundry.applications.api.DialogV2.wait({
     window: { title: dialogName },
+    classes: ["ep2e-primary-right"],
     content,
     buttons: [
-      {
-        action: "cancel",
-        label: cancelButton,
-        callback: () => ({ cancelled: true })
-      },
       {
         action: "confirm",
         label: confirmButton,
@@ -610,6 +606,11 @@ async function healingDialog(dialog, type, dialogType, enhancements, enhancement
         callback: (event, button) => {
           return _healingResult(button.form, enhancements, type);
         }
+      },
+      {
+        action: "cancel",
+        label: cancelButton,
+        callback: () => ({ cancelled: true })
       }
     ],
     position: { width: 315 },

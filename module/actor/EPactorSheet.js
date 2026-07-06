@@ -1574,18 +1574,19 @@ async function poolUsageConfirmation(dialog, type, pool, dialogType, subtitle, c
 
   const result = await foundry.applications.api.DialogV2.wait({
     window: { title: dialogName },
+    classes: ["ep2e-primary-right"],
     content,
     buttons: [
-      {
-        action: "cancel",
-        label: cancelButton,
-        callback: () => ({ cancelled: true })
-      },
       {
         action: "confirm",
         label: confirmButton,
         default: true,
         callback: (event, button) => _poolUsageModifiers(button.form)
+      },
+      {
+        action: "cancel",
+        label: cancelButton,
+        callback: () => ({ cancelled: true })
       }
     ],
     position: { width: 315 },

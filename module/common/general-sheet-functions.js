@@ -317,6 +317,13 @@ export async function itemReduction(actor, itemID, itemQuantity){
 
     const buttons = [];
 
+    buttons.push({
+      action: "confirm",
+      label: primaryButton,
+      default: true,
+      callback: () => true
+    });
+
     if (!buttonLayout) {
       buttons.push({
         action: "cancel",
@@ -325,15 +332,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
       });
     }
 
-    buttons.push({
-      action: "confirm",
-      label: primaryButton,
-      default: true,
-      callback: () => true
-    });
-
     const result = await foundry.applications.api.DialogV2.wait({
       window: { title: popUpTitle },
+      classes: ["ep2e-primary-right"],
       content,
       buttons,
       modal: true,
@@ -505,7 +506,7 @@ export function itemToggle(html, item) {
 
     const result = await foundry.applications.api.DialogV2.wait({
       window: { title },
-      classes: ["ep2e-roll-dialog"],
+      classes: ["ep2e-primary-right"],
       content,
       buttons: [
         {
