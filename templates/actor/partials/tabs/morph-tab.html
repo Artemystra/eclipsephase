@@ -1,7 +1,7 @@
 <div class="tab body main-tab-pc" data-group="primary" data-tab="morph">
     <div class="flexrow contentBox noMargin" style="max-height: 850px; height: 100%;">
         <!-- Subnav Area -->
-        <div class="scrolly" style="flex-grow: 0.3; max-height: 678px; min-height: 678px;">
+        <div class="scrolly" style="flex-grow: 0.3; min-height: 630px;">
             <nav class="morph-tabs subtabs" data-group="morph">
                 <!-- Morphs -->
                 {{#each actor.bodies as |body key|}}
@@ -68,7 +68,7 @@
             </nav>
         </div>
         <!-- Content Area -->
-        <div class="scrolly" style="background-color: var(--pitchBorder); min-height: 680px; max-height: 680px; padding: 10px;">
+        <div class="scrolly" style="background-color: var(--pitchBorder); padding: 10px; flex: 1; min-height: 630px;">
             <section class="morph-details">
             {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab -->

@@ -1,265 +1,299 @@
 {{#if (eq actor.type "character")}}
-    <div class="contentBox" style="margin-bottom: 10px;">
+
+    {{!-- Section 1: General & Personality --}}
+    <div>
+        <div class="contentBox" style="margin-bottom: 10px;">
+            <div class="flexrow subheader colorV1">
+                <h3 class="subheader colorV1">{{localize "ep2e.ego.general.headline"}}</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                    <label class="resource-label">{{localize "ep2e.ego.general.egoFlexLabel"}} </label><input class="input-small" type="number" name="system.ego.egoFlex" value="{{actor.system.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
+                </div>
+            </div>
+            <div>
+                <div style="display: flex; flex-wrap: nowrap; align-items: flex-start; gap: 0;">
+                    <div class="listBackground" style="background-color: var(--pitchBorder); flex: 1; min-width: 0;">
+                        <div class="flexrow grid-2col">
+                            <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.origin.headline"}}</label>
+                            <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()"  name="system.ego.origin" data-type="String" type="text" list="originList" value="{{actor.system.ego.origin}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectOrigin'}}" style="padding-left: 5px;">
+                            <datalist id="originList">
+                                {{#each config.origins as |origin key|}}
+                                    <option value="{{localize origin}}"></option>
+                                {{/each}}
+                            </datalist>
+                        </div>
+                        <div class="flexrow grid-2col">
+                            <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.sex.headline"}}</label>
+                            <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.sex" data-type="String" type="text" list="sexList" value="{{actor.system.ego.sex}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectSex'}}" style="padding-left: 5px;">
+                            <datalist id="sexList">
+                                {{#each config.sexes as |sex key|}}
+                                    <option value="{{localize sex}}"></option>
+                                {{/each}}
+                            </datalist>
+                        </div>
+                        <div class="flexrow grid-2col">
+                            <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.gender.headline"}}</label>
+                            <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.gender" data-type="String" type="text" list="genderList" value="{{actor.system.ego.gender}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectGender'}}" style="padding-left: 5px;">
+                            <datalist id="genderList">
+                                {{#each config.genders as |gender key|}}
+                                <option value="{{localize gender}}"></option>
+                                {{/each}}
+                            </datalist>
+                        </div>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="itemBackground" style="padding-bottom: 0;">
+                            <label class="input-large resource-value alignLeft" >{{localize "ep2e.ego.motivations.headline"}}</label>
+                            <ol style="list-style-type: decimal-leading-zero; padding: 0 0 0 2.5em; margin: 10px 0;">
+                                <li><input type="text" name="system.ego.motivations.motivation1" value='{{actor.system.ego.motivations.motivation1}}' placeholder="{{localize 'ep2e.ego.motivations.placeholder'}}"/></li>
+                                <li><input type="text" name="system.ego.motivations.motivation2" value='{{actor.system.ego.motivations.motivation2}}' placeholder="{{localize 'ep2e.ego.motivations.placeholder'}}"/></li>
+                                <li><input type="text" name="system.ego.motivations.motivation3" value='{{actor.system.ego.motivations.motivation3}}' placeholder="{{localize 'ep2e.ego.motivations.placeholder'}}"/></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="itemBackground skills flexrow flex-group-left" style="gap: 8px;">
+                    <label class="input-large resource-value" >{{localize "ep2e.ego.languages.headline"}}</label>
+                    <input type="text" name="system.ego.languages" value="{{actor.system.ego.languages}}" placeholder="{{localize 'ep2e.ego.languages.placeholder'}}"/>
+                </div>
+            </div>
+        </div>
         <div class="flexrow subheader colorV1">
-            <h3 class="subheader colorV1">{{localize "ep2e.ego.general.headline"}}</h3>
+            <h3 class="subheader colorV1">{{localize "ep2e.ego.personality.headline"}}</h3>
             <div class="alignRight flexGrowThreeQuarter">
-                <label class="resource-label">{{localize "ep2e.ego.general.egoFlexLabel"}} </label><input class="input-small" type="number" name="system.ego.egoFlex" value="{{actor.system.ego.egoFlex}}" data-dtype="Number" placeholder="0"/>
             </div>
         </div>
-        <div style="display: flex; flex-wrap: nowrap; align-items: flex-start; gap: 0;">
-            <div class="listBackground" style="background-color: var(--pitchBorder); flex: 1; min-width: 0;">
-                <div class="flexrow grid-2col">
-                    <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.origin.headline"}}</label>
-                    <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()"  name="system.ego.origin" data-type="String" type="text" list="originList" value="{{actor.system.ego.origin}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectOrigin'}}" style="padding-left: 5px;">
-                    <datalist id="originList">
-                        {{#each config.origins as |origin key|}}
-                            <option value="{{localize origin}}"></option>
-                        {{/each}}
-                    </datalist>
-                </div>
-                <!--This is my test Droplist-->
-                <div class="flexrow grid-2col">
-                    <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.sex.headline"}}</label>
-                    <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.sex" data-type="String" type="text" list="sexList" value="{{actor.system.ego.sex}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectSex'}}" style="padding-left: 5px;">
-                    <datalist id="sexList">
-                        {{#each config.sexes as |sex key|}}
-                            <option value="{{localize sex}}"></option>
-                        {{/each}}
-                    </datalist>
-                </div>
-                <div class="flexrow grid-2col">
-                    <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.gender.headline"}}</label>
-                    <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.gender" data-type="String" type="text" list="genderList" value="{{actor.system.ego.gender}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectGender'}}" style="padding-left: 5px;">
-                    <datalist id="genderList">
-                        {{#each config.genders as |gender key|}}
-                        <option value="{{localize gender}}"></option>
-                        {{/each}}
-                    </datalist>
-                </div>
-            </div>
-            <div style="flex: 1; min-width: 0;">
-                <div class="itemBackground" style="padding-bottom: 0;">
-                    <label class="input-large resource-value alignLeft" >{{localize "ep2e.ego.motivations.headline"}}</label>
-                    <ol style="list-style-type: decimal-leading-zero; padding: 0 0 0 2.5em; margin: 10px 0;">
-                        <li><input type="text" name="system.ego.motivations.motivation1" value='{{actor.system.ego.motivations.motivation1}}' placeholder="{{localize 'ep2e.ego.motivations.placeholder'}}"/></li>
-                        <li><input type="text" name="system.ego.motivations.motivation2" value='{{actor.system.ego.motivations.motivation2}}' placeholder="{{localize 'ep2e.ego.motivations.placeholder'}}"/></li>
-                        <li><input type="text" name="system.ego.motivations.motivation3" value='{{actor.system.ego.motivations.motivation3}}' placeholder="{{localize 'ep2e.ego.motivations.placeholder'}}"/></li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-        <div class="itemBackground skills flexrow flex-group-left" style="gap: 8px;">
-            <label class="input-large resource-value" >{{localize "ep2e.ego.languages.headline"}}</label>
-            <input type="text" name="system.ego.languages" value="{{actor.system.ego.languages}}" placeholder="{{localize 'ep2e.ego.languages.placeholder'}}"/>
-        </div>
-    </div>
-    <div class="flexrow flex-between" style="flex-wrap: nowrap; align-items: flex-start;">
-        <div class="contentBox" style="margin-bottom: 10px; flex: 1; min-width: 0;">
-            <div class="flexrow subheader colorV1">
-                <h3 class="subheader colorV1">{{localize "ep2e.ego.traits.headline"}}</h3>
-                <div class="alignRight flexGrowHalf">
-                </div>
-            </div>
-            <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
-                {{#if actor.trait}}
-                {{#each actor.trait as |item id|}}
-                
-                    {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="success" ego=true}}
-
-                {{/each}}
-                {{else}}
-                <div class="flex-group-center">
-                    <label class="resource-label">{{localize "ep2e.ego.traits.noItems"}}</label>
-                </div>
-                {{/if}}
-            </div>
-            <div class="itemBackground shape2 edgeLord"></div>
-        </div>
-        <div class="contentBox" style="margin-bottom: 10px; flex: 1; min-width: 0;">
-            <div class="flexrow subheader colorV1">
-                <h3 class="subheader colorV1">{{localize "ep2e.ego.flaws.headline"}}</h3>
-                <div class="alignRight flexGrowHalf">
-                </div>
-            </div>
-            <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center">
-                {{#if actor.flaw}}
-                {{#each actor.flaw as |item id|}}
-                
-                    {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="fail" ego=true}}
-
-                {{/each}}
-                {{else}}
-                <div class="flex-group-center">
-                    <label class="resource-label">{{localize "ep2e.ego.flaws.noItems"}}</label>
-                </div>
-                {{/if}}
-            </div>
-            <div class="itemBackground shape1 edgeLord"></div>
-        </div>
-    </div>
-    <div class="flexrow subheader colorV1">
-        <h3 class="subheader colorV1">{{localize "ep2e.ego.personality.headline"}}</h3>
-        <div class="alignRight flexGrowQuarter">
-        </div>
-    </div>
-        {{#if editable}}
-            <prose-mirror
-                id="pcBio"
-                name="system.biography"
-                button="true"
-                editable="true"
-                toggled="false"
-                value="{{biographyValue}}">
+        <div style="padding: 10px;">
+            {{#if editable}}
+                <prose-mirror
+                    id="pcBio"
+                    name="system.biography"
+                    button="true"
+                    editable="true"
+                    toggled="false"
+                    value="{{biographyValue}}"
+                    style="height: 200px;">
+                    {{{htmlBiography}}}
+                </prose-mirror>
+            {{else}}
                 {{{htmlBiography}}}
-            </prose-mirror>
-        {{else}}
-            {{{htmlBiography}}}
-        {{/if}}
-    {{!-- Identities --}}
-    <div class="contentBox noMargin" style="margin-top: 10px;">
-        <div style="display: flex; flex-wrap: wrap;">
-            <nav class="id-tabs subtabs scrollx" data-group="id" style="display: flex;">
+            {{/if}}
+        </div>
+    </div>
+
+    <nav class="subtabs scrollx" data-group="ego" style="display: flex;">
+        <a data-action="tab" data-group="ego" data-tab="traits-flaws" class="item {{#if (eq tabGroups.ego 'traits-flaws')}}active{{/if}}" style="flex: 1; text-align: center;">{{localize "ep2e.ego.tabs.traitsFlaws"}}</a>
+        <a data-action="tab" data-group="ego" data-tab="identification" class="item {{#if (eq tabGroups.ego 'identification')}}active{{/if}}" style="flex: 1; text-align: center;">{{localize "ep2e.ego.tabs.identification"}}</a>
+        <a data-action="tab" data-group="ego" data-tab="muse" class="item {{#if (eq tabGroups.ego 'muse')}}active{{/if}}" style="flex: 1; text-align: center;">{{localize "ep2e.ego.tabs.muse"}}</a>
+    </nav>
+
+    {{!-- Section 2: Traits & Flaws --}}
+    <div class="tab {{#if (eq tabGroups.ego 'traits-flaws')}}active{{/if}}" data-group="ego" data-tab="traits-flaws" style="height: 380px; min-height: 380px; max-height: 380px; overflow-y: auto; padding: 20px 0; background-color: var(--pitchBorder);">
+        <div style="display: flex; flex-direction: column; height: 100%;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; margin: 0; gap: 10px; flex: 1;">
+            <div class="contentBox" style="margin: 0; min-width: 0; display: flex; flex-direction: column;">
+                <div class="flexrow subheader colorV1">
+                    <h3 class="subheader colorV1">{{localize "ep2e.ego.traits.headline"}}</h3>
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column;">
+                    <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center" style="flex: 1; align-content: flex-start;">
+                        {{#if actor.trait}}
+                        {{#each actor.trait as |item id|}}
+
+                            {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="success" ego=true}}
+
+                        {{/each}}
+                        {{else}}
+                        <div class="flex-group-center">
+                            <label class="resource-label">{{localize "ep2e.ego.traits.noItems"}}</label>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="itemBackground shape2 edgeLord"></div>
+                </div>
+            </div>
+            <div class="contentBox" style="margin: 0; min-width: 0; display: flex; flex-direction: column;">
+                <div class="flexrow subheader colorV1">
+                    <h3 class="subheader colorV1">{{localize "ep2e.ego.flaws.headline"}}</h3>
+                    <div class="alignRight flexGrowHalf">
+                    </div>
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column;">
+                    <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center" style="flex: 1; align-content: flex-start;">
+                        {{#if actor.flaw}}
+                        {{#each actor.flaw as |item id|}}
+
+                            {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="fail" ego=true}}
+
+                        {{/each}}
+                        {{else}}
+                        <div class="flex-group-center">
+                            <label class="resource-label">{{localize "ep2e.ego.flaws.noItems"}}</label>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="itemBackground shape1 edgeLord"></div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    {{!-- Section 3: IDs --}}
+    <div class="tab {{#if (eq tabGroups.ego 'identification')}}active{{/if}}" data-group="ego" data-tab="identification" style="min-height: 380px; max-height: 380px; overflow-y: auto; padding: 20px 0; background-color: var(--pitchBorder);">
+        <div class="contentBox noMargin" style="margin-top: 10px;">
+            <div style="display: flex; flex-wrap: nowrap; align-items: stretch;">
+                <nav class="id-tabs subtabs scrollx" data-group="id" style="flex: 1; display: flex; background-color: var(--mainBackground);">
+                    {{#each actor.ids as |idValues key|}}
+                        {{#if (eq @root.actor.system.activeID idValues.id)}}
+                            <a data-action="tab" data-group="id" data-tab="active" class="item {{#if (eq @root.tabGroups.id 'active')}}active{{/if}}" style="padding: 0 5px; min-height: 40px; min-width: 70px; display: flex; gap: 5px; flex-wrap: nowrap;">
+                                <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
+                                <div style="background-color: var(--highlight); height: 10px; min-width: 10px; border-radius: 100px;"></div>
+                            </a>
+                        {{else}}
+                            <a data-action="tab" data-group="id" data-tab="{{idValues.id}}" class="item {{#if (eq @root.tabGroups.id idValues.id)}}active{{/if}}" style="padding: 0 5px; min-height: 40px; min-width: 70px;">
+                                <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
+                            </a>
+                        {{/if}}
+                    {{/each}}
+                </nav>
+                <button type="button" class="item-control item-create sheetButton" data-type="id" style="flex: 0 0 auto; width: 40px; height: 40px; font-size: 20px;">+</button>
+            </div>
+            <div style="background-color: var(--pitchBorder); padding: 10px;">
+                <section class="id-details">
                 {{#each actor.ids as |idValues key|}}
                     {{#if (eq @root.actor.system.activeID idValues.id)}}
-                        <a data-action="tab" data-group="id" data-tab="active" class="item {{#if (eq @root.tabGroups.id 'active')}}active{{/if}}" style="padding: 0 5px; min-height: 40px; min-width: 70px; display: flex; gap: 5px; flex-wrap: nowrap;">
-                            <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
-                            <div style="background-color: var(--highlight); height: 10px; min-width: 10px; border-radius: 100px;"></div>
-                        </a>
+                        <div class="tab body item {{#if (eq @root.tabGroups.id 'active')}}active{{/if}}" data-group="id" data-tab="active">
+                        <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
+                            <label class="ressource-label"><strong>{{idValues.name}}</strong></label>
+                            <div class="item" style="min-width: 100%; display: flex;" data-item-id="{{idValues.id}}">
+                                <button type="button"
+                                    class="resource-label button sheetButton thinButton item-edit"
+                                    title="{{localize 'ep2e.actorSheet.button.changeID'}}"
+                                    data-item-id="{{idValues._id}}"
+                                    data-actorid="{{@root.actor.id}}">
+                                    <i class="far fa-edit awesomeIcon"></i>
+                                    {{localize "Edit"}}
+                                </button>
+                            </div>
+                        </div>
                     {{else}}
-                        <a data-action="tab" data-group="id" data-tab="{{idValues.id}}" class="item {{#if (eq @root.tabGroups.id idValues.id)}}active{{/if}}" style="padding: 0 5px; min-height: 40px; min-width: 70px;">
-                            <div class="label truncateMulti">{{localize "ep2e.actorSheet.leftTabs.idTab"}} {{idValues.system.displayNumber}}</div>
-                        </a>
+                        <div class="tab body item {{#if (eq @root.tabGroups.id idValues.id)}}active{{/if}}" data-group="id" data-tab="{{idValues.id}}">
+                        <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
+                            <label class="ressource-label"><strong>{{idValues.name}}</strong></label>
+                            <div class="item" style="min-width: 100%; display: flex;" data-item-id="{{idValues.id}}" data-item-name="{{localize 'ep2e.actorSheet.leftTabs.idTab'}} ({{idValues.name}})">
+                                <button type="button"
+                                    class="resource-label button sheetButton changeIdentityButton"
+                                    title="{{localize 'ep2e.actorSheet.button.changeID'}}"
+                                    data-item-id="{{idValues._id}}"
+                                    data-actorid="{{@root.actor.id}}">
+                                    {{localize "ep2e.actorSheet.button.changeID"}}
+                                </button>
+                                <button type="button"
+                                    class="resource-label button sheetButton thinButton item-delete"
+                                    title="{{localize 'ep2e.actorSheet.button.changeID'}}">
+                                    <i class="far fa-times-circle awesomeIcon"></i>
+                                    {{localize "Delete"}}
+                                </button>
+                                <button type="button"
+                                    class="resource-label button sheetButton thinButton item-edit"
+                                    title="{{localize 'ep2e.actorSheet.button.changeID'}}">
+                                    <i class="far fa-edit awesomeIcon"></i>
+                                    {{localize "Edit"}}
+                                </button>
+                            </div>
+                        </div>
                     {{/if}}
-                {{/each}}
-                <button type="button" class="item-control item-create sheetButton" data-type="id" style="width: 40px; font-size: 20px;">+</button>
-            </nav>
-        </div>
-        <div style="background-color: var(--pitchBorder); padding: 10px;">
-            <section class="id-details">
-            {{#each actor.ids as |idValues key|}}
-                {{#if (eq @root.actor.system.activeID idValues.id)}}
-                    <div class="tab body item {{#if (eq @root.tabGroups.id 'active')}}active{{/if}}" data-group="id" data-tab="active">
-                    <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
-                        <label class="ressource-label"><strong>{{idValues.name}}</strong></label>
-                        <div class="item" style="min-width: 100%; display: flex;" data-item-id="{{idValues.id}}">
-                            <button type="button"
-                                class="resource-label button sheetButton thinButton item-edit"
-                                title="{{localize 'ep2e.actorSheet.button.changeID'}}"
-                                data-item-id="{{idValues._id}}"
-                                data-actorid="{{@root.actor.id}}">
-                                <i class="far fa-edit awesomeIcon"></i>
-                                {{localize "Edit"}}
-                            </button>
-                        </div>
-                    </div>
-                {{else}}
-                    <div class="tab body item {{#if (eq @root.tabGroups.id idValues.id)}}active{{/if}}" data-group="id" data-tab="{{idValues.id}}">
-                    <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
-                        <label class="ressource-label"><strong>{{idValues.name}}</strong></label>
-                        <div class="item" style="min-width: 100%; display: flex;" data-item-id="{{idValues.id}}" data-item-name="{{localize 'ep2e.actorSheet.leftTabs.idTab'}} ({{idValues.name}})">
-                            <button type="button"
-                                class="resource-label button sheetButton changeIdentityButton"
-                                title="{{localize 'ep2e.actorSheet.button.changeID'}}"
-                                data-item-id="{{idValues._id}}"
-                                data-actorid="{{@root.actor.id}}">
-                                {{localize "ep2e.actorSheet.button.changeID"}}
-                            </button>
-                            <button type="button"
-                                class="resource-label button sheetButton thinButton item-delete"
-                                title="{{localize 'ep2e.actorSheet.button.changeID'}}">
-                                <i class="far fa-times-circle awesomeIcon"></i>
-                                {{localize "Delete"}}
-                            </button>
-                            <button type="button"
-                                class="resource-label button sheetButton thinButton item-edit"
-                                title="{{localize 'ep2e.actorSheet.button.changeID'}}">
-                                <i class="far fa-edit awesomeIcon"></i>
-                                {{localize "Edit"}}
-                            </button>
-                        </div>
-                    </div>
-                {{/if}}
-                    <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
-                        {{#each idValues.system.rep as |rep key|}}
-                            <div style="display: flex; justify-content: center; flex-wrap: wrap; max-width: 40px;">
-                                <div class="reveal item" style="display: flex; gap: 5px; max-width: 40px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
-                                    <span class="toggle input-medium resource-label">{{localize rep.name}}</span>
-                                    <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
-                                        <img data-type="skill" data-key="rep" data-name="{{key}}" data-rollvalue="{{rep.value}}"
-                                        src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
+                        <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
+                            {{#each idValues.system.rep as |rep key|}}
+                                <div style="display: flex; justify-content: center; flex-wrap: wrap; max-width: 40px;">
+                                    <div class="reveal item" style="display: flex; gap: 5px; max-width: 40px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
+                                        <span class="toggle input-medium resource-label">{{localize rep.name}}</span>
+                                        <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
+                                            <img data-type="skill" data-key="rep" data-name="{{key}}" data-rollvalue="{{rep.value}}"
+                                            src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
+                                        </div>
+                                    </div>
+                                    <div class="flex-group-center item" data-item-id="{{idValues._id}}">
+                                        <input class="input-small sheet-inline-edit" onFocus="this.select()" type="text" data-field="system.rep.{{key}}.value" name="system.rep.{{key}}.value"
+                                            value="{{rep.value}}" placeholder="0" style="text-align: center"/>
                                     </div>
                                 </div>
-                                <div class="flex-group-center item" data-item-id="{{idValues._id}}">
-                                    <input class="input-small sheet-inline-edit" onFocus="this.select()" type="text" data-field="system.rep.{{key}}.value" name="system.rep.{{key}}.value"
-                                        value="{{rep.value}}" placeholder="0" style="text-align: center"/>
+                            {{/each}}
+                        </div>
+                        <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
+                            {{#each idValues.system.rep as |rep key|}}
+                                <div style="display: flex; gap: 5px; max-width: 40px; flex-wrap: wrap; justify-content: center;">
+                                    {{localize "ep2e.id.complexity.min"}}
+                                    <div style="display: flex; max-width: 20px; flex-wrap: wrap; gap: 5px; justify-content: center;">
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small1" name="system.rep.{{key}}.small1" {{checked rep.small1}}>
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small2" name="system.rep.{{key}}.small2" {{checked rep.small2}}>
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small3" name="system.rep.{{key}}.small3" {{checked rep.small3}}>
+                                    </div>
+                                    {{localize "ep2e.id.complexity.mod"}}
+                                    <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.med1" name="system.rep.{{key}}.med1" {{checked rep.med1}}>
+                                    </div>
+                                    {{localize "ep2e.id.complexity.maj"}}
+                                    <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
+                                        <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.large" name="system.rep.{{key}}.large" {{checked rep.large}}>
+                                    </div>
                                 </div>
-                            </div>
-                        {{/each}}
-                    </div>
-                    <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
-                        {{#each idValues.system.rep as |rep key|}}
-                            <div style="display: flex; gap: 5px; max-width: 40px; flex-wrap: wrap; justify-content: center;">
-                                {{localize "ep2e.id.complexity.min"}}
-                                <div style="display: flex; max-width: 20px; flex-wrap: wrap; gap: 5px; justify-content: center;">
-                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small1" name="system.rep.{{key}}.small1" {{checked rep.small1}}>
-                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small2" name="system.rep.{{key}}.small2" {{checked rep.small2}}>
-                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small3" name="system.rep.{{key}}.small3" {{checked rep.small3}}>
-                                </div>
-                                {{localize "ep2e.id.complexity.mod"}}
-                                <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
-                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.med1" name="system.rep.{{key}}.med1" {{checked rep.med1}}>
-                                </div>
-                                {{localize "ep2e.id.complexity.maj"}}
-                                <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
-                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.large" name="system.rep.{{key}}.large" {{checked rep.large}}>
-                                </div>
-                            </div>
-                        {{/each}}
-                    </div>
-                    </div>
-            {{/each}}
-            </section>
+                            {{/each}}
+                        </div>
+                        </div>
+                {{/each}}
+                </section>
+            </div>
         </div>
     </div>
-    {{!-- Muse --}}
-    <div class="contentBox" style="margin-top: 10px;">
-        <div class="flexrow subheader colorV1">
-            <h3 class="subheader colorV1">{{localize "ep2e.muse.headline"}}</h3>
-        </div>
+
+    {{!-- Section 4: Muse --}}
+    <div class="tab {{#if (eq tabGroups.ego 'muse')}}active{{/if}}" data-group="ego" data-tab="muse" style="height: 380px; min-height: 380px; max-height: 380px; overflow-y: auto; padding: 20px 0; background-color: var(--pitchBorder);">
+        <div style="display: flex; flex-direction: column; height: 100%;">
         <div class="itemBackground flexrow flex-group-left">
             <label class="input-large resource-label">{{localize "ep2e.muse.nameLabel"}}</label>
-            <input class="input-XL" name="system.muse.name" type="text" value="{{actor.system.muse.name}}" data-dtype="String" placeholder="{{localize 'ep2e.muse.namePlaceholder'}}"/>
+            <input name="system.muse.name" type="text" value="{{actor.system.muse.name}}" data-dtype="String" placeholder="{{localize 'ep2e.muse.namePlaceholder'}}" style="flex: 1;"/>
         </div>
-    </div>
-    <div class="listBackground edgeAbler">
-        <div class="grid grid-2col noMargin" style="gap: 0;">
-            {{#each actor.system.muse.skills as |skill key|}}
-            <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
-                <input class="input-XL" name="system.muse.skills.{{key}}.skillname" type="text" value="{{localize skill.skillname}}" placeholder="{{localize 'ep2e.skills.additionalSkills.placeholder'}}" style="text-transform: uppercase;"/>
-                <input class="input-small" type="number" name="system.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
-                <div class="flexrow flex-group-center" style="max-width: 40px;">
-                    <img data-type="skill" data-name="{{skill.skillname}}" data-key="muse" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+        <div style="display: flex; flex-wrap: nowrap; align-items: stretch; gap: 10px; flex: 1;">
+            <div class="contentBox" style="flex: 1; min-width: 0; margin: 0; display: flex; flex-direction: column;">
+                <div class="listBackground edgeAbler" style="flex: 1;">
+                    <div>
+                        {{#each actor.system.muse.skills as |skill key|}}
+                        <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
+                            <input class="input-XL" name="system.muse.skills.{{key}}.skillname" type="text" value="{{localize skill.skillname}}" placeholder="{{localize 'ep2e.skills.additionalSkills.placeholder'}}" style="text-transform: uppercase;"/>
+                            <input class="input-small" type="number" name="system.muse.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number" placeholder="0"/>
+                            <div class="flexrow flex-group-center" style="max-width: 40px;">
+                                <img data-type="skill" data-name="{{skill.skillname}}" data-key="muse" data-rollvalue="{{skill.value}}" src="icons/svg/d10-grey.svg" class="toggle icon-small noShow roll-label task-check"/>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
                 </div>
             </div>
-            {{/each}}
+            <div class="contentBox" style="flex: 2; min-width: 0; margin: 0; display: flex; flex-direction: column;">
+                <div style="flex: 1; display: flex; flex-direction: column;">
+                    {{#if editable}}
+                        <prose-mirror
+                            id="museDescription"
+                            name="system.muse.description"
+                            button="true"
+                            editable="true"
+                            toggled="false"
+                            value="{{museDescriptionValue}}"
+                            style="flex: 1;">
+                            {{{htmlMuseDescription}}}
+                        </prose-mirror>
+                    {{else}}
+                        {{{htmlMuseDescription}}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
         </div>
     </div>
-    <div class="flexrow subheader colorV1">
-        <h3 class="subheader colorV1">{{localize "ep2e.muse.aboutLabel"}} {{actor.system.muse.name}}</h3>
-    </div>
-    {{#if editable}}
-        <prose-mirror
-            id="museDescription"
-            name="system.muse.description"
-            button="true"
-            editable="true"
-            toggled="false"
-            value="{{museDescriptionValue}}">
-            {{{htmlMuseDescription}}}
-        </prose-mirror>
-    {{else}}
-        {{{htmlMuseDescription}}}
-    {{/if}}
+
 {{else}}
     {{#if (eq actor.type "npc")}}
     <div class="itemBackground">
