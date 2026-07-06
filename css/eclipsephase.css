@@ -836,6 +836,11 @@ span.neutral {
   padding: 0.5rem;
 }
 
+/* Keep Roll/Select as the first button in the DOM (so Enter submits it), but show it on the right */
+.ep2e-roll-dialog .form-footer {
+  flex-direction: row-reverse;
+}
+
 #sidebar {
   background-color: rgba(0,0,0,0.5)!important;
   backdrop-filter: blur(6px);

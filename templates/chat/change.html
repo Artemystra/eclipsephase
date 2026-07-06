@@ -66,16 +66,18 @@
             <span style="font-size: 14px;">{{localize "ep2e.morph.sleeving.announce.copy.jammed"}}:<br></span>
             <span><b>{{morphname}}</b></span><br>
         </div>
+        {{#unless actor.system.additionalSystems.jamming.noIntegration}}
         <div class="item privateChatButton horizontal" data-ownerid={{actor.id}}>
-            <button type="button" 
-                class="chatButton resleeve"  
-                data-type = "integration"   
+            <button type="button"
+                class="chatButton resleeve"
+                data-type = "integration"
                 data-integrationtitle = "{{integrationtitle}}"
                 data-morphtype = "{{morphtype}}"
                 data-actorid = "{{actor.id}}">
                 Roll Integration Only
             </button>
         </div>
+        {{/unless}}
     {{else if (eq type "identification")}}
         <p>{{localize "ep2e.id.announce.idChanged"}}<span class="resource-value"></span></p>
 

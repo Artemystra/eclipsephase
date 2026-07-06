@@ -505,6 +505,7 @@ export function itemToggle(html, item) {
 
     const result = await foundry.applications.api.DialogV2.wait({
       window: { title },
+      classes: ["ep2e-roll-dialog"],
       content,
       buttons: [
         {

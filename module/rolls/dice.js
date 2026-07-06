@@ -620,6 +620,7 @@ const rollButton = new Localizer("ep2e.roll.dialog.button.roll");
 
 const result = await foundry.applications.api.DialogV2.wait({
     window: { title: rollData.title },
+    classes: ["ep2e-roll-dialog"],
     content,
     buttons: [
     {
@@ -918,7 +919,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Resleeving & Jamming */
 
-    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill") {
+    if (actorModel?.additionalSystems?.isJamming && !actorModel?.additionalSystems?.jamming?.ignorePenalty && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill") {
         modValue = -10;
         announce = "ep2e.roll.announce.jamming.penalty";
         task.addModifier(new TaskRollModifier(announce, modValue));
