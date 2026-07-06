@@ -56,7 +56,7 @@ export async function sleevingTest (data) {
     ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: actorWhole.name}),
         flavor: html,
-        sound: chatData.integrationTest.sound
+        sound: chatData.integrationTest?.sound
     })
 }
 
@@ -133,7 +133,8 @@ export async function result (data) {
         })
     }
     console.log("resultData", resultData)
-    await calcEffects (actorWhole, actorModel, Number(resultData[0].result), Number(resultData[1].result))
+    const stressResult = (resultData[1].result === undefined || resultData[1].result === "") ? null : Number(resultData[1].result)
+    await calcEffects (actorWhole, actorModel, Number(resultData[0].result), stressResult)
 }
 
 async function calcEffects(actorWhole, actorModel, integrationResult, stressResult) {
@@ -175,9 +176,10 @@ async function calcEffects(actorWhole, actorModel, integrationResult, stressResu
         })
     }
     
-    //Checks if the final stress test result is a failure
-    if (stressResult <= 2 || stressResult === 6 || stressResult === 8){const listOptions = [{"id" : "minorStress", "label" : "ep2e.dialog.selectStress.minorLabel", "description" : "ep2e.dialog.selectStress.minorDescription"}, {"id" : "majorStress", "label" : "ep2e.dialog.selectStress.majorLabel", "description" : "ep2e.dialog.selectStress.majorDescription"}]
+    //Checks if the final stress test result is a failure (no stress test happened, e.g. jamming, when stressResult is null)
+    if (stressResult !== null && (stressResult <= 2 || stressResult === 6 || stressResult === 8)){const listOptions = [{"id" : "minorStress", "label" : "ep2e.dialog.selectStress.minorLabel", "description" : "ep2e.dialog.selectStress.minorDescription"}, {"id" : "majorStress", "label" : "ep2e.dialog.selectStress.majorLabel", "description" : "ep2e.dialog.selectStress.majorDescription"}]
         const dialog = await listSelection(listOptions, "standardSelectionList", 300, "ep2e.dialog.selectStress.dialogTitle", "", "ep2e.dialog.selectStress.copy");
+        if (dialog.cancelled) return;
         let stressUpdate = actorModel.health.mental.value;
         let traumaUpdate = actorModel.mental.trauma;
         let insanity = actorModel.health.insanity.max + actorModel.health.mental.max

@@ -508,15 +508,15 @@ export function itemToggle(html, item) {
       content,
       buttons: [
         {
-          action: "cancel",
-          label: cancelButton,
-          callback: () => ({ cancelled: true })
-        },
-        {
           action: "select",
           label: useButton,
           default: true,
           callback: (event, button) => listSelectionOutcome(button.form)
+        },
+        {
+          action: "cancel",
+          label: cancelButton,
+          callback: () => ({ cancelled: true })
         }
       ],
       position: { width },

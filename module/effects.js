@@ -36,8 +36,14 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
       const activeMorph = actor.system?.activeMorph;
       if (!activeMorph) return false;
 
-      const suppressed = boundTo !== activeMorph;
-      // console.debug("[EP2e] morph suppression", { item: item.name, boundTo, activeMorph, suppressed });
+      // While jamming, the ego is sleeved into the remote body instead of its own morph:
+      // ware/traits bound to the original morph must be suppressed just like any other resleeve,
+      // while anything bound to the jammed vehicle itself (if ever supported) stays active.
+      const activeJam = actor.system?.activeJam;
+      const activeBody = activeJam || activeMorph;
+
+      const suppressed = boundTo !== activeBody;
+      // console.debug("[EP2e] morph suppression", { item: item.name, boundTo, activeBody, suppressed });
       return suppressed;
     }
 

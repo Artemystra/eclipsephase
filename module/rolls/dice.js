@@ -623,15 +623,15 @@ const result = await foundry.applications.api.DialogV2.wait({
     content,
     buttons: [
     {
-        action: "cancel",
-        label: cancelButton.title,
-        callback: () => ({ cancelled: true })
-    },
-    {
         action: "roll",
         label: rollButton.title,
         default: true,
         callback: (event, button) => extractFormValues(button.form)
+    },
+    {
+        action: "cancel",
+        label: cancelButton.title,
+        callback: () => ({ cancelled: true })
     }
     ],
     modal: true,

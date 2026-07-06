@@ -123,10 +123,10 @@ export default class EPactor extends Actor {
       // When jamming, use the drone's pools instead of the morph's
       const poolSource = jammedVehicleData
         ? {
-            vigor:   jammedVehicleData.system.pools?.vig?.max  ?? 0,
-            insight: jammedVehicleData.system.pools?.ins?.max  ?? 0,
-            moxie:   jammedVehicleData.system.pools?.mox?.max  ?? 0,
-            flex:    jammedVehicleData.system.pools?.flex?.max ?? 0
+            vigor:   Number(jammedVehicleData.system.pools?.vig?.max)  || 0,
+            insight: Number(jammedVehicleData.system.pools?.ins?.max)  || 0,
+            moxie:   Number(jammedVehicleData.system.pools?.mox?.max)  || 0,
+            flex:    Number(jammedVehicleData.system.pools?.flex?.max) || 0
           }
         : morphValues;
       this._calculatePools(actorModel, poolSource, chiMultiplier)
@@ -197,7 +197,7 @@ export default class EPactor extends Actor {
       }
     }
 
-    if (actorWhole.getFlag("eclipsephase", "resleeving") === true && actorModel.isOwner){
+    if (actorWhole.getFlag("eclipsephase", "resleeving") === true && actorWhole.isOwner){
         await actorWhole.update({
           "system.pools.insight.value": actorPools.insight.totalInsight, 
           "system.pools.vigor.value": actorPools.vigor.totalVigor, 
