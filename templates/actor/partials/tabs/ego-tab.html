@@ -165,7 +165,7 @@
                 {{#each actor.ids as |idValues key|}}
                     {{#if (eq @root.actor.system.activeID idValues.id)}}
                         <div class="tab body item id-detail-panel {{#if (eq @root.tabGroups.id 'active')}}active{{/if}}" data-group="id" data-tab="active">
-                        <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
+                        <div style="display: flex; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
                             <div class="item" style="min-width: 100%; display: flex; justify-content: flex-end;" data-item-id="{{idValues.id}}">
                                 <div class="wantToKnowMore">
                                     <button type="button"
@@ -180,7 +180,7 @@
                         </div>
                     {{else}}
                         <div class="tab body item id-detail-panel {{#if (eq @root.tabGroups.id idValues.id)}}active{{/if}}" data-group="id" data-tab="{{idValues.id}}">
-                        <div style="display: flex; min-height: 55px; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
+                        <div style="display: flex; width: 100%; gap: 10px; flex-wrap: wrap; align-content: center;">
                             <div class="item" style="min-width: 100%; display: flex; justify-content: flex-end;" data-item-id="{{idValues.id}}" data-item-name="{{localize 'ep2e.actorSheet.leftTabs.idTab'}} ({{idValues.name}})">
                                 <div class="wantToKnowMore">
                                     <button type="button"
@@ -208,7 +208,7 @@
                             </div>
                         </div>
                     {{/if}}
-                        <div style="display: flex; flex-wrap: nowrap; align-items: stretch; gap: 10px; margin-top: 10px; flex: 1; min-height: 0;">
+                        <div style="display: flex; flex-wrap: nowrap; align-items: stretch; gap: 10px; flex: 1; min-height: 0;">
                             <div class="contentBox" style="flex: 1.5; min-width: 0; margin: 0; display: flex; flex-direction: column;">
                                 <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
                                     {{#each idValues.system.rep as |rep key|}}
