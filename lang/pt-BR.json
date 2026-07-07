@@ -323,6 +323,34 @@
           "apora": "Aporagênero",
           "mav": "Maverique",
           "novi": "Novigênero"
+        },
+        "language": {
+          "arabic": "Árabe",
+          "bengali": "Bengali",
+          "cantonese": "Cantonês",
+          "dutch": "Holandês",
+          "english": "Inglês",
+          "farsi": "Persa",
+          "french": "Francês",
+          "german": "Alemão",
+          "hindi": "Hindi",
+          "italian": "Italiano",
+          "japanese": "Japonês",
+          "javanese": "Javanês",
+          "korean": "Coreano",
+          "mandarin": "Mandarim",
+          "polish": "Polonês",
+          "portuguese": "Português",
+          "punjabi": "Panjabi",
+          "russian": "Russo",
+          "skandinaviska": "Skandinaviska",
+          "spanish": "Espanhol",
+          "swedish": "Sueco",
+          "tamil": "Tâmil",
+          "turkish": "Turco",
+          "urdu": "Urdu",
+          "vietnamese": "Vietnamita",
+          "wu": "Wu"
         }
       },
       "motivations": {
@@ -331,7 +359,8 @@
       },
       "languages": {
         "headline": "Idiomas",
-        "placeholder": "ex.: hindi, chinês, inglês"
+        "placeholder": "Digite um idioma e pressione Enter",
+        "removeTitle": "Remover"
       },
       "traits": {
         "headline": "Traços",

@@ -2151,6 +2151,82 @@ function itemDeletion(actor, itemID){
   actor.deleteEmbeddedDocuments("Item", itemDelete);
 }
 
+/**
+ * Migrates actor.system.ego.languages from a single comma-separated string into an array of
+ * individual language strings, to support the new multi-select pill widget on the Identity tab
+ * (see multiSelectPills in common/general-sheet-functions.js).
+ *
+ * Legacy: "Hindi, Chinese, English" (String)
+ * New:    ["Hindi", "Chinese", "English"] (Array of Strings)
+ *
+ * Runs on character, npc and goon actors, since ego.languages lives in the shared "base" template.
+ */
+export async function migrationPre190(startMigration, endMigration) {
+  const latestUpdate = "1.9";
+  if (!startMigration) return { endMigration: false };
+
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+  const total = actors.length || 1;
+
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (let i = 0; i < actors.length; i++) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    const actor = actors[i];
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const legacyLanguages = actor.system?.ego?.languages;
+
+      // Only actors still on the old string format need converting; skip anyone already migrated.
+      if (typeof legacyLanguages === "string") {
+        const languageArray = legacyLanguages
+          .split(",")
+          .map(language => language.trim())
+          .filter(language => language.length > 0);
+
+        await actor.update({ "system.ego.languages": languageArray });
+
+        console.log(
+          `[EP Migration ${latestUpdate}] ${actor.name}: converted languages "${legacyLanguages}" -> [${languageArray.join(", ")}]`
+        );
+      }
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
+    }
+
+    doneCount++;
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
 function epCreateProgressDialog(title = "Migration") {
   const state = { cancelled: false };
 

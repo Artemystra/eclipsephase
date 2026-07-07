@@ -458,6 +458,54 @@ export function embeddedItemToggle(html, actor) {
 }
 
 /**
+ * Powers any ".multiselect-widget" (see templates/actor/partials/multiselect-pills.html) - a
+ * reusable multi-select that stores its values as an array on the widget's data-path.
+ * Add: type into .multiselect-input and press Enter. Remove: click a .multiselect-pill-remove.
+ * @param {Object} html - The HTML object to which the event listeners are added
+ * @param {Object} actor - The actor object whose data-path array fields are being edited
+ */
+export function multiSelectPills(html, actor) {
+  html.querySelectorAll(".multiselect-widget").forEach(widget => {
+    const path = widget.dataset.path;
+    if (!path) return;
+
+    const input = widget.querySelector(".multiselect-input");
+
+    if (input) {
+      input.addEventListener("keydown", async ev => {
+        if (ev.key !== "Enter") return;
+        ev.preventDefault();
+
+        const value = input.value.trim();
+        if (!value) return;
+
+        const values = foundry.utils.duplicate(foundry.utils.getProperty(actor, path) ?? []);
+        const alreadyAdded = values.some(existing => String(existing).toLowerCase() === value.toLowerCase());
+        if (alreadyAdded) {
+          input.value = "";
+          return;
+        }
+
+        values.push(value);
+        await actor.update({ [path]: values });
+        input.value = "";
+      });
+    }
+
+    widget.querySelectorAll(".multiselect-pill-remove").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const index = Number(ev.currentTarget.dataset.index);
+        const values = foundry.utils.duplicate(foundry.utils.getProperty(actor, path) ?? []);
+        if (Number.isNaN(index) || !values[index]) return;
+
+        values.splice(index, 1);
+        await actor.update({ [path]: values });
+      });
+    });
+  });
+}
+
+/**
  * Simple toggle for items active state
  * @param {Object} html - The html object passeed in click on a button of the actor sheet
  * @param {Object} item - The item to be toggled

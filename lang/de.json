@@ -331,6 +331,34 @@
           "apora": "Aporagender",
           "mav": "Maverique",
           "novi": "Novigender"
+        },
+        "language": {
+          "arabic": "Arabisch",
+          "bengali": "Bengalisch",
+          "cantonese": "Kantonesisch",
+          "dutch": "Niederländisch",
+          "english": "Englisch",
+          "farsi": "Persisch",
+          "french": "Französisch",
+          "german": "Deutsch",
+          "hindi": "Hindi",
+          "italian": "Italienisch",
+          "japanese": "Japanisch",
+          "javanese": "Javanisch",
+          "korean": "Koreanisch",
+          "mandarin": "Mandarin",
+          "polish": "Polnisch",
+          "portuguese": "Portugiesisch",
+          "punjabi": "Punjabi",
+          "russian": "Russisch",
+          "skandinaviska": "Skandinaviska",
+          "spanish": "Spanisch",
+          "swedish": "Schwedisch",
+          "tamil": "Tamil",
+          "turkish": "Türkisch",
+          "urdu": "Urdu",
+          "vietnamese": "Vietnamesisch",
+          "wu": "Wu"
         }
       },
       "motivations": {
@@ -339,7 +367,8 @@
       },
       "languages": {
         "headline": "Sprachen",
-        "placeholder": "z.B. Hindi, Chinesisch, Englisch"
+        "placeholder": "Sprache eingeben und Enter drücken",
+        "removeTitle": "Entfernen"
       },
       "traits": {
         "headline": "Vorteile",

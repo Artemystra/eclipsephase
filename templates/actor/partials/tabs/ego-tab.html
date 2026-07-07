@@ -14,7 +14,7 @@
                     <div class="listBackground" style="background-color: var(--pitchBorder); flex: 1; min-width: 0;">
                         <div class="flexrow grid-2col">
                             <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.origin.headline"}}</label>
-                            <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()"  name="system.ego.origin" data-type="String" type="text" list="originList" value="{{actor.system.ego.origin}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectOrigin'}}" style="padding-left: 5px;">
+                            <input class="selectSpecApt item-standard-margin-medium flex-group-left ego-combo-input" onFocus="this.select()"  name="system.ego.origin" data-type="String" type="text" list="originList" value="{{actor.system.ego.origin}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectOrigin'}}" style="padding-left: 5px;">
                             <datalist id="originList">
                                 {{#each config.origins as |origin key|}}
                                     <option value="{{localize origin}}"></option>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="flexrow grid-2col">
                             <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.sex.headline"}}</label>
-                            <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.sex" data-type="String" type="text" list="sexList" value="{{actor.system.ego.sex}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectSex'}}" style="padding-left: 5px;">
+                            <input class="selectSpecApt item-standard-margin-medium flex-group-left ego-combo-input" onFocus="this.select()" name="system.ego.sex" data-type="String" type="text" list="sexList" value="{{actor.system.ego.sex}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectSex'}}" style="padding-left: 5px;">
                             <datalist id="sexList">
                                 {{#each config.sexes as |sex key|}}
                                     <option value="{{localize sex}}"></option>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="flexrow grid-2col">
                             <label class="resource-value flex-group-left" >{{localize "ep2e.ego.general.gender.headline"}}</label>
-                            <input class="selectSpecApt item-standard-margin-medium flex-group-left" onFocus="this.select()" name="system.ego.gender" data-type="String" type="text" list="genderList" value="{{actor.system.ego.gender}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectGender'}}" style="padding-left: 5px;">
+                            <input class="selectSpecApt item-standard-margin-medium flex-group-left ego-combo-input" onFocus="this.select()" name="system.ego.gender" data-type="String" type="text" list="genderList" value="{{actor.system.ego.gender}}" placeholder="{{localize 'ep2e.actorSheet.placeholders.selectGender'}}" style="padding-left: 5px;">
                             <datalist id="genderList">
                                 {{#each config.genders as |gender key|}}
                                 <option value="{{localize gender}}"></option>
@@ -40,7 +40,7 @@
                             </datalist>
                         </div>
                     </div>
-                    <div style="flex: 1; min-width: 0;">
+                    <div style="flex: 2; min-width: 0;">
                         <div class="itemBackground" style="padding-bottom: 0;">
                             <label class="input-large resource-value alignLeft" >{{localize "ep2e.ego.motivations.headline"}}</label>
                             <ol style="list-style-type: decimal-leading-zero; padding: 0 0 0 2.5em; margin: 10px 0;">
@@ -51,9 +51,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="itemBackground skills flexrow flex-group-left" style="gap: 8px;">
+                <div class="itemBackground skills flexrow flex-group-left" style="gap: 8px; flex-wrap: wrap;">
                     <label class="input-large resource-value" >{{localize "ep2e.ego.languages.headline"}}</label>
-                    <input type="text" name="system.ego.languages" value="{{actor.system.ego.languages}}" placeholder="{{localize 'ep2e.ego.languages.placeholder'}}"/>
+                    {{> systems/eclipsephase/templates/actor/partials/multiselect-pills.html
+                        items=actor.system.ego.languages
+                        path="system.ego.languages"
+                        placeholderKey="ep2e.ego.languages.placeholder"
+                        removeTitleKey="ep2e.ego.languages.removeTitle"
+                        datalistId="languageList"
+                        suggestions=config.languages }}
                 </div>
             </div>
         </div>

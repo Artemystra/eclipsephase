@@ -244,6 +244,38 @@ eclipsephase.origins = {
     regional: "ep2e.ego.general.origin.regional"
 }
 
+//Languages listed in the core rulebook (Step 7: Skills) and the Character Options Random
+//Language table (3.0), used as suggestions for the Languages multi-select on the Identity tab.
+//Players may still type in any other language.
+eclipsephase.languages = {
+    arabic: "ep2e.ego.general.language.arabic",
+    bengali: "ep2e.ego.general.language.bengali",
+    cantonese: "ep2e.ego.general.language.cantonese",
+    dutch: "ep2e.ego.general.language.dutch",
+    english: "ep2e.ego.general.language.english",
+    farsi: "ep2e.ego.general.language.farsi",
+    french: "ep2e.ego.general.language.french",
+    german: "ep2e.ego.general.language.german",
+    hindi: "ep2e.ego.general.language.hindi",
+    italian: "ep2e.ego.general.language.italian",
+    japanese: "ep2e.ego.general.language.japanese",
+    javanese: "ep2e.ego.general.language.javanese",
+    korean: "ep2e.ego.general.language.korean",
+    mandarin: "ep2e.ego.general.language.mandarin",
+    polish: "ep2e.ego.general.language.polish",
+    portuguese: "ep2e.ego.general.language.portuguese",
+    punjabi: "ep2e.ego.general.language.punjabi",
+    russian: "ep2e.ego.general.language.russian",
+    skandinaviska: "ep2e.ego.general.language.skandinaviska",
+    spanish: "ep2e.ego.general.language.spanish",
+    swedish: "ep2e.ego.general.language.swedish",
+    tamil: "ep2e.ego.general.language.tamil",
+    turkish: "ep2e.ego.general.language.turkish",
+    urdu: "ep2e.ego.general.language.urdu",
+    vietnamese: "ep2e.ego.general.language.vietnamese",
+    wu: "ep2e.ego.general.language.wu"
+}
+
 eclipsephase.damageRatingMultiplier = {
   synth: 2.0,
   bio: 1.5,

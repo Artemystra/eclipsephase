@@ -313,7 +313,7 @@
           "gender": "",
           "age": "",
           "origin": "",
-          "languages": "",
+          "languages": [],
           "motivations": {
             "motivation1": "",
             "motivation2": "",

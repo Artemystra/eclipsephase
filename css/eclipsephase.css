@@ -2384,6 +2384,88 @@ h3.subheaderBlank {
   flex-grow: 0.5;
 }
 
+/* Datalist-combo inputs (Origin/Sex/Gender via .ego-combo-input, and any multiselect-input that
+   has a datalist attached via list="..."). Chromium's native <input list> dropdown arrow is drawn
+   at a fixed offset from the top rather than truly centered (confirmed: it doesn't move even when
+   the field is much taller), so instead of relying on it we hide it and draw our own, reliably
+   centered arrow via background-image. */
+input[type="text"].ego-combo-input,
+input[type="text"].multiselect-input[list] {
+  height: 24px;
+  padding-right: 22px;
+}
+
+input[type="text"].ego-combo-input:hover,
+input[type="text"].multiselect-input[list]:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0L5 6L10 0Z' fill='%23cccccc'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+}
+
+/* Keep Chromium's native indicator functionally clickable (so the dropdown still opens/closes)
+   but visually invisible, since our own background-image draws the visible arrow instead. */
+input[type="text"].ego-combo-input::-webkit-calendar-picker-indicator,
+input[type="text"].multiselect-input[list]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+/* Reusable multiselect-pills widget (see templates/actor/partials/multiselect-pills.html and
+   multiSelectPills() in common/general-sheet-functions.js) — used by e.g. Languages.
+   Pills and the input are direct siblings inside one bordered container, so the whole thing
+   reads as a single field rather than two separate boxes. */
+.multiselect-widget {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-height: 24px;
+  padding: 3px 6px;
+  border: solid 1px var(--highlightBackground);
+  border-radius: 4px;
+}
+
+.multiselect-widget:focus-within {
+  background: var(--focusBackground);
+}
+
+.multiselect-pill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--focusBackground);
+  border: solid 1px var(--highlightBackground);
+  border-radius: 12px;
+  padding: 2px 6px 2px 10px;
+  font-size: 12px;
+  color: var(--mainText);
+}
+
+.multiselect-pill-remove {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0 4px;
+  color: var(--mainText);
+}
+
+.multiselect-pill-remove:hover {
+  color: var(--highlight);
+}
+
+.multiselect-input {
+  flex: 1 1 80px;
+  min-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The widget's own :focus-within already highlights the whole field, so keep the input itself
+   transparent instead of also switching background on its own hover/focus. */
+input[type="text"].multiselect-input:hover,
+input[type="text"].multiselect-input:focus {
+  background: transparent;
+}
+
 .flavor-text,
 .message-content,
 .chat-message {

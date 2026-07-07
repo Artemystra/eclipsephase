@@ -323,6 +323,34 @@
           "apora": "异性别",
           "mav": "超性别",
           "novi": "复杂性别"
+        },
+        "language": {
+          "arabic": "阿拉伯语",
+          "bengali": "孟加拉语",
+          "cantonese": "粤语",
+          "dutch": "荷兰语",
+          "english": "英语",
+          "farsi": "波斯语",
+          "french": "法语",
+          "german": "德语",
+          "hindi": "印地语",
+          "italian": "意大利语",
+          "japanese": "日语",
+          "javanese": "爪哇语",
+          "korean": "韩语",
+          "mandarin": "普通话",
+          "polish": "波兰语",
+          "portuguese": "葡萄牙语",
+          "punjabi": "旁遮普语",
+          "russian": "俄语",
+          "skandinaviska": "Skandinaviska",
+          "spanish": "西班牙语",
+          "swedish": "瑞典语",
+          "tamil": "泰米尔语",
+          "turkish": "土耳其语",
+          "urdu": "乌尔都语",
+          "vietnamese": "越南语",
+          "wu": "吴语"
         }
       },
       "motivations": {
@@ -331,7 +359,8 @@
       },
       "languages": {
         "headline": "语言",
-        "placeholder": "例如 印地语, 汉语, 英语"
+        "placeholder": "输入语言后按回车",
+        "removeTitle": "移除"
       },
       "traits": {
         "headline": "正面特征",

@@ -324,6 +324,34 @@
           "apora": "Aporagender",
           "mav": "Maverique",
           "novi": "Novigender"
+        },
+        "language": {
+          "arabic": "Árabe",
+          "bengali": "Bengalí",
+          "cantonese": "Cantonés",
+          "dutch": "Neerlandés",
+          "english": "Inglés",
+          "farsi": "Persa",
+          "french": "Francés",
+          "german": "Alemán",
+          "hindi": "Hindi",
+          "italian": "Italiano",
+          "japanese": "Japonés",
+          "javanese": "Javanés",
+          "korean": "Coreano",
+          "mandarin": "Mandarín",
+          "polish": "Polaco",
+          "portuguese": "Portugués",
+          "punjabi": "Panyabí",
+          "russian": "Ruso",
+          "skandinaviska": "Skandinaviska",
+          "spanish": "Español",
+          "swedish": "Sueco",
+          "tamil": "Tamil",
+          "turkish": "Turco",
+          "urdu": "Urdu",
+          "vietnamese": "Vietnamita",
+          "wu": "Wu"
         }
       },
       "motivations": {
@@ -332,7 +360,8 @@
       },
       "languages": {
         "headline": "Languages",
-        "placeholder": "e.g. Hindi, Chinese, English"
+        "placeholder": "Escribe un idioma y pulsa Enter",
+        "removeTitle": "Eliminar"
       },
       "traits": {
         "headline": "Traits",

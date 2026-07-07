@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList} from "../common/general-sheet-functions.js";
+import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
@@ -1219,6 +1219,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     //Edit Item Checkboxes
     embeddedItemToggle(html, actor);
+
+    //Multi-select pill widgets (e.g. Languages)
+    multiSelectPills(html, actor);
 
     //show on hover
     html.querySelectorAll(".reveal").forEach(element => {

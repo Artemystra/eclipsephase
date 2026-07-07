@@ -160,6 +160,7 @@ Hooks.once('init', async function() {
   var templates = [
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/health-bar.html",
+    "systems/eclipsephase/templates/actor/partials/multiselect-pills.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html",
@@ -266,6 +267,7 @@ Hooks.once("ready", async function() {
   let before110 = foundry.utils.isNewerVersion("1.1.0", gameVersion);
   let before150 = foundry.utils.isNewerVersion("1.5", gameVersion);
   let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
+  let before190 = foundry.utils.isNewerVersion("1.9", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -467,6 +469,23 @@ Hooks.once("ready", async function() {
 
     let Migration170 = await update.migrationPre170(startMigration);
     endMigration = Migration170["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
+  //1.9 Migration
+  if (before190) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.190";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration190 = await update.migrationPre190(startMigration);
+    endMigration = Migration190["endMigration"];
   }
 
     if(endMigration){
