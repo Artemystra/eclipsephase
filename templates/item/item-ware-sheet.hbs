@@ -1,12 +1,12 @@
 <form class="{{cssClass}}" autocomplete="off">
-    <header class="sheet-header itemHeader">
-        <div class="header-fields flexgrow flex-group-left" style="align-items: flex-end;">
+    <div class="ep-sheet-titlebar">
+        <div class="ep-titlebar-item-logo">
             <img class="item-img" src="{{item.img}}" data-action="editImage" data-field="img" title="{{item.name}}"/>
-            <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
-            </h1>
         </div>
-    </header>
+        <div class="ep-titlebar-name centerBackground">
+            <input name="name" type="text" value="{{item.name}}" placeholder="Name" style="width: 100%;"/>
+        </div>
+    </div>
 
     <nav class="sheet-tabs itemnav tabs" data-group="primary">
         {{#each tabs.primary as |tab|}}

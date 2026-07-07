@@ -180,7 +180,7 @@ async _onRender(context, options) {
   const windowHeader = html.querySelector('.window-header');
   if (windowHeader) windowHeader.style.display = 'none';
 
-  const itemHeader = html.querySelector(".sheet-header.itemHeader");
+  const itemHeader = html.querySelector(".ep-sheet-titlebar");
   addWindowControls(this, itemHeader);
   addDragSupport(this, itemHeader);
 

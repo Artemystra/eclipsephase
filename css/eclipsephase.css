@@ -431,24 +431,6 @@
   font-family: 'Cousine', monospace!important;
 }
 
-.eclipsephase .sheet-header {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 210px;
-  flex: 0 0 210px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-box-pack: start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .eclipsephase nav.sheet-tabs {
   min-height: 50px;
   max-height: 50px;
@@ -512,35 +494,6 @@
   position: absolute;
   border-radius: 50%;
   margin: -5px 0 0 12px;
-}
-
-.eclipsephase .sheet-header .header-fields {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-
-.eclipsephase .sheet-header h1.goonname {
-  height: 40px;
-  padding: 0px;
-  margin: 22px 8px 0px 0px;
-  border-bottom: 0;
-  font-size: 22px;
-}
-
-.eclipsephase .sheet-header h1.charname {
-  height: 40px;
-  padding: 0px;
-  margin: 22px 8px 0px 0px;
-  border-bottom: 0;
-  font-size: 22px;
-}
-
-.eclipsephase .sheet-header h1.charname input,
-.eclipsephase .sheet-header h1.goonname input{
-  width: 100%;
-  height: 100%;
-  margin: 0;
 }
 
 .eclipsephase .primary-tabs {
@@ -1588,6 +1541,27 @@ optgroup .Default .Roll .Mode,
   z-index: 1;
 }
 
+/* Item sheets show the item's own square image here instead of the system logo -
+   own class so it isn't forced into the logo's diagonal clip-path/wide box. */
+.ep-titlebar-item-logo {
+  height: 52px;
+  padding: 0 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.ep-titlebar-item-logo .item-img {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  max-width: 52px;
+  object-fit: cover;
+  margin: 0;
+  border: none;
+}
+
 .ep-titlebar-name {
   background-color: var(--highlightBackground);
   padding: 10px 0 0 22px;
@@ -1624,29 +1598,6 @@ optgroup .Default .Roll .Mode,
 }
 
 .ep-sheet-titlebar .ep-window-controls button.header-control:hover {
-  opacity: 1;
-}
-
-/* Controls inside item header (absolute positioning) */
-.itemHeader .ep-window-controls {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 4px;
-  z-index: 10;
-  cursor: default;
-}
-
-.itemHeader .ep-window-controls button.header-control {
-  --button-text-color: var(--mainText, #ccc);
-  --button-background-color: transparent;
-  opacity: 0.6;
-  cursor: pointer;
-}
-
-.itemHeader .ep-window-controls button.header-control:hover {
   opacity: 1;
 }
 
