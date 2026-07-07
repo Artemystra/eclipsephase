@@ -1187,6 +1187,11 @@
         "usePool": "Use",
         "modifier": "Modifier",
         "globalModLabel": "Global Mod",
+        "jamming": {
+          "headline": "Jamming",
+          "remoteBody": "Roll Remote Body",
+          "ownBody": "Roll Own Body"
+        },
         "noSpecLabel": "No Specialization",
         "noPool": "No pool left",
         "useThreat": "Use Threat",
@@ -1392,7 +1397,8 @@
         "stressReceived": "Stress Received",
         "infectionRaise": "Infection raised to",
         "jamming": {
-          "penalty": "Jamming Penalty"
+          "penalty": "Jamming Penalty",
+          "ownBodyPenalty": "Own Body Penalty"
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",

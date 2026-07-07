@@ -1,17 +1,12 @@
 <form>
-    <div class="grid" style="margin-bottom: 0;">
-        <div class="flexrow subheader">
-            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.generalModHeadline"}}</h3>
-        </div>
-        <div class="flexrow subheader">
-            <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.attackerHeadline"}}</h3>
-        </div>
-    </div>
-    <div class="grid" style="margin-top: 0;">
+    <div class="grid">
         <div>
             {{> systems/eclipsephase/templates/chat/partials/general-modifiers.html }}
         </div>
         <div>
+            <div class="flexrow subheader">
+                <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.attackerHeadline"}}</h3>
+            </div>
             <div class="form-group listBackgroundMain">
                 <input type="checkbox" name="calledShot" id="calledshot">
                 <label class="resource-label" for="calledshot">{{localize "ep2e.roll.dialog.calledShotLabel"}}</label>

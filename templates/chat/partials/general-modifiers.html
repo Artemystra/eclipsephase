@@ -1,4 +1,7 @@
 <div class="contentBoxMargin">
+    <div class="flexrow subheader">
+        <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.generalModHeadline"}}</h3>
+    </div>
     <div class="form-group listBackgroundMain">
         <label class="resource-labelDialog" style="min-width: 140px;">{{localize "ep2e.roll.dialog.globalModLabel"}}</label>
         <input type="text" name="globalMod" placeholder="e.g. -20" />
@@ -146,6 +149,19 @@
         </div>
     </div>
     {{/if}}
+{{/if}}
+{{#if (and actorWhole.system.additionalSystems.isJamming (ne rolledFrom "integration") (ne rolledFrom "vehicleSkill"))}}
+<div class="contentBoxMargin">
+    <div class="flexrow subheader colorV2">
+        <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.jamming.headline"}}</h3>
+    </div>
+    <div class="form-group listBackgroundMain">
+        <select name="jammingRollTarget" style="width: 100%;">
+            <option value="remote">{{localize "ep2e.roll.dialog.jamming.remoteBody"}}{{#unless actorWhole.system.additionalSystems.jamming.ignorePenalty}} (-10){{/unless}}</option>
+            <option value="own">{{localize "ep2e.roll.dialog.jamming.ownBody"}} (-30)</option>
+        </select>
+    </div>
+</div>
 {{/if}}
 <div class="contentBoxMargin">
     <div class="flexrow subheader">

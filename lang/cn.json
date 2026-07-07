@@ -1141,6 +1141,11 @@
         "ignoreInfection": "忽视感染",
         "usePool": "使用",
         "globalModLabel": "全局调整值",
+        "jamming": {
+          "headline": "干扰",
+          "remoteBody": "以远程身体投骰",
+          "ownBody": "以自己的身体投骰"
+        },
         "noSpecLabel": "无专精",
         "noPool": "无剩余能力池",
         "useThreat": "使用威胁 （+20）",
@@ -1335,6 +1340,9 @@
         "total": "Result",
         "damageDone": "Damage Done",
         "infectionRaise": "感染加深至",
+        "jamming": {
+          "ownBodyPenalty": "自身身体减值"
+        },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
           "aversion": "Morph Aversion",

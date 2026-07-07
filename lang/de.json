@@ -1163,6 +1163,11 @@
         "ignoreInfection": "Infektion ignorieren",
         "usePool": "Nutze",
         "globalModLabel": "Globale Mod",
+        "jamming": {
+          "headline": "Jammen",
+          "remoteBody": "Als Drohne würfeln",
+          "ownBody": "Als eigenen Körper würfeln"
+        },
         "noSpecLabel": "Keine Spezialisierung",
         "noPool": "Nicht genug Pool",
         "useThreat": "Nutze Bedrohung (+20)",
@@ -1364,7 +1369,8 @@
         "damageDone": "Schaden gesamt",
         "infectionRaise": "Ienfektion steigt auf",
         "jamming": {
-          "penalty": "Jamming-Malus"
+          "penalty": "Jamming-Malus",
+          "ownBodyPenalty": "Malus für eigenen Körper"
         },
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie",

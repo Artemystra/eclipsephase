@@ -1134,6 +1134,11 @@
         "ignoreInfection": "Ignore Infection",
         "usePool": "Use",
         "globalModLabel": "Global Mod",
+        "jamming": {
+          "headline": "Jamming",
+          "remoteBody": "Tirar como cuerpo remoto",
+          "ownBody": "Tirar como cuerpo propio"
+        },
         "noSpecLabel": "No Specialization",
         "noPool": "No pool left",
         "useThreat": "Use Threat (+20)",
@@ -1328,6 +1333,9 @@
         "total": "Result",
         "damageDone": "Damage Done",
         "infectionRaise": "Infection raised to",
+        "jamming": {
+          "ownBodyPenalty": "Penalización de cuerpo propio"
+        },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
           "aversion": "Morph Aversion",

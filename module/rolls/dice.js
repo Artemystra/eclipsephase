@@ -132,7 +132,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 function defineRoll(dataset, actorWhole){
     
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -919,10 +919,17 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Resleeving & Jamming */
 
-    if (actorModel?.additionalSystems?.isJamming && !actorModel?.additionalSystems?.jamming?.ignorePenalty && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill") {
-        modValue = -10;
-        announce = "ep2e.roll.announce.jamming.penalty";
-        task.addModifier(new TaskRollModifier(announce, modValue));
+    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill") {
+        if (options.jammingRollTarget === "own") {
+            modValue = -30;
+            announce = "ep2e.roll.announce.jamming.ownBodyPenalty";
+            task.addModifier(new TaskRollModifier(announce, modValue));
+        }
+        else if (!actorModel?.additionalSystems?.jamming?.ignorePenalty) {
+            modValue = -10;
+            announce = "ep2e.roll.announce.jamming.penalty";
+            task.addModifier(new TaskRollModifier(announce, modValue));
+        }
     }
 
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined && rolledFrom !== "vehicleSkill"){
