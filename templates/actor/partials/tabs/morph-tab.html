@@ -4,6 +4,9 @@
         <div class="scrolly" style="flex-grow: 0.3; min-height: 630px;">
             <nav class="morph-tabs subtabs" data-group="morph">
                 <!-- Morphs -->
+                <div class="resource-label" style="padding: 6px 4px 2px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--inactive);">
+                    {{localize "ep2e.morph.morphsHeadline"}}
+                </div>
                 {{#each actor.bodies as |body key|}}
                 <!-- "Sleeved" morph has it's own data-tab, as it needs to be identified this way during defaultOptions setup in EPactorSheet.js -->
                     {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
@@ -16,7 +19,7 @@
                             <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
                             <div style="min-height: 20px; width: 100%;">
                                 <button type="button"
-                                    class="resource-label editWithLabel button sheetButton sleeveButton"
+                                    class="resource-label button sheetButton sleeveButton"
                                     title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}"
                                     data-item-id="{{body.morphdetails.0._id}}"
                                     data-actorid="{{@root.actor.id}}"
@@ -36,15 +39,14 @@
                         <a data-action="tab" data-group="morph" data-tab="{{vehicle.id}}" class="item {{#if (eq @root.tabGroups.morph vehicle.id)}}active{{/if}}">
                             <div class="label truncateMulti">{{vehicle.name}}</div>
                             {{#if (eq @root.actor.system.activeJam vehicle.id)}}
-                                <!-- Jammed: state label (hidden by CSS when tab active) + Unjam button (shown by CSS when tab active) -->
-                                <div class="state jammed-state">{{localize "ep2e.morph.jamming.jammed"}}</div>
-                                <div style="min-height: 20px; width: 100%;">
+                                <!-- Jammed: state label and Unjam button share one slot so the tab doesn't resize when toggling active -->
+                                <div class="jam-slot">
+                                    <div class="state jammed-state">{{localize "ep2e.morph.jamming.jammed"}}</div>
                                     <button type="button"
-                                        class="resource-label editWithLabel button sheetButton unjammButton"
+                                        class="resource-label button sheetButton unjammButton"
                                         title="{{localize 'ep2e.actorSheet.button.unjamVehicle'}}"
                                         data-item-id="{{vehicle.id}}"
-                                        data-actorid="{{@root.actor.id}}"
-                                        style="width: 100%;">
+                                        data-actorid="{{@root.actor.id}}">
                                         {{localize "ep2e.actorSheet.button.unjamVehicle"}}
                                     </button>
                                 </div>
@@ -52,7 +54,7 @@
                                 <!-- Not jammed: Jam button (CSS shows only when tab active) -->
                                 <div style="min-height: 20px; width: 100%;">
                                     <button type="button"
-                                        class="resource-label editWithLabel button sheetButton jammButton"
+                                        class="resource-label button sheetButton jammButton"
                                         title="{{localize 'ep2e.actorSheet.button.jamVehicle'}}"
                                         data-item-id="{{vehicle.id}}"
                                         data-name="{{vehicle.name}}"
@@ -80,7 +82,7 @@
                         <div class="contentBox item flexrow" data-item-id="{{body.morphdetails.0._id}}" data-item-name="{{body.morphdetails.0.name}}" style="flex-wrap: wrap; gap: 10px;">
                             <div class="contentBox flexrow" style="align-items: flex-start;">
                                 <div style="flex: 0.3;">
-                                    <img src="{{body.morphdetails.0.img}}" style="max-width: 10rem;"/>
+                                    <img src="{{body.morphdetails.0.img}}" class="body-portrait"/>
                                     <div style="display: flex;">
                                         <button type="button" class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
                                         {{#if (ne @root.actor.system.activeMorph body.morphdetails.0.id)}}
@@ -102,7 +104,7 @@
                                         </div>
                                     </div>
                                     {{#if body.morphdetails.0.system.description}}
-                                        <div class="contentBox" style=" overflow-y: scroll; padding: 10px;">
+                                        <div class="contentBox body-description-box">
                                             {{{body.morphdetails.0.system.description}}}
                                         </div>
                                     {{else}}
@@ -214,7 +216,7 @@
                     <div class="contentBox item flexrow" data-item-id="{{vehicle._id}}" data-item-name="{{vehicle.name}}" style="flex-wrap: wrap; gap: 10px;">
                         <div class="contentBox flexrow" style="align-items: flex-start;">
                             <div style="flex: 0.3;">
-                                <img src="{{vehicle.img}}" style="max-width: 10rem;"/>
+                                <img src="{{vehicle.img}}" class="body-portrait"/>
                                 <div style="display: flex;">
                                     <button type="button" class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
                                     <button type="button" class="item-delete resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
@@ -224,7 +226,7 @@
                                 <div class="itemRowHeader">
                                     <div class="itemGroup wantToKnowMore">
                                         <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
-                                        <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
+                                        <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
                                         <label class="resource-value">{{vehicle.system.dur}}</label>
                                     </div>
                                     <div class="itemGroup wantToKnowMore">
@@ -235,8 +237,12 @@
                                     </div>
                                 </div>
                                 {{#if vehicle.system.description}}
-                                    <div class="contentBox" style=" overflow-y: scroll; padding: 10px;">
+                                    <div class="contentBox body-description-box">
                                         {{{vehicle.system.description}}}
+                                    </div>
+                                {{else}}
+                                    <div class="contentBox" style="min-height: 160px; display: flex; justify-content: center; align-items: center;">
+                                        <span class="warning-pulse">{{localize "ep2e.morph.currentMorph.descriptionMissing"}}</span>
                                     </div>
                                 {{/if}}
                             </div>
@@ -274,9 +280,11 @@
                         </div>
                         <!-- Movement -->
                         {{#if vehicle.system.movement.1.speed}}
-                        <div class="contentBox" style="width: 100%;">
+                        <div class="contentBox">
                             <div class="flexrow subheader">
                                 <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
+                                <div class="alignRight flexGrowThreeQuarter">
+                                </div>
                             </div>
                             <div class="grid grid-2col itemBackground noMargin">
                                 {{#each vehicle.system.movement as |mov key|}}
@@ -291,9 +299,11 @@
                         </div>
                         {{/if}}
                         <!-- Skills -->
-                        <div class="contentBox" style="width: 100%;">
+                        <div class="contentBox">
                             <div class="flexrow subheader">
                                 <h3 class="subheader">{{localize "ep2e.peripherals.skillsHeadline"}}</h3>
+                                <div class="alignRight flexGrowThreeQuarter">
+                                </div>
                             </div>
                             {{#if (eq @root.actor.system.activeJam vehicle.id)}}
                                 <div class="itemBackground" style="padding: 10px; text-align: center; color: var(--inactive);">

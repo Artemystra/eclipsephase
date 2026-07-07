@@ -101,6 +101,7 @@
       "rightTabs": {
         "skillsTab": "Skills",
         "morphTab": "Morph",
+        "bodiesTab": "Cuerpos",
         "inventoryTab": "Inventory",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
@@ -601,7 +602,8 @@
       "traitsLabel": "Morph Traits",
       "wareLabel": "Morph Ware",
       "noMorphTraits": "This Morph is Traitless",
-      "noMorphWare": "Your Morph is Flat"
+      "noMorphWare": "Your Morph is Flat",
+      "morphsHeadline": "Morphs"
     },
     "inventory": {
       "armorLabel": "Armor",

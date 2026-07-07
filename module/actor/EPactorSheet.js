@@ -57,7 +57,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       tabs: [
         { id: "ego", label: "ep2e.actorSheet.leftTabs.identityTab" },
         { id: "skills", label: "ep2e.actorSheet.rightTabs.skillsTab" },
-        { id: "morph", label: "ep2e.actorSheet.rightTabs.morphTab" },
+        { id: "morph", label: "ep2e.actorSheet.rightTabs.bodiesTab" },
         { id: "weapons", label: "ep2e.actorSheet.rightTabs.inventoryTab" },
           { id: "psi", label: "ep2e.actorSheet.rightTabs.psiTab" },
         { id: "gmInfo", label: "ep2e.actorSheet.rightTabs.gmInfoTab" }

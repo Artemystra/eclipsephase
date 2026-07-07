@@ -105,6 +105,7 @@
       "rightTabs": {
         "skillsTab": "Skills",
         "morphTab": "Morph",
+        "bodiesTab": "Bodies",
         "inventoryTab": "Inventory",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
@@ -621,6 +622,7 @@
       "wareLabel": "Morph Ware",
       "noMorphTraits": "This Morph is Traitless",
       "noMorphWare": "Your Morph is Flat",
+      "morphsHeadline": "Morphs",
       "jamming": {
         "headline": "Remote Bodies",
         "jammed": "Jammed",

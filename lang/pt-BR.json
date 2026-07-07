@@ -100,6 +100,7 @@
       "rightTabs": {
         "skillsTab": "Perícias",
         "morphTab": "Morfo",
+        "bodiesTab": "Corpos",
         "inventoryTab": "Inventário",
         "peripheralsTab": "Periféricos",
         "psiTab": "Psi",
@@ -600,7 +601,8 @@
       "traitsLabel": "Traços do Morfo",
       "wareLabel": "Ware do Morfo",
       "noMorphTraits": "Este Morfo não possui traços",
-      "noMorphWare": "Seu Morfo é Tosco"
+      "noMorphWare": "Seu Morfo é Tosco",
+      "morphsHeadline": "Morfos"
     },
     "inventory": {
       "armorLabel": "Armadura",

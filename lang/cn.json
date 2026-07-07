@@ -101,6 +101,7 @@
       "rightTabs": {
         "skillsTab": "技能",
         "morphTab": "义体",
+        "bodiesTab": "身体",
         "inventoryTab": "物品栏",
         "peripheralsTab": "外设",
         "psiTab": "灵能",
@@ -600,7 +601,8 @@
       "traitsLabel": "义体特征",
       "wareLabel": "义体插件",
       "noMorphTraits": "这具义体没有特征",
-      "noMorphWare": "你的义体是自然人"
+      "noMorphWare": "你的义体是自然人",
+      "morphsHeadline": "义体"
     },
     "inventory": {
       "armorLabel": "护甲",

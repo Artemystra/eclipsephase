@@ -104,6 +104,7 @@
       "rightTabs": {
         "skillsTab": "Fähigkeiten",
         "morphTab": "Morph",
+        "bodiesTab": "Körper",
         "inventoryTab": "Inventar",
         "peripheralsTab": "Peripherie",
         "psiTab": "Psi",
@@ -609,6 +610,7 @@
       "wareLabel": "Morph Modifikation",
       "noMorphTraits": "Dieser Morph ist eigenschaftslos",
       "noMorphWare": "Dieser Morph ist flat",
+      "morphsHeadline": "Morphe",
       "jamming": {
         "headline": "Ferngesteuerte Körper",
         "jammed": "Gejammt",
