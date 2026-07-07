@@ -924,6 +924,32 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
             modValue = -30;
             announce = "ep2e.roll.announce.jamming.ownBodyPenalty";
             task.addModifier(new TaskRollModifier(announce, modValue));
+
+            // Rolling with the real body instead of the drone: its stashed wounds and its own
+            // worn-armor encumbrance apply again, since neither affects the drone while jamming.
+            if (actorModel?.additionalSystems?.jamming?.ownBodyWoundMod) {
+                modValue = actorModel.additionalSystems.jamming.ownBodyWoundMod;
+                announce = "ep2e.roll.announce.jamming.ownBodyWounds";
+                task.addModifier(new TaskRollModifier(announce, modValue));
+            }
+            if (actorModel?.additionalSystems?.jamming?.ownBodyArmorMalus) {
+                modValue = actorModel.additionalSystems.jamming.ownBodyArmorMalus;
+                announce = "ep2e.roll.announce.jamming.ownBodyArmor";
+                task.addModifier(new TaskRollModifier(announce, modValue));
+            }
+
+            // The Homebrew weapon/gear/bulky/consumable encumbrance is suppressed on the drone's own
+            // rolls (see _calculateHomebrewEncumberance), so the real body's stashed values apply here instead.
+            if (actorModel?.homebrew) {
+                const weapon = actorModel.additionalSystems?.jamming?.ownBodyWeaponMalus || 0;
+                const gear = actorModel.additionalSystems?.jamming?.ownBodyGearMalus || 0;
+                const homebrewEncumbrance = (weapon + gear) * -1;
+                if (homebrewEncumbrance) {
+                    modValue = homebrewEncumbrance;
+                    announce = "ep2e.roll.announce.jamming.ownBodyEncumbrance";
+                    task.addModifier(new TaskRollModifier(announce, modValue));
+                }
+            }
         }
         else if (!actorModel?.additionalSystems?.jamming?.ignorePenalty) {
             modValue = -10;

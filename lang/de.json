@@ -1401,7 +1401,10 @@
         "infectionRaise": "Ienfektion steigt auf",
         "jamming": {
           "penalty": "Jamming-Malus",
-          "ownBodyPenalty": "Malus für eigenen Körper"
+          "ownBodyPenalty": "Malus für eigenen Körper",
+          "ownBodyWounds": "Wunden des eigenen Körpers",
+          "ownBodyArmor": "Rüstungsbehinderung des eigenen Körpers",
+          "ownBodyEncumbrance": "Behinderung des eigenen Körpers"
         },
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie",

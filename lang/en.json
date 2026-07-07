@@ -1429,7 +1429,10 @@
         "infectionRaise": "Infection raised to",
         "jamming": {
           "penalty": "Jamming Penalty",
-          "ownBodyPenalty": "Own Body Penalty"
+          "ownBodyPenalty": "Own Body Penalty",
+          "ownBodyWounds": "Own Body Wounds",
+          "ownBodyArmor": "Own Body Armor Encumbrance",
+          "ownBodyEncumbrance": "Own Body Encumbrance"
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",

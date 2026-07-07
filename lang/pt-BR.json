@@ -1378,7 +1378,10 @@
         "damageDone": "Damage Done",
         "infectionRaise": "Infecção elevada para",
         "jamming": {
-          "ownBodyPenalty": "Penalidade de corpo próprio"
+          "ownBodyPenalty": "Penalidade de corpo próprio",
+          "ownBodyWounds": "Feridas do corpo próprio",
+          "ownBodyArmor": "Sobrecarga de armadura do corpo próprio",
+          "ownBodyEncumbrance": "Sobrecarga do corpo próprio"
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",

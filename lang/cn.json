@@ -1372,7 +1372,10 @@
         "damageDone": "Damage Done",
         "infectionRaise": "感染加深至",
         "jamming": {
-          "ownBodyPenalty": "自身身体减值"
+          "ownBodyPenalty": "自身身体减值",
+          "ownBodyWounds": "自身身体伤势",
+          "ownBodyArmor": "自身护甲负重",
+          "ownBodyEncumbrance": "自身负重"
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",

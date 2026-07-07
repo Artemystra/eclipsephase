@@ -2174,6 +2174,23 @@ export async function migrationPre190(startMigration, endMigration) {
 
   let doneCount = 0;
 
+  // Stale pre-jamming-update copies of these two items (missing their new Active Effect) get
+  // replaced with the current compendium version, so existing characters pick up the jamming behavior.
+  const JAMMING_ITEMS = [
+    { type: "ware", name: "Drone Rig", packId: "eclipsephase.ware", compendiumId: "z3tPlA7ET15FGS3E", effectId: "DrRigJamPenalty1" },
+    { type: "traits", name: "Drone Affinity", packId: "eclipsephase.traits", compendiumId: "MHw8AZ7y8yPoAkyQ", effectId: "DroneAffinityNoI" }
+  ];
+
+  for (const entry of JAMMING_ITEMS) {
+    const pack = game.packs.get(entry.packId);
+    const doc = pack ? await pack.getDocument(entry.compendiumId) : null;
+    if (!doc) {
+      console.error(`[EP Migration ${latestUpdate}] ${entry.name}: not found in ${entry.packId}, skipping replacement`);
+      continue;
+    }
+    entry.sourceData = doc.toObject();
+  }
+
   for (let i = 0; i < actors.length; i++) {
     if (uiBar.state.cancelled) {
       uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
@@ -2203,6 +2220,30 @@ export async function migrationPre190(startMigration, endMigration) {
         console.log(
           `[EP Migration ${latestUpdate}] ${actor.name}: converted languages "${legacyLanguages}" -> [${languageArray.join(", ")}]`
         );
+      }
+
+      for (const entry of JAMMING_ITEMS) {
+        if (!entry.sourceData) continue;
+
+        const staleItems = actor.items.filter(item =>
+          item.type === entry.type &&
+          item.name === entry.name &&
+          !item.effects.some(e => e.id === entry.effectId)
+        );
+
+        for (const staleItem of staleItems) {
+          const replacement = foundry.utils.duplicate(entry.sourceData);
+          replacement.sort = staleItem.sort;
+          replacement.system.active = staleItem.system.active;
+          if (entry.type === "ware") replacement.system.boundTo = staleItem.system.boundTo;
+
+          await actor.deleteEmbeddedDocuments("Item", [staleItem.id]);
+          await actor.createEmbeddedDocuments("Item", [replacement]);
+
+          console.log(
+            `[EP Migration ${latestUpdate}] ${actor.name}: replaced stale "${entry.name}" with the updated compendium version`
+          );
+        }
       }
     } catch (err) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);

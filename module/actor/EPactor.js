@@ -119,7 +119,7 @@ export default class EPactor extends Actor {
 
     if (this.type === "character"){  
       this._calculateHomebrewEncumberance(actorModel);
-      this._calculateSideCart(actorModel, items);
+      this._calculateSideCart(actorModel, items, jammedVehicleData);
       this._poolUpdate(actorModel);
       this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     }
@@ -398,11 +398,26 @@ export default class EPactor extends Actor {
       consumableMalus = Math.ceil((consumableCount + consumableCountMod -3)/3)*10;
     }
 
-    actorModel.physical.totalWeaponMalus = weaponMalus;
-    actorModel.physical.totalGearMalus = bulkyMalus + accessoryMalus + consumableMalus;
-    actorModel.currentStatus.bulkyModifier = bulkyMalus;
-    actorModel.currentStatus.gearModifier = accessoryMalus;
-    actorModel.currentStatus.consumableModifier = consumableMalus;
+    // While jamming, the real body's carried weapons/gear stay behind and must not encumber the
+    // drone's own rolls; stash the values instead, for use by rolls made with the real body (-30).
+    if (actorModel.additionalSystems?.isJamming) {
+      actorModel.additionalSystems.jamming ??= {};
+      actorModel.additionalSystems.jamming.ownBodyWeaponMalus = weaponMalus;
+      actorModel.additionalSystems.jamming.ownBodyGearMalus = bulkyMalus + accessoryMalus + consumableMalus;
+
+      actorModel.physical.totalWeaponMalus = 0;
+      actorModel.physical.totalGearMalus = 0;
+      actorModel.currentStatus.bulkyModifier = 0;
+      actorModel.currentStatus.gearModifier = 0;
+      actorModel.currentStatus.consumableModifier = 0;
+    }
+    else {
+      actorModel.physical.totalWeaponMalus = weaponMalus;
+      actorModel.physical.totalGearMalus = bulkyMalus + accessoryMalus + consumableMalus;
+      actorModel.currentStatus.bulkyModifier = bulkyMalus;
+      actorModel.currentStatus.gearModifier = accessoryMalus;
+      actorModel.currentStatus.consumableModifier = consumableMalus;
+    }
   }
   //In case "Homebrew" is ticked off, this prevents a NaN failure in the dice roll
   else {
@@ -411,7 +426,7 @@ export default class EPactor extends Actor {
   }
   }
 
-  _calculateSideCart(actorModel, items) {
+  _calculateSideCart(actorModel, items, jammedVehicleData) {
     //Checks for certain item types to be equipped to dynamically change the side cart content
     let rangedCount = 0;
     let ccCount = 0;
@@ -448,7 +463,8 @@ export default class EPactor extends Actor {
     if(ccCount>0){
       actorModel.additionalSystems.ccEquipped = true;
     }
-    if(armorCount>0){
+    // While jamming, armor comes from the drone's own rating instead of worn armor items - see _calculateArmor()
+    if(armorCount>0 || jammedVehicleData){
       actorModel.additionalSystems.armorEquipped = true;
     }
     if(gearCount>0){
@@ -511,6 +527,15 @@ export default class EPactor extends Actor {
     let wounds = actorModel.physical.wounds
     let ignoreWounds = actorModel.mods.woundMod + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*chiMultiplier) : 0)
     let woundsCalc = wounds + ignoreWounds > 0 ? (wounds + ignoreWounds) * -10 * actorModel.mods.woundMultiplier : 0;
+
+    // While jamming, actorModel.physical.wounds reflects the fresh drone, not the real body. Work out
+    // what the wound modifier would be for the stashed real body, for rolls made with it (-30 own body).
+    if (actorModel.additionalSystems?.isJamming) {
+      const ownWounds = actorWhole.getFlag("eclipsephase", "jamHealthBackup")?.wounds ?? 0;
+      const ownWoundsCalc = ownWounds + ignoreWounds > 0 ? (ownWounds + ignoreWounds) * -10 * actorModel.mods.woundMultiplier : 0;
+      actorModel.additionalSystems.jamming ??= {};
+      actorModel.additionalSystems.jamming.ownBodyWoundMod = ownWoundsCalc;
+    }
 
     //Trauma + trauma mods are getting calculated
     let trauma = actorModel.mental.trauma;
@@ -602,6 +627,40 @@ export default class EPactor extends Actor {
       if (armorSomCheck > 11){
         actorModel.physical.armorVisibilityAnnounce = 1;
       }
+
+      // Also work out what the real body's own worn-armor encumbrance would be, for rolls
+      // made with the real body instead of the drone (see dice.js "jammingRollTarget: own")
+      let ownEnergyTotal = 0;
+      let ownKineticTotal = 0;
+      let ownMainArmorAmount = 0;
+      for (let armor of this.items.filter(i => i.type === "armor")) {
+        if (armor.system.active) {
+          ownEnergyTotal += Number(armor.system.energy);
+          ownKineticTotal += Number(armor.system.kinetic);
+          if (armor.system.slotType === "main") ownMainArmorAmount++;
+        }
+      }
+      ownEnergyTotal += eval(actorModel.mods.energyMod);
+      ownKineticTotal += eval(actorModel.mods.kineticMod);
+
+      let ownMainArmorMalus = 0;
+      if (ownMainArmorAmount > 1) {
+        ownMainArmorMalus = (ownMainArmorAmount - 1) * 20;
+      }
+
+      const ownArmorSomCheck = ownEnergyTotal > ownKineticTotal ? ownEnergyTotal : ownKineticTotal;
+      const actorSom = actorModel.aptitudes.som.value;
+      let ownArmorSomMalus = 0;
+      if (actorWhole.type === "character" && ownArmorSomCheck > actorSom && actorModel.homebrew){
+        ownArmorSomMalus = 20;
+      }
+      else if (actorWhole.type === "character" && ownArmorSomCheck > actorSom && ownMainArmorAmount > 1){
+        ownArmorSomMalus = 20;
+      }
+
+      actorModel.additionalSystems.jamming ??= {};
+      actorModel.additionalSystems.jamming.ownBodyArmorMalus = (ownMainArmorMalus + ownArmorSomMalus) * -1;
+
       return;
     }
 
