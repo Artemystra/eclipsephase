@@ -36,20 +36,20 @@
 </div>
 
 <div class="tab effects" data-group="primary" data-tab="gmInfo">
-    <div style="display: flex;">
-        <div style="width: 35%;">
-            <span class="headline5">{{localize "ep2e.actorSheet.rightTabs.effectsTab"}}</span>
-            <div class="flexrow item" style="padding: 10px 0 0 0;">
+    <div class="main-tab-pc" style="display: flex; flex-direction: column; overflow: hidden;">
+        <div style="flex: 0 0 25%; display: flex; flex-direction: column; min-height: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 0;">
+                <span class="headline5" style="margin: 0;">{{localize "ep2e.actorSheet.rightTabs.effectsTab"}}</span>
                 <div style="padding: 10px; background-color: var(--pitchBorder); max-width: fit-content;">
                     <a class="item-control effect-create" title="Create Effect" data-type="ActiveEffect"><i class="fas fa-plus awesomeIcon item-standard-margin-medium"></i>{{localize "ep2e.actorSheet.button.addNew"}}</a>
                 </div>
             </div>
-                
-            <div style="height: 620px; overflow-y: scroll; overflow-x: hidden; background-color: var(--pitchBorder);">
-                <div class="itemBox">
+
+            <div class="scrolly" style="flex: 1; min-height: 0; background-color: var(--pitchBorder);">
+                <div class="itemBox" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 5px;">
                 {{#each actor.effects as |item id|}}
-                    <div class="item effect flexrow flex-group-center reveal wantToKnowMore" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="margin-bottom: 10px;">
-                        
+                    <div class="item effect flexrow flex-group-center reveal wantToKnowMore" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
+
                         <span class="tooltipText" style="top: 30px">{{item.name}}</span>
                         <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
                         <!-- in case we need a collapsible space beneath the effects again
@@ -75,9 +75,9 @@
                 </div>
             </div>
         </div>
-        <div style="width: 65%;">
+        <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
             <span class="headline5">{{localize "ep2e.gmInfo.rezLedger.label"}}</span>
-            <div style="height: 666px; overflow-y: scroll; overflow-x: hidden;">
+            <div class="scrolly" style="flex: 1; min-height: 0;">
                 {{#each actor.system.rezPoints.ledger as |entry key|}}
                     <div style="display: flex; justify-content: space-between; background-color: var(--accentBackground); width: 100%; padding: 2px 10px;">
                         <span class="headline6">{{entry.date}}</span>
