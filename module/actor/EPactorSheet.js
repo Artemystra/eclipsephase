@@ -897,8 +897,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     if (itemData.type === "morph" && actor.type !== "character") {
       await MORPHFUNCTION.replaceMorph(actor, currentMorph, itemData);
       const created = await actor.createEmbeddedDocuments("Item", [itemData]);
+      // Real resleeving refills Flex to full too (Ego Flex + the new morph's own Flex) - see morp-functions.js resleeveMorph
+      const egoFlex = Number(actorModel.ego?.egoFlex) || 0;
+      const newBodyFlexMax = Number(itemModel.flex) || 0;
       await actor.update({
         "system.activeMorph": created[0].id,
+        "system.pools.flex.value": egoFlex + newBodyFlexMax,
         "flags.eclipsephase.resleeving": true
       });
       return created[0];

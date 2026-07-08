@@ -27,6 +27,7 @@
             </div>
         {{/if}}
     {{/if}}
+    {{#unless (and actorWhole.system.additionalSystems.isJamming (ne rolledFrom "integration"))}}
     {{#if (ne actorType "goon")}}
         {{#if pool.skillPoolValue}}
             {{#if pool.flexPoolValue}}
@@ -91,6 +92,7 @@
         </div>
         {{/if}}
     {{/if}}
+    {{/unless}}
 </div>
 {{#if (eq rollType "rep")}}
 <div class="contentBoxMargin">
@@ -160,6 +162,105 @@
             <option value="remote">{{localize "ep2e.roll.dialog.jamming.remoteBody"}}{{#unless actorWhole.system.additionalSystems.jamming.ignorePenalty}} (-10){{/unless}}</option>
             <option value="own">{{localize "ep2e.roll.dialog.jamming.ownBody"}} (-30)</option>
         </select>
+    </div>
+    <div id="jamming-pool-remote">
+        {{#if pool.skillPoolValue}}
+            {{#if pool.flexPoolValue}}
+                <div class="form-group listBackgroundMain">
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</label>
+                    <select name="jammingUsePoolRemote" class="input-large">
+                        <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        {{#if (eq rollType "psi")}}<option value="ignoreInfection">{{localize "ep2e.roll.dialog.ignoreInfection"}} ({{localize pool.poolType}})</option>{{/if}}
+                        <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{localize pool.poolType}})</option>
+                        <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}} ({{localize pool.poolType}})</option>
+                        <option value="flex">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{localize "ep2e.skills.flex.flexHeadline"}})</option>
+                        <option value="flexIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}} ({{localize "ep2e.skills.flex.flexHeadline"}})</option>
+                    </select>
+                </div>
+            {{else}}
+                <div class="form-group listBackgroundMain">
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.usePool"}} {{localize pool.poolType}}</label>
+                    <select name="jammingUsePoolRemote" class="input-large">
+                        <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        {{#if (eq rollType "psi")}}<option value="ignoreInfection">{{localize "ep2e.roll.dialog.ignoreInfection"}} ({{localize pool.poolType}})</option>{{/if}}
+                        <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
+                        <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
+                    </select>
+                </div>
+            {{/if}}
+        {{else}}
+            {{#if pool.flexPoolValue}}
+                <div class="form-group listBackgroundMain">
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.usePool"}} {{localize "ep2e.skills.flex.flexHeadline"}}</label>
+                    <select name="jammingUsePoolRemote" class="input-large">
+                        <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        <option value="flex">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
+                        <option value="flexIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
+                    </select>
+                </div>
+            {{else}}
+                <div class="form-group listBackgroundMain">
+                    <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.noPool"}}</label>
+                    <select name="jammingUsePoolRemote" class="input-large" disabled>
+                        <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                    </select>
+                </div>
+            {{/if}}
+        {{/if}}
+    </div>
+    <div id="jamming-pool-own" style="display: none;">
+        {{#if pool.own}}
+            {{#if pool.own.skillPoolValue}}
+                {{#if pool.own.flexPoolValue}}
+                    <div class="form-group listBackgroundMain">
+                        <label class="resource-labelDialog">{{localize "ep2e.roll.announce.poolUsage.usePoolSubheadline"}}</label>
+                        <select name="jammingUsePoolOwn" class="input-large">
+                            <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                            {{#if (eq rollType "psi")}}<option value="ignoreInfection">{{localize "ep2e.roll.dialog.ignoreInfection"}} ({{localize pool.own.poolType}})</option>{{/if}}
+                            <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{localize pool.own.poolType}})</option>
+                            <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}} ({{localize pool.own.poolType}})</option>
+                            <option value="flex">+20 {{localize "ep2e.roll.dialog.modifier"}} ({{localize "ep2e.skills.flex.flexHeadline"}})</option>
+                            <option value="flexIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}} ({{localize "ep2e.skills.flex.flexHeadline"}})</option>
+                        </select>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.usePool"}} {{localize pool.own.poolType}}</label>
+                        <select name="jammingUsePoolOwn" class="input-large">
+                            <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                            {{#if (eq rollType "psi")}}<option value="ignoreInfection">{{localize "ep2e.roll.dialog.ignoreInfection"}} ({{localize pool.own.poolType}})</option>{{/if}}
+                            <option value="pool">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
+                            <option value="poolIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
+                        </select>
+                    </div>
+                {{/if}}
+            {{else}}
+                {{#if pool.own.flexPoolValue}}
+                    <div class="form-group listBackgroundMain">
+                        <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.usePool"}} {{localize "ep2e.skills.flex.flexHeadline"}}</label>
+                        <select name="jammingUsePoolOwn" class="input-large">
+                            <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                            <option value="flex">+20 {{localize "ep2e.roll.dialog.modifier"}}</option>
+                            <option value="flexIgnore">{{localize "ep2e.skills.pool.ignoreModifiers"}}</option>
+                        </select>
+                    </div>
+                {{else}}
+                    <div class="form-group listBackgroundMain">
+                        <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.noPool"}}</label>
+                        <select name="jammingUsePoolOwn" class="input-large" disabled>
+                            <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                        </select>
+                    </div>
+                {{/if}}
+            {{/if}}
+        {{else}}
+            <div class="form-group listBackgroundMain">
+                <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.noPool"}}</label>
+                <select name="jammingUsePoolOwn" class="input-large" disabled>
+                    <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                </select>
+            </div>
+        {{/if}}
     </div>
 </div>
 {{/if}}

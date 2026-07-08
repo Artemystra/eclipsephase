@@ -124,7 +124,8 @@ export default class EPactor extends Actor {
       this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     }
     if (this.type === "npc" || this.type === "character"){
-      // When jamming, use the drone's pools instead of the morph's
+      // When jamming, body-bound pools (including the body's own Flex, if any) come from the drone
+      // instead of the morph. Ego Flex is unaffected either way, since it's added separately below.
       const poolSource = jammedVehicleData
         ? {
             vigor:   Number(jammedVehicleData.system.pools?.vig?.max)  || 0,
@@ -134,6 +135,27 @@ export default class EPactor extends Actor {
           }
         : morphValues;
       this._calculatePools(actorModel, poolSource, chiMultiplier)
+      if (jammedVehicleData) {
+        // Pass the real body's stashed pools through as derived data so the roll dialog can offer them.
+        // Ego Flex is shared between both perspectives, so work out how much of it is still unspent from
+        // the drone's live combined value - same Body-Flex-first back-derivation as jammVehicle/unjamVehicle.
+        const backup = actorWhole.getFlag("eclipsephase", "jamHealthBackup");
+        const egoFlex = Number(actorModel.ego.egoFlex) || 0;
+        const droneTotalFlex = Number(actorModel.pools.flex.totalFlex) || 0;
+        const droneBodyFlexMax = droneTotalFlex - egoFlex;
+        const droneFlexSpent = droneTotalFlex - (Number(actorModel.pools.flex.value) || 0);
+        const egoFlexSpent = Math.max(0, droneFlexSpent - droneBodyFlexMax);
+        const egoFlexRemaining = Math.max(0, egoFlex - egoFlexSpent);
+        const bodyFlexRemaining = backup?.bodyFlexValue ?? 0;
+        actorModel.additionalSystems.jamming ??= {};
+        actorModel.additionalSystems.jamming.ownBodyPools = {
+          vigor: backup?.vigor ?? 0,
+          insight: backup?.insight ?? 0,
+          moxie: backup?.moxie ?? 0,
+          bodyFlexRemaining: bodyFlexRemaining,
+          flex: bodyFlexRemaining + egoFlexRemaining
+        };
+      }
       this._calculateMentalHealth(actorModel, chiMultiplier)
       this._minimumInfection(actorModel, gammaCount, chiCount);
     }
@@ -202,11 +224,12 @@ export default class EPactor extends Actor {
     }
 
     if (actorWhole.getFlag("eclipsephase", "resleeving") === true && actorWhole.isOwner){
+        // Flex is deliberately left out here: jamming/unjamming set it themselves (Body-Flex-first
+        // carry-over math in morp-functions.js), and a blanket refill to full would undo that.
         await actorWhole.update({
-          "system.pools.insight.value": actorPools.insight.totalInsight, 
-          "system.pools.vigor.value": actorPools.vigor.totalVigor, 
-          "system.pools.moxie.value": actorPools.moxie.totalMoxie, 
-          "system.pools.flex.value": actorPools.flex.totalFlex,
+          "system.pools.insight.value": actorPools.insight.totalInsight,
+          "system.pools.vigor.value": actorPools.vigor.totalVigor,
+          "system.pools.moxie.value": actorPools.moxie.totalMoxie,
           "flags.eclipsephase.resleeving": false })
     }
   }

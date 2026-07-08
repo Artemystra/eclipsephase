@@ -126,13 +126,62 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 
     let calcPool = {poolType: pool.poolType, useMessage: pool.useMessage, skillPoolValue: eval(pool.skillPoolValue), updatePoolPath: pool.updatePoolPath, flexPoolValue: eval(pool.flexPoolValue), updateFlexPath: pool.updateFlexPath, poolUsageCount: pool.poolUsageCount}
 
+    // While jamming, offer the real body's stashed pools as an "own body" variant that spends from the
+    // backup flag. Integration Tests are the exception: logically they happen before the jam is fully
+    // established, so they always use the original body's pool directly (no Remote/Own choice at all -
+    // we just process the roll asynchronously via chat, by which point isJamming is technically already true).
+    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "vehicleSkill" && actorType !== "goon") {
+        const ownPools = actorModel.additionalSystems.jamming?.ownBodyPools ?? { vigor: 0, insight: 0, moxie: 0, flex: 0 };
+        let ownSkillPoolValue = 0;
+        let updateOwnPoolPath = "";
+        switch (pool.poolType) {
+            case "ep2e.skills.insightSkills.poolHeadline":
+                ownSkillPoolValue = ownPools.insight;
+                updateOwnPoolPath = "flags.eclipsephase.jamHealthBackup.insight";
+              break;
+            case "ep2e.skills.vigorSkills.poolHeadline":
+                ownSkillPoolValue = ownPools.vigor;
+                updateOwnPoolPath = "flags.eclipsephase.jamHealthBackup.vigor";
+              break;
+            case "ep2e.skills.moxieSkills.poolHeadline":
+                ownSkillPoolValue = ownPools.moxie;
+                updateOwnPoolPath = "flags.eclipsephase.jamHealthBackup.moxie";
+              break;
+            default:
+              break;
+        }
+        if (updateOwnPoolPath) {
+            // Flex spends draw the body's stashed share first; once that's gone they fall through to the
+            // live shared Ego Flex on the drone's side, so both perspectives spend the same points.
+            const bodyFlexRemaining = ownPools.bodyFlexRemaining ?? 0;
+            const updateOwnFlexPath = bodyFlexRemaining > 0
+                ? "flags.eclipsephase.jamHealthBackup.bodyFlexValue"
+                : "system.pools.flex.value";
+            const ownPool = {
+                poolType: pool.poolType,
+                useMessage: pool.useMessage,
+                skillPoolValue: ownSkillPoolValue,
+                updatePoolPath: updateOwnPoolPath,
+                flexPoolValue: ownPools.flex,
+                updateFlexPath: updateOwnFlexPath,
+                poolUsageCount: 0
+            };
+            if (rolledFrom === "integration") {
+                calcPool = ownPool;
+            }
+            else {
+                calcPool.own = ownPool;
+            }
+        }
+    }
+
     return calcPool
 }
 
 function defineRoll(dataset, actorWhole){
     
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -481,6 +530,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let specName = dataset.specname || "";
     let roll = defineRoll(dataset, actorWhole)
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
+    const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
     let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom)
     
     if(values.cancelled)
@@ -497,23 +547,29 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         let task = new TaskRoll(`${dataset.name}`, dataset.rollvalue, options.rangedFray)
 
-        if(options.usePool){
+        // While jamming, the pool choice comes from the jam-aware dropdowns and "own body" spends from the backup flag
+        const activePoolChoice = isJammingRoll
+            ? (options.jammingRollTarget === "own" ? options.jammingUsePoolOwn : options.jammingUsePoolRemote)
+            : options.usePool;
+        const activePool = (isJammingRoll && options.jammingRollTarget === "own" && pool.own) ? pool.own : pool;
 
-            let updatedPools = await pools.update(options.usePool, pool, task, actorWhole)
-            
-            if(pool.flexPoolValue){
-                pool["skillPoolValue"] = updatedPools.skillPoolValue
-                pool["flexPoolValue"] = updatedPools.flexPoolValue
+        if (activePoolChoice) {
+
+            let updatedPools = await pools.update(activePoolChoice, activePool, task, actorWhole)
+
+            if (activePool.flexPoolValue) {
+                activePool["skillPoolValue"] = updatedPools.skillPoolValue
+                activePool["flexPoolValue"] = updatedPools.flexPoolValue
             }
-            else{
-                pool["skillPoolValue"] = updatedPools.skillPoolValue
+            else {
+                activePool["skillPoolValue"] = updatedPools.skillPoolValue
             }
         }
 
         if(roll.type === "psi" && actorWhole.type != "goon")
             options.totalInfection = await psi.infectionUpdate(actorWhole, options)
         
-        if(options.usePool != "poolIgnore" && options.usePool != "flexIgnore")
+        if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
         
         await task.performRoll()
@@ -524,9 +580,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         else if(roll.sleight)
             itemData = roll.sleight
         
-        let outputData = task.outputData(options, actorWhole, pool, itemData, rolledFrom, systemOptions)
+        let outputData = task.outputData(options, actorWhole, activePool, itemData, rolledFrom, systemOptions)
 
-        outputData.alternatives = await pools.outcomeAlternatives(outputData, pool, systemOptions)
+        outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
 
@@ -547,7 +603,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         console.log("My outputData", outputData)
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
         
-        if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && options.usePool != "ignoreInfection")
+        if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
 
         //Returns a rollResult in case it's needed
@@ -637,6 +693,23 @@ const result = await foundry.applications.api.DialogV2.wait({
     ],
     modal: true,
     rejectClose: false,
+    render: (event, dialog) => {
+        const root = dialog.element;
+        if (!root) return;
+
+        // Jamming: switch the pool dropdown between the remote body's live pools and the own body's stashed pools
+        const jamTargetSelect = root.querySelector('select[name="jammingRollTarget"]');
+        const remotePoolContainer = root.querySelector("#jamming-pool-remote");
+        const ownPoolContainer = root.querySelector("#jamming-pool-own");
+
+        if (jamTargetSelect && remotePoolContainer && ownPoolContainer) {
+            jamTargetSelect.addEventListener("change", e => {
+                const ownSelected = e.currentTarget.value === "own";
+                remotePoolContainer.style.display = ownSelected ? "none" : "";
+                ownPoolContainer.style.display = ownSelected ? "" : "none";
+            });
+        }
+    },
     ...(rollData.templateSize?.width ? { position: { width: rollData.templateSize.width } } : {}),
     ...(rollData.templateSize && !rollData.templateSize.width ? rollData.templateSize : {})
 });

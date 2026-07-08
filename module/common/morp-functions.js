@@ -16,7 +16,16 @@ export async function resleeveMorph(actor, currentTarget, sheet){
 
     if(popUp.confirm === true){
         sheet.tabGroups.morph = "sleeved";
-        await actor.update({"system.activeMorph": itemID});
+
+        // Real resleeving takes long enough for a full recovery, so unlike jamming, Flex is simply
+        // refilled to full here too (Ego Flex + the new morph's own Flex).
+        const egoFlex = Number(actor.system.ego.egoFlex) || 0;
+        const newBodyFlexMax = Number(newMorph.system.flex) || 0;
+
+        await actor.update({
+            "system.activeMorph": itemID,
+            "system.pools.flex.value": egoFlex + newBodyFlexMax
+        });
         await actor.update({ "flags.eclipsephase.resleeving": true });
         
         let message = {
@@ -75,15 +84,33 @@ export async function jammVehicle(actor, currentTarget, sheet) {
 
     if (popUp.confirm === true) {
         sheet.tabGroups.morph = itemID;
-        // Stash the real body's damage so it's untouched while jamming, then start the drone fresh
+
+        // Flex is spent Body-Flex first, Ego Flex only once that's gone. So work out how much of the
+        // current value is already eating into Ego Flex - that part carries into the drone, the body's
+        // own share does not (the drone gets its own, separate Body-Flex share instead).
+        const egoFlex = Number(actor.system.ego.egoFlex) || 0;
+        const originalTotalFlex = Number(actor.system.pools.flex.totalFlex) || 0;
+        const originalBodyFlexMax = originalTotalFlex - egoFlex;
+        const originalFlexSpent = originalTotalFlex - (Number(actor.system.pools.flex.value) || 0);
+        const egoFlexSpent = Math.max(0, originalFlexSpent - originalBodyFlexMax);
+        const bodyFlexRemaining = Math.max(0, originalBodyFlexMax - originalFlexSpent);
+        const droneBodyFlexMax = Number(vehicle.system.pools?.flex?.max) || 0;
+        const droneFlexValue = Math.max(0, egoFlex + droneBodyFlexMax - egoFlexSpent);
+
+        // Stash the real body's damage and pools so they're untouched while jamming, then start the drone fresh
         await actor.update({
             "system.activeJam": itemID,
             "flags.eclipsephase.jamHealthBackup": {
                 value: actor.system.health.physical.value,
-                wounds: actor.system.physical.wounds
+                wounds: actor.system.physical.wounds,
+                vigor: actor.system.pools.vigor.value,
+                insight: actor.system.pools.insight.value,
+                moxie: actor.system.pools.moxie.value,
+                bodyFlexValue: bodyFlexRemaining
             },
             "system.health.physical.value": 0,
-            "system.physical.wounds": 0
+            "system.physical.wounds": 0,
+            "system.pools.flex.value": droneFlexValue
         });
         await actor.update({ "flags.eclipsephase.resleeving": true });
 
@@ -113,15 +140,30 @@ export async function unjamVehicle(actor, currentTarget, sheet) {
 
     if (popUp.confirm === true) {
         sheet.tabGroups.morph = "sleeved";
-        // Restore the real body's damage from before jamming; the drone's damage is not kept
+
+        // Same Body-Flex-first logic as jamming, in reverse: work out how much Ego Flex was spent
+        // while jamming (anything beyond the drone's own Body-Flex share), and carry only that back.
         const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
+        const egoFlex = Number(actor.system.ego.egoFlex) || 0;
+        const droneTotalFlex = Number(actor.system.pools.flex.totalFlex) || 0;
+        const droneBodyFlexMax = droneTotalFlex - egoFlex;
+        const droneFlexSpent = droneTotalFlex - (Number(actor.system.pools.flex.value) || 0);
+        const egoFlexSpent = Math.max(0, droneFlexSpent - droneBodyFlexMax);
+        const restoredBodyFlexValue = Number(backup?.bodyFlexValue ?? 0);
+        const restoredFlexValue = Math.max(0, egoFlex + restoredBodyFlexValue - egoFlexSpent);
+
+        // Restore the real body's damage and pools from before jamming; the drone's are not kept.
+        // Restored directly (not via the resleeving flag) so pools return to their exact prior values instead of refilling to full.
         await actor.update({
             "system.activeJam": null,
             "system.health.physical.value": backup?.value ?? 0,
             "system.physical.wounds": backup?.wounds ?? 0,
+            "system.pools.vigor.value": backup?.vigor ?? 0,
+            "system.pools.insight.value": backup?.insight ?? 0,
+            "system.pools.moxie.value": backup?.moxie ?? 0,
+            "system.pools.flex.value": restoredFlexValue,
             "flags.eclipsephase.-=jamHealthBackup": null
         });
-        await actor.update({ "flags.eclipsephase.resleeving": true });
     }
 }
 
