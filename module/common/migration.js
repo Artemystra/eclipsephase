@@ -2161,8 +2161,8 @@ function itemDeletion(actor, itemID){
  *
  * Runs on character, npc and goon actors, since ego.languages lives in the shared "base" template.
  */
-export async function migrationPre190(startMigration, endMigration) {
-  const latestUpdate = "1.9";
+export async function migrationPre195(startMigration, endMigration) {
+  const latestUpdate = "1.9.5";
   if (!startMigration) return { endMigration: false };
 
   const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
