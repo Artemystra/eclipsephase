@@ -68,10 +68,10 @@
                 {{/if}}
                     <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
                         {{#each idValues.system.rep as |rep key|}}
-                            <div style="display: flex; justify-content: center; flex-wrap: wrap; max-width: 40px;">
-                                <div class="reveal item" style="display: flex; gap: 5px; max-width: 40px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
-                                    <span class="toggle input-medium resource-label" >{{localize rep.name}}</span>
-                                    <div class="toggle flexrow flex-group-left noShow input-medium" style="padding-left: 5px;">
+                            <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 40px; flex-shrink: 0;">
+                                <div class="reveal item" style="display: flex; gap: 5px; max-width: 40px; min-width: 40px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
+                                    <span class="toggle input-medium resource-label" style="min-width: 100%;">{{localize rep.name}}</span>
+                                    <div class="toggle flexrow flex-group-left input-medium noShow" style="padding-left: 5px; min-width: 100%;">
                                         <img data-type="skill" data-key="rep" data-name="{{key}}" data-rollvalue="{{rep.value}}"
                                         src="icons/svg/d10-grey.svg" class="icon-small roll-label task-check"/>
                                     </div>
