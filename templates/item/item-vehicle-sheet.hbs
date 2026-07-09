@@ -132,7 +132,7 @@
             {{/if}}
 
             <div style="display: flex;">
-                <p class="headline5" style="flex-grow: 1;">{{localize "ep2e.peripherals.skillsHeadline"}}</p>
+                <p class="headline5" style="flex-grow: 1;">{{#if (eq item.system.chassisType "animal")}}{{localize "ep2e.peripherals.skillsHeadline"}}{{else}}{{localize "ep2e.peripherals.aiSkillsHeadline"}}{{/if}}</p>
                 {{#if (ne item.system.chassisType "animal")}}
                 <button type="button" class="autoBot" style="min-width: 100px; max-width: 350px; width:fit-content; max-height: 30px; display: flex; align-items: center; justify-content: center;" data-name="{{item.name}}" data-id="{{item.id}}">
                     {{localize "ep2e.item.vehicle.autoBot"}}

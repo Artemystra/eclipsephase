@@ -690,7 +690,12 @@
         "size": "Tamanho"
       },
       "modPlaceholder": "Sem modificações",
-      "skillsHeadline": "Perícias"
+      "skillsHeadline": "Perícias",
+      "aiSkillsHeadline": "Perícias de IA",
+      "traitsLabel": "Traços e Defeitos",
+      "wareLabel": "Implantes",
+      "noTraits": "Nenhum Traço ou Defeito instalado",
+      "noWare": "Nenhum Implante instalado"
     },
     "psi": {
       "infectionHeadline": "Tipo de Infecção",

@@ -703,7 +703,12 @@
         "size": "Grösse"
       },
       "modPlaceholder": "Keine Mods",
-      "skillsHeadline": "Skills"
+      "skillsHeadline": "Skills",
+      "aiSkillsHeadline": "KI-Skills",
+      "traitsLabel": "Eigenschaften & Mängel",
+      "wareLabel": "Modifikation",
+      "noTraits": "Keine Eigenschaften oder Mängel vorhanden",
+      "noWare": "Keine Ware installiert"
     },
     "psi": {
       "infectionHeadline": "Infektionstyp",

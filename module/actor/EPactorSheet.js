@@ -676,6 +676,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             itemModel.luc = Math.round(itemModel.aptitudes.wil.value * 2);
             itemModel.tt = Math.round(itemModel.luc / 5);
             itemModel.ir = Math.round(itemModel.luc * 2);
+            for (const aptitude of Object.values(itemModel.aptitudes)) {
+              aptitude.roll = (aptitude.value ?? 0) * 3;
+            }
             vehicle[itemModel.chassisType].push(item)
           }
         else if (item.type === 'ware' && itemModel.boundTo) {
@@ -1257,6 +1260,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           "name": dataset.name,
           "rolltype": "skill",
           "rollvalue": Number(dataset.rollvalue),
+          "specname": dataset.specname,
           "dialogTitle": dataset.name
         }, this.actor.system, this.actor, systemOptions, false, "vehicleSkill");
       });

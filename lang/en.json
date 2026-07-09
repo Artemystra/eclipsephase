@@ -715,7 +715,12 @@
         "size": "Size"
       },
       "modPlaceholder": "No modifications",
-      "skillsHeadline": "Skills"
+      "skillsHeadline": "Skills",
+      "aiSkillsHeadline": "AI Skills",
+      "traitsLabel": "Traits & Flaws",
+      "wareLabel": "Ware",
+      "noTraits": "No Traits or Flaws Installed",
+      "noWare": "No Ware Installed"
     },
     "psi": {
       "infectionHeadline": "Infection Type",

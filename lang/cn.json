@@ -690,7 +690,12 @@
         "size": "体型"
       },
       "modPlaceholder": "没有调整值",
-      "skillsHeadline": "技能"
+      "skillsHeadline": "技能",
+      "aiSkillsHeadline": "AI技能",
+      "traitsLabel": "特质与缺陷",
+      "wareLabel": "装备",
+      "noTraits": "未安装特质或缺陷",
+      "noWare": "未安装装备"
     },
     "psi": {
       "infectionHeadline": "感染类型",

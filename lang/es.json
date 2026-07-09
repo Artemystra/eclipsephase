@@ -691,7 +691,12 @@
         "size": "Size"
       },
       "modPlaceholder": "No modifications",
-      "skillsHeadline": "Skills"
+      "skillsHeadline": "Skills",
+      "aiSkillsHeadline": "Habilidades de IA",
+      "traitsLabel": "Rasgos y Defectos",
+      "wareLabel": "Equipamiento",
+      "noTraits": "No hay Rasgos ni Defectos instalados",
+      "noWare": "No hay Equipamiento instalado"
     },
     "psi": {
       "infectionHeadline": "Infection Type",

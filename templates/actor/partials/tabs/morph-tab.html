@@ -223,13 +223,26 @@
                                 </div>
                             </div>
                             <div style="flex: 0.7;">
-                                <div class="itemRowHeader">
+                                <div class="itemRowHeader" style="display: grid; grid-template-columns: repeat(3, 1fr); justify-items: start;">
                                     <div class="itemGroup wantToKnowMore">
                                         <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
                                         <label class="tooltipTextB resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
                                         <label class="resource-value">{{vehicle.system.dur}}</label>
                                     </div>
                                     <div class="itemGroup wantToKnowMore">
+                                        {{#if (eq vehicle.system.chassisType "vehicle")}}
+                                        <i class="fa-regular fa-seat-airline awesomeIcon icon-small"></i>
+                                        <label class="tooltipTextB resource-value">{{localize "ep2e.peripherals.table.passengers"}}</label>
+                                        <label class="resource-value">{{vehicle.system.pass}}</label>
+                                        {{/if}}
+                                        {{#if (eq vehicle.system.chassisType "animal")}}
+                                        <i class="fa-solid fa-brain awesomeIcon icon-small"></i>
+                                        <label class="tooltipTextB resource-value">{{localize "ep2e.healthbar.tooltip.stressluc"}}</label>
+                                        <label class="resource-value">{{vehicle.system.luc}}</label>
+                                        {{/if}}
+                                    </div>
+                                    <div class="itemGroup wantToKnowMore">
+                                        <label class="tooltipTextB resource-value">{{localize "ep2e.peripherals.table.armor"}}</label>
                                         <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
                                         <label class="resource-value">{{vehicle.system.armor.energy}}</label>
                                         <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 16px!important; max-height: 16px!important;"/>
@@ -247,61 +260,96 @@
                                 {{/if}}
                             </div>
                         </div>
-                        <!-- Pools -->
-                        <div class="itemRowHeader">
-                            {{#if vehicle.system.insight}}
-                                <div class="itemGroup">
-                                    <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
-                                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
-                                    {{vehicle.system.insight}}
+                        {{#if (eq vehicle.system.chassisType "animal")}}
+                        <!-- Aptitudes (animal chassis only - rollable, styled like the actor's own aptitude strip) -->
+                        <div class="flexrow flex-group-center listBackground" style="background-color: var(--pitchBorder); margin: 0; flex-basis: 100%;">
+                            {{#each vehicle.system.aptitudes as |aptitude key|}}
+                            <div class="flexrow flex-group-center reveal" style="min-height: 24px;">
+                                <div class="flexrow flex-group-center input-small">
+                                    <span class="toggle resource-value alignCenter" style="font-size: 11px;">{{localize aptitude.label}}</span>
+                                    <label class="toggle roll-label vehicle-task-check noShow" data-name="{{localize aptitude.name}}" data-rollvalue="{{aptitude.roll}}"><img src="icons/svg/d10-grey.svg" class="icon-small"/></label>
                                 </div>
-                            {{/if}}
-                            {{#if vehicle.system.moxie}}
-                                <div class="itemGroup">
-                                    <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
-                                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
-                                    {{vehicle.system.moxie}}
-                                </div>
-                            {{/if}}
-                            {{#if vehicle.system.vigor}}
-                                <div class="itemGroup">
-                                    <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
-                                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
-                                    {{vehicle.system.vigor}}
-                                </div>
-                            {{/if}}
-                            {{#if vehicle.system.flex}}
-                                <div class="itemGroup">
-                                    <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
-                                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
-                                    {{vehicle.system.flex}}
-                                </div>
-                            {{/if}}
+                                <span class="resource-label alignCenter" style="font-size: 11px; min-width: 16px;">{{#if aptitude.value}}{{aptitude.value}}{{else}}0{{/if}}</span>
+                            </div>
+                            {{/each}}
                         </div>
+                        <!-- Threat & Initiative (animal chassis only - animals use a Threat rating instead of ego pools) -->
+                        <div class="itemRowHeader">
+                            <div class="itemGroup">
+                                <i class="fa-solid fa-land-mine-on awesomeIcon icon-small"></i>
+                                <label class="resource-value">{{localize "ep2e.healthbar.tooltip.threat"}}</label>
+                                <label class="resource-value">{{#if vehicle.system.threat}}{{vehicle.system.threat}}{{else}}0{{/if}}</label>
+                            </div>
+                            <div class="itemGroup">
+                                <i class="fa-regular fa-stopwatch awesomeIcon icon-small"></i>
+                                <label class="resource-value">{{localize "ep2e.healthbar.tooltip.initiative"}}</label>
+                                <label class="resource-value">{{#if vehicle.system.init}}{{vehicle.system.init}}{{else}}0{{/if}}</label>
+                            </div>
+                        </div>
+                        {{else}}
+                        <!-- Pools (vehicle/robot chassis - the ego's pools carry over while jamming) -->
+                        <div class="itemRowHeader">
+                            <div class="itemGroup">
+                                <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
+                                <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
+                                {{#if vehicle.system.insight}}{{vehicle.system.insight}}{{else}}0{{/if}}
+                            </div>
+                            <div class="itemGroup">
+                                <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
+                                <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
+                                {{#if vehicle.system.moxie}}{{vehicle.system.moxie}}{{else}}0{{/if}}
+                            </div>
+                            <div class="itemGroup">
+                                <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
+                                <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
+                                {{#if vehicle.system.vigor}}{{vehicle.system.vigor}}{{else}}0{{/if}}
+                            </div>
+                            <div class="itemGroup">
+                                <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
+                                <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
+                                {{#if vehicle.system.flex}}{{vehicle.system.flex}}{{else}}0{{/if}}
+                            </div>
+                        </div>
+                        {{/if}}
                         <!-- Movement -->
-                        {{#if vehicle.system.movement.move1.base}}
                         <div class="contentBox">
                             <div class="flexrow subheader">
                                 <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
                                 <div class="alignRight flexGrowThreeQuarter">
                                 </div>
                             </div>
-                            <div class="grid grid-2col itemBackground noMargin">
-                                {{#each vehicle.system.movement as |mov key|}}
-                                    {{#if mov.base}}
-                                        <div class="flexrow flex-group-left" style="padding: 4px 8px; gap: 8px;">
-                                            <label class="resource-value">{{mov.base}} / {{mov.full}}</label>
-                                            <label class="resource-label">{{mov.type}}</label>
-                                        </div>
+                            <div class="grid grid-2col itemBackground noMargin" style="padding: 10 5px">
+                                {{#each vehicle.system.movement as |move key|}}
+                                    {{#if base}}
+                                        {{#if (eq active true)}}
+                                            <div class="item flexrow flex-group-center atHand wantToKnowMore equipped checkBox" data-item-id="{{vehicle._id}}" data-path="system.movement.{{key}}.active" data-grouppath="system.movement" data-currenttargetkey={{key}} style="min-width: 100%; min-height: 33px; justify-content: space-between;">
+                                                <div class="flexrow flex-group-left" style="gap: 5px;">
+                                                    <input class="sheet equipped checkBox" data-dtype="Boolean" type="checkbox" {{checked active}}>
+                                                    <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
+                                                    <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
+                                                    <label class="labelWidth-medium flex-group-center noMargin" style="min-width: fit-content;"><strong>{{base}} / {{full}}</strong></label>
+                                                </div>
+                                                <label class="labelWidth-large flex-group-center noMargin truncateMulti"><strong>{{{type}}}</strong></label>
+                                            </div>
+                                        {{else}}
+                                            <div class="item flexrow flex-group-center offHand wantToKnowMore equipped checkBox" data-item-id="{{vehicle._id}}" data-path="system.movement.{{key}}.active" data-grouppath="system.movement" data-currenttargetkey={{key}} style="min-width: 100%; min-height: 33px; justify-content: space-between;">
+                                                <div class="flexrow flex-group-left" style="gap: 5px;">
+                                                    <input class="sheet equipped checkBox" data-dtype="Boolean" type="checkbox" {{checked active}}>
+                                                    <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
+                                                    <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
+                                                    <label class="labelWidth-medium flex-group-center noMargin" style="min-width: fit-content;"><strong>{{base}} / {{full}}</strong></label>
+                                                </div>
+                                                <label class="labelWidth-large flex-group-center noMargin truncateMulti"><strong>{{type}}</strong></label>
+                                            </div>
+                                        {{/if}}
                                     {{/if}}
                                 {{/each}}
                             </div>
                         </div>
-                        {{/if}}
-                        <!-- Skills -->
+                        <!-- Skills (animals) / AI Skills (autonomously acting vehicle/robot onboard AIs) -->
                         <div class="contentBox">
                             <div class="flexrow subheader">
-                                <h3 class="subheader">{{localize "ep2e.peripherals.skillsHeadline"}}</h3>
+                                <h3 class="subheader">{{#if (eq vehicle.system.chassisType "animal")}}{{localize "ep2e.peripherals.skillsHeadline"}}{{else}}{{localize "ep2e.peripherals.aiSkillsHeadline"}}{{/if}}</h3>
                                 <div class="alignRight flexGrowThreeQuarter">
                                 </div>
                             </div>
@@ -311,21 +359,44 @@
                                     {{localize "ep2e.morph.jamming.noSkillsWhileJammed"}}
                                 </div>
                             {{else}}
-                                <div style="overflow-y: auto;  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;">
+                                <div class="listBackground edgeAbler" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px;">
                                     {{#each vehicle.system.skills as |skill key|}}
                                         {{#if skill.name}}
-                                            <div class="flexrow flex-group-center reveal" style="padding: 4px 5px; justify-content: space-between; gap: 4px;">
-                                                <label class="resource-value" style="flex: 1; text-align: left; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{skill.name}}</label>
-                                                <label class="resource-value input-xs" style="text-align: right; min-width: 24px;">{{skill.value}}</label>
-                                                <img src="icons/svg/d10-grey.svg"
-                                                    class="info icon-dice icon-hidden vehicle-task-check input-xs"
-                                                    data-name="{{skill.name}}"
-                                                    data-rollvalue="{{skill.value}}"/>
+                                            <div class="flexrow flex-group-center reveal wantToKnowMore skill">
+                                                <span class="tooltipText">{{skill.name}}</span>
+                                                <label class="resource-label truncate input-large" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{skill.name}}</label>
+                                                <label class="resource-value input-xs">{{skill.value}}</label>
+                                                <label class="resource-label truncate input-largeSpec">
+                                                    {{#if skill.specname}}{{skill.specname}}{{else}}<span style="color: var(--inactive); text-transform: capitalize;">{{localize 'ep2e.skills.placeholders.additionalSpec'}}</span>{{/if}}
+                                                </label>
+                                                <img src="icons/svg/d10-grey.svg" class="info icon-dice icon-hidden vehicle-task-check" data-name="{{skill.name}}" data-rollvalue="{{skill.value}}" data-specname="{{skill.specname}}"/>
                                             </div>
                                         {{/if}}
                                     {{/each}}
                                 </div>
                             {{/if}}
+                        </div>
+                        <!-- Traits & Flaws (placeholder - vehicles/animals don't yet link real Item documents here) -->
+                        <div class="contentBox">
+                            <div class="flexrow subheader">
+                                <h3 class="subheader">{{localize "ep2e.peripherals.traitsLabel"}}</h3>
+                                <div class="alignRight flexGrowThreeQuarter">
+                                </div>
+                            </div>
+                            <div class="itemBackground minSize">
+                                {{localize "ep2e.peripherals.noTraits"}}
+                            </div>
+                        </div>
+                        <!-- Ware (placeholder - vehicles/animals don't yet link real Item documents here) -->
+                        <div class="contentBox">
+                            <div class="flexrow subheader">
+                                <h3 class="subheader">{{localize "ep2e.peripherals.wareLabel"}}</h3>
+                                <div class="alignRight flexGrowThreeQuarter">
+                                </div>
+                            </div>
+                            <div class="itemBackground minSize">
+                                {{localize "ep2e.peripherals.noWare"}}
+                            </div>
                         </div>
                     </div>
                 </div>
