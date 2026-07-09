@@ -249,37 +249,37 @@
                         </div>
                         <!-- Pools -->
                         <div class="itemRowHeader">
-                            {{#if vehicle.system.pools.ins.max}}
+                            {{#if vehicle.system.insight}}
                                 <div class="itemGroup">
                                     <img src="systems/eclipsephase/resources/icons/insightBright.webp" class="icon-small"/>
                                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.insightLabel"}}</label>
-                                    {{vehicle.system.pools.ins.max}}
+                                    {{vehicle.system.insight}}
                                 </div>
                             {{/if}}
-                            {{#if vehicle.system.pools.mox.max}}
+                            {{#if vehicle.system.moxie}}
                                 <div class="itemGroup">
                                     <img src="systems/eclipsephase/resources/icons/moxieBright.webp" class="icon-small"/>
                                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.moxieLabel"}}</label>
-                                    {{vehicle.system.pools.mox.max}}
+                                    {{vehicle.system.moxie}}
                                 </div>
                             {{/if}}
-                            {{#if vehicle.system.pools.vig.max}}
+                            {{#if vehicle.system.vigor}}
                                 <div class="itemGroup">
                                     <img src="systems/eclipsephase/resources/icons/vigorBright.webp" class="icon-small"/>
                                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.vigorLabel"}}</label>
-                                    {{vehicle.system.pools.vig.max}}
+                                    {{vehicle.system.vigor}}
                                 </div>
                             {{/if}}
-                            {{#if vehicle.system.pools.flex.max}}
+                            {{#if vehicle.system.flex}}
                                 <div class="itemGroup">
                                     <img src="systems/eclipsephase/resources/icons/flexBright.webp" class="icon-small"/>
                                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
-                                    {{vehicle.system.pools.flex.max}}
+                                    {{vehicle.system.flex}}
                                 </div>
                             {{/if}}
                         </div>
                         <!-- Movement -->
-                        {{#if vehicle.system.movement.1.speed}}
+                        {{#if vehicle.system.movement.move1.base}}
                         <div class="contentBox">
                             <div class="flexrow subheader">
                                 <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
@@ -288,9 +288,9 @@
                             </div>
                             <div class="grid grid-2col itemBackground noMargin">
                                 {{#each vehicle.system.movement as |mov key|}}
-                                    {{#if mov.speed}}
+                                    {{#if mov.base}}
                                         <div class="flexrow flex-group-left" style="padding: 4px 8px; gap: 8px;">
-                                            <label class="resource-value">{{mov.speed}}</label>
+                                            <label class="resource-value">{{mov.base}} / {{mov.full}}</label>
                                             <label class="resource-label">{{mov.type}}</label>
                                         </div>
                                     {{/if}}

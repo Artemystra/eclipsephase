@@ -2152,23 +2152,35 @@ function itemDeletion(actor, itemID){
 }
 
 /**
- * Migrates actor.system.ego.languages from a single comma-separated string into an array of
- * individual language strings, to support the new multi-select pill widget on the Identity tab
- * (see multiSelectPills in common/general-sheet-functions.js).
- *
- * Legacy: "Hindi, Chinese, English" (String)
- * New:    ["Hindi", "Chinese", "English"] (Array of Strings)
- *
- * Runs on character, npc and goon actors, since ego.languages lives in the shared "base" template.
+ * Combined 1.9.6 migration (1.9.5 and 1.9.6 ship together, so their migrations run as one pass):
+ *  - Migrates actor.system.ego.languages from a comma-separated string into an array of individual
+ *    language strings, for the multi-select pill widget on the Identity tab.
+ *  - Replaces stale pre-jamming-update copies of Drone Rig/Drone Affinity with the current compendium
+ *    version, so existing characters pick up the jamming behavior.
+ *  - Harmonizes the vehicle Item schema with the morph Item schema: flattens the nested "pools" object
+ *    into flat vigor/moxie/insight/flex/threat + cur* fields, migrates the old 4-slot {speed,type}
+ *    movement into the new 10-slot {label,active,type,base,full} shape, renames the chassis-category
+ *    field "type" to "chassisType", removes the dead autoControl/controlType fields, and converts any
+ *    vehicle item that was (mis)configured with system.type === "morph" into a real Morph item.
  */
-export async function migrationPre195(startMigration, endMigration) {
-  const latestUpdate = "1.9.5";
+export async function migrationPre196(startMigration, endMigration) {
+  const latestUpdate = "1.9.6";
   if (!startMigration) return { endMigration: false };
 
   const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
   const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
-  const total = actors.length || 1;
 
+  const targets = [];
+  for (const actor of game.actors) {
+    for (const item of actor.items.filter(i => i.type === "vehicle")) {
+      targets.push({ actor, item });
+    }
+  }
+  for (const item of game.items.filter(i => i.type === "vehicle")) {
+    targets.push({ actor: null, item });
+  }
+
+  const total = actors.length + targets.length || 1;
   const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
   uiBar.set(0, "Preparing migration…", `0/${total}`);
 
@@ -2263,9 +2275,159 @@ export async function migrationPre195(startMigration, endMigration) {
     }
   }
 
+  for (const { actor, item } of targets) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    const ownerLabel = actor ? actor.name : "World Items";
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${ownerLabel} - ${item.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const sys = item.system;
+
+      if (sys.type === "morph") {
+        // This vehicle item was (mis)configured as a "morph" chassis - that option is being removed
+        // entirely, since a vehicle-as-morph was never reachable via the jamming UI in the first place.
+        // Convert it into a real Morph item instead of deleting it, preserving whatever data it can.
+        const newMovement = _ep196_convertMovementSlots(sys.movement, `${ownerLabel}/${item.name}`, latestUpdate);
+
+        const morphData = {
+          name: item.name,
+          type: "morph",
+          img: item.img,
+          system: {
+            description: sys.description ?? "",
+            type: "synth",
+            dur: _ep196_numOrNull(sys.dur),
+            insight: _ep196_numOrNull(sys.pools?.ins?.max),
+            moxie: _ep196_numOrNull(sys.pools?.mox?.max),
+            vigor: _ep196_numOrNull(sys.pools?.vig?.max),
+            flex: _ep196_numOrNull(sys.pools?.flex?.max),
+            movement: newMovement
+          }
+        };
+
+        if (actor) {
+          if (actor.system?.activeJam === item.id) {
+            await actor.update({ "system.activeJam": null });
+            console.warn(`[EP Migration ${latestUpdate}] ${ownerLabel}: cleared activeJam reference to "${item.name}" before converting it away from the vehicle type.`);
+          }
+          await actor.deleteEmbeddedDocuments("Item", [item.id]);
+          const [created] = await actor.createEmbeddedDocuments("Item", [morphData]);
+          console.warn(`[EP Migration ${latestUpdate}] ${ownerLabel}: vehicle item "${item.name}" had system.type === "morph" and was converted into a real Morph item (new id ${created?.id}). Please review it.`);
+        } else {
+          await item.delete();
+          const created = await Item.create(morphData);
+          console.warn(`[EP Migration ${latestUpdate}] World Items: vehicle item "${item.name}" had system.type === "morph" and was converted into a real Morph item (new id ${created?.id}). Please review it.`);
+        }
+      } else {
+        const update = { _id: item.id };
+
+        update["system.vigor"] = _ep196_numOrNull(sys.pools?.vig?.max);
+        update["system.moxie"] = _ep196_numOrNull(sys.pools?.mox?.max);
+        update["system.insight"] = _ep196_numOrNull(sys.pools?.ins?.max);
+        update["system.flex"] = _ep196_numOrNull(sys.pools?.flex?.max);
+        update["system.threat"] = _ep196_numOrNull(sys.pools?.threat?.max);
+        update["system.curVigor"] = _ep196_numOrNull(sys.pools?.vig?.current);
+        update["system.curMoxie"] = _ep196_numOrNull(sys.pools?.mox?.current);
+        update["system.curInsight"] = _ep196_numOrNull(sys.pools?.ins?.current);
+        update["system.curFlex"] = _ep196_numOrNull(sys.pools?.flex?.current);
+        update["system.curThreat"] = _ep196_numOrNull(sys.pools?.threat?.current);
+        update["system.-=pools"] = null;
+
+        update["system.movement"] = _ep196_convertMovementSlots(sys.movement, `${ownerLabel}/${item.name}`, latestUpdate);
+
+        update["system.chassisType"] = sys.type;
+        update["system.-=type"] = null;
+
+        update["system.-=autoControl"] = null;
+        update["system.-=controlType"] = null;
+
+        if (actor) {
+          await actor.updateEmbeddedDocuments("Item", [update]);
+        } else {
+          await item.update(update);
+        }
+
+        console.log(`[EP Migration ${latestUpdate}] ${ownerLabel}: migrated vehicle item "${item.name}" to the new schema (chassisType="${sys.type}")`);
+      }
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${ownerLabel}: migration failed for vehicle item "${item?.name}"`, err);
+    }
+
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${ownerLabel}`,
+      `${doneCount}/${total}`
+    );
+
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+  }
+
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   uiBar.done(`Migration finished (${doneCount}/${total})`);
   return { endMigration: true };
+}
+
+function _ep196_numOrNull(v) {
+  return (v === null || v === undefined || v === "") ? null : Number(v);
+}
+
+// Converts an old 4-slot {speed,type} vehicle movement object into the new 10-slot
+// {label,active,type,base,full} shape shared with morph items. Also used to build a real
+// morph item's movement when converting away from the removed "morph" vehicleType.
+function _ep196_convertMovementSlots(oldMovement, contextLabel, latestUpdate) {
+  const newMovement = {};
+  for (let i = 1; i <= 10; i++) {
+    newMovement["move" + i] = { label: `${i}.`, active: i === 1, type: null, base: null, full: null };
+  }
+
+  if (!oldMovement) return newMovement;
+
+  let firstMigratedKey = null;
+  for (let i = 1; i <= 4; i++) {
+    const oldSlot = oldMovement[String(i)];
+    if (!oldSlot || !oldSlot.speed) continue;
+
+    const key = "move" + i;
+    let type = oldSlot.type || null;
+    if (typeof type === "string" && type.startsWith("{{localize")) {
+      type = "boat";
+    }
+    newMovement[key].type = type;
+
+    const parts = String(oldSlot.speed).split("/");
+    const base = parts.length === 2 ? parts[0].trim() : "";
+    const full = parts.length === 2 ? parts[1].trim() : "";
+    if (base !== "" && full !== "" && Number.isFinite(Number(base)) && Number.isFinite(Number(full))) {
+      newMovement[key].base = Number(base);
+      newMovement[key].full = Number(full);
+    } else {
+      newMovement[key].base = null;
+      newMovement[key].full = null;
+      console.warn(`[EP Migration ${latestUpdate}] ${contextLabel}: movement slot ${i} speed "${oldSlot.speed}" could not be parsed as "base/full" - left blank for manual review.`);
+    }
+
+    if (!firstMigratedKey) firstMigratedKey = key;
+  }
+
+  if (firstMigratedKey) {
+    for (const key of Object.keys(newMovement)) newMovement[key].active = false;
+    newMovement[firstMigratedKey].active = true;
+  }
+
+  return newMovement;
 }
 
 function epCreateProgressDialog(title = "Migration") {

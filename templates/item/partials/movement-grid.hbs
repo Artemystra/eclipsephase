@@ -1,0 +1,21 @@
+<p class="headline5">{{localize "ep2e.morph.currentMorph.movement.label"}}</p>
+<div class="grid grid-2col">
+    {{#each item.system.movement as |mov key|}}
+    <div class="itemRow itemBackgroundDark">
+        <div class="itemGroup wantToKnowMore">
+            {{label}}
+            <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
+            <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
+            <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.base" value="{{base}}" placeholder="0"/>/
+            <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.full" value="{{full}}" placeholder="0"/>
+        </div>
+        <div class="itemGroup wantToKnowMore">
+            <i class="fa-regular fa-tags awesomeIcon icon-xsmall"></i>
+            <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}</label>
+            <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
+                {{selectOptions @root.config.moveTypes selected=mov.type localize=true}}
+            </select>
+        </div>
+    </div>
+    {{/each}}
+</div>

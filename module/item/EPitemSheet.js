@@ -77,7 +77,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       return { width: 520, height: 415 };
     }
     else if (item.type === "vehicle"){
-      return { width: 1010, height: 505 };
+      return { width: 680, height: 560 };
     }
 
     return { width: 520, height: 415 };
@@ -127,7 +127,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
         primaryTabs = primaryTabs.filter(tab => tab.id !== "details2");
       }
 
-      if (item.type !== "morph") {
+      if (item.type !== "morph" && item.type !== "vehicle") {
         primaryTabs = primaryTabs.filter(tab => tab.id !== "additions");
       }
 
@@ -148,7 +148,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       item.system.ammoName = "ep2e.item.weapon.table.ammoUsed." + item.system.ammoType;
     }
 
-    if (item.type === "morph") {
+    if (item.type === "morph" || item.type === "vehicle") {
       context.itemList = CONFIG.compendiumList ?? {
         ware: { none: "Calculating..." },
         flaw: { none: "Calculating..." },

@@ -26,13 +26,13 @@
 
     <section class="item-sheet-body" style="min-height: 245px; height: fit-content; overflow-y: scroll">
         <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details">
-            <div class="itemRow">
+            <div class="itemRowPadded" style="display: grid; grid-template-columns: 1fr 1fr; justify-items: start;">
                 <div class="itemGroup">
                     <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
                     <input class="input-small" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="0" style="text-align: center"/>
                 </div>
-                <div class="itemGroup">
+                <div class="itemGroup" style="justify-self: end;">
                     <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
                     <select style="max-width: 100px;" class="selectSpecApt" name="system.type" data-type="String">
@@ -64,27 +64,7 @@
                 </div>
             </div>
 
-            <p class="headline5">{{localize "ep2e.morph.currentMorph.movement.label"}}</p>
-            <div class="grid grid-2col">
-                {{#each item.system.movement as |mov key|}}
-                <div class="itemRow itemBackgroundDark">
-                    <div class="itemGroup wantToKnowMore">
-                        {{label}}
-                        <i class="fa-regular fa-gauge-max awesomeIcon icon-xsmall"></i>
-                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.speed"}}</label>
-                        <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.base" value="{{base}}" placeholder="0"/>/
-                        <input class="input-small" type="number" onFocus="this.select()" name="system.movement.{{key}}.full" value="{{full}}" placeholder="0"/>
-                    </div>
-                    <div class="itemGroup wantToKnowMore">
-                        <i class="fa-regular fa-tags awesomeIcon icon-xsmall"></i>
-                        <label class="tooltipText resource-value">{{localize "ep2e.morph.currentMorph.movement.type"}}</label>
-                        <select class="selectSpecApt" style="max-width: 85px;" name="system.movement.{{key}}.type" data-type="String">
-                            {{selectOptions @root.config.moveTypes selected=mov.type localize=true}}
-                        </select>
-                    </div>
-                </div>
-                {{/each}}
-            </div>
+            {{> systems/eclipsephase/templates/item/partials/movement-grid.hbs item=item config=config}}
         </div>
 
         <div class="tab {{#if (eq tabGroups.primary 'additions')}}active{{/if}}" data-group="primary" data-tab="additions">

@@ -302,7 +302,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const vehicle = {
           robot: [],
           vehicle: [],
-          morph: [],
           animal: [],
           Robot: [],
           Vehicle: [],
@@ -668,16 +667,16 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
                   break;
               }
             itemModel.wt = Math.round(itemModel.dur / 5);
-            if (itemModel.type != "animal"){
+            if (itemModel.chassisType != "animal"){
               itemModel.dr = Math.round(itemModel.dur * 2);
             }
             else {
               itemModel.dr = Math.round(itemModel.dur * 1.5);
             }
-            itemModel.luc = Math.round(itemModel.wil * 2);
+            itemModel.luc = Math.round(itemModel.aptitudes.wil.value * 2);
             itemModel.tt = Math.round(itemModel.luc / 5);
             itemModel.ir = Math.round(itemModel.luc * 2);
-            vehicle[itemModel.type].push(item)
+            vehicle[itemModel.chassisType].push(item)
           }
         else if (item.type === 'ware' && itemModel.boundTo) {
               const path = bodies[boundTo].morphgear;

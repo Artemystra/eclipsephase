@@ -188,7 +188,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
     "systems/eclipsephase/templates/item/partials/item-traits.hbs",
-    "systems/eclipsephase/templates/item/partials/additions-tab.hbs"
+    "systems/eclipsephase/templates/item/partials/additions-tab.hbs",
+    "systems/eclipsephase/templates/item/partials/movement-grid.hbs"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -265,7 +266,7 @@ Hooks.once("ready", async function() {
   let before110 = foundry.utils.isNewerVersion("1.1.0", gameVersion);
   let before150 = foundry.utils.isNewerVersion("1.5", gameVersion);
   let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
-  let before195 = foundry.utils.isNewerVersion("1.9.5", gameVersion);
+  let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -473,17 +474,17 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
-  //1.9.5 Migration
-  if (before195) {
+  //1.9.6 Migration
+  if (before196) {
     endMigration = false;
-    const messageCopy = "ep2e.migration.195";
+    const messageCopy = "ep2e.migration.196";
     let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
 
     if (migration.cancelled) return;
     startMigration = migration.start;
 
-    let Migration195 = await update.migrationPre195(startMigration);
-    endMigration = Migration195["endMigration"];
+    let Migration196 = await update.migrationPre196(startMigration);
+    endMigration = Migration196["endMigration"];
   }
 
     if(endMigration){

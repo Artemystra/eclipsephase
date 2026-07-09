@@ -94,7 +94,7 @@ export async function jammVehicle(actor, currentTarget, sheet) {
         const originalFlexSpent = originalTotalFlex - (Number(actor.system.pools.flex.value) || 0);
         const egoFlexSpent = Math.max(0, originalFlexSpent - originalBodyFlexMax);
         const bodyFlexRemaining = Math.max(0, originalBodyFlexMax - originalFlexSpent);
-        const droneBodyFlexMax = Number(vehicle.system.pools?.flex?.max) || 0;
+        const droneBodyFlexMax = Number(vehicle.system.flex) || 0;
         const droneFlexValue = Math.max(0, egoFlex + droneBodyFlexMax - egoFlexSpent);
 
         // Stash the real body's damage and pools so they're untouched while jamming, then start the drone fresh
@@ -117,7 +117,7 @@ export async function jammVehicle(actor, currentTarget, sheet) {
         let message = {
             type: "jamming",
             actor: actor,
-            morphtype: vehicle.system.type,
+            morphtype: vehicle.system.chassisType,
             morphname: vehicle.name
         };
 

@@ -110,7 +110,7 @@ export default class EPactor extends Actor {
     //actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
     // When jamming, Durability/Armor come from the drone instead of the morph (drones/vehicles/robots count as synth, animals as bio)
     const jammedHealthValues = jammedVehicleData
-      ? { dur: jammedVehicleData.system.dur, type: jammedVehicleData.system.type === "animal" ? "bio" : "synth" }
+      ? { dur: jammedVehicleData.system.dur, type: jammedVehicleData.system.chassisType === "animal" ? "bio" : "synth" }
       : null;
     this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole, jammedVehicleData);
@@ -128,10 +128,10 @@ export default class EPactor extends Actor {
       // instead of the morph. Ego Flex is unaffected either way, since it's added separately below.
       const poolSource = jammedVehicleData
         ? {
-            vigor:   Number(jammedVehicleData.system.pools?.vig?.max)  || 0,
-            insight: Number(jammedVehicleData.system.pools?.ins?.max)  || 0,
-            moxie:   Number(jammedVehicleData.system.pools?.mox?.max)  || 0,
-            flex:    Number(jammedVehicleData.system.pools?.flex?.max) || 0
+            vigor:   Number(jammedVehicleData.system.vigor)  || 0,
+            insight: Number(jammedVehicleData.system.insight) || 0,
+            moxie:   Number(jammedVehicleData.system.moxie)  || 0,
+            flex:    Number(jammedVehicleData.system.flex)   || 0
           }
         : morphValues;
       this._calculatePools(actorModel, poolSource, chiMultiplier)

@@ -31,7 +31,7 @@ eclipsephase.gearTypes = {
 
 eclipsephase.moveTypes = {
     none: "ep2e.morph.currentMorph.movementTypes.none",
-    '{{localize "ep2e.morph.currentMorph.movementTypes.boat"}}': "ep2e.morph.currentMorph.movementTypes.boat",
+    boat: "ep2e.morph.currentMorph.movementTypes.boat",
     glider: "ep2e.morph.currentMorph.movementTypes.glider",
     hopper: "ep2e.morph.currentMorph.movementTypes.hopper",
     hover: "ep2e.morph.currentMorph.movementTypes.hover",
@@ -136,7 +136,6 @@ eclipsephase.vehicleSize = {
 eclipsephase.vehicleType = {
     robot: "ep2e.item.vehicle.table.type.robot",
     vehicle: "ep2e.item.vehicle.table.type.vehicle",
-    morph: "ep2e.item.vehicle.table.type.morph",
     animal: "ep2e.item.vehicle.table.type.animal"
 }
 

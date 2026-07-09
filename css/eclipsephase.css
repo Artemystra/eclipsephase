@@ -2157,6 +2157,15 @@ h3.subheaderBlank {
   padding: 5px 2px;
 }
 
+/* Same padding/layout as itemRowHeader, but keeps itemRow's plain (no) background/border */
+.itemRowPadded {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: none;
+  padding: 5px 0.5em 5px 0.5em;
+}
+
 .itemGroup {
   display: flex;
   align-items: center;
