@@ -215,11 +215,11 @@
                         </div>
                     {{/if}}
                         <div style="display: flex; flex-wrap: nowrap; align-items: stretch; gap: 10px; flex: 1; min-height: 0;">
-                            <div class="contentBox" style="flex: 1.5; min-width: 0; margin: 0; display: flex; flex-direction: column;">
-                                <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
+                            <div class="contentBox" style="flex: 1; min-width: 0; margin: 0; display: flex; flex-direction: column;">
+                                <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; width: 100%; padding: 5px 0.5em;">
                                     {{#each idValues.system.rep as |rep key|}}
-                                        <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 40px; flex-shrink: 0;">
-                                            <div class="reveal item" style="display: flex; gap: 5px; max-width: 40px; min-width: 40px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
+                                        <div style="display: flex; flex-direction: column; align-items: stretch; gap: 4px; min-width: 0;">
+                                            <div class="reveal item" style="display: flex; gap: 5px; height: 24px; flex-wrap: wrap; justify-content: center; align-content: center;">
                                                 <span class="toggle input-medium resource-label" style="min-width: 100%;">{{localize rep.name}}</span>
                                                 <div class="toggle flexrow flex-group-left input-medium noShow" style="padding-left: 5px; min-width: 100%;">
                                                     <img data-type="skill" data-key="rep" data-name="{{key}}" data-rollvalue="{{rep.value}}"
@@ -228,33 +228,33 @@
                                             </div>
                                             <div class="flex-group-center item" data-item-id="{{idValues._id}}">
                                                 <input class="input-small sheet-inline-edit" onFocus="this.select()" type="text" data-field="system.rep.{{key}}.value" name="system.rep.{{key}}.value"
-                                                    value="{{rep.value}}" placeholder="0" style="text-align: center"/>
+                                                    value="{{rep.value}}" placeholder="0" style="text-align: center; width: 100%"/>
                                             </div>
-                                        </div>
-                                    {{/each}}
-                                </div>
-                                <div style="display: flex; justify-content: space-between; min-width: 100%; padding: 5px 0.5em;">
-                                    {{#each idValues.system.rep as |rep key|}}
-                                        <div style="display: flex; gap: 5px; max-width: 40px; flex-wrap: wrap; justify-content: center;">
-                                            {{localize "ep2e.id.complexity.min"}}
-                                            <div style="display: flex; max-width: 20px; flex-wrap: wrap; gap: 5px; justify-content: center;">
-                                                <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small1" name="system.rep.{{key}}.small1" {{checked rep.small1}}>
-                                                <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small2" name="system.rep.{{key}}.small2" {{checked rep.small2}}>
-                                                <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small3" name="system.rep.{{key}}.small3" {{checked rep.small3}}>
+                                            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                                                {{localize "ep2e.id.complexity.min"}}
+                                                <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
+                                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small1" name="system.rep.{{key}}.small1" {{checked rep.small1}}>
+                                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small2" name="system.rep.{{key}}.small2" {{checked rep.small2}}>
+                                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.small3" name="system.rep.{{key}}.small3" {{checked rep.small3}}>
+                                                </div>
                                             </div>
-                                            {{localize "ep2e.id.complexity.mod"}}
-                                            <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
-                                                <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.med1" name="system.rep.{{key}}.med1" {{checked rep.med1}}>
+                                            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                                                {{localize "ep2e.id.complexity.mod"}}
+                                                <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.med1" name="system.rep.{{key}}.med1" {{checked rep.med1}}>
+                                                </div>
                                             </div>
-                                            {{localize "ep2e.id.complexity.maj"}}
-                                            <div style="display: flex; max-width: 20px; flex-wrap: wrap; justify-content: center;">
-                                                <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.large" name="system.rep.{{key}}.large" {{checked rep.large}}>
+                                            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                                                {{localize "ep2e.id.complexity.maj"}}
+                                                <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                                                    <input type="checkbox" class="sheet equipped checkBox" data-item-id="{{idValues.id}}" data-path="system.rep.{{key}}.large" name="system.rep.{{key}}.large" {{checked rep.large}}>
+                                                </div>
                                             </div>
                                         </div>
                                     {{/each}}
                                 </div>
                             </div>
-                            <div class="contentBox" style="flex: 2; min-width: 0; margin: 0; display: flex; flex-direction: column;">
+                            <div class="contentBox" style="flex: 1; min-width: 0; margin: 0; display: flex; flex-direction: column;">
                                 {{#if idValues.system.description}}
                                     <div class="id-description-box">
                                         {{{idValues.system.description}}}
