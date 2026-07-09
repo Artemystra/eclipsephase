@@ -781,6 +781,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const titlebar = html.querySelector('.ep-sheet-titlebar');
     SHEET.addWindowControls(this, titlebar);
     SHEET.addDragSupport(this, titlebar);
+    SHEET.addMinimizeSupport(this, titlebar);
 
     if (!this.isEditable) return;
 

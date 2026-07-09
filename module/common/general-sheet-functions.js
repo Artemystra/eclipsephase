@@ -845,6 +845,59 @@ export function addDragSupport(sheet, handle) {
   });
 }
 
+/**
+ * Binds double-click on the given handle element to toggle a custom
+ * minimized state on the sheet, replicating the native window-header
+ * dblclick-minimize (unusable here because the native header is hidden
+ * and native minimize would hide the custom title bar along with the rest
+ * of the window content). Visual collapse is handled by the .ep-minimized
+ * CSS rules in css/eclipsephase.css.
+ * Only wired once — subsequent calls are no-ops via a data attribute guard.
+ * @param {ApplicationV2} sheet - The sheet instance
+ * @param {HTMLElement} handle - The element to use as double-click target
+ */
+export function addMinimizeSupport(sheet, handle) {
+  if (!handle || handle.dataset.epMinimizeBound) return;
+  handle.dataset.epMinimizeBound = "1";
+
+  handle.addEventListener("dblclick", async (event) => {
+    if (event.target.closest('[data-action], button, input, select')) return;
+
+    event.preventDefault();
+
+    const element = sheet.element;
+    if (!element || sheet._epMinimizeAnimating) return;
+
+    if (element.classList.contains("ep-minimized")) {
+      // Restore: remove the class, then wait for the max-width/max-height
+      // transition to finish before reapplying the stashed size.
+      // setPosition() clamps width/height against getComputedStyle()'s
+      // maxWidth/maxHeight, and while the transition is still running those
+      // compute to the collapsed values, so calling it synchronously would
+      // clamp the frame right back down to the minimized size. Core's own
+      // maximize() awaits the transition the same way before repositioning.
+      sheet._epMinimizeAnimating = true;
+      element.classList.remove("ep-minimized");
+      await sheet._awaitTransition(element, 1000);
+      sheet._epMinimizeAnimating = false;
+      if (sheet._epPriorSize && sheet.rendered) {
+        sheet.setPosition({
+          width: sheet._epPriorSize.width,
+          height: sheet._epPriorSize.height
+        });
+      }
+    } else {
+      // Minimize: stash the current size on the long-lived sheet instance
+      // (survives re-renders, unlike DOM dataset attributes)
+      sheet._epPriorSize = {
+        width: sheet.position.width,
+        height: sheet.position.height
+      };
+      element.classList.add("ep-minimized");
+    }
+  });
+}
+
 export async function transferItemBetweenActors({
   sourceActor,
   targetActor,

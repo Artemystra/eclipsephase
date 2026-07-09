@@ -1,4 +1,4 @@
-import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport } from "../common/general-sheet-functions.js";
+import { registerEffectHandlers, registerCommonHandlers, itemToggle, moreInfo, addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -183,6 +183,7 @@ async _onRender(context, options) {
   const itemHeader = html.querySelector(".ep-sheet-titlebar");
   addWindowControls(this, itemHeader);
   addDragSupport(this, itemHeader);
+  addMinimizeSupport(this, itemHeader);
 
   if(item.type !== "knowSkill" && item.type !== "specialSkill"){
     // Fallback logic for sheets that do not render every static tab

@@ -1516,12 +1516,14 @@ optgroup .Default .Roll .Mode,
   padding: 0 !important;
 }
 
-/* Custom title bar spanning full sheet width */
+/* Custom title bar spanning full sheet width.
+   Height is shared with the .ep-minimized collapsed state below via
+   --ep-titlebar-height (declared on .application.eclipsephase.sheet). */
 .ep-sheet-titlebar {
   display: flex;
   align-items: flex-end;
   flex-shrink: 0;
-  height: 52px;
+  height: var(--ep-titlebar-height, 52px);
   position: relative;
   z-index: 1;
   cursor: grab;
@@ -1568,12 +1570,46 @@ optgroup .Default .Roll .Mode,
   box-shadow: 0 5px var(--pitchBorder);
   height: 40px;
   flex-grow: 1;
+  /* Allow this flex child to shrink below its content size so the name
+     can ellipsis-truncate when the window is minimized to 200px */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .ep-titlebar-name input[name="name"] {
   font-size: 17px;
   text-shadow: 0 0 5px #161616;
   width: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Read-only stand-in for the name input while minimized - not an <input>,
+   so double-clicking it always restores the window instead of placing a
+   text cursor. Hidden otherwise; see .ep-minimized rules below. */
+.ep-titlebar-name-plain {
+  display: none;
+  font-size: 12px;
+  text-shadow: 0 0 5px #161616;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The limited-permission actor sheet has no editable name input to swap out
+   (it's already plain text) - just shrink it in step with every other
+   sheet's titlebar when minimized. */
+.ep-titlebar-name-limited {
+  font-size: 17px;
+  text-shadow: 0 0 5px #161616;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.application.eclipsephase.sheet.ep-minimized .ep-titlebar-name-limited {
+  font-size: 12px;
 }
 
 /* Controls injected into the title bar as a flex sibling */
@@ -1616,6 +1652,50 @@ optgroup .Default .Roll .Mode,
 
 .ep-close-btn:hover {
   opacity: 1;
+}
+
+/* Custom double-click minimize (see addMinimizeSupport in
+   module/common/general-sheet-functions.js). Native minimize is unusable
+   because the custom title bar lives inside .window-content, which core
+   hides when minimized. */
+.application.eclipsephase.sheet {
+  --ep-titlebar-height: 52px;
+  /* Roughly double Foundry's native --minimized-width (200px) - our titlebar
+     carries more content (portrait/logo + name) than the native 24px header. */
+  --ep-minimized-width: 400px;
+  /* Defined base max values so the collapse/expand transition animates */
+  max-width: 100vw;
+  max-height: 100vh;
+  transition: max-width 0.25s ease, max-height 0.25s ease;
+}
+
+.application.eclipsephase.sheet.ep-minimized {
+  max-width: var(--ep-minimized-width);
+  max-height: var(--ep-titlebar-height);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Hide everything below the title bar while minimized. The titlebar is the
+   first child of the sheet's root <form> in all 16 templates that use it,
+   so the sibling selector covers item and actor sheets alike. */
+.application.eclipsephase.sheet.ep-minimized .ep-sheet-titlebar ~ * {
+  display: none;
+}
+
+.application.eclipsephase.sheet.ep-minimized .window-resize-handle {
+  display: none;
+}
+
+/* Swap the editable name input for the plain-text stand-in while minimized -
+   keeps the collapsed titlebar non-editable and click-to-restore reliable. */
+.application.eclipsephase.sheet.ep-minimized .ep-titlebar-name input[name="name"] {
+  display: none;
+}
+
+.application.eclipsephase.sheet.ep-minimized .ep-titlebar-name-plain {
+  display: block;
 }
 
 .filepicker .display-modes a {
