@@ -460,7 +460,9 @@ export function embeddedItemToggle(html, actor) {
 /**
  * Powers any ".multiselect-widget" (see templates/actor/partials/multiselect-pills.html) - a
  * reusable multi-select that stores its values as an array on the widget's data-path.
- * Add: type into .multiselect-input and press Enter. Remove: click a .multiselect-pill-remove.
+ * Add: type into .multiselect-input and press Enter (free text allowed), or pick a suggestion
+ * from the custom .multiselect-dropdown (filtered while typing, arrow keys to highlight).
+ * Remove: click a .multiselect-pill-remove.
  * @param {Object} html - The HTML object to which the event listeners are added
  * @param {Object} actor - The actor object whose data-path array fields are being edited
  */
@@ -470,25 +472,114 @@ export function multiSelectPills(html, actor) {
     if (!path) return;
 
     const input = widget.querySelector(".multiselect-input");
+    const dropdown = widget.querySelector(".multiselect-dropdown");
+
+    // shared by the Enter-key path and the option-click path
+    const addValue = async rawValue => {
+      const value = String(rawValue ?? "").trim();
+      if (!value) return;
+
+      const values = foundry.utils.duplicate(foundry.utils.getProperty(actor, path) ?? []);
+      const alreadyAdded = values.some(existing => String(existing).toLowerCase() === value.toLowerCase());
+      if (alreadyAdded) {
+        input.value = "";
+        return;
+      }
+
+      values.push(value);
+      await actor.update({ [path]: values });
+      input.value = "";
+    };
+
+    const hideDropdown = () => {
+      if (!dropdown) return;
+      dropdown.classList.add("noShow");
+      dropdown.classList.remove("showFlex");
+      clearHighlight();
+    };
+
+    const clearHighlight = () => {
+      if (!dropdown) return;
+      dropdown.querySelectorAll(".multiselect-option-active").forEach(option => option.classList.remove("multiselect-option-active"));
+    };
+
+    const visibleOptions = () => dropdown ? [...dropdown.querySelectorAll(".multiselect-option:not(.noShow)")] : [];
+
+    // Show options whose text contains the typed value (all of them while the input is empty,
+    // so focusing the field doubles as browsing the full list); hide the box if nothing matches.
+    const filterDropdown = () => {
+      if (!dropdown) return;
+      clearHighlight();
+      const search = input.value.trim().toLowerCase();
+      let anyMatch = false;
+      dropdown.querySelectorAll(".multiselect-option").forEach(option => {
+        const match = (option.dataset.value ?? "").toLowerCase().includes(search);
+        option.classList.toggle("noShow", !match);
+        if (match) anyMatch = true;
+      });
+      dropdown.classList.toggle("noShow", !anyMatch);
+      dropdown.classList.toggle("showFlex", anyMatch);
+    };
 
     if (input) {
+      input.addEventListener("focus", filterDropdown);
+      input.addEventListener("input", filterDropdown);
+      input.addEventListener("blur", hideDropdown);
+
       input.addEventListener("keydown", async ev => {
-        if (ev.key !== "Enter") return;
-        ev.preventDefault();
+        const dropdownOpen = dropdown && !dropdown.classList.contains("noShow");
 
-        const value = input.value.trim();
-        if (!value) return;
-
-        const values = foundry.utils.duplicate(foundry.utils.getProperty(actor, path) ?? []);
-        const alreadyAdded = values.some(existing => String(existing).toLowerCase() === value.toLowerCase());
-        if (alreadyAdded) {
-          input.value = "";
+        if (ev.key === "Escape" && dropdownOpen) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          hideDropdown();
           return;
         }
 
-        values.push(value);
-        await actor.update({ [path]: values });
-        input.value = "";
+        if ((ev.key === "ArrowDown" || ev.key === "ArrowUp") && dropdown) {
+          if (!dropdownOpen) {
+            filterDropdown();
+            return;
+          }
+          ev.preventDefault();
+          const options = visibleOptions();
+          if (!options.length) return;
+          const current = options.findIndex(option => option.classList.contains("multiselect-option-active"));
+          const next = ev.key === "ArrowDown"
+            ? (current + 1) % options.length
+            : (current <= 0 ? options.length - 1 : current - 1);
+          clearHighlight();
+          options[next].classList.add("multiselect-option-active");
+          options[next].scrollIntoView({ block: "nearest" });
+          return;
+        }
+
+        if (ev.key !== "Enter") return;
+        ev.preventDefault();
+
+        // Enter picks the arrow-key-highlighted suggestion if there is one,
+        // otherwise it adds the literal typed text (free-text entries stay allowed)
+        const highlighted = dropdownOpen ? dropdown.querySelector(".multiselect-option-active:not(.noShow)") : null;
+        if (highlighted) {
+          hideDropdown();
+          await addValue(highlighted.dataset.value);
+          return;
+        }
+        await addValue(input.value);
+      });
+    }
+
+    if (dropdown && input) {
+      // mousedown would normally move focus off the input, firing its blur handler and
+      // closing the dropdown before the click can land - swallow it (scrollbar drags included)
+      dropdown.addEventListener("mousedown", ev => ev.preventDefault());
+
+      dropdown.querySelectorAll(".multiselect-option").forEach(option => {
+        option.addEventListener("click", async ev => {
+          ev.preventDefault();
+          hideDropdown();
+          await addValue(ev.currentTarget.dataset.value);
+        });
       });
     }
 

@@ -1,5 +1,5 @@
 {{!-- Multi-select pill widget, powered by multiSelectPills() in general-sheet-functions.js
-  Params: items, path (required), placeholderKey (required), datalistId, suggestions, removeTitleKey (optional) --}}
+  Params: items, path (required), placeholderKey (required), suggestions, removeTitleKey (optional) --}}
 <div class="multiselect-widget" data-path="{{path}}">
     {{#each items as |value index|}}
         <span class="multiselect-pill">
@@ -7,12 +7,12 @@
             <a class="multiselect-pill-remove" data-index="{{index}}" {{#if removeTitleKey}}title="{{localize removeTitleKey}}"{{/if}}>&times;</a>
         </span>
     {{/each}}
-    <input type="text" class="multiselect-input" {{#if datalistId}}list="{{datalistId}}"{{/if}} placeholder="{{localize placeholderKey}}"/>
-    {{#if datalistId}}
-        <datalist id="{{datalistId}}">
+    <input type="text" class="multiselect-input" placeholder="{{localize placeholderKey}}"/>
+    {{#if suggestions}}
+        <div class="multiselect-dropdown noShow">
             {{#each suggestions as |suggestion key|}}
-                <option value="{{localize suggestion}}"></option>
+                <a class="multiselect-option" data-value="{{localize suggestion}}">{{localize suggestion}}</a>
             {{/each}}
-        </datalist>
+        </div>
     {{/if}}
 </div>

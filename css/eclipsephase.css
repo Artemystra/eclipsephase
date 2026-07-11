@@ -2435,27 +2435,25 @@ h3.subheaderBlank {
 }
 
 /* Chromium's native datalist arrow doesn't center, draw our own instead */
-input[type="text"].ego-combo-input,
-input[type="text"].multiselect-input[list] {
+input[type="text"].ego-combo-input {
   height: 24px;
   padding-right: 22px;
 }
 
-input[type="text"].ego-combo-input:hover,
-input[type="text"].multiselect-input[list]:hover {
+input[type="text"].ego-combo-input:hover {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0L5 6L10 0Z' fill='%23cccccc'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 6px center;
 }
 
 /* native arrow stays clickable, just invisible */
-input[type="text"].ego-combo-input::-webkit-calendar-picker-indicator,
-input[type="text"].multiselect-input[list]::-webkit-calendar-picker-indicator {
+input[type="text"].ego-combo-input::-webkit-calendar-picker-indicator {
   opacity: 0;
 }
 
 /* pills + input in one bordered box, see multiselect-pills.html */
 .multiselect-widget {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -2506,6 +2504,40 @@ input[type="text"].multiselect-input[list]::-webkit-calendar-picker-indicator {
 input[type="text"].multiselect-input:hover,
 input[type="text"].multiselect-input:focus {
   background: transparent;
+}
+
+/* Custom suggestion dropdown (native datalist popups can't be size-capped),
+   toggled via noShow/showFlex by multiSelectPills() */
+.multiselect-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 2px;
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--mainBackground);
+  border: solid 1px var(--highlightBackground);
+  border-radius: 4px;
+}
+
+/* .showFlex brings flex-wrap:wrap + align-items:center along, force a vertical list instead */
+.multiselect-dropdown.showFlex {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+.multiselect-option {
+  padding: 4px 10px;
+  color: var(--mainText);
+  cursor: pointer;
+}
+
+.multiselect-option:hover,
+.multiselect-option.multiselect-option-active {
+  background: var(--focusBackground);
 }
 
 .flavor-text,
@@ -2862,6 +2894,16 @@ button.epTextlink:hover{
   top: 1.8em;
   z-index: 100;
   color: var(--mainText);
+}
+
+/* fixed pos escapes .wrapperleft's overflow:hidden, opens into center column */
+.armorSideCar .tooltip:hover div[role=tooltipNegative] {
+  position: fixed;
+  top: auto;
+  left: auto;
+  min-width: 320px;
+  max-width: 320px;
+  transform: translateX(330px);
 }
 
 .tooltipTop,
