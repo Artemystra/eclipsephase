@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills} from "../common/general-sheet-functions.js";
+import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,positionArmorTooltip} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
@@ -784,6 +784,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     SHEET.addWindowControls(this, titlebar);
     SHEET.addDragSupport(this, titlebar);
     SHEET.addMinimizeSupport(this, titlebar);
+
+    //Position the Armor sideCar tooltip beside its hover anchor - a read-only hover
+    //effect, must work for non-editable viewers too (e.g. showEverything)
+    positionArmorTooltip(html);
 
     if (!this.isEditable) return;
 
