@@ -180,12 +180,24 @@
                                     </div>
                                 </div>
                                 {{#if body.traitsCount}}
-                                    {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphtraits}}
+                                    <div class="itemBackground" style="padding: 0 0.5em;">
+                                        <div class="grid grid-2col">
+                                            {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphtraits}}
+                                        </div>
+                                    </div>
                                     {{#if body.flawsCount}}
-                                        {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphflaws}}
+                                        <div class="itemBackground" style="padding: 0 0.5em;">
+                                            <div class="grid grid-2col">
+                                                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphflaws}}
+                                            </div>
+                                        </div>
                                     {{/if}}
                                 {{else if body.flawsCount}}
-                                    {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphflaws}}
+                                    <div class="itemBackground" style="padding: 0 0.5em;">
+                                        <div class="grid grid-2col">
+                                            {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphflaws}}
+                                        </div>
+                                    </div>
                                 {{else}}
                                     <div class="itemBackground minSize">
                                         {{localize "ep2e.morph.noMorphTraits"}}
@@ -200,7 +212,11 @@
                                         </div>
                                     </div>
                                     {{#if body.gearCount}}
-                                        {{> systems/eclipsephase/templates/actor/partials/item-partials/2column-item-list.html item=body.morphgear}}
+                                        <div class="itemBackground" style="padding: 0 0.5em;">
+                                            <div class="grid grid-2col">
+                                                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=body.morphgear}}
+                                            </div>
+                                        </div>
                                     {{else}}
                                         <div class="itemBackground minSize">
                                             {{localize "ep2e.morph.noMorphWare"}}

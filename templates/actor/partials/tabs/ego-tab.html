@@ -103,13 +103,9 @@
                     </div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column;">
-                    <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center" style="flex: 1; align-content: flex-start;">
+                    <div class="itemBackground noPadBot edgeAbler" style="flex: 1; align-content: flex-start;">
                         {{#if actor.trait}}
-                        {{#each actor.trait as |item id|}}
-
-                            {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="success" ego=true}}
-
-                        {{/each}}
+                        {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=actor.trait}}
                         {{else}}
                         <div class="flex-group-center">
                             <label class="resource-label">{{localize "ep2e.ego.traits.noItems"}}</label>
@@ -126,13 +122,9 @@
                     </div>
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column;">
-                    <div class="itemBackground noPadBot edgeAbler flexrow flex-group-center" style="flex: 1; align-content: flex-start;">
+                    <div class="itemBackground noPadBot edgeAbler" style="flex: 1; align-content: flex-start;">
                         {{#if actor.flaw}}
-                        {{#each actor.flaw as |item id|}}
-
-                            {{> systems/eclipsephase/templates/actor/partials/item-partials/traitsAndFlaws.html item=item itemType="fail" ego=true}}
-
-                        {{/each}}
+                        {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=actor.flaw}}
                         {{else}}
                         <div class="flex-group-center">
                             <label class="resource-label">{{localize "ep2e.ego.flaws.noItems"}}</label>

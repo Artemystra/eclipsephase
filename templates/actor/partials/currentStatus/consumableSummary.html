@@ -3,30 +3,7 @@
         <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.consumables.headline"}}</label>
     </div>
     {{#if actor.system.additionalSystems.consumableEquipped}}
-        {{#each actor.consumable as |item id|}}
-            {{#if this.system.active}}
-            <div class="item flexrow" data-item-id="{{item._id}}">
-                <div class=" flexrow flex-group-center itemBox reveal wantToKnowMore">
-                    <span class="tooltipText">{{item.name}}</span>
-                    <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
-                    <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
-                    <label class="flex-group-center alignCenter" style="background: none; margin-left: 10px;">{{item.system.quantity}}</label>
-                </div>
-                <div class="flex-group-right slideShow input-small">
-                    <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>
-                    <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>
-                </div>
-                <div class="item showMore descriptionContainer" data-item-id="{{item._id}}">
-                    {{#if item.system.description}}
-                    <div class="itemDescription" style="min-width: 100%;">
-                        {{{item.system.description}}}
-                    </div>
-                    {{/if}}
-                </div>
-            </div>
-            {{/if}}
-        {{/each}}
+        {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=actor.consumableActive readOnly=true}}
     {{else}}
     <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">{{localize "ep2e.sideCar.consumables.noConsumablesSubheadline"}}</span></div>
     {{/if}}

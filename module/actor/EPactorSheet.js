@@ -720,6 +720,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.program = program;
       actor.gear = gear;
       actor.consumable = consumable;
+      actor.gearActive = gear.filter(item => item.system.active);
+      actor.consumableActive = consumable.filter(item => item.system.active);
       actor.knowSkill = know;
       actor.specialSkill = special;
       actor.vehicle = vehicle;
