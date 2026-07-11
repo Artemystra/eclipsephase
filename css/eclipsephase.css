@@ -195,7 +195,6 @@
 .wrapperleft {
   height: 795px;
   grid-area: left;
-  overflow: hidden;
   background-color: var(--mainBackground);
   display: flex;
   flex-direction: column;
@@ -2896,21 +2895,13 @@ button.epTextlink:hover{
   color: var(--mainText);
 }
 
-/* top/left set by positionArmorTooltip() in JS; translateY centers on that point.
-   .armor-tooltip-open (JS-managed, see positionArmorTooltip) keeps it open while
-   hovering the tooltip itself, since :hover alone can't bridge the gap to it. */
-.armorSideCar .tooltip:hover div[role=tooltipNegative],
-.armorSideCar .tooltip.armor-tooltip-open div[role=tooltipNegative] {
-  opacity: 1;
-  display: block;
-  font-family: 'Cousine', monospace!important;
-  text-align: left;
-  color: var(--mainText);
-  position: fixed;
+/* opens sideways into the center column, same trick as the Insight/pool tooltips
+   (.wrapperleft no longer clips this, so a plain offset can escape it) */
+.armorSideCar .tooltip:hover div[role=tooltipNegative] {
+  top: -180px;
+  left: 260px;
   min-width: 320px;
   max-width: 320px;
-  z-index: 100;
-  transform: translateY(-50%);
 }
 
 .tooltipTop,
