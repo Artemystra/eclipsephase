@@ -266,6 +266,7 @@ Hooks.once("ready", async function() {
   let before150 = foundry.utils.isNewerVersion("1.5", gameVersion);
   let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
   let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
+  let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -484,6 +485,23 @@ Hooks.once("ready", async function() {
 
     let Migration196 = await update.migrationPre196(startMigration);
     endMigration = Migration196["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
+  //2.0 Migration
+  if (before200) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.200";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration200 = await update.migrationPre200(startMigration);
+    endMigration = Migration200["endMigration"];
   }
 
     if(endMigration){

@@ -2430,6 +2430,103 @@ function _ep196_convertMovementSlots(oldMovement, contextLabel, latestUpdate) {
   return newMovement;
 }
 
+/**
+ * Repairs an actor's active morph Item when its system.type is blank or otherwise not one of
+ * "bio"/"synth"/"info", by recovering the real value from the actor's own pre-1.5 legacy data.
+ * Root cause: the 1.5 migration (_ep150_mapLegacyMorphToItemSystem) mapped bodies.morphX.type
+ * into the new morph Item, but for npc/goon the value that actually drove the old DR calc lived
+ * in a separate field, system.bodyType.value (see EPactor.js as of commit 1d0bbdd1~1) - that
+ * field was never consulted, so npc/goon morphs frequently landed on system.type === "". Nothing
+ * in this codebase ever deletes system.bodies or system.bodyType after that migration, so this
+ * legacy data is still sitting untouched on any actor that predates it - see
+ * _ep200_resolveLegacyMorphType for exactly which field is read per actor type. That blank/wrong
+ * value poisons eclipsephase.damageRatingMultiplier[type] lookups in
+ * EPactor.js#_calculatePhysicalHealth, producing a NaN (or silently incorrect) Death Rating.
+ * Idempotent - only the active morph is touched, and only when the recovered legacy value
+ * differs from what's currently stored.
+ */
+export async function migrationPre200(startMigration, endMigration) {
+  const latestUpdate = "2.0";
+  if (!startMigration) return { endMigration: false };
+
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+
+  const total = actors.length || 1;
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (const actor of actors) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const activeMorphId = actor.system?.activeMorph;
+      const activeMorph = activeMorphId ? actor.items.get(activeMorphId) : null;
+
+      if (activeMorph) {
+        const legacyType = _ep200_resolveLegacyMorphType(actor);
+        const currentType = activeMorph.system?.type;
+
+        if (legacyType && legacyType !== currentType) {
+          await actor.updateEmbeddedDocuments("Item", [{ _id: activeMorph.id, "system.type": legacyType }]);
+          console.log(`[EP Migration ${latestUpdate}] ${actor.name}: corrected active morph "${activeMorph.name}" type "${currentType || "(blank)"}" -> "${legacyType}" (recovered from legacy data)`);
+        } else if (!legacyType && !["bio", "synth", "info"].includes(currentType)) {
+          console.warn(`[EP Migration ${latestUpdate}] ${actor.name}: active morph "${activeMorph.name}" has an invalid type "${currentType}" but no legacy data could be recovered to fix it - please check manually`);
+        }
+      }
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
+    }
+
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+/**
+ * Recovers the pre-1.5 legacy body type for whatever is now an actor's active morph, so it can
+ * be cross-checked against the migrated Item's system.type. Returns null if nothing valid can be
+ * recovered (e.g. the actor postdates the 1.5 migration and never had this legacy data at all).
+ *  - npc/goon: the old DR calc read the separate actor.system.bodyType.value field directly;
+ *    bodies.morph1.type was never the field that mattered, but is checked as a weaker fallback.
+ *  - character: the old DR calc read activeMorph.type, i.e. bodies[bodies.activeMorph].type -
+ *    bodies.activeMorph (old, a string key like "morph2") is the exact legacy slot that became
+ *    the current Item, per _ep150_createMorphsFromLegacy's activeKey matching.
+ */
+function _ep200_resolveLegacyMorphType(actor) {
+  const VALID_MORPH_TYPES = new Set(["bio", "synth", "info"]);
+  const bodies = actor.system?.bodies;
+  let legacyType = null;
+
+  if (actor.type === "npc" || actor.type === "goon") {
+    legacyType = actor.system?.bodyType?.value ?? bodies?.morph1?.type ?? null;
+  } else if (actor.type === "character") {
+    const activeKey = bodies?.activeMorph;
+    legacyType = activeKey ? (bodies?.[activeKey]?.type ?? null) : null;
+  }
+
+  return VALID_MORPH_TYPES.has(legacyType) ? legacyType : null;
+}
+
 function epCreateProgressDialog(title = "Migration") {
   const state = { cancelled: false };
 
