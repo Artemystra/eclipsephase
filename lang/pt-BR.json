@@ -117,7 +117,7 @@
         "showDetails": "Mostrar Detalhes",
         "hideDetails": "Ocultar detalhes",
         "changeID": "Activate ID",
-        "sleeveMorph": "Sleeve Morph",
+        "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam"
       },
@@ -129,6 +129,7 @@
         "information": "Informação"
       },
       "popUp": {
+        "needPuppetSockToJam": "Requer um Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
         "autoBotCopyGeneral": "<p><b>Aviso:</b> Isto irá redefinir todas as perícias do veículo/bot para os valores de perícia da IA padrão do bot. Isso sobrescreverá quaisquer mudanças que você tenha feito em suas perícias.</p><p><b>Selecione o tipo do seu veículo:</b></p>",

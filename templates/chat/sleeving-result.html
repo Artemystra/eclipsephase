@@ -163,14 +163,14 @@
                                 {{/if}}
                             {{/if}}
                             {{#if (and (eq integrationTest.alternatives.options.swap true)(eq integrationTest.resultClass "fail"))}}
-                                {{#if (and (eq stressTest.resultClass "fail") (gt integrationTest.pools.skillPoolValue 0))}}
+                                {{#if (and stressTest (eq stressTest.resultClass "fail") (gt integrationTest.pools.skillPoolValue 0))}}
                                     <option value="poolnone">Integration: Vigor ; Stress Test: None</option>
-                                {{else if (and (eq stressTest.resultClass "success") (gt integrationTest.pools.skillPoolValue 0))}}
+                                {{else if (and (or (not stressTest) (eq stressTest.resultClass "success")) (gt integrationTest.pools.skillPoolValue 0))}}
                                     <option value="poolnone">Integration: Vigor</option>
                                 {{/if}}
-                                {{#if (and (eq stressTest.resultClass "fail") (gt integrationTest.pools.flexPoolValue 0))}}
+                                {{#if (and stressTest (eq stressTest.resultClass "fail") (gt integrationTest.pools.flexPoolValue 0))}}
                                     <option value="flexnone">Integration: Flex ; Stress Test: None</option>
-                                {{else if (and (eq stressTest.resultClass "success") (gt integrationTest.pools.flexPoolValue 0))}}
+                                {{else if (and (or (not stressTest) (eq stressTest.resultClass "success")) (gt integrationTest.pools.flexPoolValue 0))}}
                                     <option value="flexnone">Integration: Flex</option>
                                 {{/if}}
                             {{/if}}
@@ -191,7 +191,7 @@
                     </div>
                 </div>
             {{/if}}
-            <div style="padding: 0 10px 10px 10px; width: 100%;">
+            <div style="padding: 10px; width: 100%;">
                 <button type="button" class="resleeveResult test" style="width: 100%;" data-actorid="{{#if stressTest}}{{stressTest.actor.id}}{{else}}{{integrationTest.actor.id}}{{/if}}" data-oldintegrationtestresult="{{integrationTest.alternatives.originalResult}}" data-oldstresstestresult="{{stressTest.alternatives.originalResult}}">Accept Results</button>
             </div>
         </div>

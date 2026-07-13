@@ -92,7 +92,8 @@
         "additionalSystems": {
           "hasPsi": null,
           "hasGear": null,
-          "psiAutoClose": false
+          "psiAutoClose": false,
+          "puppetSocked": []
         },
         "initiative": {
           "value": null,

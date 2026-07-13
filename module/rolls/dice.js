@@ -127,9 +127,9 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
     let calcPool = {poolType: pool.poolType, useMessage: pool.useMessage, skillPoolValue: eval(pool.skillPoolValue), updatePoolPath: pool.updatePoolPath, flexPoolValue: eval(pool.flexPoolValue), updateFlexPath: pool.updateFlexPath, poolUsageCount: pool.poolUsageCount}
 
     // While jamming, offer the real body's stashed pools as an "own body" variant that spends from the
-    // backup flag. Integration Tests are the exception: logically they happen before the jam is fully
-    // established, so they always use the original body's pool directly (no Remote/Own choice at all -
-    // we just process the roll asynchronously via chat, by which point isJamming is technically already true).
+    // backup flag. Integration Tests are the exception: they represent the real Ego struggling to
+    // integrate, so they always draw from the real body's stashed pool directly (no Remote/Own choice -
+    // the freshly-jammed body's own pool wouldn't make sense here).
     if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "vehicleSkill" && actorType !== "goon") {
         const ownPools = actorModel.additionalSystems.jamming?.ownBodyPools ?? { vigor: 0, insight: 0, moxie: 0, flex: 0 };
         let ownSkillPoolValue = 0;
@@ -1118,10 +1118,25 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     }
 
     if (rolledFrom === "integration"){
-        const newMorph = actorWhole.items.get(actorModel.activeMorph);
+        // For a real resleeve, check the newly sleeved Morph. For a jam, check the body actually
+        // being jammed into instead - activeMorph never changes during a jam, so checking it here
+        // meant the aversion check silently never fired for jamming (Vehicle or Morph target alike).
+        const targetId = actorModel.activeJam || actorModel.activeMorph;
+        const targetBody = actorWhole.items.get(targetId);
+        const targetType = targetBody
+            ? (targetBody.type === "vehicle"
+                ? (targetBody.system.chassisType === "animal" ? "bio" : "synth")
+                : targetBody.system.type)
+            : undefined;
 
-        if(actorModel?.additionalSystems?.sleeving?.aversion?.type === newMorph.system.type){
-            modValue = eval(actorModel.additionalSystems.sleeving.aversion.value)
+        // Each Aversion trait (Biomorph/Synthmorph/Infomorph, I-III) writes to its own
+        // sleeving.aversions.<bodyType> key, so multiple simultaneous Aversions can't collide into
+        // one merged value (they used to all target the same sleeving.aversion.type/.value pair,
+        // which "add"-mode string-concatenated the type into garbage like "bioinfosynth" - see the
+        // v2.0 migration for the fix applied to already-placed copies of these traits).
+        const aversionValue = targetType ? actorModel?.additionalSystems?.sleeving?.aversions?.[targetType] : undefined;
+        if (aversionValue) {
+            modValue = eval(aversionValue)
             announce = "ep2e.roll.announce.sleeving.aversion";
             task.addModifier(new TaskRollModifier(announce, modValue))
         }

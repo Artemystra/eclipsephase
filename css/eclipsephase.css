@@ -1159,6 +1159,17 @@ body.game .app button:focus {
   transition: 300ms;
 }
 
+/* A Jam button disabled because its body has no Puppet Sock - follows every .jammButton
+   visibility/sizing rule above (same class), just styled to look inert with no hover glow. */
+.eclipsephase button.sheetButton.jammButtonDisabled,
+.eclipsephase button.sheetButton.jammButtonDisabled:hover,
+.eclipsephase button.sheetButton.jammButtonDisabled:focus {
+  color: var(--focusBackground);
+  background: var(--highlightBackground);
+  border-color: var(--highlightBackground);
+  box-shadow: none;
+}
+
 .eclipsephase .jam-slot {
   position: relative;
   min-height: 20px;
@@ -1215,6 +1226,16 @@ a.content-link, a.inline-roll {
 
 .chatButton {
   width: 100%;
+}
+
+.resleeveResult {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  min-height: 0;
+  line-height: normal;
+  padding: 10px;
 }
 
 .chatActionButton {

@@ -95,6 +95,19 @@ export default class EPactor extends Actor {
       actorModel.additionalSystems.hasAmmo = true;
     }
 
+    // Which bodies (Morphs/Vehicles) have a Puppet Sock bound to them - read directly off a
+    // disabled marker ActiveEffect on the Ware item (see Puppet Sock's own effect data; the
+    // effect is never actually applied, its changes are only ever read raw). Consumed by the Jam
+    // button's disabled state in the sheet and jamVehicle()'s own defense-in-depth check.
+    const puppetSocked = [];
+    for (const wareCheck of items) {
+      if (wareCheck.type !== "ware" || !wareCheck.system.boundTo) continue;
+      const hasSockMarker = wareCheck.effects?.some(e =>
+        e.changes?.some(c => c.key === "flags.eclipsephase.grantsPuppetSock"));
+      if (hasSockMarker) puppetSocked.push(wareCheck.system.boundTo);
+    }
+    actorModel.additionalSystems.puppetSocked = puppetSocked;
+
     //Prepares information what type of psi a character uses
     for(let psiTypeCheck of items){
       if (psiTypeCheck.type === "aspect"){
@@ -108,9 +121,16 @@ export default class EPactor extends Actor {
     }
 
     //actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
-    // When jamming, Durability/Armor come from the drone instead of the morph (drones/vehicles/robots count as synth, animals as bio)
+    // When jamming, Durability/Armor come from the jammed body instead of the sleeved morph. A
+    // jammed Vehicle has no "type" of its own (drones/vehicles/robots count as synth, animals as
+    // bio); a jammed Morph keeps its own real type (bio/synth/info) instead.
     const jammedHealthValues = jammedVehicleData
-      ? { dur: jammedVehicleData.system.dur, type: jammedVehicleData.system.chassisType === "animal" ? "bio" : "synth" }
+      ? {
+          dur: jammedVehicleData.system.dur,
+          type: jammedVehicleData.type === "morph"
+            ? jammedVehicleData.system.type
+            : (jammedVehicleData.system.chassisType === "animal" ? "bio" : "synth")
+        }
       : null;
     this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole, jammedVehicleData);
@@ -138,7 +158,7 @@ export default class EPactor extends Actor {
       if (jammedVehicleData) {
         // Pass the real body's stashed pools through as derived data so the roll dialog can offer them.
         // Ego Flex is shared between both perspectives, so work out how much of it is still unspent from
-        // the drone's live combined value - same Body-Flex-first back-derivation as jammVehicle/unjamVehicle.
+        // the drone's live combined value - same Body-Flex-first back-derivation as jamBody/unjamBody.
         const backup = actorWhole.getFlag("eclipsephase", "jamHealthBackup");
         const egoFlex = Number(actorModel.ego.egoFlex) || 0;
         const droneTotalFlex = Number(actorModel.pools.flex.totalFlex) || 0;

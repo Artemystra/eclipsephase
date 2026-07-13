@@ -117,7 +117,7 @@
         "showDetails": "展示细节",
         "hideDetails": "隐藏细节",
         "changeID": "Activate ID",
-        "sleeveMorph": "Sleeve Morph",
+        "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam"
       },
@@ -129,6 +129,7 @@
         "information": "信息"
       },
       "popUp": {
+        "needPuppetSockToJam": "需要 Puppet Sock 才能 Jam",
         "deleteCopyGeneral": "<b>警告:</b>这会将物品从你的人物卡中永远删除。",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>若需略过删除物品时的提示框，请按住SHIFT建的同时点击删除键。</p></i>",
         "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",

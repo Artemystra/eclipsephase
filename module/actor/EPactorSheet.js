@@ -369,6 +369,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const boundTo = item.system.boundTo;
 
         item.img = item.img || DEFAULT_TOKEN;
+        // Used by the Jam button (Morphs and Vehicles alike) to decide enabled-vs-disabled+tooltip.
+        item.hasPuppetSock = (actorModel.additionalSystems.puppetSocked ?? []).includes(item.id);
 
         //Adds morphs to their container AND creates a subcontainer to morphflaws/traits and ware
         if (item.type === "morph" && actor.type === "character"){
@@ -1405,13 +1407,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     html.querySelectorAll(".jammButton").forEach(element => {
       element.addEventListener("click", ev => {
-        MORPHFUNCTION.jammVehicle(actor, ev.currentTarget, this);
+        MORPHFUNCTION.jamBody(actor, ev.currentTarget, this);
       });
     });
 
     html.querySelectorAll(".unjammButton").forEach(element => {
       element.addEventListener("click", ev => {
-        MORPHFUNCTION.unjamVehicle(actor, ev.currentTarget, this);
+        MORPHFUNCTION.unjamBody(actor, ev.currentTarget, this);
       });
     });
 

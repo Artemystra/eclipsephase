@@ -121,7 +121,7 @@
         "addNew": "Hinzufügen",
         "showDetails": "Mehr Details",
         "hideDetails": "Weniger Details",
-        "sleeveMorph": "Morph Wechseln",
+        "sleeveMorph": "Wechseln",
         "jamVehicle": "Jammen",
         "unjamVehicle": "Unjammen",
         "changeID": "Activate ID"
@@ -142,6 +142,7 @@
         "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>Alle Berechnungen & Tests werden automatisch vorgenommen. Neue Ware, Vor- und Nachteile werden hernach automatisch dem neuen Morph zugeordnet.</p></i>",
         "jamCopyGeneral": "<b>Vorsicht:</b>Du verbindest dich mit diesem Fernkörper. Deine Morph-Pools werden durch die Pools dieses Körpers ersetzt.",
         "jamAdditionalInfo": "<i><p style='font-size: 11px;'>Du erhältst einen -10 Malus auf alle Aktionen während du jammst. Ein Integrationstest wird automatisch gewürfelt.</p></i>",
+        "needPuppetSockToJam": "Benötigt einen Puppet Sock, um zu jammen",
         "unjamCopyGeneral": "<b>Vorsicht:</b>Du trennst dich von diesem Fernkörper und kehrst in deinen eigenen Körper zurück."
       }
     },

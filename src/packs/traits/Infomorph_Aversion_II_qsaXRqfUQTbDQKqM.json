@@ -24,13 +24,7 @@
       "system": {
         "changes": [
           {
-            "key": "system.additionalSystems.sleeving.aversion.type",
-            "value": "info",
-            "priority": null,
-            "type": "add"
-          },
-          {
-            "key": "system.additionalSystems.sleeving.aversion.value",
+            "key": "system.additionalSystems.sleeving.aversions.info",
             "value": -20,
             "priority": null,
             "type": "add"

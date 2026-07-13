@@ -15,18 +15,53 @@
                             <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
                             <div class="state">{{localize "ep2e.morph.currentMorph.sleevedLabel"}}</div>
                         </a>
+                    {{else if (eq @root.actor.system.activeJam body.morphdetails.0.id)}}
+                        <a data-action="tab" data-group="morph" data-tab="{{body.morphdetails.0.id}}" class="item {{#if (eq @root.tabGroups.morph body.morphdetails.0.id)}}active{{/if}}">
+                            <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
+                            <!-- Jammed: state label and Unjam button share one slot so the tab doesn't resize when toggling active -->
+                            <div class="jam-slot">
+                                <div class="state jammed-state">{{localize "ep2e.morph.jamming.jammed"}}</div>
+                                <button type="button"
+                                    class="resource-label button sheetButton unjammButton"
+                                    title="{{localize 'ep2e.actorSheet.button.unjamVehicle'}}"
+                                    data-item-id="{{body.morphdetails.0.id}}"
+                                    data-actorid="{{@root.actor.id}}">
+                                    {{localize "ep2e.actorSheet.button.unjamVehicle"}}
+                                </button>
+                            </div>
+                        </a>
                     {{else}}
                         <a data-action="tab" data-group="morph" data-tab="{{body.morphdetails.0.id}}" class="item {{#if (eq @root.tabGroups.morph body.morphdetails.0.id)}}active{{/if}}">
                             <div class="label truncateMulti">{{body.morphdetails.0.name}}</div>
-                            <div style="min-height: 20px; width: 100%;">
-                                <button type="button"
-                                    class="resource-label button sheetButton sleeveButton"
-                                    title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}"
-                                    data-item-id="{{body.morphdetails.0._id}}"
-                                    data-actorid="{{@root.actor.id}}"
-                                    style="width: 100%;">
-                                    {{localize "ep2e.actorSheet.button.sleeveMorph"}}
-                                </button>
+                            <div style="min-height: 20px; width: 100%; display: flex; gap: 4px;">
+                                {{#if body.morphdetails.0.hasPuppetSock}}
+                                    <button type="button"
+                                        class="resource-label button sheetButton jammButton"
+                                        title="{{localize 'ep2e.actorSheet.button.jamVehicle'}}"
+                                        data-item-id="{{body.morphdetails.0.id}}"
+                                        data-name="{{body.morphdetails.0.name}}"
+                                        data-actorid="{{@root.actor.id}}"
+                                        style="flex: 1;">
+                                        {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                    </button>
+                                {{else}}
+                                    <div class="wantToKnowMore jammButton" style="flex: 1; max-width: none;">
+                                        <button type="button" class="resource-label button sheetButton jammButton jammButtonDisabled" disabled style="width: 100%;">
+                                            {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                        </button>
+                                        <span class="tooltipText">{{localize "ep2e.actorSheet.popUp.needPuppetSockToJam"}}</span>
+                                    </div>
+                                {{/if}}
+                                {{#unless @root.actor.system.activeJam}}
+                                    <button type="button"
+                                        class="resource-label button sheetButton sleeveButton"
+                                        title="{{localize 'ep2e.actorSheet.button.sleeveMorph'}}"
+                                        data-item-id="{{body.morphdetails.0._id}}"
+                                        data-actorid="{{@root.actor.id}}"
+                                        style="flex: 1;">
+                                        {{localize "ep2e.actorSheet.button.sleeveMorph"}}
+                                    </button>
+                                {{/unless}}
                             </div>
                         </a>
                     {{/if}}
@@ -55,15 +90,24 @@
                             {{else}}
                                 <!-- Not jammed: Jam button (CSS shows only when tab active) -->
                                 <div style="min-height: 20px; width: 100%;">
-                                    <button type="button"
-                                        class="resource-label button sheetButton jammButton"
-                                        title="{{localize 'ep2e.actorSheet.button.jamVehicle'}}"
-                                        data-item-id="{{vehicle.id}}"
-                                        data-name="{{vehicle.name}}"
-                                        data-actorid="{{@root.actor.id}}"
-                                        style="width: 100%;">
-                                        {{localize "ep2e.actorSheet.button.jamVehicle"}}
-                                    </button>
+                                    {{#if vehicle.hasPuppetSock}}
+                                        <button type="button"
+                                            class="resource-label button sheetButton jammButton"
+                                            title="{{localize 'ep2e.actorSheet.button.jamVehicle'}}"
+                                            data-item-id="{{vehicle.id}}"
+                                            data-name="{{vehicle.name}}"
+                                            data-actorid="{{@root.actor.id}}"
+                                            style="width: 100%;">
+                                            {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                        </button>
+                                    {{else}}
+                                        <div class="wantToKnowMore jammButton" style="width: 100%; max-width: none;">
+                                            <button type="button" class="resource-label button sheetButton jammButton jammButtonDisabled" disabled style="width: 100%;">
+                                                {{localize "ep2e.actorSheet.button.jamVehicle"}}
+                                            </button>
+                                            <span class="tooltipText">{{localize "ep2e.actorSheet.popUp.needPuppetSockToJam"}}</span>
+                                        </div>
+                                    {{/if}}
                                 </div>
                             {{/if}}
                         </a>
@@ -88,7 +132,7 @@
                                     <img src="{{body.morphdetails.0.img}}" class="body-portrait"/>
                                     <div style="display: flex;">
                                         <button type="button" class="item-edit resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.edit'}}"><i class="far fa-edit awesomeIcon"></i>{{localize "ep2e.actorSheet.button.edit"}}</button>
-                                        {{#if (ne @root.actor.system.activeMorph body.morphdetails.0.id)}}
+                                        {{#if (and (ne @root.actor.system.activeMorph body.morphdetails.0.id) (ne @root.actor.system.activeJam body.morphdetails.0.id))}}
                                             <button type="button" class="item-delete resource-label button sheetButton" title="{{localize 'ep2e.actorSheet.button.delete'}}"><i class="far fa-times-circle awesomeIcon"></i>{{localize "ep2e.actorSheet.button.delete"}}</button>
                                         {{/if}}
                                     </div>

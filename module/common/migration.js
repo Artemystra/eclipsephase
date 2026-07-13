@@ -2444,6 +2444,9 @@ function _ep196_convertMovementSlots(oldMovement, contextLabel, latestUpdate) {
  * EPactor.js#_calculatePhysicalHealth, producing a NaN (or silently incorrect) Death Rating.
  * Idempotent - only the active morph is touched, and only when the recovered legacy value
  * differs from what's currently stored.
+ *
+ * Also fixes already-placed Aversion trait Items via _ep200_fixCollidingAversionTraits - see
+ * that function's doc comment for the unrelated bug it repairs.
  */
 export async function migrationPre200(startMigration, endMigration) {
   const latestUpdate = "2.0";
@@ -2489,6 +2492,12 @@ export async function migrationPre200(startMigration, endMigration) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
     }
 
+    try {
+      await _ep200_fixCollidingAversionTraits(actor, latestUpdate);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: aversion-trait fix failed`, err);
+    }
+
     doneCount++;
     uiBar.set(
       Math.floor((doneCount / total) * 100),
@@ -2525,6 +2534,55 @@ function _ep200_resolveLegacyMorphType(actor) {
   }
 
   return VALID_MORPH_TYPES.has(legacyType) ? legacyType : null;
+}
+
+/**
+ * Fixes Aversion trait Items (Biomorph/Synthmorph/Infomorph I-III) already placed on an actor
+ * before the source compendium was corrected. The old effect wrote two changes to a shared
+ * sleeving.aversion.type/.value pair; with more than one Aversion trait active at once, Foundry's
+ * "add" change mode string-concatenates same-key values (e.g. "bioinfosynth"), silently breaking
+ * the malus for every Aversion trait on that actor, not just the extra ones. The fix replaces the
+ * old effect with one that writes to its own sleeving.aversions.<bodyType> key instead, matching
+ * the corrected compendium sources. Delete-and-recreate rather than update(), since ActiveEffect's
+ * changes array lives at a different schema path in v13 (top-level) vs v14 (system.changes).
+ */
+async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
+  const STALE_KEY = "system.additionalSystems.sleeving.aversion.type";
+  const STALE_VALUE_KEY = "system.additionalSystems.sleeving.aversion.value";
+  const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
+
+  const staleTraits = actor.items.filter(i =>
+    i.type === "traits" &&
+    i.effects?.some(e => e.changes?.some(c => c.key === STALE_KEY))
+  );
+
+  for (const trait of staleTraits) {
+    const staleEffect = trait.effects.find(e => e.changes?.some(c => c.key === STALE_KEY));
+    if (!staleEffect) continue;
+
+    const bodyType = staleEffect.changes.find(c => c.key === STALE_KEY)?.value;
+    const malus = staleEffect.changes.find(c => c.key === STALE_VALUE_KEY)?.value;
+    if (!bodyType || malus === undefined) continue;
+
+    const newChanges = [
+      { key: `system.additionalSystems.sleeving.aversions.${bodyType}`, value: malus, priority: null, type: "add" }
+    ];
+
+    const newEffectData = {
+      name: staleEffect.name,
+      icon: staleEffect.icon,
+      origin: staleEffect.origin,
+      disabled: staleEffect.disabled,
+      transfer: staleEffect.transfer,
+      changes: newChanges
+    };
+    if (isV14Plus) newEffectData.system = { changes: newChanges };
+
+    await trait.deleteEmbeddedDocuments("ActiveEffect", [staleEffect.id]);
+    await trait.createEmbeddedDocuments("ActiveEffect", [newEffectData]);
+
+    console.log(`[EP Migration ${latestUpdate}] ${actor.name}: fixed colliding Aversion effect on "${trait.name}" -> sleeving.aversions.${bodyType} = ${malus}`);
+  }
 }
 
 function epCreateProgressDialog(title = "Migration") {
