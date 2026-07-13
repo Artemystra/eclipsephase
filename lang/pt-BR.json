@@ -1539,6 +1539,14 @@
         "majorLabel": "Major Stress",
         "minorDescription": "Stress due to alienation with the new body, continuity loss of yur ego or the lack of time since you have been reinstated.",
         "majorDescription": "Stress due to the fact that you're actively remembering your own death, or if you were offline for over 3 months of time."
+      },
+      "selectEnhancements": {
+        "header": "Adicionar Aprimoramentos padrão?",
+        "copy": "Este corpo já vem com Ware, Traits e Flaws padrão do compêndio. Eles devem ser adicionados automaticamente, ou o corpo deve permanecer como está (sem aprimoramentos)?",
+        "standardLabel": "Aprimoramentos padrão",
+        "standardDescription": "Adiciona todo o Ware, Traits e Flaws listados nos slots de Aprimoramento deste corpo.",
+        "flatLabel": "Sem aprimoramentos",
+        "flatDescription": "Adiciona o corpo como está, sem nenhum dos aprimoramentos listados."
       }
     },
     "chat": {
@@ -1629,7 +1637,8 @@
         "itemAddedToBody": "Adicionado a {body}: {name}.",
         "noBodyTrait": "Nenhum corpo presente. O Trait não pode ser adicionado.",
         "noBodyWare": "Nenhum corpo presente. A Ware não pode ser adicionada.",
-        "unknownTraitType": "Tipo de Trait desconhecido. Selecione pelo menos uma opção - ego ou morfo - para usar este trait."
+        "unknownTraitType": "Tipo de Trait desconhecido. Selecione pelo menos uma opção - ego ou morfo - para usar este trait.",
+        "enhancementsAdded": "{count} aprimoramento(s) adicionado(s) a {body}."
       }
     }
   }

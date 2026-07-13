@@ -1570,6 +1570,14 @@
         "majorLabel": "Extremer Stress",
         "minorDescription": "Stress aufgrund der fremdartigkeit des neuen Körpers, des Faktes, dass ein Backup geweckt wurde oder des schieren Zeitverlust-Gefühls.",
         "majorDescription": "Stress aufgrund der Erinnerung an den eigenen Tod oder weil mehr als 3 Monate seit der Reinsanzierung Vergangen sind."
+      },
+      "selectEnhancements": {
+        "header": "Standard-Verbesserungen hinzufügen?",
+        "copy": "Dieser Körper bringt vordefinierte Ware, Traits und Flaws aus dem Kompendium mit. Sollen diese automatisch hinzugefügt werden, oder soll der Körper unverändert (flach) bleiben?",
+        "standardLabel": "Standard-Verbesserungen",
+        "standardDescription": "Fügt alle Ware, Traits und Flaws hinzu, die in den Verbesserungs-Slots dieses Körpers hinterlegt sind.",
+        "flatLabel": "Flach",
+        "flatDescription": "Fügt den Körper so hinzu, wie er ist, ohne die hinterlegten Verbesserungen."
       }
     },
     "chat": {
@@ -1651,7 +1659,8 @@
         "itemAddedToBody": "{name} zu {body} hinzugefügt.",
         "noBodyTrait": "Kein Körper vorhanden. Trait kann nicht hinzugefügt werden.",
         "noBodyWare": "Kein Körper vorhanden. Ware kann nicht hinzugefügt werden.",
-        "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen."
+        "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
+        "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
       }
     }
   }

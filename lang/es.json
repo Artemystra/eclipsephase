@@ -1526,6 +1526,14 @@
         "majorLabel": "Major Stress",
         "minorDescription": "Stress due to alienation with the new body, continuity loss of yur ego or the lack of time since you have been reinstated.",
         "majorDescription": "Stress due to the fact that you're actively remembering your own death, or if you were offline for over 3 months of time."
+      },
+      "selectEnhancements": {
+        "header": "¿Añadir Mejoras estándar?",
+        "copy": "Este cuerpo trae Ware, Traits y Flaws predefinidos del compendio. ¿Deben añadirse automáticamente, o el cuerpo debe quedarse tal cual (sin mejoras)?",
+        "standardLabel": "Mejoras estándar",
+        "standardDescription": "Añade todo el Ware, Traits y Flaws listados en las ranuras de Mejora de este cuerpo.",
+        "flatLabel": "Sin mejoras",
+        "flatDescription": "Añade el cuerpo tal cual, sin ninguna de sus mejoras listadas."
       }
     },
     "chat": {
@@ -1615,7 +1623,8 @@
         "itemAddedToBody": "Se ha añadido {name} a {body}.",
         "noBodyTrait": "No hay ningún cuerpo presente. El Trait no puede añadirse.",
         "noBodyWare": "No hay ningún cuerpo presente. La Ware no puede añadirse.",
-        "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait."
+        "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait.",
+        "enhancementsAdded": "{count} mejora(s) añadida(s) a {body}."
       }
     }
   }

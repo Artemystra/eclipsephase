@@ -227,6 +227,9 @@ Hooks.once("ready", async () => {
     const fullItem = await fromUuid(entry.uuid);
     switch (fullItem.type) {
       case "traits":
+        // These lists only feed body-bound Enhancement slots (Morphs/Vehicles) - an ego-only
+        // trait/flaw (morph: false) can't attach to a body, so it doesn't belong here.
+        if (fullItem.system.morph !== true) break;
         fullItem.system.traitType === "trait" ? compendiumList.trait[fullItem.uuid] = fullItem.name : compendiumList.flaw[fullItem.uuid] = fullItem.name;
         break;
       case "ware":

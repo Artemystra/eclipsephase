@@ -941,6 +941,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         "system.pools.flex.value": egoFlex + newBodyFlexMax,
         "flags.eclipsephase.resleeving": true
       });
+      await maybeApplyStandardEnhancements(actor, created[0], "activeMorph");
       return created[0];
     }
 
@@ -1084,6 +1085,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     if (pendingMessage) {
       systemMessage(pendingMessage.type, pendingMessage.key, pendingMessage.data);
+    }
+
+    if (itemData.type === "morph" || itemData.type === "vehicle") {
+      await maybeApplyStandardEnhancements(actor, created[0], boundToFor(created[0]));
     }
 
     return created[0] ?? null;
@@ -1748,4 +1753,32 @@ function _traitSelection(form) {
     return {
         value: form.TraitTypeSelection.value
     }
+}
+
+// After a Morph/Vehicle is added as a body, offers to pull its Enhancement slots (Ware/Traits/
+// Flaws) straight from the compendium and bind them to it - skipped entirely if the body has no
+// filled slots, so a blank/custom body never triggers a pointless prompt.
+async function maybeApplyStandardEnhancements(actor, body, boundTo) {
+  const hasFilledSlot = [body.system.ware, body.system.traits, body.system.flaws]
+    .some(slots => Object.values(slots ?? {}).some(slot => slot?.value && slot.value !== "none"));
+  if (!hasFilledSlot) return;
+
+  const choice = await listSelection(
+    [
+      { id: "standard", label: "ep2e.dialog.selectEnhancements.standardLabel", description: "ep2e.dialog.selectEnhancements.standardDescription" },
+      { id: "flat", label: "ep2e.dialog.selectEnhancements.flatLabel", description: "ep2e.dialog.selectEnhancements.flatDescription" }
+    ],
+    "standardSelectionList",
+    320,
+    "ep2e.dialog.selectEnhancements.header",
+    "",
+    "ep2e.dialog.selectEnhancements.copy"
+  );
+
+  if (choice.cancelled || choice.selection !== "standard") return;
+
+  const created = await MORPHFUNCTION.applyStandardEnhancements(actor, body, boundTo);
+  if (created.length) {
+    systemMessage("success", "ep2e.systemMessage.itemAttachment.enhancementsAdded", { count: created.length, body: body.name });
+  }
 }

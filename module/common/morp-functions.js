@@ -224,3 +224,39 @@ export async function deleteBody(actor, bodyId){
     }
     await actor.deleteEmbeddedDocuments("Item", deletionList)
 }
+
+// Pulls every filled Enhancement slot (Ware/Traits/Flaws) on a body directly from the compendium
+// and creates them bound to that body - one created item per filled slot, so a slot referencing
+// the same compendium item twice (e.g. two identical minor Ware pieces) still yields two items.
+export async function applyStandardEnhancements(actor, body, boundTo) {
+    const slotGroups = [body.system.ware, body.system.traits, body.system.flaws];
+    const itemsToCreate = [];
+
+    for (const slots of slotGroups) {
+        for (const slot of Object.values(slots ?? {})) {
+            const uuid = slot?.value;
+            if (!uuid || uuid === "none") continue;
+
+            const source = await fromUuid(uuid);
+            if (!source) {
+                console.warn(`[EP2e] ${actor.name}: Enhancement slot on "${body.name}" points at a missing compendium item (${uuid}) - skipped.`);
+                continue;
+            }
+
+            const itemData = source.toObject();
+            itemData.system.boundTo = boundTo;
+            itemData.system.updated = game.system.version;
+            // A Trait/Flaw that can be either ego or morph (ego: true, morph: true) still gets
+            // bucketed as an ego trait purely by its ego flag, boundTo notwithstanding (see the
+            // trait/flaw classification in EPactorSheet.js). Clear it here, same as the interactive
+            // drop dialog does when the user picks "Morph" for a dual-capable trait.
+            if (itemData.type === "traits") {
+                itemData.system.ego = false;
+            }
+            itemsToCreate.push(itemData);
+        }
+    }
+
+    if (!itemsToCreate.length) return [];
+    return actor.createEmbeddedDocuments("Item", itemsToCreate);
+}

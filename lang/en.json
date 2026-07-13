@@ -1597,6 +1597,14 @@
         "majorLabel": "Major Stress",
         "minorDescription": "Stress due to alienation with the new body, continuity loss of yur ego or the lack of time since you have been reinstated.",
         "majorDescription": "Stress due to the fact that you're actively remembering your own death, or if you were offline for over 3 months of time."
+      },
+      "selectEnhancements": {
+        "header": "Add Standard Enhancements?",
+        "copy": "This body comes with a set of default Ware, Traits, and Flaws from the compendium. Should they be added automatically, or should the body stay flat?",
+        "standardLabel": "Standard Enhancements",
+        "standardDescription": "Add all Ware, Traits, and Flaws listed in this body's Enhancement slots.",
+        "flatLabel": "Flat",
+        "flatDescription": "Add the body as-is, without any of its listed Enhancements."
       }
     },
     "chat": {
@@ -1700,7 +1708,8 @@
         "itemAddedToBody": "{name} added to {body}.",
         "noBodyTrait": "No body present. Trait cannot be added.",
         "noBodyWare": "No body present. Ware cannot be added.",
-        "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait."
+        "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
+        "enhancementsAdded": "{count} Enhancement(s) added to {body}."
       }
     }
   }
