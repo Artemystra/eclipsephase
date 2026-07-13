@@ -1518,6 +1518,11 @@
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
       },
+      "selectBody": {
+        "header": "选择身体",
+        "copy": "该物品需绑定到一具身体，请选择接收它的身体。",
+        "placeholder": "- 选择身体 -"
+      },
       "selectStress": {
         "dialogTitle": "Stress Response",
         "copy": "You are stressed out by the sensation of being resleeved. The Stress Value is based on the most stressful aspect of resleeving.",
@@ -1608,6 +1613,13 @@
         "copy": "This dialog lets you add Rez to every active player character in game. If a character is not active you can still add Rez to them. Please be aware that the 'Add REZ to all characters' option will add the same amount of Rez to all characters, no matter if they're active or not. Rez added to specific characters will therefore count on top of this value.",
         "inputLabelAll": "Add REZ to all characters",
         "confirm": "Add Rez"
+      },
+      "itemAttachment": {
+        "itemAddedEgo": "已添加 {name}。",
+        "itemAddedToBody": "已将 {name} 添加到 {morph}。",
+        "noBodyTrait": "没有可用的身体，无法添加特征。",
+        "noBodyWare": "没有可用的身体，无法添加插件。",
+        "unknownTraitType": "未知的特征类型。请至少选择一项——意识或义体——以使用该特征。"
       }
     }
   }

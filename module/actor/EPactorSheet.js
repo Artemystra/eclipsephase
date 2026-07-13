@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills} from "../common/general-sheet-functions.js";
+import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
@@ -913,35 +913,112 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       return created[0];
     }
 
-    if (itemData.type === "traits" && itemModel.morph === true && itemModel.ego === true) {
+    const isWare = itemData.type === "ware";
+    const isTrait = itemData.type === "traits";
+    const canBeEgo = isTrait && itemModel.ego === true;
+    const canBeMorph = isWare || (isTrait && itemModel.morph === true);
+    const morphs = actor.items.filter(i => i.type === "morph");
+    const boundToFor = (morph) => actor.type === "character" ? morph.id : "activeMorph";
+
+    // Traits authored with neither flag set can't be meaningfully attached anywhere.
+    if (isTrait && !canBeEgo && !canBeMorph) {
+      await systemMessage("error", "ep2e.systemMessage.itemAttachment.unknownTraitType");
+      return null;
+    }
+
+    let pendingMessage;
+
+    if (canBeEgo && canBeMorph) {
       const dialogName = game.i18n.localize("ep2e.dialog.selectTrait.header");
       const dialogCopy = "ep2e.dialog.selectTrait.copy";
       const listOptions = [
         { id: "ego", label: "ep2e.actorSheet.leftTabs.egoTab" },
-        { id: "morph", label: "ep2e.actorSheet.rightTabs.morphTab" }
+        {
+          id: "morph",
+          label: "ep2e.actorSheet.rightTabs.morphTab",
+          disabled: morphs.length === 0,
+          bodyOptions: morphs.length > 1 ? morphs.map(m => ({ id: m.id, name: m.name })) : undefined,
+          bodyPlaceholder: game.i18n.localize("ep2e.dialog.selectBody.placeholder")
+        }
       ];
+
+      const renderHook = (event, dialog) => {
+        const root = dialog.element;
+        const morphRadio = root.querySelector('input[name="ItemSelect"][value="morph"]');
+        const egoRadio = root.querySelector('input[name="ItemSelect"][value="ego"]');
+        const bodySelect = root.querySelector('select[name="BodySelect"]');
+        const confirmBtn = root.querySelector('button[data-action="select"]');
+        if (!bodySelect || !confirmBtn) return;
+
+        const sync = () => {
+          const morphChosen = !!morphRadio?.checked;
+          bodySelect.disabled = !morphChosen;
+          confirmBtn.disabled = morphChosen && !bodySelect.value;
+        };
+
+        morphRadio?.addEventListener("change", sync);
+        egoRadio?.addEventListener("change", sync);
+        bodySelect.addEventListener("change", sync);
+        sync();
+      };
 
       traitSelection = await listSelection(
         listOptions,
         "standardSelectionList",
-        250,
+        280,
         dialogName,
         "",
-        dialogCopy
+        dialogCopy,
+        renderHook
       );
 
       if (traitSelection.cancelled) return null;
 
-      if (traitSelection.selection === "morph") itemModel.ego = false;
-      else itemModel.morph = false;
-    }
+      if (traitSelection.selection === "morph") {
+        itemModel.ego = false;
 
-    if (
-      (itemData.type === "traits" && itemModel.morph === true) ||
-      itemData.type === "ware" ||
-      itemModel.morph === true
-    ) {
-      itemModel.boundTo = actor.type === "character" ? currentMorph : "activeMorph";
+        const chosenMorph = morphs.length > 1
+          ? morphs.find(m => m.id === traitSelection.body)
+          : morphs[0];
+
+        if (!chosenMorph) {
+          await systemMessage("error", "ep2e.systemMessage.itemAttachment.noBodyTrait");
+          return null;
+        }
+
+        itemModel.boundTo = boundToFor(chosenMorph);
+        pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, morph: chosenMorph.name } };
+      } else {
+        itemModel.morph = false;
+        pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
+      }
+    } else if (canBeMorph) {
+      if (morphs.length === 0) {
+        const key = isWare ? "noBodyWare" : "noBodyTrait";
+        await systemMessage("error", `ep2e.systemMessage.itemAttachment.${key}`);
+        return null;
+      }
+
+      let chosenMorph;
+      if (actor.type === "character" && morphs.length > 1) {
+        const bodyChoice = await selectBody(
+          morphs.map(m => ({ id: m.id, name: m.name })),
+          "ep2e.dialog.selectBody.header",
+          "",
+          "ep2e.dialog.selectBody.copy"
+        );
+
+        if (bodyChoice.cancelled) return null;
+        chosenMorph = morphs.find(m => m.id === bodyChoice.selection);
+        if (!chosenMorph) return null;
+      } else {
+        chosenMorph = morphs[0];
+      }
+
+      itemModel.boundTo = boundToFor(chosenMorph);
+      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, morph: chosenMorph.name } };
+    } else if (canBeEgo) {
+      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
     }
 
     if (itemData.type === "rangedWeapon") {
@@ -960,6 +1037,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     itemModel.updated = game.system.version;
 
     const created = await actor.createEmbeddedDocuments("Item", [itemData]);
+
+    if (pendingMessage) {
+      systemMessage(pendingMessage.type, pendingMessage.key, pendingMessage.data);
+    }
+
     return created[0] ?? null;
   }
 

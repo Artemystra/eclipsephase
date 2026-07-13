@@ -166,11 +166,13 @@
                                 <input style="background-color: var(--highlightBackground);" type="number" name="Input" id="{{id}}">
                             </div>
                         {{else}}
-                            {{#if (eq key 0)}}
+                            {{#if disabled}}
+                                <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" disabled>
+                            {{else if (eq key 0)}}
                                 <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}" checked>
                             {{else}}
                                 <input class="dialog radio" type="radio" name="ItemSelect" value="{{id}}" id="{{id}}">
-                            {{/if}} 
+                            {{/if}}
                         {{/if}}
                     </div>
                     <div style="width: 100%; display: flex; flex-wrap: wrap; padding-top: 2px;">
@@ -181,9 +183,38 @@
                         <div>
                             <label for="{{id}}" style="font-size: 10px;"><i>{{localize description}}</i></label>
                         </div>
+                        {{#if bodyOptions}}
+                        <div style="width: 100%; margin-top: 8px;">
+                            <select name="BodySelect" style="width: 100%;" disabled>
+                                <option value="" disabled selected>{{bodyPlaceholder}}</option>
+                                {{#each bodyOptions}}
+                                <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        {{/if}}
                     </div>
                 </div>
             {{/each}}
+        </div>
+
+    {{else if (eq dialogType "selectBody")}}
+
+        {{#if copy}}
+            <div style="padding: 10px 0;">
+                {{#if headline}}
+                    <span class="headline5">{{localize headline}}</span><br>
+                {{/if}}
+                {{localize copy}}
+            </div>
+        {{/if}}
+        <div style="padding: 10px 0;">
+            <select name="BodySelect" style="width: 100%;">
+                <option value="" disabled selected>{{placeholder}}</option>
+                {{#each objectList}}
+                <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </select>
         </div>
     {{/if}}
 </form>

@@ -628,7 +628,7 @@ export function itemToggle(html, item) {
  * @param {String} copy - The copy within the dialog
  * @returns 
  */
-  export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy) {
+  export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy, renderHook) {
     const title = dialogTitle
       ? game.i18n.localize(dialogTitle)
       : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
@@ -662,7 +662,8 @@ export function itemToggle(html, item) {
       ],
       position: { width },
       modal: true,
-      rejectClose: false
+      rejectClose: false,
+      ...(typeof renderHook === "function" ? { render: renderHook } : {})
     });
 
     return result ?? { cancelled: true };
@@ -672,23 +673,141 @@ export function itemToggle(html, item) {
     let returnValue;
 
     if (form?.ItemSelect) {
-      returnValue = form.ItemSelect.value;
-    } else {
-      returnValue = {};
-      const inputs = form?.elements?.Input
-        ? Array.from(form.elements.Input instanceof RadioNodeList ? form.elements.Input : [form.elements.Input])
-        : [];
+      const result = { selection: form.ItemSelect.value };
+      // Only present when a dialog embeds a nested body-picker dropdown next to a radio option
+      // (e.g. the Ego/Morph trait dialog's "Morph" option) - absent for every other radio-only caller.
+      if (form?.BodySelect) result.body = form.BodySelect.value;
+      return result;
+    }
 
-      for (const entry of inputs) {
-        if (entry.value) {
-          returnValue[entry.id] = entry.type === "number" ? Number(entry.value) : entry.value;
-        }
+    returnValue = {};
+    const inputs = form?.elements?.Input
+      ? Array.from(form.elements.Input instanceof RadioNodeList ? form.elements.Input : [form.elements.Input])
+      : [];
+
+    for (const entry of inputs) {
+      if (entry.value) {
+        returnValue[entry.id] = entry.type === "number" ? Number(entry.value) : entry.value;
       }
     }
 
     return {
       selection: returnValue
     };
+  }
+
+/**
+ * A dropdown-only body picker, used when a Morph-bound Trait or Ware is dropped onto an actor
+ * that has more than one Morph. The Select button stays disabled until a real body is chosen -
+ * the placeholder option can never be submitted.
+ * @param {Array} morphs - Array of {id, name} for every candidate body.
+ * @param {String} [dialogTitle] - localization key for the window title
+ * @param {String} [headline] - localization key for the headline shown above the dropdown
+ * @param {String} [copy] - localization key for the explanatory copy shown above the dropdown
+ * @returns {Promise<{cancelled: true}|{selection: String}>}
+ */
+  export async function selectBody(morphs, dialogTitle, headline, copy) {
+    const title = dialogTitle
+      ? game.i18n.localize(dialogTitle)
+      : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
+    const useButton = game.i18n.localize("ep2e.actorSheet.button.select");
+    const placeholder = game.i18n.localize("ep2e.dialog.selectBody.placeholder");
+    const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      objectList: morphs,
+      dialogType: "selectBody",
+      headline,
+      copy,
+      placeholder
+    });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title },
+      classes: ["ep2e-primary-right"],
+      content,
+      buttons: [
+        {
+          action: "select",
+          label: useButton,
+          default: true,
+          callback: (event, button) => ({ selection: button.form.BodySelect.value })
+        },
+        {
+          action: "cancel",
+          label: cancelButton,
+          callback: () => ({ cancelled: true })
+        }
+      ],
+      position: { width: 340 },
+      modal: true,
+      rejectClose: false,
+      render: (event, dialog) => {
+        const select = dialog.element.querySelector('select[name="BodySelect"]');
+        const confirmBtn = dialog.element.querySelector('button[data-action="select"]');
+        if (!select || !confirmBtn) return;
+        const sync = () => { confirmBtn.disabled = !select.value; };
+        select.addEventListener("change", sync);
+        sync();
+      }
+    });
+
+    return result ?? { cancelled: true };
+  }
+
+/**
+ * A passive, non-interactive confirmation toast (success or error) that auto-closes on its own -
+ * used for quick system feedback (e.g. "Ego Trait added") where no user response is required.
+ * Modeled after the migration progress dialog's auto-close behavior in migration.js.
+ * @param {"success"|"error"} type
+ * @param {String} textKey - localization key for the message body
+ * @param {Object} [textData] - optional data for game.i18n.format placeholders
+ */
+  export async function systemMessage(type, textKey, textData) {
+    const template = "systems/eclipsephase/templates/chat/system-message.html";
+    const icon = type === "error" ? "fa-circle-xmark" : "fa-circle-check";
+    const colorClass = type === "error" ? "fail" : "success";
+    const title = type === "error"
+      ? game.i18n.localize("ep2e.actorSheet.dialogHeadline.error")
+      : game.i18n.localize("ep2e.actorSheet.dialogHeadline.success");
+    const message = textData ? game.i18n.format(textKey, textData) : game.i18n.localize(textKey);
+
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+      icon,
+      colorClass,
+      message
+    });
+
+    const dlg = new foundry.applications.api.DialogV2({
+      window: { title },
+      classes: ["ep2e-primary-right"],
+      content,
+      buttons: [
+        {
+          // DialogV2 requires at least one button - this toast needs no interaction, so it's hidden below.
+          action: "dismiss",
+          label: "",
+          callback: () => true
+        }
+      ],
+      position: { width: 320 },
+      close: () => {}
+    });
+
+    await dlg.render({ force: true });
+
+    const dismissButton = dlg.element?.querySelector('button[data-action="dismiss"]');
+    if (dismissButton) dismissButton.style.display = "none";
+
+    setTimeout(() => {
+      const root = dlg.element;
+      if (root) {
+        root.style.transition = "opacity 300ms ease-out";
+        root.style.opacity = "0";
+      }
+      setTimeout(() => dlg.close(), 300);
+    }, 2000);
   }
 
 

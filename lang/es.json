@@ -1511,6 +1511,11 @@
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
       },
+      "selectBody": {
+        "header": "Seleccionar Cuerpo",
+        "copy": "Este objeto está vinculado a un cuerpo. Elige cuál debe recibirlo.",
+        "placeholder": "- Seleccionar Cuerpo -"
+      },
       "selectStress": {
         "dialogTitle": "Stress Response",
         "copy": "You are stressed out by the sensation of being resleeved. The Stress Value is based on the most stressful aspect of resleeving.",
@@ -1601,6 +1606,13 @@
         "copy": "This dialog lets you add Rez to every active player character in game. If a character is not active you can still add Rez to them. Please be aware that the 'Add REZ to all characters' option will add the same amount of Rez to all characters, no matter if they're active or not. Rez added to specific characters will therefore count on top of this value.",
         "inputLabelAll": "Add REZ to all characters",
         "confirm": "Add Rez"
+      },
+      "itemAttachment": {
+        "itemAddedEgo": "Se ha añadido {name}.",
+        "itemAddedToBody": "Se ha añadido {name} a {morph}.",
+        "noBodyTrait": "No hay ningún cuerpo presente. El Trait no puede añadirse.",
+        "noBodyWare": "No hay ningún cuerpo presente. La Ware no puede añadirse.",
+        "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait."
       }
     }
   }
