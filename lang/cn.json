@@ -1380,7 +1380,9 @@
           "ownBodyPenalty": "自身身体减值",
           "ownBodyWounds": "自身身体伤势",
           "ownBodyArmor": "自身护甲负重",
-          "ownBodyEncumbrance": "自身负重"
+          "ownBodyEncumbrance": "自身负重",
+          "ownBodyTraits": "自身特征/插件",
+          "noPsi": "干扰状态下心灵能力无法使用。心灵能力永远无法通过网格连接或电子脑运作。"
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
@@ -1616,7 +1618,7 @@
       },
       "itemAttachment": {
         "itemAddedEgo": "已添加 {name}。",
-        "itemAddedToBody": "已将 {name} 添加到 {morph}。",
+        "itemAddedToBody": "已将 {name} 添加到 {body}。",
         "noBodyTrait": "没有可用的身体，无法添加特征。",
         "noBodyWare": "没有可用的身体，无法添加插件。",
         "unknownTraitType": "未知的特征类型。请至少选择一项——意识或义体——以使用该特征。"

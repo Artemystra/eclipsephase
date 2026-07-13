@@ -60,7 +60,7 @@ export async function replaceMorph(actor, activeMorph, newMorph){
 
     if(popUp.confirm === true){
         if (!oldMorph) return;
-        await deleteMorph(actor, activeMorph);
+        await deleteBody(actor, activeMorph);
         return;
     }
     else{
@@ -69,6 +69,10 @@ export async function replaceMorph(actor, activeMorph, newMorph){
 }
 
 export async function jammVehicle(actor, currentTarget, sheet) {
+    // Guards against a second jam while already jamming (e.g. a double click, or jamming a second
+    // vehicle) - that would overwrite jamHealthBackup with the already-jammed (drone-side) state.
+    if (actor.system.activeJam) return;
+
     const dataset = currentTarget.dataset;
     const itemID = dataset.itemId;
     const vehicle = actor.items.get(itemID);
@@ -130,6 +134,10 @@ export async function jammVehicle(actor, currentTarget, sheet) {
 }
 
 export async function unjamVehicle(actor, currentTarget, sheet) {
+    // Guards against a second unjam (e.g. a double click) - jamHealthBackup would already be gone
+    // after the first pass, and restoring with the "?? 0" fallbacks below would zero everything out.
+    if (!actor.system.activeJam) return;
+
     const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
     const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.unjamVehicle");
     const popUpCopy = "ep2e.actorSheet.popUp.unjamCopyGeneral";
@@ -141,9 +149,17 @@ export async function unjamVehicle(actor, currentTarget, sheet) {
     if (popUp.confirm === true) {
         sheet.tabGroups.morph = "sleeved";
 
+        const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
+        if (!backup) {
+            // No stashed state to restore (e.g. an already-consumed/orphaned backup) - just end the
+            // jam without zeroing out health/pools via the "?? 0" fallbacks below.
+            console.warn(`[EP2e] ${actor.name}: unjammed with no jamHealthBackup present - health/pools left as-is.`);
+            await actor.update({ "system.activeJam": null });
+            return;
+        }
+
         // Same Body-Flex-first logic as jamming, in reverse: work out how much Ego Flex was spent
         // while jamming (anything beyond the drone's own Body-Flex share), and carry only that back.
-        const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
         const egoFlex = Number(actor.system.ego.egoFlex) || 0;
         const droneTotalFlex = Number(actor.system.pools.flex.totalFlex) || 0;
         const droneBodyFlexMax = droneTotalFlex - egoFlex;
@@ -167,10 +183,19 @@ export async function unjamVehicle(actor, currentTarget, sheet) {
     }
 }
 
-export async function deleteMorph(actor, activeMorph){
+// Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws).
+export async function deleteBody(actor, bodyId){
     const deletionList = [];
-    const morphCollection = actor.type === "character" ? actor.bodies[activeMorph] : actor.bodies["activeMorph"];
-    const consolidatedItemList = [...morphCollection.morphdetails, ...morphCollection.morphtraits, ...morphCollection.morphflaws, ...morphCollection.morphgear];
+    let bucketKey = bodyId;
+    if (actor.type !== "character") {
+        // npc/goon share one fixed key per body type, not per item, so the type of the item
+        // actually being deleted decides which bucket to consolidate - otherwise deleting a
+        // Vehicle could sweep up an unrelated leftover Morph bound to the same "activeMorph" key.
+        const bodyItem = actor.items.get(bodyId);
+        bucketKey = bodyItem?.type === "vehicle" ? "activeVehicle" : "activeMorph";
+    }
+    const bodyCollection = actor.bodies[bucketKey];
+    const consolidatedItemList = [...bodyCollection.morphdetails, ...bodyCollection.morphtraits, ...bodyCollection.morphflaws, ...bodyCollection.morphgear];
     for (let item of consolidatedItemList){
         deletionList.push(item.id);
     }

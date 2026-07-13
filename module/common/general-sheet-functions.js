@@ -697,16 +697,18 @@ export function itemToggle(html, item) {
   }
 
 /**
- * A dropdown-only body picker, used when a Morph-bound Trait or Ware is dropped onto an actor
- * that has more than one Morph. The Select button stays disabled until a real body is chosen -
- * the placeholder option can never be submitted.
- * @param {Array} morphs - Array of {id, name} for every candidate body.
+ * A dropdown-only body picker, used when a Morph/Vehicle-bound Trait or Ware is dropped onto an
+ * actor that has more than one candidate body. The Select button stays disabled until a real
+ * body is chosen - the placeholder option can never be submitted.
+ * @param {Array<{label: String, options: Array<{id: String, name: String}>}>} bodyGroups -
+ *   Bodies grouped for <optgroup> rendering (e.g. "Morphs" vs "Remote Bodies"). Empty groups
+ *   should be filtered out by the caller before passing them in.
  * @param {String} [dialogTitle] - localization key for the window title
  * @param {String} [headline] - localization key for the headline shown above the dropdown
  * @param {String} [copy] - localization key for the explanatory copy shown above the dropdown
  * @returns {Promise<{cancelled: true}|{selection: String}>}
  */
-  export async function selectBody(morphs, dialogTitle, headline, copy) {
+  export async function selectBody(bodyGroups, dialogTitle, headline, copy) {
     const title = dialogTitle
       ? game.i18n.localize(dialogTitle)
       : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
@@ -716,7 +718,7 @@ export function itemToggle(html, item) {
     const template = "systems/eclipsephase/templates/chat/list-dialog.html";
 
     const content = await foundry.applications.handlebars.renderTemplate(template, {
-      objectList: morphs,
+      bodyGroups,
       dialogType: "selectBody",
       headline,
       copy,

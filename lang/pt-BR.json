@@ -1386,7 +1386,9 @@
           "ownBodyPenalty": "Penalidade de corpo próprio",
           "ownBodyWounds": "Feridas do corpo próprio",
           "ownBodyArmor": "Sobrecarga de armadura do corpo próprio",
-          "ownBodyEncumbrance": "Sobrecarga do corpo próprio"
+          "ownBodyEncumbrance": "Sobrecarga do corpo próprio",
+          "ownBodyTraits": "Trait/Ware do corpo próprio",
+          "noPsi": "Psi não funciona enquanto você está jammando. Ele nunca funciona por conexão mesh ou dentro de um cérebro cibernético."
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
@@ -1623,7 +1625,7 @@
       },
       "itemAttachment": {
         "itemAddedEgo": "Adicionado: {name}.",
-        "itemAddedToBody": "Adicionado a {morph}: {name}.",
+        "itemAddedToBody": "Adicionado a {body}: {name}.",
         "noBodyTrait": "Nenhum corpo presente. O Trait não pode ser adicionado.",
         "noBodyWare": "Nenhum corpo presente. A Ware não pode ser adicionada.",
         "unknownTraitType": "Tipo de Trait desconhecido. Selecione pelo menos uma opção - ego ou morfo - para usar este trait."

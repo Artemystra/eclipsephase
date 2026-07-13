@@ -61,6 +61,15 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
       return suppressed;
     }
 
+    // --- Case C: Psi (aspect items) never works over mesh/cyberbrain, which jamming requires -
+    // suppress all Psi effects while jamming. activeJam (source data) is used rather than the
+    // derived additionalSystems.isJamming flag, same reasoning as Case A: this getter runs during
+    // effect application, before derived data exists. psiJamSuppression lets a caller (e.g. the
+    // "own body" roll clone in dice.js, which nulls activeJam) force this off explicitly too.
+    if (t === "aspect") {
+      return !!actor.system?.activeJam || !!foundry.utils.getProperty(actor, "flags.eclipsephase.psiJamSuppression");
+    }
+
     // Default: don't suppress other item effects
     return false;
   }

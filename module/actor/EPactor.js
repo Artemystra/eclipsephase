@@ -633,8 +633,10 @@ export default class EPactor extends Actor {
   _calculateArmor(actorModel, actorWhole, jammedVehicleData) {
     // While jamming, armor comes from the drone's own rating instead of the character's worn armor
     if (jammedVehicleData) {
-      actorModel.physical.energyArmorTotal = Number(jammedVehicleData.system.armor?.energy) || 0;
-      actorModel.physical.kineticArmorTotal = Number(jammedVehicleData.system.armor?.kinetic) || 0;
+      // Ware bound to the drone boosts armor the same way worn armor's mods do on a Morph (see the
+      // non-jammed branch below) - without this, drone-bound armor Ware (e.g. Bioweave) is ignored.
+      actorModel.physical.energyArmorTotal = (Number(jammedVehicleData.system.armor?.energy) || 0) + eval(actorModel.mods.energyMod);
+      actorModel.physical.kineticArmorTotal = (Number(jammedVehicleData.system.armor?.kinetic) || 0) + eval(actorModel.mods.kineticMod);
       actorModel.physical.mainArmorTotal = 0;
       actorModel.physical.additionalArmorTotal = 0;
       actorModel.physical.mainArmorMalus = 0;

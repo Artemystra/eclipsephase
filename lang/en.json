@@ -1436,7 +1436,9 @@
           "ownBodyPenalty": "Own Body Penalty",
           "ownBodyWounds": "Own Body Wounds",
           "ownBodyArmor": "Own Body Armor Encumbrance",
-          "ownBodyEncumbrance": "Own Body Encumbrance"
+          "ownBodyEncumbrance": "Own Body Encumbrance",
+          "ownBodyTraits": "Own Body Traits/Ware",
+          "noPsi": "Psi doesn't work while jamming. It never works over mesh connection or inside a cyberbrain."
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
@@ -1694,7 +1696,7 @@
       },
       "itemAttachment": {
         "itemAddedEgo": "{name} added.",
-        "itemAddedToBody": "{name} added to {morph}.",
+        "itemAddedToBody": "{name} added to {body}.",
         "noBodyTrait": "No body present. Trait cannot be added.",
         "noBodyWare": "No body present. Ware cannot be added.",
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait."

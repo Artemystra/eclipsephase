@@ -188,7 +188,11 @@
                             <select name="BodySelect" style="width: 100%;" disabled>
                                 <option value="" disabled selected>{{bodyPlaceholder}}</option>
                                 {{#each bodyOptions}}
-                                <option value="{{id}}">{{name}}</option>
+                                <optgroup label="{{label}}">
+                                    {{#each options}}
+                                    <option value="{{id}}">{{name}}</option>
+                                    {{/each}}
+                                </optgroup>
                                 {{/each}}
                             </select>
                         </div>
@@ -211,8 +215,12 @@
         <div style="padding: 10px 0;">
             <select name="BodySelect" style="width: 100%;">
                 <option value="" disabled selected>{{placeholder}}</option>
-                {{#each objectList}}
-                <option value="{{id}}">{{name}}</option>
+                {{#each bodyGroups}}
+                <optgroup label="{{label}}">
+                    {{#each options}}
+                    <option value="{{id}}">{{name}}</option>
+                    {{/each}}
+                </optgroup>
                 {{/each}}
             </select>
         </div>

@@ -75,6 +75,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const tabs = [];
 
     for (const body of Object.values(this.document.bodies ?? {})) {
+      if (body?.bodyType !== "morph") continue;
       const morphId = body?.morphdetails?.[0]?.id;
       if (!morphId) continue;
 
@@ -343,13 +344,23 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           migrationBridge += 1;
           if (actor.type === "character") morphID = item.id
           if (actor.type !== "character") morphID = "activeMorph"
-          bodies[morphID] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+          bodies[morphID] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+        }
+        // Vehicles are bodies too (same bucket shape/key scheme), but get their own tab/card via
+        // actor.remoteVehicles below, not the Morphs loop - bodyType lets morph-tab.html tell them apart.
+        // Non-character actors get a separate fixed key from Morphs ("activeVehicle") so an NPC/Goon
+        // that happens to carry both a leftover Morph and a Vehicle doesn't merge them into one bucket.
+        else if (item.type === "vehicle"){
+          let vehicleID
+          if (actor.type === "character") vehicleID = item.id
+          if (actor.type !== "character") vehicleID = "activeVehicle"
+          bodies[vehicleID] = { bodyType: "vehicle", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
         }
 
-        
+
       }
       if (migrationBridge === 0){
-        bodies["migrationBody"] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+        bodies["migrationBody"] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
       }
       actor.bodies = bodies;
       // Iterate through items, allocating to containers
@@ -367,6 +378,14 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         }
         else if (item.type === "morph" && actor.type !== "character"){
           const category = bodies["activeMorph"];
+          category.morphdetails.push(item);
+        }
+        else if (item.type === "vehicle" && actor.type === "character"){
+          const category = bodies[item.id];
+          category.morphdetails.push(item);
+        }
+        else if (item.type === "vehicle" && actor.type !== "character"){
+          const category = bodies["activeVehicle"];
           category.morphdetails.push(item);
         }
 
@@ -681,17 +700,17 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             }
             vehicle[itemModel.chassisType].push(item)
           }
-        else if (item.type === 'ware' && itemModel.boundTo) {
+        else if (item.type === 'ware' && itemModel.boundTo && bodies[boundTo]) {
               const path = bodies[boundTo].morphgear;
               bodies[boundTo].gearCount += 1;
               path.push(item);
         }
-        else if (item.type === "traits" && itemModel.traitType === "flaw" && itemModel.boundTo) {
+        else if (item.type === "traits" && itemModel.traitType === "flaw" && itemModel.boundTo && bodies[boundTo]) {
             const path = bodies[boundTo].morphflaws;
             bodies[boundTo].flawsCount += 1;
             path.push(item);
         }
-        else if (item.type === "traits" && itemModel.traitType === "trait" && itemModel.boundTo) {
+        else if (item.type === "traits" && itemModel.traitType === "trait" && itemModel.boundTo && bodies[boundTo]) {
             const path = bodies[boundTo].morphtraits;
             bodies[boundTo].traitsCount += 1;
             path.push(item);
@@ -725,7 +744,17 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.knowSkill = know;
       actor.specialSkill = special;
       actor.vehicle = vehicle;
-      actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal];
+      actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal].map(v => {
+        const bodyKey = actor.type === "character" ? v.id : "activeVehicle";
+        const bucket = bodies[bodyKey] ?? { traitsCount: 0, morphtraits: [], flawsCount: 0, morphflaws: [], gearCount: 0, morphgear: [] };
+        v.traitsCount = bucket.traitsCount;
+        v.morphtraits = bucket.morphtraits;
+        v.flawsCount = bucket.flawsCount;
+        v.morphflaws = bucket.morphflaws;
+        v.gearCount = bucket.gearCount;
+        v.morphgear = bucket.morphgear;
+        return v;
+      });
       actor.activeEffects=effects;
       actor.actorType = "PC";
       actor.ammo = ammo;
@@ -917,8 +946,21 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const isTrait = itemData.type === "traits";
     const canBeEgo = isTrait && itemModel.ego === true;
     const canBeMorph = isWare || (isTrait && itemModel.morph === true);
-    const morphs = actor.items.filter(i => i.type === "morph");
-    const boundToFor = (morph) => actor.type === "character" ? morph.id : "activeMorph";
+
+    // Vehicles are valid boundTo targets too, grouped as "Remote Bodies" alongside "Morphs".
+    const morphItems = actor.items.filter(i => i.type === "morph");
+    const vehicleItems = actor.items.filter(i => i.type === "vehicle");
+    const bodies = [...morphItems, ...vehicleItems];
+    const boundToFor = (body) => {
+      if (actor.type === "character") return body.id;
+      return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
+    };
+    const buildBodyGroups = () => {
+      const groups = [];
+      if (morphItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.morphsHeadline"), options: morphItems.map(m => ({ id: m.id, name: m.name })) });
+      if (vehicleItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.jamming.headline"), options: vehicleItems.map(v => ({ id: v.id, name: v.name })) });
+      return groups;
+    };
 
     // Traits authored with neither flag set can't be meaningfully attached anywhere.
     if (isTrait && !canBeEgo && !canBeMorph) {
@@ -936,8 +978,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         {
           id: "morph",
           label: "ep2e.actorSheet.rightTabs.morphTab",
-          disabled: morphs.length === 0,
-          bodyOptions: morphs.length > 1 ? morphs.map(m => ({ id: m.id, name: m.name })) : undefined,
+          disabled: bodies.length === 0,
+          bodyOptions: bodies.length > 1 ? buildBodyGroups() : undefined,
           bodyPlaceholder: game.i18n.localize("ep2e.dialog.selectBody.placeholder")
         }
       ];
@@ -977,46 +1019,46 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       if (traitSelection.selection === "morph") {
         itemModel.ego = false;
 
-        const chosenMorph = morphs.length > 1
-          ? morphs.find(m => m.id === traitSelection.body)
-          : morphs[0];
+        const chosenBody = bodies.length > 1
+          ? bodies.find(b => b.id === traitSelection.body)
+          : bodies[0];
 
-        if (!chosenMorph) {
+        if (!chosenBody) {
           await systemMessage("error", "ep2e.systemMessage.itemAttachment.noBodyTrait");
           return null;
         }
 
-        itemModel.boundTo = boundToFor(chosenMorph);
-        pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, morph: chosenMorph.name } };
+        itemModel.boundTo = boundToFor(chosenBody);
+        pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: chosenBody.name } };
       } else {
         itemModel.morph = false;
         pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
       }
     } else if (canBeMorph) {
-      if (morphs.length === 0) {
+      if (bodies.length === 0) {
         const key = isWare ? "noBodyWare" : "noBodyTrait";
         await systemMessage("error", `ep2e.systemMessage.itemAttachment.${key}`);
         return null;
       }
 
-      let chosenMorph;
-      if (actor.type === "character" && morphs.length > 1) {
+      let chosenBody;
+      if (actor.type === "character" && bodies.length > 1) {
         const bodyChoice = await selectBody(
-          morphs.map(m => ({ id: m.id, name: m.name })),
+          buildBodyGroups(),
           "ep2e.dialog.selectBody.header",
           "",
           "ep2e.dialog.selectBody.copy"
         );
 
         if (bodyChoice.cancelled) return null;
-        chosenMorph = morphs.find(m => m.id === bodyChoice.selection);
-        if (!chosenMorph) return null;
+        chosenBody = bodies.find(b => b.id === bodyChoice.selection);
+        if (!chosenBody) return null;
       } else {
-        chosenMorph = morphs[0];
+        chosenBody = bodies[0];
       }
 
-      itemModel.boundTo = boundToFor(chosenMorph);
-      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, morph: chosenMorph.name } };
+      itemModel.boundTo = boundToFor(chosenBody);
+      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: chosenBody.name } };
     } else if (canBeEgo) {
       pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
     }
@@ -1135,8 +1177,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
           let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
 
-          if (popUp.confirm === true && item?.type === "morph") {
-            await MORPHFUNCTION.deleteMorph(actor, itemId);
+          if (popUp.confirm === true && (item?.type === "morph" || item?.type === "vehicle")) {
+            await MORPHFUNCTION.deleteBody(actor, itemId);
           }
           else if (popUp.confirm === true) {
             await actor.deleteEmbeddedDocuments("Item", [itemId]);
