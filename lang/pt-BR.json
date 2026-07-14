@@ -120,7 +120,9 @@
         "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam",
-        "rebindArmor": "Reatribuir a outro corpo"
+        "rebindArmor": "Reatribuir a outro corpo",
+        "moveArmor": "Mover Armadura",
+        "deleteArmorWithBody": "Excluir Armadura"
       },
       "dialogHeadline": {
         "warning": "Aviso",
@@ -132,6 +134,7 @@
       "popUp": {
         "needPuppetSockToJam": "Requer um Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
+        "deleteArmorWithBodyCopy": "<b>Aviso:</b>Você está prestes a excluir {body}. Este corpo tem Armadura atribuída a ele, e não há outro corpo para o qual movê-la. Excluir {body} também excluirá sua Armadura.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
         "autoBotCopyGeneral": "<p><b>Aviso:</b> Isto irá redefinir todas as perícias do veículo/bot para os valores de perícia da IA padrão do bot. Isso sobrescreverá quaisquer mudanças que você tenha feito em suas perícias.</p><p><b>Selecione o tipo do seu veículo:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Segure SHIFT enquanto pressiona o botão 'Auto-Bot'.</p></i>",
@@ -1540,6 +1543,10 @@
         "header": "Selecionar Corpo",
         "copy": "Este item está vinculado a um corpo. Escolha qual deve recebê-lo.",
         "placeholder": "- Selecionar Corpo -"
+      },
+      "reassignArmor": {
+        "header": "Reatribuir Armadura",
+        "copy": "Você está prestes a excluir {body}, que tem Armadura atribuída a ele. Escolha outro corpo para movê-la, ou exclua-a junto com {body}."
       },
       "selectStress": {
         "dialogTitle": "Stress Response",

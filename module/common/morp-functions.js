@@ -293,9 +293,94 @@ export async function rebindArmor(actor, itemId) {
     await sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemRebound", { name: item.name, body: chosenBody.name });
 }
 
-// Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws).
+// Armor is always bound to some body (no floating/unbound state) - deleting a body that has Armor
+// bound to it needs an explicit choice: move it all to one other body, or confirm it goes with the
+// body. This IS the delete confirmation for that case (the caller skips the generic "delete this
+// item?" dialog entirely, rather than showing both back to back) - bodyName is folded into the
+// copy so the single dialog still makes clear the body itself is about to be deleted.
+// Returns {proceed: false} if the user backs out, leaving the body (and its armor) untouched.
+// Reads boundTo live off actor.items rather than the render-time actor.bodies cache, since a "move"
+// choice here re-binds the armor mid-flow and deleteBody's own cleanup runs right after with no
+// re-render in between - a cached bucket would still list the just-moved items as belonging here.
+export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
+    const armorItems = actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
+    if (armorItems.length === 0) return { proceed: true };
+
+    const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
+    const otherBodies = bodies.filter(b => boundToFor(b) !== bucketKey);
+
+    if (otherBodies.length === 0) {
+        const popUp = await sheetFunction.confirmation(
+            game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
+            game.i18n.localize("ep2e.actorSheet.button.delete") + " " + (bodyName ?? ""),
+            game.i18n.format("ep2e.actorSheet.popUp.deleteArmorWithBodyCopy", { body: bodyName ?? "" }),
+            "",
+            "",
+            "ep2e.actorSheet.button.delete"
+        );
+        return { proceed: popUp.confirm === true };
+    }
+
+    const template = "systems/eclipsephase/templates/chat/list-dialog.html";
+    const content = await foundry.applications.handlebars.renderTemplate(template, {
+        bodyGroups: buildBodyGroups(bucketKey),
+        dialogType: "selectBody",
+        headline: "",
+        copy: game.i18n.format("ep2e.dialog.reassignArmor.copy", { body: bodyName ?? "" }),
+        placeholder: game.i18n.localize("ep2e.dialog.selectBody.placeholder")
+    });
+
+    const result = await foundry.applications.api.DialogV2.wait({
+        window: { title: game.i18n.localize("ep2e.dialog.reassignArmor.header") },
+        classes: ["ep2e-primary-right"],
+        content,
+        buttons: [
+            {
+                action: "move",
+                label: game.i18n.localize("ep2e.actorSheet.button.moveArmor"),
+                default: true,
+                callback: (event, button) => ({ move: true, selection: button.form.BodySelect.value })
+            },
+            {
+                action: "deleteWithBody",
+                label: game.i18n.localize("ep2e.actorSheet.button.deleteArmorWithBody"),
+                callback: () => ({ move: false })
+            },
+            {
+                action: "cancel",
+                label: game.i18n.localize("ep2e.roll.dialog.button.cancel"),
+                callback: () => ({ cancelled: true })
+            }
+        ],
+        position: { width: 340 },
+        modal: true,
+        rejectClose: false,
+        render: (event, dialog) => {
+            const select = dialog.element.querySelector('select[name="BodySelect"]');
+            const moveBtn = dialog.element.querySelector('button[data-action="move"]');
+            if (!select || !moveBtn) return;
+            const sync = () => { moveBtn.disabled = !select.value; };
+            select.addEventListener("change", sync);
+            sync();
+        }
+    });
+
+    if (!result || result.cancelled) return { proceed: false };
+
+    if (result.move) {
+        const chosenBody = otherBodies.find(b => b.id === result.selection);
+        if (!chosenBody) return { proceed: false };
+        const newBoundTo = boundToFor(chosenBody);
+        await actor.updateEmbeddedDocuments("Item", armorItems.map(a => ({ _id: a.id, "system.boundTo": newBoundTo })));
+    }
+
+    return { proceed: true };
+}
+
+// Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws, Armor).
+// Callers are expected to have already resolved any bound Armor first (see
+// resolveArmorOnBodyDelete) - this function just executes the deletion, no further confirmation.
 export async function deleteBody(actor, bodyId){
-    const deletionList = [];
     let bucketKey = bodyId;
     if (actor.type !== "character") {
         // npc/goon share one fixed key per body type, not per item, so the type of the item
@@ -304,9 +389,17 @@ export async function deleteBody(actor, bodyId){
         const bodyItem = actor.items.get(bodyId);
         bucketKey = bodyItem?.type === "vehicle" ? "activeVehicle" : "activeMorph";
     }
+
+    const deletionList = [];
     const bodyCollection = actor.bodies[bucketKey];
     const consolidatedItemList = [...bodyCollection.morphdetails, ...bodyCollection.morphtraits, ...bodyCollection.morphflaws, ...bodyCollection.morphgear];
     for (let item of consolidatedItemList){
+        deletionList.push(item.id);
+    }
+    // Armor is resolved live off actor.items (not the render-time actor.bodies cache) - see
+    // resolveArmorOnBodyDelete's comment for why a cached bucket can't be trusted here.
+    const remainingBoundArmor = actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
+    for (let item of remainingBoundArmor){
         deletionList.push(item.id);
     }
     await actor.deleteEmbeddedDocuments("Item", deletionList)

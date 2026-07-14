@@ -125,6 +125,8 @@
         "jamVehicle": "Jammen",
         "unjamVehicle": "Unjammen",
         "rebindArmor": "Einem anderen Körper zuweisen",
+        "moveArmor": "Rüstung verschieben",
+        "deleteArmorWithBody": "Rüstung löschen",
         "changeID": "Activate ID"
       },
       "dialogHeadline": {
@@ -136,6 +138,7 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Vorsicht:</b>Das Item wird permanent gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        "deleteArmorWithBodyCopy": "<b>Vorsicht:</b>Du bist dabei, {body} zu löschen. Diesem Körper ist Rüstung zugewiesen, und es gibt keinen anderen Körper, dem sie zugewiesen werden könnte. Beim Löschen von {body} wird auch seine Rüstung gelöscht.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>",
         "autoBotCopyGeneral": "<p><b>Vorsicht:</b>Dies ersetzt alle manuell eingetragenen Skills mit den Standard Skills & Skillwerten für Bot AIs.</p><p><b>Wähle den Fahrzeugtyp:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Halte SHIFT gedrückt während du den 'Auto-Bot'-button drückst um diese Nachricht nicht zu sehen.</p></i>",
@@ -1571,6 +1574,10 @@
         "header": "Körper Wählen",
         "copy": "Dieses Item ist an einen Körper gebunden. Wähle aus, welcher es erhalten soll.",
         "placeholder": "- Körper Wählen -"
+      },
+      "reassignArmor": {
+        "header": "Rüstung Neu Zuweisen",
+        "copy": "Du bist dabei, {body} zu löschen, dem Rüstung zugewiesen ist. Wähle einen anderen Körper, dem sie zugewiesen werden soll, oder lösche sie zusammen mit {body}."
       },
       "selectStress": {
         "dialogTitle": "Stressauswirkungen",

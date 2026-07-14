@@ -1165,6 +1165,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (!askForOptions) {
           const item = actor.items.get(itemId);
           const itemName = li.dataset.itemName ? li.dataset.itemName : null;
+
+          if (item?.type === "morph" || item?.type === "vehicle") {
+            let bucketKey = itemId;
+            if (actor.type !== "character") {
+              bucketKey = item.type === "vehicle" ? "activeVehicle" : "activeMorph";
+            }
+            const hasArmor = actor.items.some(i => i.type === "armor" && i.system.boundTo === bucketKey);
+
+            if (hasArmor) {
+              // Bound Armor gets one merged dialog (delete-confirmation + reassignment choice)
+              // instead of the generic confirm followed by a second, separate Armor dialog.
+              const resolution = await MORPHFUNCTION.resolveArmorOnBodyDelete(actor, bucketKey, itemName);
+              if (!resolution.proceed) return;
+              await MORPHFUNCTION.deleteBody(actor, itemId);
+              return;
+            }
+          }
+
           const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
           const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete")) + " " + (itemName ? itemName : "");
           const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";

@@ -121,7 +121,9 @@
         "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam",
-        "rebindArmor": "Reasignar a otro cuerpo"
+        "rebindArmor": "Reasignar a otro cuerpo",
+        "moveArmor": "Mover Armadura",
+        "deleteArmorWithBody": "Eliminar Armadura"
       },
       "dialogHeadline": {
         "warning": "Warning",
@@ -133,6 +135,7 @@
       "popUp": {
         "needPuppetSockToJam": "Se necesita un Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
+        "deleteArmorWithBodyCopy": "<b>Advertencia:</b>Estás a punto de eliminar {body}. Este cuerpo tiene Armadura asignada, y no hay otro cuerpo al que reasignarla. Al eliminar {body} también se eliminará su Armadura.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>",
         "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Hold SHIFT while pressing the 'Auto-Bot'-button.</p></i>",
@@ -1527,6 +1530,10 @@
         "header": "Seleccionar Cuerpo",
         "copy": "Este objeto está vinculado a un cuerpo. Elige cuál debe recibirlo.",
         "placeholder": "- Seleccionar Cuerpo -"
+      },
+      "reassignArmor": {
+        "header": "Reasignar Armadura",
+        "copy": "Estás a punto de eliminar {body}, que tiene Armadura asignada. Elige otro cuerpo al que reasignarla, o elimínala junto con {body}."
       },
       "selectStress": {
         "dialogTitle": "Stress Response",
