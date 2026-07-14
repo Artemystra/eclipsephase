@@ -2038,7 +2038,7 @@ async function _ep170_createIdsFromLegacy(actor) {
 async function _ep170_deleteLegacyIdData(actor) {
   // If your system supports key deletion syntax, this fully removes ego.ids
   await actor.update({
-    "system.ego.-=ids": null
+    "system.ego.ids": foundry.data.operators.ForcedDeletion
   });
 }
 
@@ -2340,15 +2340,15 @@ export async function migrationPre196(startMigration, endMigration) {
         update["system.curInsight"] = _ep196_numOrNull(sys.pools?.ins?.current);
         update["system.curFlex"] = _ep196_numOrNull(sys.pools?.flex?.current);
         update["system.curThreat"] = _ep196_numOrNull(sys.pools?.threat?.current);
-        update["system.-=pools"] = null;
+        update["system.pools"] = foundry.data.operators.ForcedDeletion;
 
         update["system.movement"] = _ep196_convertMovementSlots(sys.movement, `${ownerLabel}/${item.name}`, latestUpdate);
 
         update["system.chassisType"] = sys.type;
-        update["system.-=type"] = null;
+        update["system.type"] = foundry.data.operators.ForcedDeletion;
 
-        update["system.-=autoControl"] = null;
-        update["system.-=controlType"] = null;
+        update["system.autoControl"] = foundry.data.operators.ForcedDeletion;
+        update["system.controlType"] = foundry.data.operators.ForcedDeletion;
 
         if (actor) {
           await actor.updateEmbeddedDocuments("Item", [update]);

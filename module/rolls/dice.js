@@ -803,7 +803,12 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     let weaponTraits = weaponSelected ? weaponSelected.weaponTraits : null
     let wounds = 10*(parseInt(actorModel.physical.wounds)+eval(actorModel.mods.woundMod) + (actorModel.mods.woundChiMod ? (eval(actorModel.mods.woundChiMod)*actorModel.mods.psiMultiplier) : 0))*eval(actorModel.mods.woundMultiplier)
     let trauma = 10*(parseInt(actorModel.mental.trauma)+eval(actorModel.mods.traumaMod) + (actorModel.mods.traumaChiMod ? (eval(actorModel.mods.traumaChiMod)*actorModel.mods.psiMultiplier) : 0))
-    
+
+    // isJammingRoll is needed by several unrelated suppression checks below (wounds, armor malus) -
+    // computed once here so they all agree on the same definition.
+    const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
+    const isOwnBodyJammingRoll = isJammingRoll && options.jammingRollTarget === "own";
+
     if(options.rangedFray)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.combat.ranged.fray', eval(null), "Skill base value halved"))
 
@@ -815,8 +820,13 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     if(options.favorMod)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.favor', eval(options.favorMod)))
-    
-    if(wounds > 0 && rolledFrom !== "vehicleSkill")
+
+    // Wounds are suppressed for an "Own Body" jamming roll - "wounds" reflects the currently
+    // jammed body (see EPactor.js's jammed _calculatePhysicalHealth branch), and the "Resleeving &
+    // Jamming" block further down already applies the real body's own stashed ownBodyWoundMod
+    // instead, so counting both here would double it up. Trauma is NOT suppressed - it's ego-level,
+    // not body-level, so it applies regardless of which body is rolling.
+    if(wounds > 0 && rolledFrom !== "vehicleSkill" && !isOwnBodyJammingRoll)
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.woundModifier', -wounds))
 
     if(trauma > 0 && rolledFrom !== "vehicleSkill")
@@ -828,8 +838,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     // Armor's share is suppressed for an "Own Body" jamming roll - that's the currently jammed
     // body's malus, and the branch below already applies the real body's own stashed armor malus
     // (ownBodyArmorMalus) instead, so counting both here would double it up.
-    const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    const suppressArmorMalusHere = isJammingRoll && options.jammingRollTarget === "own";
+    const suppressArmorMalusHere = isOwnBodyJammingRoll;
     const additionalArmorMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.additionalArmorMalus;
     const mainArmorMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.mainArmorMalus;
     const armorSomMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.armorSomMalus;

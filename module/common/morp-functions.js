@@ -182,7 +182,7 @@ async function restoreFromJam(actor) {
         "system.pools.insight.value": backup?.insight ?? 0,
         "system.pools.moxie.value": backup?.moxie ?? 0,
         "system.pools.flex.value": restoredFlexValue,
-        "flags.eclipsephase.-=jamHealthBackup": null
+        "flags.eclipsephase.jamHealthBackup": foundry.data.operators.ForcedDeletion
     });
 }
 
