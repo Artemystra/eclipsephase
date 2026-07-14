@@ -51,7 +51,9 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
     }
 
     // --- Case B: Gear / Weapons / Armor depend on an "active/equipped" flag
-    // (suppress if not active)
+    // (suppress if not active). For Armor, "active" isn't a manual toggle anymore - EPitem.js
+    // keeps it in sync with whether the body it's boundTo is the currently active/jammed one,
+    // so this check alone already covers body-relevance without a separate case here.
     if (t === "gear" || t === "weapon" || t === "armor" || t === "rangedWeapon" || t === "ccWeapon" || t === "ammo" || t === "grenade" || t === "drug") {
       // Change this path to whatever you actually store: active, equipped, carried, worn, etc.
       const isActive = !!item.system?.active; // or item.system.equipped / item.system.worn / etc.

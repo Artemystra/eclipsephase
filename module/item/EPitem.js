@@ -16,6 +16,22 @@ export default class EPitem extends Item {
         else {
           itemModel.homebrew = false;
         }
+
+        // Armor is always body-bound and always "worn" once bound - active reflects whether the
+        // body it's boundTo is the one currently sleeved/jammed, recomputed every prepare cycle
+        // instead of being a manually-toggled flag like Gear/Weapons still use. Armor with no
+        // boundTo yet (not migrated to the new body-bound design) is left untouched.
+        if (item.type === "armor" && itemModel.boundTo) {
+          const actor = item.parent;
+          if (actor instanceof Actor) {
+            if (actor.type !== "character") {
+              itemModel.active = true;
+            } else {
+              const activeBody = actor.system?.activeJam || actor.system?.activeMorph;
+              itemModel.active = itemModel.boundTo === activeBody;
+            }
+          }
+        }
       }
 
     chatTemplate = {
