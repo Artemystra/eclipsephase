@@ -929,7 +929,9 @@
           "type": {
             "label": "Armor Type",
             "main": "Main Armor",
-            "additional": "Additional Armor"
+            "additional": "Additional Armor",
+            "mainShort": "Principal",
+            "additionalShort": "Adicional"
           }
         }
       },
@@ -1611,6 +1613,7 @@
       }
     },
     "migration": {
+      "armorBoundNotice": "<p><b>Actualización de Armadura:</b> {count} objeto(s) de Armadura de este personaje se vincularon automáticamente a <b>{body}</b>, ya que ahora la Armadura pertenece a un cuerpo específico en lugar de simplemente estar en tu inventario. Usa el botón de reasignar junto a un objeto de Armadura (en la pestaña de Morph) para moverlo a otro cuerpo cuando quieras.</p>",
       "headlineStart": "<h3 class='subheader dialog'>Dear System User</h3>",
       "legacy": "<label class='resource-label'>Thank you for playing Eclipse Phase with our system. To guarantee the overall file integrity in the upcoming updates, we ask you to shortly migrate your data to the latest structure, provided with update 0.8.1.<p/><p/><b>This is necessary for implementing even cooler features than we already have (like lokalization e.g.), and will only take a few seconds.</b><p/><p/> Thank you and have a great day playing!<p><i>Note: Please note that drugs underwent a general overhaul. Just pull them from the compendium again and delete the old ones.</i></p></label>",
       "0861": "<label class='resource-label'><p>We have updated the items-structure to allow future migrations to only trigger, if your item is on a specific version.<p/><p><b>This prevents your character sheets/items from ending up broken, while you're triggering a migration.</b><p/><p>Please migrate to this version at your earliest convenience to help us stabilize your character's item-data<p/> <p>Thank you and have a great day playing!</p></label>",

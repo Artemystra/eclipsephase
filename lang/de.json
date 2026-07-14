@@ -944,7 +944,9 @@
           "type": {
             "label": "Rüstungstyp",
             "main": "Hauptrüstung",
-            "additional": "Zusatzrüstung"
+            "additional": "Zusatzrüstung",
+            "mainShort": "Haupt",
+            "additionalShort": "Zusatz"
           }
         }
       },
@@ -1653,6 +1655,9 @@
           "twoHanded": "Diese Waffe erfordert zwei Hände (oder eine äquivalente greifende Gliedmaße), um verwendet zu werden. Bei einhändiger Nutzung gilt ein Malus von -20 auf den Angriff."
         }
       }
+    },
+    "migration": {
+      "armorBoundNotice": "<p><b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände dieses Charakters wurden automatisch an <b>{body}</b> gebunden, da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Nutze den Zuweisen-Button neben einem Rüstungsgegenstand (im Morph-Tab), um ihn jederzeit einem anderen Körper zuzuweisen.</p>"
     },
     "systemMessage": {
       "general": {

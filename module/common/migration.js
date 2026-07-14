@@ -2498,6 +2498,12 @@ export async function migrationPre200(startMigration, endMigration) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: aversion-trait fix failed`, err);
     }
 
+    try {
+      await _ep200_migrateArmorToBoundBodies(actor, latestUpdate);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: armor body-binding failed`, err);
+    }
+
     doneCount++;
     uiBar.set(
       Math.floor((doneCount / total) * 100),
@@ -2583,6 +2589,60 @@ async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
 
     console.log(`[EP Migration ${latestUpdate}] ${actor.name}: fixed colliding Aversion effect on "${trait.name}" -> sleeving.aversions.${bodyType} = ${malus}`);
   }
+}
+
+/**
+ * Part of the 2.0 armor-becomes-body-bound redesign (see EPactor.js#_calculateArmor and
+ * effects.js's Case B for the runtime side, which already treat an item with boundTo unset as
+ * legacy/untouched). Pre-2.0, Armor items had no boundTo at all and just sat on the actor
+ * globally; this maps every one of them onto the actor's currently active Morph in one shot, so
+ * they behave correctly under the new body-bound rules without the player losing anything. A
+ * one-time whispered chat notice tells the owner what happened, since armor that used to be a
+ * flat inventory list now silently "belongs" to one specific body and can be moved with the
+ * rebind button on the Morph tab (module/actor/EPactorSheet.js's ".item-rebind" handler).
+ * Skips (with a console warning, no notice sent) an actor that has unbound Armor but no Morph at
+ * all to bind it to - Armor could only ever be created without a boundTo pre-2.0, so this should
+ * be vanishingly rare, but is left for a human to check by hand rather than guessing at a target.
+ */
+async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
+  const unboundArmor = actor.items.filter(i => i.type === "armor" && !i.system.boundTo);
+  if (unboundArmor.length === 0) return;
+
+  let bucketKey;
+  let targetName;
+  if (actor.type === "character") {
+    const activeMorphId = actor.system?.activeMorph;
+    const activeMorph = activeMorphId ? actor.items.get(activeMorphId) : null;
+    if (!activeMorph) {
+      console.warn(`[EP Migration ${latestUpdate}] ${actor.name}: has ${unboundArmor.length} unbound Armor item(s) but no active Morph to bind them to - skipped, please check manually`);
+      return;
+    }
+    bucketKey = activeMorph.id;
+    targetName = activeMorph.name;
+  } else {
+    const anyMorph = actor.items.find(i => i.type === "morph");
+    if (!anyMorph) {
+      console.warn(`[EP Migration ${latestUpdate}] ${actor.name}: has ${unboundArmor.length} unbound Armor item(s) but no Morph body to bind them to - skipped, please check manually`);
+      return;
+    }
+    bucketKey = "activeMorph";
+    targetName = anyMorph.name;
+  }
+
+  await actor.updateEmbeddedDocuments("Item", unboundArmor.map(a => ({ _id: a.id, "system.boundTo": bucketKey })));
+  console.log(`[EP Migration ${latestUpdate}] ${actor.name}: bound ${unboundArmor.length} Armor item(s) to "${targetName}"`);
+
+  // GMs own every actor by definition (testUserPermission always passes for them), but don't need
+  // a whisper about their own migration run - only actual player owners do. If there's no
+  // non-GM owner (e.g. a GM-only NPC), there's no one to notify, so skip the whisper entirely.
+  const playerOwners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER")).map(u => u.id);
+  if (playerOwners.length === 0) return;
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    whisper: playerOwners,
+    content: game.i18n.format("ep2e.migration.armorBoundNotice", { count: unboundArmor.length, body: targetName })
+  });
 }
 
 function epCreateProgressDialog(title = "Migration") {

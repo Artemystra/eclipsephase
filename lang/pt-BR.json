@@ -928,7 +928,9 @@
           "type": {
             "label": "Tipo de Armadura",
             "main": "Armadura Principal",
-            "additional": "Armadura Adicional"
+            "additional": "Armadura Adicional",
+            "mainShort": "Principal",
+            "additionalShort": "Adicional"
           }
         }
       },
@@ -1624,6 +1626,7 @@
       }
     },
     "migration": {
+      "armorBoundNotice": "<p><b>Atualização de Armadura:</b> {count} item(ns) de Armadura deste personagem foram automaticamente vinculados a <b>{body}</b>, já que a Armadura agora pertence a um corpo específico em vez de simplesmente ficar no seu inventário. Use o botão de reatribuir ao lado de um item de Armadura (na aba Morfo) para movê-lo para outro corpo quando quiser.</p>",
       "headlineStart": "<h3 class='subheader dialog'>Caro Usuário do Sistema</h3>",
       "headlineEnd": "<h3 class='subheader dialog'>Você está pronto!</h3>",
       "done": "<label class='resource-label'>Divirta-se combatendo a TITAN e resgatando o universo, ou fazendo o que bem entender!</i></p></label>",

@@ -542,10 +542,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             let slotType = itemModel.slotType;
               switch (slotType){
                 case 'main':
-                  itemModel.slotName = "ep2e.item.armor.table.type.main";
+                  itemModel.slotName = "ep2e.item.armor.table.type.mainShort";
                   break;
                 case 'additional':
-                  itemModel.slotName = "ep2e.item.armor.table.type.additional";
+                  itemModel.slotName = "ep2e.item.armor.table.type.additionalShort";
                   break;
                 default:
                   break;
