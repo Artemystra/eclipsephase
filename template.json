@@ -1145,7 +1145,8 @@
       ],
       "energy": null,
       "kinetic": null,
-      "displayCategory": "armor"
+      "displayCategory": "armor",
+      "boundTo": null
     },
     "drug": {
       "templates": [
@@ -1635,6 +1636,10 @@
       "moxie": null,
       "vigor": null,
       "flex": null,
+      "armor": {
+        "energy": null,
+        "kinetic": null
+      },
       "movement": {
         "move1": {
           "label": "1.",

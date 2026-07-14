@@ -951,19 +951,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const canBeMorph = isWare || (isTrait && itemModel.morph === true);
 
     // Vehicles are valid boundTo targets too, grouped as "Remote Bodies" alongside "Morphs".
-    const morphItems = actor.items.filter(i => i.type === "morph");
-    const vehicleItems = actor.items.filter(i => i.type === "vehicle");
-    const bodies = [...morphItems, ...vehicleItems];
-    const boundToFor = (body) => {
-      if (actor.type === "character") return body.id;
-      return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
-    };
-    const buildBodyGroups = () => {
-      const groups = [];
-      if (morphItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.morphsHeadline"), options: morphItems.map(m => ({ id: m.id, name: m.name })) });
-      if (vehicleItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.jamming.headline"), options: vehicleItems.map(v => ({ id: v.id, name: v.name })) });
-      return groups;
-    };
+    const { bodies, boundToFor, buildBodyGroups } = MORPHFUNCTION.getBodyBindingInfo(actor);
 
     // Traits authored with neither flag set can't be meaningfully attached anywhere.
     if (isTrait && !canBeEgo && !canBeMorph) {

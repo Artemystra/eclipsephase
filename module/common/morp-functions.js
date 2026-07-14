@@ -206,6 +206,29 @@ export async function unjamBody(actor, currentTarget, sheet) {
     }
 }
 
+// Shared helper for anything that needs an actor's candidate bodies (Morphs + Vehicles) and how
+// to resolve a boundTo value for one - drop-time binding (Ware/Traits/Armor), rebinding, and
+// delete-reassignment all share this instead of re-deriving it separately and drifting apart.
+export function getBodyBindingInfo(actor) {
+    const morphItems = actor.items.filter(i => i.type === "morph");
+    const vehicleItems = actor.items.filter(i => i.type === "vehicle");
+    const bodies = [...morphItems, ...vehicleItems];
+
+    const boundToFor = (body) => {
+        if (actor.type === "character") return body.id;
+        return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
+    };
+
+    const buildBodyGroups = () => {
+        const groups = [];
+        if (morphItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.morphsHeadline"), options: morphItems.map(m => ({ id: m.id, name: m.name })) });
+        if (vehicleItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.jamming.headline"), options: vehicleItems.map(v => ({ id: v.id, name: v.name })) });
+        return groups;
+    };
+
+    return { morphItems, vehicleItems, bodies, boundToFor, buildBodyGroups };
+}
+
 // Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws).
 export async function deleteBody(actor, bodyId){
     const deletionList = [];
