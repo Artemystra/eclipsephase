@@ -642,8 +642,10 @@
       },
       "traitsLabel": "Morph Eigenschaften",
       "wareLabel": "Morph Modifikation",
+      "armorLabel": "Rüstung",
       "noMorphTraits": "Dieser Morph ist eigenschaftslos",
       "noMorphWare": "Dieser Morph ist flat",
+      "noMorphArmor": "Dieser Morph hat keine Rüstung",
       "morphsHeadline": "Morphe",
       "jamming": {
         "headline": "Ferngesteuerte Körper",
@@ -712,8 +714,10 @@
       "aiSkillsHeadline": "KI-Skills",
       "traitsLabel": "Eigenschaften & Mängel",
       "wareLabel": "Modifikation",
+      "armorLabel": "Rüstung",
       "noTraits": "Keine Eigenschaften oder Mängel vorhanden",
-      "noWare": "Keine Ware installiert"
+      "noWare": "Keine Ware installiert",
+      "noArmor": "Keine Rüstung installiert"
     },
     "psi": {
       "infectionHeadline": "Infektionstyp",

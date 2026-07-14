@@ -185,7 +185,23 @@
                                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.flexLabel"}}</label>
                                     {{#if body.morphdetails.0.system.flex}}{{body.morphdetails.0.system.flex}}{{else}}0{{/if}}
                                 </div>
-                            </div> 
+                            </div>
+                            <div class="contentBox">
+                                <div class="flexrow subheader">
+                                    <h3 class="subheader">{{localize "ep2e.morph.armorLabel"}}</h3>
+                                    <div class="alignRight flexGrowThreeQuarter">
+                                    </div>
+                                </div>
+                                {{#if body.armorCount}}
+                                    <div class="itemBackground" style="padding: 10px 0.5em;">
+                                        {{> systems/eclipsephase/templates/global-partials/armor-row-list.hbs item=body.morpharmor}}
+                                    </div>
+                                {{else}}
+                                    <div class="itemBackground minSize">
+                                        {{localize "ep2e.morph.noMorphArmor"}}
+                                    </div>
+                                {{/if}}
+                            </div>
                             <div class="contentBox">
                                 <div class="flexrow subheader">
                                     <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
@@ -377,6 +393,23 @@
                             </div>
                         </div>
                         {{/if}}
+                        <!-- Armor -->
+                        <div class="contentBox">
+                            <div class="flexrow subheader">
+                                <h3 class="subheader">{{localize "ep2e.peripherals.armorLabel"}}</h3>
+                                <div class="alignRight flexGrowThreeQuarter">
+                                </div>
+                            </div>
+                            {{#if vehicle.armorCount}}
+                                <div class="itemBackground" style="padding: 10px 0.5em;">
+                                    {{> systems/eclipsephase/templates/global-partials/armor-row-list.hbs item=vehicle.morpharmor}}
+                                </div>
+                            {{else}}
+                                <div class="itemBackground minSize">
+                                    {{localize "ep2e.peripherals.noArmor"}}
+                                </div>
+                            {{/if}}
+                        </div>
                         <!-- Movement -->
                         <div class="contentBox">
                             <div class="flexrow subheader">

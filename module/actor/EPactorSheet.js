@@ -344,7 +344,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           migrationBridge += 1;
           if (actor.type === "character") morphID = item.id
           if (actor.type !== "character") morphID = "activeMorph"
-          bodies[morphID] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+          bodies[morphID] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
         }
         // Vehicles are bodies too (same bucket shape/key scheme), but get their own tab/card via
         // actor.remoteVehicles below, not the Morphs loop - bodyType lets morph-tab.html tell them apart.
@@ -354,13 +354,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           let vehicleID
           if (actor.type === "character") vehicleID = item.id
           if (actor.type !== "character") vehicleID = "activeVehicle"
-          bodies[vehicleID] = { bodyType: "vehicle", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+          bodies[vehicleID] = { bodyType: "vehicle", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
         }
 
 
       }
       if (migrationBridge === 0){
-        bodies["migrationBody"] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+        bodies["migrationBody"] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
       }
       actor.bodies = bodies;
       // Iterate through items, allocating to containers
@@ -551,6 +551,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
                   break;
               }
             armor.push(item);
+            if (itemModel.boundTo && bodies[itemModel.boundTo]) {
+              bodies[itemModel.boundTo].morpharmor.push(item);
+              bodies[itemModel.boundTo].armorCount += 1;
+            }
           }
           else if (item.type === 'aspect') {
             let psiDuration = itemModel.duration;
@@ -748,13 +752,15 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.vehicle = vehicle;
       actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal].map(v => {
         const bodyKey = actor.type === "character" ? v.id : "activeVehicle";
-        const bucket = bodies[bodyKey] ?? { traitsCount: 0, morphtraits: [], flawsCount: 0, morphflaws: [], gearCount: 0, morphgear: [] };
+        const bucket = bodies[bodyKey] ?? { traitsCount: 0, morphtraits: [], flawsCount: 0, morphflaws: [], gearCount: 0, morphgear: [], armorCount: 0, morpharmor: [] };
         v.traitsCount = bucket.traitsCount;
         v.morphtraits = bucket.morphtraits;
         v.flawsCount = bucket.flawsCount;
         v.morphflaws = bucket.morphflaws;
         v.gearCount = bucket.gearCount;
         v.morphgear = bucket.morphgear;
+        v.armorCount = bucket.armorCount;
+        v.morpharmor = bucket.morpharmor;
         return v;
       });
       actor.activeEffects=effects;

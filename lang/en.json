@@ -654,8 +654,10 @@
       },
       "traitsLabel": "Morph Traits",
       "wareLabel": "Morph Ware",
+      "armorLabel": "Armor",
       "noMorphTraits": "This Morph is Traitless",
       "noMorphWare": "Your Morph is Flat",
+      "noMorphArmor": "This Morph has no Armor",
       "morphsHeadline": "Morphs",
       "jamming": {
         "headline": "Remote Bodies",
@@ -724,8 +726,10 @@
       "aiSkillsHeadline": "AI Skills",
       "traitsLabel": "Traits & Flaws",
       "wareLabel": "Ware",
+      "armorLabel": "Armor",
       "noTraits": "No Traits or Flaws Installed",
-      "noWare": "No Ware Installed"
+      "noWare": "No Ware Installed",
+      "noArmor": "No Armor Installed"
     },
     "psi": {
       "infectionHeadline": "Infection Type",

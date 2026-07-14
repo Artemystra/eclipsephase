@@ -635,8 +635,10 @@
       },
       "traitsLabel": "Morph Traits",
       "wareLabel": "Morph Ware",
+      "armorLabel": "Armadura",
       "noMorphTraits": "This Morph is Traitless",
       "noMorphWare": "Your Morph is Flat",
+      "noMorphArmor": "Este Morph no tiene Armadura",
       "morphsHeadline": "Morphs"
     },
     "inventory": {
@@ -700,8 +702,10 @@
       "aiSkillsHeadline": "Habilidades de IA",
       "traitsLabel": "Rasgos y Defectos",
       "wareLabel": "Equipamiento",
+      "armorLabel": "Armadura",
       "noTraits": "No hay Rasgos ni Defectos instalados",
-      "noWare": "No hay Equipamiento instalado"
+      "noWare": "No hay Equipamiento instalado",
+      "noArmor": "No hay Armadura instalada"
     },
     "psi": {
       "infectionHeadline": "Infection Type",

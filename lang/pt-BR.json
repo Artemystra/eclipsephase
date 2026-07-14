@@ -634,8 +634,10 @@
       },
       "traitsLabel": "Traços do Morfo",
       "wareLabel": "Ware do Morfo",
+      "armorLabel": "Armadura",
       "noMorphTraits": "Este Morfo não possui traços",
       "noMorphWare": "Seu Morfo é Tosco",
+      "noMorphArmor": "Este Morfo não possui Armadura",
       "morphsHeadline": "Morfos"
     },
     "inventory": {
@@ -699,8 +701,10 @@
       "aiSkillsHeadline": "Perícias de IA",
       "traitsLabel": "Traços e Defeitos",
       "wareLabel": "Implantes",
+      "armorLabel": "Armadura",
       "noTraits": "Nenhum Traço ou Defeito instalado",
-      "noWare": "Nenhum Implante instalado"
+      "noWare": "Nenhum Implante instalado",
+      "noArmor": "Nenhuma Armadura instalada"
     },
     "psi": {
       "infectionHeadline": "Tipo de Infecção",

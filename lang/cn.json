@@ -634,8 +634,10 @@
       },
       "traitsLabel": "义体特征",
       "wareLabel": "义体插件",
+      "armorLabel": "护甲",
       "noMorphTraits": "这具义体没有特征",
       "noMorphWare": "你的义体是自然人",
+      "noMorphArmor": "这具义体没有护甲",
       "morphsHeadline": "义体"
     },
     "inventory": {
@@ -699,8 +701,10 @@
       "aiSkillsHeadline": "AI技能",
       "traitsLabel": "特质与缺陷",
       "wareLabel": "装备",
+      "armorLabel": "护甲",
       "noTraits": "未安装特质或缺陷",
-      "noWare": "未安装装备"
+      "noWare": "未安装装备",
+      "noArmor": "未安装护甲"
     },
     "psi": {
       "infectionHeadline": "感染类型",
