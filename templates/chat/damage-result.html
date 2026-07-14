@@ -97,4 +97,15 @@
     </div>
   </div>
   {{/if}}
+
+  {{#if (eq type "equipArmor")}}
+  <div style="margin-bottom: 30px;">
+    <p>{{{localize copy}}}</p>
+
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
+      <span><b>{{armorName}}</b></span><br>
+      <span style="font-size: 14px;">{{localize "ep2e.item.armor.table.energy"}}: {{armorEnergy}} / {{localize "ep2e.item.armor.table.kinetic"}}: {{armorKinetic}}</span>
+    </div>
+  </div>
+  {{/if}}
 </div>

@@ -293,6 +293,59 @@ export async function rebindArmor(actor, itemId) {
     await sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemRebound", { name: item.name, body: chosenBody.name });
 }
 
+// Sets an Armor item aside in the (character-only) Stash instead of keeping it bound to a body -
+// skipConfirm mirrors the item-delete SHIFT-click convention (no confirmation dialog on shift-click).
+export async function stashArmor(actor, itemId, skipConfirm) {
+    if (actor.type !== "character") return;
+
+    const item = actor.items.get(itemId);
+    if (!item) return;
+
+    if (!skipConfirm) {
+        const popUp = await sheetFunction.confirmation(
+            game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
+            `${game.i18n.localize("ep2e.actorSheet.button.stashArmor")} ${item.name}`,
+            game.i18n.format("ep2e.actorSheet.popUp.stashArmorCopy", { name: item.name }),
+            "",
+            "",
+            "ep2e.actorSheet.button.stashArmor"
+        );
+        if (!popUp.confirm) return;
+    }
+
+    await item.update({ "system.boundTo": "stash" });
+}
+
+// Equips an Armor item out of the (character-only) Stash onto a body - reuses resolveBodyForItem's
+// silent-single-body/picker-at-2+/error-at-zero resolution, since the Equip click itself is
+// already the deliberate act (unlike rebindArmor, which always shows a picker since "switch to
+// which other body?" is inherently ambiguous there).
+export async function equipArmorFromStash(actor, itemId) {
+    if (actor.type !== "character") return;
+
+    const item = actor.items.get(itemId);
+    if (!item) return;
+
+    const resolved = await resolveBodyForItem(actor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
+    if (resolved.cancelled) return;
+
+    await item.update({ "system.boundTo": resolved.boundTo });
+
+    const message = {
+        type: "equipArmor",
+        copy: game.i18n.format("ep2e.roll.announce.armor.equipped", { morph: resolved.chosenBody.name, armor: item.name }),
+        armorName: item.name,
+        armorEnergy: item.system.energy,
+        armorKinetic: item.system.kinetic
+    };
+    const renderedHtml = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
+
+    ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: renderedHtml
+    });
+}
+
 // Armor is always bound to some body (no floating/unbound state) - deleting a body that has Armor
 // bound to it needs an explicit choice: move it all to one other body, or confirm it goes with the
 // body. This IS the delete confirmation for that case (the caller skips the generic "delete this

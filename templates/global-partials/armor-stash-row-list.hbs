@@ -9,10 +9,6 @@
                 </div>
                 <div class="item-image flex-group-center input-small toggle"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
             </div>
-            <a class="item-control item-rebind input-small wantToKnowMore" data-item-id="{{item._id}}">
-                <i class="fa-solid fa-right-left awesomeIcon"></i>
-                <span class="tooltipText">{{localize 'ep2e.actorSheet.button.rebindArmor'}}</span>
-            </a>
         </div>
         <label class="truncate alignLeft" style="flex: 1.5; font-weight: bold;">{{item.name}}</label>
         <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
@@ -20,12 +16,10 @@
         <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-height: 24px!important; max-width: 20px!important;"/>
         <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.kinetic}}</strong></label>
         <label class="labelWidth-XL flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
-        {{#if (eq @root.actor.type "character")}}
-        <a class="item-control item-stash input-small wantToKnowMore tooltip-opens-left" data-item-id="{{item._id}}">
-            <i class="fa-solid fa-box-archive awesomeIcon"></i>
-            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.stashArmor'}}</span>
+        <a class="item-control item-equip input-small wantToKnowMore tooltip-opens-left" data-item-id="{{item._id}}">
+            <i class="fa-regular fa-circle-up awesomeIcon"></i>
+            <span class="tooltipText">{{localize 'ep2e.actorSheet.button.equipArmor'}}</span>
         </a>
-        {{/if}}
         <div class="flex-group-right slideShow input-xs">
             <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>
             <a class="noShow"><i class="fas fa-minus icon-xsmall awesomeIcon"></i></a>

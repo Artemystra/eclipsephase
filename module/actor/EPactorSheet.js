@@ -289,6 +289,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const rangedweapon = [];
       const ccweapon = [];
       const armor = [];
+      // PC-only "set this aside for now" bucket - Armor with boundTo === "stash" instead of a
+      // real body id. Starts as Armor-only; extend with more keys if other item types gain it later.
+      const stash = { armor: [] };
       const aspect = {
           none: [],
           chi: [],
@@ -551,7 +554,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
                   break;
               }
             armor.push(item);
-            if (itemModel.boundTo && bodies[itemModel.boundTo]) {
+            if (itemModel.boundTo === "stash") {
+              stash.armor.push(item);
+            }
+            else if (itemModel.boundTo && bodies[itemModel.boundTo]) {
               bodies[itemModel.boundTo].morpharmor.push(item);
               bodies[itemModel.boundTo].armorCount += 1;
             }
@@ -740,6 +746,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.rangedWeapon = rangedweapon;
       actor.ccweapon = ccweapon;
       actor.armor = armor;
+      actor.stash = stash;
       actor.ware = ware;
       actor.aspect = aspect;
       actor.program = program;
@@ -1431,6 +1438,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     html.querySelectorAll(".item-rebind").forEach(element => {
       element.addEventListener("click", ev => {
         MORPHFUNCTION.rebindArmor(actor, ev.currentTarget.dataset.itemId);
+      });
+    });
+
+    html.querySelectorAll(".item-stash").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.stashArmor(actor, ev.currentTarget.dataset.itemId, ev.shiftKey);
+      });
+    });
+
+    html.querySelectorAll(".item-equip").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.equipArmorFromStash(actor, ev.currentTarget.dataset.itemId);
       });
     });
 

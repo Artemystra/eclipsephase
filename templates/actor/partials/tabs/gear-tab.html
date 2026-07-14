@@ -1,6 +1,19 @@
 <div class="tab gear scrolly main-tab-pc" data-group="primary" data-tab="weapons">
     {{#if actor.system.additionalSystems.hasGear}}
 
+        {{#if actor.stash.armor.length}}
+        <div class="contentBox">
+            <div class="flexrow subheader">
+                <h3 class="subheader">{{localize "ep2e.inventory.stashedArmorLabel"}}</h3>
+                <div class="alignRight flexGrowThreeQuarter">
+                </div>
+            </div>
+            <div class="itemBackground">
+                {{> systems/eclipsephase/templates/global-partials/armor-stash-row-list.hbs item=actor.stash.armor}}
+            </div>
+        </div>
+        {{/if}}
+
         {{#if actor.rangedWeapon}}
         <div class="contentBox">
             <div class="flexrow subheader">

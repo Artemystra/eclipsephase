@@ -121,8 +121,10 @@
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam",
         "rebindArmor": "Reatribuir a outro corpo",
+        "stashArmor": "Guardar Armadura",
         "moveArmor": "Mover Armadura",
-        "deleteArmorWithBody": "Excluir Armadura"
+        "deleteArmorWithBody": "Excluir Armadura",
+        "equipArmor": "Equipar"
       },
       "dialogHeadline": {
         "warning": "Aviso",
@@ -135,6 +137,7 @@
         "needPuppetSockToJam": "Requer um Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
         "deleteArmorWithBodyCopy": "<b>Aviso:</b>Você está prestes a excluir {body}. Este corpo tem Armadura atribuída a ele, e não há outro corpo para o qual movê-la. Excluir {body} também excluirá sua Armadura.",
+        "stashArmorCopy": "Deseja guardar {name}? Você o encontrará no seu inventário quando quiser.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
         "autoBotCopyGeneral": "<p><b>Aviso:</b> Isto irá redefinir todas as perícias do veículo/bot para os valores de perícia da IA padrão do bot. Isso sobrescreverá quaisquer mudanças que você tenha feito em suas perícias.</p><p><b>Selecione o tipo do seu veículo:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Segure SHIFT enquanto pressiona o botão 'Auto-Bot'.</p></i>",
@@ -647,6 +650,7 @@
     "inventory": {
       "armorLabel": "Armadura",
       "armorPlaceholder": "Sem Nome da Armadura",
+      "stashedArmorLabel": "Armadura Guardada",
       "rangedLabel": "Armas de Distância",
       "rangedPlaceholder": "Sem Nome da Arma",
       "ccLabel": "Armas de Combate Próximo",
@@ -1404,6 +1408,9 @@
           "ownBodyEncumbrance": "Sobrecarga do corpo próprio",
           "ownBodyTraits": "Trait/Ware do corpo próprio",
           "noPsi": "Psi não funciona enquanto você está jammando. Ele nunca funciona por conexão mesh ou dentro de um cérebro cibernético."
+        },
+        "armor": {
+          "equipped": "Eu equipei {morph} com uma armadura."
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",

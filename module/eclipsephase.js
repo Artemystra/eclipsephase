@@ -183,6 +183,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
     "systems/eclipsephase/templates/global-partials/item-row-list.hbs",
     "systems/eclipsephase/templates/global-partials/armor-row-list.hbs",
+    "systems/eclipsephase/templates/global-partials/armor-stash-row-list.hbs",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",

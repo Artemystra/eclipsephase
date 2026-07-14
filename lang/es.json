@@ -122,8 +122,10 @@
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam",
         "rebindArmor": "Reasignar a otro cuerpo",
+        "stashArmor": "Guardar Armadura",
         "moveArmor": "Mover Armadura",
-        "deleteArmorWithBody": "Eliminar Armadura"
+        "deleteArmorWithBody": "Eliminar Armadura",
+        "equipArmor": "Equipar"
       },
       "dialogHeadline": {
         "warning": "Warning",
@@ -136,6 +138,7 @@
         "needPuppetSockToJam": "Se necesita un Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
         "deleteArmorWithBodyCopy": "<b>Advertencia:</b>Estás a punto de eliminar {body}. Este cuerpo tiene Armadura asignada, y no hay otro cuerpo al que reasignarla. Al eliminar {body} también se eliminará su Armadura.",
+        "stashArmorCopy": "¿Quieres guardar {name}? Lo encontrarás en tu inventario cuando quieras.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>",
         "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Hold SHIFT while pressing the 'Auto-Bot'-button.</p></i>",
@@ -648,6 +651,7 @@
     "inventory": {
       "armorLabel": "Armor",
       "armorPlaceholder": "No Armor Name",
+      "stashedArmorLabel": "Armadura Guardada",
       "rangedLabel": "Ranged Weapons",
       "rangedPlaceholder": "No Weapon Name",
       "ccLabel": "Close Combat Weapons",
@@ -1391,6 +1395,9 @@
           "ownBodyEncumbrance": "Sobrecarga del cuerpo propio",
           "ownBodyTraits": "Trait/Ware del cuerpo propio",
           "noPsi": "El Psi no funciona mientras estás jammeando. Nunca funciona a través de una conexión mesh o dentro de un cerebro cibernético."
+        },
+        "armor": {
+          "equipped": "He equipado a {morph} con armadura."
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
