@@ -1410,6 +1410,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
+    html.querySelectorAll(".item-rebind").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.rebindArmor(actor, ev.currentTarget.dataset.itemId);
+      });
+    });
+
     html.querySelectorAll(".changeIdentityButton").forEach(element => {
       element.addEventListener("click", async func => {
         const dataset = func.currentTarget.dataset;

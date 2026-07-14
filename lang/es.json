@@ -120,7 +120,8 @@
         "changeID": "Activate ID",
         "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
-        "unjamVehicle": "Unjam"
+        "unjamVehicle": "Unjam",
+        "rebindArmor": "Reasignar a otro cuerpo"
       },
       "dialogHeadline": {
         "warning": "Warning",
@@ -1632,6 +1633,8 @@
         "noBodyTrait": "No hay ningún cuerpo presente. El Trait no puede añadirse.",
         "noBodyWare": "No hay ningún cuerpo presente. La Ware no puede añadirse.",
         "noBodyArmor": "No hay ningún cuerpo presente. La armadura no puede añadirse.",
+        "noOtherBodyArmor": "No hay otro cuerpo al que reasignar esta armadura.",
+        "itemRebound": "{name} reasignada a {body}.",
         "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait.",
         "enhancementsAdded": "{count} mejora(s) añadida(s) a {body}."
       }

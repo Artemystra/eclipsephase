@@ -1,12 +1,17 @@
 {{#each item as |item id|}}
     <div class="item flexrow flex-group-center atHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-        <div style="max-width: 25px!important;">
-            <div class="noShow toggle" style="padding-left: 4px;">
-                <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
-                    <i class="fas fa-bars" style="text-align: left; font-size: 18px;"></i>
-                </a>
+        <div style="display: flex; flex-wrap: nowrap; align-items: center; flex: 0 0 auto; gap: 4px;">
+            <div style="max-width: 25px!important;">
+                <div class="noShow toggle" style="padding-left: 4px;">
+                    <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
+                        <i class="fas fa-bars" style="text-align: left; font-size: 18px;"></i>
+                    </a>
+                </div>
+                <div class="item-image flex-group-center input-small toggle"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
             </div>
-            <div class="item-image flex-group-center input-small toggle"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+            <a class="item-control item-rebind input-small" data-item-id="{{item._id}}" title="{{localize 'ep2e.actorSheet.button.rebindArmor'}}">
+                <i class="fa-solid fa-right-left awesomeIcon"></i>
+            </a>
         </div>
         <label class="truncate alignLeft" style="flex: 3.5; font-weight: bold;">{{item.name}}</label>
         <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>

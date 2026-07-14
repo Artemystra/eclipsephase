@@ -119,7 +119,8 @@
         "changeID": "Activate ID",
         "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
-        "unjamVehicle": "Unjam"
+        "unjamVehicle": "Unjam",
+        "rebindArmor": "重新分配给其他身体"
       },
       "dialogHeadline": {
         "warning": "警告",
@@ -1639,6 +1640,8 @@
         "noBodyTrait": "没有可用的身体，无法添加特征。",
         "noBodyWare": "没有可用的身体，无法添加插件。",
         "noBodyArmor": "没有可用的身体，无法添加护甲。",
+        "noOtherBodyArmor": "没有其他身体可以重新分配这件护甲。",
+        "itemRebound": "{name} 已重新分配给 {body}。",
         "unknownTraitType": "未知的特征类型。请至少选择一项——意识或义体——以使用该特征。",
         "enhancementsAdded": "已为 {body} 添加 {count} 项插件。"
       }

@@ -124,6 +124,7 @@
         "sleeveMorph": "Wechseln",
         "jamVehicle": "Jammen",
         "unjamVehicle": "Unjammen",
+        "rebindArmor": "Einem anderen Körper zuweisen",
         "changeID": "Activate ID"
       },
       "dialogHeadline": {
@@ -1668,6 +1669,8 @@
         "noBodyTrait": "Kein Körper vorhanden. Trait kann nicht hinzugefügt werden.",
         "noBodyWare": "Kein Körper vorhanden. Ware kann nicht hinzugefügt werden.",
         "noBodyArmor": "Kein Körper vorhanden. Rüstung kann nicht hinzugefügt werden.",
+        "noOtherBodyArmor": "Kein anderer Körper vorhanden, dem diese Rüstung zugewiesen werden könnte.",
+        "itemRebound": "{name} wurde {body} zugewiesen.",
         "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
         "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
       }

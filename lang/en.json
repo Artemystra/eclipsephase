@@ -125,6 +125,7 @@
         "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam",
+        "rebindArmor": "Rebind to another body",
         "changeID": "Activate ID",
         "thankYouLaph": "Thank You, Laph!"
       },
@@ -1717,6 +1718,8 @@
         "noBodyTrait": "No body present. Trait cannot be added.",
         "noBodyWare": "No body present. Ware cannot be added.",
         "noBodyArmor": "No body present. Armor cannot be added.",
+        "noOtherBodyArmor": "No other body to rebind this Armor to.",
+        "itemRebound": "{name} rebound to {body}.",
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
         "enhancementsAdded": "{count} Enhancement(s) added to {body}."
       }

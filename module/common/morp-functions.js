@@ -219,10 +219,14 @@ export function getBodyBindingInfo(actor) {
         return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
     };
 
-    const buildBodyGroups = () => {
+    // excludeBoundTo lets a caller (e.g. rebindArmor) drop the currently-bound body from the list,
+    // since re-picking it would be a no-op - unused by drop-time binding, which has no "current" yet.
+    const buildBodyGroups = (excludeBoundTo) => {
         const groups = [];
-        if (morphItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.morphsHeadline"), options: morphItems.map(m => ({ id: m.id, name: m.name })) });
-        if (vehicleItems.length) groups.push({ label: game.i18n.localize("ep2e.morph.jamming.headline"), options: vehicleItems.map(v => ({ id: v.id, name: v.name })) });
+        const morphOptions = morphItems.filter(m => boundToFor(m) !== excludeBoundTo).map(m => ({ id: m.id, name: m.name }));
+        const vehicleOptions = vehicleItems.filter(v => boundToFor(v) !== excludeBoundTo).map(v => ({ id: v.id, name: v.name }));
+        if (morphOptions.length) groups.push({ label: game.i18n.localize("ep2e.morph.morphsHeadline"), options: morphOptions });
+        if (vehicleOptions.length) groups.push({ label: game.i18n.localize("ep2e.morph.jamming.headline"), options: vehicleOptions });
         return groups;
     };
 
@@ -257,6 +261,36 @@ export async function resolveBodyForItem(actor, noBodyMessageKey) {
     }
 
     return { chosenBody, boundTo: boundToFor(chosenBody) };
+}
+
+// Rebinds an Armor item to a different body - unlike Ware/Traits (drop-time-only by design),
+// Armor gets an explicit rebind action since it's always bound and can't just be dropped again.
+export async function rebindArmor(actor, itemId) {
+    const item = actor.items.get(itemId);
+    if (!item) return;
+
+    const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
+    const currentBoundTo = item.system.boundTo;
+    const otherBodies = bodies.filter(b => boundToFor(b) !== currentBoundTo);
+
+    if (otherBodies.length === 0) {
+        await sheetFunction.systemMessage("error", "ep2e.systemMessage.itemAttachment.noOtherBodyArmor");
+        return;
+    }
+
+    const bodyChoice = await sheetFunction.selectBody(
+        buildBodyGroups(currentBoundTo),
+        "ep2e.dialog.selectBody.header",
+        "",
+        "ep2e.dialog.selectBody.copy"
+    );
+    if (bodyChoice.cancelled) return;
+
+    const chosenBody = otherBodies.find(b => b.id === bodyChoice.selection);
+    if (!chosenBody) return;
+
+    await item.update({ "system.boundTo": boundToFor(chosenBody) });
+    await sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemRebound", { name: item.name, body: chosenBody.name });
 }
 
 // Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws).
