@@ -825,8 +825,17 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Encumberance (Armor) Malus */
 
-    if(rolledFrom !== "vehicleSkill" && (actorModel.physical.additionalArmorMalus || actorModel.physical.mainArmorMalus || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus || actorModel.physical.armorSomMalus)){
-        task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - actorModel.physical.additionalArmorMalus - actorModel.physical.mainArmorMalus - actorModel.physical.totalWeaponMalus - actorModel.physical.totalGearMalus - actorModel.physical.armorSomMalus))
+    // Armor's share is suppressed for an "Own Body" jamming roll - that's the currently jammed
+    // body's malus, and the branch below already applies the real body's own stashed armor malus
+    // (ownBodyArmorMalus) instead, so counting both here would double it up.
+    const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
+    const suppressArmorMalusHere = isJammingRoll && options.jammingRollTarget === "own";
+    const additionalArmorMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.additionalArmorMalus;
+    const mainArmorMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.mainArmorMalus;
+    const armorSomMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.armorSomMalus;
+
+    if(rolledFrom !== "vehicleSkill" && (additionalArmorMalusHere || mainArmorMalusHere || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus || armorSomMalusHere)){
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - additionalArmorMalusHere - mainArmorMalusHere - actorModel.physical.totalWeaponMalus - actorModel.physical.totalGearMalus - armorSomMalusHere))
     }
 
     /* Melee Roll */
@@ -1066,7 +1075,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     /* Resleeving & Jamming */
 
-    if (actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill") {
+    if (isJammingRoll) {
         if (options.jammingRollTarget === "own") {
             modValue = -30;
             announce = "ep2e.roll.announce.jamming.ownBodyPenalty";
