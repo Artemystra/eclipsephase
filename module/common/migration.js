@@ -2595,14 +2595,24 @@ async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
  * Part of the 2.0 armor-becomes-body-bound redesign (see EPactor.js#_calculateArmor and
  * effects.js's Case B for the runtime side, which already treat an item with boundTo unset as
  * legacy/untouched). Pre-2.0, Armor items had no boundTo at all and just sat on the actor
- * globally; this maps every one of them onto the actor's currently active Morph in one shot, so
- * they behave correctly under the new body-bound rules without the player losing anything. A
- * one-time whispered chat notice tells the owner what happened, since armor that used to be a
- * flat inventory list now silently "belongs" to one specific body and can be moved with the
- * rebind button on the Morph tab (module/actor/EPactorSheet.js's ".item-rebind" handler).
- * Skips (with a console warning, no notice sent) an actor that has unbound Armor but no Morph at
- * all to bind it to - Armor could only ever be created without a boundTo pre-2.0, so this should
- * be vanishingly rare, but is left for a human to check by hand rather than guessing at a target.
+ * globally; this maps every one of them into the (character-only) Stash in one shot, rather than
+ * guessing at a body - the Stash exists precisely for "figure out where this goes later", so
+ * there's no more "no active Morph to bind to" edge case to skip for characters either. NPCs/
+ * Goons have no Stash (see stashArmor/EPactorSheet.js), so they keep the original behavior of
+ * binding onto whichever Morph body they have.
+ *
+ * Notifying the owner: a ChatMessage created here would run on the executing GM's client, and a
+ * message's AUTHOR sees their own sent messages regardless of whisper targets - confirmed live,
+ * neither excluding the GM from `whisper` nor `blind:true` (which instead visibly masks content
+ * as "???" for everyone) nor `author: null` stopped the GM from seeing it. The actual fix: for
+ * characters, don't create the message here at all - stash a per-user pending-notice flag instead
+ * (module/eclipsephase.js's dedicated "ready" hook, ungated by isGM, self-whispers it on that
+ * player's own next login and clears the flag). The GM's client never runs that code, so it never
+ * sees these. NPC/Goon armor (bound to a body, not the Stash) keeps the old immediate-whisper
+ * behavior - a player owning an NPC/Goon is a rare edge case not worth the same treatment.
+ * Skips (with a console warning, no notice sent) an NPC/Goon actor that has unbound Armor but no
+ * Morph at all to bind it to - Armor could only ever be created without a boundTo pre-2.0, so
+ * this should be vanishingly rare, but is left for a human to check by hand rather than guessing.
  */
 async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
   const unboundArmor = actor.items.filter(i => i.type === "armor" && !i.system.boundTo);
@@ -2611,14 +2621,7 @@ async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
   let bucketKey;
   let targetName;
   if (actor.type === "character") {
-    const activeMorphId = actor.system?.activeMorph;
-    const activeMorph = activeMorphId ? actor.items.get(activeMorphId) : null;
-    if (!activeMorph) {
-      console.warn(`[EP Migration ${latestUpdate}] ${actor.name}: has ${unboundArmor.length} unbound Armor item(s) but no active Morph to bind them to - skipped, please check manually`);
-      return;
-    }
-    bucketKey = activeMorph.id;
-    targetName = activeMorph.name;
+    bucketKey = "stash";
   } else {
     const anyMorph = actor.items.find(i => i.type === "morph");
     if (!anyMorph) {
@@ -2630,17 +2633,28 @@ async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
   }
 
   await actor.updateEmbeddedDocuments("Item", unboundArmor.map(a => ({ _id: a.id, "system.boundTo": bucketKey })));
-  console.log(`[EP Migration ${latestUpdate}] ${actor.name}: bound ${unboundArmor.length} Armor item(s) to "${targetName}"`);
+  console.log(`[EP Migration ${latestUpdate}] ${actor.name}: bound ${unboundArmor.length} Armor item(s) to "${actor.type === "character" ? "Stash" : targetName}"`);
 
   // GMs own every actor by definition (testUserPermission always passes for them), but don't need
-  // a whisper about their own migration run - only actual player owners do. If there's no
-  // non-GM owner (e.g. a GM-only NPC), there's no one to notify, so skip the whisper entirely.
-  const playerOwners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER")).map(u => u.id);
+  // a notice about their own migration run - only actual player owners do. If there's no non-GM
+  // owner (e.g. a GM-only NPC), there's no one to notify.
+  const playerOwners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER"));
   if (playerOwners.length === 0) return;
+
+  if (actor.type === "character") {
+    // Deferred, self-whispered notice (see doc comment above) - one flag entry per affected
+    // character, consumed and cleared by module/eclipsephase.js's dedicated "ready" hook.
+    for (const user of playerOwners) {
+      const pending = user.getFlag("eclipsephase", "pendingArmorStashNotices") ?? [];
+      pending.push({ actorName: actor.name, count: unboundArmor.length });
+      await user.setFlag("eclipsephase", "pendingArmorStashNotices", pending);
+    }
+    return;
+  }
 
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
-    whisper: playerOwners,
+    whisper: playerOwners.map(u => u.id),
     content: game.i18n.format("ep2e.migration.armorBoundNotice", { count: unboundArmor.length, body: targetName })
   });
 }

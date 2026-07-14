@@ -137,7 +137,7 @@
       "popUp": {
         "needPuppetSockToJam": "Se necesita un Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
-        "deleteArmorWithBodyCopy": "<b>Advertencia:</b>Estás a punto de eliminar {body}. Este cuerpo tiene Armadura asignada, y no hay otro cuerpo al que reasignarla. Al eliminar {body} también se eliminará su Armadura.",
+        "deleteArmorWithBodyCopy": "<b>Advertencia:</b>Estás a punto de eliminar {body}. Este cuerpo tiene Armadura asignada - al eliminar {body} también se eliminará su Armadura.",
         "stashArmorCopy": "¿Quieres guardar {name}? Lo encontrarás en tu inventario cuando quieras.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>",
         "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
@@ -1542,7 +1542,7 @@
       },
       "reassignArmor": {
         "header": "Reasignar Armadura",
-        "copy": "Estás a punto de eliminar {body}, que tiene Armadura asignada. Elige otro cuerpo al que reasignarla, o elimínala junto con {body}."
+        "copy": "Estás a punto de eliminar {body}, que tiene Armadura asignada. Guárdala para más tarde, o elimínala junto con {body}."
       },
       "selectStress": {
         "dialogTitle": "Stress Response",
@@ -1621,6 +1621,11 @@
     },
     "migration": {
       "armorBoundNotice": "<p><b>Actualización de Armadura:</b> {count} objeto(s) de Armadura de este personaje se vincularon automáticamente a <b>{body}</b>, ya que ahora la Armadura pertenece a un cuerpo específico en lugar de simplemente estar en tu inventario. Usa el botón de reasignar junto a un objeto de Armadura (en la pestaña de Morph) para moverlo a otro cuerpo cuando quieras.</p>",
+      "armorStashedNoticeSelf": {
+        "updateLabel": "Aviso de Actualización",
+        "main": "<b>Actualización de Armadura:</b> {count} objeto(s) de Armadura de <b style='color: var(--highlight);'>{actor}</b> se movieron automáticamente a su Almacén.",
+        "sub": "Ya que ahora la Armadura pertenece a un cuerpo específico en lugar de simplemente estar en tu inventario. Lo encontrarás en Armadura Guardada (pestaña de Equipo) - usa el botón Equipar junto a él para asignarlo a un cuerpo cuando quieras."
+      },
       "headlineStart": "<h3 class='subheader dialog'>Dear System User</h3>",
       "legacy": "<label class='resource-label'>Thank you for playing Eclipse Phase with our system. To guarantee the overall file integrity in the upcoming updates, we ask you to shortly migrate your data to the latest structure, provided with update 0.8.1.<p/><p/><b>This is necessary for implementing even cooler features than we already have (like lokalization e.g.), and will only take a few seconds.</b><p/><p/> Thank you and have a great day playing!<p><i>Note: Please note that drugs underwent a general overhaul. Just pull them from the compendium again and delete the old ones.</i></p></label>",
       "0861": "<label class='resource-label'><p>We have updated the items-structure to allow future migrations to only trigger, if your item is on a specific version.<p/><p><b>This prevents your character sheets/items from ending up broken, while you're triggering a migration.</b><p/><p>Please migrate to this version at your earliest convenience to help us stabilize your character's item-data<p/> <p>Thank you and have a great day playing!</p></label>",

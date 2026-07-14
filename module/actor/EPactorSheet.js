@@ -906,11 +906,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       if (canEditSource && canEditTarget) {
         // Armor is always body-bound - re-resolve it for the target actor instead of carrying
         // over whatever boundTo it had on the source, which would point at a body that doesn't exist here.
+        // Incoming armor on a character always lands in the (character-only) Stash instead of
+        // prompting a body-picker - the receiving player never gets asked where to put someone
+        // else's armor, they just get to see it arrived and equip it themselves when ready.
         let boundToOverride;
         if (item.type === "armor") {
-          const resolved = await MORPHFUNCTION.resolveBodyForItem(targetActor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
-          if (resolved.cancelled) return null;
-          boundToOverride = resolved.boundTo;
+          if (targetActor.type === "character") {
+            boundToOverride = "stash";
+          } else {
+            const resolved = await MORPHFUNCTION.resolveBodyForItem(targetActor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
+            if (resolved.cancelled) return null;
+            boundToOverride = resolved.boundTo;
+          }
         }
         return SHEET.transferItemBetweenActors({
           sourceActor,
@@ -996,7 +1003,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           label: "ep2e.actorSheet.rightTabs.morphTab",
           disabled: bodies.length === 0,
           bodyOptions: bodies.length > 1 ? buildBodyGroups() : undefined,
-          bodyPlaceholder: game.i18n.localize("ep2e.dialog.selectBody.placeholder")
+          bodyPlaceholder: game.i18n.localize("ep2e.dialog.selectBody.placeholder"),
+          // Default to the sleeved Morph even while jamming (never the jammed body) - same
+          // reasoning as the Armor rebind/equip dialogs, saves a click for the common case.
+          defaultSelection: actor.system?.activeMorph
         }
       ];
 

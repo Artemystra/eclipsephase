@@ -1,6 +1,6 @@
 {{#each item as |item id|}}
     <div class="item flexrow flex-group-center offHand reveal" data-item-id="{{item._id}}" data-item-name="{{item.name}}">
-        <div style="display: flex; flex-wrap: nowrap; align-items: center; flex: 0 0 auto; gap: 4px;">
+        <div style="display: flex; flex-wrap: nowrap; align-items: center; flex: 0 0 auto; gap: 4px; margin-right: 10px;">
             <div style="max-width: 25px!important;">
                 <div class="noShow toggle" style="padding-left: 4px;">
                     <a class="item-drag flexrow flex-group-left input-small" data-itemid="{{item.id}}" draggable="true" data-action="dragItem" title="Drag item">
@@ -17,7 +17,7 @@
         <label class="labelWidth-small flex-group-center noMargin"><strong>{{item.system.kinetic}}</strong></label>
         <label class="labelWidth-XL flex-group-center noMargin"><strong>{{localize item.system.slotName}}</strong></label>
         <a class="item-control item-equip input-small wantToKnowMore tooltip-opens-left" data-item-id="{{item._id}}">
-            <i class="fa-regular fa-circle-up awesomeIcon"></i>
+            <i class="fa-regular fa-circle-up awesomeIcon" style="color: var(--iconBlue);"></i>
             <span class="tooltipText">{{localize 'ep2e.actorSheet.button.equipArmor'}}</span>
         </a>
         <div class="flex-group-right slideShow input-xs">

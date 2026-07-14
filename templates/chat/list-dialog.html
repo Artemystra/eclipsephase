@@ -186,11 +186,11 @@
                         {{#if bodyOptions}}
                         <div style="width: 100%; margin-top: 8px;">
                             <select name="BodySelect" style="width: 100%;" disabled>
-                                <option value="" disabled selected>{{bodyPlaceholder}}</option>
+                                <option value="" disabled {{#unless defaultSelection}}selected{{/unless}}>{{bodyPlaceholder}}</option>
                                 {{#each bodyOptions}}
                                 <optgroup label="{{label}}">
                                     {{#each options}}
-                                    <option value="{{id}}">{{name}}</option>
+                                    <option value="{{id}}" {{#if (eq id ../../defaultSelection)}}selected{{/if}}>{{name}}</option>
                                     {{/each}}
                                 </optgroup>
                                 {{/each}}
@@ -214,11 +214,11 @@
         {{/if}}
         <div style="padding: 10px 0;">
             <select name="BodySelect" style="width: 100%;">
-                <option value="" disabled selected>{{placeholder}}</option>
+                <option value="" disabled {{#unless defaultSelection}}selected{{/unless}}>{{placeholder}}</option>
                 {{#each bodyGroups}}
                 <optgroup label="{{label}}">
                     {{#each options}}
-                    <option value="{{id}}">{{name}}</option>
+                    <option value="{{id}}" {{#if (eq id ../../defaultSelection)}}selected{{/if}}>{{name}}</option>
                     {{/each}}
                 </optgroup>
                 {{/each}}

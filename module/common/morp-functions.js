@@ -246,11 +246,14 @@ export async function resolveBodyForItem(actor, noBodyMessageKey) {
 
     let chosenBody;
     if (actor.type === "character" && bodies.length > 1) {
+        // Default to the sleeved Morph even while jamming (never the jammed body) - it's the more
+        // likely target, saving a click for the common case of equipping your own real body.
         const bodyChoice = await sheetFunction.selectBody(
             buildBodyGroups(),
             "ep2e.dialog.selectBody.header",
             "",
-            "ep2e.dialog.selectBody.copy"
+            "ep2e.dialog.selectBody.copy",
+            actor.system?.activeMorph
         );
 
         if (bodyChoice.cancelled) return { cancelled: true };
@@ -278,11 +281,14 @@ export async function rebindArmor(actor, itemId) {
         return;
     }
 
+    // Same sleeved-Morph-as-default reasoning as resolveBodyForItem - a no-op here if the armor
+    // is currently bound to the sleeved Morph itself, since that's excluded from the options.
     const bodyChoice = await sheetFunction.selectBody(
         buildBodyGroups(currentBoundTo),
         "ep2e.dialog.selectBody.header",
         "",
-        "ep2e.dialog.selectBody.copy"
+        "ep2e.dialog.selectBody.copy",
+        actor.system?.activeMorph
     );
     if (bodyChoice.cancelled) return;
 
@@ -359,10 +365,9 @@ export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
     const armorItems = actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
     if (armorItems.length === 0) return { proceed: true };
 
-    const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
-    const otherBodies = bodies.filter(b => boundToFor(b) !== bucketKey);
-
-    if (otherBodies.length === 0) {
+    // NPCs/Goons have no Stash (character-only, see stashArmor) and no "move to another body"
+    // option anymore either - just a plain confirm that deleting the body deletes its armor too.
+    if (actor.type !== "character") {
         const popUp = await sheetFunction.confirmation(
             game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
             game.i18n.localize("ep2e.actorSheet.button.delete") + " " + (bodyName ?? ""),
@@ -374,30 +379,23 @@ export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
         return { proceed: popUp.confirm === true };
     }
 
-    const template = "systems/eclipsephase/templates/chat/list-dialog.html";
-    const content = await foundry.applications.handlebars.renderTemplate(template, {
-        bodyGroups: buildBodyGroups(bucketKey),
-        dialogType: "selectBody",
-        headline: "",
-        copy: game.i18n.format("ep2e.dialog.reassignArmor.copy", { body: bodyName ?? "" }),
-        placeholder: game.i18n.localize("ep2e.dialog.selectBody.placeholder")
-    });
-
+    // Characters: no more "move to a specific other body" choice - Stash replaces it as the safe
+    // "figure it out later" alternative, so the only real choice is Delete or Stash.
     const result = await foundry.applications.api.DialogV2.wait({
         window: { title: game.i18n.localize("ep2e.dialog.reassignArmor.header") },
         classes: ["ep2e-primary-right"],
-        content,
+        content: `<div style="padding: 10px 0;">${game.i18n.format("ep2e.dialog.reassignArmor.copy", { body: bodyName ?? "" })}</div>`,
         buttons: [
             {
-                action: "move",
-                label: game.i18n.localize("ep2e.actorSheet.button.moveArmor"),
+                action: "stash",
+                label: game.i18n.localize("ep2e.actorSheet.button.stashArmor"),
                 default: true,
-                callback: (event, button) => ({ move: true, selection: button.form.BodySelect.value })
+                callback: () => ({ stash: true })
             },
             {
                 action: "deleteWithBody",
                 label: game.i18n.localize("ep2e.actorSheet.button.deleteArmorWithBody"),
-                callback: () => ({ move: false })
+                callback: () => ({ stash: false })
             },
             {
                 action: "cancel",
@@ -407,24 +405,13 @@ export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
         ],
         position: { width: 340 },
         modal: true,
-        rejectClose: false,
-        render: (event, dialog) => {
-            const select = dialog.element.querySelector('select[name="BodySelect"]');
-            const moveBtn = dialog.element.querySelector('button[data-action="move"]');
-            if (!select || !moveBtn) return;
-            const sync = () => { moveBtn.disabled = !select.value; };
-            select.addEventListener("change", sync);
-            sync();
-        }
+        rejectClose: false
     });
 
     if (!result || result.cancelled) return { proceed: false };
 
-    if (result.move) {
-        const chosenBody = otherBodies.find(b => b.id === result.selection);
-        if (!chosenBody) return { proceed: false };
-        const newBoundTo = boundToFor(chosenBody);
-        await actor.updateEmbeddedDocuments("Item", armorItems.map(a => ({ _id: a.id, "system.boundTo": newBoundTo })));
+    if (result.stash) {
+        await actor.updateEmbeddedDocuments("Item", armorItems.map(a => ({ _id: a.id, "system.boundTo": "stash" })));
     }
 
     return { proceed: true };

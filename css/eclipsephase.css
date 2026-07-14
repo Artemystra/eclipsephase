@@ -3468,5 +3468,14 @@ body.system-eclipsephase {
 
 body.system-eclipsephase * {
   scrollbar-color: var(--iconBlue) transparent;
-  scrollbar-width: none;                       
+  scrollbar-width: none;
+}
+
+/* System-styled chat notices (e.g. the armor-migration self-notice) read as coming from the
+   game itself, not a specific player - hide Foundry's default message header (sender, timestamp,
+   "To: X" whisper tag) entirely, scoped to just these messages via :has() so normal messages
+   elsewhere keep showing it. */
+.chat-message:has(.ep-system-notice) .message-header,
+li:has(.ep-system-notice) .message-header {
+  display: none !important;
 }

@@ -136,7 +136,7 @@
       "popUp": {
         "needPuppetSockToJam": "需要 Puppet Sock 才能 Jam",
         "deleteCopyGeneral": "<b>警告:</b>这会将物品从你的人物卡中永远删除。",
-        "deleteArmorWithBodyCopy": "<b>警告:</b>你即将删除{body}。这具身体上绑定了护甲，且没有其他身体可以转移过去。删除{body}也会一并删除其护甲。",
+        "deleteArmorWithBodyCopy": "<b>警告:</b>你即将删除{body}。这具身体上绑定了护甲——删除{body}也会一并删除其护甲。",
         "stashArmorCopy": "要收纳{name}吗？你可以随时在物品栏中找到它。",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>若需略过删除物品时的提示框，请按住SHIFT建的同时点击删除键。</p></i>",
         "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
@@ -1549,7 +1549,7 @@
       },
       "reassignArmor": {
         "header": "重新分配护甲",
-        "copy": "你即将删除{body}，这具身体上绑定了护甲。请选择另一具身体将其转移过去，或将其与{body}一并删除。"
+        "copy": "你即将删除{body}，这具身体上绑定了护甲。可以将其收纳以备日后使用，或将其与{body}一并删除。"
       },
       "selectStress": {
         "dialogTitle": "Stress Response",
@@ -1628,6 +1628,11 @@
     },
     "migration": {
       "armorBoundNotice": "<p><b>护甲更新：</b>这个角色的 {count} 件护甲已自动绑定到 <b>{body}</b>，因为护甲现在归属于特定身体，而不再只是放在物品栏中。可以随时点击护甲旁边的重新分配按钮（在义体页签中）将其转移到其他身体。</p>",
+      "armorStashedNoticeSelf": {
+        "updateLabel": "更新通知",
+        "main": "<b>护甲更新：</b><b style='color: var(--highlight);'>{actor}</b> 的 {count} 件护甲已自动转移到收纳箱。",
+        "sub": "因为护甲现在归属于特定身体，而不再只是放在物品栏中。你可以在“已收纳的护甲”（装备页签）中找到它——随时点击旁边的装备按钮将其分配给某具身体。"
+      },
       "headlineStart": "<h3 class='subheader dialog'>尊敬的规则系统用户</h3>",
       "legacy": "<label class='resource-label'>感谢你使用我们的系统游玩《隐蚀期》。在接下来的更新中，为了确保整体文件的完整性，我们请求你快速地将你的数据迁移到最新的框架中，即0.8.1版本更新的框架。<p/><p/><b>为了引入一些比已有框架更酷的特性（例如本地化），这一步骤是必须的，而且只需要花费短短几秒钟。</b><p/><p/>谢谢你，祝你游戏愉快!<p><i>注意：我们对药物进行了整体的重做。只需要将其从合集包再次拖入，并删除旧的药物。</i></p></label>",
       "0861": "<label class='resource-label'><p>我们已经更新了物品结构，未来的迁移只会在你的物品处于特定版本时才会触发。<p/><p><b>这能防止你的角色卡和物品在触发迁移时损坏。</b><p/><p>请尽早迁移到这个版本，以协助我们稳定你角色的物品数据<p/> <p>谢谢你，祝你游戏愉快！</p></label>",

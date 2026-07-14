@@ -140,7 +140,7 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Vorsicht:</b>Das Item wird permanent gelöscht. Dies kann nicht rückgängig gemacht werden.",
-        "deleteArmorWithBodyCopy": "<b>Vorsicht:</b>Du bist dabei, {body} zu löschen. Diesem Körper ist Rüstung zugewiesen, und es gibt keinen anderen Körper, dem sie zugewiesen werden könnte. Beim Löschen von {body} wird auch seine Rüstung gelöscht.",
+        "deleteArmorWithBodyCopy": "<b>Vorsicht:</b>Du bist dabei, {body} zu löschen. Diesem Körper ist Rüstung zugewiesen - beim Löschen von {body} wird auch seine Rüstung gelöscht.",
         "stashArmorCopy": "Möchtest du {name} verstauen? Du findest es jederzeit in deinem Inventar wieder.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>",
         "autoBotCopyGeneral": "<p><b>Vorsicht:</b>Dies ersetzt alle manuell eingetragenen Skills mit den Standard Skills & Skillwerten für Bot AIs.</p><p><b>Wähle den Fahrzeugtyp:</b></p>",
@@ -1586,7 +1586,7 @@
       },
       "reassignArmor": {
         "header": "Rüstung Neu Zuweisen",
-        "copy": "Du bist dabei, {body} zu löschen, dem Rüstung zugewiesen ist. Wähle einen anderen Körper, dem sie zugewiesen werden soll, oder lösche sie zusammen mit {body}."
+        "copy": "Du bist dabei, {body} zu löschen, dem Rüstung zugewiesen ist. Verstaue sie für später, oder lösche sie zusammen mit {body}."
       },
       "selectStress": {
         "dialogTitle": "Stressauswirkungen",
@@ -1664,7 +1664,12 @@
       }
     },
     "migration": {
-      "armorBoundNotice": "<p><b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände dieses Charakters wurden automatisch an <b>{body}</b> gebunden, da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Nutze den Zuweisen-Button neben einem Rüstungsgegenstand (im Morph-Tab), um ihn jederzeit einem anderen Körper zuzuweisen.</p>"
+      "armorBoundNotice": "<p><b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände dieses Charakters wurden automatisch an <b>{body}</b> gebunden, da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Nutze den Zuweisen-Button neben einem Rüstungsgegenstand (im Morph-Tab), um ihn jederzeit einem anderen Körper zuzuweisen.</p>",
+      "armorStashedNoticeSelf": {
+        "updateLabel": "Update-Hinweis",
+        "main": "<b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände von <b style='color: var(--highlight);'>{actor}</b> wurden automatisch in den Stash verschoben.",
+        "sub": "Da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Du findest sie unter Verstaute Rüstung (Ausrüstungs-Tab) - nutze den Ausrüsten-Button daneben, um sie jederzeit einem Körper zuzuweisen."
+      }
     },
     "systemMessage": {
       "general": {

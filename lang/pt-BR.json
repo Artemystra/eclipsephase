@@ -136,7 +136,7 @@
       "popUp": {
         "needPuppetSockToJam": "Requer um Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
-        "deleteArmorWithBodyCopy": "<b>Aviso:</b>Você está prestes a excluir {body}. Este corpo tem Armadura atribuída a ele, e não há outro corpo para o qual movê-la. Excluir {body} também excluirá sua Armadura.",
+        "deleteArmorWithBodyCopy": "<b>Aviso:</b>Você está prestes a excluir {body}. Este corpo tem Armadura atribuída a ele - excluir {body} também excluirá sua Armadura.",
         "stashArmorCopy": "Deseja guardar {name}? Você o encontrará no seu inventário quando quiser.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
         "autoBotCopyGeneral": "<p><b>Aviso:</b> Isto irá redefinir todas as perícias do veículo/bot para os valores de perícia da IA padrão do bot. Isso sobrescreverá quaisquer mudanças que você tenha feito em suas perícias.</p><p><b>Selecione o tipo do seu veículo:</b></p>",
@@ -1555,7 +1555,7 @@
       },
       "reassignArmor": {
         "header": "Reatribuir Armadura",
-        "copy": "Você está prestes a excluir {body}, que tem Armadura atribuída a ele. Escolha outro corpo para movê-la, ou exclua-a junto com {body}."
+        "copy": "Você está prestes a excluir {body}, que tem Armadura atribuída a ele. Guarde-a para mais tarde, ou exclua-a junto com {body}."
       },
       "selectStress": {
         "dialogTitle": "Stress Response",
@@ -1634,6 +1634,11 @@
     },
     "migration": {
       "armorBoundNotice": "<p><b>Atualização de Armadura:</b> {count} item(ns) de Armadura deste personagem foram automaticamente vinculados a <b>{body}</b>, já que a Armadura agora pertence a um corpo específico em vez de simplesmente ficar no seu inventário. Use o botão de reatribuir ao lado de um item de Armadura (na aba Morfo) para movê-lo para outro corpo quando quiser.</p>",
+      "armorStashedNoticeSelf": {
+        "updateLabel": "Aviso de Atualização",
+        "main": "<b>Atualização de Armadura:</b> {count} item(ns) de Armadura de <b style='color: var(--highlight);'>{actor}</b> foram movidos automaticamente para o Estoque.",
+        "sub": "Já que a Armadura agora pertence a um corpo específico em vez de simplesmente ficar no seu inventário. Você o encontrará em Armadura Guardada (aba Equipamento) - use o botão Equipar ao lado dele para atribuí-lo a um corpo quando quiser."
+      },
       "headlineStart": "<h3 class='subheader dialog'>Caro Usuário do Sistema</h3>",
       "headlineEnd": "<h3 class='subheader dialog'>Você está pronto!</h3>",
       "done": "<label class='resource-label'>Divirta-se combatendo a TITAN e resgatando o universo, ou fazendo o que bem entender!</i></p></label>",

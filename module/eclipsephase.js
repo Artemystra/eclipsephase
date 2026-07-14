@@ -626,6 +626,37 @@ Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
 });
 
+// Delivers pending "your Armor moved to your Stash" notices from the 2.0 migration
+// (module/common/migration.js's _ep200_migrateArmorToBoundBodies), one self-whispered chat
+// message per affected character this user owns. Deliberately NOT gated on isGM - runs for every
+// user, but only ever finds something for users the migration actually flagged. Self-whispering
+// (whisper: [game.user.id]) from each player's OWN client, rather than the GM creating the
+// message directly, is what actually keeps the executing GM from seeing it: a message's author
+// always sees their own sent messages regardless of whisper targets, so a GM-authored whisper is
+// never fully private from that GM no matter how whisper/blind/author are set on creation.
+Hooks.once("ready", async () => {
+  const pending = game.user.getFlag("eclipsephase", "pendingArmorStashNotices");
+  if (!pending || !pending.length) return;
+
+  for (const entry of pending) {
+    const message = {
+      type: "systemNotice",
+      noticeLabel: "ep2e.migration.armorStashedNoticeSelf.updateLabel",
+      mainCopy: game.i18n.format("ep2e.migration.armorStashedNoticeSelf.main", { count: entry.count, actor: entry.actorName }),
+      subCopy: game.i18n.localize("ep2e.migration.armorStashedNoticeSelf.sub")
+    };
+    const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
+
+    await ChatMessage.create({
+      speaker: { alias: "System" },
+      whisper: [game.user.id],
+      content
+    });
+  }
+
+  await game.user.unsetFlag("eclipsephase", "pendingArmorStashNotices");
+});
+
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
 Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.addChatListeners(html, data);

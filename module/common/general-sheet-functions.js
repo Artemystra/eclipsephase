@@ -708,7 +708,7 @@ export function itemToggle(html, item) {
  * @param {String} [copy] - localization key for the explanatory copy shown above the dropdown
  * @returns {Promise<{cancelled: true}|{selection: String}>}
  */
-  export async function selectBody(bodyGroups, dialogTitle, headline, copy) {
+  export async function selectBody(bodyGroups, dialogTitle, headline, copy, defaultBodyId) {
     const title = dialogTitle
       ? game.i18n.localize(dialogTitle)
       : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
@@ -722,7 +722,8 @@ export function itemToggle(html, item) {
       dialogType: "selectBody",
       headline,
       copy,
-      placeholder
+      placeholder,
+      defaultSelection: defaultBodyId
     });
 
     const result = await foundry.applications.api.DialogV2.wait({
