@@ -1,0 +1,22 @@
+{
+  "name": "Biomorphs",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "Bi34oGF4KGk99uKV",
+  "description": "",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1783981826782,
+    "modifiedTime": 1783981826782,
+    "lastModifiedBy": null
+  },
+  "_key": "!folders!Bi34oGF4KGk99uKV"
+}

@@ -1,0 +1,198 @@
+{
+  "name": "Flying Squid",
+  "type": "morph",
+  "_id": "h9KuQW8saW7YhvAJ",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Flying%20Squid.webp",
+  "system": {
+    "description": "Capitalizing on the popularity of octomorphs, this stylized squid is designed for speed in both aquatic and microgravity environments. It can suck either water or air into a cavity in its mantle and then expel it out a siphon for fast, jet-like propulsion.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 40,
+    "insight": 1,
+    "moxie": 0,
+    "vigor": 2,
+    "flex": 0,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "swimmer",
+        "base": 8,
+        "full": 32
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "thrust vector",
+        "base": 4,
+        "full": 12
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.RHimXpjmkhFg3xJI"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.q3A7aPdXwlhAvGeM"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.DsZJsZvcMBXVqqNK"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.gsaGv9oGpM90DWn9"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.cD0QxGnHRCvibKXL"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.Df3EiN79MWssh2OO"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+      },
+      "ware15": {
+        "label": "15.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.traits.Item.poG2bwbmO0LgiXWO"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.WDKVUKMB3HWTWeyY"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007029213,
+    "modifiedTime": 1784007029213,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!h9KuQW8saW7YhvAJ"
+}

@@ -651,7 +651,7 @@ Hooks.on("createActor", async (actor, options, userId) => {
   if (actor.getFlag("eclipsephase", "defaultMorphAdded") || actor.getFlag("eclipsephase", "defaultIdAdded")) return;
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) return;
-  const morph = await pack.getDocument("suPRftVdLzcNhOH4");
+  const morph = await pack.getDocument("eNfxIGfFrEG2zqa9");
   if (!morph) return;
   const idData = {
     name: "Default ID",

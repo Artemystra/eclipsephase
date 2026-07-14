@@ -1,0 +1,93 @@
+{
+  "name": "Dermal Armor",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [
+    {
+      "_id": "YqjQIkLIvn8wDOS5",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "13.346",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Dermal Armor",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.energyMod",
+            "value": 4,
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.mods.kineticMod",
+            "value": 5,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!uKhS8vByVM8CeBHT.YqjQIkLIvn8wDOS5"
+    }
+  ],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Armor +4/+5. Does not reduce mobility, but makes skin smoother and less flexible (except at joints); −20 to touch-based Perceive Tests.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "b"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "coreVersion": "13.346",
+    "createdTime": 1784009714160,
+    "modifiedTime": 1784009714160,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "uKhS8vByVM8CeBHT",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_key": "!items!uKhS8vByVM8CeBHT"
+}

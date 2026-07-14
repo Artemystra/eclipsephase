@@ -1,0 +1,41 @@
+{
+  "name": "Gas-Jet System",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Nozzles in chest, back, and limbs allow maneuvering in microgav with vectored bursts of gas. +10 to Free Fall Tests. Grants Thrust Vector (Gas Jet) movement.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "ch"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "coreVersion": "13.346",
+    "createdTime": 1784009714160,
+    "modifiedTime": 1784009714160,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "MyhBItP9IQqEkVz0",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_key": "!items!MyhBItP9IQqEkVz0"
+}

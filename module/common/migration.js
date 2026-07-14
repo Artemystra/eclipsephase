@@ -1518,9 +1518,9 @@ export async function migrationPre150(startMigration, endMigration) {
     return { endMigration: false };
   }
 
-  const baseMorphDoc = await pack.getDocument("suPRftVdLzcNhOH4");
+  const baseMorphDoc = await pack.getDocument("eNfxIGfFrEG2zqa9");
   if (!baseMorphDoc) {
-    console.error(`[EP Migration ${latestUpdate}] Morph suPRftVdLzcNhOH4 not found in pack`);
+    console.error(`[EP Migration ${latestUpdate}] Morph eNfxIGfFrEG2zqa9 not found in pack`);
     uiBar.fail("Migration cancelled: base morph not found");
     return { endMigration: false };
   }

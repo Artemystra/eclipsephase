@@ -1,0 +1,41 @@
+{
+  "name": "Holographic Projector",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Projects 3D, HD, ultra-realistic images/video. +20 to Perceive Tests to spot as fake within 20 m; not visible to enhanced vision.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "coreVersion": "13.346",
+    "createdTime": 1784009714160,
+    "modifiedTime": 1784009714160,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "iOGkP46Ok2nmXPeO",
+  "folder": "Vaz2wnUwN7AmKotm",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_key": "!items!iOGkP46Ok2nmXPeO"
+}

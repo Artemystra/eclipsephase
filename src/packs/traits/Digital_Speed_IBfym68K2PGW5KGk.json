@@ -13,8 +13,8 @@
     "updated": "",
     "statChange": null,
     "traitType": "trait",
-    "ego": true,
-    "morph": false
+    "ego": false,
+    "morph": true
   },
   "effects": [],
   "flags": {},

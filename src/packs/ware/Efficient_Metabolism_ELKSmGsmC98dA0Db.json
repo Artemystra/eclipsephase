@@ -1,0 +1,41 @@
+{
+  "name": "Efficient Metabolism",
+  "type": "ware",
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "flags": {
+    "core": {}
+  },
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Eat/drink once per week; survive 1 month without water, 2 months without food before starvation/dehydration effects kick in. Not compatible with Long-Term Life Support.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "bn"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "coreVersion": "13.346",
+    "createdTime": 1784009714160,
+    "modifiedTime": 1784009714160,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "ELKSmGsmC98dA0Db",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_key": "!items!ELKSmGsmC98dA0Db"
+}

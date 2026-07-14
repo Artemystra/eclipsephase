@@ -1,0 +1,274 @@
+{
+  "name": "Overmind",
+  "type": "morph",
+  "_id": "jLSkfhvl7t420e7y",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Overmind.webp",
+  "system": {
+    "description": "Overminds are the top tier of core morphs. They are found in high-security habitats, military ships, prisons, and similar infrastructures.",
+    "img": "",
+    "customToken": null,
+    "type": "synth",
+    "dur": 80,
+    "insight": 8,
+    "moxie": 2,
+    "vigor": 0,
+    "flex": 4,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.Ih50xvvZNdBbdn4x"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.weEqI8YERxdg5WHH"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.lAcYjbqjal9lB1jC"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.dMZ6CvCLLDlYUFWg"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.qn8KaSusU9H3AFVL"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.f1QhXHpsPWzNnG4E"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.z3tPlA7ET15FGS3E"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.N1UFTAnqX3TNS7eE"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.igLyMdpw0Vwx2dLf"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.FouFrregYzI88N0C"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.jj91RbrpAE6aHXh8"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.jj91RbrpAE6aHXh8"
+      },
+      "ware15": {
+        "label": "15.",
+        "value": "Compendium.eclipsephase.ware.Item.jj91RbrpAE6aHXh8"
+      },
+      "ware16": {
+        "label": "16.",
+        "value": "Compendium.eclipsephase.ware.Item.jj91RbrpAE6aHXh8"
+      },
+      "ware17": {
+        "label": "17.",
+        "value": "Compendium.eclipsephase.ware.Item.jj91RbrpAE6aHXh8"
+      },
+      "ware18": {
+        "label": "18.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware19": {
+        "label": "19.",
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+      },
+      "ware20": {
+        "label": "20.",
+        "value": "Compendium.eclipsephase.ware.Item.MkJa0tFfnw3Wv3H8"
+      },
+      "ware21": {
+        "label": "21.",
+        "value": "Compendium.eclipsephase.ware.Item.pRqsN7bXjk0AcqS3"
+      },
+      "ware22": {
+        "label": "22.",
+        "value": "Compendium.eclipsephase.ware.Item.pRqsN7bXjk0AcqS3"
+      },
+      "ware23": {
+        "label": "23.",
+        "value": "Compendium.eclipsephase.ware.Item.pRqsN7bXjk0AcqS3"
+      },
+      "ware24": {
+        "label": "24.",
+        "value": "Compendium.eclipsephase.ware.Item.pRqsN7bXjk0AcqS3"
+      },
+      "ware25": {
+        "label": "25.",
+        "value": "Compendium.eclipsephase.ware.Item.pRqsN7bXjk0AcqS3"
+      },
+      "ware26": {
+        "label": "26.",
+        "value": "Compendium.eclipsephase.ware.Item.pRqsN7bXjk0AcqS3"
+      },
+      "ware27": {
+        "label": "27.",
+        "value": "Compendium.eclipsephase.ware.Item.pRqsN7bXjk0AcqS3"
+      },
+      "ware28": {
+        "label": "28.",
+        "value": "Compendium.eclipsephase.ware.Item.3Jbg4j8hSRAmOygZ"
+      },
+      "ware29": {
+        "label": "29.",
+        "value": "Compendium.eclipsephase.ware.Item.VSb0jNadow4bNHrh"
+      },
+      "ware30": {
+        "label": "30.",
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+      },
+      "ware31": {
+        "label": "31.",
+        "value": "Compendium.eclipsephase.ware.Item.JpYGa0xqeXFgBTII"
+      },
+      "ware32": {
+        "label": "32.",
+        "value": "Compendium.eclipsephase.ware.Item.R1aQgb7qtHG25V0M"
+      },
+      "ware33": {
+        "label": "33.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xGMEXPrvbypAfXKI"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.traits.Item.xGMEXPrvbypAfXKI"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw4": {
+        "label": "4.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.IBfym68K2PGW5KGk"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "NfKORwce5MErntbB",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007386284,
+    "modifiedTime": 1784007386284,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!jLSkfhvl7t420e7y"
+}
