@@ -1641,6 +1641,7 @@
         "itemAddedToBody": "Adicionado a {body}: {name}.",
         "noBodyTrait": "Nenhum corpo presente. O Trait não pode ser adicionado.",
         "noBodyWare": "Nenhum corpo presente. A Ware não pode ser adicionada.",
+        "noBodyArmor": "Nenhum corpo presente. A Armadura não pode ser adicionada.",
         "unknownTraitType": "Tipo de Trait desconhecido. Selecione pelo menos uma opção - ego ou morfo - para usar este trait.",
         "enhancementsAdded": "{count} aprimoramento(s) adicionado(s) a {body}."
       }

@@ -229,6 +229,36 @@ export function getBodyBindingInfo(actor) {
     return { morphItems, vehicleItems, bodies, boundToFor, buildBodyGroups };
 }
 
+// Resolves which body a body-bound item (Ware/Traits/Armor) should attach to on `actor`: refuses if
+// there are none, silently picks the only one if there's exactly one, otherwise prompts via
+// selectBody(). Used both at drop-time and for cross-actor transfers, so the two stay consistent.
+export async function resolveBodyForItem(actor, noBodyMessageKey) {
+    const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
+
+    if (bodies.length === 0) {
+        await sheetFunction.systemMessage("error", noBodyMessageKey);
+        return { cancelled: true };
+    }
+
+    let chosenBody;
+    if (actor.type === "character" && bodies.length > 1) {
+        const bodyChoice = await sheetFunction.selectBody(
+            buildBodyGroups(),
+            "ep2e.dialog.selectBody.header",
+            "",
+            "ep2e.dialog.selectBody.copy"
+        );
+
+        if (bodyChoice.cancelled) return { cancelled: true };
+        chosenBody = bodies.find(b => b.id === bodyChoice.selection);
+        if (!chosenBody) return { cancelled: true };
+    } else {
+        chosenBody = bodies[0];
+    }
+
+    return { chosenBody, boundTo: boundToFor(chosenBody) };
+}
+
 // Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws).
 export async function deleteBody(actor, bodyId){
     const deletionList = [];

@@ -1114,7 +1114,8 @@ export async function transferItemBetweenActors({
   sourceActor,
   targetActor,
   item,
-  quantity = 1
+  quantity = 1,
+  boundToOverride
 } = {}) {
   if (!sourceActor || !targetActor || !item) return null;
 
@@ -1126,6 +1127,12 @@ export async function transferItemBetweenActors({
 
   if (foundry.utils.hasProperty(itemData, "system.quantity")) {
     itemData.system.quantity = Math.min(sourceQty, transferQty);
+  }
+
+  // boundTo is only meaningful within the actor it was resolved against - a value carried over
+  // verbatim from the source actor would point at a body that doesn't exist on the target.
+  if (boundToOverride !== undefined && foundry.utils.hasProperty(itemData, "system.boundTo")) {
+    itemData.system.boundTo = boundToOverride;
   }
 
   const existing = targetActor.items.find(i =>

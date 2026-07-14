@@ -891,11 +891,20 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const canEditTarget = targetActor.isOwner;
       // Direct transfer if current user owns both sides
       if (canEditSource && canEditTarget) {
+        // Armor is always body-bound - re-resolve it for the target actor instead of carrying
+        // over whatever boundTo it had on the source, which would point at a body that doesn't exist here.
+        let boundToOverride;
+        if (item.type === "armor") {
+          const resolved = await MORPHFUNCTION.resolveBodyForItem(targetActor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
+          if (resolved.cancelled) return null;
+          boundToOverride = resolved.boundTo;
+        }
         return SHEET.transferItemBetweenActors({
           sourceActor,
           targetActor,
           item,
-          quantity
+          quantity,
+          boundToOverride
         });
       }
 
@@ -947,8 +956,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const isWare = itemData.type === "ware";
     const isTrait = itemData.type === "traits";
+    // Armor is always body-bound, same as Ware - unlike Ware/Traits it can be rebound later
+    // (see the per-item rebind action), but it still needs a body to land on in the first place.
+    const isArmor = itemData.type === "armor";
     const canBeEgo = isTrait && itemModel.ego === true;
-    const canBeMorph = isWare || (isTrait && itemModel.morph === true);
+    const canBeMorph = isWare || isArmor || (isTrait && itemModel.morph === true);
 
     // Vehicles are valid boundTo targets too, grouped as "Remote Bodies" alongside "Morphs".
     const { bodies, boundToFor, buildBodyGroups } = MORPHFUNCTION.getBodyBindingInfo(actor);
@@ -1026,30 +1038,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
       }
     } else if (canBeMorph) {
-      if (bodies.length === 0) {
-        const key = isWare ? "noBodyWare" : "noBodyTrait";
-        await systemMessage("error", `ep2e.systemMessage.itemAttachment.${key}`);
-        return null;
-      }
+      const key = isWare ? "noBodyWare" : (isArmor ? "noBodyArmor" : "noBodyTrait");
+      const resolved = await MORPHFUNCTION.resolveBodyForItem(actor, `ep2e.systemMessage.itemAttachment.${key}`);
+      if (resolved.cancelled) return null;
 
-      let chosenBody;
-      if (actor.type === "character" && bodies.length > 1) {
-        const bodyChoice = await selectBody(
-          buildBodyGroups(),
-          "ep2e.dialog.selectBody.header",
-          "",
-          "ep2e.dialog.selectBody.copy"
-        );
-
-        if (bodyChoice.cancelled) return null;
-        chosenBody = bodies.find(b => b.id === bodyChoice.selection);
-        if (!chosenBody) return null;
-      } else {
-        chosenBody = bodies[0];
-      }
-
-      itemModel.boundTo = boundToFor(chosenBody);
-      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: chosenBody.name } };
+      itemModel.boundTo = resolved.boundTo;
+      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: resolved.chosenBody.name } };
     } else if (canBeEgo) {
       pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
     }

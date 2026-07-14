@@ -1712,6 +1712,7 @@
         "itemAddedToBody": "{name} added to {body}.",
         "noBodyTrait": "No body present. Trait cannot be added.",
         "noBodyWare": "No body present. Ware cannot be added.",
+        "noBodyArmor": "No body present. Armor cannot be added.",
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
         "enhancementsAdded": "{count} Enhancement(s) added to {body}."
       }
