@@ -759,25 +759,24 @@ span.neutral {
   text-align: left;
 }
 
-/* Chat message header: sender name centered on its own row, taking the full width except the
-   delete icon (pinned top-right so it doesn't drift down if the name wraps to a second line),
-   with the timestamp centered on its own row underneath. display:contents on .message-metadata
-   lets its children (timestamp, delete link) become direct grid items of .message-header without
-   touching the DOM - font sizes/colors are untouched, this is layout only. */
+/* Chat message header: sender name centered on top, timestamp centered underneath, delete icon
+   pinned top-right. The delete icon is taken out of flow entirely (position:absolute) rather than
+   sharing a grid/columns with the rest of the header - some message types (e.g. rolls) append
+   extra content like .flavor-text directly into .message-header, and forcing that into the same
+   column structure as sender/delete stretched it into the wrong width. This way the icon only
+   ever shares space with the sender line (via the reserved padding), and anything else in the
+   header just stacks normally below at full width. Font sizes/colors are untouched. */
 .chat-message .message-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas:
-    "sender delete"
-    "timestamp timestamp";
-  align-items: start;
-  column-gap: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .chat-message .message-header .message-sender {
-  grid-area: sender;
   text-align: center;
   margin: 0;
+  padding: 0 28px;
 }
 
 .chat-message .message-header .message-metadata {
@@ -785,15 +784,14 @@ span.neutral {
 }
 
 .chat-message .message-header .message-timestamp {
-  grid-area: timestamp;
   display: block;
   text-align: center;
 }
 
 .chat-message .message-header .message-delete {
-  grid-area: delete;
-  align-self: start;
-  justify-self: end;
+  position: absolute;
+  top: 0;
+  right: 0;
   color: var(--iconBlue);
 }
 
