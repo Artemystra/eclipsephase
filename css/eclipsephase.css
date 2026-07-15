@@ -759,6 +759,44 @@ span.neutral {
   text-align: left;
 }
 
+/* Chat message header: sender name centered on its own row, taking the full width except the
+   delete icon (pinned top-right so it doesn't drift down if the name wraps to a second line),
+   with the timestamp centered on its own row underneath. display:contents on .message-metadata
+   lets its children (timestamp, delete link) become direct grid items of .message-header without
+   touching the DOM - font sizes/colors are untouched, this is layout only. */
+.chat-message .message-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "sender delete"
+    "timestamp timestamp";
+  align-items: start;
+  column-gap: 8px;
+}
+
+.chat-message .message-header .message-sender {
+  grid-area: sender;
+  text-align: center;
+  margin: 0;
+}
+
+.chat-message .message-header .message-metadata {
+  display: contents;
+}
+
+.chat-message .message-header .message-timestamp {
+  grid-area: timestamp;
+  display: block;
+  text-align: center;
+}
+
+.chat-message .message-header .message-delete {
+  grid-area: delete;
+  align-self: start;
+  justify-self: end;
+  color: var(--iconBlue);
+}
+
 .ep-menu {
   background-color: rgba(64, 152, 214, 0.4)!important;
 }
@@ -2662,6 +2700,10 @@ input[type="text"].multiselect-input:focus {
 .item-row-list-entry {
   width: 100%;
   box-sizing: border-box;
+  /* .grid-2col's implicit align-items: stretch otherwise forces every entry in the same grid row
+     to match the tallest one - e.g. an expanded neighbor's description box stretching a closed,
+     unrelated entry down with it. Pin each entry to its own content height at the top instead. */
+  align-self: start;
 }
 
 /* beats .wantToKnowMore's max-width: fit-content */
