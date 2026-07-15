@@ -2,6 +2,20 @@ import { eclipsephase } from "../config.js"
 
 export default class EPitem extends Item {
 
+    async _preUpdate(changes, options, user) {
+        await super._preUpdate(changes, options, user);
+
+        // Only vehicles/robots have real intrinsic (frame) armor - Smart Animals get theirs from
+        // Armor Ware items instead, same as Biomorphs. Switching a body's chassis to "animal"
+        // always zeroes out whatever intrinsic armor it had as a vehicle/robot, so a leftover
+        // value can't silently keep counting after the switch.
+        const newChassisType = changes.system?.chassisType ?? changes["system.chassisType"];
+        if (this.type === "vehicle" && newChassisType === "animal") {
+            changes["system.armor.energy"] = 0;
+            changes["system.armor.kinetic"] = 0;
+        }
+    }
+
     async prepareData() {
         super.prepareData();
         

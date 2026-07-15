@@ -1,7 +1,7 @@
 {
   "name": "Light Frame Armor",
   "type": "armor",
-  "img": "systems/eclipsephase/resources/icons/Additional Armor.png",
+  "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
   "effects": [],
   "folder": null,
   "sort": 0,
@@ -26,14 +26,15 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "Every synthmorph must choose a frame, which provides its inherent Armor Value. Light frames are used by cases, dragonflies, spares, swarmanoids, and similar lightweight shells.",
     "active": true,
     "displayCategory": "armor",
     "updated": "",
     "cost": "minor",
     "slotType": "main",
     "energy": "6",
-    "kinetic": "4"
+    "kinetic": "4",
+    "isFrame": true
   },
   "_key": "!items!puuTYYsKNXEW05FX"
 }

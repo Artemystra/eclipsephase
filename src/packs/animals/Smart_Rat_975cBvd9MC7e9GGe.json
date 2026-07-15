@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Enhanced Smell, Grip Pads, Prehensile Tail; NOTES: Very Small size",
+    "description": "These upgrades of the common Norwegian rat are clever and dexterous, and they easily fit into a pocket or hood.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -225,15 +225,15 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.sUhAh4vPbEs1jZKP"
       },
       "ware4": {
         "label": "4.",

@@ -22,7 +22,7 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "This heavy-duty suit can almost be considered a miniature spaceship. It appears as a large metallic ovoid with jointed, servo-assisted arms and legs. It increases Vigor pool by 1 and inflicts an extra 1d10 damage in melee. Its miniature plasma thrusters are capable of delivering 0.01 g for 10 hours. Like all hardsuits, it is environmentally sealed, protecting you from vacuum, radiation, and temperatures from –175 to 140 C, and self-seals any punctures that inflict less than 30 points of damage.",
     "active": true,
     "displayCategory": "armor",
     "updated": "",

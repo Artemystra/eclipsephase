@@ -9,7 +9,7 @@
   "_id": "gbFzPOzGcOVlVhcL",
   "system": {
     "additionalSystems": {},
-    "description": "360-Degree Vision, Access Jacks, Bot AI, Lidar, Mesh Inserts, Puppet Sock, Anti-Glare, Eelware, Enhanced Hearing, Enhanced Vision, Light Combat Armor, Smart Actuators, T-Ray Emitter, Weapon Mounts (2 Articulated/Concealed)",
+    "description": "Many varieties of sentry bots exist, but common models maneuver on four multi-directional smart treads. Used throughout the Solar System for policing and security purposes, they are loaded with armor and weapons.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,43 +224,55 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.jP46G9UyhpEboPOY"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware9": {
         "label": "9.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.nq4GPn8iDhEKZHUM"
       },
       "ware10": {
         "label": "10.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.F6w9fRuKwsICXk9h"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.j8eZ9xRZbp7aPZJh"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.9ODirit8oYFzPTY9"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.9ODirit8oYFzPTY9"
       }
     },
     "flaws": {

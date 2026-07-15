@@ -971,6 +971,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         "flags.eclipsephase.resleeving": true
       });
       await maybeApplyStandardEnhancements(actor, created[0], "activeMorph");
+      await MORPHFUNCTION.applyFrame(actor, created[0], "activeMorph");
       return created[0];
     }
 
@@ -1094,6 +1095,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     if (itemData.type === "morph" || itemData.type === "vehicle") {
       await maybeApplyStandardEnhancements(actor, created[0], boundToFor(created[0]));
+      await MORPHFUNCTION.applyFrame(actor, created[0], boundToFor(created[0]));
     }
 
     return created[0] ?? null;

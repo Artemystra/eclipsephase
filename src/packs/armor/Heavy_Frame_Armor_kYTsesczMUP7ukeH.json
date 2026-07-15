@@ -1,7 +1,7 @@
 {
   "name": "Heavy Frame Armor",
   "type": "armor",
-  "img": "systems/eclipsephase/resources/icons/Additional Armor.png",
+  "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
   "effects": [],
   "folder": null,
   "sort": 0,
@@ -26,14 +26,15 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "Every synthmorph must choose a frame, which provides its inherent Armor Value. Heavy frames are used by combat-oriented and industrial synthmorphs.",
     "active": true,
     "displayCategory": "armor",
     "updated": "",
     "cost": "minor",
     "slotType": "main",
     "energy": "12",
-    "kinetic": "10"
+    "kinetic": "10",
+    "isFrame": true
   },
   "_key": "!items!kYTsesczMUP7ukeH"
 }

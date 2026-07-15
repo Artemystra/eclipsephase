@@ -219,11 +219,14 @@ Hooks.once("ready", async () => {
   compendiumList.ware = {"none":"--Select--"};
   compendiumList.flaw = {"none":"--Select--"};
   compendiumList.trait = {"none":"--Select--"};
+  compendiumList.frame = {"none":"No Frame"};
   const traitsPack = game.packs.get("eclipsephase.traits");
   const traitsIndex = await traitsPack.getIndex();
   const warePack = game.packs.get("eclipsephase.ware");
   const wareIndex = await warePack.getIndex();
-  const joinedIndex = [...wareIndex, ...traitsIndex]
+  const armorPack = game.packs.get("eclipsephase.armor");
+  const armorIndex = await armorPack.getIndex();
+  const joinedIndex = [...wareIndex, ...traitsIndex, ...armorIndex]
 
   for(const entry of joinedIndex){
     const fullItem = await fromUuid(entry.uuid);
@@ -237,12 +240,23 @@ Hooks.once("ready", async () => {
       case "ware":
         compendiumList.ware[fullItem.uuid] = fullItem.name;
         break;
+      case "armor":
+        // Only the three Frame items (Light/Medium/Heavy) feed the Synthmorph Frame dropdown -
+        // regular Armor items in this same pack aren't relevant here.
+        if (fullItem.system.isFrame === true) compendiumList.frame[fullItem.uuid] = fullItem.name;
+        break;
       default: break
     }
   }
   compendiumList.ware = helperFunction.sortObjectByValue(compendiumList.ware)
   compendiumList.flaw = helperFunction.sortObjectByValue(compendiumList.flaw)
   compendiumList.trait = helperFunction.sortObjectByValue(compendiumList.trait)
+  // Frame is ordered by size (Select, Light, Medium, Heavy) rather than alphabetically - alpha
+  // order would put Heavy before Light before Medium, which reads oddly for a size progression.
+  const frameOrder = { "No Frame": 0, "Light Frame Armor": 1, "Medium Frame Armor": 2, "Heavy Frame Armor": 3 };
+  compendiumList.frame = Object.fromEntries(
+    Object.entries(compendiumList.frame).sort(([, a], [, b]) => (frameOrder[a] ?? 99) - (frameOrder[b] ?? 99))
+  );
 
   CONFIG.compendiumList = compendiumList;
 })

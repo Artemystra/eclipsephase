@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Enhanced Smell; NOTES: Bite DV 1d6, Small size",
+    "description": "These small-sized squid are adapted for air breathing and maneuvering in micrograv with natural air jets. They are favored as pets and snacks by neo-octopi.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -225,7 +225,7 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware2": {
         "label": "2.",

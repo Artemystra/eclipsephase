@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Claws, Enhanced Hearing, Enhanced Vision; NOTES: Beak/claws DV 1d6, Small size",
+    "description": "Enhanced versions of peregrine falcons and other predatory birds are common in large, open habitats. The art of falconry has made a comeback, with birds trained for surveillance and tracking.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -225,15 +225,15 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.SNBc4gvEfvvGisGA"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware4": {
         "label": "4.",

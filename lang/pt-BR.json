@@ -65,7 +65,7 @@
   "TYPES.Item.program": "Programa",
   "TYPES.Item.specialSkill": "Perícia Especial",
   "TYPES.Item.knowSkill": "Perícia de Saber",
-  "TYPES.Item.vehicle": "Veículo",
+  "TYPES.Item.vehicle": "Corpo Remoto",
   "TYPES.Item.drug": "Droga",
   "TYPES.Item.ammo" : "Ammo",
   "TYPES.Item.id" : "ID",
@@ -565,6 +565,9 @@
           "synth": "Sintético",
           "bio": "Biológico",
           "info": "Infomorfo"
+        },
+        "frame": {
+          "label": "Chassi"
         },
         "durabilityLabel": "Durabilidade",
         "movement": {

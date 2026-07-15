@@ -22,7 +22,7 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "The trike exoskeleton is a three-wheeled personal motorcycle design, rather than a walker. Use Pilot: Ground and a Movement Rate of 8/40 (very fast).",
     "active": true,
     "displayCategory": "armor",
     "updated": "",

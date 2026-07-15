@@ -176,7 +176,7 @@
       },
       "ware23": {
         "label": "23.",
-        "value": "none"
+        "value": "Compendium.eclipsephase.ware.Item.8tY1uBnMzD5oFrGp"
       }
     },
     "flaws": {
@@ -206,7 +206,8 @@
         "label": "3.",
         "value": "none"
       }
-    }
+    },
+    "frame": "Compendium.eclipsephase.armor.Item.kYTsesczMUP7ukeH"
   },
   "effects": [],
   "folder": "NfKORwce5MErntbB",

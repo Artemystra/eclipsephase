@@ -152,7 +152,8 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       context.itemList = CONFIG.compendiumList ?? {
         ware: { none: "Calculating..." },
         flaw: { none: "Calculating..." },
-        trait: { none: "Calculating..." }
+        trait: { none: "Calculating..." },
+        frame: { none: "Calculating..." }
       };
       // Enhancement slots (system.ware/traits/flaws) aren't schema-bound to a fixed count - only
       // show enough to always have one free slot (minimum 3), growing as they fill up. A slot that
@@ -161,6 +162,19 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       context.visibleWare = this._buildVisibleSlots(item.system.ware, "ware");
       context.visibleTraits = this._buildVisibleSlots(item.system.traits, "trait");
       context.visibleFlaws = this._buildVisibleSlots(item.system.flaws, "flaw");
+    }
+
+    if (item.type === "morph") {
+      // No canonical Synthmorph in either rulebook goes without a frame, so a freshly-set-to-Synth
+      // morph with no frame chosen yet defaults the dropdown to Light Frame - a pure rendering
+      // default (submitOnChange means this isn't written to the document until the user actually
+      // interacts with the select, same as selectBody()'s defaultSelection elsewhere).
+      if (!item.system.frame || item.system.frame === "none") {
+        const lightFrameEntry = Object.entries(context.itemList?.frame ?? {}).find(([, name]) => name === "Light Frame Armor");
+        context.frameDefault = lightFrameEntry?.[0] ?? "none";
+      } else {
+        context.frameDefault = item.system.frame;
+      }
     }
 
     await this._prepareRenderedHTMLContent(context);

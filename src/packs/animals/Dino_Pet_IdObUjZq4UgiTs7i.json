@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Dermal Armor, Enhanced Smell, Enhanced Vision, some have Poison Glands; NOTES: Bite/Horn/Tail DV 1d6, Small size",
+    "description": "Genehackers have resurrected a number of extinct dinosaur species as small, colorful, and lovable pets. Varieties include pterosaurs, stegosauruses, ankylosauruses, triceratops, and many others.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -115,8 +115,8 @@
       }
     },
     "armor": {
-      "energy": 4,
-      "kinetic": 5
+      "energy": null,
+      "kinetic": null
     },
     "init": 5,
     "luc": 20,
@@ -225,19 +225,19 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.uKhS8vByVM8CeBHT"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.SEoOYO8TjgC2vIdf"
       },
       "ware5": {
         "label": "5.",

@@ -64,10 +64,12 @@
                     {{/if}}
                 </div>
                 <div class="itemGroup">
+                    {{#if (ne item.system.chassisType "animal")}}
                     <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
                     <input class="input-small alignCenter" type="number" name="system.armor.energy" value="{{item.system.armor.energy}}" placeholder="0"/>
                     <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 20px!important; max-height: 20px!important;"/>
                     <input class="input-small alignCenter" type="number" name="system.armor.kinetic" value="{{item.system.armor.kinetic}}" placeholder="0"/>
+                    {{/if}}
                 </div>
             </div>
 

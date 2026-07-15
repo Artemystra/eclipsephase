@@ -65,7 +65,7 @@
   "TYPES.Item.program" : "Program",
   "TYPES.Item.specialSkill" : "Special Skill",
   "TYPES.Item.knowSkill" : "Know Skill",
-  "TYPES.Item.vehicle" : "Vehicle",
+  "TYPES.Item.vehicle" : "Cuerpo Remoto",
   "TYPES.Item.drug" : "Drug",
   "TYPES.Item.ammo" : "Ammo",
   "TYPES.Item.id" : "ID",
@@ -566,6 +566,9 @@
           "synth": "Synthetic",
           "bio": "Biologic",
           "info": "Infomorph"
+        },
+        "frame": {
+          "label": "Chasis"
         },
         "durabilityLabel": "Durability",
         "movement": {

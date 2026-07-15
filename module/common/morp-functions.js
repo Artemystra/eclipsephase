@@ -480,3 +480,35 @@ export async function applyStandardEnhancements(actor, body, boundTo) {
     if (!itemsToCreate.length) return [];
     return actor.createEmbeddedDocuments("Item", itemsToCreate);
 }
+
+// Pulls a Synthmorph's chosen Frame (Light/Medium/Heavy, system.frame - a compendium Armor item
+// UUID, same reference pattern as the Enhancement slots above) straight from the compendium and
+// binds a fresh copy to the body, unconditionally - Frame isn't an optional "Enhancement" like
+// Ware/Traits, it's the mandatory intrinsic Armor every synthmorph has per the rules, so this
+// doesn't go through the Standard/Flat Enhancement choice at all. Runs only for body.type ===
+// "morph" with system.type === "synth" - a Bio/Info morph, or a Synth with no frame chosen, is
+// left untouched. Checking body.system.type AT DROP TIME (rather than trying to keep a live body
+// in sync) is what prevents a stale Frame from lingering if the source Morph's type is later
+// edited back and forth - the check simply never fires for a non-Synth body.
+export async function applyFrame(actor, body, boundTo) {
+    if (body.type !== "morph" || body.system.type !== "synth") return null;
+
+    const uuid = body.system.frame;
+    if (!uuid || uuid === "none") return null;
+
+    const source = await fromUuid(uuid);
+    if (!source) {
+        console.warn(`[EP2e] ${actor.name}: "${body.name}"'s Frame points at a missing compendium item (${uuid}) - skipped.`);
+        return null;
+    }
+
+    const itemData = source.toObject();
+    itemData.system.boundTo = boundTo;
+    itemData.system.updated = game.system.version;
+
+    const created = await actor.createEmbeddedDocuments("Item", [itemData]);
+    if (created[0]) {
+        sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemAddedToBody", { name: created[0].name, body: body.name });
+    }
+    return created[0] ?? null;
+}

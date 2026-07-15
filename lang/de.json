@@ -65,7 +65,7 @@
   "TYPES.Item.program" : "Programm",
   "TYPES.Item.specialSkill" : "Spezial-Skill",
   "TYPES.Item.knowSkill" : "Wissens-Skill",
-  "TYPES.Item.vehicle" : "Fahrzeug",
+  "TYPES.Item.vehicle" : "Remotekörper",
   "TYPES.Item.drug" : "Droge",
   "TYPES.Item.ammo" : "Munition",
   "TYPES.Item.id" : "ID",
@@ -573,6 +573,9 @@
           "synth": "Synthetisch",
           "bio": "Biologisch",
           "info": "Digital"
+        },
+        "frame": {
+          "label": "Frame"
         },
         "durabilityLabel": "Ausdauer",
         "movement": {

@@ -65,7 +65,7 @@
   "TYPES.Item.program" : "程序",
   "TYPES.Item.specialSkill" : "特殊技能",
   "TYPES.Item.knowSkill" : "知识技能",
-  "TYPES.Item.vehicle" : "载具",
+  "TYPES.Item.vehicle" : "远程躯体",
   "TYPES.Item.drug" : "药物",
   "TYPES.Item.ammo" : "Ammo",
   "TYPES.Item.id" : "ID",
@@ -565,6 +565,9 @@
           "synth": "人造",
           "bio": "生物",
           "info": "信息"
+        },
+        "frame": {
+          "label": "机身框架"
         },
         "durabilityLabel": "耐久值",
         "movement": {

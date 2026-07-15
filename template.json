@@ -1146,7 +1146,8 @@
       "energy": null,
       "kinetic": null,
       "displayCategory": "armor",
-      "boundTo": null
+      "boundTo": null,
+      "isFrame": false
     },
     "drug": {
       "templates": [
@@ -1631,15 +1632,12 @@
       "img": "",
       "customToken": null,
       "type": "",
+      "frame": "none",
       "dur": null,
       "insight": null,
       "moxie": null,
       "vigor": null,
       "flex": null,
-      "armor": {
-        "energy": null,
-        "kinetic": null
-      },
       "movement": {
         "move1": {
           "label": "1.",

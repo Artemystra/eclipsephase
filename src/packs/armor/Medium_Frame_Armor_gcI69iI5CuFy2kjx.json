@@ -1,7 +1,7 @@
 {
   "name": "Medium Frame Armor",
   "type": "armor",
-  "img": "systems/eclipsephase/resources/icons/Additional Armor.png",
+  "img": "systems/eclipsephase/resources/icons/Main%20Armor.png",
   "effects": [],
   "folder": null,
   "sort": 0,
@@ -26,14 +26,15 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "Every synthmorph must choose a frame, which provides its inherent Armor Value. Medium frames are the standard choice for general-purpose synthmorphs.",
     "active": true,
     "displayCategory": "armor",
     "updated": "",
     "cost": "minor",
     "slotType": "main",
     "energy": "8",
-    "kinetic": "6"
+    "kinetic": "6",
+    "isFrame": true
   },
   "_key": "!items!gcI69iI5CuFy2kjx"
 }

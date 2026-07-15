@@ -22,7 +22,7 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "High-dive suits are personal spacesuits designed to withstand atmospheric re-entry. Wearing one of these, you can step out a spacecraft in orbit around a planet, enter the atmosphere without burning up, and safely land using both drogue and conventional parachutes. High-dive suits are meant for unpowered descent only; they do not possess the capability for flight.",
     "active": true,
     "displayCategory": "armor",
     "updated": "",
