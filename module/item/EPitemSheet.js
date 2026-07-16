@@ -155,13 +155,17 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
         trait: { none: "Calculating..." },
         frame: { none: "Calculating..." }
       };
-      // Enhancement slots (system.ware/traits/flaws) aren't schema-bound to a fixed count - only
-      // show enough to always have one free slot (minimum 3), growing as they fill up. A slot that
-      // doesn't exist in the data yet is rendered as a blank placeholder; Foundry's own
+      // Enhancement slots (system.ware/traits/flaws/movement) aren't schema-bound to a fixed count -
+      // only show enough to always have one free slot (minimum 3), growing as they fill up. A slot
+      // that doesn't exist in the data yet is rendered as a blank placeholder; Foundry's own
       // submitOnChange form handling writes it into the document the moment it's picked.
       context.visibleWare = this._buildVisibleSlots(item.system.ware, "ware");
       context.visibleTraits = this._buildVisibleSlots(item.system.traits, "trait");
       context.visibleFlaws = this._buildVisibleSlots(item.system.flaws, "flaw");
+      context.visibleMovement = this._buildVisibleSlots(item.system.movement, "move", {
+        isFilled: (slot) => !!slot?.type && slot.type !== "none",
+        emptySlot: (label) => ({ label, active: false, type: "none", base: null, full: null })
+      });
     }
 
     if (item.type === "morph") {
@@ -182,16 +186,21 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     return context;
   }
 
-  // See the comment above the visibleWare/visibleTraits/visibleFlaws context assignment.
-  _buildVisibleSlots(existingSlots, prefix) {
-    const isFilled = (slot) => !!slot?.value && slot.value !== "none";
+  // See the comment above the visibleWare/visibleTraits/visibleFlaws/visibleMovement context
+  // assignment. Ware/Trait/Flaw slots are a single {value} field where "none" means empty;
+  // Movement slots are {active, type, base, full} where "none" *type* means empty - pass
+  // isFilled/emptySlot to adapt the same growth rule to either shape.
+  _buildVisibleSlots(existingSlots, prefix, {
+    isFilled = (slot) => !!slot?.value && slot.value !== "none",
+    emptySlot = (label) => ({ label, value: "" })
+  } = {}) {
     const filledCount = Object.values(existingSlots ?? {}).filter(isFilled).length;
     const visibleCount = Math.max(3, filledCount + 1);
 
     const visible = {};
     for (let i = 1; i <= visibleCount; i++) {
       const key = `${prefix}${i}`;
-      visible[key] = existingSlots?.[key] ?? { label: `${i}.`, value: "" };
+      visible[key] = existingSlots?.[key] ?? emptySlot(`${i}.`);
     }
     return visible;
   }

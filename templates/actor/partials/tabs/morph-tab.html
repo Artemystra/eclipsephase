@@ -202,6 +202,7 @@
                                     </div>
                                 {{/if}}
                             </div>
+                            {{#if body.hasMovement}}
                             <div class="contentBox">
                                 <div class="flexrow subheader">
                                     <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
@@ -236,6 +237,7 @@
                                     {{/each}}
                                 </div>
                             </div>
+                            {{/if}}
                             <div class="contentBox">
                                 <div class="flexrow subheader">
                                     <h3 class="subheader">{{localize "ep2e.morph.traitsLabel"}}</h3>
@@ -411,6 +413,7 @@
                             {{/if}}
                         </div>
                         <!-- Movement -->
+                        {{#if vehicle.hasMovement}}
                         <div class="contentBox">
                             <div class="flexrow subheader">
                                 <h3 class="subheader">{{localize "ep2e.peripherals.table.movement"}}</h3>
@@ -445,6 +448,7 @@
                                 {{/each}}
                             </div>
                         </div>
+                        {{/if}}
                         <!-- Skills (animals) / AI Skills (autonomously acting vehicle/robot onboard AIs) -->
                         <div class="contentBox">
                             <div class="flexrow subheader">

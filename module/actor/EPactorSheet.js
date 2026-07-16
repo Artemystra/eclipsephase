@@ -13,6 +13,12 @@ import { restingListeners } from "../rolls/resting.js";
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
+// Infomorphs and other bodyless bodies have every movement slot at type "none" - used to hide the
+// Movement section on the Morph tab entirely rather than showing an empty header (Njal/Agent case).
+function hasAnyMovement(bodyItem) {
+  return Object.values(bodyItem?.system?.movement ?? {}).some(m => m?.type && m.type !== "none");
+}
+
 
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   
@@ -380,18 +386,22 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           const morphID = (item.id);
           const category = bodies[morphID];
           category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
         }
         else if (item.type === "morph" && actor.type !== "character"){
           const category = bodies["activeMorph"];
           category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
         }
         else if (item.type === "vehicle" && actor.type === "character"){
           const category = bodies[item.id];
           category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
         }
         else if (item.type === "vehicle" && actor.type !== "character"){
           const category = bodies["activeVehicle"];
           category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
         }
 
         // Append to features.
@@ -768,6 +778,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         v.morphgear = bucket.morphgear;
         v.armorCount = bucket.armorCount;
         v.morpharmor = bucket.morpharmor;
+        v.hasMovement = hasAnyMovement(v);
         return v;
       });
       actor.activeEffects=effects;
