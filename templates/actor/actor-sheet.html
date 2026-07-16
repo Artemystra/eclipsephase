@@ -23,10 +23,8 @@
     {{/if}}
             {{!-- Sheet Header --}}
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
-            {{!-- SideCar (characters only) --}}
-            {{#if (eq actor.type 'character')}}
+            {{!-- SideCar (all actor types; NPC/Goon get a reduced Armor + Weapons variant, see sideCar.html) --}}
                 {{> systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html }}
-            {{/if}}
         </div>
         {{#if (eq actor.type 'character')}}
             <div class="wrappercenter">

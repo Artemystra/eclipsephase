@@ -229,11 +229,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       return { width: 800, height: 366 };
     }
 
-    if (actor.type === 'npc') {
-      return { width: 1058, height: 675 };
-    }
-
-    return { width: 1058, height: 630 };
+    // NPC and Goon share the same sheet height now - no more separate, shorter Goon variant.
+    return { width: 1058, height: 675 };
   }
 
   //Registering HTML-editors to actor sheets

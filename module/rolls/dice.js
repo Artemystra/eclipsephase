@@ -843,8 +843,14 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     const mainArmorMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.mainArmorMalus;
     const armorSomMalusHere = suppressArmorMalusHere ? 0 : actorModel.physical.armorSomMalus;
 
-    if(rolledFrom !== "vehicleSkill" && (additionalArmorMalusHere || mainArmorMalusHere || actorModel.physical.totalWeaponMalus || actorModel.physical.totalGearMalus || armorSomMalusHere)){
-        task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - additionalArmorMalusHere - mainArmorMalusHere - actorModel.physical.totalWeaponMalus - actorModel.physical.totalGearMalus - armorSomMalusHere))
+    // totalWeaponMalus/totalGearMalus are only ever set for characters (see EPactor.js's
+    // _calculateHomebrewEncumberance, still character-only) - npc/goon leave them undefined,
+    // so they need a fallback here to avoid poisoning the sum with NaN.
+    const totalWeaponMalusHere = actorModel.physical.totalWeaponMalus || 0;
+    const totalGearMalusHere = actorModel.physical.totalGearMalus || 0;
+
+    if(rolledFrom !== "vehicleSkill" && (additionalArmorMalusHere || mainArmorMalusHere || totalWeaponMalusHere || totalGearMalusHere || armorSomMalusHere)){
+        task.addModifier(new TaskRollModifier('ep2e.roll.announce.encumberance', - additionalArmorMalusHere - mainArmorMalusHere - totalWeaponMalusHere - totalGearMalusHere - armorSomMalusHere))
     }
 
     /* Melee Roll */

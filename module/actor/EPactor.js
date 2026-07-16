@@ -137,12 +137,21 @@ export default class EPactor extends Actor {
     this._calculateInitiative(actorModel, chiMultiplier);
     this._calculateRez(actorModel)
 
-    if (this.type === "character"){  
+    // The SideCar (armor/weapon summaries) renders for every actor type, so its
+    // "is anything equipped" flags have to be derived for npc/goon too.
+    this._calculateSideCart(actorModel, items, jammedVehicleData);
+
+    if (this.type === "character"){
       this._calculateHomebrewEncumberance(actorModel);
-      this._calculateSideCart(actorModel, items, jammedVehicleData);
       this._poolUpdate(actorModel);
-      this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     }
+
+    // The SideCar's Current Status box renders for every actor type, so its sums have to
+    // be derived for npc/goon too. Runs after _calculateHomebrewEncumberance since it reads
+    // that method's fields; its sub-blocks self-gate on data only characters can actually
+    // have (homebrew encumbrance, resleeving integration issues), so for npc/goon it only
+    // ever surfaces wounds, trauma (npc-only in practice) and armor maluses.
+    this._modificationListCreator(actorModel, actorWhole, chiMultiplier);
     if (this.type === "npc" || this.type === "character"){
       // When jamming, body-bound pools (including the body's own Flex, if any) come from the drone
       // instead of the morph. Ego Flex is unaffected either way, since it's added separately below.
@@ -483,14 +492,18 @@ export default class EPactor extends Actor {
     actorModel.additionalSystems.gearEquipped = false;
     actorModel.additionalSystems.consumableEquipped = false;
 
+    // NPCs/Goons have no UI to equip/unequip items, so everything they own counts
+    // as "at hand" regardless of its stored active flag (characters keep the toggle).
+    const ignoreActive = this.type !== "character";
+
     for(let gearCheck of items){
-      if(gearCheck.system.displayCategory === "ranged" && gearCheck.system.active){
+      if(gearCheck.system.displayCategory === "ranged" && (ignoreActive || gearCheck.system.active)){
         rangedCount++
       }
-      else if(gearCheck.system.displayCategory === "ccweapon" && gearCheck.system.active){
+      else if(gearCheck.system.displayCategory === "ccweapon" && (ignoreActive || gearCheck.system.active)){
         ccCount++
       }
-      else if(gearCheck.system.displayCategory === "armor" && gearCheck.system.active){
+      else if(gearCheck.system.displayCategory === "armor" && (ignoreActive || gearCheck.system.active)){
         armorCount++
       }
       else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active && gearCheck.system.slotType != "consumable"){
@@ -662,7 +675,9 @@ export default class EPactor extends Actor {
       let mainArmorAmount = 0;
 
       for (let armor of this.items.filter(i => i.type === "armor" && i.system.boundTo === jammedVehicleData.id)) {
-        if (armor.system.active) {
+        // Same npc/goon "no equip toggle" bypass as the non-jammed branch below - otherwise a
+        // jamming npc/goon's drone-bound armor would silently stop counting while jammed.
+        if (actorWhole.type !== "character" || armor.system.active) {
           energyTotal += Number(armor.system.energy) || 0;
           kineticTotal += Number(armor.system.kinetic) || 0;
           if (armor.system.slotType === "main") mainArmorAmount++;
@@ -752,7 +767,9 @@ export default class EPactor extends Actor {
 
     for (let armor of armorItems) {
       let key = armor.type
-      if(armor.system.active){
+      // NPCs/Goons have no equip toggle, so all of their armor always counts;
+      // characters only benefit from armor flagged active.
+      if(actorWhole.type !== "character" || armor.system.active){
         energyTotal += Number(armor.system.energy)
         kineticTotal += Number(armor.system.kinetic)
         if (armor.system.slotType === "main") {

@@ -1,5 +1,5 @@
-{{actor}}
-            {{#if item.system.active}}
+            {{!-- NPCs/Goons have no equip toggle, so every weapon shows; characters only show "active" ones --}}
+            {{#if (or (ne @root.actor.type "character") item.system.active)}}
             <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
                 <div class="flexrow subheader">
                     <!--Name & Dice Roller-->

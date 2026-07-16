@@ -1,7 +1,12 @@
 {{!-- Current Status --}}
 {{> systems/eclipsephase/templates/actor/partials/currentStatus/statusSummary.html }}
-{{!-- Armor Section --}}
-{{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html }}
+{{!-- Armor Section (Character keeps the full card; NPC/Goon get a compact single-line variant
+     since their sheets are much shorter overall) --}}
+{{#if (eq actor.type "character")}}
+    {{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html }}
+{{else}}
+    {{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummaryCompact.html }}
+{{/if}}
 {{!-- Current Equipment Section --}}
 <div class="contentright">
 
@@ -37,6 +42,9 @@
         {{/if}}
     </div>
 
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html }}
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
+    {{!-- Gear & Consumables are character-only; NPCs/Goons just get Armor + Weapons --}}
+    {{#if (eq actor.type "character")}}
+        {{> systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html }}
+        {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
+    {{/if}}
 </div>
