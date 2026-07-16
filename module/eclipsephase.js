@@ -172,7 +172,6 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html",
-    "systems/eclipsephase/templates/actor/partials/currentStatus/armorSummaryCompact.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/weaponSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html",
     "systems/eclipsephase/templates/actor/partials/currentStatus/statusSummary.html",

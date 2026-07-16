@@ -2166,17 +2166,8 @@ h3.subheaderBlank {
   margin-bottom: 10px;
 }
 
+/* Same footprint as .statusSideCar above it (single line, detail on hover), for every actor type. */
 .armorSideCar {
-  background-image: url(../resources/img/armorSideCar.webp);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-}
-
-/* NPC/Goon variant - collapses to the same footprint as .statusSideCar above it (single line,
-   detail on hover) instead of the Character card's tall watermarked placeholder. Two classes
-   beat .sideCarBox's/.armorSideCar's single-class rules regardless of source order. */
-.armorSideCar.armorSideCarCompact {
-  background-image: none;
   min-height: 50px;
   max-height: 50px;
   padding: 10px;
@@ -2969,20 +2960,14 @@ button.epTextlink:hover{
 }
 
 /* opens sideways into the center column, same trick as the Insight/pool tooltips
-   (.wrapperleft no longer clips this, so a plain offset can escape it) */
+   (.wrapperleft no longer clips this, so a plain offset can escape it). Same trigger + tooltip
+   design for every actor type now, so one offset applies everywhere - last confirmed value from
+   the compact NPC/Goon trigger, may need re-tuning now that the tooltip content itself is shorter. */
 .armorSideCar .tooltip:hover div[role=tooltipNegative] {
-  top: -180px;
-  left: 260px;
+  top: -115px;
+  left: 285px;
   min-width: 320px;
   max-width: 320px;
-}
-
-/* NPC/Goon's compact single-line trigger sits much higher in the (shorter) sideCar column than
-   Character's tall placeholder card did, so the same upward offset would push the tooltip off the
-   top of the window - open it further down instead. Two classes beat the Character-only rule
-   above regardless of source order. */
-.armorSideCar.armorSideCarCompact .tooltip:hover div[role=tooltipNegative] {
-  top: -300px;
 }
 
 .tooltipTop,

@@ -887,21 +887,9 @@
       "armor": {
         "headline": "Armor",
         "noArmorSubheadline": "No Armor Equipped",
-        "noArmorCopy": "You are not wearing any armor",
-        "armorSubheadline": "Cumulated Armor",
-        "energy": "Energy",
-        "kinetic": "Kinetic",
-        "concealWarning": "Not concealable while > 11",
-        "encumberanceWarning": "Unable to move while > Dur",
-        "armorCountSubheadline": "Armor Pieces active on You",
-        "mainArmorLabel": "Main Armor",
-        "additionalArmorLabel": "Additional Armor",
-        "cumulativeMalusLabel": "Cumulative Malus",
-        "mainArmorMalusCopy": "For every additional main armor a modifier of -20 will be calculated to all your actions.",
-        "additionalArmorMalusCopy": "Additional armor can be layered without any modifier. It still counts against other armor modifiers.",
-        "exceedingSomLabel": "Exceeding Somatics",
-        "exceedingSomCopy": "If either singular AV (kinetic OR energy) exceeds your SOM, you receive another -20 to all rolls.",
-        "armorUsageDescription": "To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available."
+        "concealWarning": "Armor values higher than 11 are not concealable - think of it as at least a thick, noticeable layer of clothing.",
+        "encumberanceWarning": "While your cumulative Armor exceeds your body's Durability, you are unable to move.",
+        "armorSourceHint": "To change your armor value, add it to your current Morph, or to the Remote Body you're jamming."
       },
       "ranged": {
         "headline": "Ranged Combat",

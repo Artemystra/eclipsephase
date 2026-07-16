@@ -1,12 +1,7 @@
 {{!-- Current Status --}}
 {{> systems/eclipsephase/templates/actor/partials/currentStatus/statusSummary.html }}
-{{!-- Armor Section (Character keeps the full card; NPC/Goon get a compact single-line variant
-     since their sheets are much shorter overall) --}}
-{{#if (eq actor.type "character")}}
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html }}
-{{else}}
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummaryCompact.html }}
-{{/if}}
+{{!-- Armor Section - same compact design for every actor type --}}
+{{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html }}
 {{!-- Current Equipment Section --}}
 <div class="contentright">
 

@@ -861,21 +861,9 @@
       "armor": {
         "headline": "护甲",
         "noArmorSubheadline": "没有装备护甲d",
-        "noArmorCopy": "你没有装备任何护甲",
-        "armorSubheadline": "累计护甲",
-        "energy": "能量",
-        "kinetic": "动能",
-        "concealWarning": "大于11时不可隐藏",
-        "encumberanceWarning": "大于DUR时不可移动",
-        "armorCountSubheadline": "你身上激活的护甲",
-        "mainArmorLabel": "主要护甲",
-        "additionalArmorLabel": "额外护甲",
-        "cumulativeMalusLabel": "累计减值",
-        "mainArmorMalusCopy": "每有一件额外的主要护甲，你的所有动作都需要承受一次-20调整值。",
-        "additionalArmorMalusCopy": "额外护甲可以在无调整值的情况下叠加上去。这仍需要计算其他的护甲调整值。",
-        "exceedingSomLabel": "超出体能",
-        "exceedingSomCopy": "如果任意一项AV（动能或能量）超出了你的SOM，你的所有投骰再承受一个-20调整值。",
-        "armorUsageDescription": "要激活或停用额外的/不同的护甲，你只需要打开物品栏选项卡。你可以从合集包或其他物品集合中拖入护甲。"
+        "concealWarning": "护甲值高于11时无法隐藏——可以把它想象成至少一层又厚又显眼的衣物。",
+        "encumberanceWarning": "当你的累计护甲值超过身体的耐久值时，你将无法移动。",
+        "armorSourceHint": "如需更改护甲值，请将护甲添加到你当前的Morph，或添加到你正在Jamming的远程躯体上。"
       },
       "ranged": {
         "headline": "远程战斗",

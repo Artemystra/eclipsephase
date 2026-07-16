@@ -861,21 +861,9 @@
       "armor": {
         "headline": "Armadura",
         "noArmorSubheadline": "Nenhuma Armadura Equipada",
-        "noArmorCopy": "Você não está usando armadura",
-        "armorSubheadline": "Armadura Acumulada",
-        "energy": "Energética",
-        "kinetic": "Cinética",
-        "concealWarning": "Não é ocultável enquanto > 11",
-        "encumberanceWarning": "Incapaz de se mover enquanto > Dur",
-        "armorCountSubheadline": "Peças de Armadura ativas em você",
-        "mainArmorLabel": "Armadura Principal",
-        "additionalArmorLabel": "Armadura Adicional",
-        "cumulativeMalusLabel": "Penalidade por Acumulação",
-        "mainArmorMalusCopy": "Para cada armadura principal adicional um modificador de -20 será adicionado em todas as suas ações.",
-        "additionalArmorMalusCopy": "Armaduras adicionais podem ser usadas em camadas sem nenhum modificador. Isso ainda conta para outros modificadores de armadura.",
-        "exceedingSomLabel": "Excedendo Somática",
-        "exceedingSomCopy": "Se qualquer VA individual (cinética OU energética) exceder sua SOM, você recebe mais -20 em todas as rolagens.",
-        "armorUsageDescription": "Para ativar ou desativar armadura adicionais/diferentes, vá para a Aba Inventário. Você pode adicionar armadura arrastando & soltando-a dos compêndios ou de qualquer outra coleção de itens disponível."
+        "concealWarning": "Valores de Armadura acima de 11 não são ocultáveis - pense nisso como, no mínimo, uma camada grossa e perceptível de roupa.",
+        "encumberanceWarning": "Enquanto sua Armadura cumulativa exceder a Durabilidade do seu corpo, você é incapaz de se mover.",
+        "armorSourceHint": "Para alterar seu valor de Armadura, adicione-a ao seu Morph atual ou ao Corpo Remoto que estiver em jamming."
       },
       "ranged": {
         "headline": "Combate de Distância",

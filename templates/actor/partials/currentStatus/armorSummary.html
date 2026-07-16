@@ -1,87 +1,42 @@
-<div class="sideCarBox armorSideCar">
-    <div>
-        <label class="resource-value" style="font-size: 20px;">{{localize "ep2e.sideCar.armor.headline"}}</label>
-        {{#if actor.system.physical.armorDurAnnounce}} 
-            <label style='color: var(--negative);'>{{localize "ep2e.sideCar.armor.encumberanceWarning"}}</label><br/>
+{{!-- Compact single-line Armor summary, same for every actor type - full breakdown lives in the
+     hover tooltip instead of always taking up space. Cumulative Malus is dropped entirely since
+     it's already shown in the Current Status box above; the equip-toggle hint is dropped since
+     NPC/Goon have no toggle to point at. --}}
+<div class="sideCarBox armorSideCar flexrow" style="align-content: center;">
+    <div class="tooltip flexrow flex-group-center" style="width: 100%; align-items: center;">
+        <label class="resource-value" style="font-size: 16px; margin-right: 8px;">{{localize "ep2e.sideCar.armor.headline"}}:</label>
+        {{#if actor.system.additionalSystems.armorEquipped}}
+        <div class="flexrow flex-group-center" style="align-items: center;">
+            <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
+            <span class="resource-value alignLeft item-standard-margin-medium">{{actor.system.physical.energyArmorTotal}}</span>
+            <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 20px!important; max-height: 20px!important; margin-right: 5px;"/>
+            <span class="resource-value alignLeft">{{actor.system.physical.kineticArmorTotal}}</span>
+        </div>
         {{else}}
-            {{#if actor.system.physical.armorVisibilityAnnounce}}
-                    <label style='color: var(--warning);'>{{localize "ep2e.sideCar.armor.concealWarning"}}</label><br/>
-            {{/if}}
+        <span class="resource-value">{{localize "ep2e.sideCar.armor.noArmorSubheadline"}}</span>
         {{/if}}
-    </div>
-    <div class="tooltip">
+        {{#if actor.system.physical.armorDurAnnounce}}
+        <i class="fa-solid fa-triangle-exclamation icon-xsmall" style="color: var(--negative); margin-left: 8px;" title="{{localize 'ep2e.sideCar.armor.encumberanceWarning'}}"></i>
+        {{else if actor.system.physical.armorVisibilityAnnounce}}
+        <i class="fa-solid fa-triangle-exclamation icon-xsmall" style="color: var(--warning); margin-left: 8px;" title="{{localize 'ep2e.sideCar.armor.concealWarning'}}"></i>
+        {{/if}}
         <div role="tooltipNegative">
             <div class="tooltipTopBorder">
                 <div class="tooltipTop"></div>
             </div>
             <div class="armorValue">
                 <h3 class="inline" style="margin-bottom: 20px;">{{localize "ep2e.sideCar.armor.headline"}}</h3>
-                {{#if actor.system.additionalSystems.armorEquipped}}
-                    <p/>
-                    <label class="resource-value">{{localize "ep2e.sideCar.armor.armorSubheadline"}} </label>
-                    <div class="flexrow" style="align-items: center; margin-bottom: 15px;">
-                        <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-small"/>
-                        <span class="toggle resource-label alignLeft">{{localize "ep2e.sideCar.armor.energy"}}:</span>
-                        <span class="toggle resource-value alignLeft item-standard-margin-medium">{{actor.system.physical.energyArmorTotal}}</span>
-                        <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-small" style="max-width: 20px!important; max-height: 20px!important; margin-right: 5px;"/>
-                        <span class="toggle resource-label alignLeft"> {{localize "ep2e.sideCar.armor.kinetic"}}: </span>
-                        <span class="toggle resource-value alignLeft">{{actor.system.physical.kineticArmorTotal}}</span>
-                    </div>
-                    <label class="resource-value">{{localize "ep2e.sideCar.armor.armorCountSubheadline"}}</label>
-                    <div class="listBackgroundMain">
-                        <span class="toggle resource-label
-                            alignLeft">{{localize "ep2e.sideCar.armor.mainArmorLabel"}}: </span><span
-                            class="toggle resource-value
-                            alignLeft">{{actor.system.physical.mainArmorTotal}}</span><br/>
-                        <p/>
-                        <span class="toggle resource-label
-                            alignLeft">{{localize "ep2e.sideCar.armor.additionalArmorLabel"}}: </span><span
-                            class="toggle resource-value
-                            alignLeft">{{actor.system.physical.additionalArmorTotal}}</span><br/>
-                    </div>
-                    <p/>
-                    <label class="resource-value">{{localize "ep2e.sideCar.armor.cumulativeMalusLabel"}} -{{actor.system.physical.armorMalusTotal}}</label>
-                    <div class="listBackgroundMain">
-                        <span class="toggle resource-label alignLeft">{{localize "ep2e.sideCar.armor.mainArmorLabel"}}: </span><span class="toggle resource-value alignLeft">-{{actor.system.physical.mainArmorMalus}}</span>
-                        <p/>
-                        <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.mainArmorMalusCopy"}}</i>
-                        <p/>
-                        <span class="toggle resource-label alignLeft">{{localize "ep2e.sideCar.armor.additionalArmorLabel"}}:
-                        </span>
-                        <p/>
-                        <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.additionalArmorMalusCopy"}}</i>
-                        {{#if actor.system.physical.armorSomMalus}}
-                        <p/>
-                        <span class="toggle resource-label alignLeft">{{localize "ep2e.sideCar.armor.exceedingSomLabel"}}:<span class="toggle resource-value alignLeft">-{{actor.system.physical.armorSomMalus}}</span>
-                        </span>
-                        <p/>
-                        <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.exceedingSomCopy"}}</i>
-                        {{/if}}
-                    </div>
-                    <p/>
-                    {{else}}
-                    <label class="resource-value">{{localize "ep2e.sideCar.armor.noArmorCopy"}}</label>
-                    <p/>
-                    {{/if}}
-                    <i style="font-size: 12px; margin-bottom: 10px;">{{localize "ep2e.sideCar.armor.armorUsageDescription"}}</i>
+                {{#if actor.system.physical.armorDurAnnounce}}
+                    <label style='color: var(--negative);'>{{localize "ep2e.sideCar.armor.encumberanceWarning"}}</label><br/>
+                {{else if actor.system.physical.armorVisibilityAnnounce}}
+                    <label style='color: var(--warning);'>{{localize "ep2e.sideCar.armor.concealWarning"}}</label><br/>
+                {{/if}}
+                <p/>
+                <label style="color: var(--mainText);">{{localize "ep2e.sideCar.armor.armorSourceHint"}}</label>
             </div>
             <div class="tooltipBottomBorder">
                 <div class="tooltipBottom"></div>
             </div>
         </div>
-        {{#if actor.system.additionalSystems.armorEquipped}}
-        <div class="grid grid-2col">
-            <div class="flexrow flex-group-right">
-                <img src="systems/eclipsephase/resources/icons/power.webp" class="icon-medium"/>
-                <span class="resource-value input-small alignLeft">{{actor.system.physical.energyArmorTotal}}</span>
-            </div>
-            <div class="flexrow flex-group-left">
-                <img src="systems/eclipsephase/resources/icons/shield.webp" class="icon-medium" style="margin-right: 10px; max-width: 35px!important; max-height: 45px!important;"/>
-                <span class="resource-value input-small">{{actor.system.physical.kineticArmorTotal}}</span>
-            </div>
-        </div>
-        {{else}}
-        <div class="flexrow flex-group-center" style="height: 60px;"><span class="resource-value">{{localize "ep2e.sideCar.armor.noArmorSubheadline"}}</span></div>
-        {{/if}}
     </div>
 </div>

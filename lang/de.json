@@ -874,21 +874,9 @@
       "armor": {
         "headline": "Rüstung",
         "noArmorSubheadline": "Keine Rüstung",
-        "noArmorCopy": "Du trägst keine Rüstung",
-        "armorSubheadline": "Rüstung Gesamt",
-        "energy": "Energie",
-        "kinetic": "Kinetisch",
-        "concealWarning": "Nicht zu verbergen (>11)",
-        "encumberanceWarning": "Bewegungsunfähig (>Dur)",
-        "armorCountSubheadline": "Rüstung aktiv",
-        "mainArmorLabel": "Hauptrüstung",
-        "additionalArmorLabel": "Zusatzrüstung",
-        "cumulativeMalusLabel": "Malus Gesamt",
-        "mainArmorMalusCopy": "Für jedes zusätzliche Rüstungsteil wird ein -20 Modifikator für alle Aktionen angerechnet.",
-        "additionalArmorMalusCopy": "Zusatzrüstung kann ohne Modifikator in Lagen getragen werden. Sie zählt weiterhin gegen andere Rüstungsmodifikatoren.",
-        "exceedingSomLabel": "Übersteigt Somatik",
-        "exceedingSomCopy": "Wenn ein einzelner Rüstwert (Kinetisch ODER Energie) deinen SOM-Wert übersteigt, wird ein weiterer -20 Modifikator auf alle Würfe gerechnet.",
-        "armorUsageDescription": "Um Rüstung an- oder abzulegen, navigiere in dein Inventar. Rüstungen können aus dem Kompendium und allen anderen Gegenstandssammlungen die zur Verfügung stehen auf den Bogen gezogen werden."
+        "concealWarning": "Rüstungswerte über 11 lassen sich nicht verbergen - stell es dir wie mindestens eine dicke, auffällige Kleidungsschicht vor.",
+        "encumberanceWarning": "Solange deine kumulierte Rüstung die Ausdauer deines Körpers übersteigt, bist du bewegungsunfähig.",
+        "armorSourceHint": "Um deinen Rüstungswert zu ändern, füge Rüstung zu deinem aktuellen Morph hinzu oder zu dem Remotekörper, den du gerade jammst."
       },
       "ranged": {
         "headline": "Fernkampf",
