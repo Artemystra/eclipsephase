@@ -49,10 +49,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   });
 
   //Fallback template for sheets in general
+  // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders
   static PARTS = {
     body: {
       template: "systems/eclipsephase/templates/actor/actor-sheet.html",
-      root: true
+      root: true,
+      scrollable: ["#egoPane", "#skillsPane", "#bodySubNav", "#bodyDetails", "#vehiclesPane", "#weaponsPane", "#psiPane", "#gmEffectsList", "#rezLedger", ".contentright", ".wrapperright"]
     }
   };
 
@@ -181,6 +183,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   async _onFirstRender(context, options) {
     await super._onFirstRender(context, options);
     this.setPosition(this._getSheetDimensions());
+  }
+
+  // Foundry v14 core bug: for a root:true part, _replaceHTML empties newElement via
+  // replaceChildren() before calling _syncPartState(), so its focus-restore query
+  // (newElement.querySelector(state.focus)) always misses and submitOnChange silently
+  // drops focus on every edit. Retry the same selector against the live DOM if core's
+  // own restore found nothing.
+  _syncPartState(partId, newElement, priorElement, state) {
+    super._syncPartState(partId, newElement, priorElement, state);
+    if (state.focus && !newElement.querySelector(state.focus)) {
+      this.element.querySelector(state.focus)?.focus();
+    }
   }
 
   //Sheet template based on actor.type
