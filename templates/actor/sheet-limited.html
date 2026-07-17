@@ -26,11 +26,13 @@
   </div>
   {{#if (eq actor.type "character")}}
     <nav class="sheet-tabs itemnav tabs" data-group="limited">
-      <a class="item {{#if (eq tabGroups.limited 'physicalDescription')}}active{{/if}}" data-action="tab" data-group="limited" data-tab="physicalDescription">
-        {{localize "ep2e.actorSheet.limitedTabs.physicalDescription" name=actor.name}}
+      <a class="item wantToKnowMore {{#if (eq tabGroups.limited 'physicalDescription')}}active{{/if}}" data-action="tab" data-group="limited" data-tab="physicalDescription">
+        <span class="tooltipText">{{localize "ep2e.actorSheet.limitedTabs.physicalDescription" name=actor.name}}</span>
+        <span class="limited-tab-label-text">{{localize "ep2e.actorSheet.limitedTabs.physicalDescription" name=actor.name}}</span>
       </a>
-      <a class="item {{#if (eq tabGroups.limited 'registeredId')}}active{{/if}}" data-action="tab" data-group="limited" data-tab="registeredId">
-        {{localize "ep2e.actorSheet.limitedTabs.registeredId" name=actor.currentIdName}}
+      <a class="item wantToKnowMore {{#if (eq tabGroups.limited 'registeredId')}}active{{/if}}" data-action="tab" data-group="limited" data-tab="registeredId">
+        <span class="tooltipText">{{localize "ep2e.actorSheet.limitedTabs.registeredId" name=actor.currentIdName}}</span>
+        <span class="limited-tab-label-text">{{localize "ep2e.actorSheet.limitedTabs.registeredId" name=actor.currentIdName}}</span>
       </a>
     </nav>
 

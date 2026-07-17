@@ -2629,6 +2629,27 @@ input[type="text"].multiselect-input:focus {
   padding-top: 10px;
 }
 
+.eclipsephase nav[data-group="limited"] .item {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.limited-tab-label-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.eclipsephase nav[data-group="limited"] .tooltipText {
+  padding: 5px;
+  line-height: 12px;
+}
+
 .journal-sheet form .editor,
 .item .editor{
   max-height: 100%;
@@ -3114,6 +3135,7 @@ button.epTextlink:hover{
     color: var(--mainText);
     text-align: center;
     text-transform: capitalize;
+    font-size: 12px;
     padding: 5px 3px;
     border-style: solid;
     border-width: 3px;
