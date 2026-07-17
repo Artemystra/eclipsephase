@@ -74,6 +74,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     secondary: {
       initial: "",
       tabs: []
+    },
+    limited: {
+      initial: "physicalDescription",
+      tabs: [
+        { id: "physicalDescription", label: "ep2e.actorSheet.limitedTabs.physicalDescription" },
+        { id: "registeredId", label: "ep2e.actorSheet.limitedTabs.registeredId" }
+      ]
     }
   };
 
@@ -124,7 +131,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     primary: "skills",
     morph: "sleeved",
     id: "active",
-    ego: "traits-flaws"
+    ego: "traits-flaws",
+    limited: "physicalDescription"
   };
 
   static async _onEditImage(event, target) {
@@ -167,6 +175,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       };
 
       context.tabGroups = this.tabGroups;
+    }
+    else {
+      context.tabGroups = { limited: this.tabGroups.limited };
     }
 
     return context;
@@ -797,6 +808,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.ammo = ammo;
       actor.morph = morph;
       actor.ids = id;
+      actor.currentIdName = actor.ids.find(i => i.id === actor.system.activeID)?.name ?? "";
 
       // Check if sleights are present and toggle Psi Tab based on this
       if (actor.aspect.chi.length>0){

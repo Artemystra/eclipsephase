@@ -2624,6 +2624,11 @@ input[type="text"].multiselect-input:focus {
   padding: 0 10px;
 }
 
+.limited-body-tab {
+  background-color: var(--mainBackground);
+  padding-top: 10px;
+}
+
 .journal-sheet form .editor,
 .item .editor{
   max-height: 100%;

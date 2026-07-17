@@ -25,34 +25,69 @@
     </div>
   </div>
   {{#if (eq actor.type "character")}}
-    {{#each actor.bodies as |body key|}}
-      <!-- "Sleeved" morph has it's own data-tab -->
-      {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
-      <div class="centerBackground" style="background-color: var(--highlightBackground); width: 100%; border-top: 5px solid var(--pitchBorder); border-bottom: 5px solid var(--pitchBorder); height: 51px;">
-        <h3 style="flex-grow: 10; border: none; text-align: center;">{{@root.actor.name}}'s Sleeve</h3>
-      </div>
-        <div class="grid grid-3col-limited2" style="margin-top: 0; gap: 0;">
-          <div style="grid-area: left;">
-            <div>
-              <div class="limited-editor">
-                  {{editor
-                    body.morphdetails.0.system.description
-                    target="body.morphdetails.0.system.description"
-                    button=false
-                    owner=owner
-                    editable=this.options.editable
-                  }}
+    <nav class="sheet-tabs itemnav tabs" data-group="limited">
+      <a class="item {{#if (eq tabGroups.limited 'physicalDescription')}}active{{/if}}" data-action="tab" data-group="limited" data-tab="physicalDescription">
+        {{localize "ep2e.actorSheet.limitedTabs.physicalDescription" name=actor.name}}
+      </a>
+      <a class="item {{#if (eq tabGroups.limited 'registeredId')}}active{{/if}}" data-action="tab" data-group="limited" data-tab="registeredId">
+        {{localize "ep2e.actorSheet.limitedTabs.registeredId" name=actor.currentIdName}}
+      </a>
+    </nav>
+
+    <div class="tab limited-body-tab {{#if (eq tabGroups.limited 'physicalDescription')}}active{{/if}}" data-group="limited" data-tab="physicalDescription">
+      {{#each actor.bodies as |body key|}}
+        <!-- "Sleeved" morph has it's own data-tab -->
+        {{#if (eq @root.actor.system.activeMorph body.morphdetails.0.id)}}
+          <div class="grid grid-3col-limited2" style="margin-top: 0; gap: 0;">
+            <div style="grid-area: left;">
+              <div>
+                <div class="limited-editor">
+                    {{editor
+                      body.morphdetails.0.system.description
+                      target="body.morphdetails.0.system.description"
+                      button=false
+                      owner=owner
+                      editable=this.options.editable
+                    }}
+                </div>
+              </div>
+            </div>
+            <div style="grid-area: center;">
+              <div class="limited-sheet">
+                <img class="profile-goon-img" src="{{body.morphdetails.0.img}}"
+                title="{{actor.name}}'s {{body.morphdetails.0.name}}"/>
               </div>
             </div>
           </div>
-          <div style="grid-area: center;">
-            <div class="limited-sheet">
-              <img class="profile-goon-img" src="{{body.morphdetails.0.img}}"
-              title="{{actor.name}}'s {{body.morphdetails.0.name}}"/>
+        {{/if}}
+      {{/each}}
+    </div>
+
+    <div class="tab limited-body-tab {{#if (eq tabGroups.limited 'registeredId')}}active{{/if}}" data-group="limited" data-tab="registeredId">
+      {{#each actor.ids as |idValues key|}}
+        {{#if (eq @root.actor.system.activeID idValues.id)}}
+          <div class="grid grid-3col-limited2" style="margin-top: 0; gap: 0;">
+            <div style="grid-area: left;">
+              <div>
+                <div class="limited-editor">
+                    {{editor
+                      idValues.system.description
+                      target="idValues.system.description"
+                      button=false
+                      owner=owner
+                      editable=this.options.editable
+                    }}
+                </div>
+              </div>
+            </div>
+            <div style="grid-area: center;">
+              <div class="limited-sheet">
+                <img class="profile-goon-img" src="{{idValues.img}}" title="{{idValues.name}}"/>
+              </div>
             </div>
           </div>
-        </div>
-      {{/if}}
-    {{/each}}
+        {{/if}}
+      {{/each}}
+    </div>
   {{/if}}
 </form>

@@ -108,6 +108,10 @@
         "effectsTab": "Effects",
         "gmInfoTab": "GM Info"
       },
+      "limitedTabs": {
+        "physicalDescription": "Sleeve de {name}",
+        "registeredId": "Identidad Registrada: {name}"
+      },
       "button": {
         "edit": "Edit",
         "delete": "Delete",

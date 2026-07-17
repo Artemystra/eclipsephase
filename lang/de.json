@@ -111,6 +111,10 @@
         "effectsTab": "Effekte",
         "gmInfoTab": "GM Info"
       },
+      "limitedTabs": {
+        "physicalDescription": "{name}s Hülle",
+        "registeredId": "Registrierte ID: {name}"
+      },
       "button": {
         "edit": "Editieren",
         "delete": "Löschen",

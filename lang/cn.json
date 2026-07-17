@@ -108,6 +108,10 @@
         "effectsTab": "效果",
         "gmInfoTab": "GM Info"
       },
+      "limitedTabs": {
+        "physicalDescription": "{name}的义体",
+        "registeredId": "注册身份：{name}"
+      },
       "button": {
         "edit": "编辑",
         "delete": "删除",
