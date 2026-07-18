@@ -69,18 +69,27 @@ We're happy to announce that from this moment on forward, the system at hand is 
 
 ### Action Side Car Breakdown
 
-- **Modification Overview**
-  ![Modification Overview](resources/screenshots/modBreakdown.webp)
-  To provide you as a player with a better idea of the modifications automatically applied to your rolls, you have the Modification Over on top of the Side Car. You can always hover it to get more information about the nature of the modifications you're suffering.
-- **Armor Section**
-  ![Armor Section](resources/screenshots/armorInfo.webp)
-  Presents the player with a cumulated value for both their energy and their kinetic armor. Beside stating if the armor exceeding certain thresholds it's also hoverable and players and GMs alike get a warning sign if any special modifiers apply.
-- **Item Details**
-  ![Item Details](resources/screenshots/sideCarItem.webp)
-  While it's necessary to reduce the provided information, about any item shown, to the bare minimum in order to save as much space as possible, players can easily decollapse these items to get to know more about their items at hand.
-- **Reload Automation**
-  ![Reload Automation](resources/screenshots/reload.webp)
-  Melee and Ranged weapons can be directly rolled from this section. If applicable, ranged weapons automatically deduct the ammo used from the sheet. The Action Side Bar provides players with the option to reload them directly. This mechanic is not yet bound to any ammunition. This will eventually change before deployment of v1.0.
+<img src="resources/screenshots/modBreakdown.webp" align="right" width="200" alt="Modification Overview">
+
+**Modification Overview**
+To provide you as a player with a better idea of the modifications automatically applied to your rolls, you have the Modification Over on top of the Side Car. You can always hover it to get more information about the nature of the modifications you're suffering.
+
+<img src="resources/screenshots/armorInfo.webp" align="right" width="200" alt="Armor Section">
+
+**Armor Section**
+Presents the player with a cumulated value for both their energy and their kinetic armor. Beside stating if the armor exceeding certain thresholds it's also hoverable and players and GMs alike get a warning sign if any special modifiers apply.
+
+<img src="resources/screenshots/sideCarItem.webp" align="right" width="200" alt="Item Details">
+
+**Item Details**
+While it's necessary to reduce the provided information, about any item shown, to the bare minimum in order to save as much space as possible, players can easily decollapse these items to get to know more about their items at hand.
+
+<img src="resources/screenshots/reload.webp" align="right" width="200" alt="Reload Automation">
+
+**Reload Automation**
+Melee and Ranged weapons can be directly rolled from this section. If applicable, ranged weapons automatically deduct the ammo used from the sheet. The Action Side Bar provides players with the option to reload them directly. This mechanic is not yet bound to any ammunition. This will eventually change before deployment of v1.0.
+
+<br clear="right">
 
 ### Contextual Dice Roll Menus
 Most of the rules in Eclipse Phase a relatively straight forward, which is reflected in the minimal design of the common dice roll pop-up. To save you, as a player, time and nerves special rolls like attacks, fray or psi are enriched to provide the best UX as possible, while navigating through your GMs challenges.
@@ -94,7 +103,7 @@ Most of the rules in Eclipse Phase a relatively straight forward, which is refle
 ### Rules & Tooltips
 Where applicable the system is enriched with other tooltips including some of the more complex rules of Eclipse Phase, to save you time searching for them in the rulebook. If you're missing some important rules feel free to open an issue and let's discuss this matter.
 
-![Rule Info](resources/screenshots/ruleInfo.webp)
+<img src="resources/screenshots/ruleInfo.webp" width="400" alt="Rule Info">
 
 ### Automatic Rest Calculator
 ![Rest Calculator 1](resources/screenshots/rest1.webp)
