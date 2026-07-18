@@ -70,25 +70,25 @@ We're happy to announce that from this moment on forward, the system at hand is 
 ### Action Side Car Breakdown
 
 #### Modification Overview
-<img src="resources/screenshots/modBreakdown.webp" align="right" width="200" alt="Modification Overview">
+<img src="resources/screenshots/modBreakdown.webp" align="left" width="300" alt="Modification Overview">
 
 To provide you as a player with a better idea of the modifications automatically applied to your rolls, you have the Modification Over on top of the Side Car. You can always hover it to get more information about the nature of the modifications you're suffering.
 
-<br clear="right">
+<br clear="left">
 
 #### Armor Section
-<img src="resources/screenshots/armorInfo.webp" align="right" width="200" alt="Armor Section">
+<img src="resources/screenshots/armorInfo.webp" align="left" width="300" alt="Armor Section">
 
 Presents the player with a cumulated value for both their energy and their kinetic armor. Beside stating if the armor exceeding certain thresholds it's also hoverable and players and GMs alike get a warning sign if any special modifiers apply.
 
-<br clear="right">
+<br clear="left">
 
 #### Item Details
-<img src="resources/screenshots/sideCarItem.webp" align="right" width="200" alt="Item Details">
+<img src="resources/screenshots/sideCarItem.webp" align="left" width="300" alt="Item Details">
 
 While it's necessary to reduce the provided information, about any item shown, to the bare minimum in order to save as much space as possible, players can easily decollapse these items to get to know more about their items at hand.
 
-<br clear="right">
+<br clear="left">
 
 #### Reload Automation
 <img src="resources/screenshots/reload.webp" width="200" alt="Reload Automation">
