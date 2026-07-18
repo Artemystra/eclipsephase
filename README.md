@@ -69,27 +69,31 @@ We're happy to announce that from this moment on forward, the system at hand is 
 
 ### Action Side Car Breakdown
 
+#### Modification Overview
 <img src="resources/screenshots/modBreakdown.webp" align="right" width="200" alt="Modification Overview">
 
-**Modification Overview**
 To provide you as a player with a better idea of the modifications automatically applied to your rolls, you have the Modification Over on top of the Side Car. You can always hover it to get more information about the nature of the modifications you're suffering.
 
+<br clear="right">
+
+#### Armor Section
 <img src="resources/screenshots/armorInfo.webp" align="right" width="200" alt="Armor Section">
 
-**Armor Section**
 Presents the player with a cumulated value for both their energy and their kinetic armor. Beside stating if the armor exceeding certain thresholds it's also hoverable and players and GMs alike get a warning sign if any special modifiers apply.
 
+<br clear="right">
+
+#### Item Details
 <img src="resources/screenshots/sideCarItem.webp" align="right" width="200" alt="Item Details">
 
-**Item Details**
 While it's necessary to reduce the provided information, about any item shown, to the bare minimum in order to save as much space as possible, players can easily decollapse these items to get to know more about their items at hand.
 
-<img src="resources/screenshots/reload.webp" align="right" width="200" alt="Reload Automation">
-
-**Reload Automation**
-Melee and Ranged weapons can be directly rolled from this section. If applicable, ranged weapons automatically deduct the ammo used from the sheet. The Action Side Bar provides players with the option to reload them directly. This mechanic is not yet bound to any ammunition. This will eventually change before deployment of v1.0.
-
 <br clear="right">
+
+#### Reload Automation
+<img src="resources/screenshots/reload.webp" width="200" alt="Reload Automation">
+
+Melee and Ranged weapons can be directly rolled from this section. If applicable, ranged weapons automatically deduct the ammo used from the sheet. The Action Side Bar provides players with the option to reload them directly. This mechanic is not yet bound to any ammunition. This will eventually change before deployment of v1.0.
 
 ### Contextual Dice Roll Menus
 Most of the rules in Eclipse Phase a relatively straight forward, which is reflected in the minimal design of the common dice roll pop-up. To save you, as a player, time and nerves special rolls like attacks, fray or psi are enriched to provide the best UX as possible, while navigating through your GMs challenges.
