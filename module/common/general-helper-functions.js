@@ -1,4 +1,5 @@
 import * as SHEET from "./general-sheet-functions.js"
+import * as MORPHFUNCTION from "./morp-functions.js"
 
 /**
  * Sorts an object list alphabetically
@@ -259,12 +260,31 @@ export function registerItemTransferSocket() {
       });
     }
 
+    // Armor is always body-bound - this path previously carried the source actor's boundTo over
+    // verbatim, leaving it dangling on the target (invisible on a character, wrongly active on an
+    // npc/goon). Same resolution as the direct (non-GM) transfer path in EPactorSheet.js: incoming
+    // armor on a character always lands in the Stash; on npc/goon, silently bind to their one body
+    // (no dialog possible here - this runs unattended on the GM's client, not the requesting
+    // player's) - if they have none, leave boundTo as-is rather than guessing.
+    let boundToOverride;
+    if (item.type === "armor") {
+      if (targetActor.type === "character") {
+        boundToOverride = "stash";
+      } else {
+        const { bodies, boundToFor } = MORPHFUNCTION.getBodyBindingInfo(targetActor);
+        if (bodies.length > 0) {
+          boundToOverride = boundToFor(bodies[0]);
+        }
+      }
+    }
+
     try {
       await SHEET.transferItemBetweenActors({
         sourceActor,
         targetActor,
         item,
-        quantity
+        quantity,
+        boundToOverride
       });
 
       _replyToUser(userId, {

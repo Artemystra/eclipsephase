@@ -152,13 +152,57 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       context.itemList = CONFIG.compendiumList ?? {
         ware: { none: "Calculating..." },
         flaw: { none: "Calculating..." },
-        trait: { none: "Calculating..." }
+        trait: { none: "Calculating..." },
+        frame: { none: "Calculating..." }
       };
+      // Enhancement slots (system.ware/traits/flaws/movement) aren't schema-bound to a fixed count -
+      // only show enough to always have one free slot (minimum 3), growing as they fill up. A slot
+      // that doesn't exist in the data yet is rendered as a blank placeholder; Foundry's own
+      // submitOnChange form handling writes it into the document the moment it's picked.
+      context.visibleWare = this._buildVisibleSlots(item.system.ware, "ware");
+      context.visibleTraits = this._buildVisibleSlots(item.system.traits, "trait");
+      context.visibleFlaws = this._buildVisibleSlots(item.system.flaws, "flaw");
+      context.visibleMovement = this._buildVisibleSlots(item.system.movement, "move", {
+        isFilled: (slot) => !!slot?.type && slot.type !== "none",
+        emptySlot: (label) => ({ label, active: false, type: "none", base: null, full: null })
+      });
+    }
+
+    if (item.type === "morph") {
+      // No canonical Synthmorph in either rulebook goes without a frame, so a freshly-set-to-Synth
+      // morph with no frame chosen yet defaults the dropdown to Light Frame - a pure rendering
+      // default (submitOnChange means this isn't written to the document until the user actually
+      // interacts with the select, same as selectBody()'s defaultSelection elsewhere).
+      if (!item.system.frame || item.system.frame === "none") {
+        const lightFrameEntry = Object.entries(context.itemList?.frame ?? {}).find(([, name]) => name === "Light Frame Armor");
+        context.frameDefault = lightFrameEntry?.[0] ?? "none";
+      } else {
+        context.frameDefault = item.system.frame;
+      }
     }
 
     await this._prepareRenderedHTMLContent(context);
 
     return context;
+  }
+
+  // See the comment above the visibleWare/visibleTraits/visibleFlaws/visibleMovement context
+  // assignment. Ware/Trait/Flaw slots are a single {value} field where "none" means empty;
+  // Movement slots are {active, type, base, full} where "none" *type* means empty - pass
+  // isFilled/emptySlot to adapt the same growth rule to either shape.
+  _buildVisibleSlots(existingSlots, prefix, {
+    isFilled = (slot) => !!slot?.value && slot.value !== "none",
+    emptySlot = (label) => ({ label, value: "" })
+  } = {}) {
+    const filledCount = Object.values(existingSlots ?? {}).filter(isFilled).length;
+    const visibleCount = Math.max(3, filledCount + 1);
+
+    const visible = {};
+    for (let i = 1; i <= visibleCount; i++) {
+      const key = `${prefix}${i}`;
+      visible[key] = existingSlots?.[key] ?? emptySlot(`${i}.`);
+    }
+    return visible;
   }
 
   async _prepareRenderedHTMLContent(context) {

@@ -97,4 +97,30 @@
     </div>
   </div>
   {{/if}}
+
+  {{#if (eq type "equipArmor")}}
+  <div style="margin-bottom: 30px;">
+    <p>{{{localize copy}}}</p>
+
+    <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
+      <span><b>{{armorName}}</b></span><br>
+      <span style="font-size: 14px;">{{localize "ep2e.item.armor.table.energy"}}: {{armorEnergy}} / {{localize "ep2e.item.armor.table.kinetic"}}: {{armorKinetic}}</span>
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if (eq type "systemNotice")}}
+  <div class="ep-system-notice" style="margin-bottom: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px; background-color: var(--pitchBorder); padding: 8px 12px;">
+      <img src="systems/eclipsephase/resources/img/logoalt.webp" style="width: 70px;"/>
+      <span style="font-weight: bold; letter-spacing: 1px; text-transform: uppercase; font-size: 15px; width: 100%;">{{localize noticeLabel}}</span>
+    </div>
+    <div style="padding: 10px 15px;">
+      <p style="margin: 0;">{{{mainCopy}}}</p>
+    </div>
+    <div style="background-color: var(--pitchBorder); padding: 8px 20px;">
+      <p style="margin: 0; font-size: 11px; opacity: 0.85;">{{{subCopy}}}</p>
+    </div>
+  </div>
+  {{/if}}
 </div>

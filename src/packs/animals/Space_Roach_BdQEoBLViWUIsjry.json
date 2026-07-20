@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Grip Pads; NOTES: Small size",
+    "description": "Grown to the size of a small dog, these insects are often biosculpted for bright colors and patterns. They are favored as pets and useful for minor janitorial duties.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -225,7 +225,7 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
       },
       "ware2": {
         "label": "2.",

@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Biomods, Claws, Cybercortex, Dermal Armor, Enhanced Smell, Enhanced Vision, Grip Pads, Mesh Inserts, Prehensile Tail; NOTES: Some are small size",
+    "description": "Bred on scum swarms for companionship, competitions, and weirdness, swarm cats are heavily modified with transgenic traits. No two are alike, with some incorporating traits from other animals in the suborder Feliformia, including mongooses, civets, and even hyenas. One swarm cat may look like a Siamese with purple bioluminescent fur and six legs, the next may look more like a snow leopard with four eyes, cybernetic scales, and wings.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -115,8 +115,8 @@
       }
     },
     "armor": {
-      "energy": 4,
-      "kinetic": 5
+      "energy": null,
+      "kinetic": null
     },
     "init": 6,
     "luc": 30,
@@ -225,39 +225,39 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.uKhS8vByVM8CeBHT"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.SNBc4gvEfvvGisGA"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.KMCuUOKV3PT1C5nX"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware9": {
         "label": "9.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.sUhAh4vPbEs1jZKP"
       },
       "ware10": {
         "label": "10.",

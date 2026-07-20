@@ -1,0 +1,93 @@
+{
+  "name": "Industrial Armor",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [
+    {
+      "_id": "bC2dE3fG4hI5jK6l",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Industrial Armor",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.energyMod",
+            "value": 6,
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.mods.kineticMod",
+            "value": 4,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!2fN8pQwXzY6mKjRt.bC2dE3fG4hI5jK6l"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Armor +6/+4. Designed to protect shells from collisions, extreme weather, industrial accidents, and similar wear-and-tear.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "minor",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "coreVersion": "14.356",
+    "createdTime": 1784009714162,
+    "modifiedTime": 1784009714162,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "2fN8pQwXzY6mKjRt",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_key": "!items!2fN8pQwXzY6mKjRt"
+}

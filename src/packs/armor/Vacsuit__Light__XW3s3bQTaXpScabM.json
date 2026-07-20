@@ -22,7 +22,7 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "Both smart-fabric and legacy light vacsuit models are ideal for less harsh environments such as Mars, the Venusian clouds, or exoplanets with moderate but unbreathable atmospheres. Their rebreathers provide 8 hours of air. All models include a headlight, an ecto, and atmospheric sensors. They protect you from temperatures from –75 to 100 C. They instantly self-seal breaches unless more than 20 points of damage are inflicted at once.",
     "active": true,
     "displayCategory": "armor",
     "updated": "",

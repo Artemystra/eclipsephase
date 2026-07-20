@@ -1,0 +1,154 @@
+{
+  "name": "Splicer",
+  "type": "morph",
+  "_id": "h2OSr5uP9kiRUl9R",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Splicer.webp",
+  "system": {
+    "description": "Splicers are genefixed humans. Their genome cleansed of hereditary diseases and optimized for looks and health, but not otherwise substantially upgraded. Splicers make up the majority of transhumanity.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 30,
+    "insight": 0,
+    "moxie": 0,
+    "vigor": 0,
+    "flex": 1,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "walker",
+        "base": 4,
+        "full": 20
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007594060,
+    "modifiedTime": 1784007594060,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!h2OSr5uP9kiRUl9R"
+}

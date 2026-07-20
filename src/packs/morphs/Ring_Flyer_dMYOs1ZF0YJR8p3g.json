@@ -1,0 +1,210 @@
+{
+  "name": "Ring Flyer",
+  "type": "morph",
+  "_id": "dMYOs1ZF0YJR8p3g",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Ring%20Flyer.webp",
+  "system": {
+    "description": "Designed for soaring along the rings of Saturn, this exotic spacefaring biomorph is also found skating the magnetic fields of other gas giant, ice giant, and asteroid systems. Easily recognizable with its slender limbs and the round hump of the plasma sail on its back, this morph can survive indefinitely in space, and water, and trace organic materials from ring particles, asteroids, and small moons as needed.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 30,
+    "insight": 1,
+    "moxie": 0,
+    "vigor": 0,
+    "flex": 2,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "walker",
+        "base": 4,
+        "full": 12
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "plasma sail",
+        "base": 8,
+        "full": 40
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "thrust vector",
+        "base": 4,
+        "full": 12
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.weEqI8YERxdg5WHH"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.q3A7aPdXwlhAvGeM"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.2cDM51kgGnTUzKeA"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.TqVeVph3FpKGa2Z8"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.GEcxAZPr7gGU8sxE"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.Qln6iQX9aSZnxPnL"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.Odmc5xNT15RN5p2f"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.QK2V9Jnzn7IahX5n"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.YWcxGHbUkZHyNuJt"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.j8eZ9xRZbp7aPZJh"
+      },
+      "ware15": {
+        "label": "15.",
+        "value": "Compendium.eclipsephase.ware.Item.vZWnGDZztkbgQ4KE"
+      },
+      "ware16": {
+        "label": "16.",
+        "value": "Compendium.eclipsephase.ware.Item.MyhBItP9IQqEkVz0"
+      },
+      "ware17": {
+        "label": "17.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xGMEXPrvbypAfXKI"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.traits.Item.tl2GCQOmFltBvnYO"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.traits.Item.38AibNyyurlGFb0E"
+      },
+      "flaw4": {
+        "label": "4.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007386284,
+    "modifiedTime": 1784007386284,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!dMYOs1ZF0YJR8p3g"
+}

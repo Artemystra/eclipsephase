@@ -1,4 +1,4 @@
-<div class="tab psi scrolly main-tab-pc" data-group="primary" data-tab="psi">    
+<div id="psiPane" class="tab psi scrolly main-tab-pc {{#if tabs.primary.psi.active}}active{{/if}}" data-group="primary" data-tab="psi">
     {{#if (ne actor.type "goon")}}
         {{#if actor.system.additionalSystems.psiAutoClose}}
             <div class="contentBox item" style="margin-bottom: 10px;">

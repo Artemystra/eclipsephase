@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/drone.png",
   "system": {
     "additionalSystems": {},
-    "description": "360-Degree Vision, Access Jacks, Bot AI, Lidar, Mesh Inserts, Puppet Sock, Grip Pads, Magnetic System, Telescoping Limb, Utilimod",
+    "description": "This bot takes the form of an extra limb and a supportive band, bracing frame, rig, or cuff for wearing it. The manipulator can be meshed and treated as an extension of your body or detached for autonomous operation or remote control. Though human arm designs are common, a variety of limb designs are available, from claws to tentacles.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -212,39 +212,39 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.pC4w9OPSH0LR6Jy2"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.n7ZzROqOZ72t8bKs"
       },
       "ware9": {
         "label": "9.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.TnIvEGPPxuYCXnfh"
       },
       "ware10": {
         "label": "10.",

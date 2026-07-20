@@ -9,7 +9,7 @@
   "_id": "znq17lMEMESDOHco",
   "system": {
     "additionalSystems": {},
-    "description": "360-Degree Vision, Access Jacks, Bot AI, Lidar, Mesh Inserts, Puppet Sock, Retracting Limbs, Shape Adjusting",
+    "description": "These small, amorphous bots are soft, with a smart-material liquid matrix interior and extensible skin. They can extrude tentacle-like limbs for walking and manipulating, roll as a ball, and squeeze through tight, confining spaces.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,31 +224,31 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.ec3esdksp8OPPCJ6"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.gCtQe5HgfVK9iylz"
       },
       "ware8": {
         "label": "8.",

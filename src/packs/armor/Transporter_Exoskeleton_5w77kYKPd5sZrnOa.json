@@ -22,7 +22,7 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "This exoskeleton framework features a pair of vector-thrust turbofan engines, giving you flight capabilities. Use Pilot: Air and a Movement Rate of 8/40 (very fast).",
     "active": true,
     "displayCategory": "armor",
     "updated": "",

@@ -1,0 +1,199 @@
+{
+  "name": "Takko",
+  "type": "morph",
+  "_id": "tUnUKpY8OXEj38Rj",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Takko.webp",
+  "system": {
+    "description": "The first synthetic cephalopod design from the engineers at Feral Robot is a hardy shell custom-designed to make neo-octopi uplifts feel more at home in a synthetic body with eight functioning appendages. Though it lacks a beak and ink sacs, the takko features thrust-vector jets for microgravity propulsion.",
+    "img": "",
+    "customToken": null,
+    "type": "synth",
+    "dur": 40,
+    "insight": 1,
+    "moxie": 1,
+    "vigor": 1,
+    "flex": 2,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "thrust vector",
+        "base": 8,
+        "full": 40
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "walker",
+        "base": 4,
+        "full": 20
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.RHimXpjmkhFg3xJI"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.DsZJsZvcMBXVqqNK"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.jhO6F03fXymKwxIU"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.jhO6F03fXymKwxIU"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.jhO6F03fXymKwxIU"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.cD0QxGnHRCvibKXL"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+      },
+      "ware15": {
+        "label": "15.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.WDKVUKMB3HWTWeyY"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "frame": "Compendium.eclipsephase.armor.Item.puuTYYsKNXEW05FX"
+  },
+  "effects": [],
+  "folder": "NfKORwce5MErntbB",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007594060,
+    "modifiedTime": 1784007594060,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!tUnUKpY8OXEj38Rj"
+}

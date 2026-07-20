@@ -92,7 +92,8 @@
         "additionalSystems": {
           "hasPsi": null,
           "hasGear": null,
-          "psiAutoClose": false
+          "psiAutoClose": false,
+          "puppetSocked": []
         },
         "initiative": {
           "value": null,
@@ -1144,7 +1145,9 @@
       ],
       "energy": null,
       "kinetic": null,
-      "displayCategory": "armor"
+      "displayCategory": "armor",
+      "boundTo": null,
+      "isFrame": false
     },
     "drug": {
       "templates": [
@@ -1629,6 +1632,7 @@
       "img": "",
       "customToken": null,
       "type": "",
+      "frame": "none",
       "dur": null,
       "insight": null,
       "moxie": null,

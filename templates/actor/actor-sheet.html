@@ -23,10 +23,8 @@
     {{/if}}
             {{!-- Sheet Header --}}
                 {{> systems/eclipsephase/templates/actor/partials/headerblock.html }}
-            {{!-- SideCar (characters only) --}}
-            {{#if (eq actor.type 'character')}}
+            {{!-- SideCar (all actor types; NPC/Goon get a reduced Armor + Weapons variant, see sideCar.html) --}}
                 {{> systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html }}
-            {{/if}}
         </div>
         {{#if (eq actor.type 'character')}}
             <div class="wrappercenter">
@@ -84,7 +82,7 @@
                 <div class="contentcenter npcVariant2">
             {{/if}}
                 <section class="primary-body">
-                    <div class="tab scrolly main-tab-pc {{#if tabs.primary.ego.active}}active{{/if}}" data-group="primary" data-tab="ego">
+                    <div id="egoPane" class="tab scrolly main-tab-pc {{#if tabs.primary.ego.active}}active{{/if}}" data-group="primary" data-tab="ego">
                         {{> systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html }}
                     </div>
                     <div class="tab {{#if tabs.primary.skills.active}}active{{/if}}" data-group="primary" data-tab="skills">

@@ -1,0 +1,186 @@
+{
+  "name": "Neo-Whale",
+  "type": "morph",
+  "_id": "iY3IlxkVFKHt4pIa",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Neo%20Whale.webp",
+  "system": {
+    "description": "Less than several hundred neo-whale morphs exist, and the majority remain occupied by their original egos. They are primarily found on Ceres and Atlantica. They are derived from humpback, blue, and sperm whale genetic stock. Humpbacks and blues are baleen whales and require large amounts of krill to survive. Sperm whales are toothed, feeding on fish and squid. They can safely dive to about 3,000 meters at 1 g.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 60,
+    "insight": 1,
+    "moxie": 2,
+    "vigor": 2,
+    "flex": 2,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "swimmer",
+        "base": 8,
+        "full": 40
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.weEqI8YERxdg5WHH"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.dabdHTTI2JFFuvLQ"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.BTsi4UOOOzTT6Mnb"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.gsaGv9oGpM90DWn9"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.NEuV1BBggCI1695A"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.traits.Item.1XohJQy9sdAgaLm8"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.traits.Item.ErbeCLequNlIbkn7"
+      },
+      "flaw4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.traits.Item.38AibNyyurlGFb0E"
+      },
+      "flaw5": {
+        "label": "5.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007386284,
+    "modifiedTime": 1784007386284,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!iY3IlxkVFKHt4pIa"
+}

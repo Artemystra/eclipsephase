@@ -1,0 +1,150 @@
+{
+  "name": "Digimorph",
+  "type": "morph",
+  "_id": "kQ3F4kn1iFd0imtn",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Digimorph.webp",
+  "system": {
+    "description": "Digimorphs are bare-bones mind emulations, though customizable and widely used. By default, an ego that evacuates (or is forked from) a cyberbrain is run on a digimorph, unless another infomorph option is available.",
+    "img": "",
+    "customToken": null,
+    "type": "info",
+    "dur": 25,
+    "insight": 0,
+    "moxie": 0,
+    "vigor": 0,
+    "flex": 0,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.IBfym68K2PGW5KGk"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "kouyEGBnb3NACRux",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1783983392004,
+    "modifiedTime": 1783983392004,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!kQ3F4kn1iFd0imtn"
+}

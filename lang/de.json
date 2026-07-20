@@ -65,7 +65,7 @@
   "TYPES.Item.program" : "Programm",
   "TYPES.Item.specialSkill" : "Spezial-Skill",
   "TYPES.Item.knowSkill" : "Wissens-Skill",
-  "TYPES.Item.vehicle" : "Fahrzeug",
+  "TYPES.Item.vehicle" : "Remotekörper",
   "TYPES.Item.drug" : "Droge",
   "TYPES.Item.ammo" : "Munition",
   "TYPES.Item.id" : "ID",
@@ -111,6 +111,10 @@
         "effectsTab": "Effekte",
         "gmInfoTab": "GM Info"
       },
+      "limitedTabs": {
+        "physicalDescription": "{name}s Hülle",
+        "registeredId": "Registrierte ID: {name}"
+      },
       "button": {
         "edit": "Editieren",
         "delete": "Löschen",
@@ -121,9 +125,14 @@
         "addNew": "Hinzufügen",
         "showDetails": "Mehr Details",
         "hideDetails": "Weniger Details",
-        "sleeveMorph": "Morph Wechseln",
+        "sleeveMorph": "Wechseln",
         "jamVehicle": "Jammen",
         "unjamVehicle": "Unjammen",
+        "rebindArmor": "Einem anderen Körper zuweisen",
+        "stashArmor": "Rüstung verstauen",
+        "moveArmor": "Rüstung verschieben",
+        "deleteArmorWithBody": "Rüstung löschen",
+        "equipArmor": "Ausrüsten",
         "changeID": "Activate ID"
       },
       "dialogHeadline": {
@@ -135,6 +144,8 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Vorsicht:</b>Das Item wird permanent gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        "deleteArmorWithBodyCopy": "<b>Vorsicht:</b>Du bist dabei, {body} zu löschen. Diesem Körper ist Rüstung zugewiesen - beim Löschen von {body} wird auch seine Rüstung gelöscht.",
+        "stashArmorCopy": "Möchtest du {name} verstauen? Du findest es jederzeit in deinem Inventar wieder.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>",
         "autoBotCopyGeneral": "<p><b>Vorsicht:</b>Dies ersetzt alle manuell eingetragenen Skills mit den Standard Skills & Skillwerten für Bot AIs.</p><p><b>Wähle den Fahrzeugtyp:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Halte SHIFT gedrückt während du den 'Auto-Bot'-button drückst um diese Nachricht nicht zu sehen.</p></i>",
@@ -142,6 +153,7 @@
         "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>Alle Berechnungen & Tests werden automatisch vorgenommen. Neue Ware, Vor- und Nachteile werden hernach automatisch dem neuen Morph zugeordnet.</p></i>",
         "jamCopyGeneral": "<b>Vorsicht:</b>Du verbindest dich mit diesem Fernkörper. Deine Morph-Pools werden durch die Pools dieses Körpers ersetzt.",
         "jamAdditionalInfo": "<i><p style='font-size: 11px;'>Du erhältst einen -10 Malus auf alle Aktionen während du jammst. Ein Integrationstest wird automatisch gewürfelt.</p></i>",
+        "needPuppetSockToJam": "Benötigt einen Puppet Sock, um zu jammen",
         "unjamCopyGeneral": "<b>Vorsicht:</b>Du trennst dich von diesem Fernkörper und kehrst in deinen eigenen Körper zurück."
       }
     },
@@ -566,6 +578,9 @@
           "bio": "Biologisch",
           "info": "Digital"
         },
+        "frame": {
+          "label": "Frame"
+        },
         "durabilityLabel": "Ausdauer",
         "movement": {
           "label": "Fortbewegung",
@@ -575,11 +590,15 @@
         "movementTypes": {
           "none": "-Wähle-",
           "boat": "Boot",
+          "brachiate": "Hangeln",
           "glider": "Gleiter",
           "hopper": "Springer",
           "hover": "Schweben",
           "ionic": "Ionisch",
+          "magneticgenerator": "Magnetgenerator",
           "microlight": "Mikroleicht",
+          "ooze": "Fließen",
+          "plasmasail": "Plasmasegel",
           "roller": "Roller",
           "rotor": "Rotor",
           "snake": "Schlange",
@@ -637,8 +656,10 @@
       },
       "traitsLabel": "Morph Eigenschaften",
       "wareLabel": "Morph Modifikation",
+      "armorLabel": "Rüstung",
       "noMorphTraits": "Dieser Morph ist eigenschaftslos",
       "noMorphWare": "Dieser Morph ist flat",
+      "noMorphArmor": "Dieser Morph hat keine Rüstung",
       "morphsHeadline": "Morphe",
       "jamming": {
         "headline": "Ferngesteuerte Körper",
@@ -649,6 +670,7 @@
     "inventory": {
       "armorLabel": "Rüstung",
       "armorPlaceholder": "Kein Rüstungsname",
+      "stashedArmorLabel": "Verstaute Rüstung",
       "rangedLabel": "Fernkampfwaffen",
       "rangedPlaceholder": "Kein Waffenname",
       "ccLabel": "Nahkampfwaffen",
@@ -707,8 +729,10 @@
       "aiSkillsHeadline": "KI-Skills",
       "traitsLabel": "Eigenschaften & Mängel",
       "wareLabel": "Modifikation",
+      "armorLabel": "Rüstung",
       "noTraits": "Keine Eigenschaften oder Mängel vorhanden",
-      "noWare": "Keine Ware installiert"
+      "noWare": "Keine Ware installiert",
+      "noArmor": "Keine Rüstung installiert"
     },
     "psi": {
       "infectionHeadline": "Infektionstyp",
@@ -854,21 +878,9 @@
       "armor": {
         "headline": "Rüstung",
         "noArmorSubheadline": "Keine Rüstung",
-        "noArmorCopy": "Du trägst keine Rüstung",
-        "armorSubheadline": "Rüstung Gesamt",
-        "energy": "Energie",
-        "kinetic": "Kinetisch",
-        "concealWarning": "Nicht zu verbergen (>11)",
-        "encumberanceWarning": "Bewegungsunfähig (>Dur)",
-        "armorCountSubheadline": "Rüstung aktiv",
-        "mainArmorLabel": "Hauptrüstung",
-        "additionalArmorLabel": "Zusatzrüstung",
-        "cumulativeMalusLabel": "Malus Gesamt",
-        "mainArmorMalusCopy": "Für jedes zusätzliche Rüstungsteil wird ein -20 Modifikator für alle Aktionen angerechnet.",
-        "additionalArmorMalusCopy": "Zusatzrüstung kann ohne Modifikator in Lagen getragen werden. Sie zählt weiterhin gegen andere Rüstungsmodifikatoren.",
-        "exceedingSomLabel": "Übersteigt Somatik",
-        "exceedingSomCopy": "Wenn ein einzelner Rüstwert (Kinetisch ODER Energie) deinen SOM-Wert übersteigt, wird ein weiterer -20 Modifikator auf alle Würfe gerechnet.",
-        "armorUsageDescription": "Um Rüstung an- oder abzulegen, navigiere in dein Inventar. Rüstungen können aus dem Kompendium und allen anderen Gegenstandssammlungen die zur Verfügung stehen auf den Bogen gezogen werden."
+        "concealWarning": "Rüstungswerte über 11 lassen sich nicht verbergen - stell es dir wie mindestens eine dicke, auffällige Kleidungsschicht vor.",
+        "encumberanceWarning": "Solange deine kumulierte Rüstung die Ausdauer deines Körpers übersteigt, bist du bewegungsunfähig.",
+        "armorSourceHint": "Um deinen Rüstungswert zu ändern, füge Rüstung zu deinem aktuellen Morph hinzu oder zu dem Remotekörper, den du gerade jammst."
       },
       "ranged": {
         "headline": "Fernkampf",
@@ -931,7 +943,9 @@
           "type": {
             "label": "Rüstungstyp",
             "main": "Hauptrüstung",
-            "additional": "Zusatzrüstung"
+            "additional": "Zusatzrüstung",
+            "mainShort": "Haupt",
+            "additionalShort": "Zusatz"
           }
         }
       },
@@ -1409,7 +1423,12 @@
           "ownBodyPenalty": "Malus für eigenen Körper",
           "ownBodyWounds": "Wunden des eigenen Körpers",
           "ownBodyArmor": "Rüstungsbehinderung des eigenen Körpers",
-          "ownBodyEncumbrance": "Behinderung des eigenen Körpers"
+          "ownBodyEncumbrance": "Behinderung des eigenen Körpers",
+          "ownBodyTraits": "Eigene Traits/Ware",
+          "noPsi": "Psi funktioniert nicht während des Jammens. Es wirkt niemals über eine Mesh-Verbindung oder in einem Cyberhirn."
+        },
+        "armor": {
+          "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."
         },
         "sleeving": {
           "exoticMorphology": "Exotische Morphologie",
@@ -1555,6 +1574,15 @@
         "header": "Trait Typ Wählen",
         "copy": "Hinweis: Diese Eigenschaft kann für Egos oder Morphs gewählt werden. Morpheigenschaften sind an den derzeitig bewohnten Körper gebunden, während Egoeigenschaften immer erhalten bleiben, auch wenn der Körper gewechselt wird."
       },
+      "selectBody": {
+        "header": "Körper Wählen",
+        "copy": "Dieses Item ist an einen Körper gebunden. Wähle aus, welcher es erhalten soll.",
+        "placeholder": "- Körper Wählen -"
+      },
+      "reassignArmor": {
+        "header": "Rüstung Neu Zuweisen",
+        "copy": "Du bist dabei, {body} zu löschen, dem Rüstung zugewiesen ist. Verstaue sie für später, oder lösche sie zusammen mit {body}."
+      },
       "selectStress": {
         "dialogTitle": "Stressauswirkungen",
         "copy": "Der Vorgang des körperwechsels hat seine Spuren hinterlassen. Die Höhe des Stressschadens wird anhand der traumatischsten Erinnerung in diesem Zusammenhang bestimmt.",
@@ -1562,6 +1590,14 @@
         "majorLabel": "Extremer Stress",
         "minorDescription": "Stress aufgrund der fremdartigkeit des neuen Körpers, des Faktes, dass ein Backup geweckt wurde oder des schieren Zeitverlust-Gefühls.",
         "majorDescription": "Stress aufgrund der Erinnerung an den eigenen Tod oder weil mehr als 3 Monate seit der Reinsanzierung Vergangen sind."
+      },
+      "selectEnhancements": {
+        "header": "Standard-Verbesserungen hinzufügen?",
+        "copy": "Dieser Körper bringt vordefinierte Ware, Traits und Flaws aus dem Kompendium mit. Sollen diese automatisch hinzugefügt werden, oder soll der Körper unverändert (flach) bleiben?",
+        "standardLabel": "Standard-Verbesserungen",
+        "standardDescription": "Fügt alle Ware, Traits und Flaws hinzu, die in den Verbesserungs-Slots dieses Körpers hinterlegt sind.",
+        "flatLabel": "Flach",
+        "flatDescription": "Fügt den Körper so hinzu, wie er ist, ohne die hinterlegten Verbesserungen."
       }
     },
     "chat": {
@@ -1622,6 +1658,14 @@
         }
       }
     },
+    "migration": {
+      "armorBoundNotice": "<p><b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände dieses Charakters wurden automatisch an <b>{body}</b> gebunden, da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Nutze den Zuweisen-Button neben einem Rüstungsgegenstand (im Morph-Tab), um ihn jederzeit einem anderen Körper zuzuweisen.</p>",
+      "armorStashedNoticeSelf": {
+        "updateLabel": "Update-Hinweis",
+        "main": "<b>Rüstungs-Update:</b> {count} Rüstungsgegenstand/-gegenstände von <b style='color: var(--highlight);'>{actor}</b> wurden automatisch in den Stash verschoben.",
+        "sub": "Da Rüstung nun einem bestimmten Körper zugeordnet ist, statt einfach nur im Inventar zu liegen. Du findest sie unter Verstaute Rüstung (Ausrüstungs-Tab) - nutze den Ausrüsten-Button daneben, um sie jederzeit einem Körper zuzuweisen."
+      }
+    },
     "systemMessage": {
       "general": {
         "headline": "Spielercharaktere",
@@ -1637,6 +1681,17 @@
         "title": "Rez Verteilen",
         "copy": "Dieser Dialog ermöglicht es dir, jedem aktiven Spielercharakter im Spiel Rez hinzuzufügen. Wenn ein Charakter nicht aktiv ist, kannst du ihm dennoch Rez hinzufügen. Bitte beachte, dass die Option „Allen Charakteren REZ hinzufügen“ allen Charakteren denselben Rez-Wert hinzufügt, unabhängig davon, ob sie aktiv sind oder nicht. Rez, das einzelnen Charakteren spezifisch hinzugefügt wird, wird zusätzlich zu diesem Wert angerechnet.",
         "checkBoxLabelAll": "Allen Charakteren REZ hinzufügen"
+      },
+      "itemAttachment": {
+        "itemAddedEgo": "{name} hinzugefügt.",
+        "itemAddedToBody": "{name} zu {body} hinzugefügt.",
+        "noBodyTrait": "Kein Körper vorhanden. Trait kann nicht hinzugefügt werden.",
+        "noBodyWare": "Kein Körper vorhanden. Ware kann nicht hinzugefügt werden.",
+        "noBodyArmor": "Kein Körper vorhanden. Rüstung kann nicht hinzugefügt werden.",
+        "noOtherBodyArmor": "Kein anderer Körper vorhanden, dem diese Rüstung zugewiesen werden könnte.",
+        "itemRebound": "{name} wurde {body} zugewiesen.",
+        "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
+        "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
       }
     }
   }

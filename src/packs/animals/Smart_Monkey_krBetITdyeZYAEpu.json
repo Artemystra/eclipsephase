@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Grip Pads, Prehensile Feet, Prehensile Tail; NOTES: Bite DV 1d6, Small size",
+    "description": "Employed by criminal groups for minor larceny such as pickpocketing, smart monkeys are useful intelligent aides.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -225,15 +225,15 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.QK2V9Jnzn7IahX5n"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.sUhAh4vPbEs1jZKP"
       },
       "ware4": {
         "label": "4.",

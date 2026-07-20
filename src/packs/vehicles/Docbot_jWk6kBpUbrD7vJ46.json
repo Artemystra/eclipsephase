@@ -9,7 +9,7 @@
   "_id": "jWk6kBpUbrD7vJ46",
   "system": {
     "additionalSystems": {},
-    "description": "360-Degree Vision, Access Jacks, Bot AI, Lidar, Mesh Inserts, Puppet Sock, Enhanced Smell, Fractal Digits, Guardian Hive, Medium Fabber, Nanoscopic Vision, Specimen Container, Tool Kit (Medicine: Biotech or Paramedic)",
+    "description": "These wheeled medical robots are designed to tend to and transport injured or sick people. They carry a fabber for medical supplies and pharmaceuticals, miscellaneous medical gear, a secure container for carrying heads, and 4-8 articulated arms for conducting remote surgery. They are often loaded up with healing spray and meds (acquired separately).",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,35 +224,35 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.o55oqedqeoXKGJSG"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.BqnoTSOo5Fcppt2S"
       },
       "ware9": {
         "label": "9.",

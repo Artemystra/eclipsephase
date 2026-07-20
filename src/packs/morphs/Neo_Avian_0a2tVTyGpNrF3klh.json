@@ -1,0 +1,174 @@
+{
+  "name": "Neo-Avian",
+  "type": "morph",
+  "_id": "0a2tVTyGpNrF3klh",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Neo-Avian.webp",
+  "system": {
+    "description": "Neo-avians include ravens, crows, and gray parrots uplifted to human-level intelligence. Their physical sizes are much larger than their non-uplifted cousins, with larger heads for their increased brain size. Numerous transgenic modifications have been made to their wings, allowing them to retain limited flight capabilities at 1 g, but giving them a more bat-like physiology so they can bend and fold better and adding primitive digits for basic tool manipulation.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 25,
+    "insight": 2,
+    "moxie": 1,
+    "vigor": 0,
+    "flex": 0,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "walker",
+        "base": 2,
+        "full": 8
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "winged",
+        "base": 8,
+        "full": 40
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.SNBc4gvEfvvGisGA"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.ws0IespqkhNwO78T"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.QK2V9Jnzn7IahX5n"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.MLdCePqreTx1hnLn"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.traits.Item.kjKWREhbiGjlvhkT"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007225382,
+    "modifiedTime": 1784007225382,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!0a2tVTyGpNrF3klh"
+}

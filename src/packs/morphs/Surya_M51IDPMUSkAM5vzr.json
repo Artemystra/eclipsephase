@@ -1,0 +1,206 @@
+{
+  "name": "Surya",
+  "type": "morph",
+  "_id": "M51IDPMUSkAM5vzr",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Nishakara.webp",
+  "system": {
+    "description": "Despite the extreme temperatures of the solar corona, the plasma in that part of the sun's atmosphere is incredibly diffuse, meaning actual heat transfer is quite low, making it survivable with the right protections. Suryas blur the line between biomorph and synthmorph and push the envelope of synthetic biology in order to survive in this hostile environment. Named for a Hindu sun deity, suryas reach lengths of ten meters or more and rely heavily on both whale and extremophile genetics.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 60,
+    "insight": 0,
+    "moxie": 0,
+    "vigor": 1,
+    "flex": 3,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "magnetic generator",
+        "base": 8,
+        "full": 40
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "swimmer",
+        "base": 8,
+        "full": 40
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.jP46G9UyhpEboPOY"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.weEqI8YERxdg5WHH"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.RHimXpjmkhFg3xJI"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.sk3JXg3Iu6HbNmTL"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.q3iVCdAD0Q9q0knh"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.TqVeVph3FpKGa2Z8"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.d8AdId0NrcAH87JK"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.GEcxAZPr7gGU8sxE"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.Qln6iQX9aSZnxPnL"
+      },
+      "ware15": {
+        "label": "15.",
+        "value": "Compendium.eclipsephase.ware.Item.A61v3WNNWjpZ1v7e"
+      },
+      "ware16": {
+        "label": "16.",
+        "value": "Compendium.eclipsephase.ware.Item.vZWnGDZztkbgQ4KE"
+      },
+      "ware17": {
+        "label": "17.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.traits.Item.kjKWREhbiGjlvhkT"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007594060,
+    "modifiedTime": 1784007594060,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!M51IDPMUSkAM5vzr"
+}

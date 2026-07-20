@@ -9,7 +9,7 @@
   "_id": "49Y52xDSaVMatJky",
   "system": {
     "additionalSystems": {},
-    "description": "Access Jacks, Mesh Inserts, Puppet Sock, Radar, +2 Vigor, +2d10 melee, armor-piercing",
+    "description": "This common example of a heavy-use industrial exoskeleton is large (just over 3 meters tall) and designed for handling heavy/large objects. Though open frame, the wearer is partially protected by a meshed cage.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,19 +224,19 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware5": {
         "label": "5.",

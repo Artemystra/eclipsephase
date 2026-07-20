@@ -1,0 +1,158 @@
+{
+  "name": "Hazer",
+  "type": "morph",
+  "_id": "XlEivexat18y1yAF",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Hazer.webp",
+  "system": {
+    "description": "Hazers are tall but slight morphs adapted for life in Titan's dome colonies. They cannot survive unprotected in Titan's frigid methane environment, but they are insulated to handle a bit of cold. Some hazers have angular or elfin features that are viewed as either striking or unsettling.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 35,
+    "insight": 1,
+    "moxie": 2,
+    "vigor": 0,
+    "flex": 1,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "walker",
+        "base": 4,
+        "full": 20
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.dabdHTTI2JFFuvLQ"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007225382,
+    "modifiedTime": 1784007225382,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!XlEivexat18y1yAF"
+}

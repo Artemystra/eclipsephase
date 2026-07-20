@@ -1,0 +1,166 @@
+{
+  "name": "Dvergr",
+  "type": "morph",
+  "_id": "OayRoueEmLufVzuU",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Dvergr.webp",
+  "system": {
+    "description": "Dvergr (plural of dvergr) are biomorphs designed for comfortable operation in high-gravity environments. They feature a reinforced skeletal structure and sturdier muscle masses. They are easily identified by their slightly squat, thick-necked, tough appearances.",
+    "img": "",
+    "customToken": null,
+    "type": "bio",
+    "dur": 45,
+    "insight": 0,
+    "moxie": 0,
+    "vigor": 3,
+    "flex": 1,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "walker",
+        "base": 4,
+        "full": 20
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.hDfb8XzgU9odt4Md"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.WldUNqt5jmEpJF4r"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.o2GDz1JjnSLe7Jr0"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.L4pLWCxM24G5yYpd"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    }
+  },
+  "effects": [],
+  "folder": "Bi34oGF4KGk99uKV",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007029213,
+    "modifiedTime": 1784007029213,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!OayRoueEmLufVzuU"
+}

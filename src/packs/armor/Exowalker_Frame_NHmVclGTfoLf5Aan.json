@@ -22,7 +22,7 @@
   },
   "system": {
     "additionalSystems": {},
-    "description": "",
+    "description": "Exowalkers are minimal framework exoskeletons, primarily designed to bolster the wearer's strength and movement. They provide a +1 bonus to Vigor pool, increase melee damage by 1d6, increase your walker speed to 8/32 (fast), and double your jumping distance.",
     "active": true,
     "displayCategory": "armor",
     "updated": "",

@@ -1,6 +1,6 @@
 {{!-- Current Status --}}
 {{> systems/eclipsephase/templates/actor/partials/currentStatus/statusSummary.html }}
-{{!-- Armor Section --}}
+{{!-- Armor Section - same compact design for every actor type --}}
 {{> systems/eclipsephase/templates/actor/partials/currentStatus/armorSummary.html }}
 {{!-- Current Equipment Section --}}
 <div class="contentright">
@@ -37,6 +37,9 @@
         {{/if}}
     </div>
 
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html }}
-    {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
+    {{!-- Gear & Consumables are character-only; NPCs/Goons just get Armor + Weapons --}}
+    {{#if (eq actor.type "character")}}
+        {{> systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html }}
+        {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
+    {{/if}}
 </div>

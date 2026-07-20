@@ -200,9 +200,14 @@
   flex-direction: column;
 }
 
+/* Matches .wrappercenter's npc/goon height below - an explicit height (not auto) is what lets
+   .contentright's "flex: 1; min-height: 0;" resolve a real scroll region, same mechanism as the
+   character column's fixed 795px. Without it, the SideCar's weapon/armor list can't scroll and
+   collapses instead of showing its rows. Goon uses the same height as NPC now - no more separate,
+   shorter Goon variant. */
 .wrapperleft.npcVariant1,
 .wrapperleft.goonVariant1 {
-  height: auto;
+  height: 600px;
 }
 
 .contentleft {
@@ -219,14 +224,9 @@
   flex-direction: column;
 }
 
-.wrappercenter.npcVariant1 {
-  height: 600px;
-  display: flex;
-  flex-direction: column;
-}
-
+.wrappercenter.npcVariant1,
 .wrappercenter.goonVariant1 {
-  height: 555px;
+  height: 600px;
   display: flex;
   flex-direction: column;
 }
@@ -759,6 +759,42 @@ span.neutral {
   text-align: left;
 }
 
+/* Chat message header: sender name centered on top, timestamp centered underneath, delete icon
+   pinned top-right. The delete icon is taken out of flow entirely (position:absolute) rather than
+   sharing a grid/columns with the rest of the header - some message types (e.g. rolls) append
+   extra content like .flavor-text directly into .message-header, and forcing that into the same
+   column structure as sender/delete stretched it into the wrong width. This way the icon only
+   ever shares space with the sender line (via the reserved padding), and anything else in the
+   header just stacks normally below at full width. Font sizes/colors are untouched. */
+.chat-message .message-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.chat-message .message-header .message-sender {
+  text-align: center;
+  margin: 0;
+  padding: 0 28px;
+}
+
+.chat-message .message-header .message-metadata {
+  display: contents;
+}
+
+.chat-message .message-header .message-timestamp {
+  display: block;
+  text-align: center;
+}
+
+.chat-message .message-header .message-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--iconBlue);
+}
+
 .ep-menu {
   background-color: rgba(64, 152, 214, 0.4)!important;
 }
@@ -1159,6 +1195,17 @@ body.game .app button:focus {
   transition: 300ms;
 }
 
+/* A Jam button disabled because its body has no Puppet Sock - follows every .jammButton
+   visibility/sizing rule above (same class), just styled to look inert with no hover glow. */
+.eclipsephase button.sheetButton.jammButtonDisabled,
+.eclipsephase button.sheetButton.jammButtonDisabled:hover,
+.eclipsephase button.sheetButton.jammButtonDisabled:focus {
+  color: var(--focusBackground);
+  background: var(--highlightBackground);
+  border-color: var(--highlightBackground);
+  box-shadow: none;
+}
+
 .eclipsephase .jam-slot {
   position: relative;
   min-height: 20px;
@@ -1215,6 +1262,16 @@ a.content-link, a.inline-roll {
 
 .chatButton {
   width: 100%;
+}
+
+.resleeveResult {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  min-height: 0;
+  line-height: normal;
+  padding: 10px;
 }
 
 .chatActionButton {
@@ -2109,10 +2166,13 @@ h3.subheaderBlank {
   margin-bottom: 10px;
 }
 
+/* Same footprint as .statusSideCar above it (single line, detail on hover), for every actor type. */
 .armorSideCar {
-  background-image: url(../resources/img/armorSideCar.webp);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  min-height: 50px;
+  max-height: 50px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .rangedSideCar {
@@ -2564,6 +2624,32 @@ input[type="text"].multiselect-input:focus {
   padding: 0 10px;
 }
 
+.limited-body-tab {
+  background-color: var(--mainBackground);
+  padding-top: 10px;
+}
+
+.eclipsephase nav[data-group="limited"] .item {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.limited-tab-label-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.eclipsephase nav[data-group="limited"] .tooltipText {
+  padding: 5px;
+  line-height: 12px;
+}
+
 .journal-sheet form .editor,
 .item .editor{
   max-height: 100%;
@@ -2641,6 +2727,10 @@ input[type="text"].multiselect-input:focus {
 .item-row-list-entry {
   width: 100%;
   box-sizing: border-box;
+  /* .grid-2col's implicit align-items: stretch otherwise forces every entry in the same grid row
+     to match the tallest one - e.g. an expanded neighbor's description box stretching a closed,
+     unrelated entry down with it. Pin each entry to its own content height at the top instead. */
+  align-self: start;
 }
 
 /* beats .wantToKnowMore's max-width: fit-content */
@@ -2896,10 +2986,12 @@ button.epTextlink:hover{
 }
 
 /* opens sideways into the center column, same trick as the Insight/pool tooltips
-   (.wrapperleft no longer clips this, so a plain offset can escape it) */
+   (.wrapperleft no longer clips this, so a plain offset can escape it). Same trigger + tooltip
+   design for every actor type now, so one offset applies everywhere - last confirmed value from
+   the compact NPC/Goon trigger, may need re-tuning now that the tooltip content itself is shorter. */
 .armorSideCar .tooltip:hover div[role=tooltipNegative] {
-  top: -180px;
-  left: 260px;
+  top: -115px;
+  left: 285px;
   min-width: 320px;
   max-width: 320px;
 }
@@ -3043,6 +3135,7 @@ button.epTextlink:hover{
     color: var(--mainText);
     text-align: center;
     text-transform: capitalize;
+    font-size: 12px;
     padding: 5px 3px;
     border-style: solid;
     border-width: 3px;
@@ -3447,5 +3540,14 @@ body.system-eclipsephase {
 
 body.system-eclipsephase * {
   scrollbar-color: var(--iconBlue) transparent;
-  scrollbar-width: none;                       
+  scrollbar-width: none;
+}
+
+/* System-styled chat notices (e.g. the armor-migration self-notice) read as coming from the
+   game itself, not a specific player - hide Foundry's default message header (sender, timestamp,
+   "To: X" whisper tag) entirely, scoped to just these messages via :has() so normal messages
+   elsewhere keep showing it. */
+.chat-message:has(.ep-system-notice) .message-header,
+li:has(.ep-system-notice) .message-header {
+  display: none !important;
 }

@@ -182,6 +182,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/item-partials/chi-sleight.html",
     "systems/eclipsephase/templates/actor/partials/item-partials/vehicles.html",
     "systems/eclipsephase/templates/global-partials/item-row-list.hbs",
+    "systems/eclipsephase/templates/global-partials/armor-row-list.hbs",
+    "systems/eclipsephase/templates/global-partials/armor-stash-row-list.hbs",
     "systems/eclipsephase/templates/chat/partials/general-modifiers.html",
     "systems/eclipsephase/templates/chat/partials/roll-results.html",
     "systems/eclipsephase/templates/item/partials/weapon-mode.hbs",
@@ -217,20 +219,31 @@ Hooks.once("ready", async () => {
   compendiumList.ware = {"none":"--Select--"};
   compendiumList.flaw = {"none":"--Select--"};
   compendiumList.trait = {"none":"--Select--"};
+  compendiumList.frame = {"none":"No Frame"};
   const traitsPack = game.packs.get("eclipsephase.traits");
   const traitsIndex = await traitsPack.getIndex();
   const warePack = game.packs.get("eclipsephase.ware");
   const wareIndex = await warePack.getIndex();
-  const joinedIndex = [...wareIndex, ...traitsIndex]
+  const armorPack = game.packs.get("eclipsephase.armor");
+  const armorIndex = await armorPack.getIndex();
+  const joinedIndex = [...wareIndex, ...traitsIndex, ...armorIndex]
 
   for(const entry of joinedIndex){
     const fullItem = await fromUuid(entry.uuid);
     switch (fullItem.type) {
       case "traits":
+        // These lists only feed body-bound Enhancement slots (Morphs/Vehicles) - an ego-only
+        // trait/flaw (morph: false) can't attach to a body, so it doesn't belong here.
+        if (fullItem.system.morph !== true) break;
         fullItem.system.traitType === "trait" ? compendiumList.trait[fullItem.uuid] = fullItem.name : compendiumList.flaw[fullItem.uuid] = fullItem.name;
         break;
       case "ware":
         compendiumList.ware[fullItem.uuid] = fullItem.name;
+        break;
+      case "armor":
+        // Only the three Frame items (Light/Medium/Heavy) feed the Synthmorph Frame dropdown -
+        // regular Armor items in this same pack aren't relevant here.
+        if (fullItem.system.isFrame === true) compendiumList.frame[fullItem.uuid] = fullItem.name;
         break;
       default: break
     }
@@ -238,6 +251,12 @@ Hooks.once("ready", async () => {
   compendiumList.ware = helperFunction.sortObjectByValue(compendiumList.ware)
   compendiumList.flaw = helperFunction.sortObjectByValue(compendiumList.flaw)
   compendiumList.trait = helperFunction.sortObjectByValue(compendiumList.trait)
+  // Frame is ordered by size (Select, Light, Medium, Heavy) rather than alphabetically - alpha
+  // order would put Heavy before Light before Medium, which reads oddly for a size progression.
+  const frameOrder = { "No Frame": 0, "Light Frame Armor": 1, "Medium Frame Armor": 2, "Heavy Frame Armor": 3 };
+  compendiumList.frame = Object.fromEntries(
+    Object.entries(compendiumList.frame).sort(([, a], [, b]) => (frameOrder[a] ?? 99) - (frameOrder[b] ?? 99))
+  );
 
   CONFIG.compendiumList = compendiumList;
 })
@@ -266,6 +285,7 @@ Hooks.once("ready", async function() {
   let before150 = foundry.utils.isNewerVersion("1.5", gameVersion);
   let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
   let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
+  let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -490,6 +510,23 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
+  //2.0 Migration
+  if (before200) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.200";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration200 = await update.migrationPre200(startMigration);
+    endMigration = Migration200["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
@@ -603,6 +640,37 @@ Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
 });
 
+// Delivers pending "your Armor moved to your Stash" notices from the 2.0 migration
+// (module/common/migration.js's _ep200_migrateArmorToBoundBodies), one self-whispered chat
+// message per affected character this user owns. Deliberately NOT gated on isGM - runs for every
+// user, but only ever finds something for users the migration actually flagged. Self-whispering
+// (whisper: [game.user.id]) from each player's OWN client, rather than the GM creating the
+// message directly, is what actually keeps the executing GM from seeing it: a message's author
+// always sees their own sent messages regardless of whisper targets, so a GM-authored whisper is
+// never fully private from that GM no matter how whisper/blind/author are set on creation.
+Hooks.once("ready", async () => {
+  const pending = game.user.getFlag("eclipsephase", "pendingArmorStashNotices");
+  if (!pending || !pending.length) return;
+
+  for (const entry of pending) {
+    const message = {
+      type: "systemNotice",
+      noticeLabel: "ep2e.migration.armorStashedNoticeSelf.updateLabel",
+      mainCopy: game.i18n.format("ep2e.migration.armorStashedNoticeSelf.main", { count: entry.count, actor: entry.actorName }),
+      subCopy: game.i18n.localize("ep2e.migration.armorStashedNoticeSelf.sub")
+    };
+    const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
+
+    await ChatMessage.create({
+      speaker: { alias: "System" },
+      whisper: [game.user.id],
+      content
+    });
+  }
+
+  await game.user.unsetFlag("eclipsephase", "pendingArmorStashNotices");
+});
+
 //Sets parts of the chat invisible to players or the GM & adds special functions to chat messages
 Hooks.on("renderChatMessageHTML", (message, html, data) => {
   EPchat.addChatListeners(html, data);
@@ -630,7 +698,7 @@ Hooks.on("createActor", async (actor, options, userId) => {
   if (actor.getFlag("eclipsephase", "defaultMorphAdded") || actor.getFlag("eclipsephase", "defaultIdAdded")) return;
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) return;
-  const morph = await pack.getDocument("suPRftVdLzcNhOH4");
+  const morph = await pack.getDocument("eNfxIGfFrEG2zqa9");
   if (!morph) return;
   const idData = {
     name: "Default ID",

@@ -65,7 +65,7 @@
   "TYPES.Item.program": "Programa",
   "TYPES.Item.specialSkill": "Perícia Especial",
   "TYPES.Item.knowSkill": "Perícia de Saber",
-  "TYPES.Item.vehicle": "Veículo",
+  "TYPES.Item.vehicle": "Corpo Remoto",
   "TYPES.Item.drug": "Droga",
   "TYPES.Item.ammo" : "Ammo",
   "TYPES.Item.id" : "ID",
@@ -107,6 +107,10 @@
         "effectsTab": "Efeitos",
         "gmInfoTab": "GM Info"
       },
+      "limitedTabs": {
+        "physicalDescription": "Sleeve de {name}",
+        "registeredId": "Identidade Registrada: {name}"
+      },
       "button": {
         "edit": "Editar",
         "delete": "Excluir",
@@ -117,9 +121,14 @@
         "showDetails": "Mostrar Detalhes",
         "hideDetails": "Ocultar detalhes",
         "changeID": "Activate ID",
-        "sleeveMorph": "Sleeve Morph",
+        "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
-        "unjamVehicle": "Unjam"
+        "unjamVehicle": "Unjam",
+        "rebindArmor": "Reatribuir a outro corpo",
+        "stashArmor": "Guardar Armadura",
+        "moveArmor": "Mover Armadura",
+        "deleteArmorWithBody": "Excluir Armadura",
+        "equipArmor": "Equipar"
       },
       "dialogHeadline": {
         "warning": "Aviso",
@@ -129,7 +138,10 @@
         "information": "Informação"
       },
       "popUp": {
+        "needPuppetSockToJam": "Requer um Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
+        "deleteArmorWithBodyCopy": "<b>Aviso:</b>Você está prestes a excluir {body}. Este corpo tem Armadura atribuída a ele - excluir {body} também excluirá sua Armadura.",
+        "stashArmorCopy": "Deseja guardar {name}? Você o encontrará no seu inventário quando quiser.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
         "autoBotCopyGeneral": "<p><b>Aviso:</b> Isto irá redefinir todas as perícias do veículo/bot para os valores de perícia da IA padrão do bot. Isso sobrescreverá quaisquer mudanças que você tenha feito em suas perícias.</p><p><b>Selecione o tipo do seu veículo:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Segure SHIFT enquanto pressiona o botão 'Auto-Bot'.</p></i>",
@@ -558,6 +570,9 @@
           "bio": "Biológico",
           "info": "Infomorfo"
         },
+        "frame": {
+          "label": "Chassi"
+        },
         "durabilityLabel": "Durabilidade",
         "movement": {
           "label": "Movimento",
@@ -567,11 +582,15 @@
         "movementTypes": {
           "none": "-Selecionar-",
           "boat": "Barca",
+          "brachiate": "Braquear",
           "glider": "Glider",
           "hopper": "Pulo",
           "hover": "Flutuação",
           "ionic": "Iônico",
+          "magneticgenerator": "Gerador Magnético",
           "microlight": "Microleve",
+          "ooze": "Fluir",
+          "plasmasail": "Vela de Plasma",
           "roller": "Rolagem",
           "rotor": "Rotor",
           "snake": "Serpente",
@@ -629,13 +648,16 @@
       },
       "traitsLabel": "Traços do Morfo",
       "wareLabel": "Ware do Morfo",
+      "armorLabel": "Armadura",
       "noMorphTraits": "Este Morfo não possui traços",
       "noMorphWare": "Seu Morfo é Tosco",
+      "noMorphArmor": "Este Morfo não possui Armadura",
       "morphsHeadline": "Morfos"
     },
     "inventory": {
       "armorLabel": "Armadura",
       "armorPlaceholder": "Sem Nome da Armadura",
+      "stashedArmorLabel": "Armadura Guardada",
       "rangedLabel": "Armas de Distância",
       "rangedPlaceholder": "Sem Nome da Arma",
       "ccLabel": "Armas de Combate Próximo",
@@ -694,8 +716,10 @@
       "aiSkillsHeadline": "Perícias de IA",
       "traitsLabel": "Traços e Defeitos",
       "wareLabel": "Implantes",
+      "armorLabel": "Armadura",
       "noTraits": "Nenhum Traço ou Defeito instalado",
-      "noWare": "Nenhum Implante instalado"
+      "noWare": "Nenhum Implante instalado",
+      "noArmor": "Nenhuma Armadura instalada"
     },
     "psi": {
       "infectionHeadline": "Tipo de Infecção",
@@ -841,21 +865,9 @@
       "armor": {
         "headline": "Armadura",
         "noArmorSubheadline": "Nenhuma Armadura Equipada",
-        "noArmorCopy": "Você não está usando armadura",
-        "armorSubheadline": "Armadura Acumulada",
-        "energy": "Energética",
-        "kinetic": "Cinética",
-        "concealWarning": "Não é ocultável enquanto > 11",
-        "encumberanceWarning": "Incapaz de se mover enquanto > Dur",
-        "armorCountSubheadline": "Peças de Armadura ativas em você",
-        "mainArmorLabel": "Armadura Principal",
-        "additionalArmorLabel": "Armadura Adicional",
-        "cumulativeMalusLabel": "Penalidade por Acumulação",
-        "mainArmorMalusCopy": "Para cada armadura principal adicional um modificador de -20 será adicionado em todas as suas ações.",
-        "additionalArmorMalusCopy": "Armaduras adicionais podem ser usadas em camadas sem nenhum modificador. Isso ainda conta para outros modificadores de armadura.",
-        "exceedingSomLabel": "Excedendo Somática",
-        "exceedingSomCopy": "Se qualquer VA individual (cinética OU energética) exceder sua SOM, você recebe mais -20 em todas as rolagens.",
-        "armorUsageDescription": "Para ativar ou desativar armadura adicionais/diferentes, vá para a Aba Inventário. Você pode adicionar armadura arrastando & soltando-a dos compêndios ou de qualquer outra coleção de itens disponível."
+        "concealWarning": "Valores de Armadura acima de 11 não são ocultáveis - pense nisso como, no mínimo, uma camada grossa e perceptível de roupa.",
+        "encumberanceWarning": "Enquanto sua Armadura cumulativa exceder a Durabilidade do seu corpo, você é incapaz de se mover.",
+        "armorSourceHint": "Para alterar seu valor de Armadura, adicione-a ao seu Morph atual ou ao Corpo Remoto que estiver em jamming."
       },
       "ranged": {
         "headline": "Combate de Distância",
@@ -915,7 +927,9 @@
           "type": {
             "label": "Tipo de Armadura",
             "main": "Armadura Principal",
-            "additional": "Armadura Adicional"
+            "additional": "Armadura Adicional",
+            "mainShort": "Principal",
+            "additionalShort": "Adicional"
           }
         }
       },
@@ -1386,7 +1400,12 @@
           "ownBodyPenalty": "Penalidade de corpo próprio",
           "ownBodyWounds": "Feridas do corpo próprio",
           "ownBodyArmor": "Sobrecarga de armadura do corpo próprio",
-          "ownBodyEncumbrance": "Sobrecarga do corpo próprio"
+          "ownBodyEncumbrance": "Sobrecarga do corpo próprio",
+          "ownBodyTraits": "Trait/Ware do corpo próprio",
+          "noPsi": "Psi não funciona enquanto você está jammando. Ele nunca funciona por conexão mesh ou dentro de um cérebro cibernético."
+        },
+        "armor": {
+          "equipped": "Eu equipei {morph} com uma armadura."
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
@@ -1524,6 +1543,15 @@
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
       },
+      "selectBody": {
+        "header": "Selecionar Corpo",
+        "copy": "Este item está vinculado a um corpo. Escolha qual deve recebê-lo.",
+        "placeholder": "- Selecionar Corpo -"
+      },
+      "reassignArmor": {
+        "header": "Reatribuir Armadura",
+        "copy": "Você está prestes a excluir {body}, que tem Armadura atribuída a ele. Guarde-a para mais tarde, ou exclua-a junto com {body}."
+      },
       "selectStress": {
         "dialogTitle": "Stress Response",
         "copy": "You are stressed out by the sensation of being resleeved. The Stress Value is based on the most stressful aspect of resleeving.",
@@ -1531,6 +1559,14 @@
         "majorLabel": "Major Stress",
         "minorDescription": "Stress due to alienation with the new body, continuity loss of yur ego or the lack of time since you have been reinstated.",
         "majorDescription": "Stress due to the fact that you're actively remembering your own death, or if you were offline for over 3 months of time."
+      },
+      "selectEnhancements": {
+        "header": "Adicionar Aprimoramentos padrão?",
+        "copy": "Este corpo já vem com Ware, Traits e Flaws padrão do compêndio. Eles devem ser adicionados automaticamente, ou o corpo deve permanecer como está (sem aprimoramentos)?",
+        "standardLabel": "Aprimoramentos padrão",
+        "standardDescription": "Adiciona todo o Ware, Traits e Flaws listados nos slots de Aprimoramento deste corpo.",
+        "flatLabel": "Sem aprimoramentos",
+        "flatDescription": "Adiciona o corpo como está, sem nenhum dos aprimoramentos listados."
       }
     },
     "chat": {
@@ -1592,6 +1628,12 @@
       }
     },
     "migration": {
+      "armorBoundNotice": "<p><b>Atualização de Armadura:</b> {count} item(ns) de Armadura deste personagem foram automaticamente vinculados a <b>{body}</b>, já que a Armadura agora pertence a um corpo específico em vez de simplesmente ficar no seu inventário. Use o botão de reatribuir ao lado de um item de Armadura (na aba Morfo) para movê-lo para outro corpo quando quiser.</p>",
+      "armorStashedNoticeSelf": {
+        "updateLabel": "Aviso de Atualização",
+        "main": "<b>Atualização de Armadura:</b> {count} item(ns) de Armadura de <b style='color: var(--highlight);'>{actor}</b> foram movidos automaticamente para o Estoque.",
+        "sub": "Já que a Armadura agora pertence a um corpo específico em vez de simplesmente ficar no seu inventário. Você o encontrará em Armadura Guardada (aba Equipamento) - use o botão Equipar ao lado dele para atribuí-lo a um corpo quando quiser."
+      },
       "headlineStart": "<h3 class='subheader dialog'>Caro Usuário do Sistema</h3>",
       "headlineEnd": "<h3 class='subheader dialog'>Você está pronto!</h3>",
       "done": "<label class='resource-label'>Divirta-se combatendo a TITAN e resgatando o universo, ou fazendo o que bem entender!</i></p></label>",
@@ -1615,6 +1657,17 @@
         "copy": "This dialog lets you add Rez to every active player character in game. If a character is not active you can still add Rez to them. Please be aware that the 'Add REZ to all characters' option will add the same amount of Rez to all characters, no matter if they're active or not. Rez added to specific characters will therefore count on top of this value.",
         "inputLabelAll": "Add REZ to all characters",
         "confirm": "Add Rez"
+      },
+      "itemAttachment": {
+        "itemAddedEgo": "Adicionado: {name}.",
+        "itemAddedToBody": "Adicionado a {body}: {name}.",
+        "noBodyTrait": "Nenhum corpo presente. O Trait não pode ser adicionado.",
+        "noBodyWare": "Nenhum corpo presente. A Ware não pode ser adicionada.",
+        "noBodyArmor": "Nenhum corpo presente. A Armadura não pode ser adicionada.",
+        "noOtherBodyArmor": "Não há outro corpo para reatribuir esta Armadura.",
+        "itemRebound": "{name} reatribuída a {body}.",
+        "unknownTraitType": "Tipo de Trait desconhecido. Selecione pelo menos uma opção - ego ou morfo - para usar este trait.",
+        "enhancementsAdded": "{count} aprimoramento(s) adicionado(s) a {body}."
       }
     }
   }

@@ -9,7 +9,7 @@
   "_id": "Wq3HRRnL8GObTPIB",
   "system": {
     "additionalSystems": {},
-    "description": "360-Degree Vision, Access Jacks, Bot AI, Lidar, Mesh Inserts, Puppet Sock, Chem Sniffer, Enhanced Vision, Laser Link, Radar, T-Ray Emitter",
+    "description": "Aerostats are balloons, relying on buoyant gases for lift in atmospheres, maneuvering with turbofans. Their low signature and longevity make them ideal for high-altitude surveillance, research, or gas mining.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,39 +224,39 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.q3iVCdAD0Q9q0knh"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware9": {
         "label": "9.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.j8eZ9xRZbp7aPZJh"
       },
       "ware10": {
         "label": "10.",

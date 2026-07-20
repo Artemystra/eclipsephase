@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/steering-wheel.png",
   "system": {
     "additionalSystems": {},
-    "description": "Access Jacks, Mesh Inserts, Puppet Sock, Radar",
+    "description": "This smart-wheeled buggie is equipped with a metallic-hydrogen rocket. It is ideal for moons and large asteroids, where it can reach orbit and return or take a parabolic path to any destination on that moon in less than an hour. Buggies are also popular on Mars (though unable to reach orbit).",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -212,19 +212,19 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware5": {
         "label": "5.",

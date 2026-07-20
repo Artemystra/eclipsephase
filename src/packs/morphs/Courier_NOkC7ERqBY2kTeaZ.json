@@ -1,0 +1,195 @@
+{
+  "name": "Courier",
+  "type": "morph",
+  "_id": "NOkC7ERqBY2kTeaZ",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Courier.webp",
+  "system": {
+    "description": "Couriers were made to soar between the many moons and habitats in the Saturnian system. They are shaped like a multi-armed chess piece, with a humanoid head and torso atop a conical metallic-hydrogen rocket. With an acceleration of up to 0.25 g, couriers can take off and land on all moons and other small bodies in the Solar System.",
+    "img": "",
+    "customToken": null,
+    "type": "synth",
+    "dur": 35,
+    "insight": 1,
+    "moxie": 0,
+    "vigor": 0,
+    "flex": 2,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "thrust vector",
+        "base": 8,
+        "full": 40
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.q3A7aPdXwlhAvGeM"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.ws0IespqkhNwO78T"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.jhO6F03fXymKwxIU"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.q3iVCdAD0Q9q0knh"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.Odmc5xNT15RN5p2f"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.ec3esdksp8OPPCJ6"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.tl2GCQOmFltBvnYO"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "frame": "Compendium.eclipsephase.armor.Item.gcI69iI5CuFy2kjx"
+  },
+  "effects": [],
+  "folder": "NfKORwce5MErntbB",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1783983392004,
+    "modifiedTime": 1783983392004,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!NOkC7ERqBY2kTeaZ"
+}

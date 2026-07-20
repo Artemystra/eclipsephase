@@ -2,6 +2,10 @@ import * as sheetFunction from "./general-sheet-functions.js"
 import * as resleeving from "../rolls/resleeving.js"
 
 export async function resleeveMorph(actor, currentTarget, sheet){
+    // Can't resleeve while jamming - your ego is off piloting a remote body. Also backs up the
+    // sheet's own Sleeve-button-hidden-while-jamming rule (see morph-tab.html).
+    if (actor.system.activeJam) return;
+
     const dataset = currentTarget.dataset;
     const itemID = dataset.itemId;
     const newMorph = actor.items.get(itemID);
@@ -60,7 +64,7 @@ export async function replaceMorph(actor, activeMorph, newMorph){
 
     if(popUp.confirm === true){
         if (!oldMorph) return;
-        await deleteMorph(actor, activeMorph);
+        await deleteBody(actor, activeMorph);
         return;
     }
     else{
@@ -68,10 +72,21 @@ export async function replaceMorph(actor, activeMorph, newMorph){
     }
 }
 
-export async function jammVehicle(actor, currentTarget, sheet) {
+// Jams a body (Vehicle or, since Puppet Sock support, a Morph) - identical rules for either type.
+// Jamming a DIFFERENT body while already jamming is allowed (switches: implicitly restores the old
+// body first, then jams the new one) - only jamming the SAME already-jammed body again is a no-op.
+export async function jamBody(actor, currentTarget, sheet) {
     const dataset = currentTarget.dataset;
     const itemID = dataset.itemId;
-    const vehicle = actor.items.get(itemID);
+    if (actor.system.activeJam === itemID) return;
+
+    const body = actor.items.get(itemID);
+    if (!body) return;
+
+    // Defense in depth: the Jam button is already disabled in the sheet for bodies without a
+    // Puppet Sock, but don't rely on that alone (e.g. a stale render, a direct API call).
+    if (!actor.system.additionalSystems?.puppetSocked?.includes(itemID)) return;
+
     const itemName = dataset.name;
     const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
     const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.jamVehicle")) + ": " + (itemName ? itemName : "");
@@ -83,21 +98,27 @@ export async function jammVehicle(actor, currentTarget, sheet) {
     let popUp = await sheetFunction.confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo, "", popUpPrimary);
 
     if (popUp.confirm === true) {
+        // Switching from another jammed body: restore it first (silently, no separate dialog) so
+        // its stashed health/pools aren't just overwritten by the new jam's stash.
+        if (actor.system.activeJam) {
+            await restoreFromJam(actor);
+        }
+
         sheet.tabGroups.morph = itemID;
 
         // Flex is spent Body-Flex first, Ego Flex only once that's gone. So work out how much of the
-        // current value is already eating into Ego Flex - that part carries into the drone, the body's
-        // own share does not (the drone gets its own, separate Body-Flex share instead).
+        // current value is already eating into Ego Flex - that part carries into the jammed body, the
+        // real body's own share does not (the jammed body gets its own, separate Body-Flex share instead).
         const egoFlex = Number(actor.system.ego.egoFlex) || 0;
         const originalTotalFlex = Number(actor.system.pools.flex.totalFlex) || 0;
         const originalBodyFlexMax = originalTotalFlex - egoFlex;
         const originalFlexSpent = originalTotalFlex - (Number(actor.system.pools.flex.value) || 0);
         const egoFlexSpent = Math.max(0, originalFlexSpent - originalBodyFlexMax);
         const bodyFlexRemaining = Math.max(0, originalBodyFlexMax - originalFlexSpent);
-        const droneBodyFlexMax = Number(vehicle.system.flex) || 0;
-        const droneFlexValue = Math.max(0, egoFlex + droneBodyFlexMax - egoFlexSpent);
+        const jammedBodyFlexMax = Number(body.system.flex) || 0;
+        const jammedFlexValue = Math.max(0, egoFlex + jammedBodyFlexMax - egoFlexSpent);
 
-        // Stash the real body's damage and pools so they're untouched while jamming, then start the drone fresh
+        // Stash the real body's damage and pools so they're untouched while jamming, then start the jammed body fresh
         await actor.update({
             "system.activeJam": itemID,
             "flags.eclipsephase.jamHealthBackup": {
@@ -110,15 +131,15 @@ export async function jammVehicle(actor, currentTarget, sheet) {
             },
             "system.health.physical.value": 0,
             "system.physical.wounds": 0,
-            "system.pools.flex.value": droneFlexValue
+            "system.pools.flex.value": jammedFlexValue
         });
         await actor.update({ "flags.eclipsephase.resleeving": true });
 
         let message = {
             type: "jamming",
             actor: actor,
-            morphtype: vehicle.system.chassisType,
-            morphname: vehicle.name
+            morphtype: body.type === "morph" ? body.system.type : body.system.chassisType,
+            morphname: body.name
         };
 
         let html = await foundry.applications.handlebars.renderTemplate(JAM_MESSAGE, message);
@@ -129,7 +150,48 @@ export async function jammVehicle(actor, currentTarget, sheet) {
     }
 }
 
-export async function unjamVehicle(actor, currentTarget, sheet) {
+// Shared restore math for ending a jam - used both by unjamBody's own confirm dialog and by
+// jamBody's silent implicit-unjam when switching straight from one jammed body to another.
+async function restoreFromJam(actor) {
+    const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
+    if (!backup) {
+        // No stashed state to restore (e.g. an already-consumed/orphaned backup) - just end the
+        // jam without zeroing out health/pools via the "?? 0" fallbacks below.
+        console.warn(`[EP2e] ${actor.name}: unjammed with no jamHealthBackup present - health/pools left as-is.`);
+        await actor.update({ "system.activeJam": null });
+        return;
+    }
+
+    // Same Body-Flex-first logic as jamming, in reverse: work out how much Ego Flex was spent
+    // while jamming (anything beyond the drone's own Body-Flex share), and carry only that back.
+    const egoFlex = Number(actor.system.ego.egoFlex) || 0;
+    const droneTotalFlex = Number(actor.system.pools.flex.totalFlex) || 0;
+    const droneBodyFlexMax = droneTotalFlex - egoFlex;
+    const droneFlexSpent = droneTotalFlex - (Number(actor.system.pools.flex.value) || 0);
+    const egoFlexSpent = Math.max(0, droneFlexSpent - droneBodyFlexMax);
+    const restoredBodyFlexValue = Number(backup?.bodyFlexValue ?? 0);
+    const restoredFlexValue = Math.max(0, egoFlex + restoredBodyFlexValue - egoFlexSpent);
+
+    // Restore the real body's damage and pools from before jamming; the drone's are not kept.
+    // Restored directly (not via the resleeving flag) so pools return to their exact prior values instead of refilling to full.
+    await actor.update({
+        "system.activeJam": null,
+        "system.health.physical.value": backup?.value ?? 0,
+        "system.physical.wounds": backup?.wounds ?? 0,
+        "system.pools.vigor.value": backup?.vigor ?? 0,
+        "system.pools.insight.value": backup?.insight ?? 0,
+        "system.pools.moxie.value": backup?.moxie ?? 0,
+        "system.pools.flex.value": restoredFlexValue,
+        "flags.eclipsephase.jamHealthBackup": foundry.data.operators.ForcedDeletion
+    });
+}
+
+export async function unjamBody(actor, currentTarget, sheet) {
+    // Guards against a second unjam (e.g. a double click) - jamHealthBackup would already be gone
+    // after the first pass, and restoring with the "?? 0" fallbacks in restoreFromJam would zero
+    // everything out.
+    if (!actor.system.activeJam) return;
+
     const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
     const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.unjamVehicle");
     const popUpCopy = "ep2e.actorSheet.popUp.unjamCopyGeneral";
@@ -140,39 +202,313 @@ export async function unjamVehicle(actor, currentTarget, sheet) {
 
     if (popUp.confirm === true) {
         sheet.tabGroups.morph = "sleeved";
-
-        // Same Body-Flex-first logic as jamming, in reverse: work out how much Ego Flex was spent
-        // while jamming (anything beyond the drone's own Body-Flex share), and carry only that back.
-        const backup = actor.getFlag("eclipsephase", "jamHealthBackup");
-        const egoFlex = Number(actor.system.ego.egoFlex) || 0;
-        const droneTotalFlex = Number(actor.system.pools.flex.totalFlex) || 0;
-        const droneBodyFlexMax = droneTotalFlex - egoFlex;
-        const droneFlexSpent = droneTotalFlex - (Number(actor.system.pools.flex.value) || 0);
-        const egoFlexSpent = Math.max(0, droneFlexSpent - droneBodyFlexMax);
-        const restoredBodyFlexValue = Number(backup?.bodyFlexValue ?? 0);
-        const restoredFlexValue = Math.max(0, egoFlex + restoredBodyFlexValue - egoFlexSpent);
-
-        // Restore the real body's damage and pools from before jamming; the drone's are not kept.
-        // Restored directly (not via the resleeving flag) so pools return to their exact prior values instead of refilling to full.
-        await actor.update({
-            "system.activeJam": null,
-            "system.health.physical.value": backup?.value ?? 0,
-            "system.physical.wounds": backup?.wounds ?? 0,
-            "system.pools.vigor.value": backup?.vigor ?? 0,
-            "system.pools.insight.value": backup?.insight ?? 0,
-            "system.pools.moxie.value": backup?.moxie ?? 0,
-            "system.pools.flex.value": restoredFlexValue,
-            "flags.eclipsephase.-=jamHealthBackup": null
-        });
+        await restoreFromJam(actor);
     }
 }
 
-export async function deleteMorph(actor, activeMorph){
+// Shared helper for anything that needs an actor's candidate bodies (Morphs + Vehicles) and how
+// to resolve a boundTo value for one - drop-time binding (Ware/Traits/Armor), rebinding, and
+// delete-reassignment all share this instead of re-deriving it separately and drifting apart.
+export function getBodyBindingInfo(actor) {
+    const morphItems = actor.items.filter(i => i.type === "morph");
+    const vehicleItems = actor.items.filter(i => i.type === "vehicle");
+    const bodies = [...morphItems, ...vehicleItems];
+
+    const boundToFor = (body) => {
+        if (actor.type === "character") return body.id;
+        return body.type === "vehicle" ? "activeVehicle" : "activeMorph";
+    };
+
+    // excludeBoundTo lets a caller (e.g. rebindArmor) drop the currently-bound body from the list,
+    // since re-picking it would be a no-op - unused by drop-time binding, which has no "current" yet.
+    const buildBodyGroups = (excludeBoundTo) => {
+        const groups = [];
+        const morphOptions = morphItems.filter(m => boundToFor(m) !== excludeBoundTo).map(m => ({ id: m.id, name: m.name }));
+        const vehicleOptions = vehicleItems.filter(v => boundToFor(v) !== excludeBoundTo).map(v => ({ id: v.id, name: v.name }));
+        if (morphOptions.length) groups.push({ label: game.i18n.localize("ep2e.morph.morphsHeadline"), options: morphOptions });
+        if (vehicleOptions.length) groups.push({ label: game.i18n.localize("ep2e.morph.jamming.headline"), options: vehicleOptions });
+        return groups;
+    };
+
+    return { morphItems, vehicleItems, bodies, boundToFor, buildBodyGroups };
+}
+
+// Resolves which body a body-bound item (Ware/Traits/Armor) should attach to on `actor`: refuses if
+// there are none, silently picks the only one if there's exactly one, otherwise prompts via
+// selectBody(). Used both at drop-time and for cross-actor transfers, so the two stay consistent.
+export async function resolveBodyForItem(actor, noBodyMessageKey) {
+    const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
+
+    if (bodies.length === 0) {
+        await sheetFunction.systemMessage("error", noBodyMessageKey);
+        return { cancelled: true };
+    }
+
+    let chosenBody;
+    if (actor.type === "character" && bodies.length > 1) {
+        // Default to the sleeved Morph even while jamming (never the jammed body) - it's the more
+        // likely target, saving a click for the common case of equipping your own real body.
+        const bodyChoice = await sheetFunction.selectBody(
+            buildBodyGroups(),
+            "ep2e.dialog.selectBody.header",
+            "",
+            "ep2e.dialog.selectBody.copy",
+            actor.system?.activeMorph
+        );
+
+        if (bodyChoice.cancelled) return { cancelled: true };
+        chosenBody = bodies.find(b => b.id === bodyChoice.selection);
+        if (!chosenBody) return { cancelled: true };
+    } else {
+        chosenBody = bodies[0];
+    }
+
+    return { chosenBody, boundTo: boundToFor(chosenBody) };
+}
+
+// Rebinds an Armor item to a different body - unlike Ware/Traits (drop-time-only by design),
+// Armor gets an explicit rebind action since it's always bound and can't just be dropped again.
+export async function rebindArmor(actor, itemId) {
+    const item = actor.items.get(itemId);
+    if (!item) return;
+
+    const { bodies, boundToFor, buildBodyGroups } = getBodyBindingInfo(actor);
+    const currentBoundTo = item.system.boundTo;
+    const otherBodies = bodies.filter(b => boundToFor(b) !== currentBoundTo);
+
+    if (otherBodies.length === 0) {
+        await sheetFunction.systemMessage("error", "ep2e.systemMessage.itemAttachment.noOtherBodyArmor");
+        return;
+    }
+
+    // Same sleeved-Morph-as-default reasoning as resolveBodyForItem - a no-op here if the armor
+    // is currently bound to the sleeved Morph itself, since that's excluded from the options.
+    const bodyChoice = await sheetFunction.selectBody(
+        buildBodyGroups(currentBoundTo),
+        "ep2e.dialog.selectBody.header",
+        "",
+        "ep2e.dialog.selectBody.copy",
+        actor.system?.activeMorph
+    );
+    if (bodyChoice.cancelled) return;
+
+    const chosenBody = otherBodies.find(b => b.id === bodyChoice.selection);
+    if (!chosenBody) return;
+
+    await item.update({ "system.boundTo": boundToFor(chosenBody) });
+    await sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemRebound", { name: item.name, body: chosenBody.name });
+}
+
+// Sets an Armor item aside in the (character-only) Stash instead of keeping it bound to a body -
+// skipConfirm mirrors the item-delete SHIFT-click convention (no confirmation dialog on shift-click).
+export async function stashArmor(actor, itemId, skipConfirm) {
+    if (actor.type !== "character") return;
+
+    const item = actor.items.get(itemId);
+    if (!item) return;
+
+    if (!skipConfirm) {
+        const popUp = await sheetFunction.confirmation(
+            game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
+            `${game.i18n.localize("ep2e.actorSheet.button.stashArmor")} ${item.name}`,
+            game.i18n.format("ep2e.actorSheet.popUp.stashArmorCopy", { name: item.name }),
+            "",
+            "",
+            "ep2e.actorSheet.button.stashArmor"
+        );
+        if (!popUp.confirm) return;
+    }
+
+    await item.update({ "system.boundTo": "stash" });
+}
+
+// Equips an Armor item out of the (character-only) Stash onto a body - reuses resolveBodyForItem's
+// silent-single-body/picker-at-2+/error-at-zero resolution, since the Equip click itself is
+// already the deliberate act (unlike rebindArmor, which always shows a picker since "switch to
+// which other body?" is inherently ambiguous there).
+export async function equipArmorFromStash(actor, itemId) {
+    if (actor.type !== "character") return;
+
+    const item = actor.items.get(itemId);
+    if (!item) return;
+
+    const resolved = await resolveBodyForItem(actor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
+    if (resolved.cancelled) return;
+
+    await item.update({ "system.boundTo": resolved.boundTo });
+
+    const message = {
+        type: "equipArmor",
+        copy: game.i18n.format("ep2e.roll.announce.armor.equipped", { morph: resolved.chosenBody.name, armor: item.name }),
+        armorName: item.name,
+        armorEnergy: item.system.energy,
+        armorKinetic: item.system.kinetic
+    };
+    const renderedHtml = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
+
+    ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: renderedHtml
+    });
+}
+
+// Armor is always bound to some body (no floating/unbound state) - deleting a body that has Armor
+// bound to it needs an explicit choice: move it all to one other body, or confirm it goes with the
+// body. This IS the delete confirmation for that case (the caller skips the generic "delete this
+// item?" dialog entirely, rather than showing both back to back) - bodyName is folded into the
+// copy so the single dialog still makes clear the body itself is about to be deleted.
+// Returns {proceed: false} if the user backs out, leaving the body (and its armor) untouched.
+// Reads boundTo live off actor.items rather than the render-time actor.bodies cache, since a "move"
+// choice here re-binds the armor mid-flow and deleteBody's own cleanup runs right after with no
+// re-render in between - a cached bucket would still list the just-moved items as belonging here.
+export async function resolveArmorOnBodyDelete(actor, bucketKey, bodyName) {
+    const armorItems = actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
+    if (armorItems.length === 0) return { proceed: true };
+
+    // NPCs/Goons have no Stash (character-only, see stashArmor) and no "move to another body"
+    // option anymore either - just a plain confirm that deleting the body deletes its armor too.
+    if (actor.type !== "character") {
+        const popUp = await sheetFunction.confirmation(
+            game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
+            game.i18n.localize("ep2e.actorSheet.button.delete") + " " + (bodyName ?? ""),
+            game.i18n.format("ep2e.actorSheet.popUp.deleteArmorWithBodyCopy", { body: bodyName ?? "" }),
+            "",
+            "",
+            "ep2e.actorSheet.button.delete"
+        );
+        return { proceed: popUp.confirm === true };
+    }
+
+    // Characters: no more "move to a specific other body" choice - Stash replaces it as the safe
+    // "figure it out later" alternative, so the only real choice is Delete or Stash.
+    const result = await foundry.applications.api.DialogV2.wait({
+        window: { title: game.i18n.localize("ep2e.dialog.reassignArmor.header") },
+        classes: ["ep2e-primary-right"],
+        content: `<div style="padding: 10px 0;">${game.i18n.format("ep2e.dialog.reassignArmor.copy", { body: bodyName ?? "" })}</div>`,
+        buttons: [
+            {
+                action: "stash",
+                label: game.i18n.localize("ep2e.actorSheet.button.stashArmor"),
+                default: true,
+                callback: () => ({ stash: true })
+            },
+            {
+                action: "deleteWithBody",
+                label: game.i18n.localize("ep2e.actorSheet.button.deleteArmorWithBody"),
+                callback: () => ({ stash: false })
+            },
+            {
+                action: "cancel",
+                label: game.i18n.localize("ep2e.roll.dialog.button.cancel"),
+                callback: () => ({ cancelled: true })
+            }
+        ],
+        position: { width: 340 },
+        modal: true,
+        rejectClose: false
+    });
+
+    if (!result || result.cancelled) return { proceed: false };
+
+    if (result.stash) {
+        await actor.updateEmbeddedDocuments("Item", armorItems.map(a => ({ _id: a.id, "system.boundTo": "stash" })));
+    }
+
+    return { proceed: true };
+}
+
+// Deletes a body (Morph or Vehicle) and everything bound to it (Ware, Traits, Flaws, Armor).
+// Callers are expected to have already resolved any bound Armor first (see
+// resolveArmorOnBodyDelete) - this function just executes the deletion, no further confirmation.
+export async function deleteBody(actor, bodyId){
+    let bucketKey = bodyId;
+    if (actor.type !== "character") {
+        // npc/goon share one fixed key per body type, not per item, so the type of the item
+        // actually being deleted decides which bucket to consolidate - otherwise deleting a
+        // Vehicle could sweep up an unrelated leftover Morph bound to the same "activeMorph" key.
+        const bodyItem = actor.items.get(bodyId);
+        bucketKey = bodyItem?.type === "vehicle" ? "activeVehicle" : "activeMorph";
+    }
+
     const deletionList = [];
-    const morphCollection = actor.type === "character" ? actor.bodies[activeMorph] : actor.bodies["activeMorph"];
-    const consolidatedItemList = [...morphCollection.morphdetails, ...morphCollection.morphtraits, ...morphCollection.morphflaws, ...morphCollection.morphgear];
+    const bodyCollection = actor.bodies[bucketKey];
+    const consolidatedItemList = [...bodyCollection.morphdetails, ...bodyCollection.morphtraits, ...bodyCollection.morphflaws, ...bodyCollection.morphgear];
     for (let item of consolidatedItemList){
         deletionList.push(item.id);
     }
+    // Armor is resolved live off actor.items (not the render-time actor.bodies cache) - see
+    // resolveArmorOnBodyDelete's comment for why a cached bucket can't be trusted here.
+    const remainingBoundArmor = actor.items.filter(i => i.type === "armor" && i.system.boundTo === bucketKey);
+    for (let item of remainingBoundArmor){
+        deletionList.push(item.id);
+    }
     await actor.deleteEmbeddedDocuments("Item", deletionList)
+}
+
+// Pulls every filled Enhancement slot (Ware/Traits/Flaws) on a body directly from the compendium
+// and creates them bound to that body - one created item per filled slot, so a slot referencing
+// the same compendium item twice (e.g. two identical minor Ware pieces) still yields two items.
+export async function applyStandardEnhancements(actor, body, boundTo) {
+    const slotGroups = [body.system.ware, body.system.traits, body.system.flaws];
+    const itemsToCreate = [];
+
+    for (const slots of slotGroups) {
+        for (const slot of Object.values(slots ?? {})) {
+            const uuid = slot?.value;
+            if (!uuid || uuid === "none") continue;
+
+            const source = await fromUuid(uuid);
+            if (!source) {
+                console.warn(`[EP2e] ${actor.name}: Enhancement slot on "${body.name}" points at a missing compendium item (${uuid}) - skipped.`);
+                continue;
+            }
+
+            const itemData = source.toObject();
+            itemData.system.boundTo = boundTo;
+            itemData.system.updated = game.system.version;
+            // A Trait/Flaw that can be either ego or morph (ego: true, morph: true) still gets
+            // bucketed as an ego trait purely by its ego flag, boundTo notwithstanding (see the
+            // trait/flaw classification in EPactorSheet.js). Clear it here, same as the interactive
+            // drop dialog does when the user picks "Morph" for a dual-capable trait.
+            if (itemData.type === "traits") {
+                itemData.system.ego = false;
+            }
+            itemsToCreate.push(itemData);
+        }
+    }
+
+    if (!itemsToCreate.length) return [];
+    return actor.createEmbeddedDocuments("Item", itemsToCreate);
+}
+
+// Pulls a Synthmorph's chosen Frame (Light/Medium/Heavy, system.frame - a compendium Armor item
+// UUID, same reference pattern as the Enhancement slots above) straight from the compendium and
+// binds a fresh copy to the body, unconditionally - Frame isn't an optional "Enhancement" like
+// Ware/Traits, it's the mandatory intrinsic Armor every synthmorph has per the rules, so this
+// doesn't go through the Standard/Flat Enhancement choice at all. Runs only for body.type ===
+// "morph" with system.type === "synth" - a Bio/Info morph, or a Synth with no frame chosen, is
+// left untouched. Checking body.system.type AT DROP TIME (rather than trying to keep a live body
+// in sync) is what prevents a stale Frame from lingering if the source Morph's type is later
+// edited back and forth - the check simply never fires for a non-Synth body.
+export async function applyFrame(actor, body, boundTo) {
+    if (body.type !== "morph" || body.system.type !== "synth") return null;
+
+    const uuid = body.system.frame;
+    if (!uuid || uuid === "none") return null;
+
+    const source = await fromUuid(uuid);
+    if (!source) {
+        console.warn(`[EP2e] ${actor.name}: "${body.name}"'s Frame points at a missing compendium item (${uuid}) - skipped.`);
+        return null;
+    }
+
+    const itemData = source.toObject();
+    itemData.system.boundTo = boundTo;
+    itemData.system.updated = game.system.version;
+
+    const created = await actor.createEmbeddedDocuments("Item", [itemData]);
+    if (created[0]) {
+        sheetFunction.systemMessage("success", "ep2e.systemMessage.itemAttachment.itemAddedToBody", { name: created[0].name, body: body.name });
+    }
+    return created[0] ?? null;
 }

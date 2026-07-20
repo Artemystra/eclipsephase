@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Bioweave, Chameleon Skin, Cryogenic Protection, Gills; NOTES: Bite DV 1d10",
+    "description": "It is suspected that these six-limbed amphibians were partially uplifted by now extinct aliens on the exoplanet Droplet. They sometimes walk erect on 2 limbs, sometimes crawl on all 6. They are quite perceptive and have learned to mimic transhuman behaviors and tool use.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -225,19 +225,19 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.jeQal8Rcw1OrnKjq"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RHimXpjmkhFg3xJI"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.q3A7aPdXwlhAvGeM"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.gsaGv9oGpM90DWn9"
       },
       "ware5": {
         "label": "5.",

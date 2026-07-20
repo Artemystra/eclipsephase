@@ -51,7 +51,9 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
     }
 
     // --- Case B: Gear / Weapons / Armor depend on an "active/equipped" flag
-    // (suppress if not active)
+    // (suppress if not active). For Armor, "active" isn't a manual toggle anymore - EPitem.js
+    // keeps it in sync with whether the body it's boundTo is the currently active/jammed one,
+    // so this check alone already covers body-relevance without a separate case here.
     if (t === "gear" || t === "weapon" || t === "armor" || t === "rangedWeapon" || t === "ccWeapon" || t === "ammo" || t === "grenade" || t === "drug") {
       // Change this path to whatever you actually store: active, equipped, carried, worn, etc.
       const isActive = !!item.system?.active; // or item.system.equipped / item.system.worn / etc.
@@ -59,6 +61,15 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
       const suppressed = !isActive;
       // console.debug("[EP2e] equipment suppression", { item: item.name, isActive, suppressed });
       return suppressed;
+    }
+
+    // --- Case C: Psi (aspect items) never works over mesh/cyberbrain, which jamming requires -
+    // suppress all Psi effects while jamming. activeJam (source data) is used rather than the
+    // derived additionalSystems.isJamming flag, same reasoning as Case A: this getter runs during
+    // effect application, before derived data exists. psiJamSuppression lets a caller (e.g. the
+    // "own body" roll clone in dice.js, which nulls activeJam) force this off explicitly too.
+    if (t === "aspect") {
+      return !!actor.system?.activeJam || !!foundry.utils.getProperty(actor, "flags.eclipsephase.psiJamSuppression");
     }
 
     // Default: don't suppress other item effects

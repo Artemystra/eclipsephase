@@ -2,6 +2,9 @@
 .idea/
 .vs/
 
+# macOS
+.DS_Store
+
 # Node Modules
 node_modules/
 npm-debug.log

@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Chameleon Skin, Enhanced Hearing, Enhanced Smell, Grip Pads, Prehensile Feet, Prehensile Tail; NOTES: Bite DV 1d6, Small size, Immune to land anemone venom",
+    "description": "Found in the Echo system, these colorful, omnivorous, winged avian-primates normally live in a symbiotic relationship with carnivorous land anemones. These mischievous creatures have bonded with some transhumans. They are clever, playful, and prone to pranks.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -115,8 +115,8 @@
       }
     },
     "armor": {
-      "energy": 2,
-      "kinetic": 3
+      "energy": null,
+      "kinetic": null
     },
     "init": 7,
     "luc": 30,
@@ -225,27 +225,27 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RHimXpjmkhFg3xJI"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.52LcZphn3UEctkiV"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.QK2V9Jnzn7IahX5n"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.sUhAh4vPbEs1jZKP"
       },
       "ware7": {
         "label": "7.",

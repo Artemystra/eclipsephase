@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Enhanced Smell, Enhanced Vision, some have Poison Glands; NOTES: Swarm sting DV 1d10 (ignores non-sealed armor)",
+    "description": "Interbred and gene-modified bee and wasp variations pollinate habitat gardens. They also produce honey, hunt other insects, trim leaves, and collect debris. Though non-aggressive, some have been modified for use as assassins or guardians.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -225,15 +225,15 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.SEoOYO8TjgC2vIdf"
       },
       "ware4": {
         "label": "4.",

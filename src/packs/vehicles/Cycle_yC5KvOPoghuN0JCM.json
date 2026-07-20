@@ -9,7 +9,7 @@
   "_id": "yC5KvOPoghuN0JCM",
   "system": {
     "additionalSystems": {},
-    "description": "Access Jacks, Mesh Inserts, Puppet Sock, Radar",
+    "description": "Motorcycles are favored in habitats where space is premium. Open two-seaters remain the most common, but gyro-stabilized one-wheel designs are growing in popularity. Two-wheelers and trikes with enclosed capsules are frequent sights on Mars, Mercury, and Titan.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,19 +224,19 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware5": {
         "label": "5.",

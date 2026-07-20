@@ -1518,9 +1518,9 @@ export async function migrationPre150(startMigration, endMigration) {
     return { endMigration: false };
   }
 
-  const baseMorphDoc = await pack.getDocument("suPRftVdLzcNhOH4");
+  const baseMorphDoc = await pack.getDocument("eNfxIGfFrEG2zqa9");
   if (!baseMorphDoc) {
-    console.error(`[EP Migration ${latestUpdate}] Morph suPRftVdLzcNhOH4 not found in pack`);
+    console.error(`[EP Migration ${latestUpdate}] Morph eNfxIGfFrEG2zqa9 not found in pack`);
     uiBar.fail("Migration cancelled: base morph not found");
     return { endMigration: false };
   }
@@ -2038,7 +2038,7 @@ async function _ep170_createIdsFromLegacy(actor) {
 async function _ep170_deleteLegacyIdData(actor) {
   // If your system supports key deletion syntax, this fully removes ego.ids
   await actor.update({
-    "system.ego.-=ids": null
+    "system.ego.ids": foundry.data.operators.ForcedDeletion
   });
 }
 
@@ -2340,15 +2340,15 @@ export async function migrationPre196(startMigration, endMigration) {
         update["system.curInsight"] = _ep196_numOrNull(sys.pools?.ins?.current);
         update["system.curFlex"] = _ep196_numOrNull(sys.pools?.flex?.current);
         update["system.curThreat"] = _ep196_numOrNull(sys.pools?.threat?.current);
-        update["system.-=pools"] = null;
+        update["system.pools"] = foundry.data.operators.ForcedDeletion;
 
         update["system.movement"] = _ep196_convertMovementSlots(sys.movement, `${ownerLabel}/${item.name}`, latestUpdate);
 
         update["system.chassisType"] = sys.type;
-        update["system.-=type"] = null;
+        update["system.type"] = foundry.data.operators.ForcedDeletion;
 
-        update["system.-=autoControl"] = null;
-        update["system.-=controlType"] = null;
+        update["system.autoControl"] = foundry.data.operators.ForcedDeletion;
+        update["system.controlType"] = foundry.data.operators.ForcedDeletion;
 
         if (actor) {
           await actor.updateEmbeddedDocuments("Item", [update]);
@@ -2428,6 +2428,235 @@ function _ep196_convertMovementSlots(oldMovement, contextLabel, latestUpdate) {
   }
 
   return newMovement;
+}
+
+/**
+ * Repairs an actor's active morph Item when its system.type is blank or otherwise not one of
+ * "bio"/"synth"/"info", by recovering the real value from the actor's own pre-1.5 legacy data.
+ * Root cause: the 1.5 migration (_ep150_mapLegacyMorphToItemSystem) mapped bodies.morphX.type
+ * into the new morph Item, but for npc/goon the value that actually drove the old DR calc lived
+ * in a separate field, system.bodyType.value (see EPactor.js as of commit 1d0bbdd1~1) - that
+ * field was never consulted, so npc/goon morphs frequently landed on system.type === "". Nothing
+ * in this codebase ever deletes system.bodies or system.bodyType after that migration, so this
+ * legacy data is still sitting untouched on any actor that predates it - see
+ * _ep200_resolveLegacyMorphType for exactly which field is read per actor type. That blank/wrong
+ * value poisons eclipsephase.damageRatingMultiplier[type] lookups in
+ * EPactor.js#_calculatePhysicalHealth, producing a NaN (or silently incorrect) Death Rating.
+ * Idempotent - only the active morph is touched, and only when the recovered legacy value
+ * differs from what's currently stored.
+ *
+ * Also fixes already-placed Aversion trait Items via _ep200_fixCollidingAversionTraits - see
+ * that function's doc comment for the unrelated bug it repairs.
+ */
+export async function migrationPre200(startMigration, endMigration) {
+  const latestUpdate = "2.0";
+  if (!startMigration) return { endMigration: false };
+
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+
+  const total = actors.length || 1;
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (const actor of actors) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const activeMorphId = actor.system?.activeMorph;
+      const activeMorph = activeMorphId ? actor.items.get(activeMorphId) : null;
+
+      if (activeMorph) {
+        const legacyType = _ep200_resolveLegacyMorphType(actor);
+        const currentType = activeMorph.system?.type;
+
+        if (legacyType && legacyType !== currentType) {
+          await actor.updateEmbeddedDocuments("Item", [{ _id: activeMorph.id, "system.type": legacyType }]);
+          console.log(`[EP Migration ${latestUpdate}] ${actor.name}: corrected active morph "${activeMorph.name}" type "${currentType || "(blank)"}" -> "${legacyType}" (recovered from legacy data)`);
+        } else if (!legacyType && !["bio", "synth", "info"].includes(currentType)) {
+          console.warn(`[EP Migration ${latestUpdate}] ${actor.name}: active morph "${activeMorph.name}" has an invalid type "${currentType}" but no legacy data could be recovered to fix it - please check manually`);
+        }
+      }
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: migration failed`, err);
+    }
+
+    try {
+      await _ep200_fixCollidingAversionTraits(actor, latestUpdate);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: aversion-trait fix failed`, err);
+    }
+
+    try {
+      await _ep200_migrateArmorToBoundBodies(actor, latestUpdate);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: armor body-binding failed`, err);
+    }
+
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+/**
+ * Recovers the pre-1.5 legacy body type for whatever is now an actor's active morph, so it can
+ * be cross-checked against the migrated Item's system.type. Returns null if nothing valid can be
+ * recovered (e.g. the actor postdates the 1.5 migration and never had this legacy data at all).
+ *  - npc/goon: the old DR calc read the separate actor.system.bodyType.value field directly;
+ *    bodies.morph1.type was never the field that mattered, but is checked as a weaker fallback.
+ *  - character: the old DR calc read activeMorph.type, i.e. bodies[bodies.activeMorph].type -
+ *    bodies.activeMorph (old, a string key like "morph2") is the exact legacy slot that became
+ *    the current Item, per _ep150_createMorphsFromLegacy's activeKey matching.
+ */
+function _ep200_resolveLegacyMorphType(actor) {
+  const VALID_MORPH_TYPES = new Set(["bio", "synth", "info"]);
+  const bodies = actor.system?.bodies;
+  let legacyType = null;
+
+  if (actor.type === "npc" || actor.type === "goon") {
+    legacyType = actor.system?.bodyType?.value ?? bodies?.morph1?.type ?? null;
+  } else if (actor.type === "character") {
+    const activeKey = bodies?.activeMorph;
+    legacyType = activeKey ? (bodies?.[activeKey]?.type ?? null) : null;
+  }
+
+  return VALID_MORPH_TYPES.has(legacyType) ? legacyType : null;
+}
+
+/**
+ * Fixes Aversion trait Items (Biomorph/Synthmorph/Infomorph I-III) already placed on an actor
+ * before the source compendium was corrected. The old effect wrote two changes to a shared
+ * sleeving.aversion.type/.value pair; with more than one Aversion trait active at once, Foundry's
+ * "add" change mode string-concatenates same-key values (e.g. "bioinfosynth"), silently breaking
+ * the malus for every Aversion trait on that actor, not just the extra ones. The fix replaces the
+ * old effect with one that writes to its own sleeving.aversions.<bodyType> key instead, matching
+ * the corrected compendium sources. Delete-and-recreate rather than update(), since ActiveEffect's
+ * changes array lives at a different schema path in v13 (top-level) vs v14 (system.changes).
+ */
+async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
+  const STALE_KEY = "system.additionalSystems.sleeving.aversion.type";
+  const STALE_VALUE_KEY = "system.additionalSystems.sleeving.aversion.value";
+  const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
+
+  const staleTraits = actor.items.filter(i =>
+    i.type === "traits" &&
+    i.effects?.some(e => e.changes?.some(c => c.key === STALE_KEY))
+  );
+
+  for (const trait of staleTraits) {
+    const staleEffect = trait.effects.find(e => e.changes?.some(c => c.key === STALE_KEY));
+    if (!staleEffect) continue;
+
+    const bodyType = staleEffect.changes.find(c => c.key === STALE_KEY)?.value;
+    const malus = staleEffect.changes.find(c => c.key === STALE_VALUE_KEY)?.value;
+    if (!bodyType || malus === undefined) continue;
+
+    const newChanges = [
+      { key: `system.additionalSystems.sleeving.aversions.${bodyType}`, value: malus, priority: null, type: "add" }
+    ];
+
+    const newEffectData = {
+      name: staleEffect.name,
+      icon: staleEffect.icon,
+      origin: staleEffect.origin,
+      disabled: staleEffect.disabled,
+      transfer: staleEffect.transfer,
+      changes: newChanges
+    };
+    if (isV14Plus) newEffectData.system = { changes: newChanges };
+
+    await trait.deleteEmbeddedDocuments("ActiveEffect", [staleEffect.id]);
+    await trait.createEmbeddedDocuments("ActiveEffect", [newEffectData]);
+
+    console.log(`[EP Migration ${latestUpdate}] ${actor.name}: fixed colliding Aversion effect on "${trait.name}" -> sleeving.aversions.${bodyType} = ${malus}`);
+  }
+}
+
+/**
+ * Part of the 2.0 armor-becomes-body-bound redesign (see EPactor.js#_calculateArmor and
+ * effects.js's Case B for the runtime side, which already treat an item with boundTo unset as
+ * legacy/untouched). Pre-2.0, Armor items had no boundTo at all and just sat on the actor
+ * globally; this maps every one of them into the (character-only) Stash in one shot, rather than
+ * guessing at a body - the Stash exists precisely for "figure out where this goes later", so
+ * there's no more "no active Morph to bind to" edge case to skip for characters either. NPCs/
+ * Goons have no Stash (see stashArmor/EPactorSheet.js), so they keep the original behavior of
+ * binding onto whichever Morph body they have.
+ *
+ * Notifying the owner: a ChatMessage created here would run on the executing GM's client, and a
+ * message's AUTHOR sees their own sent messages regardless of whisper targets - confirmed live,
+ * neither excluding the GM from `whisper` nor `blind:true` (which instead visibly masks content
+ * as "???" for everyone) nor `author: null` stopped the GM from seeing it. The actual fix: for
+ * characters, don't create the message here at all - stash a per-user pending-notice flag instead
+ * (module/eclipsephase.js's dedicated "ready" hook, ungated by isGM, self-whispers it on that
+ * player's own next login and clears the flag). The GM's client never runs that code, so it never
+ * sees these. NPC/Goon armor (bound to a body, not the Stash) keeps the old immediate-whisper
+ * behavior - a player owning an NPC/Goon is a rare edge case not worth the same treatment.
+ * Skips (with a console warning, no notice sent) an NPC/Goon actor that has unbound Armor but no
+ * Morph at all to bind it to - Armor could only ever be created without a boundTo pre-2.0, so
+ * this should be vanishingly rare, but is left for a human to check by hand rather than guessing.
+ */
+async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
+  const unboundArmor = actor.items.filter(i => i.type === "armor" && !i.system.boundTo);
+  if (unboundArmor.length === 0) return;
+
+  let bucketKey;
+  let targetName;
+  if (actor.type === "character") {
+    bucketKey = "stash";
+  } else {
+    const anyMorph = actor.items.find(i => i.type === "morph");
+    if (!anyMorph) {
+      console.warn(`[EP Migration ${latestUpdate}] ${actor.name}: has ${unboundArmor.length} unbound Armor item(s) but no Morph body to bind them to - skipped, please check manually`);
+      return;
+    }
+    bucketKey = "activeMorph";
+    targetName = anyMorph.name;
+  }
+
+  await actor.updateEmbeddedDocuments("Item", unboundArmor.map(a => ({ _id: a.id, "system.boundTo": bucketKey })));
+  console.log(`[EP Migration ${latestUpdate}] ${actor.name}: bound ${unboundArmor.length} Armor item(s) to "${actor.type === "character" ? "Stash" : targetName}"`);
+
+  // GMs own every actor by definition (testUserPermission always passes for them), but don't need
+  // a notice about their own migration run - only actual player owners do. If there's no non-GM
+  // owner (e.g. a GM-only NPC), there's no one to notify.
+  const playerOwners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER"));
+  if (playerOwners.length === 0) return;
+
+  if (actor.type === "character") {
+    // Deferred, self-whispered notice (see doc comment above) - one flag entry per affected
+    // character, consumed and cleared by module/eclipsephase.js's dedicated "ready" hook.
+    for (const user of playerOwners) {
+      const pending = user.getFlag("eclipsephase", "pendingArmorStashNotices") ?? [];
+      pending.push({ actorName: actor.name, count: unboundArmor.length });
+      await user.setFlag("eclipsephase", "pendingArmorStashNotices", pending);
+    }
+    return;
+  }
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    whisper: playerOwners.map(u => u.id),
+    content: game.i18n.format("ep2e.migration.armorBoundNotice", { count: unboundArmor.length, body: targetName })
+  });
 }
 
 function epCreateProgressDialog(title = "Migration") {

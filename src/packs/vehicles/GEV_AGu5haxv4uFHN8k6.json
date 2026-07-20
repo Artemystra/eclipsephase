@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/steering-wheel.png",
   "system": {
     "additionalSystems": {},
-    "description": "Access Jacks, Mesh Inserts, Puppet Sock, Radar, Autocook, Chem Sniffer, Enhanced Hearing, Enhanced Vision, Large Fabber, Life Support (1 month), Healing Vat, Pressure Adaptation, Portable Sensor (Telescope)",
+    "description": "A GEV is a boxy exploration vehicle designed to handle almost any environment. Favored for gatecrashing, they feature a smart-matter chassis that can shift between wheels and legs for rough terrain in 1d6 minutes. It can handle vacuum, surface water, and underwater, and carries a small metallic-hydrogen drive and attitude jets for maneuvering in space. It is shielded against radiation, features an extendable airlock, and carries extended life support functions.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -212,35 +212,35 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.TqVeVph3FpKGa2Z8"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.Df3EiN79MWssh2OO"
       },
       "ware9": {
         "label": "9.",

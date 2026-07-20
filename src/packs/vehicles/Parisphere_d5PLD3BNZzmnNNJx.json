@@ -9,7 +9,7 @@
   "_id": "d5PLD3BNZzmnNNJx",
   "system": {
     "additionalSystems": {},
-    "description": "Enhanced Vision, Heavy Combat Armor, Radar Absorbent, Structural Reinforcement, Weapon Mounts (2 Static, 2 Articulated/Concealed)",
+    "description": "Named after the Trojan hero Paris, who slew Achilles with an arrow, this orb-like spacecraft is little more than a weapons pod built around a rocket. Lacking a pilot, these fighter drones can pull high-g maneuvers.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,43 +224,55 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.8m6V78XjCsY7KhPY"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.KsDS5s931jzY2HRX"
       },
       "ware9": {
         "label": "9.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.x7IYwgKwlTY00kfW"
       },
       "ware10": {
         "label": "10.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.9ODirit8oYFzPTY9"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.9ODirit8oYFzPTY9"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.9ODirit8oYFzPTY9"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.9ODirit8oYFzPTY9"
       }
     },
     "flaws": {

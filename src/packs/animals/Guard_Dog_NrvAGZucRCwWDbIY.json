@@ -4,7 +4,7 @@
   "img": "systems/eclipsephase/resources/icons/smart-animal.png",
   "system": {
     "additionalSystems": {},
-    "description": "WARE: Claws, Cybercortex, Dermal Armor, Enhanced Hearing, Enhanced Smell, Enhanced Vision, Mesh Inserts, Muscle Augmentation, Puppet Sock, Reflex Boosters;",
+    "description": "These smart dogs are trained for security and policing purposes and sometimes enhanced with combative bioware or cybernetics.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -115,8 +115,8 @@
       }
     },
     "armor": {
-      "energy": 4,
-      "kinetic": 5
+      "energy": null,
+      "kinetic": null
     },
     "init": 10,
     "luc": 20,
@@ -225,43 +225,43 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.uKhS8vByVM8CeBHT"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.SNBc4gvEfvvGisGA"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.KMCuUOKV3PT1C5nX"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
       },
       "ware5": {
         "label": "5.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware6": {
         "label": "6.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware7": {
         "label": "7.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware8": {
         "label": "8.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.L4pLWCxM24G5yYpd"
       },
       "ware9": {
         "label": "9.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware10": {
         "label": "10.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.DCtJcW5nGCLD34ZN"
       }
     },
     "flaws": {

@@ -1,15 +1,3 @@
-2026/07/09-08:50:46.887290 17400b000 Recovering log #28
-2026/07/09-08:50:46.888373 17400b000 Delete type=0 #28
-2026/07/09-08:50:46.888399 17400b000 Delete type=3 #26
-2026/07/09-08:50:46.902625 174097000 Level-0 table #34: started
-2026/07/09-08:50:46.903171 174097000 Level-0 table #34: 51431 bytes OK
-2026/07/09-08:50:46.903258 174097000 Delete type=0 #32
-2026/07/09-08:50:46.903336 174097000 Manual compaction at level-0 from '!folders!BqAuWSEWfisfuXXd' @ 72057594037927935 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at (end)
-2026/07/09-08:50:46.903355 174097000 Manual compaction at level-1 from '!folders!BqAuWSEWfisfuXXd' @ 72057594037927935 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 810 : 1
-2026/07/09-08:50:46.903361 174097000 Compacting 1@1 + 1@2 files
-2026/07/09-08:50:46.903952 174097000 Generated table #35@1: 191 keys, 51431 bytes
-2026/07/09-08:50:46.903957 174097000 Compacted 1@1 + 1@2 files => 51431 bytes
-2026/07/09-08:50:46.904002 174097000 compacted to: files[ 0 0 1 0 0 0 0 ]
-2026/07/09-08:50:46.904032 174097000 Delete type=2 #34
-2026/07/09-08:50:46.904081 174097000 Delete type=2 #30
-2026/07/09-08:50:46.904161 174097000 Manual compaction at level-1 from '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 810 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at (end)
+2026/07/16-11:31:24.073427 1759af000 Recovering log #101
+2026/07/16-11:31:24.073752 1759af000 Delete type=0 #101
+2026/07/16-11:31:24.073774 1759af000 Delete type=3 #100

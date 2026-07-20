@@ -66,7 +66,7 @@
   "TYPES.Item.program" : "Program",
   "TYPES.Item.specialSkill" : "Special Skill",
   "TYPES.Item.knowSkill" : "Know Skill",
-  "TYPES.Item.vehicle" : "Vehicle",
+  "TYPES.Item.vehicle" : "Remote Body",
   "TYPES.Item.drug" : "Drug",
   "TYPES.Item.ammo" : "Ammo",
   "TYPES.Item.id" : "ID",
@@ -112,6 +112,10 @@
         "effectsTab": "Effects",
         "gmInfoTab": "GM Info"
       },
+      "limitedTabs": {
+        "physicalDescription": "{name}'s Sleeve",
+        "registeredId": "Registered ID: {name}"
+      },
       "button": {
         "edit": "Edit",
         "delete": "Delete",
@@ -122,9 +126,14 @@
         "addNew": "Add New",
         "showDetails": "Show Details",
         "hideDetails": "Hide Details",
-        "sleeveMorph": "Sleeve Morph",
+        "sleeveMorph": "Sleeve",
         "jamVehicle": "Jam",
         "unjamVehicle": "Unjam",
+        "rebindArmor": "Rebind to another body",
+        "stashArmor": "Stash Armor",
+        "moveArmor": "Move Armor",
+        "deleteArmorWithBody": "Delete Armor",
+        "equipArmor": "Equip",
         "changeID": "Activate ID",
         "thankYouLaph": "Thank You, Laph!"
       },
@@ -137,6 +146,8 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
+        "deleteArmorWithBodyCopy": "<b>Warning:</b>You are about to delete {body}. It has Armor bound to it - deleting {body} will also delete its Armor.",
+        "stashArmorCopy": "Do you want to stash {name}? You'll find it in your inventory anytime.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up hold SHIFT while pressing the delete button.</p></i>",
         "autoBotCopyGeneral": "<p><b>Warning:</b>This will reset all the vehicle's/bot's skill to the standard bot AI skills values. It will overwrite any changes you might have made to it's skills.</p><p><b>Select your vehicle's type:</b></p>",
         "autoBotAdditionalInfo": "<i><p style='font-size: 11px;'>Hold SHIFT while pressing the 'Auto-Bot'-button.</p></i>",
@@ -149,6 +160,7 @@
         "sleeveReplaceCopyNew": "<p><b>New Morph:</b></p>",
         "jamCopyGeneral": "<b>Warning:</b>You are about to jam into this remote body. Your morph's pools will be replaced with this body's pools.",
         "jamAdditionalInfo": "<i><p style='font-size: 11px;'>You will receive a -10 modifier to all actions while jamming. An Integration Test will be rolled automatically.</p></i>",
+        "needPuppetSockToJam": "Add Puppet Sock to Jam",
         "unjamCopyGeneral": "<b>Warning:</b>You are about to disengage from this remote body and return to your own morph.",
         "sleeveReplaceInfo": "<i><p style='font-size: 11px;'><b>Warning:</b>The old sleeve and all it's ware and traits will be automatically deleted. All calculations will be automatically based on your new sleeve</p></i>",
         "itemDeprecatedHeadline": "Sorry, Agent. I can't let you do this...",
@@ -578,6 +590,9 @@
           "bio": "Biologic",
           "info": "Infomorph"
         },
+        "frame": {
+          "label": "Frame"
+        },
         "durabilityLabel": "Durability",
         "movement": {
           "label": "Movement",
@@ -587,11 +602,15 @@
         "movementTypes": {
           "none": "-Select-",
           "boat": "Boat",
+          "brachiate": "Brachiate",
           "glider": "Glider",
           "hopper": "Hopper",
           "hover": "Hover",
           "ionic": "Ionic",
+          "magneticgenerator": "Magnetic Generator",
           "microlight": "Microlight",
+          "ooze": "Ooze",
+          "plasmasail": "Plasma Sail",
           "roller": "Roller",
           "rotor": "Rotor",
           "snake": "Snake",
@@ -649,8 +668,10 @@
       },
       "traitsLabel": "Morph Traits",
       "wareLabel": "Morph Ware",
+      "armorLabel": "Armor",
       "noMorphTraits": "This Morph is Traitless",
       "noMorphWare": "Your Morph is Flat",
+      "noMorphArmor": "This Morph has no Armor",
       "morphsHeadline": "Morphs",
       "jamming": {
         "headline": "Remote Bodies",
@@ -661,6 +682,7 @@
     "inventory": {
       "armorLabel": "Armor",
       "armorPlaceholder": "No Armor Name",
+      "stashedArmorLabel": "Stashed Armor",
       "rangedLabel": "Ranged Weapons",
       "rangedPlaceholder": "No Weapon Name",
       "ccLabel": "Close Combat Weapons",
@@ -719,8 +741,10 @@
       "aiSkillsHeadline": "AI Skills",
       "traitsLabel": "Traits & Flaws",
       "wareLabel": "Ware",
+      "armorLabel": "Armor",
       "noTraits": "No Traits or Flaws Installed",
-      "noWare": "No Ware Installed"
+      "noWare": "No Ware Installed",
+      "noArmor": "No Armor Installed"
     },
     "psi": {
       "infectionHeadline": "Infection Type",
@@ -867,21 +891,9 @@
       "armor": {
         "headline": "Armor",
         "noArmorSubheadline": "No Armor Equipped",
-        "noArmorCopy": "You are not wearing any armor",
-        "armorSubheadline": "Cumulated Armor",
-        "energy": "Energy",
-        "kinetic": "Kinetic",
-        "concealWarning": "Not concealable while > 11",
-        "encumberanceWarning": "Unable to move while > Dur",
-        "armorCountSubheadline": "Armor Pieces active on You",
-        "mainArmorLabel": "Main Armor",
-        "additionalArmorLabel": "Additional Armor",
-        "cumulativeMalusLabel": "Cumulative Malus",
-        "mainArmorMalusCopy": "For every additional main armor a modifier of -20 will be calculated to all your actions.",
-        "additionalArmorMalusCopy": "Additional armor can be layered without any modifier. It still counts against other armor modifiers.",
-        "exceedingSomLabel": "Exceeding Somatics",
-        "exceedingSomCopy": "If either singular AV (kinetic OR energy) exceeds your SOM, you receive another -20 to all rolls.",
-        "armorUsageDescription": "To activate or deactivate additional/different armor just head to the Physical-Tab. You can add armor by drag & drop it out of the compendiums or any other item collection available."
+        "concealWarning": "Armor values higher than 11 are not concealable - think of it as at least a thick, noticeable layer of clothing.",
+        "encumberanceWarning": "While your cumulative Armor exceeds your body's Durability, you are unable to move.",
+        "armorSourceHint": "To change your armor value, add it to your current Morph, or to the Remote Body you're jamming."
       },
       "ranged": {
         "headline": "Ranged Combat",
@@ -944,7 +956,9 @@
           "type": {
             "label": "Armor Type",
             "main": "Main Armor",
-            "additional": "Additional Armor"
+            "additional": "Additional Armor",
+            "mainShort": "Main",
+            "additionalShort": "Additional"
           }
         }
       },
@@ -1436,7 +1450,12 @@
           "ownBodyPenalty": "Own Body Penalty",
           "ownBodyWounds": "Own Body Wounds",
           "ownBodyArmor": "Own Body Armor Encumbrance",
-          "ownBodyEncumbrance": "Own Body Encumbrance"
+          "ownBodyEncumbrance": "Own Body Encumbrance",
+          "ownBodyTraits": "Own Body Traits/Ware",
+          "noPsi": "Psi doesn't work while jamming. It never works over mesh connection or inside a cyberbrain."
+        },
+        "armor": {
+          "equipped": "I have equipped my {morph} with some armor."
         },
         "sleeving": {
           "exoticMorphology": "Exotic Morphology",
@@ -1582,6 +1601,15 @@
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."
       },
+      "selectBody": {
+        "header": "Select Body",
+        "copy": "This item is bound to a body. Choose which one should receive it.",
+        "placeholder": "- Select Body -"
+      },
+      "reassignArmor": {
+        "header": "Reassign Armor",
+        "copy": "You are about to delete {body}, which has Armor bound to it. Stash it for later, or delete it along with {body}."
+      },
       "selectStress": {
         "dialogTitle": "Stress Response",
         "copy": "You are stressed out by the sensation of being resleeved. The Stress Value is based on the most stressful aspect of resleeving.",
@@ -1589,6 +1617,14 @@
         "majorLabel": "Major Stress",
         "minorDescription": "Stress due to alienation with the new body, continuity loss of yur ego or the lack of time since you have been reinstated.",
         "majorDescription": "Stress due to the fact that you're actively remembering your own death, or if you were offline for over 3 months of time."
+      },
+      "selectEnhancements": {
+        "header": "Add Standard Enhancements?",
+        "copy": "This body comes with a set of default Ware, Traits, and Flaws from the compendium. Should they be added automatically, or should the body stay flat?",
+        "standardLabel": "Standard Enhancements",
+        "standardDescription": "Add all Ware, Traits, and Flaws listed in this body's Enhancement slots.",
+        "flatLabel": "Flat",
+        "flatDescription": "Add the body as-is, without any of its listed Enhancements."
       }
     },
     "chat": {
@@ -1667,7 +1703,14 @@
       "110": "<span class='resource-label' style='flex: 100%'><p>Dice Roll Refactoring<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a major update restructuring all dice rolls within the system.</b><p/><p>In order to work properly, there are some minor tweaks made on NPC/Threat level. This might cause you to reinstate any NPC/Threat token to currently active encounters, as only the main instance of these tokens (aka the NPC/Threat in the actors list) will be updated accordingly.</p></div></span>",
       "150": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>All new Morphs!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>This is THE major update on morphs and it will fundamentally change the way they're working in the future. I did my best to create a migration script, that helps you to keep most of your data running, though I'm still a hobbyist developer and you might want to create a new world altogether if you're just yet started. Just know that I'm running a campaign on this system for 6 years now, so if there's anything I missed rest assured that it will bite me as well.</b><p/><p> That said, the most common issues you might experience are the following:<br><ul><li>The migration will delete all old 'morphflaws', 'flaws', 'morphtraits' and 'traits' everywhere (also on your characters). This is so protect your system from crashing in my future updates from this one on. (also you'll be prevented from creating these items - use the 'traits and flaws'-item instead)</li><li>Morphs are items now, so player characters can have more than 6. The script will go through all your characters and create morph-items according to the information provided. To prevent the system from mixing up your players morph wait a moment till you're receiving the final 'migration done'-message.</li><li>The way active effects work changed fundamentally between the update from v12 to v13 so the migration script will delete all active effects from your characters including temporary wound/trauma ignore and anything you might have added by hand. Sorry for the inconvenience.</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.5'>gitHub</a>.<p/><p><b>Also it's christmas!</b><br>If you feel generous please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "170": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Identify yourself!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>Another major, but less severe update this time: IDs are coming back to the system!</b><p/><p> That includes the following:<br><ul><li>Your old ids that are still saved with legacy characters are deleted and recreated as ID items</li><li>This will only be the case if the IDs have had a name OR a rep value to them, Otherwise no new ID item will be created</li><li>You can roll and edit your IDs as before, though now they're items and for that will be prone to some changes in the future, giving you an option to show a picture and a description to every ID (and maybe some more feature, we will see)</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.7'>gitHub</a>.<p/><p><b>Also this system lives from the fact that I believe that some of you care that it exists.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
-      "196": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Languages Get a Glow-Up, Vehicles Get in Line<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li>Your character's <b>Languages</b> field is now a proper multi-select with pills instead of a single comma-separated text box — whatever you had typed in before gets automatically split up so nothing gets lost.</li><li><b>Drones, vehicles, robots and smart animals</b> now share the same underlying data shape as morphs, fixing a bunch of inconsistencies around jamming. The old 'Morph' chassis option (never actually usable in play) is gone — any vehicle still set to it gets converted into a real Morph item automatically.</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v1.9.6'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>"
+      "196": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Languages Get a Glow-Up, Vehicles Get in Line<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li>Your character's <b>Languages</b> field is now a proper multi-select with pills instead of a single comma-separated text box — whatever you had typed in before gets automatically split up so nothing gets lost.</li><li><b>Drones, vehicles, robots and smart animals</b> now share the same underlying data shape as morphs, fixing a bunch of inconsistencies around jamming. The old 'Morph' chassis option (never actually usable in play) is gone — any vehicle still set to it gets converted into a real Morph item automatically.</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v1.9.6'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "armorBoundNotice": "<p><b>Armor update:</b> {count} Armor item(s) on this character got automatically bound to <b>{body}</b>, since Armor now belongs to a specific body instead of just sitting in your inventory. Use the rebind button next to an Armor item (on the Morph tab) to move it to a different body anytime.</p>",
+      "armorStashedNoticeSelf": {
+        "updateLabel": "Update Notice",
+        "main": "<b>Armor update:</b> {count} Armor item(s) on <b style='color: var(--highlight);'>{actor}</b> got automatically moved to their Stash.",
+        "sub": "Since Armor now belongs to a specific body instead of just sitting in your inventory. You'll find it under Stashed Armor (Gear tab) - use the Equip button next to it to assign it to a body anytime."
+      },
+      "200": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Getting Attached to Your Armor?<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li><b>Armor is now body-bound</b>, just like Ware and Traits already were. Existing characters' Armor is still to be found in the inventory, but with an all new button to it: the Equip button on the right hand side, next to the +. From here on, Armor only counts while its body is actually sleeved (or jammed into), and you can equip a piece from there, or rebind an already-equipped piece to a different body, anytime.</li><li>Some older characters, NPCs and goons ended up with a blank (or wrong) Body Type on their active Morph, because a past migration never carried it over correctly, making their <b>Death Rating show up as NaN</b>. This migration repairs that where it can recover the missing data - if nothing usable could be found for a particular actor, nothing is changed on them and you'll want to double check that Morph's Body Type by hand.</li><li>All 135 Morphs, 15 Smart Animals, and 39 Vehicles/Drones in the compendium now carry their complete, book-accurate Frame, Ware, and Trait values (Gear and Weapons are still due for the same treatment).</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v2.0'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>"
     },
     "systemMessage": {
       "general": {
@@ -1685,6 +1728,17 @@
         "copy": "This dialog lets you add Rez to every active player character in game. If a character is not active you can still add Rez to them. Please be aware that the 'Add REZ to all characters' option will add the same amount of Rez to all characters, no matter if they're active or not. Rez added to specific characters will therefore count on top of this value.",
         "inputLabelAll": "Add REZ to all characters",
         "confirm": "Add Rez"
+      },
+      "itemAttachment": {
+        "itemAddedEgo": "{name} added.",
+        "itemAddedToBody": "{name} added to {body}.",
+        "noBodyTrait": "No body present. Trait cannot be added.",
+        "noBodyWare": "No body present. Ware cannot be added.",
+        "noBodyArmor": "No body present. Armor cannot be added.",
+        "noOtherBodyArmor": "No other body to rebind this Armor to.",
+        "itemRebound": "{name} rebound to {body}.",
+        "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
+        "enhancementsAdded": "{count} Enhancement(s) added to {body}."
       }
     }
   }

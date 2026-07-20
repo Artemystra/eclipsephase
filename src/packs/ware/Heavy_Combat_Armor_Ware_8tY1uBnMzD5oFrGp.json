@@ -1,0 +1,93 @@
+{
+  "name": "Heavy Combat Armor",
+  "type": "ware",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [
+    {
+      "_id": "dE4fG5hI6jK7lM8n",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "name": "Heavy Combat Armor",
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.energyMod",
+            "value": 16,
+            "priority": null,
+            "type": "add"
+          },
+          {
+            "key": "system.mods.kineticMod",
+            "value": 14,
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "description": "",
+      "statuses": [],
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!8tY1uBnMzD5oFrGp.dE4fG5hI6jK7lM8n"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Armor +16/+14. Bulky, noticeable armor plates for serious combat operations. The shell's mobility systems and power output are modified to handle the extra mass.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "",
+    "cost": "major",
+    "slotType": "",
+    "bonus": null,
+    "malus": null,
+    "boundTo": null,
+    "wareType": "h"
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "coreVersion": "14.356",
+    "createdTime": 1784009714164,
+    "modifiedTime": 1784009714164,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "8tY1uBnMzD5oFrGp",
+  "folder": "zY1KfJUcBGEXsHk7",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_key": "!items!8tY1uBnMzD5oFrGp"
+}

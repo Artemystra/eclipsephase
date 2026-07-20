@@ -9,7 +9,7 @@
   "_id": "m0vmWPnlWE0HYDXN",
   "system": {
     "additionalSystems": {},
-    "description": "Access Jacks, Mesh Inserts, Puppet Sock, Radar",
+    "description": "Ubiquitous on Luna, Mars, Mercury, and Titan, this four-wheeler's large balloon tires are designed for both roads and off-road terrain. Smart materials in both the suspension and the tires reshape themselves to adapt to uneven conditions.",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -224,19 +224,19 @@
     "ware": {
       "ware1": {
         "label": "1.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
       },
       "ware2": {
         "label": "2.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware3": {
         "label": "3.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware4": {
         "label": "4.",
-        "value": ""
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware5": {
         "label": "5.",

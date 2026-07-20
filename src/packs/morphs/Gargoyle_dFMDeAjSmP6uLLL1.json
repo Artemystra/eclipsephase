@@ -1,0 +1,203 @@
+{
+  "name": "Gargoyle",
+  "type": "morph",
+  "_id": "dFMDeAjSmP6uLLL1",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Gargoyle.webp",
+  "system": {
+    "description": "This anthroform mobile sensor unit is designed for media, freelance journalists, forensics teams, investigators, and anyone who is regularly required to document a situation thoroughly. Gargoyles stand taller than average transhumans for better viewing. Much of their exterior surface is covered in quantum-dot camera displays.",
+    "img": "",
+    "customToken": null,
+    "type": "synth",
+    "dur": 30,
+    "insight": 2,
+    "moxie": 0,
+    "vigor": 0,
+    "flex": 1,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "walker",
+        "base": 4,
+        "full": 20
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.jP46G9UyhpEboPOY"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.I4mu1EOOQnhZB3cc"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.VSb0jNadow4bNHrh"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
+      },
+      "ware15": {
+        "label": "15.",
+        "value": "Compendium.eclipsephase.ware.Item.j8eZ9xRZbp7aPZJh"
+      },
+      "ware16": {
+        "label": "16.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.tl2GCQOmFltBvnYO"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "frame": "Compendium.eclipsephase.armor.Item.puuTYYsKNXEW05FX"
+  },
+  "effects": [],
+  "folder": "NfKORwce5MErntbB",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007029213,
+    "modifiedTime": 1784007029213,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!dFMDeAjSmP6uLLL1"
+}

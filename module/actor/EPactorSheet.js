@@ -1,5 +1,5 @@
 import { eclipsephase } from "../config.js";
-import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills} from "../common/general-sheet-functions.js";
+import { registerCommonHandlers,tempEffectCreation,tempEffectDeletion,confirmation,embeddedItemToggle,moreInfo,listSelection, gmList,multiSelectPills,selectBody,systemMessage} from "../common/general-sheet-functions.js";
 import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
@@ -12,6 +12,12 @@ import { restingListeners } from "../rolls/resting.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
+
+// Infomorphs and other bodyless bodies have every movement slot at type "none" - used to hide the
+// Movement section on the Morph tab entirely rather than showing an empty header (Njal/Agent case).
+function hasAnyMovement(bodyItem) {
+  return Object.values(bodyItem?.system?.movement ?? {}).some(m => m?.type && m.type !== "none");
+}
 
 
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
@@ -43,10 +49,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   });
 
   //Fallback template for sheets in general
+  // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders
   static PARTS = {
     body: {
       template: "systems/eclipsephase/templates/actor/actor-sheet.html",
-      root: true
+      root: true,
+      scrollable: ["#egoPane", "#skillsPane", "#bodySubNav", "#bodyDetails", "#vehiclesPane", "#weaponsPane", "#psiPane", "#gmEffectsList", "#rezLedger", ".contentright", ".wrapperright"]
     }
   };
 
@@ -66,6 +74,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     secondary: {
       initial: "",
       tabs: []
+    },
+    limited: {
+      initial: "physicalDescription",
+      tabs: [
+        { id: "physicalDescription", label: "ep2e.actorSheet.limitedTabs.physicalDescription" },
+        { id: "registeredId", label: "ep2e.actorSheet.limitedTabs.registeredId" }
+      ]
     }
   };
 
@@ -75,6 +90,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const tabs = [];
 
     for (const body of Object.values(this.document.bodies ?? {})) {
+      if (body?.bodyType !== "morph") continue;
       const morphId = body?.morphdetails?.[0]?.id;
       if (!morphId) continue;
 
@@ -115,7 +131,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     primary: "skills",
     morph: "sleeved",
     id: "active",
-    ego: "traits-flaws"
+    ego: "traits-flaws",
+    limited: "physicalDescription"
   };
 
   static async _onEditImage(event, target) {
@@ -159,6 +176,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
       context.tabGroups = this.tabGroups;
     }
+    else {
+      context.tabGroups = { limited: this.tabGroups.limited };
+    }
 
     return context;
   }
@@ -174,6 +194,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   async _onFirstRender(context, options) {
     await super._onFirstRender(context, options);
     this.setPosition(this._getSheetDimensions());
+  }
+
+  // Foundry v14 core bug: for a root:true part, _replaceHTML empties newElement via
+  // replaceChildren() before calling _syncPartState(), so its focus-restore query
+  // (newElement.querySelector(state.focus)) always misses and submitOnChange silently
+  // drops focus on every edit. Retry the same selector against the live DOM if core's
+  // own restore found nothing.
+  _syncPartState(partId, newElement, priorElement, state) {
+    super._syncPartState(partId, newElement, priorElement, state);
+    if (state.focus && !newElement.querySelector(state.focus)) {
+      this.element.querySelector(state.focus)?.focus();
+    }
   }
 
   //Sheet template based on actor.type
@@ -222,11 +254,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       return { width: 800, height: 366 };
     }
 
-    if (actor.type === 'npc') {
-      return { width: 1058, height: 675 };
-    }
-
-    return { width: 1058, height: 630 };
+    // NPC and Goon share the same sheet height now - no more separate, shorter Goon variant.
+    return { width: 1058, height: 675 };
   }
 
   //Registering HTML-editors to actor sheets
@@ -288,6 +317,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const rangedweapon = [];
       const ccweapon = [];
       const armor = [];
+      // PC-only "set this aside for now" bucket - Armor with boundTo === "stash" instead of a
+      // real body id. Starts as Armor-only; extend with more keys if other item types gain it later.
+      const stash = { armor: [] };
       const aspect = {
           none: [],
           chi: [],
@@ -343,13 +375,23 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           migrationBridge += 1;
           if (actor.type === "character") morphID = item.id
           if (actor.type !== "character") morphID = "activeMorph"
-          bodies[morphID] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+          bodies[morphID] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
+        }
+        // Vehicles are bodies too (same bucket shape/key scheme), but get their own tab/card via
+        // actor.remoteVehicles below, not the Morphs loop - bodyType lets morph-tab.html tell them apart.
+        // Non-character actors get a separate fixed key from Morphs ("activeVehicle") so an NPC/Goon
+        // that happens to carry both a leftover Morph and a Vehicle doesn't merge them into one bucket.
+        else if (item.type === "vehicle"){
+          let vehicleID
+          if (actor.type === "character") vehicleID = item.id
+          if (actor.type !== "character") vehicleID = "activeVehicle"
+          bodies[vehicleID] = { bodyType: "vehicle", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
         }
 
-        
+
       }
       if (migrationBridge === 0){
-        bodies["migrationBody"] = { morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], traitsCount: 0, flawsCount: 0, gearCount: 0}
+        bodies["migrationBody"] = { bodyType: "morph", morphdetails: [], morphtraits: [], morphflaws: [], morphgear: [], morpharmor: [], traitsCount: 0, flawsCount: 0, gearCount: 0, armorCount: 0}
       }
       actor.bodies = bodies;
       // Iterate through items, allocating to containers
@@ -358,16 +400,30 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const boundTo = item.system.boundTo;
 
         item.img = item.img || DEFAULT_TOKEN;
+        // Used by the Jam button (Morphs and Vehicles alike) to decide enabled-vs-disabled+tooltip.
+        item.hasPuppetSock = (actorModel.additionalSystems.puppetSocked ?? []).includes(item.id);
 
         //Adds morphs to their container AND creates a subcontainer to morphflaws/traits and ware
         if (item.type === "morph" && actor.type === "character"){
           const morphID = (item.id);
           const category = bodies[morphID];
           category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
         }
         else if (item.type === "morph" && actor.type !== "character"){
           const category = bodies["activeMorph"];
           category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
+        }
+        else if (item.type === "vehicle" && actor.type === "character"){
+          const category = bodies[item.id];
+          category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
+        }
+        else if (item.type === "vehicle" && actor.type !== "character"){
+          const category = bodies["activeVehicle"];
+          category.morphdetails.push(item);
+          category.hasMovement = hasAnyMovement(item);
         }
 
         // Append to features.
@@ -521,15 +577,22 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             let slotType = itemModel.slotType;
               switch (slotType){
                 case 'main':
-                  itemModel.slotName = "ep2e.item.armor.table.type.main";
+                  itemModel.slotName = "ep2e.item.armor.table.type.mainShort";
                   break;
                 case 'additional':
-                  itemModel.slotName = "ep2e.item.armor.table.type.additional";
+                  itemModel.slotName = "ep2e.item.armor.table.type.additionalShort";
                   break;
                 default:
                   break;
               }
             armor.push(item);
+            if (itemModel.boundTo === "stash") {
+              stash.armor.push(item);
+            }
+            else if (itemModel.boundTo && bodies[itemModel.boundTo]) {
+              bodies[itemModel.boundTo].morpharmor.push(item);
+              bodies[itemModel.boundTo].armorCount += 1;
+            }
           }
           else if (item.type === 'aspect') {
             let psiDuration = itemModel.duration;
@@ -681,17 +744,17 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             }
             vehicle[itemModel.chassisType].push(item)
           }
-        else if (item.type === 'ware' && itemModel.boundTo) {
+        else if (item.type === 'ware' && itemModel.boundTo && bodies[boundTo]) {
               const path = bodies[boundTo].morphgear;
               bodies[boundTo].gearCount += 1;
               path.push(item);
         }
-        else if (item.type === "traits" && itemModel.traitType === "flaw" && itemModel.boundTo) {
+        else if (item.type === "traits" && itemModel.traitType === "flaw" && itemModel.boundTo && bodies[boundTo]) {
             const path = bodies[boundTo].morphflaws;
             bodies[boundTo].flawsCount += 1;
             path.push(item);
         }
-        else if (item.type === "traits" && itemModel.traitType === "trait" && itemModel.boundTo) {
+        else if (item.type === "traits" && itemModel.traitType === "trait" && itemModel.boundTo && bodies[boundTo]) {
             const path = bodies[boundTo].morphtraits;
             bodies[boundTo].traitsCount += 1;
             path.push(item);
@@ -715,6 +778,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.rangedWeapon = rangedweapon;
       actor.ccweapon = ccweapon;
       actor.armor = armor;
+      actor.stash = stash;
       actor.ware = ware;
       actor.aspect = aspect;
       actor.program = program;
@@ -725,12 +789,26 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.knowSkill = know;
       actor.specialSkill = special;
       actor.vehicle = vehicle;
-      actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal];
+      actor.remoteVehicles = [...vehicle.robot, ...vehicle.vehicle, ...vehicle.animal].map(v => {
+        const bodyKey = actor.type === "character" ? v.id : "activeVehicle";
+        const bucket = bodies[bodyKey] ?? { traitsCount: 0, morphtraits: [], flawsCount: 0, morphflaws: [], gearCount: 0, morphgear: [], armorCount: 0, morpharmor: [] };
+        v.traitsCount = bucket.traitsCount;
+        v.morphtraits = bucket.morphtraits;
+        v.flawsCount = bucket.flawsCount;
+        v.morphflaws = bucket.morphflaws;
+        v.gearCount = bucket.gearCount;
+        v.morphgear = bucket.morphgear;
+        v.armorCount = bucket.armorCount;
+        v.morpharmor = bucket.morpharmor;
+        v.hasMovement = hasAnyMovement(v);
+        return v;
+      });
       actor.activeEffects=effects;
       actor.actorType = "PC";
       actor.ammo = ammo;
       actor.morph = morph;
       actor.ids = id;
+      actor.currentIdName = actor.ids.find(i => i.id === actor.system.activeID)?.name ?? "";
 
       // Check if sleights are present and toggle Psi Tab based on this
       if (actor.aspect.chi.length>0){
@@ -860,11 +938,27 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       const canEditTarget = targetActor.isOwner;
       // Direct transfer if current user owns both sides
       if (canEditSource && canEditTarget) {
+        // Armor is always body-bound - re-resolve it for the target actor instead of carrying
+        // over whatever boundTo it had on the source, which would point at a body that doesn't exist here.
+        // Incoming armor on a character always lands in the (character-only) Stash instead of
+        // prompting a body-picker - the receiving player never gets asked where to put someone
+        // else's armor, they just get to see it arrived and equip it themselves when ready.
+        let boundToOverride;
+        if (item.type === "armor") {
+          if (targetActor.type === "character") {
+            boundToOverride = "stash";
+          } else {
+            const resolved = await MORPHFUNCTION.resolveBodyForItem(targetActor, "ep2e.systemMessage.itemAttachment.noBodyArmor");
+            if (resolved.cancelled) return null;
+            boundToOverride = resolved.boundTo;
+          }
+        }
         return SHEET.transferItemBetweenActors({
           sourceActor,
           targetActor,
           item,
-          quantity
+          quantity,
+          boundToOverride
         });
       }
 
@@ -910,38 +1004,106 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         "system.pools.flex.value": egoFlex + newBodyFlexMax,
         "flags.eclipsephase.resleeving": true
       });
+      await maybeApplyStandardEnhancements(actor, created[0], "activeMorph");
+      await MORPHFUNCTION.applyFrame(actor, created[0], "activeMorph");
       return created[0];
     }
 
-    if (itemData.type === "traits" && itemModel.morph === true && itemModel.ego === true) {
+    const isWare = itemData.type === "ware";
+    const isTrait = itemData.type === "traits";
+    // Armor is always body-bound, same as Ware - unlike Ware/Traits it can be rebound later
+    // (see the per-item rebind action), but it still needs a body to land on in the first place.
+    const isArmor = itemData.type === "armor";
+    const canBeEgo = isTrait && itemModel.ego === true;
+    const canBeMorph = isWare || isArmor || (isTrait && itemModel.morph === true);
+
+    // Vehicles are valid boundTo targets too, grouped as "Remote Bodies" alongside "Morphs".
+    const { bodies, boundToFor, buildBodyGroups } = MORPHFUNCTION.getBodyBindingInfo(actor);
+
+    // Traits authored with neither flag set can't be meaningfully attached anywhere.
+    if (isTrait && !canBeEgo && !canBeMorph) {
+      await systemMessage("error", "ep2e.systemMessage.itemAttachment.unknownTraitType");
+      return null;
+    }
+
+    let pendingMessage;
+
+    if (canBeEgo && canBeMorph) {
       const dialogName = game.i18n.localize("ep2e.dialog.selectTrait.header");
       const dialogCopy = "ep2e.dialog.selectTrait.copy";
       const listOptions = [
         { id: "ego", label: "ep2e.actorSheet.leftTabs.egoTab" },
-        { id: "morph", label: "ep2e.actorSheet.rightTabs.morphTab" }
+        {
+          id: "morph",
+          label: "ep2e.actorSheet.rightTabs.morphTab",
+          disabled: bodies.length === 0,
+          bodyOptions: bodies.length > 1 ? buildBodyGroups() : undefined,
+          bodyPlaceholder: game.i18n.localize("ep2e.dialog.selectBody.placeholder"),
+          // Default to the sleeved Morph even while jamming (never the jammed body) - same
+          // reasoning as the Armor rebind/equip dialogs, saves a click for the common case.
+          defaultSelection: actor.system?.activeMorph
+        }
       ];
+
+      const renderHook = (event, dialog) => {
+        const root = dialog.element;
+        const morphRadio = root.querySelector('input[name="ItemSelect"][value="morph"]');
+        const egoRadio = root.querySelector('input[name="ItemSelect"][value="ego"]');
+        const bodySelect = root.querySelector('select[name="BodySelect"]');
+        const confirmBtn = root.querySelector('button[data-action="select"]');
+        if (!bodySelect || !confirmBtn) return;
+
+        const sync = () => {
+          const morphChosen = !!morphRadio?.checked;
+          bodySelect.disabled = !morphChosen;
+          confirmBtn.disabled = morphChosen && !bodySelect.value;
+        };
+
+        morphRadio?.addEventListener("change", sync);
+        egoRadio?.addEventListener("change", sync);
+        bodySelect.addEventListener("change", sync);
+        sync();
+      };
 
       traitSelection = await listSelection(
         listOptions,
         "standardSelectionList",
-        250,
+        280,
         dialogName,
         "",
-        dialogCopy
+        dialogCopy,
+        renderHook
       );
 
       if (traitSelection.cancelled) return null;
 
-      if (traitSelection.selection === "morph") itemModel.ego = false;
-      else itemModel.morph = false;
-    }
+      if (traitSelection.selection === "morph") {
+        itemModel.ego = false;
 
-    if (
-      (itemData.type === "traits" && itemModel.morph === true) ||
-      itemData.type === "ware" ||
-      itemModel.morph === true
-    ) {
-      itemModel.boundTo = actor.type === "character" ? currentMorph : "activeMorph";
+        const chosenBody = bodies.length > 1
+          ? bodies.find(b => b.id === traitSelection.body)
+          : bodies[0];
+
+        if (!chosenBody) {
+          await systemMessage("error", "ep2e.systemMessage.itemAttachment.noBodyTrait");
+          return null;
+        }
+
+        itemModel.boundTo = boundToFor(chosenBody);
+        pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: chosenBody.name } };
+      } else {
+        itemModel.morph = false;
+        pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
+      }
+    } else if (canBeMorph) {
+      const key = isWare ? "noBodyWare" : (isArmor ? "noBodyArmor" : "noBodyTrait");
+      const resolved = await MORPHFUNCTION.resolveBodyForItem(actor, `ep2e.systemMessage.itemAttachment.${key}`);
+      if (resolved.cancelled) return null;
+
+      itemModel.boundTo = resolved.boundTo;
+      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedToBody", data: { name: itemData.name, body: resolved.chosenBody.name } };
+    } else if (canBeEgo) {
+      pendingMessage = { type: "success", key: "ep2e.systemMessage.itemAttachment.itemAddedEgo", data: { name: itemData.name } };
     }
 
     if (itemData.type === "rangedWeapon") {
@@ -960,6 +1122,16 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     itemModel.updated = game.system.version;
 
     const created = await actor.createEmbeddedDocuments("Item", [itemData]);
+
+    if (pendingMessage) {
+      systemMessage(pendingMessage.type, pendingMessage.key, pendingMessage.data);
+    }
+
+    if (itemData.type === "morph" || itemData.type === "vehicle") {
+      await maybeApplyStandardEnhancements(actor, created[0], boundToFor(created[0]));
+      await MORPHFUNCTION.applyFrame(actor, created[0], boundToFor(created[0]));
+    }
+
     return created[0] ?? null;
   }
 
@@ -1046,6 +1218,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (!askForOptions) {
           const item = actor.items.get(itemId);
           const itemName = li.dataset.itemName ? li.dataset.itemName : null;
+
+          if (item?.type === "morph" || item?.type === "vehicle") {
+            let bucketKey = itemId;
+            if (actor.type !== "character") {
+              bucketKey = item.type === "vehicle" ? "activeVehicle" : "activeMorph";
+            }
+            const hasArmor = actor.items.some(i => i.type === "armor" && i.system.boundTo === bucketKey);
+
+            if (hasArmor) {
+              // Bound Armor gets one merged dialog (delete-confirmation + reassignment choice)
+              // instead of the generic confirm followed by a second, separate Armor dialog.
+              const resolution = await MORPHFUNCTION.resolveArmorOnBodyDelete(actor, bucketKey, itemName);
+              if (!resolution.proceed) return;
+              await MORPHFUNCTION.deleteBody(actor, itemId);
+              return;
+            }
+          }
+
           const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
           const popUpHeadline = (game.i18n.localize("ep2e.actorSheet.button.delete")) + " " + (itemName ? itemName : "");
           const popUpCopy = "ep2e.actorSheet.popUp.deleteCopyGeneral";
@@ -1053,8 +1243,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
           let popUp = await confirmation(popUpTitle, popUpHeadline, popUpCopy, popUpInfo);
 
-          if (popUp.confirm === true && item?.type === "morph") {
-            await MORPHFUNCTION.deleteMorph(actor, itemId);
+          if (popUp.confirm === true && (item?.type === "morph" || item?.type === "vehicle")) {
+            await MORPHFUNCTION.deleteBody(actor, itemId);
           }
           else if (popUp.confirm === true) {
             await actor.deleteEmbeddedDocuments("Item", [itemId]);
@@ -1281,13 +1471,31 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     html.querySelectorAll(".jammButton").forEach(element => {
       element.addEventListener("click", ev => {
-        MORPHFUNCTION.jammVehicle(actor, ev.currentTarget, this);
+        MORPHFUNCTION.jamBody(actor, ev.currentTarget, this);
       });
     });
 
     html.querySelectorAll(".unjammButton").forEach(element => {
       element.addEventListener("click", ev => {
-        MORPHFUNCTION.unjamVehicle(actor, ev.currentTarget, this);
+        MORPHFUNCTION.unjamBody(actor, ev.currentTarget, this);
+      });
+    });
+
+    html.querySelectorAll(".item-rebind").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.rebindArmor(actor, ev.currentTarget.dataset.itemId);
+      });
+    });
+
+    html.querySelectorAll(".item-stash").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.stashArmor(actor, ev.currentTarget.dataset.itemId, ev.shiftKey);
+      });
+    });
+
+    html.querySelectorAll(".item-equip").forEach(element => {
+      element.addEventListener("click", ev => {
+        MORPHFUNCTION.equipArmorFromStash(actor, ev.currentTarget.dataset.itemId);
       });
     });
 
@@ -1622,4 +1830,32 @@ function _traitSelection(form) {
     return {
         value: form.TraitTypeSelection.value
     }
+}
+
+// After a Morph/Vehicle is added as a body, offers to pull its Enhancement slots (Ware/Traits/
+// Flaws) straight from the compendium and bind them to it - skipped entirely if the body has no
+// filled slots, so a blank/custom body never triggers a pointless prompt.
+async function maybeApplyStandardEnhancements(actor, body, boundTo) {
+  const hasFilledSlot = [body.system.ware, body.system.traits, body.system.flaws]
+    .some(slots => Object.values(slots ?? {}).some(slot => slot?.value && slot.value !== "none"));
+  if (!hasFilledSlot) return;
+
+  const choice = await listSelection(
+    [
+      { id: "standard", label: "ep2e.dialog.selectEnhancements.standardLabel", description: "ep2e.dialog.selectEnhancements.standardDescription" },
+      { id: "flat", label: "ep2e.dialog.selectEnhancements.flatLabel", description: "ep2e.dialog.selectEnhancements.flatDescription" }
+    ],
+    "standardSelectionList",
+    320,
+    "ep2e.dialog.selectEnhancements.header",
+    "",
+    "ep2e.dialog.selectEnhancements.copy"
+  );
+
+  if (choice.cancelled || choice.selection !== "standard") return;
+
+  const created = await MORPHFUNCTION.applyStandardEnhancements(actor, body, boundTo);
+  if (created.length) {
+    systemMessage("success", "ep2e.systemMessage.itemAttachment.enhancementsAdded", { count: created.length, body: body.name });
+  }
 }

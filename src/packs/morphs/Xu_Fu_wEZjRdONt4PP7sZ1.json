@@ -1,0 +1,203 @@
+{
+  "name": "Xu Fu",
+  "type": "morph",
+  "_id": "wEZjRdONt4PP7sZ1",
+  "img": "systems/eclipsephase/resources/img/StandardMorphs/Xu%20Fu.webp",
+  "system": {
+    "description": "Named after a historical Chinese explorer, many gatecrashers consider xu fus the ideal exoplanet exploration synthmorph. Its main body sits atop 6 legs that end in multidirectional smart wheels for quick travel, capable of rolling in any direction and over rough terrain. For exceptionally difficult terrain, the wheels can be retracted and the xu fu can maneuver as a walker. In addition to two standard arms, it features a lower third arm for collecting samples and an upper telescoping fourth arm for reaching far distances and overseeing obstacles. All arms are retractable. Xu fus have an impressive sensor package and are ideal for surface-based scouting, investigating tunnels, and other gatecrashing tasks.",
+    "img": "",
+    "customToken": null,
+    "type": "synth",
+    "dur": 40,
+    "insight": 1,
+    "moxie": 0,
+    "vigor": 0,
+    "flex": 2,
+    "movement": {
+      "move1": {
+        "label": "1.",
+        "active": true,
+        "type": "walker",
+        "base": 4,
+        "full": 20
+      },
+      "move2": {
+        "label": "2.",
+        "active": false,
+        "type": "wheeled",
+        "base": 8,
+        "full": 40
+      },
+      "move3": {
+        "label": "3.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move4": {
+        "label": "4.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move5": {
+        "label": "5.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move6": {
+        "label": "6.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move7": {
+        "label": "7.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move8": {
+        "label": "8.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move9": {
+        "label": "9.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      },
+      "move10": {
+        "label": "10.",
+        "active": false,
+        "type": "none",
+        "base": null,
+        "full": null
+      }
+    },
+    "ware": {
+      "ware1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.ware.Item.RQy3Yu8F9n9TQQYs"
+      },
+      "ware2": {
+        "label": "2.",
+        "value": "Compendium.eclipsephase.ware.Item.yhjjHWEzn9Xoqu6I"
+      },
+      "ware3": {
+        "label": "3.",
+        "value": "Compendium.eclipsephase.ware.Item.IP2UzRPBLlUWdvWX"
+      },
+      "ware4": {
+        "label": "4.",
+        "value": "Compendium.eclipsephase.ware.Item.DsZJsZvcMBXVqqNK"
+      },
+      "ware5": {
+        "label": "5.",
+        "value": "Compendium.eclipsephase.ware.Item.ws0IespqkhNwO78T"
+      },
+      "ware6": {
+        "label": "6.",
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+      },
+      "ware7": {
+        "label": "7.",
+        "value": "Compendium.eclipsephase.ware.Item.jhO6F03fXymKwxIU"
+      },
+      "ware8": {
+        "label": "8.",
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
+      },
+      "ware9": {
+        "label": "9.",
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+      },
+      "ware10": {
+        "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+      },
+      "ware11": {
+        "label": "11.",
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+      },
+      "ware12": {
+        "label": "12.",
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
+      },
+      "ware13": {
+        "label": "13.",
+        "value": "Compendium.eclipsephase.ware.Item.ec3esdksp8OPPCJ6"
+      },
+      "ware14": {
+        "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.j8eZ9xRZbp7aPZJh"
+      },
+      "ware15": {
+        "label": "15.",
+        "value": "Compendium.eclipsephase.ware.Item.n7ZzROqOZ72t8bKs"
+      },
+      "ware16": {
+        "label": "16.",
+        "value": "none"
+      }
+    },
+    "flaws": {
+      "flaw1": {
+        "label": "1.",
+        "value": "Compendium.eclipsephase.traits.Item.xe7Xnj0GJ28v2LaB"
+      },
+      "flaw2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "flaw3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "traits": {
+      "trait1": {
+        "label": "1.",
+        "value": "none"
+      },
+      "trait2": {
+        "label": "2.",
+        "value": "none"
+      },
+      "trait3": {
+        "label": "3.",
+        "value": "none"
+      }
+    },
+    "frame": "Compendium.eclipsephase.armor.Item.puuTYYsKNXEW05FX"
+  },
+  "effects": [],
+  "folder": "NfKORwce5MErntbB",
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null,
+    "coreVersion": "13.346",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.0",
+    "createdTime": 1784007679559,
+    "modifiedTime": 1784007679559,
+    "lastModifiedBy": null
+  },
+  "_key": "!items!wEZjRdONt4PP7sZ1"
+}
