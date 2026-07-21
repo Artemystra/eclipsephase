@@ -1,4 +1,5 @@
 import { eclipsephase } from "../config.js"
+import { takeDamage } from "../rolls/damage.js"
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -273,6 +274,10 @@ export default class EPactor extends Actor {
   // ceiling instead for those two; everything else keeps native behavior.
   async modifyTokenAttribute(attribute, value, isDelta = false, isBar = true) {
     const ceilingByAttribute = { "health.physical": "physical.dr", "health.mental": "mental.ir" };
+    const DAMAGE_CONFIG = {
+      "health.physical": { barTarget: "physical", thresholdPath: "physical.wt", modifierPath: "physical.wounds" },
+      "health.mental": { barTarget: "mental", thresholdPath: "mental.tt", modifierPath: "mental.trauma" }
+    };
     const ceilingPath = ceilingByAttribute[attribute];
     if (!isBar || !ceilingPath) return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
 
@@ -282,7 +287,23 @@ export default class EPactor extends Actor {
     if (update === current) return this;
 
     const ceiling = foundry.utils.getProperty(this.system, ceilingPath);
-    const updates = { [`system.${attribute}.value`]: Math.clamp(update, 0, ceiling) };
+    const clampedUpdate = Math.clamp(update, 0, ceiling);
+
+    // Taking damage (not healing - healDamage() is a whole dialog-driven mechanic meant to be
+    // triggered deliberately from the sheet, not implied by a smaller HUD value) runs the same
+    // wound/trauma-threshold math and chat announcement takeDamage() posts from the sheet's damage
+    // button, instead of silently just moving the raw value.
+    if (clampedUpdate > current) {
+      const config = DAMAGE_CONFIG[attribute];
+      const currentModifier = foundry.utils.getProperty(this.system, config.modifierPath) ?? 0;
+      const threshold = foundry.utils.getProperty(this.system, config.thresholdPath) || 1;
+      return takeDamage(
+        { value: clampedUpdate - current }, current, 1, 0, currentModifier, threshold,
+        `system.${attribute}.value`, `system.${config.modifierPath}`, this, config.barTarget, ceiling
+      );
+    }
+
+    const updates = { [`system.${attribute}.value`]: clampedUpdate };
     const allowed = Hooks.call("modifyTokenAttribute", { attribute, value, isDelta, isBar }, updates, this);
     return allowed !== false ? this.update(updates) : this;
   }

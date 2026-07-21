@@ -711,6 +711,38 @@ Hooks.on("renderChatLog", (app,html,data) => {
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)
 
+// #token-hud's own bar1/bar2 rows live inside .col.middle, which core pads with a fixed, non-scaling
+// "+100px / top:-50px" (see #token-hud .col in foundry2.css) - a flat constant, not a percentage of
+// the container, so it can't track the token's real height, which itself varies by grid type: row/
+// column hex grids stretch height/width by 2/sqrt(3) relative to a square grid of the same nominal
+// grid size (TokenDocument#getSize / HexagonalGrid constructor). Fix: bypass .col.middle's box
+// entirely and position these two rows directly against #token-hud (sized at exactly
+// document.getSize()/uiScale, then CSS scale(uiScale)'d back up as a unit - see
+// BasePlaceableHUD#_updatePosition / ApplicationV2#applyPosition), using the exact same source values
+// EPtoken.js's _drawBar() uses, converted into that same pre-scale pixel space (divide by uiScale).
+Hooks.on("renderTokenHUD", (app, html) => {
+  const token = app.object;
+  const bar1 = html.querySelector(".attribute.bar1");
+  const bar2 = html.querySelector(".attribute.bar2");
+  if (!token || (!bar1 && !bar2)) return;
+
+  const s = canvas.dimensions.uiScale;
+  const { height } = token.document.getSize();
+  const bh = 16 * (token.document.height >= 2 ? 1.5 : 1) * s; // must match EPtoken.js's _drawBar bh
+
+  const place = (el, worldTop) => {
+    if (!el) return;
+    Object.assign(el.style, { position: "absolute", left: "0", width: "100%", bottom: "", top: `${worldTop / s}px` });
+    html.appendChild(el); // escapes .col.middle's box; re-appending an already-moved node is a no-op
+  };
+
+  // -1 world pixel nudges bar1 up by ~1 screen pixel after the /s conversion below, regardless of
+  // the current uiScale/zoom (subtracting a fixed CSS px instead would shift by a different amount
+  // on-screen depending on zoom).
+  place(bar1, height - bh - 1); // matches EPtoken.js: bar.position.set(0, height - bh), nudged up 1px
+  place(bar2, height + 4 * s);  // matches EPtoken.js: bar.position.set(0, height + 4 * s)
+});
+
 // Reaches both Token Config and Prototype Token Config (both derive from the same v14 mixin class) -
 // injects the toggle for EPtoken's non-owner health-approximation display (see module/canvas/EPtoken.js).
 Hooks.on("renderTokenApplication", (app, html) => {
