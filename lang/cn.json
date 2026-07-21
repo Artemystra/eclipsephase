@@ -112,6 +112,9 @@
         "physicalDescription": "{name}的义体",
         "registeredId": "注册身份：{name}"
       },
+      "warnings": {
+        "noPlacedToken": "该角色当前没有已放置的指令牌。"
+      },
       "button": {
         "edit": "编辑",
         "delete": "删除",
@@ -286,6 +289,12 @@
       "rest": {
         "label": "Rest",
         "jammedLabel": "干扰期间无法充能"
+      }
+    },
+    "token": {
+      "showApproximation": {
+        "label": "显示健康状况估算",
+        "hint": "没有所有权的观看者查看该指令牌时，显示粗略的分段健康估算，而不是完全隐藏血条。"
       }
     },
     "ego": {

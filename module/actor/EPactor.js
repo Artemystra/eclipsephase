@@ -30,7 +30,8 @@ export default class EPactor extends Actor {
   /**
    * Augment the basic actor data with additional dynamic data.
    */
-  async prepareData() {
+  // Keep synchronous - Foundry never awaits prepareData(), an early await breaks unlinked-token actors.
+  prepareData() {
     super.prepareData();
     if (this.getFlag("eclipsephase", "migrating")) return super.prepareData();
     const actorWhole = this;
@@ -120,7 +121,6 @@ export default class EPactor extends Actor {
       }
     }
 
-    //actorModel.additionalSystems.movementBase = morphData.movement1 ? morphData.movement1.base : 0;
     // When jamming, Durability/Armor come from the jammed body instead of the sleeved morph. A
     // jammed Vehicle has no "type" of its own (drones/vehicles/robots count as synth, animals as
     // bio); a jammed Morph keeps its own real type (bio/synth/info) instead.
@@ -134,6 +134,10 @@ export default class EPactor extends Actor {
       : null;
     this._calculatePhysicalHealth(actorModel, jammedHealthValues || morphValues, chiMultiplier);
     this._calculateArmor(actorModel, actorWhole, jammedVehicleData);
+    // Mirrors jammedHealthValues: when jamming, movement comes from the jammed body, not the sleeved
+    // morph. Exposed on the actor (not just the item) so canvas/token code can read it directly
+    // without re-resolving which body/movement slot is active itself.
+    this._calculateMovement(actorModel, jammedVehicleData?.system ?? morphValues);
     this._calculateInitiative(actorModel, chiMultiplier);
     this._calculateRez(actorModel)
 
@@ -255,12 +259,32 @@ export default class EPactor extends Actor {
     if (actorWhole.getFlag("eclipsephase", "resleeving") === true && actorWhole.isOwner){
         // Flex is deliberately left out here: jamming/unjamming set it themselves (Body-Flex-first
         // carry-over math in morp-functions.js), and a blanket refill to full would undo that.
-        await actorWhole.update({
+        actorWhole.update({
           "system.pools.insight.value": actorPools.insight.totalInsight,
           "system.pools.vigor.value": actorPools.vigor.totalVigor,
           "system.pools.moxie.value": actorPools.moxie.totalMoxie,
           "flags.eclipsephase.resleeving": false })
     }
+  }
+
+  // Native modifyTokenAttribute() (Token HUD bar-edit, macros) clamps to attr.max - for our two split
+  // bars that's just the health portion (health.physical.max/health.mental.max), which would block
+  // ever entering the Death Rating/Insanity overflow zone from the HUD. Clamp against the combined
+  // ceiling instead for those two; everything else keeps native behavior.
+  async modifyTokenAttribute(attribute, value, isDelta = false, isBar = true) {
+    const ceilingByAttribute = { "health.physical": "physical.dr", "health.mental": "mental.ir" };
+    const ceilingPath = ceilingByAttribute[attribute];
+    if (!isBar || !ceilingPath) return super.modifyTokenAttribute(attribute, value, isDelta, isBar);
+
+    const attr = foundry.utils.getProperty(this.system, attribute);
+    const current = attr.value;
+    const update = isDelta ? current + value : value;
+    if (update === current) return this;
+
+    const ceiling = foundry.utils.getProperty(this.system, ceilingPath);
+    const updates = { [`system.${attribute}.value`]: Math.clamp(update, 0, ceiling) };
+    const allowed = Hooks.call("modifyTokenAttribute", { attribute, value, isDelta, isBar }, updates, this);
+    return allowed !== false ? this.update(updates) : this;
   }
 
   /**
@@ -360,6 +384,18 @@ export default class EPactor extends Actor {
     const currentDeathDamage = actorModel.health.insanity.value;
     const maxDeathDamage = actorModel.health.insanity.max;
     actorModel.mental.relativeInsanityDamage = Math.round(currentDeathDamage*100/maxDeathDamage) > 100 ? 100 : Math.round(currentDeathDamage*100/maxDeathDamage);
+  }
+
+  // The movement-grid UI (movement-grid.hbs) has no input for .active at all - it's toggled
+  // exclusively via the radio-group click handler in general-sheet-functions.js
+  // (embeddedItemToggle's grouppath branch), which force-clears every sibling slot's .active to
+  // false in the same update. So at most one slot can ever be active through the normal UI.
+  _calculateMovement(actorModel, bodySource) {
+    const slots = bodySource?.movement ?? {};
+    const active = Object.values(slots).find(m => m?.active && m.type && m.type !== "none");
+    actorModel.currentMovement = active
+      ? { type: active.type, base: Number(active.base) || 0, full: Number(active.full) || 0 }
+      : { type: "none", base: 0, full: 0 };
   }
 
   _calculatePools(actorModel, morphValues, chiMultiplier) {

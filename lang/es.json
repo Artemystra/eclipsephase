@@ -112,6 +112,9 @@
         "physicalDescription": "Sleeve de {name}",
         "registeredId": "Identidad Registrada: {name}"
       },
+      "warnings": {
+        "noPlacedToken": "Este actor no está representado por un token colocado en este momento."
+      },
       "button": {
         "edit": "Edit",
         "delete": "Delete",
@@ -287,6 +290,12 @@
       "rest": {
         "label": "Rest",
         "jammedLabel": "Sin recarga durante el jamming"
+      }
+    },
+    "token": {
+      "showApproximation": {
+        "label": "Mostrar aproximación de salud",
+        "hint": "Cuando espectadores sin derechos de propiedad ven este token, muestra un indicador aproximado de salud segmentado en lugar de ocultar las barras por completo."
       }
     },
     "ego": {

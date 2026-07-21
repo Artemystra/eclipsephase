@@ -11,6 +11,8 @@ import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
 import  * as update from "./common/migration.js";
+import EPtoken from "./canvas/EPtoken.js";
+import EPtokenRuler from "./canvas/EPtokenRuler.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -141,6 +143,8 @@ Hooks.once('init', async function() {
   CONFIG.Actor.documentClass = EPactor;
   CONFIG.eclipsephase = eclipsephase;
   CONFIG.Item.documentClass = EPitem;
+  CONFIG.Token.objectClass = EPtoken;
+  CONFIG.Token.rulerClass = EPtokenRuler;
 
   // Register sheet application classes
   foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
@@ -286,6 +290,7 @@ Hooks.once("ready", async function() {
   let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
   let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
   let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
+  let before210 = foundry.utils.isNewerVersion("2.1", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -527,6 +532,23 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
+  //2.1 Migration
+  if (before210) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.210";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration210 = await update.migrationPre210(startMigration);
+    endMigration = Migration210["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
@@ -688,6 +710,59 @@ Hooks.on("renderChatLog", (app,html,data) => {
 
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)
+
+// Reaches both Token Config and Prototype Token Config (both derive from the same v14 mixin class) -
+// injects the toggle for EPtoken's non-owner health-approximation display (see module/canvas/EPtoken.js).
+Hooks.on("renderTokenApplication", (app, html) => {
+  // health.death/health.insanity are Death Rating/Insanity overflow trackers, not meant to be picked
+  // as a standalone bar - still computed as always (EPactor.js), just hidden from this picker. Safe to
+  // rerun on every render (removing an already-removed option is a no-op, unlike the checkbox below).
+  html.querySelectorAll('select[name="bar1.attribute"] option, select[name="bar2.attribute"] option')
+    .forEach(opt => { if (["health.death", "health.insanity"].includes(opt.value)) opt.remove(); });
+
+  // Partial re-renders (e.g. after touching Light/Vision fields) refire this hook without clearing
+  // the "resources" part's DOM - skip re-injecting or submission sees two same-named checkboxes and
+  // reads an array instead of a boolean (a non-empty array is always truthy, so it'd look permanently
+  // checked). Old DOM surviving also means the user's in-progress toggle isn't reset by this re-fire.
+  if (html.querySelector('input[name="flags.eclipsephase.showApproximation"]')) return;
+
+  // app.document is undefined on PrototypeTokenConfig (it doesn't extend DocumentSheetV2) - app.token
+  // is the actual shared accessor TokenApplicationMixin guarantees on both TokenConfig and
+  // PrototypeTokenConfig, and also reflects an active live-preview clone if one exists.
+  const current = foundry.utils.getProperty(app.token, "flags.eclipsephase.showApproximation") ?? true;
+  const row = document.createElement("div");
+  row.classList.add("form-group");
+  row.innerHTML = `
+    <label>${game.i18n.localize("ep2e.token.showApproximation.label")}</label>
+    <div class="form-fields">
+      <input type="checkbox" name="flags.eclipsephase.showApproximation" ${current ? "checked" : ""}>
+    </div>
+    <p class="hint">${game.i18n.localize("ep2e.token.showApproximation.hint")}</p>
+  `;
+  // "Bar 2 Data" (the live value/max preview) is a separate row right after "Bar 2 Attribute"'s own
+  // form-group, not inside it - anchor past that sibling too, so this doesn't land between them.
+  const bar2Group = html.querySelector('[name="bar2.attribute"]')?.closest(".form-group");
+  const anchor = bar2Group?.nextElementSibling ?? bar2Group;
+  if (anchor) anchor.after(row);
+  else html.querySelector("form")?.appendChild(row);
+});
+
+// Foundry doesn't reliably apply the system.json bar-attribute/actorLink schema defaults on actor
+// creation - set them explicitly instead. Goons unlinked (mook tokens), character/npc linked.
+Hooks.on("preCreateActor", (actor, data, options, userId) => {
+  const update = {
+    "prototypeToken.bar1.attribute": "health.physical",
+    "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
+  };
+  if (data.type === "goon") {
+    update["prototypeToken.actorLink"] = false;
+  } else {
+    update["prototypeToken.actorLink"] = true;
+    // NPCs don't get bar2 automatically (no default Mental Health bar) - GMs can still set it by hand.
+    if (data.type === "character") update["prototypeToken.bar2.attribute"] = "health.mental";
+  }
+  actor.updateSource(update);
+});
 
 //Gives every character a flat-morph from start using the compendiumpack as a source
 Hooks.on("createActor", async (actor, options, userId) => {

@@ -862,6 +862,27 @@ span.neutral {
   text-align: center;
 }
 
+/* Core pins bar2 (first DOM child) to the top and bar1 (last) to the bottom via
+   justify-content: space-between on .col.middle - top/bottom offsets on the bars themselves don't
+   matter here, the flex distribution overrides them. Switch to flex-end so both stack together
+   near the bottom instead of spreading apart, and reorder bar1 first so physical (bar1) ends up
+   above mental (bar2), matching EPtoken.js's PIXI bar layout (physical inside/upper, mental
+   outside/lower). */
+/* No !important anywhere in this block on purpose - a module or user stylesheet loaded after ours
+   (or a future core change) can still cleanly override any of this via normal cascade if wanted. */
+#token-hud .col.middle{
+  justify-content: flex-end;
+  max-height: 175px;
+  gap: 0px;
+}
+#token-hud .attribute.bar1{
+  order: -1;
+  max-height: 22px;
+}
+#token-hud .attribute.bar2{
+  max-height: 22px;
+}
+
 input[class="sheet"],
 input[class="sheet equipped checkBox"],
 input[class="rest"]{

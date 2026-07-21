@@ -23,7 +23,10 @@ function hasAnyMovement(bodyItem) {
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   
   //Fallback config for sheets in general
-  static DEFAULT_OPTIONS = foundry.utils.mergeObject(super.DEFAULT_OPTIONS, {
+  // Foundry's own ApplicationV2 already walks the class chain and merges each level's DEFAULT_OPTIONS
+  // (concatenating arrays like window.controls) - do not pre-merge super.DEFAULT_OPTIONS here, that
+  // double-counts array entries (e.g. duplicate "Configure Token" header buttons).
+  static DEFAULT_OPTIONS = {
     classes: ["eclipsephase", "sheet", "actor"],
     tag: "form",
     form: {
@@ -38,7 +41,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       resizable: false
     },
     actions: {
-      editImage: this._onEditImage
+      editImage: this._onEditImage,
+      // Guards a rare core edge case (actor.token null despite the "Configure Token" control being
+      // shown) instead of letting ActorSheetV2's own handler throw - see project_release_v21_todo.md.
+      configureToken: function () {
+        if (!this.actor.token) return ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.noPlacedToken"));
+        this.actor.token.sheet.render({ force: true });
+      }
     },
     dragDrop: [
       {
@@ -46,7 +55,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         dropSelector: ".window-content"
       }
     ]
-  });
+  };
 
   //Fallback template for sheets in general
   // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders

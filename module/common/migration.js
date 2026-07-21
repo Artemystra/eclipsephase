@@ -2518,6 +2518,116 @@ export async function migrationPre200(startMigration, endMigration) {
 }
 
 /**
+ * Applies the same Prototype Token bar/display defaults that preCreateActor now sets on new actors
+ * (see module/eclipsephase.js) to actors that already existed before that hook was added. Only touches
+ * each actor's own Prototype Token - tokens already placed on scenes keep their own independent copy
+ * and are not retroactively updated (out of scope by explicit user decision).
+ */
+export async function migrationPre21(startMigration, endMigration) {
+  const latestUpdate = "2.1";
+  if (!startMigration) return { endMigration: false };
+
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+
+  const total = actors.length || 1;
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (const actor of actors) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const update = {
+        "prototypeToken.bar1.attribute": "health.physical",
+        "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
+      };
+      if (actor.type === "character") update["prototypeToken.bar2.attribute"] = "health.mental";
+      await actor.update(update);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: prototype token bar defaults failed`, err);
+    }
+
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+/**
+ * Applies the same Prototype Token bar/display defaults that preCreateActor now sets on new actors
+ * (see module/eclipsephase.js) to actors that already existed before that hook was added. Only touches
+ * each actor's own Prototype Token - tokens already placed on scenes keep their own independent copy
+ * and are not retroactively updated (out of scope by explicit user decision).
+ */
+export async function migrationPre210(startMigration, endMigration) {
+  const latestUpdate = "2.1";
+  if (!startMigration) return { endMigration: false };
+
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+
+  const total = actors.length || 1;
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (const actor of actors) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const update = {
+        "prototypeToken.bar1.attribute": "health.physical",
+        "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
+      };
+      if (actor.type === "character") update["prototypeToken.bar2.attribute"] = "health.mental";
+      await actor.update(update);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: prototype token bar defaults failed`, err);
+    }
+
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+/**
  * Recovers the pre-1.5 legacy body type for whatever is now an actor's active morph, so it can
  * be cross-checked against the migrated Item's system.type. Returns null if nothing valid can be
  * recovered (e.g. the actor postdates the 1.5 migration and never had this legacy data at all).
