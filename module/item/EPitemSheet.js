@@ -25,16 +25,26 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     }
   };
 
+  // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders (see EPactorSheet.js)
   static PARTS = {
     body: {
       template: "systems/eclipsephase/templates/item/item-gear-sheet.hbs",
-      root: true
+      root: true,
+      scrollable: [".item-sheet-body"]
     }
   };
 
   _getSheetTemplate() {
     const path = "systems/eclipsephase/templates/item";
     return `${path}/item-${this.document.type}-sheet.hbs`;
+  }
+
+  // Core empties newElement before restoring focus, so its own query always misses - retry against the live DOM
+  _syncPartState(partId, newElement, priorElement, state) {
+    super._syncPartState(partId, newElement, priorElement, state);
+    if (state.focus && !newElement.querySelector(state.focus)) {
+      this.element.querySelector(state.focus)?.focus();
+    }
   }
 
   static TABS = {
@@ -67,7 +77,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       return { width: 520, height: 420 };
     }
     else if (item.type === "morph") {
-      return { width: 620, height: 500 };
+      return { width: 620, height: 380 };
     }
     else if (item.type === "specialSkill" || item.type === "knowSkill") {
       return { width: 600, height: 140 };
@@ -79,7 +89,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       return { width: 520, height: 415 };
     }
     else if (item.type === "vehicle"){
-      return { width: 680, height: 560 };
+      return { width: 680, height: 380 };
     }
 
     return { width: 520, height: 415 };
@@ -166,7 +176,8 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       context.visibleFlaws = this._buildVisibleSlots(item.system.flaws, "flaw");
       context.visibleMovement = this._buildVisibleSlots(item.system.movement, "move", {
         isFilled: (slot) => !!slot?.type && slot.type !== "none",
-        emptySlot: (label) => ({ label, active: false, type: "none", base: null, full: null })
+        emptySlot: (label) => ({ label, active: false, type: "none", base: null, full: null }),
+        minVisible: 2
       });
     }
 
@@ -194,15 +205,19 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
   // isFilled/emptySlot to adapt the same growth rule to either shape.
   _buildVisibleSlots(existingSlots, prefix, {
     isFilled = (slot) => !!slot?.value && slot.value !== "none",
-    emptySlot = (label) => ({ label, value: "" })
+    emptySlot = (label) => ({ label, value: "" }),
+    minVisible = 3
   } = {}) {
     const filledCount = Object.values(existingSlots ?? {}).filter(isFilled).length;
-    const visibleCount = Math.max(3, filledCount + 1);
+    const visibleCount = Math.max(minVisible, filledCount + 1);
 
     const visible = {};
     for (let i = 1; i <= visibleCount; i++) {
       const key = `${prefix}${i}`;
-      visible[key] = existingSlots?.[key] ?? emptySlot(`${i}.`);
+      // Label is derived from position, not stored - slots beyond template.json's predefined 10
+      // never get a label written back (no input field for it), so trusting persisted data would
+      // lose the number on the next render.
+      visible[key] = { ...(existingSlots?.[key] ?? emptySlot(`${i}.`)), label: `${i}.` };
     }
     return visible;
   }

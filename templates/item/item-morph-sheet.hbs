@@ -25,8 +25,8 @@
         {{/each}}
     </nav>
 
-    <section class="item-sheet-body" style="min-height: 245px; height: fit-content; overflow-y: scroll">
-        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details">
+    <section class="item-sheet-body" style="min-height: 255px; height: fit-content; overflow-y: scroll">
+        <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details" style="min-height: 255px;">
             {{#if (eq item.system.type "synth")}}
             <div class="itemRowPadded" style="display: grid; grid-template-columns: repeat(3, 1fr); justify-items: start;">
                 <div class="itemGroup">
@@ -91,11 +91,11 @@
             {{> systems/eclipsephase/templates/item/partials/movement-grid.hbs item=item config=config}}
         </div>
 
-        <div class="tab {{#if (eq tabGroups.primary 'additions')}}active{{/if}}" data-group="primary" data-tab="additions">
+        <div class="tab {{#if (eq tabGroups.primary 'additions')}}active{{/if}}" data-group="primary" data-tab="additions" style="min-height: 255px;">
             {{> systems/eclipsephase/templates/item/partials/additions-tab.hbs item=item}}
         </div>
 
-        <div class="tab morph {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description" style="min-height: 322px;">
+        <div class="tab morph {{#if (eq tabGroups.primary 'description')}}active{{/if}}" data-group="primary" data-tab="description" style="min-height: 255px;">
             {{#if editable}}
                 <prose-mirror
                     name="system.description"
@@ -110,7 +110,7 @@
             {{/if}}
         </div>
 
-        <div class="tab {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-group="primary" data-tab="effects">
+        <div class="tab {{#if (eq tabGroups.primary 'effects')}}active{{/if}}" data-group="primary" data-tab="effects" style="min-height: 255px;">
             {{> systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html}}
         </div>
     </section>

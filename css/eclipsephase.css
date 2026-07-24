@@ -441,6 +441,7 @@
   min-height: fit-content;
   background-color: var(--mainBackground);
   padding: 5px 5px;
+  overflow-y: auto;
 }
 
 .eclipsephase .profile-img {
@@ -1501,8 +1502,8 @@ a:hover,
   min-height: 0;
 }
 
-.sheet .morph .editor-content{
-  min-height: 322px;
+.sheet .morph prose-mirror{
+  min-height: 255px;
 }
 
 .eclipsephase .sheet-body .tab .editor {
