@@ -651,9 +651,14 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         let itemData = {}
         if(weaponSelected)
             itemData = weaponSelected
+        // Checked before roll.sleight, which defineRoll() always initializes to {} (only ever
+        // populated for psi rolls, never reset) - as a truthy empty object it would otherwise
+        // always win this branch and this shopPurchase case would never run.
+        else if(rolledFrom === "shopPurchase")
+            itemData = { shopId: dataset.shopId, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds }
         else if(roll.sleight)
             itemData = roll.sleight
-        
+
         let outputData = task.outputData(options, actorWhole, activePool, itemData, rolledFrom, systemOptions)
 
         outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
@@ -680,9 +685,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
 
-        //Returns a rollResult in case it's needed
-        
-        if(dataset.preventPrintToChat === true) return rollResult;
+        return rollResult;
     }
 }
 
@@ -1310,13 +1313,15 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
     //Returns a roll without producing the output directly to the chat
     if(specialRules.preventPrintToChat) return message;
 
-    ChatMessage.create({
+    message.chatMessage = await ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: alias}),
         content: html,
         whisper: showTo,
         sound: message.sound,
         blind: blind
     })
+
+    return message;
 }
 
 function breakdown(roll){

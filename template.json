@@ -3,7 +3,8 @@
     "types": [
       "character",
       "npc",
-      "goon"
+      "goon",
+      "shop"
     ],
     "templates": {
       "morph": {
@@ -547,6 +548,24 @@
             "morph"
           ]
         }
+      }
+    },
+    "shop": {
+      "templates": [],
+      "acceptedRepNetworks": {
+        "@-rep": false,
+        "c-rep": false,
+        "f-rep": false,
+        "g-rep": false,
+        "i-rep": false,
+        "r-rep": false,
+        "x-rep": false
+      },
+      "valuation": {
+        "minor": "minor",
+        "moderate": "moderate",
+        "major": "major",
+        "rare": "major"
       }
     }
   },

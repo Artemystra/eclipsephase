@@ -15,6 +15,10 @@
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
     },
+    "enableShopSystem": {
+      "name": "Enable Shop System",
+      "hint": "Enables the Shop actor type. If deactivated, existing shops are hidden and new ones can't be created."
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -51,6 +55,7 @@
   "TYPES.Actor.character" : "Player Character",
   "TYPES.Actor.npc" : "Non-Player Character",
   "TYPES.Actor.goon" : "Threat",
+  "TYPES.Actor.shop" : "Shop",
   "TYPES.Item.gear" : "Gear",
   "TYPES.Item.rangedWeapon" : "Ranged Weapon",
   "TYPES.Item.ccWeapon" : "Close Combat Weapon",
@@ -1749,6 +1754,50 @@
         "itemRebound": "{name} rebound to {body}.",
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
         "enhancementsAdded": "{count} Enhancement(s) added to {body}."
+      }
+    },
+    "shop": {
+      "tabs": {
+        "shop": "Shop",
+        "settings": "Settings"
+      },
+      "filter": {
+        "placeholder": "Filter by item type..."
+      },
+      "placeholders": {
+        "shopName": "Shop Name",
+        "noItems": "This shop has no items yet.",
+        "limitedView": "You can see this shop's offer but the owner doesn't sell anything to you. Ask your GM for Observer rights instead."
+      },
+      "settings": {
+        "repHeadline": "Accepted Rep Networks",
+        "valuationHeadline": "Item Valuation"
+      },
+      "inventory": {
+        "headline": "Inventory"
+      },
+      "acceptedRep": {
+        "label": "Accepted Rep -",
+        "noCharacter": "You have no active character. Choose an owned character and come back here."
+      },
+      "purchase": {
+        "confirm": "Buy",
+        "required": "Required favor:",
+        "successMessage": "{character} bought {items} from {shop}."
+      },
+      "toSell": {
+        "headline": "To Sell",
+        "empty": "Drag items here from your own sheet to sell them to this shop.",
+        "confirm": "Sell",
+        "remove": "Remove from To Sell",
+        "confirmMessage": "You are about to sell the staged item(s) to this shop.",
+        "ownerWarning": "You own this shop. Are you sure you want to sell something to yourself?"
+      },
+      "warnings": {
+        "systemDisabled": "The shop system is currently disabled - you can activate it via Eclipse Phase's system settings.",
+        "sellFailed": "The sale could not be completed.",
+        "purchaseFailed": "The purchase could not be completed.",
+        "purchaseItemsGone": "Some of the purchased items are no longer available."
       }
     }
   }

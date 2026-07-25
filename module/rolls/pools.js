@@ -2,6 +2,7 @@ import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
 import { prepareRecipients } from "../common/general-sheet-functions.js";
 import { prepareWeapon } from "./damage.js";
+import { completeShopPurchase } from "../common/general-helper-functions.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 
@@ -56,6 +57,13 @@ export async function usePoolFromChat(data){
             data.rollmode = dataset.rollmode
 
             await prepareWeapon(false, result, data)
+        }
+        else if(rolledFrom === "shopPurchase" && dataset.resultclass === "success"){
+            await completeShopPurchase({
+                shopId: dataset.shopid,
+                buyerActorId: dataset.buyeractorid,
+                itemIds: dataset.itemids
+            })
         }
     }
 

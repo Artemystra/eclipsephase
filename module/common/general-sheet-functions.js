@@ -597,6 +597,76 @@ export function multiSelectPills(html, actor) {
 }
 
 /**
+ * Sister to multiSelectPills() for a purely client-side filter that is never persisted to a
+ * document - reuses the same ".multiselect-widget" markup/CSS (see
+ * templates/actor/partials/multiselect-pills.html), but add/remove mutate an array on the sheet
+ * instance itself and re-render, instead of writing to actor data. No free-text entry - only
+ * clicking a suggested option adds it, matched via its data-key (the raw filter value, distinct
+ * from the localized data-value used for display).
+ * @param {Object} html - The HTML object to which the event listeners are added
+ * @param {Object} sheet - The ApplicationV2 sheet instance whose `filterProperty` array holds the active filter
+ * @param {String} filterProperty - The property name on `sheet` holding the filter array
+ */
+export function itemTypeFilterPills(html, sheet, filterProperty) {
+  html.querySelectorAll(`.multiselect-widget[data-path="${filterProperty}"]`).forEach(widget => {
+    const input = widget.querySelector(".multiselect-input");
+    const dropdown = widget.querySelector(".multiselect-dropdown");
+
+    const hideDropdown = () => dropdown?.classList.add("noShow");
+
+    const filterDropdown = () => {
+      if (!dropdown) return;
+      const search = input.value.trim().toLowerCase();
+      let anyMatch = false;
+      dropdown.querySelectorAll(".multiselect-option").forEach(option => {
+        const match = (option.textContent ?? "").trim().toLowerCase().includes(search);
+        option.classList.toggle("noShow", !match);
+        if (match) anyMatch = true;
+      });
+      dropdown.classList.toggle("noShow", !anyMatch);
+    };
+
+    if (input) {
+      input.addEventListener("focus", filterDropdown);
+      input.addEventListener("input", filterDropdown);
+      input.addEventListener("blur", hideDropdown);
+      input.addEventListener("keydown", ev => {
+        if (ev.key === "Escape") {
+          ev.preventDefault();
+          hideDropdown();
+        }
+      });
+    }
+
+    if (dropdown) {
+      // mousedown would normally move focus off the input, firing its blur handler and closing
+      // the dropdown before the click can land - swallow it, same as multiSelectPills().
+      dropdown.addEventListener("mousedown", ev => ev.preventDefault());
+
+      dropdown.querySelectorAll(".multiselect-option").forEach(option => {
+        option.addEventListener("click", ev => {
+          ev.preventDefault();
+          hideDropdown();
+          const key = ev.currentTarget.dataset.key;
+          if (!key || sheet[filterProperty].includes(key)) return;
+          sheet[filterProperty].push(key);
+          sheet.render();
+        });
+      });
+    }
+
+    widget.querySelectorAll(".multiselect-pill-remove").forEach(element => {
+      element.addEventListener("click", ev => {
+        const index = Number(ev.currentTarget.dataset.index);
+        if (Number.isNaN(index) || !sheet[filterProperty][index]) return;
+        sheet[filterProperty].splice(index, 1);
+        sheet.render();
+      });
+    });
+  });
+}
+
+/**
  * Simple toggle for items active state
  * @param {Object} html - The html object passeed in click on a button of the actor sheet
  * @param {Object} item - The item to be toggled

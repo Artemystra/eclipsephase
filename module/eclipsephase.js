@@ -5,6 +5,7 @@ import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
+import  EPshopSheet from "./actor/EPshopSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
@@ -71,6 +72,15 @@ async function registerSystemSettings() {
     scope: "world",
     name: "SETTINGS.hideNPCs.name",
     hint: 'SETTINGS.hideNPCs.hint',
+    type: Boolean,
+    default: true
+  });
+
+  game.settings.register("eclipsephase", "enableShopSystem", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.enableShopSystem.name",
+    hint: "SETTINGS.enableShopSystem.hint",
     type: Boolean,
     default: true
   });
@@ -149,6 +159,7 @@ Hooks.once('init', async function() {
   // Register sheet application classes
   foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
+  foundry.documents.collections.Actors.registerSheet("eclipsephase", EPshopSheet, {types: ["shop"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
   Handlebars.registerHelper('concat', function() {
@@ -165,6 +176,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/health-bar.html",
     "systems/eclipsephase/templates/actor/partials/multiselect-pills.html",
+    "systems/eclipsephase/templates/actor/partials/shop-inventory-panel.html",
+    "systems/eclipsephase/templates/actor/partials/shop-to-sell-list.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html",
@@ -782,6 +795,14 @@ Hooks.on("renderTokenApplication", (app, html) => {
 // Foundry doesn't reliably apply the system.json bar-attribute/actorLink schema defaults on actor
 // creation - set them explicitly instead. Goons unlinked (mook tokens), character/npc linked.
 Hooks.on("preCreateActor", (actor, data, options, userId) => {
+  // Shops have no health bars/actorLink concerns and are gated by their own setting instead.
+  if (data.type === "shop") {
+    if (!game.settings.get("eclipsephase", "enableShopSystem")) {
+      ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.systemDisabled"));
+      return false;
+    }
+    return;
+  }
   const update = {
     "prototypeToken.bar1.attribute": "health.physical",
     "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
@@ -798,6 +819,7 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
 
 //Gives every character a flat-morph from start using the compendiumpack as a source
 Hooks.on("createActor", async (actor, options, userId) => {
+  if (actor.type === "shop") return;
   if (actor.system.activeMorph || actor.system.activeID) {
     await actor.setFlag("eclipsephase", "defaultIdAdded", true);
     await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
@@ -821,6 +843,15 @@ Hooks.on("createActor", async (actor, options, userId) => {
 
   await actor.setFlag("eclipsephase", "defaultIdAdded", true);
   await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
+});
+
+// First-pass behavior for a disabled shop system: hide existing shops from the sidebar directory
+// rather than making them read-only or deleting them (see project_release_v22_todo.md Step 1).
+Hooks.on("renderActorDirectory", (app, html) => {
+  if (game.settings.get("eclipsephase", "enableShopSystem")) return;
+  html.querySelectorAll("li.directory-item[data-entry-id]").forEach(li => {
+    if (game.actors.get(li.dataset.entryId)?.type === "shop") li.remove();
+  });
 });
 
 Hooks.on("createItem", async (item, options, userId) => {

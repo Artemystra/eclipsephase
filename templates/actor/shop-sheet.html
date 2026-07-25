@@ -1,0 +1,51 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Custom title bar: replaces hidden native window-header --}}
+    <div class="ep-sheet-titlebar">
+        <div class="ep-titlebar-logo centerBackground">
+            <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+        </div>
+        <div class="ep-titlebar-name centerBackground">
+            <input name="name" type="text" onFocus="this.select()" value="{{actor.name}}" placeholder="{{localize 'ep2e.shop.placeholders.shopName'}}" style="width: 100%;"/>
+            <span class="ep-titlebar-name-plain">{{actor.name}}</span>
+        </div>
+    </div>
+
+    <nav class="primary-tabs shop-tabs tabs" data-group="primary">
+        {{#each tabs.primary as |tab|}}
+            <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
+                {{localize tab.label}}
+            </a>
+        {{/each}}
+    </nav>
+
+    <section class="shop-sheet-body">
+        <div class="tab {{#if (eq tabGroups.primary 'shop')}}active{{/if}}" data-group="primary" data-tab="shop">
+            {{> systems/eclipsephase/templates/actor/partials/shop-inventory-panel.html}}
+        </div>
+
+        <div class="tab {{#if (eq tabGroups.primary 'settings')}}active{{/if}}" data-group="primary" data-tab="settings">
+            <p class="headline5">{{localize "ep2e.shop.settings.repHeadline"}}</p>
+            <div class="shop-settings-networks">
+                {{#each repNetworks as |locKey network|}}
+                    <label class="flexrow flex-group-center">
+                        <input type="checkbox" data-dtype="Boolean" name="system.acceptedRepNetworks.{{network}}" {{checked (lookup @root.acceptedRepNetworks network)}}/>
+                        {{localize locKey}}
+                    </label>
+                {{/each}}
+            </div>
+
+            <p class="headline5">{{localize "ep2e.shop.settings.valuationHeadline"}}</p>
+            <div class="shop-settings-valuation">
+                {{#each costTypes as |locKey tier|}}
+                    <div class="flexrow flex-group-center">
+                        <label style="flex: 1;">{{localize locKey}}</label>
+                        <select name="system.valuation.{{tier}}" style="flex: 1;">
+                            {{selectOptions @root.favorTiers selected=(lookup @root.valuation tier) localize=true}}
+                        </select>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </section>
+</form>

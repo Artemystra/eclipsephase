@@ -1380,6 +1380,223 @@ a:hover,
   min-width: 50%;
 }
 
+/* .eclipsephase .tabs .item defaults to width:100% - fine with the actor sheet's many-tab navs
+   (each shrinks to its share), but with only 2 tabs (Shop/Einstellungen) that breaks the layout.
+   Equal flex-share instead, robust regardless of tab count. */
+.eclipsephase nav.shop-tabs .item {
+  width: auto;
+  flex: 1 1 0;
+}
+
+.eclipsephase nav.shop-tabs {
+  margin-top: 10px;
+}
+
+form.eclipsephase.shop {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.eclipsephase .shop-sheet-body {
+  margin-top: 5px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Owner's "shop" tab wraps the two-column layout in a .tab - keep the flex/shrink chain going
+   through it so .shop-two-column below still gets a real, bounded height to scroll within. */
+.eclipsephase .shop-sheet-body > .tab.active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.eclipsephase .shop-limited-warning {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f0c419;
+  color: #1d1d1d;
+}
+
+/* BG3-style two equal containers: To Sell left, shop inventory right */
+.eclipsephase .shop-two-column {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.eclipsephase .shop-inventory-column,
+.eclipsephase .shop-to-sell-column {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.eclipsephase .shop-inventory-column > .headline5,
+.eclipsephase .shop-to-sell-column > .headline5 {
+  flex-shrink: 0;
+}
+
+/* Each column scrolls independently; the headline above and the sell-button/accepted-rep footer
+   below sit outside this, so they never scroll with the list (see project_release_v22_todo.md). */
+.eclipsephase .shop-column-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.eclipsephase .shop-category-heading {
+  margin: 10px 0 2px 0;
+  padding-bottom: 2px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--highlight);
+}
+
+.eclipsephase .shop-column-scroll .shop-category-heading:first-child {
+  margin-top: 0;
+}
+
+/* Visually matches button.sheetButton (see project_release_v22_todo.md for why this stays an <a>) */
+.eclipsephase a.shop-sell-confirm {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 36px;
+  margin-top: 10px;
+  box-sizing: border-box;
+  border: 1px solid var(--highlightBackground);
+  background: var(--pitchBackground);
+  color: var(--mainText);
+  cursor: pointer;
+}
+
+.eclipsephase a.shop-sell-confirm:hover,
+.eclipsephase a.shop-sell-confirm:focus {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+.eclipsephase a.shop-sell-confirm.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.eclipsephase a.shop-sell-confirm .awesomeIcon {
+  margin-right: 6px;
+}
+
+.eclipsephase .shop-accepted-rep {
+  flex-shrink: 0;
+  margin-top: 10px;
+  padding-top: 5px;
+  border-top: 1px solid var(--highlightBackground);
+  font-size: 12px;
+}
+
+/* Same look as the character sheet's input[class="sheet"] checkboxes - can't reuse that selector
+   directly, it's an exact class-attribute match and this element needs its own class for JS. */
+.eclipsephase input.item-purchase-select {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 0 0 13px;
+  min-width: 0;
+  min-height: 0;
+  height: 13px;
+  margin: 0 6px 0 0;
+  padding: 0;
+  background-color: #fff;
+  border: var(--focusBackground) 1px solid;
+}
+
+/* Core renders its own checkbox as a FontAwesome glyph via ::before/::after (foundry2.css), not
+   native browser chrome - without hiding it, it shows on top of our background/border look. */
+.eclipsephase input.item-purchase-select::before,
+.eclipsephase input.item-purchase-select::after {
+  display: none;
+}
+
+.eclipsephase input.item-purchase-select:checked {
+  background-color: var(--highlight);
+  padding: 4px;
+  border: var(--focusBackground) 1px solid;
+  filter: none;
+}
+
+.eclipsephase .shop-purchase-bar {
+  flex-shrink: 0;
+  margin-top: 10px;
+}
+
+.eclipsephase .shop-purchase-hint {
+  margin: 0 0 5px 0;
+  font-size: 12px;
+  color: var(--iconGrey);
+}
+
+.eclipsephase .shop-purchase-network {
+  flex: 1;
+}
+
+.eclipsephase a.shop-purchase-confirm {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  min-height: 36px;
+  box-sizing: border-box;
+  border: 1px solid var(--highlightBackground);
+  background: var(--pitchBackground);
+  color: var(--mainText);
+  cursor: pointer;
+}
+
+.eclipsephase a.shop-purchase-confirm:hover,
+.eclipsephase a.shop-purchase-confirm:focus {
+  box-shadow: 0 0 5px 2px var(--highlight);
+}
+
+.eclipsephase a.shop-purchase-confirm.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.eclipsephase a.shop-purchase-confirm .awesomeIcon {
+  margin-right: 6px;
+}
+
+.eclipsephase .shop-settings-networks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.eclipsephase .shop-settings-valuation {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 300px;
+}
+
 .eclipsephase .tabs {
   justify-content: space-between;
 }
@@ -1649,6 +1866,7 @@ optgroup .Default .Roll .Mode,
 /* read-only stand-in for the name input while minimized */
 .ep-titlebar-name-plain {
   display: none;
+  max-height: 40px;
   font-size: 12px;
   text-shadow: 0 0 5px #161616;
   overflow: hidden;

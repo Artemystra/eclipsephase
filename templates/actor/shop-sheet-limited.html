@@ -1,0 +1,27 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Custom title bar: replaces hidden native window-header --}}
+    <div class="ep-sheet-titlebar">
+        <div class="ep-titlebar-logo centerBackground">
+            <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+        </div>
+        <div class="ep-titlebar-name centerBackground">
+            <span class="ep-titlebar-name-plain">{{actor.name}}</span>
+        </div>
+    </div>
+
+    <section class="shop-sheet-body">
+        <p class="shop-limited-warning">{{localize "ep2e.shop.placeholders.limitedView"}}</p>
+
+        {{> systems/eclipsephase/templates/actor/partials/multiselect-pills.html items=itemTypeFilterPills path="_itemTypeFilter" placeholderKey="ep2e.shop.filter.placeholder" suggestions=itemTypeFilterSuggestions}}
+
+        {{#if itemGroups.length}}
+            {{#each itemGroups as |group|}}
+                <p class="shop-category-heading">{{group.label}}</p>
+                {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=group.items readOnly=../readOnly}}
+            {{/each}}
+        {{else}}
+            <p class="notes">{{localize "ep2e.shop.placeholders.noItems"}}</p>
+        {{/if}}
+    </section>
+</form>

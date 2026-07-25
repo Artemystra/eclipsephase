@@ -86,6 +86,26 @@ eclipsephase.costTypes = {
     rare: "ep2e.item.general.table.cost.rare"
 }
 
+// Same 7 networks as Item.id.rep in template.json - reused as-is for the Shop's acceptedRepNetworks toggles.
+eclipsephase.repTypes = {
+    "@-rep": "ep2e.id.repType.@rep",
+    "c-rep": "ep2e.id.repType.crep",
+    "f-rep": "ep2e.id.repType.frep",
+    "g-rep": "ep2e.id.repType.grep",
+    "i-rep": "ep2e.id.repType.irep",
+    "r-rep": "ep2e.id.repType.rrep",
+    "x-rep": "ep2e.id.repType.xrep"
+}
+
+// Same RAW favor tiers as the Rep-Test roll dialog's favorMod dropdown (general-modifiers.html) -
+// reused here for the Shop's per-cost-tier valuation table.
+eclipsephase.favorTiers = {
+    trivial: "ep2e.roll.dialog.reputationMode.trivial",
+    minor: "ep2e.roll.dialog.reputationMode.minor",
+    moderate: "ep2e.roll.dialog.reputationMode.moderate",
+    major: "ep2e.roll.dialog.reputationMode.major"
+}
+
 eclipsephase.programLevels = {
     intruder: "ep2e.item.program.table.level.intruder",
     user: "ep2e.item.program.table.level.user",

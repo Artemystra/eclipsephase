@@ -238,21 +238,23 @@ export function registerItemTransferSocket() {
       });
     }
 
+    // Selling owns the source; buying from a shop owns only the target - both are valid.
     const requestingUser = game.users.get(userId);
-    const ownsSource = requestingUser
-      ? sourceActor.testUserPermission(requestingUser, "OWNER")
-      : false;
+    const ownsSource = requestingUser ? sourceActor.testUserPermission(requestingUser, "OWNER") : false;
+    const ownsTarget = requestingUser ? targetActor.testUserPermission(requestingUser, "OWNER") : false;
 
-    if (!requestingUser || !ownsSource) {
+    if (!requestingUser || (!ownsSource && !ownsTarget)) {
       return _replyToUser(userId, {
         requestId,
         ok: false,
-        error: "Transfer failed: you do not own the source actor."
+        error: "Transfer failed: you must own either the source or the target actor."
       });
     }
 
+    // Morph trades between characters are blocked (active/sleeved morph has state that a plain
+    // item transfer can't handle safely) - a shop's morphs are never active, so exempt those.
     const blockedTypes = new Set(["morph"]);
-    if (blockedTypes.has(item.type)) {
+    if (sourceActor.type !== "shop" && blockedTypes.has(item.type)) {
       return _replyToUser(userId, {
         requestId,
         ok: false,
@@ -279,7 +281,7 @@ export function registerItemTransferSocket() {
     }
 
     try {
-      await SHEET.transferItemBetweenActors({
+      const created = await SHEET.transferItemBetweenActors({
         sourceActor,
         targetActor,
         item,
@@ -287,9 +289,19 @@ export function registerItemTransferSocket() {
         boundToOverride
       });
 
+      // Shop morphs come with unfilled Enhancement slots - auto-apply them on purchase (no
+      // Standard/Flat choice dialog possible here, runs unattended on the GM's client).
+      if (item.type === "morph" && sourceActor.type === "shop" && created) {
+        const { boundToFor } = MORPHFUNCTION.getBodyBindingInfo(targetActor);
+        const boundTo = boundToFor(created);
+        await MORPHFUNCTION.applyStandardEnhancements(targetActor, created, boundTo);
+        await MORPHFUNCTION.applyFrame(targetActor, created, boundTo);
+      }
+
       _replyToUser(userId, {
         requestId,
-        ok: true
+        ok: true,
+        createdItemId: created?.id
       });
     } catch (err) {
       console.error("EP item transfer failed", err);
@@ -356,4 +368,71 @@ export function requestGMItemTransfer({
       });
     }, 5000);
   });
+}
+
+/**
+ * Transfers shop items to a buyer's character (direct if both owned, else GM-relay), applying
+ * morph Enhancements/Frame and prompting the Ware body-bind dialog as needed. Called right after
+ * a successful purchase roll, and again later if a Pool swap/upgrade turns a failed roll into one.
+ * @param {{shopId: string, buyerActorId: string, itemIds: string|string[]}} params
+ * @returns {Promise<void>}
+ */
+export async function completeShopPurchase({ shopId, buyerActorId, itemIds } = {}) {
+  const shop = game.actors.get(shopId);
+  const character = game.actors.get(buyerActorId);
+  if (!shop || !character) return;
+
+  const ids = Array.isArray(itemIds) ? itemIds : String(itemIds ?? "").split(",").filter(Boolean);
+  const items = ids.map(id => shop.items.get(id)).filter(Boolean);
+  if (!items.length) {
+    if (ids.length) ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.purchaseItemsGone"));
+    return;
+  }
+  if (items.length < ids.length) {
+    ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.purchaseItemsGone"));
+  }
+
+  const boughtNames = [];
+  for (const item of items) {
+    let created;
+    if (character.isOwner && shop.isOwner) {
+      created = await SHEET.transferItemBetweenActors({ sourceActor: shop, targetActor: character, item, quantity: 1 });
+      if (item.type === "morph" && created) {
+        const { boundToFor } = MORPHFUNCTION.getBodyBindingInfo(character);
+        const boundTo = boundToFor(created);
+        await MORPHFUNCTION.applyStandardEnhancements(character, created, boundTo);
+        await MORPHFUNCTION.applyFrame(character, created, boundTo);
+      }
+    } else {
+      const transferResult = await requestGMItemTransfer({
+        sourceActorId: shop.id,
+        targetActorId: character.id,
+        itemId: item.id,
+        quantity: 1
+      });
+      if (!transferResult?.ok) {
+        ui.notifications.warn(transferResult?.error ?? game.i18n.localize("ep2e.shop.warnings.purchaseFailed"));
+        continue;
+      }
+      created = character.items.get(transferResult.createdItemId);
+    }
+
+    if (item.type === "ware" && created) {
+      const resolved = await MORPHFUNCTION.resolveBodyForItem(character, "ep2e.systemMessage.itemAttachment.noBodyWare");
+      if (!resolved.cancelled) await created.update({ "system.boundTo": resolved.boundTo });
+    }
+
+    boughtNames.push(item.name);
+  }
+
+  if (boughtNames.length) {
+    ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: character }),
+      content: `<p>${game.i18n.format("ep2e.shop.purchase.successMessage", {
+        character: character.name,
+        shop: shop.name,
+        items: boughtNames.join(", ")
+      })}</p>`
+    });
+  }
 }

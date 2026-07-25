@@ -15,6 +15,10 @@
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
     },
+    "enableShopSystem": {
+      "name": "启用商店系统",
+      "hint": "启用商店角色类型。禁用后，现有商店将被隐藏，且无法创建新商店。"
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -51,6 +55,7 @@
   "TYPES.Actor.character" : "玩家角色",
   "TYPES.Actor.npc" : "NPC",
   "TYPES.Actor.goon" : "威胁",
+  "TYPES.Actor.shop" : "商店",
   "TYPES.Item.gear" : "装备",
   "TYPES.Item.rangedWeapon" : "远程武器",
   "TYPES.Item.ccWeapon" : "近战武器",
@@ -1670,6 +1675,50 @@
         "itemRebound": "{name} 已重新分配给 {body}。",
         "unknownTraitType": "未知的特征类型。请至少选择一项——意识或义体——以使用该特征。",
         "enhancementsAdded": "已为 {body} 添加 {count} 项插件。"
+      }
+    },
+    "shop": {
+      "tabs": {
+        "shop": "商店",
+        "settings": "设置"
+      },
+      "filter": {
+        "placeholder": "按物品类型筛选..."
+      },
+      "placeholders": {
+        "shopName": "商店名称",
+        "noItems": "这家商店还没有任何物品。",
+        "limitedView": "你可以看到这家商店的商品，但店主不会卖给你任何东西。请向你的守秘人申请观察者权限。"
+      },
+      "settings": {
+        "repHeadline": "接受的Rep网络",
+        "valuationHeadline": "物品估值"
+      },
+      "inventory": {
+        "headline": "库存"
+      },
+      "acceptedRep": {
+        "label": "Accepted Rep -",
+        "noCharacter": "你没有已激活的角色。请选择一个你拥有的角色后再回来。"
+      },
+      "purchase": {
+        "confirm": "购买",
+        "required": "所需人情等级：",
+        "successMessage": "{character} 从 {shop} 购买了 {items}。"
+      },
+      "toSell": {
+        "headline": "待售",
+        "empty": "把你自己角色卡上的物品拖到这里，卖给这家商店。",
+        "confirm": "出售",
+        "remove": "从待售中移除",
+        "confirmMessage": "你即将把待售物品出售给这家商店。",
+        "ownerWarning": "这家商店是你的。你确定要把东西卖给自己吗？"
+      },
+      "warnings": {
+        "systemDisabled": "商店系统当前已停用——你可以在 Eclipse Phase 的系统设置中启用它。",
+        "sellFailed": "交易未能完成。",
+        "purchaseFailed": "购买未能完成。",
+        "purchaseItemsGone": "部分已购买的物品已不再可用。"
       }
     }
   }

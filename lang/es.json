@@ -15,6 +15,10 @@
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
     },
+    "enableShopSystem": {
+      "name": "Activar sistema de tienda",
+      "hint": "Activa el tipo de actor Tienda. Si se desactiva, las tiendas existentes se ocultan y no se pueden crear nuevas."
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -51,6 +55,7 @@
   "TYPES.Actor.character" : "Player Character",
   "TYPES.Actor.npc" : "Non-Player Character",
   "TYPES.Actor.goon" : "Threat",
+  "TYPES.Actor.shop" : "Tienda",
   "TYPES.Item.gear" : "Gear",
   "TYPES.Item.rangedWeapon" : "Ranged Weapon",
   "TYPES.Item.ccWeapon" : "Close Combat Weapon",
@@ -1663,6 +1668,50 @@
         "itemRebound": "{name} reasignada a {body}.",
         "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait.",
         "enhancementsAdded": "{count} mejora(s) añadida(s) a {body}."
+      }
+    },
+    "shop": {
+      "tabs": {
+        "shop": "Tienda",
+        "settings": "Ajustes"
+      },
+      "filter": {
+        "placeholder": "Filtrar por tipo de objeto..."
+      },
+      "placeholders": {
+        "shopName": "Nombre de la tienda",
+        "noItems": "Esta tienda todavía no tiene objetos.",
+        "limitedView": "Puedes ver la oferta de esta tienda, pero el propietario no te vende nada. Pide a tu DJ permisos de Observador."
+      },
+      "settings": {
+        "repHeadline": "Redes de Rep Aceptadas",
+        "valuationHeadline": "Valoración de Objetos"
+      },
+      "inventory": {
+        "headline": "Inventario"
+      },
+      "acceptedRep": {
+        "label": "Accepted Rep -",
+        "noCharacter": "No tienes un personaje activo. Elige un personaje que te pertenezca y vuelve aquí."
+      },
+      "purchase": {
+        "confirm": "Comprar",
+        "required": "Favor requerido:",
+        "successMessage": "{character} compró {items} de {shop}."
+      },
+      "toSell": {
+        "headline": "Para Vender",
+        "empty": "Arrastra objetos desde tu propia hoja aquí para venderlos a esta tienda.",
+        "confirm": "Vender",
+        "remove": "Quitar de Para Vender",
+        "confirmMessage": "Estás a punto de vender los objetos preparados a esta tienda.",
+        "ownerWarning": "Esta tienda es tuya. ¿Seguro que quieres venderte algo a ti mismo?"
+      },
+      "warnings": {
+        "systemDisabled": "El sistema de tienda está desactivado actualmente - puedes activarlo en los ajustes del sistema de Eclipse Phase.",
+        "sellFailed": "No se pudo completar la venta.",
+        "purchaseFailed": "No se pudo completar la compra.",
+        "purchaseItemsGone": "Algunos de los artículos comprados ya no están disponibles."
       }
     }
   }

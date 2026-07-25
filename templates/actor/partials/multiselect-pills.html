@@ -11,7 +11,7 @@
     {{#if suggestions}}
         <div class="multiselect-dropdown noShow">
             {{#each suggestions as |suggestion key|}}
-                <a class="multiselect-option" data-value="{{localize suggestion}}">{{localize suggestion}}</a>
+                <a class="multiselect-option" data-value="{{localize suggestion}}" data-key="{{key}}">{{localize suggestion}}</a>
             {{/each}}
         </div>
     {{/if}}

@@ -35,6 +35,9 @@ export default class EPactor extends Actor {
   prepareData() {
     super.prepareData();
     if (this.getFlag("eclipsephase", "migrating")) return super.prepareData();
+    // Shops have none of the morph/health/pools data this pipeline is built around - nothing below
+    // this point applies to them.
+    if (this.type === "shop") return;
     const actorWhole = this;
     const actorModel = actorWhole.system;
     const actorPools = actorModel.pools

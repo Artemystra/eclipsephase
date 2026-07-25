@@ -1,0 +1,63 @@
+{{!-- Shared shop content - used by shop-sheet.html's "Shop" tab (Owner) and shop-sheet-observer.html.
+  Not shop-sheet-limited.html - Limited stays read-only/no staging, see EPshopSheet.js's _onDropItem. --}}
+{{> systems/eclipsephase/templates/actor/partials/multiselect-pills.html items=itemTypeFilterPills path="_itemTypeFilter" placeholderKey="ep2e.shop.filter.placeholder" suggestions=itemTypeFilterSuggestions}}
+
+<div class="shop-two-column">
+    <div class="shop-to-sell-column">
+        <p class="headline5">{{localize "ep2e.shop.toSell.headline"}}</p>
+        <div class="shop-column-scroll">
+            {{#if toSellEntries.length}}
+                {{> systems/eclipsephase/templates/actor/partials/shop-to-sell-list.html entries=toSellEntries}}
+            {{else}}
+                <p class="notes">{{localize "ep2e.shop.toSell.empty"}}</p>
+            {{/if}}
+        </div>
+        {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out --}}
+        <a class="shop-sell-confirm {{#unless toSellEntries.length}}disabled{{/unless}}"><i class="far fa-money-bill awesomeIcon"></i>{{localize "ep2e.shop.toSell.confirm"}}</a>
+    </div>
+
+    <div class="shop-inventory-column">
+        <p class="headline5">{{localize "ep2e.shop.inventory.headline"}}</p>
+        <div class="shop-column-scroll">
+            {{#if itemGroups.length}}
+                {{#each itemGroups as |group|}}
+                    <p class="shop-category-heading">{{group.label}}</p>
+                    {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=group.items readOnly=../readOnly selectable=../selectable selected=../selected}}
+                {{/each}}
+            {{else}}
+                <p class="notes">{{localize "ep2e.shop.placeholders.noItems"}}</p>
+            {{/if}}
+        </div>
+
+        {{#if canPurchase}}
+            {{#if purchaseNetworks.length}}
+                <div class="shop-purchase-bar">
+                    {{#if requiredFavorTierLabel}}
+                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.required"}} {{requiredFavorTierLabel}}</p>
+                    {{/if}}
+                    <div class="flexrow flex-group-center">
+                        {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
+                        <select id="shop-purchase-network-{{actor.id}}" class="shop-purchase-network">
+                            {{#each purchaseNetworks as |option|}}
+                                <option value="{{option.network}}">{{option.label}}</option>
+                            {{/each}}
+                        </select>
+                        {{!-- <a>, not <button> - same reason as .shop-sell-confirm above --}}
+                        <a class="shop-purchase-confirm {{#unless hasSelection}}disabled{{/unless}}"><i class="far fa-hand-holding-usd awesomeIcon"></i>{{localize "ep2e.shop.purchase.confirm"}}</a>
+                    </div>
+                </div>
+            {{/if}}
+        {{/if}}
+
+        {{#if acceptedRep}}
+            {{!-- Sticky footer - sits outside .shop-column-scroll so it never scrolls with the list --}}
+            <p class="shop-accepted-rep">
+                {{#if (eq acceptedRep.mode "noCharacter")}}
+                    {{localize "ep2e.shop.acceptedRep.noCharacter"}}
+                {{else}}
+                    {{localize "ep2e.shop.acceptedRep.label"}} {{acceptedRep.text}}
+                {{/if}}
+            </p>
+        {{/if}}
+    </div>
+</div>

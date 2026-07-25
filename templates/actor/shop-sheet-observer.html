@@ -1,0 +1,17 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Custom title bar: replaces hidden native window-header --}}
+    <div class="ep-sheet-titlebar">
+        <div class="ep-titlebar-logo centerBackground">
+            <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+        </div>
+        <div class="ep-titlebar-name centerBackground">
+            <span class="ep-titlebar-name-plain">{{actor.name}}</span>
+        </div>
+    </div>
+
+    {{!-- No tabs for Observer --}}
+    <section class="shop-sheet-body">
+        {{> systems/eclipsephase/templates/actor/partials/shop-inventory-panel.html}}
+    </section>
+</form>

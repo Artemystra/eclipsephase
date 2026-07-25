@@ -15,6 +15,10 @@
       "name": "Keine Editiereinschränkungen",
       "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Rast mit ein."
     },
+    "enableShopSystem": {
+      "name": "Shop-System aktivieren",
+      "hint": "Aktiviert den Shop-Actor-Typ. Wenn deaktiviert, werden bestehende Shops versteckt und es können keine neuen erstellt werden."
+    },
     "gmMenu": {
       "name": "SL Menü",
       "hint": "Zeigt das SL-Menü auf der linken Seite (nur für Spielleiter:innen)"
@@ -51,6 +55,7 @@
   "TYPES.Actor.character" : "Spielercharakter",
   "TYPES.Actor.npc" : "Nichtspielercharakter",
   "TYPES.Actor.goon" : "Bedrohung",
+  "TYPES.Actor.shop" : "Shop",
   "TYPES.Item.gear" : "Spezialausrüstung",
   "TYPES.Item.rangedWeapon" : "Fernkampfwaffe",
   "TYPES.Item.ccWeapon" : "Nahkampfwaffe",
@@ -1701,6 +1706,50 @@
         "itemRebound": "{name} wurde {body} zugewiesen.",
         "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
         "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
+      }
+    },
+    "shop": {
+      "tabs": {
+        "shop": "Shop",
+        "settings": "Einstellungen"
+      },
+      "filter": {
+        "placeholder": "Nach Itemart filtern..."
+      },
+      "placeholders": {
+        "shopName": "Shop-Name",
+        "noItems": "Dieser Shop hat noch keine Items.",
+        "limitedView": "Du siehst das Angebot dieses Shops, aber der Besitzer verkauft dir nichts. Bitte deine Spielleitung um Observer-Rechte."
+      },
+      "settings": {
+        "repHeadline": "Akzeptierte Rep-Netzwerke",
+        "valuationHeadline": "Item-Bewertung"
+      },
+      "inventory": {
+        "headline": "Inventar"
+      },
+      "acceptedRep": {
+        "label": "Accepted Rep -",
+        "noCharacter": "Du hast keinen aktiven Charakter. Wähle einen dir gehörenden Charakter und komm dann zurück."
+      },
+      "purchase": {
+        "confirm": "Kaufen",
+        "required": "Benötigter Gefallen:",
+        "successMessage": "{character} hat {items} von {shop} gekauft."
+      },
+      "toSell": {
+        "headline": "To Sell",
+        "empty": "Ziehe Items von deinem eigenen Bogen hierher, um sie an diesen Shop zu verkaufen.",
+        "confirm": "Verkaufen",
+        "remove": "Aus To Sell entfernen",
+        "confirmMessage": "Du bist dabei, die vorgemerkten Items an diesen Shop zu verkaufen.",
+        "ownerWarning": "Dir gehört dieser Shop. Bist du sicher, dass du etwas an dich selbst verkaufen möchtest?"
+      },
+      "warnings": {
+        "systemDisabled": "Das Shop-System ist aktuell deaktiviert - du kannst es in den Eclipse-Phase-Systemeinstellungen aktivieren.",
+        "sellFailed": "Der Verkauf konnte nicht abgeschlossen werden.",
+        "purchaseFailed": "Der Kauf konnte nicht abgeschlossen werden.",
+        "purchaseItemsGone": "Einige der gekauften Items sind nicht mehr verfügbar."
       }
     }
   }
