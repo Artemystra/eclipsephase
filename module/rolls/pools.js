@@ -62,7 +62,9 @@ export async function usePoolFromChat(data){
             await completeShopPurchase({
                 shopId: dataset.shopid,
                 buyerActorId: dataset.buyeractorid,
-                itemIds: dataset.itemids
+                itemIds: dataset.itemids,
+                network: dataset.network,
+                favorTier: dataset.requiredtier
             })
         }
     }

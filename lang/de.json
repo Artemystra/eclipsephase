@@ -1734,7 +1734,13 @@
       },
       "purchase": {
         "confirm": "Kaufen",
+        "favorConfirm": "Gefallen einlösen",
         "required": "Benötigter Gefallen:",
+        "flatBuyCost": "Kaufkosten:",
+        "sellBonus": "Verkaufs-Bonus:",
+        "burnRep": "Rep verbrennen:",
+        "sellBonusModifier": "Verkaufs-Bonus",
+        "burnBonusModifier": "Verbrannter Rep",
         "successMessage": "{character} hat {items} von {shop} gekauft."
       },
       "toSell": {
@@ -1743,13 +1749,17 @@
         "confirm": "Verkaufen",
         "remove": "Aus To Sell entfernen",
         "confirmMessage": "Du bist dabei, die vorgemerkten Items an diesen Shop zu verkaufen.",
-        "ownerWarning": "Dir gehört dieser Shop. Bist du sicher, dass du etwas an dich selbst verkaufen möchtest?"
+        "ownerWarning": "Dir gehört dieser Shop. Bist du sicher, dass du etwas an dich selbst verkaufen möchtest?",
+        "repGainMessage": "{character} hat durch den Verkauf {amount} {network}-Rep erhalten."
       },
       "warnings": {
         "systemDisabled": "Das Shop-System ist aktuell deaktiviert - du kannst es in den Eclipse-Phase-Systemeinstellungen aktivieren.",
         "sellFailed": "Der Verkauf konnte nicht abgeschlossen werden.",
         "purchaseFailed": "Der Kauf konnte nicht abgeschlossen werden.",
-        "purchaseItemsGone": "Einige der gekauften Items sind nicht mehr verfügbar."
+        "purchaseItemsGone": "Einige der gekauften Items sind nicht mehr verfügbar.",
+        "favorLimitExhausted": "Kein Gefallen dieser Stufe mehr verfügbar - das Wochen- bzw. Story-Arc-Limit ist bereits ausgeschöpft.",
+        "notEnoughRepToBurn": "Nicht genug Rep zum Verbrennen vorhanden - auf das Verfügbare reduziert.",
+        "notEnoughRepToBuy": "Nicht genug Rep zum Kaufen vorhanden."
       }
     }
   }

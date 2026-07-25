@@ -1696,7 +1696,13 @@
       },
       "purchase": {
         "confirm": "Comprar",
+        "favorConfirm": "Cobrar Favor",
         "required": "Favor requerido:",
+        "flatBuyCost": "Costo de compra:",
+        "sellBonus": "Bono de venta:",
+        "burnRep": "Quemar Reputación:",
+        "sellBonusModifier": "Bono de venta",
+        "burnBonusModifier": "Reputación quemada",
         "successMessage": "{character} compró {items} de {shop}."
       },
       "toSell": {
@@ -1705,13 +1711,17 @@
         "confirm": "Vender",
         "remove": "Quitar de Para Vender",
         "confirmMessage": "Estás a punto de vender los objetos preparados a esta tienda.",
-        "ownerWarning": "Esta tienda es tuya. ¿Seguro que quieres venderte algo a ti mismo?"
+        "ownerWarning": "Esta tienda es tuya. ¿Seguro que quieres venderte algo a ti mismo?",
+        "repGainMessage": "{character} ganó {amount} de Reputación {network} por vender."
       },
       "warnings": {
         "systemDisabled": "El sistema de tienda está desactivado actualmente - puedes activarlo en los ajustes del sistema de Eclipse Phase.",
         "sellFailed": "No se pudo completar la venta.",
         "purchaseFailed": "No se pudo completar la compra.",
-        "purchaseItemsGone": "Algunos de los artículos comprados ya no están disponibles."
+        "purchaseItemsGone": "Algunos de los artículos comprados ya no están disponibles.",
+        "favorLimitExhausted": "No hay ningún favor de este nivel disponible ahora mismo - el límite semanal o de arco argumental ya se agotó.",
+        "notEnoughRepToBurn": "No hay suficiente Reputación disponible para quemar esa cantidad - reducido a lo disponible.",
+        "notEnoughRepToBuy": "No hay suficiente Reputación disponible para comprar esto."
       }
     }
   }

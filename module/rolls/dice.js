@@ -645,7 +645,16 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
-        
+
+        // "Gefallen einlösen" bonuses (Shop System house rule, Schritt 6) - shown as their own
+        // named modifiers, not folded silently into rollvalue.
+        if(rolledFrom === "shopPurchase"){
+            const sellBonus = Number(dataset.sellBonus) || 0;
+            const burnBonus = Number(dataset.burnBonus) || 0;
+            if(sellBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.sellBonusModifier', sellBonus))
+            if(burnBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', burnBonus))
+        }
+
         await task.performRoll()
 
         let itemData = {}
@@ -655,7 +664,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         // populated for psi rolls, never reset) - as a truthy empty object it would otherwise
         // always win this branch and this shopPurchase case would never run.
         else if(rolledFrom === "shopPurchase")
-            itemData = { shopId: dataset.shopId, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds }
+            itemData = { shopId: dataset.shopId, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier }
         else if(roll.sleight)
             itemData = roll.sleight
 

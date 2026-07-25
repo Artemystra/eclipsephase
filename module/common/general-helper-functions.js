@@ -370,14 +370,55 @@ export function requestGMItemTransfer({
   });
 }
 
+// Weekly/story-arc Favor-Limit-Tracking on the ID item (Item.id.rep.<network>.<slot>), per network -
+// trivial has no RAW limit so it's absent here (hasFreeFavorSlot/consumeFavorSlot treat it as always free).
+const FAVOR_LIMIT_SLOTS = { minor: ["small1", "small2", "small3"], moderate: ["med1"], major: ["large"] };
+
+/**
+ * Whether the character has an unused Favor-Limit slot left for this tier/network (read-only check).
+ * @param {Actor} character
+ * @param {string} network
+ * @param {string} tier
+ * @returns {boolean}
+ */
+export function hasFreeFavorSlot(character, network, tier) {
+  const slots = FAVOR_LIMIT_SLOTS[tier];
+  if (!slots) return true;
+  const idItem = character.items.get(character.system.activeID);
+  const rep = idItem?.system?.rep?.[network];
+  if (!rep) return false;
+  return slots.some(slot => !rep[slot]);
+}
+
+/**
+ * Marks the first unused Favor-Limit slot for this tier/network as used.
+ * @param {Actor} character
+ * @param {string} network
+ * @param {string} tier
+ * @returns {Promise<boolean>} false if no free slot was found (limit exhausted)
+ */
+export async function consumeFavorSlot(character, network, tier) {
+  const slots = FAVOR_LIMIT_SLOTS[tier];
+  if (!slots) return true;
+  const idItem = character.items.get(character.system.activeID);
+  const rep = idItem?.system?.rep?.[network];
+  if (!rep) return false;
+  const freeSlot = slots.find(slot => !rep[slot]);
+  if (!freeSlot) return false;
+  await idItem.update({ [`system.rep.${network}.${freeSlot}`]: true });
+  return true;
+}
+
 /**
  * Transfers shop items to a buyer's character (direct if both owned, else GM-relay), applying
  * morph Enhancements/Frame and prompting the Ware body-bind dialog as needed. Called right after
  * a successful purchase roll, and again later if a Pool swap/upgrade turns a failed roll into one.
- * @param {{shopId: string, buyerActorId: string, itemIds: string|string[]}} params
+ * @param {{shopId: string, buyerActorId: string, itemIds: string|string[], network?: string, favorTier?: string}} params
+ *   network/favorTier are only passed for the "Gefallen einlösen" roll flow, to consume a Favor-Limit
+ *   slot on completion - the flat "Kaufen" house rule never passes them, so never touches the limit.
  * @returns {Promise<void>}
  */
-export async function completeShopPurchase({ shopId, buyerActorId, itemIds } = {}) {
+export async function completeShopPurchase({ shopId, buyerActorId, itemIds, network, favorTier } = {}) {
   const shop = game.actors.get(shopId);
   const character = game.actors.get(buyerActorId);
   if (!shop || !character) return;
@@ -423,6 +464,11 @@ export async function completeShopPurchase({ shopId, buyerActorId, itemIds } = {
     }
 
     boughtNames.push(item.name);
+  }
+
+  if (network && favorTier) {
+    const consumed = await consumeFavorSlot(character, network, favorTier);
+    if (!consumed) ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.favorLimitExhausted"));
   }
 
   if (boughtNames.length) {

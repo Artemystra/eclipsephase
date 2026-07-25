@@ -1782,7 +1782,13 @@
       },
       "purchase": {
         "confirm": "Buy",
+        "favorConfirm": "Cash in Favor",
         "required": "Required favor:",
+        "flatBuyCost": "Buy cost:",
+        "sellBonus": "Sell bonus:",
+        "burnRep": "Burn Rep:",
+        "sellBonusModifier": "Sell Bonus",
+        "burnBonusModifier": "Burned Rep",
         "successMessage": "{character} bought {items} from {shop}."
       },
       "toSell": {
@@ -1791,13 +1797,17 @@
         "confirm": "Sell",
         "remove": "Remove from To Sell",
         "confirmMessage": "You are about to sell the staged item(s) to this shop.",
-        "ownerWarning": "You own this shop. Are you sure you want to sell something to yourself?"
+        "ownerWarning": "You own this shop. Are you sure you want to sell something to yourself?",
+        "repGainMessage": "{character} gained {amount} {network} Rep from selling."
       },
       "warnings": {
         "systemDisabled": "The shop system is currently disabled - you can activate it via Eclipse Phase's system settings.",
         "sellFailed": "The sale could not be completed.",
         "purchaseFailed": "The purchase could not be completed.",
-        "purchaseItemsGone": "Some of the purchased items are no longer available."
+        "purchaseItemsGone": "Some of the purchased items are no longer available.",
+        "favorLimitExhausted": "No favor of this tier is available right now - the weekly or story-arc limit is already used up.",
+        "notEnoughRepToBurn": "Not enough Rep available to burn that much - reduced to what's available.",
+        "notEnoughRepToBuy": "Not enough Rep available to buy this."
       }
     }
   }

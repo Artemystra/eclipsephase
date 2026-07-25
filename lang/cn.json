@@ -1703,7 +1703,13 @@
       },
       "purchase": {
         "confirm": "购买",
+        "favorConfirm": "兑现人情",
         "required": "所需人情等级：",
+        "flatBuyCost": "购买花费：",
+        "sellBonus": "出售加成：",
+        "burnRep": "燃烧信誉：",
+        "sellBonusModifier": "出售加成",
+        "burnBonusModifier": "燃烧的信誉",
         "successMessage": "{character} 从 {shop} 购买了 {items}。"
       },
       "toSell": {
@@ -1712,13 +1718,17 @@
         "confirm": "出售",
         "remove": "从待售中移除",
         "confirmMessage": "你即将把待售物品出售给这家商店。",
-        "ownerWarning": "这家商店是你的。你确定要把东西卖给自己吗？"
+        "ownerWarning": "这家商店是你的。你确定要把东西卖给自己吗？",
+        "repGainMessage": "{character} 通过出售获得了 {amount} 点 {network} 信誉。"
       },
       "warnings": {
         "systemDisabled": "商店系统当前已停用——你可以在 Eclipse Phase 的系统设置中启用它。",
         "sellFailed": "交易未能完成。",
         "purchaseFailed": "购买未能完成。",
-        "purchaseItemsGone": "部分已购买的物品已不再可用。"
+        "purchaseItemsGone": "部分已购买的物品已不再可用。",
+        "favorLimitExhausted": "该等级的人情目前不可用 - 每周或故事弧的限额已用完。",
+        "notEnoughRepToBurn": "可燃烧的信誉不足 - 已减少至可用数量。",
+        "notEnoughRepToBuy": "信誉不足，无法购买。"
       }
     }
   }

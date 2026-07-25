@@ -1554,9 +1554,34 @@ form.eclipsephase.shop {
   flex: 1;
 }
 
-.eclipsephase a.shop-purchase-confirm {
+.eclipsephase .shop-sell-network-row {
+  margin-bottom: 8px;
+}
+
+.eclipsephase select.shop-sell-network {
+  flex: 1;
+}
+
+.eclipsephase .shop-purchase-burn-row {
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.eclipsephase .shop-purchase-burn-row label {
+  font-size: 12px;
+  color: var(--iconGrey);
+  white-space: nowrap;
+}
+
+.eclipsephase input.shop-purchase-burn {
+  flex: 1;
+  min-width: 0;
+}
+
+.eclipsephase a.shop-purchase-favor,
+.eclipsephase a.shop-purchase-flatbuy {
   display: flex;
-  flex-shrink: 0;
+  flex: 1;
   align-items: center;
   justify-content: center;
   min-width: 110px;
@@ -1568,18 +1593,22 @@ form.eclipsephase.shop {
   cursor: pointer;
 }
 
-.eclipsephase a.shop-purchase-confirm:hover,
-.eclipsephase a.shop-purchase-confirm:focus {
+.eclipsephase a.shop-purchase-favor:hover,
+.eclipsephase a.shop-purchase-favor:focus,
+.eclipsephase a.shop-purchase-flatbuy:hover,
+.eclipsephase a.shop-purchase-flatbuy:focus {
   box-shadow: 0 0 5px 2px var(--highlight);
 }
 
-.eclipsephase a.shop-purchase-confirm.disabled {
+.eclipsephase a.shop-purchase-favor.disabled,
+.eclipsephase a.shop-purchase-flatbuy.disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.eclipsephase a.shop-purchase-confirm .awesomeIcon {
+.eclipsephase a.shop-purchase-favor .awesomeIcon,
+.eclipsephase a.shop-purchase-flatbuy .awesomeIcon {
   margin-right: 6px;
 }
 

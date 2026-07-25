@@ -12,6 +12,16 @@
                 <p class="notes">{{localize "ep2e.shop.toSell.empty"}}</p>
             {{/if}}
         </div>
+        {{#if sellNetworks.length}}
+            <div class="flexrow flex-group-center shop-sell-network-row">
+                {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
+                <select id="shop-sell-network-{{actor.id}}" class="shop-sell-network">
+                    {{#each sellNetworks as |option|}}
+                        <option value="{{option.network}}">{{option.label}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        {{/if}}
         {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out --}}
         <a class="shop-sell-confirm {{#unless toSellEntries.length}}disabled{{/unless}}"><i class="far fa-money-bill awesomeIcon"></i>{{localize "ep2e.shop.toSell.confirm"}}</a>
     </div>
@@ -35,6 +45,12 @@
                     {{#if requiredFavorTierLabel}}
                         <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.required"}} {{requiredFavorTierLabel}}</p>
                     {{/if}}
+                    {{#if flatBuyCost}}
+                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.flatBuyCost"}} {{flatBuyCost}}</p>
+                    {{/if}}
+                    {{#if sellBonus}}
+                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} +{{sellBonus}}</p>
+                    {{/if}}
                     <div class="flexrow flex-group-center">
                         {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
                         <select id="shop-purchase-network-{{actor.id}}" class="shop-purchase-network">
@@ -42,8 +58,17 @@
                                 <option value="{{option.network}}">{{option.label}}</option>
                             {{/each}}
                         </select>
+                    </div>
+                    <div class="flexrow flex-group-center shop-purchase-burn-row">
+                        <label for="shop-purchase-burn-{{actor.id}}">{{localize "ep2e.shop.purchase.burnRep"}}</label>
+                        <input type="number" id="shop-purchase-burn-{{actor.id}}" class="shop-purchase-burn" min="0" max="{{maxBurn}}" value="0"/>
+                    </div>
+                    <div class="flexrow flex-group-center">
                         {{!-- <a>, not <button> - same reason as .shop-sell-confirm above --}}
-                        <a class="shop-purchase-confirm {{#unless hasSelection}}disabled{{/unless}}"><i class="far fa-hand-holding-usd awesomeIcon"></i>{{localize "ep2e.shop.purchase.confirm"}}</a>
+                        <a class="shop-purchase-favor {{#unless hasSelection}}disabled{{/unless}}"><i class="far fa-hand-holding-usd awesomeIcon"></i>{{localize "ep2e.shop.purchase.favorConfirm"}}</a>
+                        {{#if homebrewBuyEnabled}}
+                            <a class="shop-purchase-flatbuy {{#unless hasSelection}}disabled{{/unless}}"><i class="far fa-coins awesomeIcon"></i>{{localize "ep2e.shop.purchase.confirm"}}</a>
+                        {{/if}}
                     </div>
                 </div>
             {{/if}}

@@ -1,8 +1,18 @@
 import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors } from "../common/general-sheet-functions.js";
-import { requestGMItemTransfer, completeShopPurchase } from "../common/general-helper-functions.js";
+import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot } from "../common/general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 
 const FAVOR_TIER_RANK = { trivial: 0, minor: 1, moderate: 2, major: 3 };
+// "Kaufen" (Diemen's Spezialbräu house rule, superBrew setting): flat Rep cost, no roll - Trivial
+// has no RAW cost equivalent, treated as free.
+const FLAT_BUY_COST = { trivial: 0, minor: 15, moderate: 30, major: 60 };
+// "Gefallen einlösen": per-item Sell-Bonus contribution when staged in "To Sell", summed and capped
+// at BONUS_CAP - same cap independently applies to the Rep-Burn-Bonus (burned points x2).
+const SELL_BONUS_PER_TIER = { trivial: 0, minor: 5, moderate: 15, major: 30 };
+const BONUS_CAP = 30;
+// Plain "Verkaufen" (no active purchase): per-item Rep gain, summed with no cap - exclusive with
+// SELL_BONUS_PER_TIER above, an item staged for one purpose is never staged for the other at once.
+const SELL_REP_PER_TIER = { trivial: 0, minor: 5, moderate: 10, major: 20 };
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -133,6 +143,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
   // Buttons ordered confirm-first - DialogV2's Enter key submits the first button in the array
   // regardless of which one is flagged default:true (see project_dialogv2_enter_key_bug.md).
+  // Grants the Rep-for-selling gain (Schritt 7) - exclusive with _useGefallen()'s Sell-Bonus, which
+  // calls _confirmSell() directly and never goes through this method.
   async _confirmSellDialog() {
     const lines = [`<p>${game.i18n.localize("ep2e.shop.toSell.confirmMessage")}</p>`];
     if (this.actor.isOwner) {
@@ -148,8 +160,29 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       ],
       rejectClose: false
     });
+    if (!confirmed) return;
 
-    if (confirmed) await this._confirmSell();
+    const repGain = this._getSellRepGain();
+    const network = this.element?.querySelector(".shop-sell-network")?.value;
+
+    await this._confirmSell();
+
+    if (repGain > 0 && network) {
+      const character = game.user.character;
+      const idItem = character?.isOwner ? character.items.get(character.system.activeID) : null;
+      if (idItem) {
+        const current = Number(idItem.system?.rep?.[network]?.value ?? 0);
+        await idItem.update({ [`system.rep.${network}.value`]: current + repGain });
+        ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({ actor: character }),
+          content: `<p>${game.i18n.format("ep2e.shop.toSell.repGainMessage", { character: character.name, amount: repGain, network: network.replace("-rep", "") })}</p>`
+        });
+        // _confirmSell() already rendered once, before this rep grant happened - the shop's own
+        // "Accepted Rep" display would otherwise keep showing the pre-gain value until some
+        // unrelated re-render happened to catch it up.
+        this.render();
+      }
+    }
   }
 
   // Transfers every currently staged item to this shop - direct if the user owns both sides,
@@ -264,25 +297,78 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
+   * The favor tier a single item resolves to, via this shop's cost-tier valuation table.
+   * @param {Item} item
+   * @returns {"trivial"|"minor"|"moderate"|"major"}
+   */
+  _favorTierForItem(item) {
+    const valuation = this.actor.system.valuation ?? {};
+    return valuation[item.system.cost] ?? "trivial";
+  }
+
+  /**
    * Highest favor tier among the given items' cost tiers.
    * @param {Item[]} items
    * @returns {"trivial"|"minor"|"moderate"|"major"}
    */
   _getRequiredFavorTier(items) {
-    const valuation = this.actor.system.valuation ?? {};
     let highest = "trivial";
     for (const item of items) {
-      const favorTier = valuation[item.system.cost];
-      if (favorTier && FAVOR_TIER_RANK[favorTier] > FAVOR_TIER_RANK[highest]) highest = favorTier;
+      const favorTier = this._favorTierForItem(item);
+      if (FAVOR_TIER_RANK[favorTier] > FAVOR_TIER_RANK[highest]) highest = favorTier;
     }
     return highest;
   }
 
   /**
-   * Plain Rep test for the selected items; transfers them to the user's character on success.
+   * Flat "Kaufen" Rep cost for the given items, summed per item's own favor tier.
+   * @param {Item[]} items
+   * @returns {number}
+   */
+  _getFlatBuyCost(items) {
+    return items.reduce((sum, item) => sum + (FLAT_BUY_COST[this._favorTierForItem(item)] ?? 0), 0);
+  }
+
+  /**
+   * Sell-Bonus for "Gefallen einlösen", summed from currently staged "To Sell" items by their own
+   * favor tier, capped at BONUS_CAP.
+   * @returns {number}
+   */
+  _getSellBonus() {
+    let total = 0;
+    for (const staged of this._toSell.values()) {
+      const item = game.actors.get(staged.sourceActorId)?.items.get(staged.itemId);
+      if (!item) continue;
+      total += SELL_BONUS_PER_TIER[this._favorTierForItem(item)] ?? 0;
+    }
+    return Math.min(total, BONUS_CAP);
+  }
+
+  /**
+   * Rep gain for a plain "Verkaufen" (no active purchase), summed from currently staged "To Sell"
+   * items by their own favor tier - no cap.
+   * @returns {number}
+   */
+  _getSellRepGain() {
+    let total = 0;
+    for (const staged of this._toSell.values()) {
+      const item = game.actors.get(staged.sourceActorId)?.items.get(staged.itemId);
+      if (!item) continue;
+      total += SELL_REP_PER_TIER[this._favorTierForItem(item)] ?? 0;
+    }
+    return total;
+  }
+
+  /**
+   * "Gefallen einlösen": Rep test for the selected items, optionally boosted by a Sell-Bonus
+   * (currently staged "To Sell" items, sold on confirm regardless of roll outcome) and/or a
+   * Rep-Burn-Bonus (points the player chooses to spend, also regardless of outcome - matches RAW
+   * "Burning Rep", which is a cost paid to attempt the roll, not a refundable wager). Success
+   * consumes a Favor-Limit slot (small1-3/med1/large) and transfers the items; a later Pool
+   * swap/upgrade that rescues a failure re-enters via usePoolFromChat() in pools.js.
    * @returns {Promise<void>}
    */
-  async _purchaseSelected() {
+  async _useGefallen() {
     const character = game.user.character;
     if (!character?.isOwner) {
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.acceptedRep.noCharacter"));
@@ -294,11 +380,25 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const network = this.element?.querySelector(".shop-purchase-network")?.value;
     if (!network) return;
 
+    const requiredTier = this._getRequiredFavorTier(items);
+    if (!hasFreeFavorSlot(character, network, requiredTier)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.favorLimitExhausted"));
+    }
+
     const idItem = character.items.get(character.system.activeID);
     const rollValue = Number(idItem?.system?.rep?.[network]?.value ?? 0);
-    const requiredTier = this._getRequiredFavorTier(items);
-    const tierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier]);
 
+    const sellBonus = this._getSellBonus();
+
+    const burnInput = this.element?.querySelector(".shop-purchase-burn");
+    const requestedBurn = Math.max(0, Math.min(BONUS_CAP / 2, Number(burnInput?.value) || 0));
+    const actualBurn = Math.min(requestedBurn, rollValue);
+    if (actualBurn < requestedBurn) {
+      ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.notEnoughRepToBurn"));
+    }
+    const burnBonus = actualBurn * 2;
+
+    const tierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier]);
     const systemOptions = {
       askForOptions: false,
       optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
@@ -314,17 +414,74 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       dialogTitle: `${game.i18n.localize("ep2e.shop.toSell.confirm")} - ${tierLabel}`,
       shopId: this.actor.id,
       buyerActorId: character.id,
-      itemIds: items.map(item => item.id).join(",")
+      itemIds: items.map(item => item.id).join(","),
+      requiredTier,
+      sellBonus,
+      burnBonus
     };
 
     const rollResult = await DICE.RollCheck(dataset, character.system, character, systemOptions, false, "shopPurchase");
-    if (!rollResult) return; // cancelled
+    if (!rollResult) return; // cancelled in the options dialog - nothing spent yet, stop here
+
+    // Only now, after the player actually confirmed the roll (not before, not on cancel), pay the
+    // costs - matches RAW "Burning Rep" (a cost for attempting the roll, not a refundable wager).
+    if (actualBurn > 0) {
+      await idItem.update({ [`system.rep.${network}.value`]: rollValue - actualBurn });
+    }
+    if (this._toSell.size > 0) {
+      await this._confirmSell();
+    }
 
     this._selectedForPurchase.clear();
     this.render();
 
     if (rollResult.resultClass !== "success") return;
-    await completeShopPurchase({ shopId: dataset.shopId, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds });
+    await completeShopPurchase({
+      shopId: dataset.shopId,
+      buyerActorId: dataset.buyerActorId,
+      itemIds: dataset.itemIds,
+      network: dataset.name,
+      favorTier: dataset.requiredTier
+    });
+  }
+
+  /**
+   * "Kaufen" (Diemen's Spezialbräu house rule, only active while the superBrew setting is on): a
+   * flat Rep cost per item's own favor tier, no roll, no Favor-Limit interaction.
+   * @returns {Promise<void>}
+   */
+  async _useFlatBuy() {
+    if (!game.settings.get("eclipsephase", "superBrew")) return;
+
+    const character = game.user.character;
+    if (!character?.isOwner) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.acceptedRep.noCharacter"));
+    }
+
+    const items = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
+    if (!items.length) return;
+
+    const network = this.element?.querySelector(".shop-purchase-network")?.value;
+    if (!network) return;
+
+    const idItem = character.items.get(character.system.activeID);
+    const available = Number(idItem?.system?.rep?.[network]?.value ?? 0);
+    const cost = this._getFlatBuyCost(items);
+
+    if (cost > available) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.notEnoughRepToBuy"));
+    }
+
+    await idItem.update({ [`system.rep.${network}.value`]: available - cost });
+
+    this._selectedForPurchase.clear();
+    this.render();
+
+    await completeShopPurchase({
+      shopId: this.actor.id,
+      buyerActorId: character.id,
+      itemIds: items.map(item => item.id).join(",")
+    });
   }
 
   // Foundry v14 core bug: for a root:true part, _replaceHTML empties newElement before restoring
@@ -378,6 +535,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.readOnly = !isOwnerView;
     context.toSellEntries = this._getToSellEntries();
     context.acceptedRep = this._getAcceptedRepDisplay(isOwnerView);
+    // Rep-for-selling network choice (Schritt 7) - shared by Owner and Observer alike, same as the
+    // "Verkaufen" button itself, so computed unconditionally rather than gated to Observer-only.
+    context.sellNetworks = this._getPurchaseNetworkOptions();
 
     // Buying is Observer-only.
     context.canPurchase = !isOwnerView;
@@ -386,9 +546,13 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.selected = Object.fromEntries([...this._selectedForPurchase].map(id => [id, true]));
       context.purchaseNetworks = this._getPurchaseNetworkOptions();
       context.hasSelection = this._selectedForPurchase.size > 0;
+      context.homebrewBuyEnabled = game.settings.get("eclipsephase", "superBrew");
+      context.sellBonus = this._getSellBonus();
+      context.maxBurn = BONUS_CAP / 2;
       if (context.hasSelection) {
         const selectedItems = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
         context.requiredFavorTierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[this._getRequiredFavorTier(selectedItems)]);
+        context.flatBuyCost = this._getFlatBuyCost(selectedItems);
       }
     }
 
@@ -414,7 +578,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (windowHeader) windowHeader.style.display = "none";
 
     // Core disables all form.elements when !isEditable - re-enable for Observer.
-    html.querySelectorAll(".item-purchase-select, .shop-purchase-network").forEach(el => el.disabled = false);
+    html.querySelectorAll(".item-purchase-select, .shop-purchase-network, .shop-purchase-burn, .shop-sell-network").forEach(el => el.disabled = false);
 
     const titlebar = html.querySelector(".ep-sheet-titlebar");
     addWindowControls(this, titlebar);
@@ -465,9 +629,14 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       });
     });
 
-    html.querySelector(".shop-purchase-confirm")?.addEventListener("click", () => {
+    html.querySelector(".shop-purchase-favor")?.addEventListener("click", () => {
       if (!this._selectedForPurchase.size) return;
-      this._purchaseSelected();
+      this._useGefallen();
+    });
+
+    html.querySelector(".shop-purchase-flatbuy")?.addEventListener("click", () => {
+      if (!this._selectedForPurchase.size) return;
+      this._useFlatBuy();
     });
 
     if (!this.isEditable) return;
