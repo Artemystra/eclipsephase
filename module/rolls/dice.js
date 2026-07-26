@@ -181,7 +181,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 function defineRoll(dataset, actorWhole){
     
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -646,13 +646,13 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
 
-        // "Gefallen einlösen" bonuses (Shop System house rule, Schritt 6) - shown as their own
-        // named modifiers, not folded silently into rollvalue.
+        // burnMod clamp must match _useGefallen()'s post-roll clamp (dataset.rollvalue/maxBurn).
         if(rolledFrom === "shopPurchase"){
             const sellBonus = Number(dataset.sellBonus) || 0;
-            const burnBonus = Number(dataset.burnBonus) || 0;
             if(sellBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.sellBonusModifier', sellBonus))
-            if(burnBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', burnBonus))
+
+            const actualBurn = Math.max(0, Math.min(Number(options.burnMod) || 0, Number(dataset.maxBurn) || 0, Number(dataset.rollvalue) || 0));
+            if(actualBurn) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', actualBurn * 2))
         }
 
         await task.performRoll()
@@ -660,11 +660,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         let itemData = {}
         if(weaponSelected)
             itemData = weaponSelected
-        // Checked before roll.sleight, which defineRoll() always initializes to {} (only ever
-        // populated for psi rolls, never reset) - as a truthy empty object it would otherwise
-        // always win this branch and this shopPurchase case would never run.
+        // Must come before roll.sleight - defineRoll() always inits it to {}, a truthy empty object.
         else if(rolledFrom === "shopPurchase")
-            itemData = { shopId: dataset.shopId, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier }
+            itemData = { shopId: dataset.shopId, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings }
         else if(roll.sleight)
             itemData = roll.sleight
 

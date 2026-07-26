@@ -1716,6 +1716,13 @@
       "filter": {
         "placeholder": "Nach Itemart filtern..."
       },
+      "dialog": {
+        "selectNetwork": {
+          "label": "Rep-Netzwerk",
+          "placeholder": "- Netzwerk wählen -",
+          "headline": "Netzwerk wählen"
+        }
+      },
       "placeholders": {
         "shopName": "Shop-Name",
         "noItems": "Dieser Shop hat noch keine Items."
@@ -1738,7 +1745,9 @@
         "required": "Benötigter Gefallen:",
         "flatBuyCost": "Kaufkosten:",
         "sellBonus": "Verkaufs-Bonus:",
+        "repBenefitsHeadline": "Rep-Vorteile",
         "burnRep": "Rep verbrennen:",
+        "burnRepHint": "Bonus: Verbrannter Rep x 2<br>(Max. 15 Rep)",
         "sellBonusModifier": "Verkaufs-Bonus",
         "burnBonusModifier": "Verbrannter Rep",
         "successMessage": "{character} hat {items} von {shop} gekauft."

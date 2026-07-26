@@ -1685,6 +1685,13 @@
       "filter": {
         "placeholder": "按物品类型筛选..."
       },
+      "dialog": {
+        "selectNetwork": {
+          "label": "信誉网络",
+          "placeholder": "- 选择网络 -",
+          "headline": "选择网络"
+        }
+      },
       "placeholders": {
         "shopName": "商店名称",
         "noItems": "这家商店还没有任何物品。"
@@ -1707,7 +1714,9 @@
         "required": "所需人情等级：",
         "flatBuyCost": "购买花费：",
         "sellBonus": "出售加成：",
+        "repBenefitsHeadline": "信誉优势",
         "burnRep": "燃烧信誉：",
+        "burnRepHint": "加成：燃烧信誉 x 2<br>（最多 15 点信誉）",
         "sellBonusModifier": "出售加成",
         "burnBonusModifier": "燃烧的信誉",
         "successMessage": "{character} 从 {shop} 购买了 {items}。"

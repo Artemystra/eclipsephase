@@ -1,6 +1,7 @@
 import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors } from "../common/general-sheet-functions.js";
 import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot } from "../common/general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
+import * as MORPHFUNCTION from "../common/morp-functions.js";
 
 const FAVOR_TIER_RANK = { trivial: 0, minor: 1, moderate: 2, major: 3 };
 // "Kaufen" (Diemen's Spezialbräu house rule, superBrew setting): flat Rep cost, no roll - Trivial
@@ -150,24 +151,35 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.shopClosed"));
     }
 
+    // Networks only offered if there's actually a controlled character to credit - selling still
+    // works without one (see _useGefallen() family), it just can't grant Rep to anyone.
+    const networks = this._getPurchaseNetworkOptions();
+
     const lines = [`<p>${game.i18n.localize("ep2e.shop.toSell.confirmMessage")}</p>`];
     if (this.actor.isOwner) {
       lines.push(`<p><strong>${game.i18n.localize("ep2e.shop.toSell.ownerWarning")}</strong></p>`);
     }
+    if (networks.length) lines.push(this._networkSelectMarkup(networks, game.i18n.localize("ep2e.shop.dialog.selectNetwork.headline")));
 
-    const confirmed = await foundry.applications.api.DialogV2.wait({
+    const result = await foundry.applications.api.DialogV2.wait({
       window: { title: game.i18n.localize("ep2e.shop.toSell.confirm") },
+      classes: ["ep2e-primary-right"],
       content: lines.join(""),
       buttons: [
-        { action: "confirm", label: game.i18n.localize("ep2e.shop.toSell.confirm"), default: true, callback: () => true },
-        { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => false }
+        { action: "confirm", label: game.i18n.localize("ep2e.shop.toSell.confirm"), default: true, callback: (event, button) => ({ network: button.form.NetworkSelect?.value ?? null }) },
+        { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => ({ cancelled: true }) }
       ],
-      rejectClose: false
+      position: { width: 276 },
+      modal: true,
+      rejectClose: false,
+      render: networks.length ? (event, dialog) => this._syncNetworkSelectConfirm(dialog) : undefined
     });
-    if (!confirmed) return;
+    // A falsy callback return (e.g. bare null) breaks DialogV2 resolution on this Foundry version -
+    // every button here must resolve truthy, same convention as selectBody()/showOptionsDialog().
+    if (!result || result.cancelled) return;
+    const network = result.network;
 
     const repGain = this._getSellRepGain();
-    const network = this.element?.querySelector(".shop-sell-network")?.value;
 
     await this._confirmSell();
 
@@ -372,6 +384,158 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return total;
   }
 
+  // Styled like general-modifiers.html. Single network auto-selected; multiple require an explicit
+  // choice (see _syncNetworkSelectConfirm()).
+  _networkSelectMarkup(networks, headline, hint, hintValue) {
+    const options = networks.map(o => `<option value="${o.network}">${o.label}</option>`).join("");
+    const select = networks.length === 1
+      ? `<select name="NetworkSelect">${options}</select>`
+      : `<select name="NetworkSelect"><option value="" selected>${game.i18n.localize("ep2e.shop.dialog.selectNetwork.placeholder")}</option>${options}</select>`;
+    const hintRow = hint
+      ? `<div class="form-group listBackgroundMain"><label class="resource-labelDialog">${hint}</label><input type="text" value="${hintValue}" disabled/></div>`
+      : "";
+    return `<div class="contentBoxMargin">
+      <div class="flexrow subheader"><h3 class="subheader dialog">${headline}</h3></div>
+      ${hintRow}
+      <div class="form-group listBackgroundMain shop-network-row">
+        <label class="resource-labelDialog">${game.i18n.localize("ep2e.shop.dialog.selectNetwork.label")}</label>
+        ${select}
+      </div>
+    </div>`;
+  }
+
+  // Same pattern as selectBody() in general-sheet-functions.js: confirm stays disabled until a
+  // non-empty value is chosen.
+  _syncNetworkSelectConfirm(dialog) {
+    const select = dialog.element.querySelector('select[name="NetworkSelect"]');
+    const confirmBtn = dialog.element.querySelector('button[data-action="confirm"]');
+    if (!select || !confirmBtn) return;
+    const sync = () => { confirmBtn.disabled = !select.value; };
+    select.addEventListener("change", sync);
+    sync();
+  }
+
+  /**
+   * Prompts for a Rep network via a DialogV2 select, styled like this system's standard roll
+   * dialogs. Confirm disabled until chosen.
+   * @param {{title: string, headline: string, hint?: string, hintValue?: string, networks: Array<{network: string, label: string}>, confirmLabel: string}} params
+   * @returns {Promise<string|null>} the chosen network, or null if cancelled
+   */
+  async _selectNetworkDialog({ title, headline, hint, hintValue, networks, confirmLabel }) {
+    const content = this._networkSelectMarkup(networks, headline, hint, hintValue);
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title },
+      classes: ["ep2e-primary-right"],
+      content,
+      buttons: [
+        { action: "confirm", label: confirmLabel, default: true, callback: (event, button) => ({ selection: button.form.NetworkSelect.value }) },
+        { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => ({ cancelled: true }) }
+      ],
+      position: { width: 276 },
+      modal: true,
+      rejectClose: false,
+      render: (event, dialog) => this._syncNetworkSelectConfirm(dialog)
+    });
+    // A falsy callback return (e.g. bare null) breaks DialogV2 resolution on this Foundry version -
+    // every button here must resolve truthy, same convention as selectBody()/showOptionsDialog().
+    if (!result || result.cancelled) return null;
+    return result.selection || null;
+  }
+
+  // One row per Ware item, all sharing the same body options. Confirm disabled until every row
+  // has a non-placeholder value (see _syncWareBindingConfirm()).
+  _wareBindingMarkup(items, bodyGroups) {
+    const placeholder = game.i18n.localize("ep2e.dialog.selectBody.placeholder");
+    const optgroups = bodyGroups.map(g =>
+      `<optgroup label="${g.label}">${g.options.map(o => `<option value="${o.id}">${o.name}</option>`).join("")}</optgroup>`
+    ).join("");
+    const rows = items.map(item => `
+      <div class="form-group listBackgroundMain shop-body-row">
+        <label class="resource-labelDialog">${item.name}</label>
+        <select name="BodySelect_${item.id}">
+          <option value="" selected>${placeholder}</option>
+          ${optgroups}
+        </select>
+      </div>`).join("");
+    return `<div class="contentBoxMargin">
+      <div class="flexrow subheader"><h3 class="subheader dialog">${game.i18n.localize("ep2e.dialog.selectBody.header")}</h3></div>
+      ${rows}
+    </div>`;
+  }
+
+  _syncWareBindingConfirm(dialog) {
+    const selects = dialog.element.querySelectorAll('select[name^="BodySelect_"]');
+    const confirmBtn = dialog.element.querySelector('button[data-action="confirm"]');
+    if (!selects.length || !confirmBtn) return;
+    const sync = () => { confirmBtn.disabled = [...selects].some(s => !s.value); };
+    selects.forEach(s => s.addEventListener("change", sync));
+    sync();
+  }
+
+  /**
+   * One combined dialog with a body-select row per item, instead of one dialog per item.
+   * @param {Item[]} items
+   * @param {Array<{label: string, options: Array<{id: string, name: string}>}>} bodyGroups
+   * @returns {Promise<Record<string,string>|null>} itemId -> chosen body id, or null if cancelled
+   */
+  async _selectWareBindingsDialog(items, bodyGroups) {
+    const content = this._wareBindingMarkup(items, bodyGroups);
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: game.i18n.localize("ep2e.dialog.selectBody.header") },
+      classes: ["ep2e-primary-right"],
+      content,
+      buttons: [
+        {
+          action: "confirm",
+          label: game.i18n.localize("ep2e.actorSheet.button.select"),
+          default: true,
+          callback: (event, button) => ({ bindings: Object.fromEntries(items.map(item => [item.id, button.form[`BodySelect_${item.id}`].value])) })
+        },
+        { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => ({ cancelled: true }) }
+      ],
+      position: { width: 340 },
+      modal: true,
+      rejectClose: false,
+      render: (event, dialog) => this._syncWareBindingConfirm(dialog)
+    });
+    // A falsy callback return (e.g. bare null) breaks DialogV2 resolution on this Foundry version -
+    // every button here must resolve truthy, same convention as selectBody()/showOptionsDialog().
+    if (!result || result.cancelled) return null;
+    return result.bindings;
+  }
+
+  /**
+   * Pre-resolves Ware body bindings before any Rep is spent. Aborts the whole purchase (no Rep
+   * dialog, nothing spent) if body choice is cancelled or there's no body to bind to at all - Ware
+   * can't currently be bought unbound. One combined dialog for all Ware items, not one per item.
+   * @param {Actor} character
+   * @param {Item[]} items
+   * @returns {Promise<{cancelled: boolean, bindings: Record<string,string>}>}
+   */
+  async _resolveWareBindings(character, items) {
+    const wareItems = items.filter(i => i.type === "ware");
+    if (!wareItems.length) return { cancelled: false, bindings: {} };
+
+    const { bodies, boundToFor, buildBodyGroups } = MORPHFUNCTION.getBodyBindingInfo(character);
+
+    if (bodies.length === 0) {
+      await MORPHFUNCTION.resolveBodyForItem(character, "ep2e.systemMessage.itemAttachment.noBodyWare");
+      return { cancelled: true, bindings: {} };
+    }
+
+    if (bodies.length === 1) {
+      const boundTo = boundToFor(bodies[0]);
+      const bindings = {};
+      wareItems.forEach(item => bindings[item.id] = boundTo);
+      return { cancelled: false, bindings };
+    }
+
+    const result = await this._selectWareBindingsDialog(wareItems, buildBodyGroups());
+    if (!result) return { cancelled: true, bindings: {} };
+    return { cancelled: false, bindings: result };
+  }
+
   /**
    * "Gefallen einlösen": Rep test for the selected items, optionally boosted by a Sell-Bonus
    * (currently staged "To Sell" items, sold on confirm regardless of roll outcome) and/or a
@@ -390,10 +554,20 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const items = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
     if (!items.length) return;
 
-    const network = this.element?.querySelector(".shop-purchase-network")?.value;
-    if (!network) return;
+    const { cancelled, bindings } = await this._resolveWareBindings(character, items);
+    if (cancelled) return;
 
     const requiredTier = this._getRequiredFavorTier(items);
+    const tierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier]);
+
+    const network = await this._selectNetworkDialog({
+      title: game.i18n.localize("ep2e.shop.purchase.favorConfirm"),
+      headline: `${game.i18n.localize("ep2e.shop.purchase.required")} ${tierLabel}`,
+      networks: this._getPurchaseNetworkOptions(),
+      confirmLabel: game.i18n.localize("ep2e.shop.purchase.favorConfirm")
+    });
+    if (!network) return;
+
     if (!hasFreeFavorSlot(character, network, requiredTier)) {
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.favorLimitExhausted"));
     }
@@ -403,41 +577,37 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     const sellBonus = this._getSellBonus();
 
-    const burnInput = this.element?.querySelector(".shop-purchase-burn");
-    const requestedBurn = Math.max(0, Math.min(BONUS_CAP / 2, Number(burnInput?.value) || 0));
-    const actualBurn = Math.min(requestedBurn, rollValue);
-    if (actualBurn < requestedBurn) {
-      ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.notEnoughRepToBurn"));
-    }
-    const burnBonus = actualBurn * 2;
-
-    const tierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier]);
     const systemOptions = {
       askForOptions: false,
       optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
       brewStatus: game.settings.get("eclipsephase", "superBrew")
     };
-    // No preventPrintToChat - the standard dice chat card (breakdown/threshold/Pool-swap button)
-    // posts itself. A later swap/upgrade that turns a failure into a success re-enters this same
-    // purchase via usePoolFromChat() in pools.js, using the ids stashed on that chat button.
+    // Pool-swap rescue re-enters via usePoolFromChat() in pools.js using ids stashed on the chat button.
     const dataset = {
       name: network,
       key: "rep",
       rollvalue: rollValue,
-      dialogTitle: `${game.i18n.localize("ep2e.shop.toSell.confirm")} - ${tierLabel}`,
+      dialogTitle: `${game.i18n.localize("ep2e.shop.purchase.favorConfirm")} - ${tierLabel}`,
       shopId: this.actor.id,
       buyerActorId: character.id,
       itemIds: items.map(item => item.id).join(","),
       requiredTier,
       sellBonus,
-      burnBonus
+      maxBurn: BONUS_CAP / 2,
+      bodyBindings: Object.entries(bindings).map(([id, boundTo]) => `${id}:${boundTo}`).join(",")
     };
 
     const rollResult = await DICE.RollCheck(dataset, character.system, character, systemOptions, false, "shopPurchase");
     if (!rollResult) return; // cancelled in the options dialog - nothing spent yet, stop here
 
-    // Only now, after the player actually confirmed the roll (not before, not on cancel), pay the
-    // costs - matches RAW "Burning Rep" (a cost for attempting the roll, not a refundable wager).
+    // Clamp must match dice.js's clamp on the roll's own burn modifier.
+    const requestedBurn = Number(rollResult.options?.burnMod) || 0;
+    const actualBurn = Math.max(0, Math.min(requestedBurn, BONUS_CAP / 2, rollValue));
+    if (requestedBurn > rollValue) {
+      ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.notEnoughRepToBurn"));
+    }
+
+    // Rep burn is a cost for attempting the roll, not a refundable wager (RAW).
     if (actualBurn > 0) {
       await idItem.update({ [`system.rep.${network}.value`]: rollValue - actualBurn });
     }
@@ -454,7 +624,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       buyerActorId: dataset.buyerActorId,
       itemIds: dataset.itemIds,
       network: dataset.name,
-      favorTier: dataset.requiredTier
+      favorTier: dataset.requiredTier,
+      bodyBindings: bindings
     });
   }
 
@@ -474,12 +645,20 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const items = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
     if (!items.length) return;
 
-    const network = this.element?.querySelector(".shop-purchase-network")?.value;
+    const { cancelled, bindings } = await this._resolveWareBindings(character, items);
+    if (cancelled) return;
+
+    const cost = this._getFlatBuyCost(items);
+    const network = await this._selectNetworkDialog({
+      title: game.i18n.localize("ep2e.shop.purchase.confirm"),
+      headline: `${game.i18n.localize("ep2e.shop.purchase.flatBuyCost")} ${cost}`,
+      networks: this._getPurchaseNetworkOptions(),
+      confirmLabel: game.i18n.localize("ep2e.shop.purchase.confirm")
+    });
     if (!network) return;
 
     const idItem = character.items.get(character.system.activeID);
     const available = Number(idItem?.system?.rep?.[network]?.value ?? 0);
-    const cost = this._getFlatBuyCost(items);
 
     if (cost > available) {
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.notEnoughRepToBuy"));
@@ -493,7 +672,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     await completeShopPurchase({
       shopId: this.actor.id,
       buyerActorId: character.id,
-      itemIds: items.map(item => item.id).join(",")
+      itemIds: items.map(item => item.id).join(","),
+      bodyBindings: bindings
     });
   }
 
@@ -546,9 +726,6 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.readOnly = !isOwnerView;
     context.toSellEntries = this._getToSellEntries();
     context.acceptedRep = this._getAcceptedRepDisplay(isOwnerView);
-    // Rep-for-selling network choice (Schritt 7) - shared by Owner and Observer alike, same as the
-    // "Verkaufen" button itself, so computed unconditionally rather than gated to Observer-only.
-    context.sellNetworks = this._getPurchaseNetworkOptions();
 
     // Buying is Observer-only.
     context.canPurchase = !isOwnerView;
@@ -559,7 +736,6 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.hasSelection = this._selectedForPurchase.size > 0;
       context.homebrewBuyEnabled = game.settings.get("eclipsephase", "superBrew");
       context.sellBonus = this._getSellBonus();
-      context.maxBurn = BONUS_CAP / 2;
       if (context.hasSelection) {
         const selectedItems = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
         context.requiredFavorTierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[this._getRequiredFavorTier(selectedItems)]);
@@ -589,7 +765,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (windowHeader) windowHeader.style.display = "none";
 
     // Core disables all form.elements when !isEditable - re-enable for Observer.
-    html.querySelectorAll(".item-purchase-select, .shop-purchase-network, .shop-purchase-burn, .shop-sell-network").forEach(el => el.disabled = false);
+    html.querySelectorAll(".item-purchase-select").forEach(el => el.disabled = false);
 
     const titlebar = html.querySelector(".ep-sheet-titlebar");
     addWindowControls(this, titlebar);

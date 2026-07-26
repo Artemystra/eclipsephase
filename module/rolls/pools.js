@@ -59,12 +59,18 @@ export async function usePoolFromChat(data){
             await prepareWeapon(false, result, data)
         }
         else if(rolledFrom === "shopPurchase" && dataset.resultclass === "success"){
+            const bodyBindings = {};
+            (dataset.bodybindings || "").split(",").filter(Boolean).forEach(pair => {
+                const [id, boundTo] = pair.split(":");
+                bodyBindings[id] = boundTo;
+            });
             await completeShopPurchase({
                 shopId: dataset.shopid,
                 buyerActorId: dataset.buyeractorid,
                 itemIds: dataset.itemids,
                 network: dataset.network,
-                favorTier: dataset.requiredtier
+                favorTier: dataset.requiredtier,
+                bodyBindings
             })
         }
     }

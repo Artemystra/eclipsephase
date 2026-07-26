@@ -1764,6 +1764,13 @@
       "filter": {
         "placeholder": "Filter by item type..."
       },
+      "dialog": {
+        "selectNetwork": {
+          "label": "Rep Network",
+          "placeholder": "- Select Network -",
+          "headline": "Choose Network"
+        }
+      },
       "placeholders": {
         "shopName": "Shop Name",
         "noItems": "This shop has no items yet."
@@ -1786,7 +1793,9 @@
         "required": "Required favor:",
         "flatBuyCost": "Buy cost:",
         "sellBonus": "Sell bonus:",
+        "repBenefitsHeadline": "Rep Benefits",
         "burnRep": "Burn Rep:",
+        "burnRepHint": "Bonus: Burned Rep x 2<br>(Max. 15 Rep)",
         "sellBonusModifier": "Sell Bonus",
         "burnBonusModifier": "Burned Rep",
         "successMessage": "{character} bought {items} from {shop}."

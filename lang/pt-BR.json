@@ -1692,6 +1692,13 @@
       "filter": {
         "placeholder": "Filtrar por tipo de item..."
       },
+      "dialog": {
+        "selectNetwork": {
+          "label": "Rede de Reputação",
+          "placeholder": "- Selecionar rede -",
+          "headline": "Escolher rede"
+        }
+      },
       "placeholders": {
         "shopName": "Nome da Loja",
         "noItems": "Esta loja ainda não tem itens."
@@ -1714,7 +1721,9 @@
         "required": "Favor necessário:",
         "flatBuyCost": "Custo de compra:",
         "sellBonus": "Bônus de venda:",
+        "repBenefitsHeadline": "Benefícios de Reputação",
         "burnRep": "Queimar Reputação:",
+        "burnRepHint": "Bônus: Reputação queimada x 2<br>(Máx. 15 Reputação)",
         "sellBonusModifier": "Bônus de venda",
         "burnBonusModifier": "Reputação queimada",
         "successMessage": "{character} comprou {items} de {shop}."

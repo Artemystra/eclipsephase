@@ -790,6 +790,7 @@ export function itemToggle(html, item) {
     const content = await foundry.applications.handlebars.renderTemplate(template, {
       bodyGroups,
       dialogType: "selectBody",
+      title,
       headline,
       copy,
       placeholder,

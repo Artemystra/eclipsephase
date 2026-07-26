@@ -13,17 +13,8 @@
             {{/if}}
         </div>
         {{#if actor.system.acceptsSales}}
-            {{#if sellNetworks.length}}
-                <div class="flexrow flex-group-center shop-sell-network-row">
-                    {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
-                    <select id="shop-sell-network-{{actor.id}}" class="shop-sell-network">
-                        {{#each sellNetworks as |option|}}
-                            <option value="{{option.network}}">{{option.label}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-            {{/if}}
-            {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out --}}
+            {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out.
+                 Rep network (if any) is chosen inside the confirm dialog, not here. --}}
             <a class="shop-sell-confirm {{#unless toSellEntries.length}}disabled{{/unless}}"><i class="far fa-money-bill awesomeIcon"></i>{{localize "ep2e.shop.toSell.confirm"}}</a>
         {{else}}
             <p class="notes">{{localize "ep2e.shop.warnings.salesClosed"}}</p>
@@ -55,18 +46,8 @@
                     {{#if sellBonus}}
                         <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} +{{sellBonus}}</p>
                     {{/if}}
-                    <div class="flexrow flex-group-center">
-                        {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
-                        <select id="shop-purchase-network-{{actor.id}}" class="shop-purchase-network">
-                            {{#each purchaseNetworks as |option|}}
-                                <option value="{{option.network}}">{{option.label}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="flexrow flex-group-center shop-purchase-burn-row">
-                        <label for="shop-purchase-burn-{{actor.id}}">{{localize "ep2e.shop.purchase.burnRep"}}</label>
-                        <input type="number" id="shop-purchase-burn-{{actor.id}}" class="shop-purchase-burn" min="0" max="{{maxBurn}}" value="0"/>
-                    </div>
+                    {{!-- Rep network and (for "Gefallen einlösen" only) Rep-Burn amount are chosen inside
+                         the confirm dialogs, not here. --}}
                     <div class="flexrow flex-group-center">
                         {{!-- <a>, not <button> - same reason as .shop-sell-confirm above --}}
                         <a class="shop-purchase-favor {{#unless hasSelection}}disabled{{/unless}}"><i class="far fa-hand-holding-usd awesomeIcon"></i>{{localize "ep2e.shop.purchase.favorConfirm"}}</a>

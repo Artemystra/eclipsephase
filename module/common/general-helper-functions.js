@@ -411,14 +411,16 @@ export async function consumeFavorSlot(character, network, tier) {
 
 /**
  * Transfers shop items to a buyer's character (direct if both owned, else GM-relay), applying
- * morph Enhancements/Frame and prompting the Ware body-bind dialog as needed. Called right after
- * a successful purchase roll, and again later if a Pool swap/upgrade turns a failed roll into one.
- * @param {{shopId: string, buyerActorId: string, itemIds: string|string[], network?: string, favorTier?: string}} params
+ * morph Enhancements/Frame and binding Ware to a body as needed. Called right after a successful
+ * purchase roll, and again later if a Pool swap/upgrade turns a failed roll into one.
+ * @param {{shopId: string, buyerActorId: string, itemIds: string|string[], network?: string, favorTier?: string, bodyBindings?: Record<string,string>}} params
  *   network/favorTier are only passed for the "Gefallen einlösen" roll flow, to consume a Favor-Limit
  *   slot on completion - the flat "Kaufen" house rule never passes them, so never touches the limit.
+ *   bodyBindings (shop item id -> boundTo) is pre-resolved before the purchase was paid for; falls
+ *   back to prompting here if a Ware item has no entry (e.g. the Pool-rescue path).
  * @returns {Promise<void>}
  */
-export async function completeShopPurchase({ shopId, buyerActorId, itemIds, network, favorTier } = {}) {
+export async function completeShopPurchase({ shopId, buyerActorId, itemIds, network, favorTier, bodyBindings = {} } = {}) {
   const shop = game.actors.get(shopId);
   const character = game.actors.get(buyerActorId);
   if (!shop || !character) return;
@@ -459,8 +461,13 @@ export async function completeShopPurchase({ shopId, buyerActorId, itemIds, netw
     }
 
     if (item.type === "ware" && created) {
-      const resolved = await MORPHFUNCTION.resolveBodyForItem(character, "ep2e.systemMessage.itemAttachment.noBodyWare");
-      if (!resolved.cancelled) await created.update({ "system.boundTo": resolved.boundTo });
+      const preResolved = bodyBindings[item.id];
+      if (preResolved) {
+        await created.update({ "system.boundTo": preResolved });
+      } else {
+        const resolved = await MORPHFUNCTION.resolveBodyForItem(character, "ep2e.systemMessage.itemAttachment.noBodyWare");
+        if (!resolved.cancelled) await created.update({ "system.boundTo": resolved.boundTo });
+      }
     }
 
     boughtNames.push(item.name);

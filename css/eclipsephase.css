@@ -825,9 +825,49 @@ span.neutral {
   padding: 0.5rem;
 }
 
+/* Native <dialog> backdrop (modal:true) - Foundry ships this unstyled, browser default is barely visible */
+dialog.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
 /* Keep the primary/confirm button first in the DOM (so Enter submits it), but show it on the right */
 .ep2e-primary-right .form-footer {
   flex-direction: row-reverse;
+}
+
+.shop-network-row .resource-labelDialog {
+  white-space: nowrap;
+}
+
+.shop-network-row select {
+  max-width: 150px;
+}
+
+.shop-body-row .resource-labelDialog {
+  white-space: nowrap;
+}
+
+.shop-body-row select {
+  max-width: 100px;
+}
+
+.shop-burn-row {
+  align-items: flex-start;
+}
+
+.shop-burn-row input {
+  align-self: flex-start;
+}
+
+.shop-burn-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-burn-row .footnote {
+  line-height: 1.1;
+  font-size: 11px;
+  padding-left: 7px;
 }
 
 #sidebar {
@@ -1540,34 +1580,6 @@ form.eclipsephase.shop {
   margin: 0 0 5px 0;
   font-size: 12px;
   color: var(--iconGrey);
-}
-
-.eclipsephase .shop-purchase-network {
-  flex: 1;
-}
-
-.eclipsephase .shop-sell-network-row {
-  margin-bottom: 8px;
-}
-
-.eclipsephase select.shop-sell-network {
-  flex: 1;
-}
-
-.eclipsephase .shop-purchase-burn-row {
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.eclipsephase .shop-purchase-burn-row label {
-  font-size: 12px;
-  color: var(--iconGrey);
-  white-space: nowrap;
-}
-
-.eclipsephase input.shop-purchase-burn {
-  flex: 1;
-  min-width: 0;
 }
 
 .eclipsephase a.shop-purchase-favor,
