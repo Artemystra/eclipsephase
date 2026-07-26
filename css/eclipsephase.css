@@ -1534,12 +1534,18 @@ form.eclipsephase.shop {
   margin-right: 6px;
 }
 
-.eclipsephase .shop-accepted-rep {
+.eclipsephase .shop-footer {
   flex-shrink: 0;
-  margin-top: 10px;
+  margin-top: 5px;
   padding-top: 5px;
   border-top: 1px solid var(--highlightBackground);
   font-size: 12px;
+}
+
+.eclipsephase .shop-acting-character {
+  font-weight: bold;
+  color: var(--highlight);
+  margin-right: 4px;
 }
 
 /* Same look as the character sheet's input[class="sheet"] checkboxes - can't reuse that selector

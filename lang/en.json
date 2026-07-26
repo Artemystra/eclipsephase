@@ -1818,7 +1818,8 @@
         "notEnoughRepToBurn": "Not enough Rep available to burn that much - reduced to what's available.",
         "notEnoughRepToBuy": "Not enough Rep available to buy this.",
         "shopClosed": "This shop is currently closed.",
-        "salesClosed": "This shop is currently closed for sales."
+        "salesClosed": "This shop is currently closed for sales.",
+        "differentActingCharacter": "You're already selling items for another character - finish or remove those first."
       }
     }
   }

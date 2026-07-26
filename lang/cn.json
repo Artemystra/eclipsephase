@@ -1739,7 +1739,8 @@
         "notEnoughRepToBurn": "可燃烧的信誉不足 - 已减少至可用数量。",
         "notEnoughRepToBuy": "信誉不足，无法购买。",
         "shopClosed": "该商店目前已关闭。",
-        "salesClosed": "该商店目前不接受出售。"
+        "salesClosed": "该商店目前不接受出售。",
+        "differentActingCharacter": "你已经在为另一个角色出售物品 - 请先完成或移除这些物品。"
       }
     }
   }

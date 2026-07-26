@@ -1,0 +1,15 @@
+{{!-- Shop-wide footer, sibling of .shop-sheet-body so it stays visible across every tab
+  (Owner's Shop/Einstellungen tabs and Observer's single view alike) - see EPshopSheet.js
+  _getAcceptedRepDisplay()/_getActingCharacter(). --}}
+{{#if acceptedRep}}
+<footer class="shop-footer">
+    {{#if (eq acceptedRep.mode "closed")}}
+        {{localize "ep2e.shop.warnings.shopClosed"}}
+    {{else if (eq acceptedRep.mode "noCharacter")}}
+        {{localize "ep2e.shop.acceptedRep.noCharacter"}}
+    {{else}}
+        {{#if acceptedRep.character}}<span class="shop-acting-character">{{acceptedRep.character}}</span>{{/if}}
+        {{localize "ep2e.shop.acceptedRep.label"}} {{acceptedRep.text}}
+    {{/if}}
+</footer>
+{{/if}}

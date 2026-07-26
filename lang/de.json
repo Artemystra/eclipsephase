@@ -1770,7 +1770,8 @@
         "notEnoughRepToBurn": "Nicht genug Rep zum Verbrennen vorhanden - auf das Verfügbare reduziert.",
         "notEnoughRepToBuy": "Nicht genug Rep zum Kaufen vorhanden.",
         "shopClosed": "Der Shop ist derzeitig geschlossen.",
-        "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen."
+        "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen.",
+        "differentActingCharacter": "Du verkaufst gerade schon Items für einen anderen Charakter - schließe das erst ab oder entferne diese Items."
       }
     }
   }

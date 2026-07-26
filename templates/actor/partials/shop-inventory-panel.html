@@ -58,18 +58,5 @@
                 </div>
             {{/if}}
         {{/if}}
-
-        {{#if acceptedRep}}
-            {{!-- Sticky footer - sits outside .shop-column-scroll so it never scrolls with the list --}}
-            <p class="shop-accepted-rep">
-                {{#if (eq acceptedRep.mode "closed")}}
-                    {{localize "ep2e.shop.warnings.shopClosed"}}
-                {{else if (eq acceptedRep.mode "noCharacter")}}
-                    {{localize "ep2e.shop.acceptedRep.noCharacter"}}
-                {{else}}
-                    {{localize "ep2e.shop.acceptedRep.label"}} {{acceptedRep.text}}
-                {{/if}}
-            </p>
-        {{/if}}
     </div>
 </div>

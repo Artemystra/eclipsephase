@@ -1746,7 +1746,8 @@
         "notEnoughRepToBurn": "Não há Reputação suficiente disponível para queimar essa quantidade - reduzido ao disponível.",
         "notEnoughRepToBuy": "Não há Reputação suficiente disponível para comprar isto.",
         "shopClosed": "Esta loja está fechada no momento.",
-        "salesClosed": "Esta loja está atualmente fechada para vendas."
+        "salesClosed": "Esta loja está atualmente fechada para vendas.",
+        "differentActingCharacter": "Você já está vendendo itens para outro personagem - termine ou remova esses itens primeiro."
       }
     }
   }

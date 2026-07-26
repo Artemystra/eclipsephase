@@ -109,6 +109,28 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   // canonical-actor uuid _getToSellEntries() re-resolves, so they'd never match.
   _toSell = new Map();
 
+  // Set only when a GM (or any user without their own game.user.character) drags another actor's
+  // item onto the shop to sell for them - see _onDropItem(). Never used by buying (Kaufen/Gefallen
+  // einlösen stay bound to game.user.character only, per Schritt-12 OQ2).
+  _actingCharacterId = null;
+
+  /**
+   * Who this sell transaction is acting as: the viewing user's own character first, else a
+   * GM-picked acting character (see _onDropItem()), else null.
+   * @returns {Actor|null}
+   */
+  _getActingCharacter() {
+    if (game.user.character) return game.user.character;
+    if (this._actingCharacterId) return game.actors.get(this._actingCharacterId) ?? null;
+    return null;
+  }
+
+  // Clears the acting-character context once nothing is staged anymore (Schritt-12 OQ3) - called
+  // after every mutation of _toSell.
+  _maybeResetActingCharacter() {
+    if (this._toSell.size === 0) this._actingCharacterId = null;
+  }
+
   _stagingKey(sourceActor, item) {
     return `${sourceActor.id}.${item.id}`;
   }
@@ -139,6 +161,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       item.shopStagingKey = key;
       entries.push(item);
     }
+    this._maybeResetActingCharacter();
     return entries;
   }
 
@@ -153,7 +176,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     // Networks only offered if there's actually a controlled character to credit - selling still
     // works without one (see _useGefallen() family), it just can't grant Rep to anyone.
-    const networks = this._getPurchaseNetworkOptions();
+    const networks = this._getSellNetworkOptions();
 
     const lines = [`<p>${game.i18n.localize("ep2e.shop.toSell.confirmMessage")}</p>`];
     if (this.actor.isOwner) {
@@ -180,11 +203,12 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const network = result.network;
 
     const repGain = this._getSellRepGain();
+    // Captured before _confirmSell() clears the acting-character context once staging empties out.
+    const character = this._getActingCharacter();
 
     await this._confirmSell();
 
     if (repGain > 0 && network) {
-      const character = game.user.character;
       const idItem = character?.isOwner ? character.items.get(character.system.activeID) : null;
       if (idItem) {
         const current = Number(idItem.system?.rep?.[network]?.value ?? 0);
@@ -232,6 +256,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       }
       this._toSell.delete(uuid);
     }
+    this._maybeResetActingCharacter();
     this.render();
   }
 
@@ -257,6 +282,15 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       if (this._isClosedForSelling()) {
         ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.shopClosed"));
         return null;
+      }
+      // Only tracked when the dragging user has no own character - a GM (or character-less user)
+      // sells for whichever actor they first dragged from, blocked from switching mid-transaction.
+      if (!game.user.character) {
+        if (this._actingCharacterId && this._actingCharacterId !== sourceActor.id) {
+          ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.differentActingCharacter"));
+          return null;
+        }
+        this._actingCharacterId = sourceActor.id;
       }
       this._stageForSale(item, sourceActor);
       return null;
@@ -285,12 +319,15 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const networks = this._getAcceptedNetworks();
     if (!networks.length) return { mode: "closed" };
 
-    if (isOwnerView) {
-      return { mode: "owner", text: networks.map(network => network.replace("-rep", "")).join("; ") };
+    // An acting character (own or a GM-picked one, see _getActingCharacter()) always wins, even
+    // for Owner/GM - only falls back to network-names-only (Owner) or the noCharacter warning
+    // (Observer) once there's truly no one to show values for.
+    const character = this._getActingCharacter();
+    if (!character?.isOwner) {
+      return isOwnerView
+        ? { mode: "owner", text: networks.map(network => network.replace("-rep", "")).join("; ") }
+        : { mode: "noCharacter" };
     }
-
-    const character = game.user.character;
-    if (!character?.isOwner) return { mode: "noCharacter" };
 
     const idItem = character.items.get(character.system.activeID);
     const rep = idItem?.system?.rep ?? {};
@@ -298,18 +335,14 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       const value = Number(rep[network]?.value ?? 0);
       return `${network.replace("-rep", "")}: ${value}`;
     }).join(" ");
-    return { mode: "observer", text };
+    return { mode: "observer", character: character.name, text };
   }
 
   // Checked item ids, client-side only.
   _selectedForPurchase = new Set();
 
-  /**
-   * Accepted networks with the user's own character's Rep values, sorted highest first.
-   * @returns {Array<{network: string, value: number, label: string}>}
-   */
-  _getPurchaseNetworkOptions() {
-    const character = game.user.character;
+  // Accepted networks with `character`'s Rep values, sorted highest first.
+  _networkOptionsFor(character) {
     if (!character?.isOwner) return [];
     const idItem = character.items.get(character.system.activeID);
     const rep = idItem?.system?.rep ?? {};
@@ -319,6 +352,25 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         return { network, value, label: `${network.replace("-rep", "")} (${value})` };
       })
       .sort((a, b) => b.value - a.value);
+  }
+
+  /**
+   * Accepted networks with the user's own character's Rep values - used by Kaufen/Gefallen
+   * einlösen, which stay bound to game.user.character only (Schritt-12 OQ2), never the acting
+   * character used by selling.
+   * @returns {Array<{network: string, value: number, label: string}>}
+   */
+  _getPurchaseNetworkOptions() {
+    return this._networkOptionsFor(game.user.character);
+  }
+
+  /**
+   * Accepted networks with the ACTING character's Rep values - used by the sell-confirmation
+   * dialog, so a GM selling on behalf of another character can credit that character.
+   * @returns {Array<{network: string, value: number, label: string}>}
+   */
+  _getSellNetworkOptions() {
+    return this._networkOptionsFor(this._getActingCharacter());
   }
 
   /**
@@ -795,6 +847,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const key = li?.dataset.stagingKey;
         if (!key) return;
         this._toSell.delete(key);
+        this._maybeResetActingCharacter();
         this.render();
       });
     });

@@ -176,6 +176,7 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/health-bar.html",
     "systems/eclipsephase/templates/actor/partials/multiselect-pills.html",
+    "systems/eclipsephase/templates/actor/partials/shop-footer.html",
     "systems/eclipsephase/templates/actor/partials/shop-inventory-panel.html",
     "systems/eclipsephase/templates/actor/partials/shop-to-sell-list.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html",
