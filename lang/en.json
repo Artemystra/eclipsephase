@@ -1766,8 +1766,7 @@
       },
       "placeholders": {
         "shopName": "Shop Name",
-        "noItems": "This shop has no items yet.",
-        "limitedView": "You can see this shop's offer but the owner doesn't sell anything to you. Ask your GM for Observer rights instead."
+        "noItems": "This shop has no items yet."
       },
       "settings": {
         "repHeadline": "Accepted Rep Networks",

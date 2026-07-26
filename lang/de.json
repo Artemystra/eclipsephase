@@ -1718,8 +1718,7 @@
       },
       "placeholders": {
         "shopName": "Shop-Name",
-        "noItems": "Dieser Shop hat noch keine Items.",
-        "limitedView": "Du siehst das Angebot dieses Shops, aber der Besitzer verkauft dir nichts. Bitte deine Spielleitung um Observer-Rechte."
+        "noItems": "Dieser Shop hat noch keine Items."
       },
       "settings": {
         "repHeadline": "Akzeptierte Rep-Netzwerke",

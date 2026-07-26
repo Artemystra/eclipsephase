@@ -1416,14 +1416,6 @@ form.eclipsephase.shop {
   min-height: 0;
 }
 
-.eclipsephase .shop-limited-warning {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  background-color: #f0c419;
-  color: #1d1d1d;
-}
-
 /* BG3-style two equal containers: To Sell left, shop inventory right */
 .eclipsephase .shop-two-column {
   display: flex;

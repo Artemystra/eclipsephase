@@ -232,12 +232,12 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     // Same-actor drag (e.g. reordering the shop's own list) - nothing to do.
     if (sourceActor && sourceActor.id === targetActor.id) return null;
 
-    // Any cross-actor drag (Owner or Observer, including the Owner dragging from one of their
-    // OTHER own characters) always stages for sale first, never transfers instantly - that's what
-    // lets _confirmSellDialog()'s "you own this shop, sell to yourself?" warning actually fire
-    // instead of being silently bypassed for Owner. Limited can't interact with the shop at all.
+    // Any cross-actor drag (Owner or anyone with at least Limited permission, including the Owner
+    // dragging from one of their OTHER own characters) always stages for sale first, never
+    // transfers instantly - that's what lets _confirmSellDialog()'s "you own this shop, sell to
+    // yourself?" warning actually fire instead of being silently bypassed for Owner.
     if (sourceActor) {
-      if (!targetActor.testUserPermission(game.user, "OBSERVER")) return null;
+      if (!targetActor.testUserPermission(game.user, "LIMITED")) return null;
       this._stageForSale(item, sourceActor);
       return null;
     }
@@ -254,8 +254,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   // Owner sees just which networks are accepted (no "their own" rep value makes sense to show
-  // them); Observer sees each accepted network's value on their own controlled character; Limited
-  // never calls this at all (shop-sheet-limited.html doesn't include the shared inventory panel).
+  // them); anyone else sees each accepted network's value on their own controlled character.
   _getAcceptedRepDisplay(isOwnerView) {
     const networks = this._getAcceptedNetworks();
     if (!networks.length) return null;
@@ -493,17 +492,15 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     }
   }
 
-  // Three-tier permission model: Owner/GM get the full sheet (Shop + Einstellungen tabs), Observer
-  // gets the interactive buy/sell view with no owner-only tabs, everyone else gets a read-only shell.
+  // Two-tier permission model: Owner/GM get the full sheet (Shop + Einstellungen tabs), anyone
+  // with at least Limited permission gets the interactive buy/sell view - there's no separate
+  // read-only tier anymore, Limited and Observer behave identically.
   _getSheetTemplate() {
     const actor = this.document;
     if (game.user.isGM || actor.isOwner) {
       return "systems/eclipsephase/templates/actor/shop-sheet.html";
     }
-    if (actor.testUserPermission(game.user, "OBSERVER")) {
-      return "systems/eclipsephase/templates/actor/shop-sheet-observer.html";
-    }
-    return "systems/eclipsephase/templates/actor/shop-sheet-limited.html";
+    return "systems/eclipsephase/templates/actor/shop-sheet-observer.html";
   }
 
   _configureRenderParts(options) {
@@ -527,8 +524,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.tabGroups = this.tabGroups;
     }
 
-    // Item list + type filter for all three tiers, incl. Limited - reaching this method at all
-    // already means Foundry granted at least LIMITED access, so no extra permission guard here.
+    // Item list + type filter for both tiers - reaching this method at all already means Foundry
+    // granted at least LIMITED access, so no extra permission guard here.
     context.itemGroups = this._getGroupedItems();
     context.itemTypeFilterPills = this._itemTypeFilter.map(type => game.i18n.localize(`TYPES.Item.${type}`));
     context.itemTypeFilterSuggestions = this._getFilterSuggestions();
@@ -601,8 +598,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       });
     });
 
-    // To Sell staging controls - available to Owner and Observer alike (Limited never sees the
-    // markup these target at all, see shop-sheet-limited.html).
+    // To Sell staging controls - available to Owner and anyone with Limited+ permission alike.
     html.querySelectorAll(".to-sell-remove").forEach(element => {
       element.addEventListener("click", ev => {
         const li = ev.currentTarget.closest(".item");

@@ -1680,8 +1680,7 @@
       },
       "placeholders": {
         "shopName": "Nombre de la tienda",
-        "noItems": "Esta tienda todavía no tiene objetos.",
-        "limitedView": "Puedes ver la oferta de esta tienda, pero el propietario no te vende nada. Pide a tu DJ permisos de Observador."
+        "noItems": "Esta tienda todavía no tiene objetos."
       },
       "settings": {
         "repHeadline": "Redes de Rep Aceptadas",

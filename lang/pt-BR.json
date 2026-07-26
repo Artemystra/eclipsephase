@@ -1694,8 +1694,7 @@
       },
       "placeholders": {
         "shopName": "Nome da Loja",
-        "noItems": "Esta loja ainda não tem itens.",
-        "limitedView": "Você pode ver a oferta desta loja, mas o dono não vende nada para você. Peça ao mestre permissões de Observador."
+        "noItems": "Esta loja ainda não tem itens."
       },
       "settings": {
         "repHeadline": "Redes de Rep Aceitas",

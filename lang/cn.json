@@ -1687,8 +1687,7 @@
       },
       "placeholders": {
         "shopName": "商店名称",
-        "noItems": "这家商店还没有任何物品。",
-        "limitedView": "你可以看到这家商店的商品，但店主不会卖给你任何东西。请向你的守秘人申请观察者权限。"
+        "noItems": "这家商店还没有任何物品。"
       },
       "settings": {
         "repHeadline": "接受的Rep网络",
