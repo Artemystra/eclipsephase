@@ -35,6 +35,11 @@
                 {{/each}}
             </div>
 
+            <label class="flexrow flex-group-center">
+                <input type="checkbox" data-dtype="Boolean" name="system.acceptsSales" {{checked actor.system.acceptsSales}}/>
+                {{localize "ep2e.shop.settings.acceptsSales"}}
+            </label>
+
             <p class="headline5">{{localize "ep2e.shop.settings.valuationHeadline"}}</p>
             <div class="shop-settings-valuation">
                 {{#each costTypes as |locKey tier|}}

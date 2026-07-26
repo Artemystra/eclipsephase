@@ -553,14 +553,15 @@
     "shop": {
       "templates": [],
       "acceptedRepNetworks": {
-        "@-rep": false,
-        "c-rep": false,
-        "f-rep": false,
-        "g-rep": false,
-        "i-rep": false,
-        "r-rep": false,
-        "x-rep": false
+        "@-rep": true,
+        "c-rep": true,
+        "f-rep": true,
+        "g-rep": true,
+        "i-rep": true,
+        "r-rep": true,
+        "x-rep": true
       },
+      "acceptsSales": true,
       "valuation": {
         "minor": "minor",
         "moderate": "moderate",

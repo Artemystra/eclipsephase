@@ -1684,6 +1684,7 @@
       },
       "settings": {
         "repHeadline": "Redes de Rep Aceptadas",
+        "acceptsSales": "La tienda acepta ventas",
         "valuationHeadline": "Valoración de Objetos"
       },
       "inventory": {
@@ -1720,7 +1721,9 @@
         "purchaseItemsGone": "Algunos de los artículos comprados ya no están disponibles.",
         "favorLimitExhausted": "No hay ningún favor de este nivel disponible ahora mismo - el límite semanal o de arco argumental ya se agotó.",
         "notEnoughRepToBurn": "No hay suficiente Reputación disponible para quemar esa cantidad - reducido a lo disponible.",
-        "notEnoughRepToBuy": "No hay suficiente Reputación disponible para comprar esto."
+        "notEnoughRepToBuy": "No hay suficiente Reputación disponible para comprar esto.",
+        "shopClosed": "Esta tienda está cerrada actualmente.",
+        "salesClosed": "Esta tienda está actualmente cerrada para ventas."
       }
     }
   }

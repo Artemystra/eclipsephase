@@ -12,18 +12,22 @@
                 <p class="notes">{{localize "ep2e.shop.toSell.empty"}}</p>
             {{/if}}
         </div>
-        {{#if sellNetworks.length}}
-            <div class="flexrow flex-group-center shop-sell-network-row">
-                {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
-                <select id="shop-sell-network-{{actor.id}}" class="shop-sell-network">
-                    {{#each sellNetworks as |option|}}
-                        <option value="{{option.network}}">{{option.label}}</option>
-                    {{/each}}
-                </select>
-            </div>
+        {{#if actor.system.acceptsSales}}
+            {{#if sellNetworks.length}}
+                <div class="flexrow flex-group-center shop-sell-network-row">
+                    {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
+                    <select id="shop-sell-network-{{actor.id}}" class="shop-sell-network">
+                        {{#each sellNetworks as |option|}}
+                            <option value="{{option.network}}">{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            {{/if}}
+            {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out --}}
+            <a class="shop-sell-confirm {{#unless toSellEntries.length}}disabled{{/unless}}"><i class="far fa-money-bill awesomeIcon"></i>{{localize "ep2e.shop.toSell.confirm"}}</a>
+        {{else}}
+            <p class="notes">{{localize "ep2e.shop.warnings.salesClosed"}}</p>
         {{/if}}
-        {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out --}}
-        <a class="shop-sell-confirm {{#unless toSellEntries.length}}disabled{{/unless}}"><i class="far fa-money-bill awesomeIcon"></i>{{localize "ep2e.shop.toSell.confirm"}}</a>
     </div>
 
     <div class="shop-inventory-column">
@@ -77,7 +81,9 @@
         {{#if acceptedRep}}
             {{!-- Sticky footer - sits outside .shop-column-scroll so it never scrolls with the list --}}
             <p class="shop-accepted-rep">
-                {{#if (eq acceptedRep.mode "noCharacter")}}
+                {{#if (eq acceptedRep.mode "closed")}}
+                    {{localize "ep2e.shop.warnings.shopClosed"}}
+                {{else if (eq acceptedRep.mode "noCharacter")}}
                     {{localize "ep2e.shop.acceptedRep.noCharacter"}}
                 {{else}}
                     {{localize "ep2e.shop.acceptedRep.label"}} {{acceptedRep.text}}

@@ -1722,6 +1722,7 @@
       },
       "settings": {
         "repHeadline": "Akzeptierte Rep-Netzwerke",
+        "acceptsSales": "Shop nimmt Verkäufe entgegen",
         "valuationHeadline": "Item-Bewertung"
       },
       "inventory": {
@@ -1758,7 +1759,9 @@
         "purchaseItemsGone": "Einige der gekauften Items sind nicht mehr verfügbar.",
         "favorLimitExhausted": "Kein Gefallen dieser Stufe mehr verfügbar - das Wochen- bzw. Story-Arc-Limit ist bereits ausgeschöpft.",
         "notEnoughRepToBurn": "Nicht genug Rep zum Verbrennen vorhanden - auf das Verfügbare reduziert.",
-        "notEnoughRepToBuy": "Nicht genug Rep zum Kaufen vorhanden."
+        "notEnoughRepToBuy": "Nicht genug Rep zum Kaufen vorhanden.",
+        "shopClosed": "Der Shop ist derzeitig geschlossen.",
+        "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen."
       }
     }
   }

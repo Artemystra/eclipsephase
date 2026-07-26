@@ -1770,6 +1770,7 @@
       },
       "settings": {
         "repHeadline": "Accepted Rep Networks",
+        "acceptsSales": "Shop accepts sales",
         "valuationHeadline": "Item Valuation"
       },
       "inventory": {
@@ -1806,7 +1807,9 @@
         "purchaseItemsGone": "Some of the purchased items are no longer available.",
         "favorLimitExhausted": "No favor of this tier is available right now - the weekly or story-arc limit is already used up.",
         "notEnoughRepToBurn": "Not enough Rep available to burn that much - reduced to what's available.",
-        "notEnoughRepToBuy": "Not enough Rep available to buy this."
+        "notEnoughRepToBuy": "Not enough Rep available to buy this.",
+        "shopClosed": "This shop is currently closed.",
+        "salesClosed": "This shop is currently closed for sales."
       }
     }
   }

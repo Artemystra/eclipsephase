@@ -1691,6 +1691,7 @@
       },
       "settings": {
         "repHeadline": "接受的Rep网络",
+        "acceptsSales": "商店接受出售",
         "valuationHeadline": "物品估值"
       },
       "inventory": {
@@ -1727,7 +1728,9 @@
         "purchaseItemsGone": "部分已购买的物品已不再可用。",
         "favorLimitExhausted": "该等级的人情目前不可用 - 每周或故事弧的限额已用完。",
         "notEnoughRepToBurn": "可燃烧的信誉不足 - 已减少至可用数量。",
-        "notEnoughRepToBuy": "信誉不足，无法购买。"
+        "notEnoughRepToBuy": "信誉不足，无法购买。",
+        "shopClosed": "该商店目前已关闭。",
+        "salesClosed": "该商店目前不接受出售。"
       }
     }
   }

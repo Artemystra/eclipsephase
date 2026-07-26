@@ -146,6 +146,10 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   // Grants the Rep-for-selling gain (Schritt 7) - exclusive with _useGefallen()'s Sell-Bonus, which
   // calls _confirmSell() directly and never goes through this method.
   async _confirmSellDialog() {
+    if (this._isClosedForSelling()) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.shopClosed"));
+    }
+
     const lines = [`<p>${game.i18n.localize("ep2e.shop.toSell.confirmMessage")}</p>`];
     if (this.actor.isOwner) {
       lines.push(`<p><strong>${game.i18n.localize("ep2e.shop.toSell.ownerWarning")}</strong></p>`);
@@ -238,6 +242,10 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     // yourself?" warning actually fire instead of being silently bypassed for Owner.
     if (sourceActor) {
       if (!targetActor.testUserPermission(game.user, "LIMITED")) return null;
+      if (this._isClosedForSelling()) {
+        ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.shopClosed"));
+        return null;
+      }
       this._stageForSale(item, sourceActor);
       return null;
     }
@@ -253,11 +261,17 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return Object.keys(accepted).filter(key => accepted[key]);
   }
 
+  // Selling is blocked if the shop accepts no Rep networks at all, or the Owner explicitly turned
+  // off sale acceptance - buying is unaffected by either.
+  _isClosedForSelling() {
+    return !this._getAcceptedNetworks().length || this.actor.system.acceptsSales === false;
+  }
+
   // Owner sees just which networks are accepted (no "their own" rep value makes sense to show
   // them); anyone else sees each accepted network's value on their own controlled character.
   _getAcceptedRepDisplay(isOwnerView) {
     const networks = this._getAcceptedNetworks();
-    if (!networks.length) return null;
+    if (!networks.length) return { mode: "closed" };
 
     if (isOwnerView) {
       return { mode: "owner", text: networks.map(network => network.replace("-rep", "")).join("; ") };
