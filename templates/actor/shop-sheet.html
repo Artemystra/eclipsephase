@@ -81,6 +81,31 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyBarHeadline"}}</p>
+                    <p class="notes">{{localize "ep2e.shop.settings.loyaltyBarDescription"}}</p>
+                    <div class="flexrow flex-group-center">
+                        <label style="flex: 1;">{{localize "ep2e.shop.settings.loyaltyBarMax"}}</label>
+                        <input type="number" data-dtype="Number" name="system.loyaltyBarMax" value="{{actor.system.loyaltyBarMax}}" style="max-width: 60px;"/>
+                    </div>
+                    <table class="shop-rate-override-table">
+                        <thead>
+                            <tr>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBarRed"}}</th>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBarOrange"}}</th>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBarYellow"}}</th>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBarGreen"}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.red" value="{{actor.system.loyaltyBarSegments.red}}"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.orange" value="{{actor.system.loyaltyBarSegments.orange}}"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.yellow" value="{{actor.system.loyaltyBarSegments.yellow}}"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.green" value="{{actor.system.loyaltyBarSegments.green}}"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     </div>
 
                     <div class="shop-cost-overrides-column" style="flex: 1;">

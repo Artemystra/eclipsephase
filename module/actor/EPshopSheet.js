@@ -351,6 +351,31 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return { mode: "observer", character: character.name, text };
   }
 
+  // Same acting-character resolution as _getAcceptedRepDisplay() - the color bar is a per
+  // (shop, character) value, so it only makes sense once there's someone owned to show it for.
+  // Segment widths are flex-grow weights, not required to sum to 100 - they scale proportionally
+  // either way.
+  _getLoyaltyBarDisplay() {
+    if (!this.actor.system.loyaltyEnabled) return null;
+    const character = this._getActingCharacter();
+    if (!character?.isOwner) return null;
+
+    const max = Number(this.actor.system.loyaltyBarMax) || 100;
+    const value = this.actor.getFlag("eclipsephase", "characterState")?.[character.id]?.loyalty?.value ?? 0;
+    const markerPercent = Math.max(0, Math.min(100, (value / max) * 100));
+    const segments = this.actor.system.loyaltyBarSegments ?? {};
+
+    return {
+      value,
+      max,
+      markerPercent,
+      segments: ["red", "orange", "yellow", "green"].map(color => ({
+        color,
+        weight: Number(segments[color]) || 0
+      }))
+    };
+  }
+
   // Checked item ids, client-side only.
   _selectedForPurchase = new Set();
 
@@ -853,6 +878,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.readOnly = !isOwnerView;
     context.toSellEntries = this._getToSellEntries();
     context.acceptedRep = this._getAcceptedRepDisplay(isOwnerView);
+    context.loyaltyBar = this._getLoyaltyBarDisplay();
 
     // Buying is Observer-only.
     context.canPurchase = !isOwnerView;

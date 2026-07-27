@@ -8,8 +8,21 @@
     {{else if (eq acceptedRep.mode "noCharacter")}}
         {{localize "ep2e.shop.acceptedRep.noCharacter"}}
     {{else}}
-        {{#if acceptedRep.character}}<span class="shop-acting-character">{{acceptedRep.character}}</span>{{/if}}
-        {{localize "ep2e.shop.acceptedRep.label"}} {{acceptedRep.text}}
+        <div class="shop-footer-row">
+            {{#if acceptedRep.character}}<span class="shop-acting-character">{{acceptedRep.character}}</span>{{/if}}
+            {{#if loyaltyBar}}
+                <span class="shop-loyalty-bar-group">
+                    <span>{{localize "ep2e.shop.acceptedRep.loyaltyLabel"}}</span>
+                    <div class="shop-loyalty-bar" title="{{loyaltyBar.value}} / {{loyaltyBar.max}}">
+                        {{#each loyaltyBar.segments as |segment|}}
+                            <div class="shop-loyalty-bar-segment shop-loyalty-bar-{{segment.color}}" style="flex-grow: {{segment.weight}};"></div>
+                        {{/each}}
+                        <div class="shop-loyalty-bar-marker" style="left: {{loyaltyBar.markerPercent}}%;"></div>
+                    </div>
+                </span>
+            {{/if}}
+            <span class="shop-accepted-rep-text">{{localize "ep2e.shop.acceptedRep.label"}} {{acceptedRep.text}}</span>
+        </div>
     {{/if}}
 </footer>
 {{/if}}

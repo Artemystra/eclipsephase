@@ -1744,6 +1744,13 @@
         "loyaltyRecordAddTitle": "Charakter hinzufügen",
         "loyaltyRecordAddHeadline": "Wähle einen Charakter aus, der zur Loyalitäts-Liste dieses Shops hinzugefügt werden soll.",
         "loyaltyRecordAddWindowTitle": "Am Loyalitäts-Brett herumpfuschen",
+        "loyaltyBarHeadline": "Loyalitäts-Balken",
+        "loyaltyBarDescription": "Stellt den Farbbalken im Footer ein, der zeigt, wo die Loyalität eines Charakters aktuell steht.",
+        "loyaltyBarMax": "Balken-Maximum",
+        "loyaltyBarRed": "Rot",
+        "loyaltyBarOrange": "Orange",
+        "loyaltyBarYellow": "Gelb",
+        "loyaltyBarGreen": "Grün",
         "rateOverridesHeadline": "Preis-Overrides",
         "generalOverridesHeadline": "Allgemeine Overrides",
         "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
@@ -1757,6 +1764,7 @@
       },
       "acceptedRep": {
         "label": "Accepted Rep -",
+        "loyaltyLabel": "Shop-Loyalität:",
         "noCharacter": "Du hast keinen aktiven Charakter. Wähle einen dir gehörenden Charakter und komm dann zurück."
       },
       "purchase": {

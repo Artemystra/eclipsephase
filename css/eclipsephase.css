@@ -1543,10 +1543,62 @@ form.eclipsephase.shop {
   font-size: 12px;
 }
 
+.eclipsephase .shop-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .eclipsephase .shop-acting-character {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 0 1 25%;
+  max-width: 25%;
+  min-width: 0;
   font-weight: bold;
   color: var(--highlight);
   margin-right: 4px;
+}
+
+.eclipsephase .shop-accepted-rep-text {
+  flex: 1 1 auto;
+  text-align: right;
+}
+
+.eclipsephase .shop-loyalty-bar-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 1 33%;
+  max-width: 33%;
+  min-width: 0;
+}
+
+.eclipsephase .shop-loyalty-bar {
+  position: relative;
+  display: inline-flex;
+  flex: 1;
+  min-width: 0;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.eclipsephase .shop-loyalty-bar-segment { flex-basis: 0; }
+
+.eclipsephase .shop-loyalty-bar-red { background: #a33636; }
+.eclipsephase .shop-loyalty-bar-orange { background: #c97a2b; }
+.eclipsephase .shop-loyalty-bar-yellow { background: #c9b32b; }
+.eclipsephase .shop-loyalty-bar-green { background: #3f9142; }
+
+.eclipsephase .shop-loyalty-bar-marker {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 12px;
+  background: var(--textColor, #fff);
+  transform: translateX(-1px);
 }
 
 /* Same look as the character sheet's input[class="sheet"] checkboxes - can't reuse that selector

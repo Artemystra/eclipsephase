@@ -1720,6 +1720,13 @@
         "loyaltyRecordAddTitle": "Adicionar Personagem",
         "loyaltyRecordAddHeadline": "Selecione um personagem para adicionar à lista de lealdade desta loja.",
         "loyaltyRecordAddWindowTitle": "Mexendo no Quadro de Lealdade",
+        "loyaltyBarHeadline": "Barra de Lealdade",
+        "loyaltyBarDescription": "Configura a barra colorida no rodapé que mostra onde a lealdade de um personagem está atualmente.",
+        "loyaltyBarMax": "Máximo da Barra",
+        "loyaltyBarRed": "Vermelho",
+        "loyaltyBarOrange": "Laranja",
+        "loyaltyBarYellow": "Amarelo",
+        "loyaltyBarGreen": "Verde",
         "rateOverridesHeadline": "Substituições de Custo",
         "generalOverridesHeadline": "Substituições Gerais",
         "generalOverridesDescription": "Define os preços base da loja. Permite tornar esta loja mais cara ou mais barata de forma rápida e geral.",
@@ -1733,6 +1740,7 @@
       },
       "acceptedRep": {
         "label": "Accepted Rep -",
+        "loyaltyLabel": "Lealdade da Loja:",
         "noCharacter": "Você não tem um personagem ativo. Escolha um personagem seu e volte aqui."
       },
       "purchase": {

@@ -1792,6 +1792,13 @@
         "loyaltyRecordAddTitle": "Add Character",
         "loyaltyRecordAddHeadline": "Select a character to add to this shop's loyalty list.",
         "loyaltyRecordAddWindowTitle": "Tamper with the Loyalty Board",
+        "loyaltyBarHeadline": "Loyalty Bar",
+        "loyaltyBarDescription": "Configures the footer's color bar showing where a character's loyalty currently stands.",
+        "loyaltyBarMax": "Bar Max",
+        "loyaltyBarRed": "Red",
+        "loyaltyBarOrange": "Orange",
+        "loyaltyBarYellow": "Yellow",
+        "loyaltyBarGreen": "Green",
         "rateOverridesHeadline": "Cost Overrides",
         "generalOverridesHeadline": "General Overrides",
         "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
@@ -1805,6 +1812,7 @@
       },
       "acceptedRep": {
         "label": "Accepted Rep -",
+        "loyaltyLabel": "Shop Loyalty:",
         "noCharacter": "You have no active character. Choose an owned character and come back here."
       },
       "purchase": {

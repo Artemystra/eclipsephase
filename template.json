@@ -575,6 +575,13 @@
         "major": null,
         "rare": null
       },
+      "loyaltyBarMax": 100,
+      "loyaltyBarSegments": {
+        "red": 25,
+        "orange": 25,
+        "yellow": 25,
+        "green": 25
+      },
       "generalRateOverrides": {
         "minor": {
           "flatBuyCost": null,

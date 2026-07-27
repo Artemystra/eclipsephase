@@ -1706,6 +1706,13 @@
         "loyaltyRecordAddTitle": "Añadir Personaje",
         "loyaltyRecordAddHeadline": "Selecciona un personaje para añadirlo a la lista de lealtad de esta tienda.",
         "loyaltyRecordAddWindowTitle": "Toquetear el Tablero de Lealtad",
+        "loyaltyBarHeadline": "Barra de Lealtad",
+        "loyaltyBarDescription": "Configura la barra de colores en el pie de página que muestra dónde se encuentra actualmente la lealtad de un personaje.",
+        "loyaltyBarMax": "Máximo de la Barra",
+        "loyaltyBarRed": "Rojo",
+        "loyaltyBarOrange": "Naranja",
+        "loyaltyBarYellow": "Amarillo",
+        "loyaltyBarGreen": "Verde",
         "rateOverridesHeadline": "Anulaciones de Costo",
         "generalOverridesHeadline": "Anulaciones Generales",
         "generalOverridesDescription": "Establece los precios base de la tienda. Permite hacer que esta tienda sea más cara o más barata en general, de forma rápida y sencilla.",
@@ -1719,6 +1726,7 @@
       },
       "acceptedRep": {
         "label": "Accepted Rep -",
+        "loyaltyLabel": "Lealtad de la Tienda:",
         "noCharacter": "No tienes un personaje activo. Elige un personaje que te pertenezca y vuelve aquí."
       },
       "purchase": {

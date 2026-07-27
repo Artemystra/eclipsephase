@@ -1713,6 +1713,13 @@
         "loyaltyRecordAddTitle": "添加角色",
         "loyaltyRecordAddHeadline": "选择一个角色，将其加入该商店的忠诚度列表。",
         "loyaltyRecordAddWindowTitle": "擅自调整忠诚榜",
+        "loyaltyBarHeadline": "忠诚度条",
+        "loyaltyBarDescription": "设置页脚中显示角色当前忠诚度位置的彩色条。",
+        "loyaltyBarMax": "条形图最大值",
+        "loyaltyBarRed": "红",
+        "loyaltyBarOrange": "橙",
+        "loyaltyBarYellow": "黄",
+        "loyaltyBarGreen": "绿",
         "rateOverridesHeadline": "费用覆盖",
         "generalOverridesHeadline": "通用覆盖",
         "generalOverridesDescription": "设定该商店的基础价格。可快速让该商店整体变得更贵或更便宜。",
@@ -1726,6 +1733,7 @@
       },
       "acceptedRep": {
         "label": "Accepted Rep -",
+        "loyaltyLabel": "商店忠诚度：",
         "noCharacter": "你没有已激活的角色。请选择一个你拥有的角色后再回来。"
       },
       "purchase": {
