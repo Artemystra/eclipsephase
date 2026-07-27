@@ -339,6 +339,20 @@ function _replyToUser(userId, payload) {
   });
 }
 
+// Sell-limit lockouts live on the CHARACTER (flags.eclipsephase.shopLockouts.<shopId>), not the
+// shop - a character always owns their own document, so clearing it on a long rest never needs a
+// GM relay the way shop-owned flags (e.g. Loyalty) do. Fires on every connected client, but only
+// the client(s) that actually own the affected character (or a GM) can write the update; everyone
+// else's call silently no-ops on the permission check.
+export function registerRestLockoutReset() {
+  Hooks.on("updateActor", (actor, changes) => {
+    if (actor.type !== "character") return;
+    if (!actor.isOwner) return;
+    if (!foundry.utils.hasProperty(changes, "system.rest.long")) return;
+    actor.unsetFlag("eclipsephase", "shopLockouts");
+  });
+}
+
 export function requestGMItemTransfer({
   sourceActorUuid,
   targetActorUuid,

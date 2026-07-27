@@ -1799,6 +1799,12 @@
         "loyaltyBarOrange": "Orange",
         "loyaltyBarYellow": "Yellow",
         "loyaltyBarGreen": "Green",
+        "sellLimitsHeadline": "Sell Limits",
+        "sellLimitsDescription": "Caps how much a character can sell to this shop in one transaction. Reaching a limit locks the character out of further sales here until a long rest, or until the Owner clears it below.",
+        "sellLimitMaxItems": "Max Items",
+        "sellLimitMaxRep": "Max Rep",
+        "sellLockoutsHeadline": "Locked-Out Characters",
+        "sellLockoutClear": "Clear this character's lockout",
         "rateOverridesHeadline": "Cost Overrides",
         "generalOverridesHeadline": "General Overrides",
         "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
@@ -1851,7 +1857,9 @@
         "salesClosed": "This shop is currently closed for sales.",
         "differentActingCharacter": "You're already selling items for another character - finish or remove those first.",
         "noEligibleCharacters": "No eligible characters left to add - every player-linked character already has a loyalty record here.",
-        "morphsBlocked": "Morphs can't be purchased with Rep. They're acquired via the mission's Morph Points instead."
+                "sellLockedOut": "You've sold too much to this shop recently. Rest to be welcomed back, or ask the Owner to lift the restriction.",
+        "sellLimitExceeded": "That's too much for one transaction here. Reduce your selection and try again.",
+"morphsBlocked": "Morphs can't be purchased with Rep. They're acquired via the mission's Morph Points instead."
       }
     }
   }

@@ -676,6 +676,11 @@ Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
 });
 
+// Clears a character's shop sell-limit lockouts when they take a long rest.
+Hooks.once("ready", () => {
+  helperFunction.registerRestLockoutReset();
+});
+
 // Delivers pending "your Armor moved to your Stash" notices from the 2.0 migration
 // (module/common/migration.js's _ep200_migrateArmorToBoundBodies), one self-whispered chat
 // message per affected character this user owns. Deliberately NOT gated on isGM - runs for every

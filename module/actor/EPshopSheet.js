@@ -175,6 +175,28 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.shopClosed"));
     }
 
+    // Captured up front - _confirmSell() clears the acting-character context once staging empties
+    // out, and the sell-limit check below needs it too.
+    const character = this._getActingCharacter();
+
+    if (character?.isOwner && this._isSellLockedOut(character)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.sellLockedOut"));
+    }
+
+    // Pre-transaction validation against this shop's configured per-transaction caps (0 = no
+    // limit). Exceeding either cap blocks the whole sale outright, without locking the character
+    // out - they can just trim their selection and try again. Landing exactly ON a cap still
+    // succeeds, but locks the character out of further sales here until a long rest or an Owner
+    // override, per the RAW-flavor "you've flooded this market for now" read of the mechanic.
+    const maxItems = Number(this.actor.system.sellLimitMaxItems) || 0;
+    const maxRep = Number(this.actor.system.sellLimitMaxRep) || 0;
+    const itemCount = this._toSell.size;
+    const estimatedRepGain = this._getSellRepGain();
+    if ((maxItems > 0 && itemCount > maxItems) || (maxRep > 0 && estimatedRepGain > maxRep)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.sellLimitExceeded"));
+    }
+    const reachesSellLimit = (maxItems > 0 && itemCount === maxItems) || (maxRep > 0 && estimatedRepGain === maxRep);
+
     // Networks only offered if there's actually a controlled character to credit - selling still
     // works without one (see _useGefallen() family), it just can't grant Rep to anyone.
     const networks = this._getSellNetworkOptions();
@@ -204,10 +226,12 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const network = result.network;
 
     const repGain = this._getSellRepGain(network);
-    // Captured before _confirmSell() clears the acting-character context once staging empties out.
-    const character = this._getActingCharacter();
 
     await this._confirmSell();
+
+    if (reachesSellLimit && character?.isOwner) {
+      await character.setFlag("eclipsephase", `shopLockouts.${this.actor.id}`, true);
+    }
 
     if (repGain > 0 && network) {
       const idItem = character?.isOwner ? character.items.get(character.system.activeID) : null;
@@ -324,6 +348,13 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   // off sale acceptance - buying is unaffected by either.
   _isClosedForSelling() {
     return !this._getAcceptedNetworks().length || this.actor.system.acceptsSales === false;
+  }
+
+  // Sell-limit lockouts live on the CHARACTER (flags.eclipsephase.shopLockouts.<shopId>), not the
+  // shop - a character always owns their own document, so setting/clearing it never needs the
+  // GM-relay socket that shop-owned flags (e.g. Loyalty) require.
+  _isSellLockedOut(character) {
+    return character?.getFlag("eclipsephase", "shopLockouts")?.[this.actor.id] === true;
   }
 
   // Owner sees just which networks are accepted (no "their own" rep value makes sense to show
@@ -911,6 +942,14 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.favorTiers = CONFIG.eclipsephase.favorTiers;
       context.valuation = actor.system.valuation;
 
+      // Sell-limit lockouts live on each character's own flags, not this shop - scanning all
+      // character actors for a match relies on the shop Owner (typically the GM) having read
+      // access to them, which holds for the common GM-owned-shop case this is scoped to.
+      context.sellLockedCharacters = game.actors
+        .filter(a => a.type === "character" && a.getFlag("eclipsephase", "shopLockouts")?.[actor.id] === true)
+        .map(a => ({ characterId: a.id, name: a.name }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
       // Loyalty tracking - runs independent of superBrew, gated only by its own master toggle.
       context.loyaltyEnabled = actor.system.loyaltyEnabled;
       const loyaltyOverrides = actor.system.loyaltyPerTier ?? {};
@@ -1104,6 +1143,16 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const { confirm } = await confirmation(popUpTitle, popUpHeadline, "ep2e.shop.settings.loyaltyRecordDeleteConfirm");
         if (!confirm) return;
         await this.actor.unsetFlag("eclipsephase", `characterState.${characterId}.loyalty`);
+      });
+    });
+
+    // Clears the lockout on the CHARACTER's own flags, not this shop's - see _isSellLockedOut().
+    html.querySelectorAll(".shop-sell-lockout-clear").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const characterId = ev.currentTarget.dataset.characterId;
+        if (!characterId) return;
+        await game.actors.get(characterId)?.unsetFlag("eclipsephase", `shopLockouts.${this.actor.id}`);
+        this.render();
       });
     });
   }

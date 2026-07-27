@@ -562,6 +562,8 @@
         "x-rep": true
       },
       "acceptsSales": true,
+      "sellLimitMaxItems": 0,
+      "sellLimitMaxRep": 0,
       "valuation": {
         "minor": "minor",
         "moderate": "moderate",

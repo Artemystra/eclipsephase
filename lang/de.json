@@ -1751,6 +1751,12 @@
         "loyaltyBarOrange": "Orange",
         "loyaltyBarYellow": "Gelb",
         "loyaltyBarGreen": "Grün",
+        "sellLimitsHeadline": "Verkaufslimits",
+        "sellLimitsDescription": "Begrenzt, wie viel ein Charakter in einer einzigen Transaktion an diesen Shop verkaufen kann. Wird ein Limit erreicht, ist der Charakter von weiteren Verkäufen hier gesperrt, bis eine lange Ruhe stattfindet oder der Owner die Sperre unten aufhebt.",
+        "sellLimitMaxItems": "Max. Items",
+        "sellLimitMaxRep": "Max. Rep",
+        "sellLockoutsHeadline": "Gesperrte Charaktere",
+        "sellLockoutClear": "Sperre dieses Charakters aufheben",
         "rateOverridesHeadline": "Preis-Overrides",
         "generalOverridesHeadline": "Allgemeine Overrides",
         "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
@@ -1803,7 +1809,9 @@
         "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen.",
         "differentActingCharacter": "Du verkaufst gerade schon Items für einen anderen Charakter - schließe das erst ab oder entferne diese Items.",
         "noEligibleCharacters": "Keine passenden Charaktere mehr übrig - jeder mit einem Spieler verbundene Charakter hat hier bereits einen Loyalitäts-Eintrag.",
-        "morphsBlocked": "Morphs können nicht mit Rep erstanden werden. Sie werden stattdessen über die Morph-Points der Mission erworben."
+                "sellLockedOut": "Du hast diesem Shop zuletzt zu viel verkauft. Ruhe dich aus, um wieder willkommen zu sein, oder bitte den Owner, die Sperre aufzuheben.",
+        "sellLimitExceeded": "Das ist zu viel für eine einzelne Transaktion hier. Verkleinere deine Auswahl und versuch es erneut.",
+"morphsBlocked": "Morphs können nicht mit Rep erstanden werden. Sie werden stattdessen über die Morph-Points der Mission erworben."
       }
     }
   }

@@ -1720,6 +1720,12 @@
         "loyaltyBarOrange": "橙",
         "loyaltyBarYellow": "黄",
         "loyaltyBarGreen": "绿",
+        "sellLimitsHeadline": "出售限制",
+        "sellLimitsDescription": "限制角色在一次交易中能卖给该商店多少东西。达到限制后，该角色将被禁止在此继续出售，直到进行一次长休，或由店主在下方解除限制。",
+        "sellLimitMaxItems": "最大物品数",
+        "sellLimitMaxRep": "最大信誉值",
+        "sellLockoutsHeadline": "被禁止出售的角色",
+        "sellLockoutClear": "解除该角色的禁售状态",
         "rateOverridesHeadline": "费用覆盖",
         "generalOverridesHeadline": "通用覆盖",
         "generalOverridesDescription": "设定该商店的基础价格。可快速让该商店整体变得更贵或更便宜。",
@@ -1772,7 +1778,9 @@
         "salesClosed": "该商店目前不接受出售。",
         "differentActingCharacter": "你已经在为另一个角色出售物品 - 请先完成或移除这些物品。",
         "noEligibleCharacters": "没有可添加的角色了——每个与玩家关联的角色都已在此拥有忠诚度记录。",
-        "morphsBlocked": "无法用信誉购买义体。义体改为通过任务的义体点数获得。"
+                "sellLockedOut": "你最近卖给这家商店的东西太多了。休息一下以重新获得欢迎，或者请店主解除此限制。",
+        "sellLimitExceeded": "这里单次交易的量太多了。请减少你的选择后重试。",
+"morphsBlocked": "无法用信誉购买义体。义体改为通过任务的义体点数获得。"
       }
     }
   }

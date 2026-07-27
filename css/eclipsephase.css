@@ -1778,6 +1778,31 @@ form.eclipsephase.shop {
   cursor: pointer;
 }
 
+.eclipsephase .shop-sell-lockout-records {
+  columns: 2;
+  column-gap: 20px;
+  margin-bottom: 15px;
+}
+
+.eclipsephase .shop-sell-lockout-record {
+  break-inside: avoid;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.eclipsephase .shop-sell-lockout-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eclipsephase .shop-sell-lockout-clear {
+  flex: 0 0 auto;
+  color: var(--iconBlue);
+  cursor: pointer;
+}
+
 .eclipsephase .tabs {
   justify-content: space-between;
 }

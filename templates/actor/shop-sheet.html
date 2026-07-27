@@ -128,6 +128,39 @@
                     </div>
                 {{/if}}
 
+                {{!-- Sell Limits - lockouts live on each character's own flags (see
+                     _isSellLockedOut() in EPshopSheet.js), not this shop, so a GM-relay socket is
+                     never needed to set/clear them. --}}
+                <p class="headline5">{{localize "ep2e.shop.settings.sellLimitsHeadline"}}</p>
+
+                <div class="shop-cost-overrides-row">
+                <div class="shop-cost-overrides-column" style="flex: 1;">
+                <p class="notes">{{localize "ep2e.shop.settings.sellLimitsDescription"}}</p>
+                <div class="flexrow flex-group-center">
+                    <label style="flex: 1;">{{localize "ep2e.shop.settings.sellLimitMaxItems"}}</label>
+                    <input type="number" data-dtype="Number" name="system.sellLimitMaxItems" value="{{actor.system.sellLimitMaxItems}}" style="max-width: 60px;"/>
+                </div>
+                <div class="flexrow flex-group-center">
+                    <label style="flex: 1;">{{localize "ep2e.shop.settings.sellLimitMaxRep"}}</label>
+                    <input type="number" data-dtype="Number" name="system.sellLimitMaxRep" value="{{actor.system.sellLimitMaxRep}}" style="max-width: 60px;"/>
+                </div>
+                </div>
+
+                <div class="shop-cost-overrides-column" style="flex: 1;">
+                <p class="headline6">{{localize "ep2e.shop.settings.sellLockoutsHeadline"}}</p>
+                {{#if sellLockedCharacters.length}}
+                    <div class="shop-sell-lockout-records">
+                        {{#each sellLockedCharacters as |record|}}
+                            <div class="shop-sell-lockout-record flexrow flex-group-center">
+                                <span class="shop-sell-lockout-name">{{record.name}}</span>
+                                <a class="shop-sell-lockout-clear" data-character-id="{{record.characterId}}" title="{{localize 'ep2e.shop.settings.sellLockoutClear'}}"><i class="fas fa-lock-open"></i></a>
+                            </div>
+                        {{/each}}
+                    </div>
+                {{/if}}
+                </div>
+                </div>
+
                 {{!-- Cost Overrides - context.generalOverrideGrid/rateOverrideGrid are fully pre-resolved
                      in EPshopSheet.js, no lookups needed here. Blank = no override, falls back to the
                      placeholder shown (General Override if set, else the system default). flatBuyCost/

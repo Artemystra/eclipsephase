@@ -1713,6 +1713,12 @@
         "loyaltyBarOrange": "Naranja",
         "loyaltyBarYellow": "Amarillo",
         "loyaltyBarGreen": "Verde",
+        "sellLimitsHeadline": "Límites de Venta",
+        "sellLimitsDescription": "Limita cuánto puede vender un personaje a esta tienda en una sola transacción. Al alcanzar un límite, el personaje queda bloqueado para más ventas aquí hasta un descanso largo, o hasta que el Propietario lo desbloquee abajo.",
+        "sellLimitMaxItems": "Máx. Objetos",
+        "sellLimitMaxRep": "Máx. Rep",
+        "sellLockoutsHeadline": "Personajes Bloqueados",
+        "sellLockoutClear": "Eliminar el bloqueo de este personaje",
         "rateOverridesHeadline": "Anulaciones de Costo",
         "generalOverridesHeadline": "Anulaciones Generales",
         "generalOverridesDescription": "Establece los precios base de la tienda. Permite hacer que esta tienda sea más cara o más barata en general, de forma rápida y sencilla.",
@@ -1765,7 +1771,9 @@
         "salesClosed": "Esta tienda está actualmente cerrada para ventas.",
         "differentActingCharacter": "Ya estás vendiendo artículos para otro personaje - termina o elimina esos primero.",
         "noEligibleCharacters": "No quedan personajes elegibles para añadir - todos los personajes vinculados a un jugador ya tienen un registro de lealtad aquí.",
-        "morphsBlocked": "Los Morphs no se pueden comprar con Reputación. En su lugar, se adquieren mediante los Puntos de Morph de la misión."
+                "sellLockedOut": "Has vendido demasiado a esta tienda recientemente. Descansa para ser bienvenido de nuevo, o pide al Propietario que levante la restricción.",
+        "sellLimitExceeded": "Eso es demasiado para una sola transacción aquí. Reduce tu selección e inténtalo de nuevo.",
+"morphsBlocked": "Los Morphs no se pueden comprar con Reputación. En su lugar, se adquieren mediante los Puntos de Morph de la misión."
       }
     }
   }
