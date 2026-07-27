@@ -979,8 +979,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
 
       const result = await HELPER.requestGMItemTransfer({
-        sourceActorId: sourceActor.id,
-        targetActorId: targetActor.id,
+        sourceActorUuid: sourceActor.uuid,
+        targetActorUuid: targetActor.uuid,
         itemId: item.id,
         quantity
       });

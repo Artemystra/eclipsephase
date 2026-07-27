@@ -568,6 +568,13 @@
         "major": "major",
         "rare": "major"
       },
+      "loyaltyEnabled": true,
+      "loyaltyPerTier": {
+        "minor": null,
+        "moderate": null,
+        "major": null,
+        "rare": null
+      },
       "generalRateOverrides": {
         "minor": {
           "flatBuyCost": null,

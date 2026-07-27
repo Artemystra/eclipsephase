@@ -1689,6 +1689,43 @@ form.eclipsephase.shop {
   background: var(--pitchBackground);
 }
 
+.eclipsephase .shop-loyalty-records {
+  columns: 2;
+  column-gap: 20px;
+  margin-bottom: 15px;
+}
+
+.eclipsephase .shop-loyalty-record {
+  break-inside: avoid;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.eclipsephase .shop-loyalty-record-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eclipsephase .shop-loyalty-record-value {
+  width: 50px;
+  flex: 0 0 auto;
+}
+
+.eclipsephase .shop-loyalty-record-delete {
+  flex: 0 0 auto;
+  color: var(--iconBlue);
+  cursor: pointer;
+}
+
+.eclipsephase .shop-loyalty-record-add {
+  display: inline-flex;
+  align-items: center;
+  color: var(--iconBlue);
+  cursor: pointer;
+}
+
 .eclipsephase .tabs {
   justify-content: space-between;
 }

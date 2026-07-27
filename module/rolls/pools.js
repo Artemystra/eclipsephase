@@ -65,7 +65,7 @@ export async function usePoolFromChat(data){
                 bodyBindings[id] = boundTo;
             });
             await completeShopPurchase({
-                shopId: dataset.shopid,
+                shopUuid: dataset.shopuuid,
                 buyerActorId: dataset.buyeractorid,
                 itemIds: dataset.itemids,
                 network: dataset.network,

@@ -662,7 +662,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             itemData = weaponSelected
         // Must come before roll.sleight - defineRoll() always inits it to {}, a truthy empty object.
         else if(rolledFrom === "shopPurchase")
-            itemData = { shopId: dataset.shopId, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings }
+            itemData = { shopUuid: dataset.shopUuid, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings }
         else if(roll.sleight)
             itemData = roll.sleight
 

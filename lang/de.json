@@ -1593,7 +1593,8 @@
       "selectBody": {
         "header": "Körper Wählen",
         "copy": "Dieses Item ist an einen Körper gebunden. Wähle aus, welcher es erhalten soll.",
-        "placeholder": "- Körper Wählen -"
+        "placeholder": "- Körper Wählen -",
+        "placeholderEgo": "- Ego Wählen -"
       },
       "reassignArmor": {
         "header": "Rüstung Neu Zuweisen",
@@ -1733,6 +1734,16 @@
         "repHeadline": "Akzeptierte Rep-Netzwerke",
         "acceptsSales": "Shop nimmt Verkäufe entgegen",
         "valuationHeadline": "Item-Bewertung",
+        "loyaltyHeadline": "Loyalität",
+        "loyaltyEnabled": "Loyalität für diesen Shop verfolgen",
+        "loyaltyPerTierDescription": "Der Kauf eines Items oder das Einlösen eines Gefallens gewährt dem Käufer Loyalität bei diesem Shop, gestaffelt nach der eigenen Kostenstufe des Items (nicht nach der Rep-Stufen-Bewertung des Shops). Verkaufen gewährt niemals Loyalität.",
+        "loyaltyRecordsHeadline": "Charakter-Loyalität",
+        "loyaltyRecordDelete": "Loyalitätseintrag dieses Charakters löschen",
+        "loyaltyRecordDeleteConfirm": "Dies löscht den Loyalitätseintrag dieses Charakters bei diesem Shop dauerhaft.",
+        "loyaltyRecordAdd": "Charakter hinzufügen",
+        "loyaltyRecordAddTitle": "Charakter hinzufügen",
+        "loyaltyRecordAddHeadline": "Wähle einen Charakter aus, der zur Loyalitäts-Liste dieses Shops hinzugefügt werden soll.",
+        "loyaltyRecordAddWindowTitle": "Am Loyalitäts-Brett herumpfuschen",
         "rateOverridesHeadline": "Preis-Overrides",
         "generalOverridesHeadline": "Allgemeine Overrides",
         "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
@@ -1783,6 +1794,7 @@
         "shopClosed": "Der Shop ist derzeitig geschlossen.",
         "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen.",
         "differentActingCharacter": "Du verkaufst gerade schon Items für einen anderen Charakter - schließe das erst ab oder entferne diese Items.",
+        "noEligibleCharacters": "Keine passenden Charaktere mehr übrig - jeder mit einem Spieler verbundene Charakter hat hier bereits einen Loyalitäts-Eintrag.",
         "morphsBlocked": "Morphs können nicht mit Rep erstanden werden. Sie werden stattdessen über die Morph-Points der Mission erworben."
       }
     }

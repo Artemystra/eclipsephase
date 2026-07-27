@@ -1620,7 +1620,8 @@
       "selectBody": {
         "header": "Select Body",
         "copy": "This item is bound to a body. Choose which one should receive it.",
-        "placeholder": "- Select Body -"
+        "placeholder": "- Select Body -",
+        "placeholderEgo": "- Select Ego -"
       },
       "reassignArmor": {
         "header": "Reassign Armor",
@@ -1781,6 +1782,16 @@
         "repHeadline": "Accepted Rep Networks",
         "acceptsSales": "Shop accepts sales",
         "valuationHeadline": "Item Valuation",
+        "loyaltyHeadline": "Loyalty",
+        "loyaltyEnabled": "Track loyalty for this shop",
+        "loyaltyPerTierDescription": "Buying an item or cashing in a Favor grants the buyer loyalty with this shop, scaled by the item's own cost type (not the shop's Rep-tier valuation). Selling never grants loyalty.",
+        "loyaltyRecordsHeadline": "Character Loyalty",
+        "loyaltyRecordDelete": "Delete this character's loyalty record",
+        "loyaltyRecordDeleteConfirm": "This will permanently delete this character's loyalty record with this shop.",
+        "loyaltyRecordAdd": "Add a character",
+        "loyaltyRecordAddTitle": "Add Character",
+        "loyaltyRecordAddHeadline": "Select a character to add to this shop's loyalty list.",
+        "loyaltyRecordAddWindowTitle": "Tamper with the Loyalty Board",
         "rateOverridesHeadline": "Cost Overrides",
         "generalOverridesHeadline": "General Overrides",
         "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
@@ -1831,6 +1842,7 @@
         "shopClosed": "This shop is currently closed.",
         "salesClosed": "This shop is currently closed for sales.",
         "differentActingCharacter": "You're already selling items for another character - finish or remove those first.",
+        "noEligibleCharacters": "No eligible characters left to add - every player-linked character already has a loyalty record here.",
         "morphsBlocked": "Morphs can't be purchased with Rep. They're acquired via the mission's Morph Points instead."
       }
     }

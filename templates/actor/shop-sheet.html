@@ -53,6 +53,56 @@
                     {{/each}}
                 </div>
 
+                {{!-- Loyalty tracking - independent of superBrew, gated only by its own master toggle.
+                     Buy and Cash-in-Favor grant loyalty (equally), plain Sell never does. --}}
+                <p class="headline5">{{localize "ep2e.shop.settings.loyaltyHeadline"}}</p>
+                <label class="flexrow flex-group-center">
+                    <input type="checkbox" data-dtype="Boolean" name="system.loyaltyEnabled" {{checked loyaltyEnabled}}/>
+                    {{localize "ep2e.shop.settings.loyaltyEnabled"}}
+                </label>
+
+                {{#if loyaltyEnabled}}
+                    <div class="shop-cost-overrides-row">
+                    <div class="shop-cost-overrides-column">
+                    <p class="notes">{{localize "ep2e.shop.settings.loyaltyPerTierDescription"}}</p>
+                    <table class="shop-rate-override-table">
+                        <thead>
+                            <tr>
+                                {{#each loyaltyTierGrid as |tierEntry|}}
+                                    <th>{{localize tierEntry.tierLabel}}</th>
+                                {{/each}}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {{#each loyaltyTierGrid as |tierEntry|}}
+                                    <td><input type="number" data-dtype="Number" name="system.loyaltyPerTier.{{tierEntry.tier}}" value="{{tierEntry.value}}" placeholder="{{tierEntry.placeholder}}"/></td>
+                                {{/each}}
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="shop-cost-overrides-column" style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <p class="headline6">{{localize "ep2e.shop.settings.loyaltyRecordsHeadline"}}</p>
+                        <a class="shop-loyalty-record-add" title="{{localize 'ep2e.shop.settings.loyaltyRecordAdd'}}"><i class="fas fa-plus"></i></a>
+                    </div>
+                    {{#if loyaltyRecords.length}}
+                        <div class="shop-loyalty-records">
+                            {{#each loyaltyRecords as |record|}}
+                                <div class="shop-loyalty-record flexrow flex-group-center">
+                                    <span class="shop-loyalty-record-name">{{record.name}}</span>
+                                    <input type="number" data-dtype="Number" class="shop-loyalty-record-value" data-character-id="{{record.characterId}}" value="{{record.value}}"/>
+                                    <a class="shop-loyalty-record-delete" data-character-id="{{record.characterId}}" data-character-name="{{record.name}}" title="{{localize 'ep2e.shop.settings.loyaltyRecordDelete'}}"><i class="fas fa-trash"></i></a>
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                    </div>
+                    </div>
+                {{/if}}
+
                 {{!-- Cost Overrides - context.generalOverrideGrid/rateOverrideGrid are fully pre-resolved
                      in EPshopSheet.js, no lookups needed here. Blank = no override, falls back to the
                      placeholder shown (General Override if set, else the system default). flatBuyCost/

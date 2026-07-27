@@ -212,12 +212,26 @@ export function registerItemTransferSocket() {
   game.socket.on(SOCKET_NAME, async payload => {
     if (!game.user.isGM) return;
     if (!payload) return;
+
+    // Shop actors are usually GM-owned - a buying player can't write the loyalty flag directly
+    // (see completeShopPurchase()'s isOwner branch below), so route it through the primary GM here.
+    // The amount is recomputed from the GM's own live shop reference rather than trusting a
+    // client-sent number, so a stale loyaltyPerTier override on the buyer's side can't apply.
+    if (payload.action === "grantLoyalty") {
+      const primaryGM = game.users.activeGM;
+      if (primaryGM && primaryGM.id !== game.user.id) return;
+      const shop = await fromUuid(payload.shopUuid);
+      if (!shop) return;
+      await addLoyalty(shop, payload.characterId, getLoyaltyGain(shop, payload.costTiers ?? []));
+      return;
+    }
+
     if (payload.action !== "transferItem") return;
 
     const {
       requestId,
-      sourceActorId,
-      targetActorId,
+      sourceActorUuid,
+      targetActorUuid,
       itemId,
       quantity,
       userId
@@ -226,8 +240,11 @@ export function registerItemTransferSocket() {
     const primaryGM = game.users.activeGM;
     if (primaryGM && primaryGM.id !== game.user.id) return;
 
-    const sourceActor = game.actors.get(sourceActorId);
-    const targetActor = game.actors.get(targetActorId);
+    // Resolved via uuid, not game.actors.get() - an actor placed as an (unlinked) scene token has
+    // its own item collection separate from the world-actor entry that a bare id would resolve to,
+    // which would silently desync stock/loyalty data from what the requesting client actually saw.
+    const sourceActor = await fromUuid(sourceActorUuid);
+    const targetActor = await fromUuid(targetActorUuid);
     const item = sourceActor?.items.get(itemId);
 
     if (!sourceActor || !targetActor || !item) {
@@ -323,8 +340,8 @@ function _replyToUser(userId, payload) {
 }
 
 export function requestGMItemTransfer({
-  sourceActorId,
-  targetActorId,
+  sourceActorUuid,
+  targetActorUuid,
   itemId,
   quantity = 1
 } = {}) {
@@ -354,8 +371,8 @@ export function requestGMItemTransfer({
       action: "transferItem",
       requestId,
       userId: game.user.id,
-      sourceActorId,
-      targetActorId,
+      sourceActorUuid,
+      targetActorUuid,
       itemId,
       quantity
     });
@@ -373,6 +390,30 @@ export function requestGMItemTransfer({
 // Weekly/story-arc Favor-Limit-Tracking on the ID item (Item.id.rep.<network>.<slot>), per network -
 // trivial has no RAW limit so it's absent here (hasFreeFavorSlot/consumeFavorSlot treat it as always free).
 const FAVOR_LIMIT_SLOTS = { minor: ["small1", "small2", "small3"], moderate: ["med1"], major: ["large"] };
+
+// Loyalty gained per item, scaled by the item's own cost type (minor/moderate/major/rare - not the
+// shop's remapped favor tier). Only completeShopPurchase() grants this (Buy/Cash in Favor); plain
+// Sell never does.
+export const LOYALTY_PER_TIER = { minor: 1, moderate: 2, major: 3, rare: 4 };
+
+// Takes cost tiers (not items) so the GM-side socket handler can recompute this from data the
+// buyer sent, even though the purchased items are already gone from the shop's collection by the
+// time that message arrives (they were just transferred to the buyer).
+function getLoyaltyGain(shop, costTiers) {
+  const overrides = shop.system.loyaltyPerTier ?? {};
+  return costTiers.reduce((sum, tier) => {
+    if (!(tier in LOYALTY_PER_TIER)) return sum;
+    return sum + (overrides[tier] ?? LOYALTY_PER_TIER[tier]);
+  }, 0);
+}
+
+// No-op while the shop's master loyaltyEnabled toggle is off - that same toggle also gates the
+// settings UI and (later) the footer/discount that read this value.
+async function addLoyalty(shop, characterId, amount) {
+  if (!shop.system.loyaltyEnabled || amount <= 0) return;
+  const current = shop.getFlag("eclipsephase", "characterState")?.[characterId]?.loyalty?.value ?? 0;
+  await shop.setFlag("eclipsephase", `characterState.${characterId}.loyalty`, { value: current + amount, updated: Date.now() });
+}
 
 /**
  * Whether the character has an unused Favor-Limit slot left for this tier/network (read-only check).
@@ -413,29 +454,32 @@ export async function consumeFavorSlot(character, network, tier) {
  * Transfers shop items to a buyer's character (direct if both owned, else GM-relay), applying
  * morph Enhancements/Frame and binding Ware to a body as needed. Called right after a successful
  * purchase roll, and again later if a Pool swap/upgrade turns a failed roll into one.
- * @param {{shopId: string, buyerActorId: string, itemIds: string|string[], network?: string, favorTier?: string, bodyBindings?: Record<string,string>}} params
+ * @param {{shopUuid: string, buyerActorId: string, itemIds: string|string[], network?: string, favorTier?: string, bodyBindings?: Record<string,string>}} params
+ *   shopUuid (not a bare id) so a shop placed as an (unlinked) scene token resolves to the exact
+ *   same instance/item-collection the buyer's sheet was showing.
  *   network/favorTier are only passed for the "Cash in Favor" roll flow, to consume a Favor-Limit
  *   slot on completion - the flat "Buy" house rule never passes them, so never touches the limit.
  *   bodyBindings (shop item id -> boundTo) is pre-resolved before the purchase was paid for; falls
  *   back to prompting here if a Ware item has no entry (e.g. the Pool-rescue path).
- * @returns {Promise<void>}
+ * @returns {Promise<Item[]>} the items actually transferred (empty if none were)
  */
-export async function completeShopPurchase({ shopId, buyerActorId, itemIds, network, favorTier, bodyBindings = {} } = {}) {
-  const shop = game.actors.get(shopId);
+export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, network, favorTier, bodyBindings = {} } = {}) {
+  const shop = await fromUuid(shopUuid);
   const character = game.actors.get(buyerActorId);
-  if (!shop || !character) return;
+  if (!shop || !character) return [];
 
   const ids = Array.isArray(itemIds) ? itemIds : String(itemIds ?? "").split(",").filter(Boolean);
   const items = ids.map(id => shop.items.get(id)).filter(Boolean);
   if (!items.length) {
     if (ids.length) ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.purchaseItemsGone"));
-    return;
+    return [];
   }
   if (items.length < ids.length) {
     ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.purchaseItemsGone"));
   }
 
   const boughtNames = [];
+  const boughtItems = [];
   for (const item of items) {
     let created;
     if (character.isOwner && shop.isOwner) {
@@ -448,8 +492,8 @@ export async function completeShopPurchase({ shopId, buyerActorId, itemIds, netw
       }
     } else {
       const transferResult = await requestGMItemTransfer({
-        sourceActorId: shop.id,
-        targetActorId: character.id,
+        sourceActorUuid: shop.uuid,
+        targetActorUuid: character.uuid,
         itemId: item.id,
         quantity: 1
       });
@@ -471,9 +515,30 @@ export async function completeShopPurchase({ shopId, buyerActorId, itemIds, netw
     }
 
     boughtNames.push(item.name);
+    boughtItems.push(item);
   }
 
-  if (network && favorTier) {
+  if (boughtItems.length) {
+    if (shop.isOwner) {
+      await addLoyalty(shop, character.id, getLoyaltyGain(shop, boughtItems.map(item => item.system.cost)));
+    } else {
+      // Shop actors are usually GM-owned - the buyer can't setFlag() on it directly, so ask a GM
+      // to apply it instead (see the "grantLoyalty" branch in registerItemTransferSocket()). The
+      // GM recomputes the amount itself from its own live shop reference rather than trusting a
+      // client-computed number, so a stale/desynced loyaltyPerTier override on the buyer's side
+      // can't under- or over-grant loyalty.
+      game.socket.emit(SOCKET_NAME, {
+        action: "grantLoyalty",
+        shopUuid: shop.uuid,
+        characterId: character.id,
+        costTiers: boughtItems.map(item => item.system.cost)
+      });
+    }
+  }
+
+  // Only consume a Favor-Limit slot if something was actually bought - otherwise a fully-failed
+  // purchase (all items already gone) would still burn a limited slot for nothing.
+  if (boughtItems.length && network && favorTier) {
     const consumed = await consumeFavorSlot(character, network, favorTier);
     if (!consumed) ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.favorLimitExhausted"));
   }
@@ -488,4 +553,6 @@ export async function completeShopPurchase({ shopId, buyerActorId, itemIds, netw
       })}</p>`
     });
   }
+
+  return boughtItems;
 }

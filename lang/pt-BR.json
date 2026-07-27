@@ -1562,7 +1562,8 @@
       "selectBody": {
         "header": "Selecionar Corpo",
         "copy": "Este item está vinculado a um corpo. Escolha qual deve recebê-lo.",
-        "placeholder": "- Selecionar Corpo -"
+        "placeholder": "- Selecionar Corpo -",
+        "placeholderEgo": "- Selecionar Ego -"
       },
       "reassignArmor": {
         "header": "Reatribuir Armadura",
@@ -1709,6 +1710,16 @@
         "repHeadline": "Redes de Rep Aceitas",
         "acceptsSales": "Loja aceita vendas",
         "valuationHeadline": "Avaliação de Itens",
+        "loyaltyHeadline": "Lealdade",
+        "loyaltyEnabled": "Rastrear lealdade para esta loja",
+        "loyaltyPerTierDescription": "Comprar um item ou resgatar um Favor concede ao comprador lealdade com esta loja, escalada de acordo com o próprio tipo de custo do item (não a avaliação por nível de Rep da loja). Vender nunca concede lealdade.",
+        "loyaltyRecordsHeadline": "Lealdade dos Personagens",
+        "loyaltyRecordDelete": "Excluir o registro de lealdade deste personagem",
+        "loyaltyRecordDeleteConfirm": "Isso excluirá permanentemente o registro de lealdade deste personagem com esta loja.",
+        "loyaltyRecordAdd": "Adicionar personagem",
+        "loyaltyRecordAddTitle": "Adicionar Personagem",
+        "loyaltyRecordAddHeadline": "Selecione um personagem para adicionar à lista de lealdade desta loja.",
+        "loyaltyRecordAddWindowTitle": "Mexendo no Quadro de Lealdade",
         "rateOverridesHeadline": "Substituições de Custo",
         "generalOverridesHeadline": "Substituições Gerais",
         "generalOverridesDescription": "Define os preços base da loja. Permite tornar esta loja mais cara ou mais barata de forma rápida e geral.",
@@ -1759,6 +1770,7 @@
         "shopClosed": "Esta loja está fechada no momento.",
         "salesClosed": "Esta loja está atualmente fechada para vendas.",
         "differentActingCharacter": "Você já está vendendo itens para outro personagem - termine ou remova esses itens primeiro.",
+        "noEligibleCharacters": "Não há mais personagens elegíveis para adicionar - todo personagem vinculado a um jogador já possui um registro de lealdade aqui.",
         "morphsBlocked": "Morfos não podem ser comprados com Reputação. Eles são adquiridos através dos Pontos de Morfo da missão."
       }
     }

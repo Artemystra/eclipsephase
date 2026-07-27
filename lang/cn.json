@@ -1556,7 +1556,8 @@
       "selectBody": {
         "header": "选择身体",
         "copy": "该物品需绑定到一具身体，请选择接收它的身体。",
-        "placeholder": "- 选择身体 -"
+        "placeholder": "- 选择身体 -",
+        "placeholderEgo": "- 选择意识 -"
       },
       "reassignArmor": {
         "header": "重新分配护甲",
@@ -1702,6 +1703,16 @@
         "repHeadline": "接受的Rep网络",
         "acceptsSales": "商店接受出售",
         "valuationHeadline": "物品估值",
+        "loyaltyHeadline": "忠诚度",
+        "loyaltyEnabled": "为该商店追踪忠诚度",
+        "loyaltyPerTierDescription": "购买物品或兑换人情会让购买者获得该商店的忠诚度，数值按物品自身的费用等级（而非商店的信誉等级估值）分级。出售物品不会获得忠诚度。",
+        "loyaltyRecordsHeadline": "角色忠诚度",
+        "loyaltyRecordDelete": "删除该角色的忠诚度记录",
+        "loyaltyRecordDeleteConfirm": "此操作将永久删除该角色在本商店的忠诚度记录。",
+        "loyaltyRecordAdd": "添加角色",
+        "loyaltyRecordAddTitle": "添加角色",
+        "loyaltyRecordAddHeadline": "选择一个角色，将其加入该商店的忠诚度列表。",
+        "loyaltyRecordAddWindowTitle": "擅自调整忠诚榜",
         "rateOverridesHeadline": "费用覆盖",
         "generalOverridesHeadline": "通用覆盖",
         "generalOverridesDescription": "设定该商店的基础价格。可快速让该商店整体变得更贵或更便宜。",
@@ -1752,6 +1763,7 @@
         "shopClosed": "该商店目前已关闭。",
         "salesClosed": "该商店目前不接受出售。",
         "differentActingCharacter": "你已经在为另一个角色出售物品 - 请先完成或移除这些物品。",
+        "noEligibleCharacters": "没有可添加的角色了——每个与玩家关联的角色都已在此拥有忠诚度记录。",
         "morphsBlocked": "无法用信誉购买义体。义体改为通过任务的义体点数获得。"
       }
     }

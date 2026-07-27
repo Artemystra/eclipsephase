@@ -1,5 +1,5 @@
-import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors } from "../common/general-sheet-functions.js";
-import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot } from "../common/general-helper-functions.js";
+import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors, confirmation, selectBody } from "../common/general-sheet-functions.js";
+import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER } from "../common/general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js";
 
@@ -245,8 +245,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         await transferItemBetweenActors({ sourceActor, targetActor: this.actor, item, quantity });
       } else {
         const result = await requestGMItemTransfer({
-          sourceActorId: sourceActor.id,
-          targetActorId: this.actor.id,
+          sourceActorUuid: sourceActor.uuid,
+          targetActorUuid: this.actor.uuid,
           itemId: item.id,
           quantity
         });
@@ -707,7 +707,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       key: "rep",
       rollvalue: rollValue,
       dialogTitle: `${game.i18n.localize("ep2e.shop.purchase.favorConfirm")} - ${tierLabel}`,
-      shopId: this.actor.id,
+      shopUuid: this.actor.uuid,
       buyerActorId: character.id,
       itemIds: items.map(item => item.id).join(","),
       requiredTier,
@@ -739,7 +739,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     if (rollResult.resultClass !== "success") return;
     await completeShopPurchase({
-      shopId: dataset.shopId,
+      shopUuid: dataset.shopUuid,
       buyerActorId: dataset.buyerActorId,
       itemIds: dataset.itemIds,
       network: dataset.name,
@@ -785,17 +785,23 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.notEnoughRepToBuy"));
     }
 
-    await idItem.update({ [`system.rep.${network}.value`]: available - cost });
-
     this._selectedForPurchase.clear();
     this.render();
 
-    await completeShopPurchase({
-      shopId: this.actor.id,
+    const boughtItems = await completeShopPurchase({
+      shopUuid: this.actor.uuid,
       buyerActorId: character.id,
       itemIds: items.map(item => item.id).join(","),
       bodyBindings: bindings
     });
+
+    // Charge only for what actually transferred - unlike Cash-in-Favor's Rep burn (a cost of
+    // attempting the roll regardless of outcome), a flat Buy has no roll to justify spending Rep
+    // on items that turned out to be gone.
+    if (boughtItems.length) {
+      const spent = this._getFlatBuyCost(boughtItems, network);
+      await idItem.update({ [`system.rep.${network}.value`]: available - spent });
+    }
   }
 
   // Foundry v14 core bug: for a root:true part, _replaceHTML empties newElement before restoring
@@ -878,6 +884,25 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.costTypes = CONFIG.eclipsephase.costTypes;
       context.favorTiers = CONFIG.eclipsephase.favorTiers;
       context.valuation = actor.system.valuation;
+
+      // Loyalty tracking - runs independent of superBrew, gated only by its own master toggle.
+      context.loyaltyEnabled = actor.system.loyaltyEnabled;
+      const loyaltyOverrides = actor.system.loyaltyPerTier ?? {};
+      context.loyaltyTierGrid = ["minor", "moderate", "major", "rare"].map(tier => ({
+        tier,
+        tierLabel: CONFIG.eclipsephase.costTypes[tier],
+        value: loyaltyOverrides[tier] ?? null,
+        placeholder: LOYALTY_PER_TIER[tier]
+      }));
+      const characterState = actor.getFlag("eclipsephase", "characterState") ?? {};
+      context.loyaltyRecords = Object.entries(characterState)
+        .filter(([, state]) => state.loyalty !== undefined)
+        .map(([characterId, state]) => ({
+          characterId,
+          name: game.actors.get(characterId)?.name ?? characterId,
+          value: state.loyalty.value ?? 0
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
 
       // Cost-override matrix - pre-resolved grids, no nested lookups needed in the template.
       // Trivial is never overridden (RAW: always free), so it's excluded entirely. flatBuyCost/
@@ -1003,6 +1028,56 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         const itemId = li?.dataset.itemId;
         if (!itemId) return;
         await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+      });
+    });
+
+    // Scoped setFlag() for just this one field, instead of a form-participating name="" input -
+    // this section's submitOnChange form would otherwise resubmit every rendered field's current
+    // DOM value on ANY change event, including a stale value racing against a delete just below.
+    html.querySelectorAll(".shop-loyalty-record-value").forEach(element => {
+      element.addEventListener("change", async ev => {
+        const characterId = ev.currentTarget.dataset.characterId;
+        if (!characterId) return;
+        const value = Number(ev.currentTarget.value) || 0;
+        await this.actor.setFlag("eclipsephase", `characterState.${characterId}.loyalty.value`, value);
+      });
+    });
+
+    html.querySelector(".shop-loyalty-record-add")?.addEventListener("click", async () => {
+      const characterState = this.actor.getFlag("eclipsephase", "characterState") ?? {};
+      const listedIds = new Set(Object.entries(characterState).filter(([, state]) => state.loyalty !== undefined).map(([id]) => id));
+      const options = game.actors
+        .filter(actor => actor.type === "character" && actor.hasPlayerOwner && !listedIds.has(actor.id))
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(actor => ({ id: actor.id, name: actor.name }));
+
+      if (!options.length) {
+        return ui.notifications.info(game.i18n.localize("ep2e.shop.warnings.noEligibleCharacters"));
+      }
+
+      const { selection, cancelled } = await selectBody(
+        [{ label: game.i18n.localize("ep2e.shop.settings.loyaltyRecordsHeadline"), options }],
+        "ep2e.shop.settings.loyaltyRecordAddTitle",
+        "ep2e.shop.settings.loyaltyRecordAddHeadline",
+        undefined,
+        undefined,
+        "ep2e.dialog.selectBody.placeholderEgo",
+        "ep2e.shop.settings.loyaltyRecordAddWindowTitle"
+      );
+      if (cancelled || !selection) return;
+      await this.actor.setFlag("eclipsephase", `characterState.${selection}.loyalty`, { value: 0, updated: Date.now() });
+    });
+
+    html.querySelectorAll(".shop-loyalty-record-delete").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const characterId = ev.currentTarget.dataset.characterId;
+        const characterName = ev.currentTarget.dataset.characterName ?? "";
+        if (!characterId) return;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = `${game.i18n.localize("ep2e.actorSheet.button.delete")} ${characterName}`;
+        const { confirm } = await confirmation(popUpTitle, popUpHeadline, "ep2e.shop.settings.loyaltyRecordDeleteConfirm");
+        if (!confirm) return;
+        await this.actor.unsetFlag("eclipsephase", `characterState.${characterId}.loyalty`);
       });
     });
   }

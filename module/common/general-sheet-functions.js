@@ -773,18 +773,26 @@ export function itemToggle(html, item) {
  * @param {Array<{label: String, options: Array<{id: String, name: String}>}>} bodyGroups -
  *   Bodies grouped for <optgroup> rendering (e.g. "Morphs" vs "Remote Bodies"). Empty groups
  *   should be filtered out by the caller before passing them in.
- * @param {String} [dialogTitle] - localization key for the window title
+ * @param {String} [dialogTitle] - localization key for the in-content subheadline (also used as
+ *   the window title unless windowTitle is given separately)
  * @param {String} [headline] - localization key for the headline shown above the dropdown
  * @param {String} [copy] - localization key for the explanatory copy shown above the dropdown
+ * @param {String} [defaultBodyId]
+ * @param {String} [placeholderKey] - localization key for the dropdown's disabled placeholder
+ *   option, defaults to the generic "- Select Body -" text - override for non-body pickers
+ *   (e.g. selecting a character) reusing this same dropdown-only dialog shape.
+ * @param {String} [windowTitle] - localization key for the window chrome title, if it should
+ *   read differently from the in-content subheadline (dialogTitle).
  * @returns {Promise<{cancelled: true}|{selection: String}>}
  */
-  export async function selectBody(bodyGroups, dialogTitle, headline, copy, defaultBodyId) {
+  export async function selectBody(bodyGroups, dialogTitle, headline, copy, defaultBodyId, placeholderKey, windowTitle) {
     const title = dialogTitle
       ? game.i18n.localize(dialogTitle)
       : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const chromeTitle = windowTitle ? game.i18n.localize(windowTitle) : title;
     const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
     const useButton = game.i18n.localize("ep2e.actorSheet.button.select");
-    const placeholder = game.i18n.localize("ep2e.dialog.selectBody.placeholder");
+    const placeholder = game.i18n.localize(placeholderKey ?? "ep2e.dialog.selectBody.placeholder");
     const template = "systems/eclipsephase/templates/chat/list-dialog.html";
 
     const content = await foundry.applications.handlebars.renderTemplate(template, {
@@ -798,7 +806,7 @@ export function itemToggle(html, item) {
     });
 
     const result = await foundry.applications.api.DialogV2.wait({
-      window: { title },
+      window: { title: chromeTitle },
       classes: ["ep2e-primary-right"],
       content,
       buttons: [

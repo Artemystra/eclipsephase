@@ -1549,7 +1549,8 @@
       "selectBody": {
         "header": "Seleccionar Cuerpo",
         "copy": "Este objeto está vinculado a un cuerpo. Elige cuál debe recibirlo.",
-        "placeholder": "- Seleccionar Cuerpo -"
+        "placeholder": "- Seleccionar Cuerpo -",
+        "placeholderEgo": "- Seleccionar Ego -"
       },
       "reassignArmor": {
         "header": "Reasignar Armadura",
@@ -1695,6 +1696,16 @@
         "repHeadline": "Redes de Rep Aceptadas",
         "acceptsSales": "La tienda acepta ventas",
         "valuationHeadline": "Valoración de Objetos",
+        "loyaltyHeadline": "Lealtad",
+        "loyaltyEnabled": "Registrar lealtad para esta tienda",
+        "loyaltyPerTierDescription": "Comprar un objeto o canjear un Favor otorga al comprador lealtad con esta tienda, escalada según el tipo de costo propio del objeto (no la valoración por nivel de Rep de la tienda). Vender nunca otorga lealtad.",
+        "loyaltyRecordsHeadline": "Lealtad de Personajes",
+        "loyaltyRecordDelete": "Eliminar el registro de lealtad de este personaje",
+        "loyaltyRecordDeleteConfirm": "Esto eliminará permanentemente el registro de lealtad de este personaje con esta tienda.",
+        "loyaltyRecordAdd": "Añadir personaje",
+        "loyaltyRecordAddTitle": "Añadir Personaje",
+        "loyaltyRecordAddHeadline": "Selecciona un personaje para añadirlo a la lista de lealtad de esta tienda.",
+        "loyaltyRecordAddWindowTitle": "Toquetear el Tablero de Lealtad",
         "rateOverridesHeadline": "Anulaciones de Costo",
         "generalOverridesHeadline": "Anulaciones Generales",
         "generalOverridesDescription": "Establece los precios base de la tienda. Permite hacer que esta tienda sea más cara o más barata en general, de forma rápida y sencilla.",
@@ -1745,6 +1756,7 @@
         "shopClosed": "Esta tienda está cerrada actualmente.",
         "salesClosed": "Esta tienda está actualmente cerrada para ventas.",
         "differentActingCharacter": "Ya estás vendiendo artículos para otro personaje - termina o elimina esos primero.",
+        "noEligibleCharacters": "No quedan personajes elegibles para añadir - todos los personajes vinculados a un jugador ya tienen un registro de lealtad aquí.",
         "morphsBlocked": "Los Morphs no se pueden comprar con Reputación. En su lugar, se adquieren mediante los Puntos de Morph de la misión."
       }
     }
