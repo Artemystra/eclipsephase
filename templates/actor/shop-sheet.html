@@ -53,11 +53,11 @@
                     {{/each}}
                 </div>
 
-                {{!-- Cost Overrides (Schritt 13) - context.generalOverrideGrid/rateOverrideGrid are fully
-                     pre-resolved in EPshopSheet.js, no lookups needed here. Blank = no override, falls
-                     back to the placeholder shown (General Override if set, else the system default).
-                     flatBuyCost/sellRepGain columns only exist while superBrew is on (matches "Kaufen"'s
-                     own gating); sellBonus is never gated. --}}
+                {{!-- Cost Overrides - context.generalOverrideGrid/rateOverrideGrid are fully pre-resolved
+                     in EPshopSheet.js, no lookups needed here. Blank = no override, falls back to the
+                     placeholder shown (General Override if set, else the system default). flatBuyCost/
+                     sellRepGain columns only exist while superBrew is on (matches "Buy"'s own gating);
+                     sellBonus is never gated. --}}
                 <p class="headline5">{{localize "ep2e.shop.settings.rateOverridesHeadline"}}</p>
 
                 <div class="shop-cost-overrides-row">
@@ -88,6 +88,27 @@
                         {{/each}}
                     </tbody>
                 </table>
+
+                {{#if superBrewEnabled}}
+                    <p class="headline6">{{localize "ep2e.shop.settings.morphPointOverridesHeadline"}}</p>
+                    <p class="notes">{{localize "ep2e.shop.settings.morphPointOverridesDescription"}}</p>
+                    <table class="shop-rate-override-table">
+                        <thead>
+                            <tr>
+                                <th>{{localize "ep2e.item.general.table.cost.moderate"}}</th>
+                                <th>{{localize "ep2e.item.general.table.cost.major"}}</th>
+                                <th>{{localize "ep2e.item.general.table.cost.rare"}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" data-dtype="Number" name="system.morphPointOverrides.moderateMin" value="{{morphPointOverrides.moderateMin}}" placeholder="2"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.morphPointOverrides.majorMin" value="{{morphPointOverrides.majorMin}}" placeholder="5"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.morphPointOverrides.rareMin" value="{{morphPointOverrides.rareMin}}" placeholder="8"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {{/if}}
                 </div>
 
                 <div class="shop-cost-overrides-column">

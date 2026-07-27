@@ -1483,7 +1483,7 @@ form.eclipsephase.shop {
 }
 
 /* Each column scrolls independently; the headline above and the sell-button/accepted-rep footer
-   below sit outside this, so they never scroll with the list (see project_release_v22_todo.md). */
+   below sit outside this, so they never scroll with the list. */
 .eclipsephase .shop-column-scroll {
   flex: 1;
   min-height: 0;
@@ -1503,7 +1503,8 @@ form.eclipsephase.shop {
   margin-top: 0;
 }
 
-/* Visually matches button.sheetButton (see project_release_v22_todo.md for why this stays an <a>) */
+/* Visually matches button.sheetButton - stays an <a>, not a <button>, since core auto-disables
+   form buttons when !isEditable and Observer still needs to click this. */
 .eclipsephase a.shop-sell-confirm {
   display: flex;
   flex-shrink: 0;
@@ -2472,6 +2473,7 @@ h3.subheaderBlank {
   left: auto;
   right: 0;
 }
+
 
 .contentBoxMargin {
   position: relative;

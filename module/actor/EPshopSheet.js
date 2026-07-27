@@ -4,14 +4,14 @@ import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js";
 
 const FAVOR_TIER_RANK = { trivial: 0, minor: 1, moderate: 2, major: 3 };
-// "Kaufen" (Diemen's Spezialbräu house rule, superBrew setting): flat Rep cost, no roll - Trivial
+// "Buy" (Laph's Special Brew house rule, superBrew setting): flat Rep cost, no roll - Trivial
 // has no RAW cost equivalent, treated as free.
 const FLAT_BUY_COST = { trivial: 0, minor: 15, moderate: 30, major: 60 };
-// "Gefallen einlösen": per-item Sell-Bonus contribution when staged in "To Sell", summed and capped
-// at BONUS_CAP - same cap independently applies to the Rep-Burn-Bonus (burned points x2).
+// "Cash in Favor": per-item Sell Bonus contribution when staged in "To Sell", summed and capped
+// at BONUS_CAP - same cap independently applies to the Rep-Burn Bonus (burned points x2).
 const SELL_BONUS_PER_TIER = { trivial: 0, minor: 5, moderate: 15, major: 30 };
 const BONUS_CAP = 30;
-// Plain "Verkaufen" (no active purchase): per-item Rep gain, summed with no cap - exclusive with
+// Plain "Sell" (no active purchase): per-item Rep gain, summed with no cap - exclusive with
 // SELL_BONUS_PER_TIER above, an item staged for one purpose is never staged for the other at once.
 const SELL_REP_PER_TIER = { trivial: 0, minor: 5, moderate: 10, major: 20 };
 
@@ -36,7 +36,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     },
     actions: {
       editImage: this._onEditImage,
-      // Same rare core edge case as EPactorSheet - see project_release_v21_todo.md.
+      // Guards a rare core edge case (actor.token null despite the "Configure Token" control being
+      // shown) instead of letting ActorSheetV2's own handler throw.
       configureToken: function () {
         if (!this.actor.token) return ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.noPlacedToken"));
         this.actor.token.sheet.render({ force: true });
@@ -67,7 +68,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   };
 
   // Transient, never persisted to the actor - lives on the sheet instance like tabGroups above,
-  // so it survives re-renders within the session but resets on close (see project_shop_system_research.md).
+  // so it survives re-renders within the session but resets on close.
   _itemTypeFilter = [];
 
   // Item types actually present on the shop, minus whatever's already an active filter - the
@@ -110,8 +111,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   _toSell = new Map();
 
   // Set only when a GM (or any user without their own game.user.character) drags another actor's
-  // item onto the shop to sell for them - see _onDropItem(). Never used by buying (Kaufen/Gefallen
-  // einlösen stay bound to game.user.character only, per Schritt-12 OQ2).
+  // item onto the shop to sell for them - see _onDropItem(). Never used by buying (Buy/Cash in
+  // Favor stay bound to game.user.character only).
   _actingCharacterId = null;
 
   /**
@@ -125,8 +126,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return null;
   }
 
-  // Clears the acting-character context once nothing is staged anymore (Schritt-12 OQ3) - called
-  // after every mutation of _toSell.
+  // Clears the acting-character context once nothing is staged anymore - called after every
+  // mutation of _toSell.
   _maybeResetActingCharacter() {
     if (this._toSell.size === 0) this._actingCharacterId = null;
   }
@@ -166,9 +167,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   // Buttons ordered confirm-first - DialogV2's Enter key submits the first button in the array
-  // regardless of which one is flagged default:true (see project_dialogv2_enter_key_bug.md).
-  // Grants the Rep-for-selling gain (Schritt 7) - exclusive with _useGefallen()'s Sell-Bonus, which
-  // calls _confirmSell() directly and never goes through this method.
+  // regardless of which one is flagged default:true.
+  // Grants the Rep-for-selling gain - exclusive with _useGefallen()'s Sell Bonus, which calls
+  // _confirmSell() directly and never goes through this method.
   async _confirmSellDialog() {
     if (this._isClosedForSelling()) {
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.shopClosed"));
@@ -266,12 +267,24 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return true;
   }
 
+  // Morphs aren't traded via Rep at all outside the SuperBrew house rule (RAW: acquired via the
+  // mission's Morph Points instead) - blocks every entry point (drop/stage, Cash in Favor, Buy),
+  // not just the roll/charge itself.
+  _isMorphBlocked(items) {
+    return !game.settings.get("eclipsephase", "superBrew") && items.some(item => item.type === "morph");
+  }
+
   async _onDropItem(event, item) {
     const targetActor = this.actor;
     const sourceActor = item.parent instanceof Actor ? item.parent : null;
 
     // Same-actor drag (e.g. reordering the shop's own list) - nothing to do.
     if (sourceActor && sourceActor.id === targetActor.id) return null;
+
+    if (this._isMorphBlocked([item])) {
+      ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.morphsBlocked"));
+      return null;
+    }
 
     // Any cross-actor drag (Owner or anyone with at least Limited permission, including the Owner
     // dragging from one of their OTHER own characters) always stages for sale first, never
@@ -355,9 +368,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
-   * Accepted networks with the user's own character's Rep values - used by Kaufen/Gefallen
-   * einlösen, which stay bound to game.user.character only (Schritt-12 OQ2), never the acting
-   * character used by selling.
+   * Accepted networks with the user's own character's Rep values - used by Buy/Cash in Favor,
+   * which stay bound to game.user.character only, never the acting character used by selling.
    * @returns {Array<{network: string, value: number, label: string}>}
    */
   _getPurchaseNetworkOptions() {
@@ -410,8 +422,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
-   * Flat "Kaufen" Rep cost for the given items, summed per item's own favor tier. `network` applies
-   * this shop's per-network overrides (Schritt 13) - omitted when no network is chosen yet.
+   * Flat "Buy" Rep cost for the given items, summed per item's own favor tier. `network` applies
+   * this shop's per-network overrides - omitted when no network is chosen yet.
    * @param {Item[]} items
    * @param {string|null} [network]
    * @returns {number}
@@ -421,7 +433,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
-   * Sell-Bonus for "Gefallen einlösen", summed from currently staged "To Sell" items by their own
+   * Sell Bonus for "Cash in Favor", summed from currently staged "To Sell" items by their own
    * favor tier, capped at BONUS_CAP. `network` applies this shop's per-network overrides.
    * @param {string|null} [network]
    * @returns {number}
@@ -640,7 +652,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
-   * "Gefallen einlösen": Rep test for the selected items, optionally boosted by a Sell-Bonus
+   * "Cash in Favor": Rep test for the selected items, optionally boosted by a Sell Bonus
    * (currently staged "To Sell" items, sold on confirm regardless of roll outcome) and/or a
    * Rep-Burn-Bonus (points the player chooses to spend, also regardless of outcome - matches RAW
    * "Burning Rep", which is a cost paid to attempt the roll, not a refundable wager). Success
@@ -656,6 +668,10 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     const items = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
     if (!items.length) return;
+
+    if (this._isMorphBlocked(items)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.morphsBlocked"));
+    }
 
     const { cancelled, bindings } = await this._resolveWareBindings(character, items);
     if (cancelled) return;
@@ -733,7 +749,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
-   * "Kaufen" (Diemen's Spezialbräu house rule, only active while the superBrew setting is on): a
+   * "Buy" (Laph's Special Brew house rule, only active while the superBrew setting is on): a
    * flat Rep cost per item's own favor tier, no roll, no Favor-Limit interaction.
    * @returns {Promise<void>}
    */
@@ -844,8 +860,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       // when it reads "0", so the template can't gate on the string directly.
       context.hasSellBonus = this._getSellBonus() > 0;
       context.sellBonus = this._getSellBonusBreakdown();
-      // Plain-Verkaufen preview, next to the Gefallen-einlösen Sell-Bonus preview above - shows what
-      // the currently staged "To Sell" items would earn without cashing in a favor.
+      // Plain-Sell preview, next to the Cash-in-Favor Sell Bonus preview above - shows what the
+      // currently staged "To Sell" items would earn without cashing in a favor.
       context.hasSellForRep = this._getSellRepGain() > 0;
       context.sellForRep = this._getSellRepGainBreakdown();
       if (context.hasSelection) {
@@ -863,11 +879,14 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.favorTiers = CONFIG.eclipsephase.favorTiers;
       context.valuation = actor.system.valuation;
 
-      // Cost-override matrix (Schritt 13) - pre-resolved grids, no nested lookups needed in the
-      // template. Trivial is never overridden (RAW: always free), so it's excluded entirely.
-      // flatBuyCost/sellRepGain columns only exist while superBrew is on, same gating as "Kaufen"
-      // itself - sellBonus is never gated (Schritt-13 OQ9).
+      // Cost-override matrix - pre-resolved grids, no nested lookups needed in the template.
+      // Trivial is never overridden (RAW: always free), so it's excluded entirely. flatBuyCost/
+      // sellRepGain columns only exist while superBrew is on, same gating as "Buy" itself -
+      // sellBonus is never gated.
       context.superBrewEnabled = game.settings.get("eclipsephase", "superBrew");
+      // Morph Points -> cost-tier thresholds, only meaningful while superBrew is on (see the
+      // superBrewEnabled gate around this section's markup in shop-sheet.html).
+      context.morphPointOverrides = actor.system.morphPointOverrides ?? {};
       const general = actor.system.generalRateOverrides ?? {};
       // What the matrix's placeholders should show: the shop's General Override if set, else the
       // system-wide default - a network cell left blank falls back to whichever of these applies.

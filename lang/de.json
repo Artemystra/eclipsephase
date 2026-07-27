@@ -48,8 +48,8 @@
       "hint": "Zeigt standardmässig einen Würfeldialog, wenn ein Skill geürfelt wird."
     },
     "superBrew": {
-      "name": "Diemen's Spezialbräu",
-      "hint": "Macht Dinge die Diemen in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
+      "name": "Laphs Spezialbräu",
+      "hint": "Macht Dinge die Laph in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
     }
   },
   "TYPES.Actor.character" : "Spielercharakter",
@@ -596,6 +596,8 @@
           "label": "Frame"
         },
         "durabilityLabel": "Ausdauer",
+        "morphPointsLabel": "Morph-Points",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "Fortbewegung",
           "speed": "Geschw.",
@@ -1734,6 +1736,8 @@
         "rateOverridesHeadline": "Preis-Overrides",
         "generalOverridesHeadline": "Allgemeine Overrides",
         "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
+        "morphPointOverridesHeadline": "Morph-Point-Overrides",
+        "morphPointOverridesDescription": "Diese Option existiert nur im Homebrew, da Morphs normalerweise nicht kaufbar sind und stattdessen über ein anderes Punktesystem verrechnet werden. Jeder Wert ist der Morph-Points-Schwellenwert, ab dem diese Stufe beginnt - niedrigere Punktkosten fallen automatisch auf die nächstniedrigere Stufe zurück. Sind zwei Schwellenwerte gleich gesetzt, gewinnt die höhere Stufe.",
         "specificOverridesHeadline": "Rep-spezifische Overrides",
         "specificOverridesDescription": "Für eine feingranularere Einstellung von Shops - zum Beispiel, wenn es Orte gibt, an denen bestimmtes Rep weniger gern gesehen ist als anderes. Alle nicht ausgefüllten Felder fallen auf den Grundwert oder den allgemeinen Override (falls vorhanden) zurück."
       },
@@ -1778,7 +1782,8 @@
         "notEnoughRepToBuy": "Nicht genug Rep zum Kaufen vorhanden.",
         "shopClosed": "Der Shop ist derzeitig geschlossen.",
         "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen.",
-        "differentActingCharacter": "Du verkaufst gerade schon Items für einen anderen Charakter - schließe das erst ab oder entferne diese Items."
+        "differentActingCharacter": "Du verkaufst gerade schon Items für einen anderen Charakter - schließe das erst ab oder entferne diese Items.",
+        "morphsBlocked": "Morphs können nicht mit Rep erstanden werden. Sie werden stattdessen über die Morph-Points der Mission erworben."
       }
     }
   }

@@ -48,8 +48,8 @@
       "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
     },
     "superBrew": {
-      "name": "Diemen's Special Brew",
-      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+      "name": "Laph's Special Brew",
+      "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
   "TYPES.Actor.character" : "Player Character",
@@ -608,6 +608,8 @@
           "label": "Frame"
         },
         "durabilityLabel": "Durability",
+        "morphPointsLabel": "Morph Points",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "Movement",
           "speed": "Speed",
@@ -1782,6 +1784,8 @@
         "rateOverridesHeadline": "Cost Overrides",
         "generalOverridesHeadline": "General Overrides",
         "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
+        "morphPointOverridesHeadline": "Morph Point Overrides",
+        "morphPointOverridesDescription": "This option only exists in Homebrew, since Morphs normally aren't purchasable and are instead accounted for via a different point system. Each value is the Morph Points threshold where that tier begins - lower point costs fall through to a lower tier automatically. If two thresholds are set to the same value, the higher tier wins.",
         "specificOverridesHeadline": "Rep-Specific Overrides",
         "specificOverridesDescription": "For finer-grained shop tuning - for example, if certain Rep is less welcome in some places than others. Any slot left blank falls back to the base value, or the General Override if one is set."
       },
@@ -1826,7 +1830,8 @@
         "notEnoughRepToBuy": "Not enough Rep available to buy this.",
         "shopClosed": "This shop is currently closed.",
         "salesClosed": "This shop is currently closed for sales.",
-        "differentActingCharacter": "You're already selling items for another character - finish or remove those first."
+        "differentActingCharacter": "You're already selling items for another character - finish or remove those first.",
+        "morphsBlocked": "Morphs can't be purchased with Rep. They're acquired via the mission's Morph Points instead."
       }
     }
   }

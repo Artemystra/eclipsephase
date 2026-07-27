@@ -48,8 +48,8 @@
       "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
     },
     "superBrew": {
-      "name": "Diemen's Special Brew",
-      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+      "name": "Laph's Special Brew",
+      "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
   "TYPES.Actor.character" : "Player Character",
@@ -589,6 +589,8 @@
           "label": "Chasis"
         },
         "durabilityLabel": "Durability",
+        "morphPointsLabel": "Puntos de Morph",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "Movement",
           "speed": "Speed",
@@ -1696,6 +1698,8 @@
         "rateOverridesHeadline": "Anulaciones de Costo",
         "generalOverridesHeadline": "Anulaciones Generales",
         "generalOverridesDescription": "Establece los precios base de la tienda. Permite hacer que esta tienda sea más cara o más barata en general, de forma rápida y sencilla.",
+        "morphPointOverridesHeadline": "Anulaciones de Puntos de Morph",
+        "morphPointOverridesDescription": "Esta opción solo existe en Homebrew, ya que los Morphs normalmente no se pueden comprar y en su lugar se contabilizan mediante otro sistema de puntos. Cada valor es el umbral de Puntos de Morph a partir del cual comienza ese nivel - los costos menores caen automáticamente al nivel inferior. Si dos umbrales tienen el mismo valor, gana el nivel más alto.",
         "specificOverridesHeadline": "Anulaciones Específicas por Reputación",
         "specificOverridesDescription": "Para un ajuste más detallado de la tienda - por ejemplo, si ciertas Reputaciones son menos bienvenidas en algunos lugares que en otros. Cualquier campo vacío recurre al valor base, o a la Anulación General si hay una establecida."
       },
@@ -1740,7 +1744,8 @@
         "notEnoughRepToBuy": "No hay suficiente Reputación disponible para comprar esto.",
         "shopClosed": "Esta tienda está cerrada actualmente.",
         "salesClosed": "Esta tienda está actualmente cerrada para ventas.",
-        "differentActingCharacter": "Ya estás vendiendo artículos para otro personaje - termina o elimina esos primero."
+        "differentActingCharacter": "Ya estás vendiendo artículos para otro personaje - termina o elimina esos primero.",
+        "morphsBlocked": "Los Morphs no se pueden comprar con Reputación. En su lugar, se adquieren mediante los Puntos de Morph de la misión."
       }
     }
   }

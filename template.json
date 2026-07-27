@@ -585,6 +585,11 @@
           "sellRepGain": null
         }
       },
+      "morphPointOverrides": {
+        "moderateMin": null,
+        "majorMin": null,
+        "rareMin": null
+      },
       "rateOverrides": {
         "@-rep": {
           "minor": {
@@ -1792,6 +1797,7 @@
       "type": "",
       "frame": "none",
       "dur": null,
+      "morphPoints": 0,
       "insight": null,
       "moxie": null,
       "vigor": null,

@@ -48,8 +48,8 @@
       "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
     },
     "superBrew": {
-      "name": "Diemen's Special Brew",
-      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+      "name": "Laph's Special Brew",
+      "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
   "TYPES.Actor.character": "Personagem do Jogador",
@@ -588,6 +588,8 @@
           "label": "Chassi"
         },
         "durabilityLabel": "Durabilidade",
+        "morphPointsLabel": "Pontos de Morfo",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "Movimento",
           "speed": "Velocidade",
@@ -1710,6 +1712,8 @@
         "rateOverridesHeadline": "Substituições de Custo",
         "generalOverridesHeadline": "Substituições Gerais",
         "generalOverridesDescription": "Define os preços base da loja. Permite tornar esta loja mais cara ou mais barata de forma rápida e geral.",
+        "morphPointOverridesHeadline": "Substituições de Pontos de Morfo",
+        "morphPointOverridesDescription": "Esta opção só existe no Homebrew, já que Morfos normalmente não podem ser comprados e são contabilizados através de outro sistema de pontos. Cada valor é o limite de Pontos de Morfo a partir do qual esse nível começa - custos menores caem automaticamente para o nível inferior. Se dois limites forem definidos com o mesmo valor, o nível mais alto vence.",
         "specificOverridesHeadline": "Substituições Específicas por Reputação",
         "specificOverridesDescription": "Para um ajuste mais fino da loja - por exemplo, se determinada Reputação é menos bem-vinda em alguns lugares do que em outros. Qualquer campo deixado em branco recorre ao valor base, ou à Substituição Geral, se houver uma definida."
       },
@@ -1754,7 +1758,8 @@
         "notEnoughRepToBuy": "Não há Reputação suficiente disponível para comprar isto.",
         "shopClosed": "Esta loja está fechada no momento.",
         "salesClosed": "Esta loja está atualmente fechada para vendas.",
-        "differentActingCharacter": "Você já está vendendo itens para outro personagem - termine ou remova esses itens primeiro."
+        "differentActingCharacter": "Você já está vendendo itens para outro personagem - termine ou remova esses itens primeiro.",
+        "morphsBlocked": "Morfos não podem ser comprados com Reputação. Eles são adquiridos através dos Pontos de Morfo da missão."
       }
     }
   }

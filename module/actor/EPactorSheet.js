@@ -43,7 +43,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     actions: {
       editImage: this._onEditImage,
       // Guards a rare core edge case (actor.token null despite the "Configure Token" control being
-      // shown) instead of letting ActorSheetV2's own handler throw - see project_release_v21_todo.md.
+      // shown) instead of letting ActorSheetV2's own handler throw.
       configureToken: function () {
         if (!this.actor.token) return ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.noPlacedToken"));
         this.actor.token.sheet.render({ force: true });

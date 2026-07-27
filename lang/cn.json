@@ -48,8 +48,8 @@
       "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
     },
     "superBrew": {
-      "name": "Diemen's Special Brew",
-      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+      "name": "Laph's Special Brew",
+      "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
   "TYPES.Actor.character" : "玩家角色",
@@ -588,6 +588,8 @@
           "label": "机身框架"
         },
         "durabilityLabel": "耐久值",
+        "morphPointsLabel": "义体点数",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "移动",
           "speed": "速度",
@@ -1703,6 +1705,8 @@
         "rateOverridesHeadline": "费用覆盖",
         "generalOverridesHeadline": "通用覆盖",
         "generalOverridesDescription": "设定该商店的基础价格。可快速让该商店整体变得更贵或更便宜。",
+        "morphPointOverridesHeadline": "义体点数覆盖",
+        "morphPointOverridesDescription": "此选项仅在家酿规则下存在，因为义体通常不可购买，而是通过另一套点数系统结算。每个数值是该等级开始的义体点数门槛——更低的点数会自动归入更低的等级。若两个门槛设为相同的值，则更高的等级胜出。",
         "specificOverridesHeadline": "信誉专属覆盖",
         "specificOverridesDescription": "用于更精细地调整商店——例如某些地方对特定信誉网络的接受度较低。未填写的项会回退到基础值，若已设置通用覆盖则回退到通用覆盖。"
       },
@@ -1747,7 +1751,8 @@
         "notEnoughRepToBuy": "信誉不足，无法购买。",
         "shopClosed": "该商店目前已关闭。",
         "salesClosed": "该商店目前不接受出售。",
-        "differentActingCharacter": "你已经在为另一个角色出售物品 - 请先完成或移除这些物品。"
+        "differentActingCharacter": "你已经在为另一个角色出售物品 - 请先完成或移除这些物品。",
+        "morphsBlocked": "无法用信誉购买义体。义体改为通过任务的义体点数获得。"
       }
     }
   }

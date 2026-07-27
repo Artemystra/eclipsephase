@@ -847,7 +847,7 @@ Hooks.on("createActor", async (actor, options, userId) => {
 });
 
 // First-pass behavior for a disabled shop system: hide existing shops from the sidebar directory
-// rather than making them read-only or deleting them (see project_release_v22_todo.md Step 1).
+// rather than making them read-only or deleting them.
 Hooks.on("renderActorDirectory", (app, html) => {
   if (game.settings.get("eclipsephase", "enableShopSystem")) return;
   html.querySelectorAll("li.directory-item[data-entry-id]").forEach(li => {
