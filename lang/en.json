@@ -1778,7 +1778,12 @@
       "settings": {
         "repHeadline": "Accepted Rep Networks",
         "acceptsSales": "Shop accepts sales",
-        "valuationHeadline": "Item Valuation"
+        "valuationHeadline": "Item Valuation",
+        "rateOverridesHeadline": "Cost Overrides",
+        "generalOverridesHeadline": "General Overrides",
+        "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
+        "specificOverridesHeadline": "Rep-Specific Overrides",
+        "specificOverridesDescription": "For finer-grained shop tuning - for example, if certain Rep is less welcome in some places than others. Any slot left blank falls back to the base value, or the General Override if one is set."
       },
       "inventory": {
         "headline": "Inventory"
@@ -1792,7 +1797,9 @@
         "favorConfirm": "Cash in Favor",
         "required": "Required favor:",
         "flatBuyCost": "Buy cost:",
-        "sellBonus": "Sell bonus:",
+        "otherwiseLabel": "Other:",
+        "sellBonus": "Sell Roll Bonus:",
+        "sellForRep": "Sell for Rep:",
         "repBenefitsHeadline": "Rep Benefits",
         "burnRep": "Burn Rep:",
         "burnRepHint": "Bonus: Burned Rep x 2<br>(Max. 15 Rep)",

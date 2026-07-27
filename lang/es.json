@@ -1692,7 +1692,12 @@
       "settings": {
         "repHeadline": "Redes de Rep Aceptadas",
         "acceptsSales": "La tienda acepta ventas",
-        "valuationHeadline": "Valoración de Objetos"
+        "valuationHeadline": "Valoración de Objetos",
+        "rateOverridesHeadline": "Anulaciones de Costo",
+        "generalOverridesHeadline": "Anulaciones Generales",
+        "generalOverridesDescription": "Establece los precios base de la tienda. Permite hacer que esta tienda sea más cara o más barata en general, de forma rápida y sencilla.",
+        "specificOverridesHeadline": "Anulaciones Específicas por Reputación",
+        "specificOverridesDescription": "Para un ajuste más detallado de la tienda - por ejemplo, si ciertas Reputaciones son menos bienvenidas en algunos lugares que en otros. Cualquier campo vacío recurre al valor base, o a la Anulación General si hay una establecida."
       },
       "inventory": {
         "headline": "Inventario"
@@ -1706,7 +1711,9 @@
         "favorConfirm": "Cobrar Favor",
         "required": "Favor requerido:",
         "flatBuyCost": "Costo de compra:",
-        "sellBonus": "Bono de venta:",
+        "otherwiseLabel": "En otro caso:",
+        "sellBonus": "Bono de Tirada de Venta:",
+        "sellForRep": "Vender por Reputación:",
         "repBenefitsHeadline": "Beneficios de Reputación",
         "burnRep": "Quemar Reputación:",
         "burnRepHint": "Bono: Reputación quemada x 2<br>(Máx. 15 Reputación)",

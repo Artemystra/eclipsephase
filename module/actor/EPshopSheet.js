@@ -48,7 +48,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     body: {
       template: "systems/eclipsephase/templates/actor/shop-sheet.html",
       root: true,
-      scrollable: [".shop-to-sell-column .shop-column-scroll", ".shop-inventory-column .shop-column-scroll"]
+      scrollable: [".shop-to-sell-column .shop-column-scroll", ".shop-inventory-column .shop-column-scroll", ".shop-settings-scroll"]
     }
   };
 
@@ -202,7 +202,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (!result || result.cancelled) return;
     const network = result.network;
 
-    const repGain = this._getSellRepGain();
+    const repGain = this._getSellRepGain(network);
     // Captured before _confirmSell() clears the acting-character context once staging empties out.
     const character = this._getActingCharacter();
 
@@ -397,43 +397,94 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return highest;
   }
 
+  // Global constant, shop-wide (all networks, no per-network entry needed), then per-network - each
+  // stage falls back to the previous one. A stored 0 ("free") is a valid override and must NOT fall
+  // back (nullish coalescing, not ||). Trivial is never overridden (RAW: always free).
+  _rateFor(category, tier, network) {
+    if (tier === "trivial") return 0;
+    const globalRate = { flatBuyCost: FLAT_BUY_COST, sellBonus: SELL_BONUS_PER_TIER, sellRepGain: SELL_REP_PER_TIER }[category][tier];
+    const general = this.actor.system.generalRateOverrides?.[tier]?.[category] ?? globalRate;
+    if (!network) return general;
+    const override = this.actor.system.rateOverrides?.[network]?.[tier]?.[category];
+    return override ?? general;
+  }
+
   /**
-   * Flat "Kaufen" Rep cost for the given items, summed per item's own favor tier.
+   * Flat "Kaufen" Rep cost for the given items, summed per item's own favor tier. `network` applies
+   * this shop's per-network overrides (Schritt 13) - omitted when no network is chosen yet.
    * @param {Item[]} items
+   * @param {string|null} [network]
    * @returns {number}
    */
-  _getFlatBuyCost(items) {
-    return items.reduce((sum, item) => sum + (FLAT_BUY_COST[this._favorTierForItem(item)] ?? 0), 0);
+  _getFlatBuyCost(items, network = null) {
+    return items.reduce((sum, item) => sum + this._rateFor("flatBuyCost", this._favorTierForItem(item), network), 0);
   }
 
   /**
    * Sell-Bonus for "Gefallen einlösen", summed from currently staged "To Sell" items by their own
-   * favor tier, capped at BONUS_CAP.
+   * favor tier, capped at BONUS_CAP. `network` applies this shop's per-network overrides.
+   * @param {string|null} [network]
    * @returns {number}
    */
-  _getSellBonus() {
+  _getSellBonus(network = null) {
     let total = 0;
     for (const staged of this._toSell.values()) {
       const item = game.actors.get(staged.sourceActorId)?.items.get(staged.itemId);
       if (!item) continue;
-      total += SELL_BONUS_PER_TIER[this._favorTierForItem(item)] ?? 0;
+      total += this._rateFor("sellBonus", this._favorTierForItem(item), network);
     }
     return Math.min(total, BONUS_CAP);
   }
 
   /**
    * Rep gain for a plain "Verkaufen" (no active purchase), summed from currently staged "To Sell"
-   * items by their own favor tier - no cap.
+   * items by their own favor tier - no cap. `network` applies this shop's per-network overrides.
+   * @param {string|null} [network]
    * @returns {number}
    */
-  _getSellRepGain() {
+  _getSellRepGain(network = null) {
     let total = 0;
     for (const staged of this._toSell.values()) {
       const item = game.actors.get(staged.sourceActorId)?.items.get(staged.itemId);
       if (!item) continue;
-      total += SELL_REP_PER_TIER[this._favorTierForItem(item)] ?? 0;
+      total += this._rateFor("sellRepGain", this._favorTierForItem(item), network);
     }
     return total;
+  }
+
+  /**
+   * Per-network breakdown for a price/bonus shown before a network is chosen: networks whose value
+   * differs from the global default are listed individually, any remaining accepted networks are
+   * grouped under one "Otherwise" entry instead of repeating the same number per network.
+   * @param {(network: string|null) => number} computeFn
+   * @returns {string}
+   */
+  _formatRateBreakdown(computeFn) {
+    const defaultValue = computeFn(null);
+    const networks = this._getAcceptedNetworks();
+    const overridden = networks
+      .map(network => ({ network, value: computeFn(network) }))
+      .filter(entry => entry.value !== defaultValue);
+
+    if (!overridden.length) return String(defaultValue);
+
+    const parts = overridden.map(({ network, value }) => `${network.replace("-rep", "")}: ${value}`);
+    if (overridden.length < networks.length) {
+      parts.push(`${game.i18n.localize("ep2e.shop.purchase.otherwiseLabel")} ${defaultValue}`);
+    }
+    return parts.join(" | ");
+  }
+
+  _getFlatBuyCostBreakdown(items) {
+    return this._formatRateBreakdown(network => this._getFlatBuyCost(items, network));
+  }
+
+  _getSellBonusBreakdown() {
+    return this._formatRateBreakdown(network => this._getSellBonus(network));
+  }
+
+  _getSellRepGainBreakdown() {
+    return this._formatRateBreakdown(network => this._getSellRepGain(network));
   }
 
   // Styled like general-modifiers.html. Single network auto-selected; multiple require an explicit
@@ -627,7 +678,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const idItem = character.items.get(character.system.activeID);
     const rollValue = Number(idItem?.system?.rep?.[network]?.value ?? 0);
 
-    const sellBonus = this._getSellBonus();
+    const sellBonus = this._getSellBonus(network);
 
     const systemOptions = {
       askForOptions: false,
@@ -700,15 +751,17 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const { cancelled, bindings } = await this._resolveWareBindings(character, items);
     if (cancelled) return;
 
-    const cost = this._getFlatBuyCost(items);
     const network = await this._selectNetworkDialog({
       title: game.i18n.localize("ep2e.shop.purchase.confirm"),
-      headline: `${game.i18n.localize("ep2e.shop.purchase.flatBuyCost")} ${cost}`,
+      headline: game.i18n.localize("ep2e.shop.dialog.selectNetwork.headline"),
+      hint: game.i18n.localize("ep2e.shop.purchase.flatBuyCost"),
+      hintValue: this._getFlatBuyCostBreakdown(items),
       networks: this._getPurchaseNetworkOptions(),
       confirmLabel: game.i18n.localize("ep2e.shop.purchase.confirm")
     });
     if (!network) return;
 
+    const cost = this._getFlatBuyCost(items, network);
     const idItem = character.items.get(character.system.activeID);
     const available = Number(idItem?.system?.rep?.[network]?.value ?? 0);
 
@@ -787,11 +840,19 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.purchaseNetworks = this._getPurchaseNetworkOptions();
       context.hasSelection = this._selectedForPurchase.size > 0;
       context.homebrewBuyEnabled = game.settings.get("eclipsephase", "superBrew");
-      context.sellBonus = this._getSellBonus();
+      // hasX gates visibility (numeric check) - the breakdown string itself is always truthy even
+      // when it reads "0", so the template can't gate on the string directly.
+      context.hasSellBonus = this._getSellBonus() > 0;
+      context.sellBonus = this._getSellBonusBreakdown();
+      // Plain-Verkaufen preview, next to the Gefallen-einlösen Sell-Bonus preview above - shows what
+      // the currently staged "To Sell" items would earn without cashing in a favor.
+      context.hasSellForRep = this._getSellRepGain() > 0;
+      context.sellForRep = this._getSellRepGainBreakdown();
       if (context.hasSelection) {
         const selectedItems = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
         context.requiredFavorTierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[this._getRequiredFavorTier(selectedItems)]);
-        context.flatBuyCost = this._getFlatBuyCost(selectedItems);
+        context.hasFlatBuyCost = this._getFlatBuyCost(selectedItems) > 0;
+        context.flatBuyCost = this._getFlatBuyCostBreakdown(selectedItems);
       }
     }
 
@@ -801,6 +862,43 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.costTypes = CONFIG.eclipsephase.costTypes;
       context.favorTiers = CONFIG.eclipsephase.favorTiers;
       context.valuation = actor.system.valuation;
+
+      // Cost-override matrix (Schritt 13) - pre-resolved grids, no nested lookups needed in the
+      // template. Trivial is never overridden (RAW: always free), so it's excluded entirely.
+      // flatBuyCost/sellRepGain columns only exist while superBrew is on, same gating as "Kaufen"
+      // itself - sellBonus is never gated (Schritt-13 OQ9).
+      context.superBrewEnabled = game.settings.get("eclipsephase", "superBrew");
+      const general = actor.system.generalRateOverrides ?? {};
+      // What the matrix's placeholders should show: the shop's General Override if set, else the
+      // system-wide default - a network cell left blank falls back to whichever of these applies.
+      const resolvedDefault = (category, tier) => general[tier]?.[category] ?? { flatBuyCost: FLAT_BUY_COST, sellBonus: SELL_BONUS_PER_TIER, sellRepGain: SELL_REP_PER_TIER }[category][tier];
+
+      context.generalOverrideGrid = ["minor", "moderate", "major"].map(tier => ({
+        tier,
+        tierLabel: CONFIG.eclipsephase.favorTiers[tier],
+        flatBuyCost: general[tier]?.flatBuyCost ?? null,
+        flatBuyCostPlaceholder: FLAT_BUY_COST[tier],
+        sellBonus: general[tier]?.sellBonus ?? null,
+        sellBonusPlaceholder: SELL_BONUS_PER_TIER[tier],
+        sellRepGain: general[tier]?.sellRepGain ?? null,
+        sellRepGainPlaceholder: SELL_REP_PER_TIER[tier]
+      }));
+
+      const overrides = actor.system.rateOverrides ?? {};
+      context.rateOverrideGrid = Object.keys(CONFIG.eclipsephase.repTypes).map(network => ({
+        network,
+        label: CONFIG.eclipsephase.repTypes[network],
+        tiers: ["minor", "moderate", "major"].map(tier => ({
+          tier,
+          tierLabel: CONFIG.eclipsephase.favorTiers[tier],
+          flatBuyCost: overrides[network]?.[tier]?.flatBuyCost ?? null,
+          flatBuyCostPlaceholder: resolvedDefault("flatBuyCost", tier),
+          sellBonus: overrides[network]?.[tier]?.sellBonus ?? null,
+          sellBonusPlaceholder: resolvedDefault("sellBonus", tier),
+          sellRepGain: overrides[network]?.[tier]?.sellRepGain ?? null,
+          sellRepGainPlaceholder: resolvedDefault("sellRepGain", tier)
+        }))
+      }));
     }
 
     return context;

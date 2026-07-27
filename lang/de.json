@@ -1730,7 +1730,12 @@
       "settings": {
         "repHeadline": "Akzeptierte Rep-Netzwerke",
         "acceptsSales": "Shop nimmt Verkäufe entgegen",
-        "valuationHeadline": "Item-Bewertung"
+        "valuationHeadline": "Item-Bewertung",
+        "rateOverridesHeadline": "Preis-Overrides",
+        "generalOverridesHeadline": "Allgemeine Overrides",
+        "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
+        "specificOverridesHeadline": "Rep-spezifische Overrides",
+        "specificOverridesDescription": "Für eine feingranularere Einstellung von Shops - zum Beispiel, wenn es Orte gibt, an denen bestimmtes Rep weniger gern gesehen ist als anderes. Alle nicht ausgefüllten Felder fallen auf den Grundwert oder den allgemeinen Override (falls vorhanden) zurück."
       },
       "inventory": {
         "headline": "Inventar"
@@ -1744,7 +1749,9 @@
         "favorConfirm": "Gefallen einlösen",
         "required": "Benötigter Gefallen:",
         "flatBuyCost": "Kaufkosten:",
-        "sellBonus": "Verkaufs-Bonus:",
+        "otherwiseLabel": "Sonst:",
+        "sellBonus": "Verkaufswurf-Bonus:",
+        "sellForRep": "Verkauf für Rep:",
         "repBenefitsHeadline": "Rep-Vorteile",
         "burnRep": "Rep verbrennen:",
         "burnRepHint": "Bonus: Verbrannter Rep x 2<br>(Max. 15 Rep)",

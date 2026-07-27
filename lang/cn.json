@@ -1699,7 +1699,12 @@
       "settings": {
         "repHeadline": "接受的Rep网络",
         "acceptsSales": "商店接受出售",
-        "valuationHeadline": "物品估值"
+        "valuationHeadline": "物品估值",
+        "rateOverridesHeadline": "费用覆盖",
+        "generalOverridesHeadline": "通用覆盖",
+        "generalOverridesDescription": "设定该商店的基础价格。可快速让该商店整体变得更贵或更便宜。",
+        "specificOverridesHeadline": "信誉专属覆盖",
+        "specificOverridesDescription": "用于更精细地调整商店——例如某些地方对特定信誉网络的接受度较低。未填写的项会回退到基础值，若已设置通用覆盖则回退到通用覆盖。"
       },
       "inventory": {
         "headline": "库存"
@@ -1713,7 +1718,9 @@
         "favorConfirm": "兑现人情",
         "required": "所需人情等级：",
         "flatBuyCost": "购买花费：",
-        "sellBonus": "出售加成：",
+        "otherwiseLabel": "其他：",
+        "sellBonus": "出售检定加成：",
+        "sellForRep": "出售换取信誉：",
         "repBenefitsHeadline": "信誉优势",
         "burnRep": "燃烧信誉：",
         "burnRepHint": "加成：燃烧信誉 x 2<br>（最多 15 点信誉）",

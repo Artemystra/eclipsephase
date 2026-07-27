@@ -40,11 +40,14 @@
                     {{#if requiredFavorTierLabel}}
                         <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.required"}} {{requiredFavorTierLabel}}</p>
                     {{/if}}
-                    {{#if flatBuyCost}}
+                    {{#if hasFlatBuyCost}}
                         <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.flatBuyCost"}} {{flatBuyCost}}</p>
                     {{/if}}
-                    {{#if sellBonus}}
-                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} +{{sellBonus}}</p>
+                    {{#if hasSellBonus}}
+                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} {{sellBonus}}</p>
+                    {{/if}}
+                    {{#if hasSellForRep}}
+                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellForRep"}} {{sellForRep}}</p>
                     {{/if}}
                     {{!-- Rep network and (for "Gefallen einlösen" only) Rep-Burn amount are chosen inside
                          the confirm dialogs, not here. --}}
