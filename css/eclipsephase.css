@@ -1579,11 +1579,18 @@ optgroup .Default .Roll .Mode,
   flex-shrink: 0;
   height: var(--ep-titlebar-height, 52px);
   position: relative;
-  /* Above every other in-sheet z-index (highest elsewhere is the Rez overlay at 100) so the native
-     header-controls dropdown, which stacks within this element, never renders behind sheet content. */
+  /* Above every other in-sheet z-index (highest elsewhere is the Rez overlay at 100). */
   z-index: 200;
   cursor: grab;
   background-color: var(--pitchBorder);
+}
+
+/* Foundry v13's native header-controls dropdown (<menu class="controls-dropdown">) - this class
+   name is specific to that version's markup, so the rule has no effect wherever Foundry renders
+   the same menu differently. Needs its own z-index above in-sheet content like the Rez overlay
+   (100) - raising an ancestor's z-index alone does not lift it. */
+.controls-dropdown {
+  z-index: 200;
 }
 
 .ep-sheet-titlebar input {
