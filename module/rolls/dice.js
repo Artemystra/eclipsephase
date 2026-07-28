@@ -600,13 +600,21 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
     const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom)
-    
+    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset)
+
     if(values.cancelled)
         return
 
     for (let entry in values){
         options[entry] = values[entry] || false
+    }
+
+    // Shop purchases with Loyalty active replace the player-facing favor-difficulty dropdown
+    // with an auto-calculated value (general-modifiers.html renders it disabled), but the value
+    // is force-applied here too since favorDifficultyModifier can legitimately be 0 (Moderate),
+    // which the `|| false` fallback above would otherwise wipe.
+    if (dataset.favorDifficultyLocked) {
+        options.favorMod = Number(dataset.favorDifficultyModifier) || 0;
     }
 
     let numberOfTargets = 1
@@ -708,7 +716,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
  * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
  * @returns {Promise<Object>} - The values of the form when submitted
  */
-async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom) {
+async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom, dataset) {
 let specialEffects;
 const actorType = actorWhole.type;
 
@@ -725,7 +733,8 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     traits,
     specialEffects,
     rolledFrom,
-    rollData
+    rollData,
+    dataset
 });
 
 function extractFormValues(form) {

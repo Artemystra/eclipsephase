@@ -1700,6 +1700,11 @@
           "label": "Rede de Reputação",
           "placeholder": "- Selecionar rede -",
           "headline": "Escolher rede"
+        },
+        "loyaltyDiscount": {
+          "label": "Desconto de Lealdade",
+          "none": "Sem desconto",
+          "option": "{levels} Nível(is) ({percent}%)"
         }
       },
       "placeholders": {
@@ -1733,7 +1738,12 @@
         "sellLimitMaxRep": "Máx. Rep",
         "sellLockoutsHeadline": "Personagens Bloqueados",
         "sellLockoutClear": "Remover o bloqueio deste personagem",
-        "rateOverridesHeadline": "Substituições de Custo",
+                "loyaltyBuyDiscountHeadline": "Desconto de Compra",
+        "loyaltyBuyDiscountDescription": "Desconto percentual ao Comprar, resgatável por Nível de Lealdade - resgatá-lo reduz a Lealdade exatamente por essa quantidade de Níveis.",
+        "loyaltyBuyDiscountLevel2": "Nível 2 (%)",
+        "loyaltyBuyDiscountLevel3": "Nível 3 (%)",
+        "loyaltyBuyDiscountLevel4": "Nível 4 (%)",
+"rateOverridesHeadline": "Substituições de Custo",
         "generalOverridesHeadline": "Substituições Gerais",
         "generalOverridesDescription": "Define os preços base da loja. Permite tornar esta loja mais cara ou mais barata de forma rápida e geral.",
         "morphPointOverridesHeadline": "Substituições de Pontos de Morfo",
@@ -1762,7 +1772,8 @@
         "burnRepHint": "Bônus: Reputação queimada x 2<br>(Máx. 15 Reputação)",
         "sellBonusModifier": "Bônus de venda",
         "burnBonusModifier": "Reputação queimada",
-        "successMessage": "{character} comprou {items} de {shop}."
+                "favorDifficultyLockedHint": "Definido automaticamente pela Lealdade nesta loja e por quantos itens você está pedindo de uma vez.",
+"successMessage": "{character} comprou {items} de {shop}."
       },
       "toSell": {
         "headline": "Para Vender",
@@ -1787,6 +1798,8 @@
         "noEligibleCharacters": "Não há mais personagens elegíveis para adicionar - todo personagem vinculado a um jogador já possui um registro de lealdade aqui.",
                 "sellLockedOut": "Você vendeu demais para esta loja recentemente. Descanse para ser bem-vindo novamente, ou peça ao Proprietário para remover a restrição.",
         "sellLimitExceeded": "Isso é demais para uma única transação aqui. Reduza sua seleção e tente novamente.",
+        "rareLoyaltyRequired": "Este item é Raro - você precisa de pelo menos nível de Lealdade Laranja com esta loja para adquiri-lo.",
+        "favorBatchTooLarge": "São itens demais para pedir como um único favor aqui - reduza sua seleção.",
 "morphsBlocked": "Morfos não podem ser comprados com Reputação. Eles são adquiridos através dos Pontos de Morfo da missão."
       }
     }

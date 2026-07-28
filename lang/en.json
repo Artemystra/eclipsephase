@@ -1772,6 +1772,11 @@
           "label": "Rep Network",
           "placeholder": "- Select Network -",
           "headline": "Choose Network"
+        },
+        "loyaltyDiscount": {
+          "label": "Loyalty Discount",
+          "none": "No discount",
+          "option": "{levels} Tier ({percent}%)"
         }
       },
       "placeholders": {
@@ -1805,7 +1810,12 @@
         "sellLimitMaxRep": "Max Rep",
         "sellLockoutsHeadline": "Locked-Out Characters",
         "sellLockoutClear": "Clear this character's lockout",
-        "rateOverridesHeadline": "Cost Overrides",
+                "loyaltyBuyDiscountHeadline": "Buy Discount",
+        "loyaltyBuyDiscountDescription": "Percentage discount on Buy, redeemable per Loyalty Tier - spending it drops standing back down by that many Tiers.",
+        "loyaltyBuyDiscountLevel2": "Tier 2 (%)",
+        "loyaltyBuyDiscountLevel3": "Tier 3 (%)",
+        "loyaltyBuyDiscountLevel4": "Tier 4 (%)",
+"rateOverridesHeadline": "Cost Overrides",
         "generalOverridesHeadline": "General Overrides",
         "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
         "morphPointOverridesHeadline": "Morph Point Overrides",
@@ -1834,7 +1844,8 @@
         "burnRepHint": "Bonus: Burned Rep x 2<br>(Max. 15 Rep)",
         "sellBonusModifier": "Sell Bonus",
         "burnBonusModifier": "Burned Rep",
-        "successMessage": "{character} bought {items} from {shop}."
+                "favorDifficultyLockedHint": "Automatically set by this shop's Loyalty standing and how many items you're calling in at once.",
+"successMessage": "{character} bought {items} from {shop}."
       },
       "toSell": {
         "headline": "To Sell",
@@ -1859,6 +1870,8 @@
         "noEligibleCharacters": "No eligible characters left to add - every player-linked character already has a loyalty record here.",
                 "sellLockedOut": "You've sold too much to this shop recently. Rest to be welcomed back, or ask the Owner to lift the restriction.",
         "sellLimitExceeded": "That's too much for one transaction here. Reduce your selection and try again.",
+        "rareLoyaltyRequired": "This item is Rare - you need at least Orange Loyalty standing with this shop to acquire it.",
+        "favorBatchTooLarge": "That's too many items to call in as one favor here - reduce your selection.",
 "morphsBlocked": "Morphs can't be purchased with Rep. They're acquired via the mission's Morph Points instead."
       }
     }

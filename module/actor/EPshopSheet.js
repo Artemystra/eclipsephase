@@ -1,5 +1,5 @@
 import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors, confirmation, selectBody } from "../common/general-sheet-functions.js";
-import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER } from "../common/general-helper-functions.js";
+import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER, getLoyaltyLevel } from "../common/general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js";
 
@@ -14,6 +14,13 @@ const BONUS_CAP = 30;
 // Plain "Sell" (no active purchase): per-item Rep gain, summed with no cap - exclusive with
 // SELL_BONUS_PER_TIER above, an item staged for one purpose is never staged for the other at once.
 const SELL_REP_PER_TIER = { trivial: 0, minor: 5, moderate: 10, major: 20 };
+
+// Cash-in-Favor batch-difficulty ladder - Rare gear has no RAW favor tier above Major, so this
+// shop's valuation always collapses it there; there is nothing higher to escalate into.
+const FAVOR_DIFFICULTY_LADDER = ["trivial", "minor", "moderate", "major"];
+// Rulebook "Rep Tests" table (Networking - Using Rep - Favors): the modifier for a Rep Test based
+// on how big a favor is being requested.
+const FAVOR_DIFFICULTY_MODIFIER = { trivial: 30, minor: 10, moderate: 0, major: -30 };
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -184,10 +191,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     }
 
     // Pre-transaction validation against this shop's configured per-transaction caps (0 = no
-    // limit). Exceeding either cap blocks the whole sale outright, without locking the character
-    // out - they can just trim their selection and try again. Landing exactly ON a cap still
-    // succeeds, but locks the character out of further sales here until a long rest or an Owner
-    // override, per the RAW-flavor "you've flooded this market for now" read of the mechanic.
+    // limit). Exceeding either cap blocks the sale outright, no lockout. Landing exactly on a
+    // cap still succeeds but locks the character out of further sales here until a long rest
+    // or an Owner override.
     const maxItems = Number(this.actor.system.sellLimitMaxItems) || 0;
     const maxRep = Number(this.actor.system.sellLimitMaxRep) || 0;
     const itemCount = this._toSell.size;
@@ -296,6 +302,23 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   // not just the roll/charge itself.
   _isMorphBlocked(items) {
     return !game.settings.get("eclipsephase", "superBrew") && items.some(item => item.type === "morph");
+  }
+
+  // Rare gear needs at least Orange (level 2) Loyalty standing, gated behind loyaltyEnabled.
+  // Checked against the item's own cost tier, not the shop's valuation-mapped favor tier
+  // (which collapses rare into major for pricing/difficulty).
+  _isRareBlocked(items, character) {
+    if (!this.actor.system.loyaltyEnabled) return false;
+    if (!items.some(item => item.system.cost === "rare")) return false;
+    return this._getLoyaltyLevel(character) < 2;
+  }
+
+  // Which of this shop's 4 Loyalty Bar segments (level 1=Red..4=Green) the character currently
+  // occupies - level 1 (no benefit) for anyone without an owned character or while Loyalty is off.
+  _getLoyaltyLevel(character) {
+    if (!this.actor.system.loyaltyEnabled || !character?.isOwner) return 1;
+    const value = this.actor.getFlag("eclipsephase", "characterState")?.[character.id]?.loyalty?.value ?? 0;
+    return getLoyaltyLevel(this.actor, value);
   }
 
   async _onDropItem(event, item) {
@@ -465,6 +488,64 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return highest;
   }
 
+  /**
+   * Cash-in-Favor's final Rep-Test difficulty and how much Loyalty ease it used.
+   * Below Major, difficulty is the highest item's tier +1 step per additional item. Once that
+   * would exceed Major, items are priced by their own tier value (Minor=1/Moderate=2/Major=3)
+   * against a budget of Major(3) plus the available Loyalty ease. Ease used is capped at what
+   * the batch needed; excess is unused. Favor-Limit slot consumption stays tied to the
+   * unescalated _getRequiredFavorTier() result.
+   * @param {Item[]} items
+   * @param {number} level 1-4
+   * @returns {{tier: "trivial"|"minor"|"moderate"|"major", easeApplied: number}|null} null if the
+   *   batch is too large even at full Loyalty ease
+   */
+  _getFinalFavorTier(items, level) {
+    const majorIndex = FAVOR_DIFFICULTY_LADDER.length - 1;
+    const highestIndex = FAVOR_DIFFICULTY_LADDER.indexOf(this._getRequiredFavorTier(items));
+    const countBasedIndex = highestIndex + (items.length - 1);
+    const preEaseIndex = countBasedIndex <= majorIndex
+      ? countBasedIndex
+      : items.reduce((sum, item) => sum + FAVOR_DIFFICULTY_LADDER.indexOf(this._favorTierForItem(item)), 0);
+
+    const ease = level - 1;
+    const budget = majorIndex + ease;
+    if (preEaseIndex > budget) return null;
+
+    const finalIndex = Math.max(0, preEaseIndex - ease);
+    return { tier: FAVOR_DIFFICULTY_LADDER[finalIndex], easeApplied: preEaseIndex - finalIndex };
+  }
+
+  /**
+   * Buy-side discount options for the current level, one per level the character could redeem
+   * (level 1 has nothing to offer). Redeeming N levels grants the percentage configured for
+   * level (N+1) - e.g. redeeming 1 level from level 4 uses the level-2 discount value.
+   * @param {number} level 1-4
+   * @returns {Array<{levels: number, percent: number, label: string}>}
+   */
+  _getBuyDiscountOptions(level) {
+    const options = [];
+    for (let redeemLevels = 1; redeemLevels < level; redeemLevels++) {
+      const percent = this._getBuyDiscountPercent(redeemLevels);
+      options.push({
+        levels: redeemLevels,
+        percent,
+        label: game.i18n.format("ep2e.shop.dialog.loyaltyDiscount.option", { levels: redeemLevels, percent })
+      });
+    }
+    return options;
+  }
+
+  // The percentage for redeeming N levels of discount (N redeemed = the level-(N+1) discount
+  // value) - owner-configurable, defaults 10/20/30 for level 2/3/4.
+  _getBuyDiscountPercent(redeemLevels) {
+    if (!redeemLevels) return 0;
+    const defaults = { level2: 10, level3: 20, level4: 30 };
+    const config = this.actor.system.loyaltyBuyDiscount ?? {};
+    const key = `level${redeemLevels + 1}`;
+    return Number(config[key] ?? defaults[key]) || 0;
+  }
+
   // Global constant, shop-wide (all networks, no per-network entry needed), then per-network - each
   // stage falls back to the previous one. A stored 0 ("free") is a valid override and must NOT fall
   // back (nullish coalescing, not ||). Trivial is never overridden (RAW: always free).
@@ -543,8 +624,14 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     return parts.join(" | ");
   }
 
-  _getFlatBuyCostBreakdown(items) {
-    return this._formatRateBreakdown(network => this._getFlatBuyCost(items, network));
+  // Rounds a discounted cost down - a 10% discount on 15 Rep charges 13, not 14, so a rounding
+  // artifact never costs the player more than the configured percentage actually promises.
+  _applyDiscount(cost, discountPercent) {
+    return Math.max(0, Math.floor(cost * (1 - discountPercent / 100)));
+  }
+
+  _getFlatBuyCostBreakdown(items, discountPercent = 0) {
+    return this._formatRateBreakdown(network => this._applyDiscount(this._getFlatBuyCost(items, network), discountPercent));
   }
 
   _getSellBonusBreakdown() {
@@ -556,27 +643,59 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   // Styled like general-modifiers.html. Single network auto-selected; multiple require an explicit
-  // choice (see _syncNetworkSelectConfirm()).
-  _networkSelectMarkup(networks, headline, hint, hintValue) {
+  // choice (see _syncPurchaseDialogConfirm()). discountOptions (Buy only) adds a dropdown for
+  // redeeming Loyalty levels for a price discount. wareItems/bodyGroups (Ware with 2+ possible
+  // bodies) appends a body-choice row per item below the network section, in this same dialog.
+  _networkSelectMarkup(networks, headline, hint, hintValue, discountOptions, wareItems, bodyGroups) {
     const options = networks.map(o => `<option value="${o.network}">${o.label}</option>`).join("");
     const select = networks.length === 1
       ? `<select name="NetworkSelect">${options}</select>`
       : `<select name="NetworkSelect"><option value="" selected>${game.i18n.localize("ep2e.shop.dialog.selectNetwork.placeholder")}</option>${options}</select>`;
     const hintRow = hint
-      ? `<div class="form-group listBackgroundMain"><label class="resource-labelDialog">${hint}</label><input type="text" value="${hintValue}" disabled/></div>`
+      ? `<div class="form-group listBackgroundMain"><label class="resource-labelDialog">${hint}</label><input type="text" class="shop-hint-value" value="${hintValue}" disabled/></div>`
       : "";
-    return `<div class="contentBoxMargin">
+    const discountRow = discountOptions?.length
+      ? `<div class="form-group listBackgroundMain">
+          <label class="resource-labelDialog">${game.i18n.localize("ep2e.shop.dialog.loyaltyDiscount.label")}</label>
+          <select name="DiscountSelect">
+            <option value="0">${game.i18n.localize("ep2e.shop.dialog.loyaltyDiscount.none")}</option>
+            ${discountOptions.map(o => `<option value="${o.levels}">${o.label}</option>`).join("")}
+          </select>
+        </div>`
+      : "";
+    const networkSection = `<div class="contentBoxMargin">
       <div class="flexrow subheader"><h3 class="subheader dialog">${headline}</h3></div>
       ${hintRow}
       <div class="form-group listBackgroundMain shop-network-row">
         <label class="resource-labelDialog">${game.i18n.localize("ep2e.shop.dialog.selectNetwork.label")}</label>
         ${select}
       </div>
+      ${discountRow}
     </div>`;
+    const wareSection = wareItems?.length ? this._wareBindingMarkup(wareItems, bodyGroups) : "";
+    return networkSection + wareSection;
+  }
+
+  // Confirm stays disabled until every required field has a value: the network (always present),
+  // and every Ware body-select row appended by _networkSelectMarkup()'s wareItems, if any.
+  _syncPurchaseDialogConfirm(dialog) {
+    const networkSelect = dialog.element.querySelector('select[name="NetworkSelect"]');
+    const bodySelects = dialog.element.querySelectorAll('select[name^="BodySelect_"]');
+    const confirmBtn = dialog.element.querySelector('button[data-action="confirm"]');
+    if (!confirmBtn) return;
+    const sync = () => {
+      const networkOk = !networkSelect || !!networkSelect.value;
+      const bodiesOk = ![...bodySelects].some(s => !s.value);
+      confirmBtn.disabled = !networkOk || !bodiesOk;
+    };
+    networkSelect?.addEventListener("change", sync);
+    bodySelects.forEach(s => s.addEventListener("change", sync));
+    sync();
   }
 
   // Same pattern as selectBody() in general-sheet-functions.js: confirm stays disabled until a
-  // non-empty value is chosen.
+  // non-empty value is chosen. Used by _confirmSellDialog()'s own inline dialog, which never has
+  // Ware body rows to also account for - see _syncPurchaseDialogConfirm() for that combined case.
   _syncNetworkSelectConfirm(dialog) {
     const select = dialog.element.querySelector('select[name="NetworkSelect"]');
     const confirmBtn = dialog.element.querySelector('button[data-action="confirm"]');
@@ -586,36 +705,67 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     sync();
   }
 
+  // Buy only: live-recomputes the price hint as the Loyalty discount dropdown changes, instead of
+  // leaving it pinned to the pre-discount value chosen when the dialog first opened.
+  _syncDiscountHint(dialog, onDiscountChange) {
+    const select = dialog.element.querySelector('select[name="DiscountSelect"]');
+    const hintInput = dialog.element.querySelector(".shop-hint-value");
+    if (!select || !hintInput) return;
+    select.addEventListener("change", () => {
+      hintInput.value = onDiscountChange(Number(select.value) || 0);
+    });
+  }
+
   /**
    * Prompts for a Rep network via a DialogV2 select, styled like this system's standard roll
-   * dialogs. Confirm disabled until chosen.
-   * @param {{title: string, headline: string, hint?: string, hintValue?: string, networks: Array<{network: string, label: string}>, confirmLabel: string}} params
-   * @returns {Promise<string|null>} the chosen network, or null if cancelled
+   * dialogs. Confirm disabled until chosen. discountOptions (Buy only) adds a dropdown for
+   * redeeming a Loyalty discount; onDiscountChange recomputes the hint value live as it changes.
+   * wareItems/bodyGroups (Ware with 2+ possible bodies) folds a body-choice row per item into
+   * this same dialog, below the network section.
+   * @param {{title: string, headline: string, hint?: string, hintValue?: string, networks: Array<{network: string, label: string}>, confirmLabel: string, discountOptions?: Array<{levels: number, label: string}>, onDiscountChange?: (discountLevels: number) => string, wareItems?: Item[], bodyGroups?: Array<{label: string, options: Array<{id: string, name: string}>}>}} params
+   * @returns {Promise<{network: string|null, discountLevels: number, bindings: Record<string,string>}>}
    */
-  async _selectNetworkDialog({ title, headline, hint, hintValue, networks, confirmLabel }) {
-    const content = this._networkSelectMarkup(networks, headline, hint, hintValue);
+  async _selectNetworkDialog({ title, headline, hint, hintValue, networks, confirmLabel, discountOptions, onDiscountChange, wareItems, bodyGroups }) {
+    const content = this._networkSelectMarkup(networks, headline, hint, hintValue, discountOptions, wareItems, bodyGroups);
 
     const result = await foundry.applications.api.DialogV2.wait({
       window: { title },
       classes: ["ep2e-primary-right"],
       content,
       buttons: [
-        { action: "confirm", label: confirmLabel, default: true, callback: (event, button) => ({ selection: button.form.NetworkSelect.value }) },
+        {
+          action: "confirm",
+          label: confirmLabel,
+          default: true,
+          callback: (event, button) => ({
+            selection: button.form.NetworkSelect.value,
+            discount: discountOptions ? Number(button.form.DiscountSelect?.value) || 0 : 0,
+            bindings: wareItems?.length ? Object.fromEntries(wareItems.map(item => [item.id, button.form[`BodySelect_${item.id}`].value])) : {}
+          })
+        },
         { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => ({ cancelled: true }) }
       ],
-      position: { width: 276 },
+      position: { width: wareItems?.length ? 340 : 276 },
       modal: true,
       rejectClose: false,
-      render: (event, dialog) => this._syncNetworkSelectConfirm(dialog)
+      render: (event, dialog) => {
+        this._syncPurchaseDialogConfirm(dialog);
+        if (onDiscountChange) this._syncDiscountHint(dialog, onDiscountChange);
+      }
     });
     // A falsy callback return (e.g. bare null) breaks DialogV2 resolution on this Foundry version -
     // every button here must resolve truthy, same convention as selectBody()/showOptionsDialog().
-    if (!result || result.cancelled) return null;
-    return result.selection || null;
+    const cancelled = !result || result.cancelled;
+    return {
+      network: cancelled ? null : (result.selection || null),
+      discountLevels: cancelled ? 0 : (discountOptions ? result.discount : 0),
+      bindings: cancelled ? {} : (wareItems?.length ? result.bindings : {})
+    };
   }
 
-  // One row per Ware item, all sharing the same body options. Confirm disabled until every row
-  // has a non-placeholder value (see _syncWareBindingConfirm()).
+  // One row per Ware item, all sharing the same body options - appended into _networkSelectMarkup()
+  // when wareItems is passed, or usable standalone. Confirm-readiness for these rows is handled
+  // together with the network select by _syncPurchaseDialogConfirm().
   _wareBindingMarkup(items, bodyGroups) {
     const placeholder = game.i18n.localize("ep2e.dialog.selectBody.placeholder");
     const optgroups = bodyGroups.map(g =>
@@ -635,76 +785,36 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     </div>`;
   }
 
-  _syncWareBindingConfirm(dialog) {
-    const selects = dialog.element.querySelectorAll('select[name^="BodySelect_"]');
-    const confirmBtn = dialog.element.querySelector('button[data-action="confirm"]');
-    if (!selects.length || !confirmBtn) return;
-    const sync = () => { confirmBtn.disabled = [...selects].some(s => !s.value); };
-    selects.forEach(s => s.addEventListener("change", sync));
-    sync();
-  }
-
   /**
-   * One combined dialog with a body-select row per item, instead of one dialog per item.
-   * @param {Item[]} items
-   * @param {Array<{label: string, options: Array<{id: string, name: string}>}>} bodyGroups
-   * @returns {Promise<Record<string,string>|null>} itemId -> chosen body id, or null if cancelled
-   */
-  async _selectWareBindingsDialog(items, bodyGroups) {
-    const content = this._wareBindingMarkup(items, bodyGroups);
-    const result = await foundry.applications.api.DialogV2.wait({
-      window: { title: game.i18n.localize("ep2e.dialog.selectBody.header") },
-      classes: ["ep2e-primary-right"],
-      content,
-      buttons: [
-        {
-          action: "confirm",
-          label: game.i18n.localize("ep2e.actorSheet.button.select"),
-          default: true,
-          callback: (event, button) => ({ bindings: Object.fromEntries(items.map(item => [item.id, button.form[`BodySelect_${item.id}`].value])) })
-        },
-        { action: "cancel", label: game.i18n.localize("ep2e.roll.dialog.button.cancel"), callback: () => ({ cancelled: true }) }
-      ],
-      position: { width: 340 },
-      modal: true,
-      rejectClose: false,
-      render: (event, dialog) => this._syncWareBindingConfirm(dialog)
-    });
-    // A falsy callback return (e.g. bare null) breaks DialogV2 resolution on this Foundry version -
-    // every button here must resolve truthy, same convention as selectBody()/showOptionsDialog().
-    if (!result || result.cancelled) return null;
-    return result.bindings;
-  }
-
-  /**
-   * Pre-resolves Ware body bindings before any Rep is spent. Aborts the whole purchase (no Rep
-   * dialog, nothing spent) if body choice is cancelled or there's no body to bind to at all - Ware
-   * can't currently be bought unbound. One combined dialog for all Ware items, not one per item.
+   * Pre-checks Ware body bindings before any Rep is spent. Aborts the whole purchase (no dialog,
+   * nothing spent) if there's no body to bind to at all - Ware can't currently be bought unbound.
+   * Auto-binds directly if there's exactly one body (unambiguous, no dialog needed). With 2+
+   * bodies, the actual choice is deferred to the caller's own _selectNetworkDialog() call (via its
+   * wareItems/bodyGroups params) instead of a separate dialog shown first - this only returns what
+   * that combined dialog needs.
    * @param {Actor} character
    * @param {Item[]} items
-   * @returns {Promise<{cancelled: boolean, bindings: Record<string,string>}>}
+   * @returns {Promise<{cancelled: boolean, bindings: Record<string,string>, wareItems: Item[], bodyGroups: Array}>}
    */
   async _resolveWareBindings(character, items) {
     const wareItems = items.filter(i => i.type === "ware");
-    if (!wareItems.length) return { cancelled: false, bindings: {} };
+    if (!wareItems.length) return { cancelled: false, bindings: {}, wareItems: [], bodyGroups: [] };
 
     const { bodies, boundToFor, buildBodyGroups } = MORPHFUNCTION.getBodyBindingInfo(character);
 
     if (bodies.length === 0) {
       await MORPHFUNCTION.resolveBodyForItem(character, "ep2e.systemMessage.itemAttachment.noBodyWare");
-      return { cancelled: true, bindings: {} };
+      return { cancelled: true, bindings: {}, wareItems: [], bodyGroups: [] };
     }
 
     if (bodies.length === 1) {
       const boundTo = boundToFor(bodies[0]);
       const bindings = {};
       wareItems.forEach(item => bindings[item.id] = boundTo);
-      return { cancelled: false, bindings };
+      return { cancelled: false, bindings, wareItems: [], bodyGroups: [] };
     }
 
-    const result = await this._selectWareBindingsDialog(wareItems, buildBodyGroups());
-    if (!result) return { cancelled: true, bindings: {} };
-    return { cancelled: false, bindings: result };
+    return { cancelled: false, bindings: {}, wareItems, bodyGroups: buildBodyGroups() };
   }
 
   /**
@@ -729,19 +839,42 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.morphsBlocked"));
     }
 
-    const { cancelled, bindings } = await this._resolveWareBindings(character, items);
+    if (this._isRareBlocked(items, character)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.rareLoyaltyRequired"));
+    }
+
+    // Batch-difficulty escalation always applies, independent of loyaltyEnabled - each additional
+    // item bumps the roll one tier harder than the highest item alone needs, and Loyalty eases
+    // the result back down (see _getFinalFavorTier()). Loyalty level is forced to 1 (no ease)
+    // while this shop's Loyalty tracking is off, see _getLoyaltyLevel().
+    const level = this._getLoyaltyLevel(character);
+    const result = this._getFinalFavorTier(items, level);
+    if (!result) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.favorBatchTooLarge"));
+    }
+    const { tier: finalTier, easeApplied } = result;
+    const favorDifficultyModifier = FAVOR_DIFFICULTY_MODIFIER[finalTier];
+    // The favor-difficulty dropdown in the roll's options dialog is only LOCKED (forced,
+    // non-editable) while Loyalty is active - with it off, the computed value still pre-fills the
+    // dropdown, but the player is free to override it, same as before this feature existed.
+    const loyaltyActive = this.actor.system.loyaltyEnabled === true;
+
+    const { cancelled, bindings: autoBindings, wareItems: wareBindingItems, bodyGroups } = await this._resolveWareBindings(character, items);
     if (cancelled) return;
 
     const requiredTier = this._getRequiredFavorTier(items);
     const tierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier]);
 
-    const network = await this._selectNetworkDialog({
+    const { network, bindings: dialogBindings } = await this._selectNetworkDialog({
       title: game.i18n.localize("ep2e.shop.purchase.favorConfirm"),
       headline: `${game.i18n.localize("ep2e.shop.purchase.required")} ${tierLabel}`,
       networks: this._getPurchaseNetworkOptions(),
-      confirmLabel: game.i18n.localize("ep2e.shop.purchase.favorConfirm")
+      confirmLabel: game.i18n.localize("ep2e.shop.purchase.favorConfirm"),
+      wareItems: wareBindingItems,
+      bodyGroups
     });
     if (!network) return;
+    const bindings = wareBindingItems.length ? dialogBindings : autoBindings;
 
     if (!hasFreeFavorSlot(character, network, requiredTier)) {
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.favorLimitExhausted"));
@@ -769,7 +902,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       requiredTier,
       sellBonus,
       maxBurn: BONUS_CAP / 2,
-      bodyBindings: Object.entries(bindings).map(([id, boundTo]) => `${id}:${boundTo}`).join(",")
+      bodyBindings: Object.entries(bindings).map(([id, boundTo]) => `${id}:${boundTo}`).join(","),
+      favorDifficultyModifier,
+      ...(loyaltyActive ? { favorDifficultyLocked: true } : {})
     };
 
     const rollResult = await DICE.RollCheck(dataset, character.system, character, systemOptions, false, "shopPurchase");
@@ -794,13 +929,17 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     this.render();
 
     if (rollResult.resultClass !== "success") return;
+    // Loyalty ease used for this roll (see _getFinalFavorTier()) consumes that many levels
+    // instead of the normal purchase gain, never both (see applyLoyaltyTransaction()). No ease
+    // used (level 1, or Loyalty off) still grants the normal gain.
     await completeShopPurchase({
       shopUuid: dataset.shopUuid,
       buyerActorId: dataset.buyerActorId,
       itemIds: dataset.itemIds,
       network: dataset.name,
       favorTier: dataset.requiredTier,
-      bodyBindings: bindings
+      bodyBindings: bindings,
+      redeemLevels: easeApplied
     });
   }
 
@@ -820,20 +959,35 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const items = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
     if (!items.length) return;
 
-    const { cancelled, bindings } = await this._resolveWareBindings(character, items);
+    if (this._isRareBlocked(items, character)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.rareLoyaltyRequired"));
+    }
+
+    const { cancelled, bindings: autoBindings, wareItems: wareBindingItems, bodyGroups } = await this._resolveWareBindings(character, items);
     if (cancelled) return;
 
-    const network = await this._selectNetworkDialog({
+    // Unlike Cash-in-Favor's automatic, passive Loyalty benefit, Buy's discount is a
+    // player-chosen, consumable resource - offered only if there's a level above 1 to redeem from.
+    const level = this._getLoyaltyLevel(character);
+    const discountOptions = this._getBuyDiscountOptions(level);
+
+    const { network, discountLevels, bindings: dialogBindings } = await this._selectNetworkDialog({
       title: game.i18n.localize("ep2e.shop.purchase.confirm"),
       headline: game.i18n.localize("ep2e.shop.dialog.selectNetwork.headline"),
       hint: game.i18n.localize("ep2e.shop.purchase.flatBuyCost"),
       hintValue: this._getFlatBuyCostBreakdown(items),
       networks: this._getPurchaseNetworkOptions(),
-      confirmLabel: game.i18n.localize("ep2e.shop.purchase.confirm")
+      confirmLabel: game.i18n.localize("ep2e.shop.purchase.confirm"),
+      discountOptions,
+      onDiscountChange: discountLevels => this._getFlatBuyCostBreakdown(items, this._getBuyDiscountPercent(discountLevels)),
+      wareItems: wareBindingItems,
+      bodyGroups
     });
     if (!network) return;
+    const bindings = wareBindingItems.length ? dialogBindings : autoBindings;
 
-    const cost = this._getFlatBuyCost(items, network);
+    const discountPercent = this._getBuyDiscountPercent(discountLevels);
+    const cost = this._applyDiscount(this._getFlatBuyCost(items, network), discountPercent);
     const idItem = character.items.get(character.system.activeID);
     const available = Number(idItem?.system?.rep?.[network]?.value ?? 0);
 
@@ -848,15 +1002,21 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       shopUuid: this.actor.uuid,
       buyerActorId: character.id,
       itemIds: items.map(item => item.id).join(","),
-      bodyBindings: bindings
+      bodyBindings: bindings,
+      redeemLevels: discountLevels
     });
 
     // Charge only for what actually transferred - unlike Cash-in-Favor's Rep burn (a cost of
     // attempting the roll regardless of outcome), a flat Buy has no roll to justify spending Rep
     // on items that turned out to be gone.
     if (boughtItems.length) {
-      const spent = this._getFlatBuyCost(boughtItems, network);
+      const spent = this._applyDiscount(this._getFlatBuyCost(boughtItems, network), discountPercent);
       await idItem.update({ [`system.rep.${network}.value`]: available - spent });
+      // The earlier render() (right after clearing the selection, above) fires before this Rep
+      // deduction lands - the shop's "accepted Rep" display (read off the BUYER's item, not this
+      // shop's own document, so no automatic re-render hook covers it) would otherwise keep
+      // showing the pre-purchase value until some unrelated re-render happened to catch it up.
+      this.render();
     }
   }
 

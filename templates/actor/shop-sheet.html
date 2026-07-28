@@ -106,6 +106,25 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyBuyDiscountHeadline"}}</p>
+                    <p class="notes">{{localize "ep2e.shop.settings.loyaltyBuyDiscountDescription"}}</p>
+                    <table class="shop-rate-override-table">
+                        <thead>
+                            <tr>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBuyDiscountLevel2"}}</th>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBuyDiscountLevel3"}}</th>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBuyDiscountLevel4"}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBuyDiscount.level2" value="{{actor.system.loyaltyBuyDiscount.level2}}" placeholder="10"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBuyDiscount.level3" value="{{actor.system.loyaltyBuyDiscount.level3}}" placeholder="20"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBuyDiscount.level4" value="{{actor.system.loyaltyBuyDiscount.level4}}" placeholder="30"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     </div>
 
                     <div class="shop-cost-overrides-column" style="flex: 1;">
@@ -161,11 +180,10 @@
                 </div>
                 </div>
 
-                {{!-- Cost Overrides - context.generalOverrideGrid/rateOverrideGrid are fully pre-resolved
-                     in EPshopSheet.js, no lookups needed here. Blank = no override, falls back to the
-                     placeholder shown (General Override if set, else the system default). flatBuyCost/
-                     sellRepGain columns only exist while superBrew is on (matches "Buy"'s own gating);
-                     sellBonus is never gated. --}}
+                {{!-- Cost Overrides - context.generalOverrideGrid/rateOverrideGrid are pre-resolved in
+                     EPshopSheet.js. Blank = no override, falls back to the shown placeholder.
+                     flatBuyCost/sellRepGain columns only exist while superBrew is on; sellBonus is
+                     never gated. --}}
                 <p class="headline5">{{localize "ep2e.shop.settings.rateOverridesHeadline"}}</p>
 
                 <div class="shop-cost-overrides-row">

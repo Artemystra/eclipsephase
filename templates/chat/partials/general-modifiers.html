@@ -99,14 +99,21 @@
     <div class="flexrow subheader">
         <h3 class="subheader dialog">{{localize "ep2e.roll.dialog.reputationMode.headline"}}</h3>
     </div>
+    {{!-- Shop purchases with Loyalty active replace the manual choice with an auto-calculated
+         value (escalated batch difficulty, eased by Loyalty level). The disabled select still
+         reports its value via dice.js's extractFormValues(), which reads .value directly off
+         elements rather than native form submission (which would drop a disabled field). --}}
     <div class="form-group listBackgroundMain">
-        <select name="favorMod">
-            <option value="+30">{{localize "ep2e.roll.dialog.reputationMode.trivial"}}</option>
-            <option value="+10">{{localize "ep2e.roll.dialog.reputationMode.minor"}}</option>
-            <option value="0">{{localize "ep2e.roll.dialog.reputationMode.moderate"}}</option>
-            <option value="-30">{{localize "ep2e.roll.dialog.reputationMode.major"}}</option>
+        <select name="favorMod" {{#if dataset.favorDifficultyLocked}}disabled{{/if}}>
+            <option value="+30" {{#if (eq dataset.favorDifficultyModifier 30)}}selected{{/if}}>{{localize "ep2e.roll.dialog.reputationMode.trivial"}}</option>
+            <option value="+10" {{#if (eq dataset.favorDifficultyModifier 10)}}selected{{/if}}>{{localize "ep2e.roll.dialog.reputationMode.minor"}}</option>
+            <option value="0" {{#if (eq dataset.favorDifficultyModifier 0)}}selected{{/if}}>{{localize "ep2e.roll.dialog.reputationMode.moderate"}}</option>
+            <option value="-30" {{#if (eq dataset.favorDifficultyModifier -30)}}selected{{/if}}>{{localize "ep2e.roll.dialog.reputationMode.major"}}</option>
         </select>
     </div>
+    {{#if dataset.favorDifficultyLocked}}
+        <p class="notes">{{localize "ep2e.shop.purchase.favorDifficultyLockedHint"}}</p>
+    {{/if}}
 </div>
 {{#if (eq rolledFrom "shopPurchase")}}
 <div class="contentBoxMargin">

@@ -584,6 +584,11 @@
         "yellow": 25,
         "green": 25
       },
+      "loyaltyBuyDiscount": {
+        "level2": 10,
+        "level3": 20,
+        "level4": 30
+      },
       "generalRateOverrides": {
         "minor": {
           "flatBuyCost": null,

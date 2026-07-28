@@ -1693,6 +1693,11 @@
           "label": "信誉网络",
           "placeholder": "- 选择网络 -",
           "headline": "选择网络"
+        },
+        "loyaltyDiscount": {
+          "label": "忠诚度折扣",
+          "none": "不使用折扣",
+          "option": "{levels} 级 ({percent}%)"
         }
       },
       "placeholders": {
@@ -1726,7 +1731,12 @@
         "sellLimitMaxRep": "最大信誉值",
         "sellLockoutsHeadline": "被禁止出售的角色",
         "sellLockoutClear": "解除该角色的禁售状态",
-        "rateOverridesHeadline": "费用覆盖",
+                "loyaltyBuyDiscountHeadline": "购买折扣",
+        "loyaltyBuyDiscountDescription": "购买时可用的百分比折扣，按忠诚度等级兑现——兑现后忠诚度会相应下降相同的等级数。",
+        "loyaltyBuyDiscountLevel2": "2级 (%)",
+        "loyaltyBuyDiscountLevel3": "3级 (%)",
+        "loyaltyBuyDiscountLevel4": "4级 (%)",
+"rateOverridesHeadline": "费用覆盖",
         "generalOverridesHeadline": "通用覆盖",
         "generalOverridesDescription": "设定该商店的基础价格。可快速让该商店整体变得更贵或更便宜。",
         "morphPointOverridesHeadline": "义体点数覆盖",
@@ -1755,7 +1765,8 @@
         "burnRepHint": "加成：燃烧信誉 x 2<br>（最多 15 点信誉）",
         "sellBonusModifier": "出售加成",
         "burnBonusModifier": "燃烧的信誉",
-        "successMessage": "{character} 从 {shop} 购买了 {items}。"
+                "favorDifficultyLockedHint": "根据你在本商店的忠诚度以及一次请求的物品数量自动确定。",
+"successMessage": "{character} 从 {shop} 购买了 {items}。"
       },
       "toSell": {
         "headline": "待售",
@@ -1780,6 +1791,8 @@
         "noEligibleCharacters": "没有可添加的角色了——每个与玩家关联的角色都已在此拥有忠诚度记录。",
                 "sellLockedOut": "你最近卖给这家商店的东西太多了。休息一下以重新获得欢迎，或者请店主解除此限制。",
         "sellLimitExceeded": "这里单次交易的量太多了。请减少你的选择后重试。",
+        "rareLoyaltyRequired": "该物品为稀有——你需要在本商店至少达到橙色忠诚度才能获得它。",
+        "favorBatchTooLarge": "这里一次人情请求所涉及的物品太多了——请减少你的选择。",
 "morphsBlocked": "无法用信誉购买义体。义体改为通过任务的义体点数获得。"
       }
     }

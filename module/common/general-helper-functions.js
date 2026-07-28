@@ -213,16 +213,16 @@ export function registerItemTransferSocket() {
     if (!game.user.isGM) return;
     if (!payload) return;
 
-    // Shop actors are usually GM-owned - a buying player can't write the loyalty flag directly
-    // (see completeShopPurchase()'s isOwner branch below), so route it through the primary GM here.
-    // The amount is recomputed from the GM's own live shop reference rather than trusting a
-    // client-sent number, so a stale loyaltyPerTier override on the buyer's side can't apply.
+    // Shop actors are usually GM-owned - a buying player can't write the loyalty flag directly,
+    // so route it through the primary GM here. Grant/redemption are recomputed from the GM's own
+    // live shop reference rather than trusting client-sent numbers, so a stale override on the
+    // buyer's side can't apply.
     if (payload.action === "grantLoyalty") {
       const primaryGM = game.users.activeGM;
       if (primaryGM && primaryGM.id !== game.user.id) return;
       const shop = await fromUuid(payload.shopUuid);
       if (!shop) return;
-      await addLoyalty(shop, payload.characterId, getLoyaltyGain(shop, payload.costTiers ?? []));
+      await applyLoyaltyTransaction(shop, payload.characterId, payload.costTiers ?? [], payload.redeemLevels ?? 0);
       return;
     }
 
@@ -421,12 +421,61 @@ function getLoyaltyGain(shop, costTiers) {
   }, 0);
 }
 
-// No-op while the shop's master loyaltyEnabled toggle is off - that same toggle also gates the
-// settings UI and (later) the footer/discount that read this value.
-async function addLoyalty(shop, characterId, amount) {
-  if (!shop.system.loyaltyEnabled || amount <= 0) return;
+// Loyalty Bar segment boundaries as raw point values, not percentages - segments are flex-grow
+// weights and aren't required to sum to 100, so boundaries are normalized against their own total
+// rather than assumed to divide loyaltyBarMax evenly.
+function getLoyaltyLevelBoundaries(shop) {
+  const max = Number(shop.system.loyaltyBarMax) || 100;
+  const segments = shop.system.loyaltyBarSegments ?? {};
+  const order = ["red", "orange", "yellow", "green"];
+  const weights = order.map(color => Number(segments[color]) || 0);
+  const totalWeight = weights.reduce((sum, w) => sum + w, 0) || 1;
+  const boundaries = [0];
+  let cumulative = 0;
+  for (let i = 0; i < order.length - 1; i++) {
+    cumulative += weights[i];
+    boundaries.push((cumulative / totalWeight) * max);
+  }
+  return boundaries;
+}
+
+/**
+ * Which of the shop's 4 Loyalty Bar segments (level 1=Red..4=Green) a raw loyalty point value
+ * currently falls into.
+ * @param {Actor} shop
+ * @param {number} value
+ * @returns {1|2|3|4}
+ */
+export function getLoyaltyLevel(shop, value) {
+  const boundaries = getLoyaltyLevelBoundaries(shop);
+  let level = 1;
+  for (let i = 1; i < boundaries.length; i++) {
+    if (value >= boundaries[i]) level = i + 1;
+  }
+  return level;
+}
+
+// Drops a loyalty value down by exactly N levels from whichever level it currently occupies,
+// landing at that lower level's own starting boundary - never below level 1 (value 0).
+function redeemLoyaltyLevels(shop, currentValue, levelsToRedeem) {
+  if (levelsToRedeem <= 0) return currentValue;
+  const boundaries = getLoyaltyLevelBoundaries(shop);
+  const currentLevel = getLoyaltyLevel(shop, currentValue);
+  const targetLevel = Math.max(1, currentLevel - levelsToRedeem);
+  return boundaries[targetLevel - 1];
+}
+
+// Applies EITHER a Loyalty grant (redeemLevels 0) OR a level redemption (Buy's discount, or
+// Cash-in-Favor's ease used at roll time - see completeShopPurchase()), never both - spending
+// Loyalty always lands exactly on the target level's floor, no gain added in the same
+// transaction. Resolved as ONE read-modify-write so a GM-relayed client can't race itself.
+// Redemption is resolved against the pre-transaction value.
+async function applyLoyaltyTransaction(shop, characterId, costTiers, redeemLevels = 0) {
+  if (!shop.system.loyaltyEnabled) return;
   const current = shop.getFlag("eclipsephase", "characterState")?.[characterId]?.loyalty?.value ?? 0;
-  await shop.setFlag("eclipsephase", `characterState.${characterId}.loyalty`, { value: current + amount, updated: Date.now() });
+  const value = redeemLevels > 0 ? redeemLoyaltyLevels(shop, current, redeemLevels) : current + getLoyaltyGain(shop, costTiers);
+  if (value === current) return;
+  await shop.setFlag("eclipsephase", `characterState.${characterId}.loyalty`, { value, updated: Date.now() });
 }
 
 /**
@@ -468,16 +517,20 @@ export async function consumeFavorSlot(character, network, tier) {
  * Transfers shop items to a buyer's character (direct if both owned, else GM-relay), applying
  * morph Enhancements/Frame and binding Ware to a body as needed. Called right after a successful
  * purchase roll, and again later if a Pool swap/upgrade turns a failed roll into one.
- * @param {{shopUuid: string, buyerActorId: string, itemIds: string|string[], network?: string, favorTier?: string, bodyBindings?: Record<string,string>}} params
+ * @param {{shopUuid: string, buyerActorId: string, itemIds: string|string[], network?: string, favorTier?: string, bodyBindings?: Record<string,string>, redeemLevels?: number}} params
  *   shopUuid (not a bare id) so a shop placed as an (unlinked) scene token resolves to the exact
  *   same instance/item-collection the buyer's sheet was showing.
  *   network/favorTier are only passed for the "Cash in Favor" roll flow, to consume a Favor-Limit
  *   slot on completion - the flat "Buy" house rule never passes them, so never touches the limit.
  *   bodyBindings (shop item id -> boundTo) is pre-resolved before the purchase was paid for; falls
  *   back to prompting here if a Ware item has no entry (e.g. the Pool-rescue path).
+ *   redeemLevels - how many Loyalty levels this purchase spends: for Buy, the player-chosen
+ *   discount redemption; for Cash-in-Favor, the ease actually used to roll at this difficulty
+ *   (see _getFinalFavorTier()) - both land on the target level's floor and skip the normal
+ *   purchase gain. 0 means no ease/redemption was used, so the normal gain applies.
  * @returns {Promise<Item[]>} the items actually transferred (empty if none were)
  */
-export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, network, favorTier, bodyBindings = {} } = {}) {
+export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, network, favorTier, bodyBindings = {}, redeemLevels = 0 } = {}) {
   const shop = await fromUuid(shopUuid);
   const character = game.actors.get(buyerActorId);
   if (!shop || !character) return [];
@@ -533,19 +586,20 @@ export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, ne
   }
 
   if (boughtItems.length) {
+    const costTiers = boughtItems.map(item => item.system.cost);
     if (shop.isOwner) {
-      await addLoyalty(shop, character.id, getLoyaltyGain(shop, boughtItems.map(item => item.system.cost)));
+      await applyLoyaltyTransaction(shop, character.id, costTiers, redeemLevels);
     } else {
-      // Shop actors are usually GM-owned - the buyer can't setFlag() on it directly, so ask a GM
-      // to apply it instead (see the "grantLoyalty" branch in registerItemTransferSocket()). The
-      // GM recomputes the amount itself from its own live shop reference rather than trusting a
-      // client-computed number, so a stale/desynced loyaltyPerTier override on the buyer's side
-      // can't under- or over-grant loyalty.
+      // Shop actors are usually GM-owned - ask a GM to apply this instead (see the "grantLoyalty"
+      // branch in registerItemTransferSocket()). The GM recomputes the grant/redemption from its
+      // own live shop reference so a stale client-side setting can't under- or over-grant loyalty.
+      // Sent as ONE message, applied as one atomic read-modify-write, so it can't race itself.
       game.socket.emit(SOCKET_NAME, {
         action: "grantLoyalty",
         shopUuid: shop.uuid,
         characterId: character.id,
-        costTiers: boughtItems.map(item => item.system.cost)
+        costTiers,
+        redeemLevels
       });
     }
   }

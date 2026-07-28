@@ -1724,6 +1724,11 @@
           "label": "Rep-Netzwerk",
           "placeholder": "- Netzwerk wählen -",
           "headline": "Netzwerk wählen"
+        },
+        "loyaltyDiscount": {
+          "label": "Loyalitäts-Rabatt",
+          "none": "Kein Rabatt",
+          "option": "{levels} Stufe(n) ({percent}%)"
         }
       },
       "placeholders": {
@@ -1757,7 +1762,12 @@
         "sellLimitMaxRep": "Max. Rep",
         "sellLockoutsHeadline": "Gesperrte Charaktere",
         "sellLockoutClear": "Sperre dieses Charakters aufheben",
-        "rateOverridesHeadline": "Preis-Overrides",
+                "loyaltyBuyDiscountHeadline": "Kauf-Rabatt",
+        "loyaltyBuyDiscountDescription": "Prozentualer Rabatt beim Kaufen, einlösbar pro Loyalitäts-Stufe - das Einlösen senkt die Loyalität um genau so viele Stufen wieder ab.",
+        "loyaltyBuyDiscountLevel2": "Stufe 2 (%)",
+        "loyaltyBuyDiscountLevel3": "Stufe 3 (%)",
+        "loyaltyBuyDiscountLevel4": "Stufe 4 (%)",
+"rateOverridesHeadline": "Preis-Overrides",
         "generalOverridesHeadline": "Allgemeine Overrides",
         "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
         "morphPointOverridesHeadline": "Morph-Point-Overrides",
@@ -1786,7 +1796,8 @@
         "burnRepHint": "Bonus: Verbrannter Rep x 2<br>(Max. 15 Rep)",
         "sellBonusModifier": "Verkaufs-Bonus",
         "burnBonusModifier": "Verbrannter Rep",
-        "successMessage": "{character} hat {items} von {shop} gekauft."
+                "favorDifficultyLockedHint": "Wird automatisch anhand der Loyalität bei diesem Shop und der Anzahl gleichzeitig erbetener Items bestimmt.",
+"successMessage": "{character} hat {items} von {shop} gekauft."
       },
       "toSell": {
         "headline": "To Sell",
@@ -1811,6 +1822,8 @@
         "noEligibleCharacters": "Keine passenden Charaktere mehr übrig - jeder mit einem Spieler verbundene Charakter hat hier bereits einen Loyalitäts-Eintrag.",
                 "sellLockedOut": "Du hast diesem Shop zuletzt zu viel verkauft. Ruhe dich aus, um wieder willkommen zu sein, oder bitte den Owner, die Sperre aufzuheben.",
         "sellLimitExceeded": "Das ist zu viel für eine einzelne Transaktion hier. Verkleinere deine Auswahl und versuch es erneut.",
+        "rareLoyaltyRequired": "Dieses Item ist Rare - du brauchst mindestens Orange-Loyalität bei diesem Shop, um es zu erwerben.",
+        "favorBatchTooLarge": "Das sind zu viele Items für einen einzigen Gefallen hier - verkleinere deine Auswahl.",
 "morphsBlocked": "Morphs können nicht mit Rep erstanden werden. Sie werden stattdessen über die Morph-Points der Mission erworben."
       }
     }
