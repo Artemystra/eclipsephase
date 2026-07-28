@@ -23,7 +23,10 @@ function hasAnyMovement(bodyItem) {
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   
   //Fallback config for sheets in general
-  static DEFAULT_OPTIONS = foundry.utils.mergeObject(super.DEFAULT_OPTIONS, {
+  // Foundry's own ApplicationV2 already walks the class chain and merges each level's DEFAULT_OPTIONS
+  // (concatenating arrays like window.controls) - do not pre-merge super.DEFAULT_OPTIONS here, that
+  // double-counts array entries (e.g. duplicate header-control buttons).
+  static DEFAULT_OPTIONS = {
     classes: ["eclipsephase", "sheet", "actor"],
     tag: "form",
     form: {
@@ -46,7 +49,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         dropSelector: ".window-content"
       }
     ]
-  });
+  };
 
   //Fallback template for sheets in general
   // scrollable: lets ApplicationV2 auto-preserve scroll position across re-renders

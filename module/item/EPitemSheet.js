@@ -4,7 +4,9 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
-  static DEFAULT_OPTIONS = foundry.utils.mergeObject(super.DEFAULT_OPTIONS, {
+  // See EPactorSheet.js - do not pre-merge super.DEFAULT_OPTIONS, Foundry's own class-chain walk
+  // already does this and double-counts array entries otherwise.
+  static DEFAULT_OPTIONS = {
     classes: ["eclipsephase", "sheet", "item"],
     tag: "form",
     form: {
@@ -21,7 +23,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     actions: {
       editImage: this._onEditImage
     }
-  });
+  };
 
   static PARTS = {
     body: {
