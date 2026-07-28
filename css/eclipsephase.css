@@ -2017,6 +2017,14 @@ optgroup .Default .Roll .Mode,
   background-color: var(--pitchBorder);
 }
 
+/* Foundry v13's native header-controls dropdown (<menu class="controls-dropdown">) - this class
+   name is specific to that version's markup, so the rule has no effect wherever Foundry renders
+   the same menu differently. Needs its own z-index above in-sheet content like the Rez overlay
+   (100) - raising an ancestor's z-index alone does not lift it. */
+.controls-dropdown {
+  z-index: 200;
+}
+
 .ep-sheet-titlebar input {
   cursor: auto;
 }
