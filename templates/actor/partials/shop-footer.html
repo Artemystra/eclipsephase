@@ -3,10 +3,40 @@
   _getAcceptedRepDisplay()/_getActingCharacter(). --}}
 {{#if acceptedRep}}
 <footer class="shop-footer">
+    {{#if cartState.visible}}
+        <div class="shop-cart-bar">
+            <div class="shop-cart-column">
+                {{#if cartState.showAction}}
+                    {{#if hasFlatBuyCost}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.flatBuyCost"}} {{flatBuyCost}}</p>{{/if}}
+                    {{#if hasSellForRep}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellForRep"}} +{{sellForRep}}</p>{{/if}}
+                    <a class="shop-cart-action {{#if cartState.actionDisabled}}disabled{{/if}}">
+                        {{#if (eq cartState.action "trade")}}
+                            <i class="fas fa-exchange-alt awesomeIcon shop-cart-icon"></i>{{localize "ep2e.shop.purchase.trade"}}
+                        {{else if (eq cartState.action "buy")}}
+                            <i class="far fa-money-bill awesomeIcon shop-cart-icon"></i>{{localize "ep2e.shop.purchase.confirm"}}
+                        {{else}}
+                            <i class="far fa-money-bill awesomeIcon shop-cart-icon"></i>{{localize "ep2e.shop.toSell.confirm"}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </div>
+            <div class="shop-cart-column">
+                {{#if cartState.showFavor}}
+                    {{#if requiredFavorTierLabel}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.required"}} {{requiredFavorTierLabel}}</p>{{/if}}
+                    {{#if hasSellBonus}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} +{{sellBonus}}</p>{{/if}}
+                    {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out.
+                         Rep network (and, for Cash in Favor, the Rep-Burn amount) is chosen inside the
+                         confirm dialog, not here. --}}
+                    <a class="shop-purchase-favor {{#if cartState.favorDisabled}}disabled{{/if}}"><img src="systems/eclipsephase/resources/icons/d100.svg" class="shop-cart-icon"/>{{localize "ep2e.shop.purchase.favorConfirm"}}</a>
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+
     {{#if (eq acceptedRep.mode "closed")}}
-        {{localize "ep2e.shop.warnings.shopClosed"}}
+        <p class="shop-footer-notice">{{localize "ep2e.shop.warnings.shopClosed"}}</p>
     {{else if (eq acceptedRep.mode "noCharacter")}}
-        {{localize "ep2e.shop.acceptedRep.noCharacter"}}
+        <p class="shop-footer-notice">{{localize "ep2e.shop.acceptedRep.noCharacter"}}</p>
     {{else}}
         <div class="shop-footer-row">
             {{#if acceptedRep.character}}<span class="shop-acting-character">{{acceptedRep.character}}</span>{{/if}}

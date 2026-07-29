@@ -430,6 +430,44 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     };
   }
 
+  /**
+   * Which state the merged Buy/Trade/Sell footer button is in, and whether it and Cash-in-Favor
+   * should show at all. Owner never has a purchase selection (Buying is Observer-only), so only
+   * ever resolves to "sell". Mirrors the same gates each action already checks on its own
+   * (accepted purchase networks, superBrew, acceptsSales) - affordability/closed-shop specifics
+   * still get their own warnings at click time in _useTrade()/_useFlatBuy()/_confirmSellDialog().
+   * @param {boolean} isOwnerView
+   * @returns {{visible: boolean, showFavor: boolean, favorDisabled: boolean, showAction: boolean, action: "buy"|"trade"|"sell", actionDisabled: boolean}}
+   */
+  _getCartState(isOwnerView) {
+    const purchaseNetworks = isOwnerView ? [] : this._getPurchaseNetworkOptions();
+    const buyAvailable = !isOwnerView && purchaseNetworks.length > 0 && game.settings.get("eclipsephase", "superBrew");
+    const hasSelection = !isOwnerView && this._selectedForPurchase.size > 0;
+    const hasStaged = this._toSell.size > 0;
+    // Same "closed" definition as the footer's own accepted-rep display (0 networks or
+    // acceptsSales off) - keeps this from showing a Sell state that would immediately warn at
+    // click time.
+    const salesOpen = !this._isClosedForSelling();
+
+    const wantsBuy = buyAvailable && hasSelection;
+    const wantsSell = hasStaged && salesOpen;
+
+    let action = "sell";
+    if (wantsBuy && wantsSell) action = "trade";
+    else if (wantsBuy || buyAvailable) action = "buy";
+
+    const showFavor = !isOwnerView && purchaseNetworks.length > 0;
+    const showAction = buyAvailable || salesOpen;
+    return {
+      visible: showFavor || showAction,
+      showFavor,
+      favorDisabled: !hasSelection,
+      showAction,
+      action,
+      actionDisabled: action === "trade" ? !(wantsBuy && wantsSell) : action === "buy" ? !wantsBuy : !wantsSell
+    };
+  }
+
   // Checked item ids, client-side only.
   _selectedForPurchase = new Set();
 
@@ -640,6 +678,12 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
   _getSellRepGainBreakdown() {
     return this._formatRateBreakdown(network => this._getSellRepGain(network));
+  }
+
+  // Trade's net Rep cost per network: flat Buy cost minus the plain Sell value of currently
+  // staged items - negative means the player would be credited instead of charged.
+  _getTradeNetBreakdown(items, discountPercent = 0) {
+    return this._formatRateBreakdown(network => this._applyDiscount(this._getFlatBuyCost(items, network), discountPercent) - this._getSellRepGain(network));
   }
 
   // Styled like general-modifiers.html. Single network auto-selected; multiple require an explicit
@@ -1020,6 +1064,127 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     }
   }
 
+  /**
+   * "Trade": Buy's flat Rep cost, netted in one transaction against the plain Sell value of the
+   * currently staged "To Sell" items - a single network pays for both sides. A negative net
+   * credits the player instead of charging them. Distinct from Cash-in-Favor's Sell Bonus (see
+   * _useGefallen()), which consumes staged items as a roll modifier instead, never for Rep.
+   * @returns {Promise<void>}
+   */
+  async _useTrade() {
+    if (!game.settings.get("eclipsephase", "superBrew")) return;
+
+    const character = game.user.character;
+    if (!character?.isOwner) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.acceptedRep.noCharacter"));
+    }
+
+    if (this._isClosedForSelling()) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.shopClosed"));
+    }
+    if (this._isSellLockedOut(character)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.sellLockedOut"));
+    }
+
+    // Same per-transaction caps as the plain Sell dialog - Trade's sell side is otherwise
+    // identical to _confirmSellDialog()'s, just netted against a purchase instead of granting
+    // Rep on its own.
+    const maxItems = Number(this.actor.system.sellLimitMaxItems) || 0;
+    const maxRep = Number(this.actor.system.sellLimitMaxRep) || 0;
+    const itemCount = this._toSell.size;
+    const estimatedRepGain = this._getSellRepGain();
+    if ((maxItems > 0 && itemCount > maxItems) || (maxRep > 0 && estimatedRepGain > maxRep)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.sellLimitExceeded"));
+    }
+    const reachesSellLimit = (maxItems > 0 && itemCount === maxItems) || (maxRep > 0 && estimatedRepGain === maxRep);
+
+    const items = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
+    if (!items.length) return;
+
+    if (this._isRareBlocked(items, character)) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.rareLoyaltyRequired"));
+    }
+
+    const { cancelled, bindings: autoBindings, wareItems: wareBindingItems, bodyGroups } = await this._resolveWareBindings(character, items);
+    if (cancelled) return;
+
+    const level = this._getLoyaltyLevel(character);
+    const discountOptions = this._getBuyDiscountOptions(level);
+
+    const { network, discountLevels, bindings: dialogBindings } = await this._selectNetworkDialog({
+      title: game.i18n.localize("ep2e.shop.purchase.trade"),
+      headline: game.i18n.localize("ep2e.shop.dialog.selectNetwork.headline"),
+      hint: game.i18n.localize("ep2e.shop.purchase.netCost"),
+      hintValue: this._getTradeNetBreakdown(items),
+      networks: this._getPurchaseNetworkOptions(),
+      confirmLabel: game.i18n.localize("ep2e.shop.purchase.trade"),
+      discountOptions,
+      onDiscountChange: discountLevels => this._getTradeNetBreakdown(items, this._getBuyDiscountPercent(discountLevels)),
+      wareItems: wareBindingItems,
+      bodyGroups
+    });
+    if (!network) return;
+    const bindings = wareBindingItems.length ? dialogBindings : autoBindings;
+
+    const discountPercent = this._getBuyDiscountPercent(discountLevels);
+    const buyCost = this._applyDiscount(this._getFlatBuyCost(items, network), discountPercent);
+    const sellGain = this._getSellRepGain(network);
+    const net = buyCost - sellGain;
+
+    const idItem = character.items.get(character.system.activeID);
+    const available = Number(idItem?.system?.rep?.[network]?.value ?? 0);
+    if (net > 0 && net > available) {
+      return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.notEnoughRepToBuy"));
+    }
+
+    if (reachesSellLimit) {
+      await character.setFlag("eclipsephase", `shopLockouts.${this.actor.id}`, true);
+    }
+
+    // Sell side first (item transfer only, no Rep of its own - see _confirmSell()), then the buy side.
+    await this._confirmSell();
+
+    this._selectedForPurchase.clear();
+    this.render();
+
+    const boughtItems = await completeShopPurchase({
+      shopUuid: this.actor.uuid,
+      buyerActorId: character.id,
+      itemIds: items.map(item => item.id).join(","),
+      bodyBindings: bindings,
+      redeemLevels: discountLevels
+    });
+
+    // Charge only for what actually transferred on the buy side (same reasoning as
+    // _useFlatBuy()) - sellGain already reflects exactly what _confirmSell() just moved.
+    const actualBuyCost = boughtItems.length ? this._applyDiscount(this._getFlatBuyCost(boughtItems, network), discountPercent) : 0;
+    const actualNet = actualBuyCost - sellGain;
+    if (actualNet !== 0) {
+      await idItem.update({ [`system.rep.${network}.value`]: available - actualNet });
+    }
+    if (sellGain > 0) {
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: character }),
+        content: `<p>${game.i18n.format("ep2e.shop.purchase.tradeInMessage", { character: character.name, amount: sellGain, network: network.replace("-rep", "") })}</p>`
+      });
+    }
+    // completeShopPurchase() already re-renders via the earlier this.render() above only covering
+    // the cleared selection - the Rep change above happens after that, same staleness reasoning
+    // as _useFlatBuy()'s own trailing render().
+    if (actualNet !== 0 || sellGain > 0) this.render();
+  }
+
+  // Dispatches the merged footer button to whichever of Buy/Trade/Sell currently applies - see
+  // _getCartState() for how the label/availability shown to the user is derived.
+  async _useBuyTradeSell() {
+    const isOwnerView = game.user.isGM || this.actor.isOwner;
+    const { action, actionDisabled } = this._getCartState(isOwnerView);
+    if (actionDisabled) return;
+    if (action === "trade") return this._useTrade();
+    if (action === "buy") return this._useFlatBuy();
+    return this._confirmSellDialog();
+  }
+
   // Foundry v14 core bug: for a root:true part, _replaceHTML empties newElement before restoring
   // focus, so its own query always misses - retry against the live DOM. See EPactorSheet.js.
   _syncPartState(partId, newElement, priorElement, state) {
@@ -1070,6 +1235,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     context.toSellEntries = this._getToSellEntries();
     context.acceptedRep = this._getAcceptedRepDisplay(isOwnerView);
     context.loyaltyBar = this._getLoyaltyBarDisplay();
+    context.cartState = this._getCartState(isOwnerView);
 
     // Buying is Observer-only.
     context.canPurchase = !isOwnerView;
@@ -1219,11 +1385,6 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       });
     });
 
-    html.querySelector(".shop-sell-confirm")?.addEventListener("click", () => {
-      if (!this._toSell.size) return;
-      this._confirmSellDialog();
-    });
-
     // Purchase controls - Observer only.
     html.querySelectorAll(".item-purchase-select").forEach(element => {
       element.addEventListener("change", ev => {
@@ -1240,10 +1401,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       this._useGefallen();
     });
 
-    html.querySelector(".shop-purchase-flatbuy")?.addEventListener("click", () => {
-      if (!this._selectedForPurchase.size) return;
-      this._useFlatBuy();
-    });
+    // Merged Buy/Trade/Sell footer button - see _getCartState()/_useBuyTradeSell() for which of
+    // the three it resolves to.
+    html.querySelector(".shop-cart-action")?.addEventListener("click", () => this._useBuyTradeSell());
 
     if (!this.isEditable) return;
 

@@ -12,13 +12,6 @@
                 <p class="notes">{{localize "ep2e.shop.toSell.empty"}}</p>
             {{/if}}
         </div>
-        {{#if actor.system.acceptsSales}}
-            {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out.
-                 Rep network (if any) is chosen inside the confirm dialog, not here. --}}
-            <a class="shop-sell-confirm {{#unless toSellEntries.length}}disabled{{/unless}}"><i class="far fa-money-bill awesomeIcon"></i>{{localize "ep2e.shop.toSell.confirm"}}</a>
-        {{else}}
-            <p class="notes">{{localize "ep2e.shop.warnings.salesClosed"}}</p>
-        {{/if}}
     </div>
 
     <div class="shop-inventory-column">
@@ -33,33 +26,5 @@
                 <p class="notes">{{localize "ep2e.shop.placeholders.noItems"}}</p>
             {{/if}}
         </div>
-
-        {{#if canPurchase}}
-            {{#if purchaseNetworks.length}}
-                <div class="shop-purchase-bar">
-                    {{#if requiredFavorTierLabel}}
-                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.required"}} {{requiredFavorTierLabel}}</p>
-                    {{/if}}
-                    {{#if hasFlatBuyCost}}
-                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.flatBuyCost"}} {{flatBuyCost}}</p>
-                    {{/if}}
-                    {{#if hasSellBonus}}
-                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} {{sellBonus}}</p>
-                    {{/if}}
-                    {{#if hasSellForRep}}
-                        <p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellForRep"}} {{sellForRep}}</p>
-                    {{/if}}
-                    {{!-- Rep network and (for "Cash in Favor" only) Rep-Burn amount are chosen inside
-                         the confirm dialogs, not here. --}}
-                    <div class="flexrow flex-group-center">
-                        {{!-- <a>, not <button> - same reason as .shop-sell-confirm above --}}
-                        <a class="shop-purchase-favor {{#unless hasSelection}}disabled{{/unless}}"><i class="far fa-hand-holding-usd awesomeIcon"></i>{{localize "ep2e.shop.purchase.favorConfirm"}}</a>
-                        {{#if homebrewBuyEnabled}}
-                            <a class="shop-purchase-flatbuy {{#unless hasSelection}}disabled{{/unless}}"><i class="far fa-coins awesomeIcon"></i>{{localize "ep2e.shop.purchase.confirm"}}</a>
-                        {{/if}}
-                    </div>
-                </div>
-            {{/if}}
-        {{/if}}
     </div>
 </div>

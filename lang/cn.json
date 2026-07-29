@@ -1754,9 +1754,11 @@
       },
       "purchase": {
         "confirm": "购买",
+        "trade": "交易",
         "favorConfirm": "兑现人情",
         "required": "所需人情等级：",
         "flatBuyCost": "购买花费：",
+        "netCost": "净花费：",
         "otherwiseLabel": "其他：",
         "sellBonus": "出售检定加成：",
         "sellForRep": "出售换取信誉：",
@@ -1766,7 +1768,8 @@
         "sellBonusModifier": "出售加成",
         "burnBonusModifier": "燃烧的信誉",
                 "favorDifficultyLockedHint": "根据你在本商店的忠诚度以及一次请求的物品数量自动确定。",
-"successMessage": "{character} 从 {shop} 购买了 {items}。"
+"successMessage": "{character} 从 {shop} 购买了 {items}。",
+        "tradeInMessage": "{character} 以价值 {amount} 点{network}信誉的物品折抵了本次购买。"
       },
       "toSell": {
         "headline": "待售",

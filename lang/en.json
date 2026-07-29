@@ -1833,9 +1833,11 @@
       },
       "purchase": {
         "confirm": "Buy",
+        "trade": "Trade",
         "favorConfirm": "Cash in Favor",
         "required": "Required favor:",
         "flatBuyCost": "Buy cost:",
+        "netCost": "Net cost:",
         "otherwiseLabel": "Other:",
         "sellBonus": "Sell Roll Bonus:",
         "sellForRep": "Sell for Rep:",
@@ -1845,7 +1847,8 @@
         "sellBonusModifier": "Sell Bonus",
         "burnBonusModifier": "Burned Rep",
                 "favorDifficultyLockedHint": "Automatically set by this shop's Loyalty standing and how many items you're calling in at once.",
-"successMessage": "{character} bought {items} from {shop}."
+"successMessage": "{character} bought {items} from {shop}.",
+        "tradeInMessage": "{character} traded in item(s) worth {amount} {network} Rep toward this purchase."
       },
       "toSell": {
         "headline": "To Sell",

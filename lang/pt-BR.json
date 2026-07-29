@@ -1761,9 +1761,11 @@
       },
       "purchase": {
         "confirm": "Comprar",
+        "trade": "Trocar",
         "favorConfirm": "Resgatar Favor",
         "required": "Favor necessário:",
         "flatBuyCost": "Custo de compra:",
+        "netCost": "Custo líquido:",
         "otherwiseLabel": "Caso contrário:",
         "sellBonus": "Bônus de Rolagem de Venda:",
         "sellForRep": "Vender por Reputação:",
@@ -1773,7 +1775,8 @@
         "sellBonusModifier": "Bônus de venda",
         "burnBonusModifier": "Reputação queimada",
                 "favorDifficultyLockedHint": "Definido automaticamente pela Lealdade nesta loja e por quantos itens você está pedindo de uma vez.",
-"successMessage": "{character} comprou {items} de {shop}."
+"successMessage": "{character} comprou {items} de {shop}.",
+        "tradeInMessage": "{character} deu itens no valor de {amount} de Reputação {network} como parte de pagamento desta compra."
       },
       "toSell": {
         "headline": "Para Vender",

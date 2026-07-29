@@ -1785,9 +1785,11 @@
       },
       "purchase": {
         "confirm": "Kaufen",
+        "trade": "Tauschen",
         "favorConfirm": "Gefallen einlösen",
         "required": "Benötigter Gefallen:",
         "flatBuyCost": "Kaufkosten:",
+        "netCost": "Nettokosten:",
         "otherwiseLabel": "Sonst:",
         "sellBonus": "Verkaufswurf-Bonus:",
         "sellForRep": "Verkauf für Rep:",
@@ -1797,7 +1799,8 @@
         "sellBonusModifier": "Verkaufs-Bonus",
         "burnBonusModifier": "Verbrannter Rep",
                 "favorDifficultyLockedHint": "Wird automatisch anhand der Loyalität bei diesem Shop und der Anzahl gleichzeitig erbetener Items bestimmt.",
-"successMessage": "{character} hat {items} von {shop} gekauft."
+"successMessage": "{character} hat {items} von {shop} gekauft.",
+        "tradeInMessage": "{character} hat Gegenstände im Wert von {amount} {network}-Rep in Zahlung gegeben."
       },
       "toSell": {
         "headline": "To Sell",

@@ -1503,38 +1503,6 @@ form.eclipsephase.shop {
   margin-top: 0;
 }
 
-/* Visually matches button.sheetButton - stays an <a>, not a <button>, since core auto-disables
-   form buttons when !isEditable and Observer still needs to click this. */
-.eclipsephase a.shop-sell-confirm {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 36px;
-  margin-top: 10px;
-  box-sizing: border-box;
-  border: 1px solid var(--highlightBackground);
-  background: var(--pitchBackground);
-  color: var(--mainText);
-  cursor: pointer;
-}
-
-.eclipsephase a.shop-sell-confirm:hover,
-.eclipsephase a.shop-sell-confirm:focus {
-  box-shadow: 0 0 5px 2px var(--highlight);
-}
-
-.eclipsephase a.shop-sell-confirm.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.eclipsephase a.shop-sell-confirm .awesomeIcon {
-  margin-right: 6px;
-}
-
 .eclipsephase .shop-footer {
   flex-shrink: 0;
   margin-top: 5px;
@@ -1630,9 +1598,21 @@ form.eclipsephase.shop {
   filter: none;
 }
 
-.eclipsephase .shop-purchase-bar {
-  flex-shrink: 0;
-  margin-top: 10px;
+/* Full-width, 2-column: the merged Buy/Trade/Sell button's hints/button on the left, Cash-in-
+   Favor's hints/button on the right - sits above the name/Loyalty-bar/Rep row in shop-footer.html,
+   so the border/spacing separates it from that row below, not above. */
+.eclipsephase .shop-cart-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--highlightBackground);
+}
+
+.eclipsephase .shop-cart-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .eclipsephase .shop-purchase-hint {
@@ -1642,13 +1622,12 @@ form.eclipsephase.shop {
 }
 
 .eclipsephase a.shop-purchase-favor,
-.eclipsephase a.shop-purchase-flatbuy {
+.eclipsephase a.shop-cart-action {
   display: flex;
-  flex: 1;
   align-items: center;
   justify-content: center;
-  min-width: 110px;
   min-height: 36px;
+  margin-top: auto;
   box-sizing: border-box;
   border: 1px solid var(--highlightBackground);
   background: var(--pitchBackground);
@@ -1658,21 +1637,37 @@ form.eclipsephase.shop {
 
 .eclipsephase a.shop-purchase-favor:hover,
 .eclipsephase a.shop-purchase-favor:focus,
-.eclipsephase a.shop-purchase-flatbuy:hover,
-.eclipsephase a.shop-purchase-flatbuy:focus {
+.eclipsephase a.shop-cart-action:hover,
+.eclipsephase a.shop-cart-action:focus {
   box-shadow: 0 0 5px 2px var(--highlight);
 }
 
 .eclipsephase a.shop-purchase-favor.disabled,
-.eclipsephase a.shop-purchase-flatbuy.disabled {
+.eclipsephase a.shop-cart-action.disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.eclipsephase a.shop-purchase-favor .awesomeIcon,
-.eclipsephase a.shop-purchase-flatbuy .awesomeIcon {
+/* Bigger than the surrounding button text without growing the button itself - min-height on
+   .shop-purchase-favor/.shop-cart-action above already caps the row, plenty of headroom left. */
+.eclipsephase .shop-cart-icon {
   margin-right: 6px;
+  vertical-align: middle;
+}
+
+.eclipsephase i.shop-cart-icon {
+  font-size: 20px;
+}
+
+.eclipsephase img.shop-cart-icon {
+  height: 20px;
+  width: 20px;
+}
+
+.eclipsephase .shop-footer-notice {
+  margin: 0;
+  text-align: center;
 }
 
 .eclipsephase .shop-settings-networks {
