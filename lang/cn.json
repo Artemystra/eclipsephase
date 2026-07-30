@@ -1691,11 +1691,11 @@
       "dialog": {
         "selectNetwork": {
           "label": "信誉网络",
-          "placeholder": "- 选择网络 -",
+          "placeholder": "- 选择 -",
           "headline": "选择网络"
         },
         "loyaltyDiscount": {
-          "label": "忠诚度折扣",
+          "label": "折扣",
           "none": "不使用折扣",
           "option": "{levels} 级 ({percent}%)"
         }
@@ -1705,13 +1705,19 @@
         "noItems": "这家商店还没有任何物品。"
       },
       "settings": {
+        "generalHeadline": "通用",
         "repHeadline": "接受的Rep网络",
+        "repDescription": "该商店接受哪些信誉网络——只有这些网络才能在此购买、出售或兑换人情时用作支付方式。",
         "acceptsSales": "商店接受出售",
         "valuationHeadline": "物品估值",
+        "valuationDescription": "将每个物品自身的费用等级映射到该商店视作的人情等级——同时决定信誉检定难度和价格。",
         "loyaltyHeadline": "忠诚度",
         "loyaltyEnabled": "为该商店追踪忠诚度",
+        "loyaltyPerTierHeadline": "各等级忠诚度",
         "loyaltyPerTierDescription": "购买物品或兑换人情会让购买者获得该商店的忠诚度，数值按物品自身的费用等级（而非商店的信誉等级估值）分级。出售物品不会获得忠诚度。",
         "loyaltyRecordsHeadline": "角色忠诚度",
+        "loyaltyRecordsDescription": "该商店中每个角色当前忠诚度状态的实时列表——这不是设置项，只是被追踪的数值。可直接编辑数值以手动修正。",
+        "loyaltyRecordsEmpty": "这家商店还没有忠实顾客。",
         "loyaltyRecordDelete": "删除该角色的忠诚度记录",
         "loyaltyRecordDeleteConfirm": "此操作将永久删除该角色在本商店的忠诚度记录。",
         "loyaltyRecordAdd": "添加角色",
@@ -1725,11 +1731,13 @@
         "loyaltyBarOrange": "橙",
         "loyaltyBarYellow": "黄",
         "loyaltyBarGreen": "绿",
-        "sellLimitsHeadline": "出售限制",
+        "sellLimitTimeframeHeadline": "按时间段的出售限制",
         "sellLimitsDescription": "限制角色在一次交易中能卖给该商店多少东西。达到限制后，该角色将被禁止在此继续出售，直到进行一次长休，或由店主在下方解除限制。",
         "sellLimitMaxItems": "最大物品数",
         "sellLimitMaxRep": "最大信誉值",
         "sellLockoutsHeadline": "被禁止出售的角色",
+        "sellLockoutsEmpty": "还没有角色达到出售限制。",
+        "sellLockoutsDescription": "因达到上方出售限制而被禁止在此出售的角色——解除禁售状态可让他们在下次长休前就能重新出售。",
         "sellLockoutClear": "解除该角色的禁售状态",
                 "loyaltyBuyDiscountHeadline": "购买折扣",
         "loyaltyBuyDiscountDescription": "购买时可用的百分比折扣，按忠诚度等级兑现——兑现后忠诚度会相应下降相同的等级数。",

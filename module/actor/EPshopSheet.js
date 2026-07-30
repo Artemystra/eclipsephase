@@ -1,4 +1,4 @@
-import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors, confirmation, selectBody } from "../common/general-sheet-functions.js";
+import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors, confirmation, selectBody, moreInfo } from "../common/general-sheet-functions.js";
 import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER, getLoyaltyLevel } from "../common/general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js";
@@ -386,13 +386,15 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const networks = this._getAcceptedNetworks();
     if (!networks.length) return { mode: "closed" };
 
+    const icon = network => `<img src="${CONFIG.eclipsephase.repIcons[network]}" class="shop-rep-icon" title="${game.i18n.localize(CONFIG.eclipsephase.repTypes[network])}"/>`;
+
     // An acting character (own or a GM-picked one, see _getActingCharacter()) always wins, even
     // for Owner/GM - only falls back to network-names-only (Owner) or the noCharacter warning
     // (Observer) once there's truly no one to show values for.
     const character = this._getActingCharacter();
     if (!character?.isOwner) {
       return isOwnerView
-        ? { mode: "owner", text: networks.map(network => network.replace("-rep", "")).join("; ") }
+        ? { mode: "owner", text: networks.map(icon).join(" / ") }
         : { mode: "noCharacter" };
     }
 
@@ -400,8 +402,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const rep = idItem?.system?.rep ?? {};
     const text = networks.map(network => {
       const value = Number(rep[network]?.value ?? 0);
-      return `${network.replace("-rep", "")}: ${value}`;
-    }).join(" ");
+      return `${icon(network)}${value}`;
+    }).join(" / ");
     return { mode: "observer", character: character.name, text };
   }
 
@@ -655,7 +657,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     if (!overridden.length) return String(defaultValue);
 
-    const parts = overridden.map(({ network, value }) => `${network.replace("-rep", "")}: ${value}`);
+    const parts = overridden.map(({ network, value }) => `<img src="${CONFIG.eclipsephase.repIcons[network]}" class="shop-rep-icon" title="${game.i18n.localize(CONFIG.eclipsephase.repTypes[network])}"/>${value}`);
     if (overridden.length < networks.length) {
       parts.push(`${game.i18n.localize("ep2e.shop.purchase.otherwiseLabel")} ${defaultValue}`);
     }
@@ -693,15 +695,18 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   _networkSelectMarkup(networks, headline, hint, hintValue, discountOptions, wareItems, bodyGroups) {
     const options = networks.map(o => `<option value="${o.network}">${o.label}</option>`).join("");
     const select = networks.length === 1
-      ? `<select name="NetworkSelect">${options}</select>`
-      : `<select name="NetworkSelect"><option value="" selected>${game.i18n.localize("ep2e.shop.dialog.selectNetwork.placeholder")}</option>${options}</select>`;
+      ? `<select name="NetworkSelect" class="input-large">${options}</select>`
+      : `<select name="NetworkSelect" class="input-large"><option value="" selected>${game.i18n.localize("ep2e.shop.dialog.selectNetwork.placeholder")}</option>${options}</select>`;
+    // A plain div, not a disabled input - this value is never editable, so there's no need to
+    // fight Foundry core's input[type="text"] styling (including its own text-align) just to
+    // display it centered.
     const hintRow = hint
-      ? `<div class="form-group listBackgroundMain"><label class="resource-labelDialog">${hint}</label><input type="text" class="shop-hint-value" value="${hintValue}" disabled/></div>`
+      ? `<div class="form-group listBackgroundMain"><label class="resource-labelDialog">${hint}</label><div class="shop-hint-value input-large">${hintValue}</div></div>`
       : "";
     const discountRow = discountOptions?.length
-      ? `<div class="form-group listBackgroundMain">
+      ? `<div class="form-group listBackgroundMain shop-discount-row">
           <label class="resource-labelDialog">${game.i18n.localize("ep2e.shop.dialog.loyaltyDiscount.label")}</label>
-          <select name="DiscountSelect">
+          <select name="DiscountSelect" class="input-large">
             <option value="0">${game.i18n.localize("ep2e.shop.dialog.loyaltyDiscount.none")}</option>
             ${discountOptions.map(o => `<option value="${o.levels}">${o.label}</option>`).join("")}
           </select>
@@ -753,10 +758,10 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   // leaving it pinned to the pre-discount value chosen when the dialog first opened.
   _syncDiscountHint(dialog, onDiscountChange) {
     const select = dialog.element.querySelector('select[name="DiscountSelect"]');
-    const hintInput = dialog.element.querySelector(".shop-hint-value");
-    if (!select || !hintInput) return;
+    const hintValue = dialog.element.querySelector(".shop-hint-value");
+    if (!select || !hintValue) return;
     select.addEventListener("change", () => {
-      hintInput.value = onDiscountChange(Number(select.value) || 0);
+      hintValue.innerHTML = onDiscountChange(Number(select.value) || 0);
     });
   }
 
@@ -1320,7 +1325,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       }));
 
       const overrides = actor.system.rateOverrides ?? {};
-      context.rateOverrideGrid = Object.keys(CONFIG.eclipsephase.repTypes).map(network => ({
+      context.rateOverrideGrid = this._getAcceptedNetworks().map(network => ({
         network,
         label: CONFIG.eclipsephase.repTypes[network],
         tiers: ["minor", "moderate", "major"].map(tier => ({
@@ -1361,6 +1366,12 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     // works for any document, same call EPitemSheet.js makes.
     registerCommonHandlers(html, this.actor);
     itemTypeFilterPills(html, this, "_itemTypeFilter");
+
+    // Settings-tab info icons - same moreInfo()/pop-up.html mechanism EPactorSheet.js/
+    // EPitemSheet.js already use, Owner-only since only the settings tab has any.
+    html.querySelectorAll("a.moreInfoDialog").forEach(element => {
+      element.addEventListener("click", moreInfo);
+    });
 
     // Opens the item sheet either editable (Owner) or read-only (Observer/Limited, see
     // EPitemSheet.js's own isEditable guard) - wired regardless of this.isEditable since viewing

@@ -1722,11 +1722,11 @@
       "dialog": {
         "selectNetwork": {
           "label": "Rep-Netzwerk",
-          "placeholder": "- Netzwerk wählen -",
+          "placeholder": "- Wählen -",
           "headline": "Netzwerk wählen"
         },
         "loyaltyDiscount": {
-          "label": "Loyalitäts-Rabatt",
+          "label": "Rabatt",
           "none": "Kein Rabatt",
           "option": "{levels} Stufe(n) ({percent}%)"
         }
@@ -1736,13 +1736,19 @@
         "noItems": "Dieser Shop hat noch keine Items."
       },
       "settings": {
+        "generalHeadline": "Allgemein",
         "repHeadline": "Akzeptierte Rep-Netzwerke",
+        "repDescription": "Welche Rep-Netzwerke dieser Shop akzeptiert - nur diese stehen beim Kaufen, Verkaufen oder Einlösen eines Gefallens hier als Zahlungsoption zur Verfügung.",
         "acceptsSales": "Shop nimmt Verkäufe entgegen",
         "valuationHeadline": "Item-Bewertung",
+        "valuationDescription": "Ordnet jeder Item-Kostenstufe die Favor-Stufe zu, die dieser Shop dafür ansetzt - bestimmt sowohl die Schwierigkeit des Rep-Tests als auch den Preis.",
         "loyaltyHeadline": "Loyalität",
         "loyaltyEnabled": "Loyalität für diesen Shop verfolgen",
+        "loyaltyPerTierHeadline": "Loyalität pro Stufe",
         "loyaltyPerTierDescription": "Der Kauf eines Items oder das Einlösen eines Gefallens gewährt dem Käufer Loyalität bei diesem Shop, gestaffelt nach der eigenen Kostenstufe des Items (nicht nach der Rep-Stufen-Bewertung des Shops). Verkaufen gewährt niemals Loyalität.",
         "loyaltyRecordsHeadline": "Charakter-Loyalität",
+        "loyaltyRecordsDescription": "Eine Live-Liste des aktuellen Loyalitätsstands jedes Charakters bei diesem Shop - keine Einstellung, nur der verfolgte Wert. Ein Wert kann direkt bearbeitet werden, um ihn manuell zu korrigieren.",
+        "loyaltyRecordsEmpty": "Dieser Shop hat noch keine treuen Kunden.",
         "loyaltyRecordDelete": "Loyalitätseintrag dieses Charakters löschen",
         "loyaltyRecordDeleteConfirm": "Dies löscht den Loyalitätseintrag dieses Charakters bei diesem Shop dauerhaft.",
         "loyaltyRecordAdd": "Charakter hinzufügen",
@@ -1756,11 +1762,13 @@
         "loyaltyBarOrange": "Orange",
         "loyaltyBarYellow": "Gelb",
         "loyaltyBarGreen": "Grün",
-        "sellLimitsHeadline": "Verkaufslimits",
+        "sellLimitTimeframeHeadline": "Verkaufslimits pro Zeitraum",
         "sellLimitsDescription": "Begrenzt, wie viel ein Charakter in einer einzigen Transaktion an diesen Shop verkaufen kann. Wird ein Limit erreicht, ist der Charakter von weiteren Verkäufen hier gesperrt, bis eine lange Ruhe stattfindet oder der Owner die Sperre unten aufhebt.",
         "sellLimitMaxItems": "Max. Items",
         "sellLimitMaxRep": "Max. Rep",
         "sellLockoutsHeadline": "Gesperrte Charaktere",
+        "sellLockoutsEmpty": "Noch kein Charakter hat die Verkaufslimits erreicht.",
+        "sellLockoutsDescription": "Charaktere, die aktuell vom Verkaufen hier gesperrt sind, weil sie ein Verkaufslimit oben erreicht haben - eine Sperre aufheben, damit sie schon vor der nächsten langen Ruhe wieder verkaufen können.",
         "sellLockoutClear": "Sperre dieses Charakters aufheben",
                 "loyaltyBuyDiscountHeadline": "Kauf-Rabatt",
         "loyaltyBuyDiscountDescription": "Prozentualer Rabatt beim Kaufen, einlösbar pro Loyalitäts-Stufe - das Einlösen senkt die Loyalität um genau so viele Stufen wieder ab.",

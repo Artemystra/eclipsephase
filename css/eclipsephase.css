@@ -584,6 +584,14 @@
   margin: 20px 0 10px 0;
 }
 
+/* Opens a moreInfo() pop-up; normal weight/case unlike the headline6 it sits in. */
+.eclipsephase .shop-info-icon {
+  margin-left: 6px;
+  font-weight: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+
 .eclipsephase .headline4 {
   text-transform: uppercase;
   font-weight: bold;
@@ -835,12 +843,17 @@ dialog.dialog::backdrop {
   flex-direction: row-reverse;
 }
 
-.shop-network-row .resource-labelDialog {
-  white-space: nowrap;
+/* Replicates core's input[type="text"] look - this is a plain div, not an input. */
+.shop-hint-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  color: var(--mainText);
 }
 
-.shop-network-row select {
-  max-width: 150px;
+.shop-network-row .resource-labelDialog {
+  white-space: nowrap;
 }
 
 .shop-body-row .resource-labelDialog {
@@ -849,6 +862,15 @@ dialog.dialog::backdrop {
 
 .shop-body-row select {
   max-width: 100px;
+}
+
+/* Keeps the select on line 1 when the label wraps to 2 lines. */
+.shop-discount-row {
+  align-items: flex-start;
+}
+
+.shop-discount-row select {
+  align-self: flex-start;
 }
 
 .shop-burn-row {
@@ -1440,6 +1462,7 @@ form.eclipsephase.shop {
 
 .eclipsephase .shop-sheet-body {
   margin-top: 5px;
+  padding: 0 15px;
   flex: 1;
   min-height: 0;
   display: flex;
@@ -1598,9 +1621,7 @@ form.eclipsephase.shop {
   filter: none;
 }
 
-/* Full-width, 2-column: the merged Buy/Trade/Sell button's hints/button on the left, Cash-in-
-   Favor's hints/button on the right - sits above the name/Loyalty-bar/Rep row in shop-footer.html,
-   so the border/spacing separates it from that row below, not above. */
+/* Buy/Trade/Sell hints+button left, Cash-in-Favor right; sits above the name/Loyalty-bar/Rep row. */
 .eclipsephase .shop-cart-bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1608,6 +1629,13 @@ form.eclipsephase.shop {
   margin-bottom: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--highlightBackground);
+}
+
+/* Tab switching is a pure DOM class toggle in Foundry core (no re-render), so this has to be a
+   CSS rule rather than a Handlebars condition. Only matches Owner's tabbed view - Observer's
+   shop-sheet-body has no Settings tab pane to match against. */
+.eclipsephase .shop-sheet-body:has(.tab[data-tab="settings"].active) ~ .shop-footer .shop-cart-bar {
+  display: none;
 }
 
 .eclipsephase .shop-cart-column {
@@ -1649,8 +1677,7 @@ form.eclipsephase.shop {
   pointer-events: none;
 }
 
-/* Bigger than the surrounding button text without growing the button itself - min-height on
-   .shop-purchase-favor/.shop-cart-action above already caps the row, plenty of headroom left. */
+/* Bigger than the button text without growing the button (min-height already caps it). */
 .eclipsephase .shop-cart-icon {
   margin-right: 6px;
   vertical-align: middle;
@@ -1677,63 +1704,10 @@ form.eclipsephase.shop {
   margin-bottom: 15px;
 }
 
-.eclipsephase .shop-settings-valuation {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  max-width: 300px;
-}
-
 .eclipsephase .shop-settings-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-}
-
-.eclipsephase .shop-cost-overrides-row {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-}
-
-.eclipsephase .shop-cost-overrides-column {
-  flex: 0 1 auto;
-  max-width: 50%;
-}
-
-.eclipsephase .shop-rate-override-table {
-  border-collapse: collapse;
-  margin-bottom: 15px;
-}
-
-.eclipsephase .shop-rate-override-table th,
-.eclipsephase .shop-rate-override-table td {
-  padding: 2px 6px;
-  text-align: left;
-  font-size: 12px;
-}
-
-.eclipsephase .shop-rate-override-table thead th {
-  text-transform: uppercase;
-  font-size: 11px;
-}
-
-.eclipsephase .shop-rate-override-table td,
-.eclipsephase .shop-rate-override-table thead th {
-  text-align: center;
-}
-
-.eclipsephase .shop-rate-override-table input {
-  width: 100%;
-  max-width: 55px;
-}
-
-.eclipsephase .shop-rate-override-table tr.shop-network-row th {
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--highlight);
-  background: var(--pitchBackground);
 }
 
 .eclipsephase .shop-loyalty-records {
@@ -1769,6 +1743,7 @@ form.eclipsephase.shop {
 .eclipsephase .shop-loyalty-record-add {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   color: var(--iconBlue);
   cursor: pointer;
 }
@@ -1796,6 +1771,95 @@ form.eclipsephase.shop {
   flex: 0 0 auto;
   color: var(--iconBlue);
   cursor: pointer;
+}
+
+/* Shop Styles */
+
+.eclipsephase .shop-rate-override-table {
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+/* Shared design for every <th> in the Shop Settings tables. */
+.eclipsephase .shop-rate-override-table th {
+  padding: 2px 6px;
+  text-align: center;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--highlight);
+  background: var(--pitchBackground);
+}
+
+.eclipsephase .shop-rate-override-table td {
+  padding: 2px 6px;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* Row-label <th> - bordered on the side, not below; fixed width to match across tables. */
+.eclipsephase .shop-rate-override-table th.shop-th-side {
+  width: 100px;
+  border-bottom: none;
+  border-right: 1px solid var(--highlight);
+}
+
+/* Blank corner above the row-label column - same width, adds the side border too. */
+.eclipsephase .shop-rate-override-table th.shop-th-corner {
+  width: 100px;
+  border-right: 1px solid var(--highlight);
+}
+
+/* The real <thead> corner doesn't need a divider line below it, unlike tbody's. */
+.eclipsephase .shop-rate-override-table thead th.shop-th-corner {
+  border-bottom: none;
+}
+
+/* Per-network divider row (@-REP/C-REP/...) - same accent background as a subheader bar. */
+.eclipsephase .shop-rate-override-table tr.shop-network-row th {
+  background: var(--accentBackground);
+}
+
+.eclipsephase .shop-rate-override-table input {
+  width: 100%;
+  max-width: 55px;
+}
+
+/* Vertically centers a heading next to its icon button. */
+.eclipsephase .shop-settings-header-row {
+  align-items: center;
+}
+
+/* One half of a settings section's .grid-2col row. */
+.eclipsephase .shop-settings-column {
+  padding: 10px 10px;
+  margin-bottom: 10px;
+  background: var(--mainBackground);
+}
+
+/* .grid-2col's own margin varied the gap before the next section depending on whether its
+   content was visible (table/column padding adds to it) - zeroed out here, the constant
+   .contentBox margin below is the only spacing between sections now. */
+.eclipsephase .shop-settings-scroll .grid-2col {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.eclipsephase .shop-settings-scroll .contentBox {
+  margin-bottom: 20px;
+}
+
+/* Rep network abbreviation icon - checkboxes, table headers, footer, dialog hints. */
+.eclipsephase .shop-rep-icon {
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.eclipsephase .shop-th-rep-center {
+  text-align: center;
 }
 
 .eclipsephase .tabs {

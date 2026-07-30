@@ -97,6 +97,16 @@ eclipsephase.repTypes = {
     "x-rep": "ep2e.id.repType.xrep"
 }
 
+eclipsephase.repIcons = {
+    "@-rep": "systems/eclipsephase/resources/icons/Currency/currency-at.svg",
+    "c-rep": "systems/eclipsephase/resources/icons/Currency/currency-c.svg",
+    "f-rep": "systems/eclipsephase/resources/icons/Currency/currency-f.svg",
+    "g-rep": "systems/eclipsephase/resources/icons/Currency/currency-g.svg",
+    "i-rep": "systems/eclipsephase/resources/icons/Currency/currency-i.svg",
+    "r-rep": "systems/eclipsephase/resources/icons/Currency/currency-r.svg",
+    "x-rep": "systems/eclipsephase/resources/icons/Currency/currency-x.svg"
+}
+
 // Same RAW favor tiers as the Rep-Test roll dialog's favorMod dropdown (general-modifiers.html) -
 // reused here for the Shop's per-cost-tier valuation table.
 eclipsephase.favorTiers = {

@@ -3,12 +3,16 @@
   _getAcceptedRepDisplay()/_getActingCharacter(). --}}
 {{#if acceptedRep}}
 <footer class="shop-footer">
+    {{!-- Hiding this on the Settings tab is done in CSS (.shop-sheet-body:has(...)), not here -
+         clicking a top-level tab is a pure DOM class toggle in Foundry core, it never re-renders
+         this template, so a Handlebars condition on tabGroups.primary would only ever reflect
+         whichever tab was active at the last full render. --}}
     {{#if cartState.visible}}
         <div class="shop-cart-bar">
             <div class="shop-cart-column">
                 {{#if cartState.showAction}}
-                    {{#if hasFlatBuyCost}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.flatBuyCost"}} {{flatBuyCost}}</p>{{/if}}
-                    {{#if hasSellForRep}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellForRep"}} +{{sellForRep}}</p>{{/if}}
+                    {{#if hasFlatBuyCost}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.flatBuyCost"}} {{{flatBuyCost}}}</p>{{/if}}
+                    {{#if hasSellForRep}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellForRep"}} +{{{sellForRep}}}</p>{{/if}}
                     <a class="shop-cart-action {{#if cartState.actionDisabled}}disabled{{/if}}">
                         {{#if (eq cartState.action "trade")}}
                             <i class="fas fa-exchange-alt awesomeIcon shop-cart-icon"></i>{{localize "ep2e.shop.purchase.trade"}}
@@ -23,7 +27,7 @@
             <div class="shop-cart-column">
                 {{#if cartState.showFavor}}
                     {{#if requiredFavorTierLabel}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.required"}} {{requiredFavorTierLabel}}</p>{{/if}}
-                    {{#if hasSellBonus}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} +{{sellBonus}}</p>{{/if}}
+                    {{#if hasSellBonus}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} +{{{sellBonus}}}</p>{{/if}}
                     {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out.
                          Rep network (and, for Cash in Favor, the Rep-Burn amount) is chosen inside the
                          confirm dialog, not here. --}}
@@ -51,7 +55,7 @@
                     </div>
                 </span>
             {{/if}}
-            <span class="shop-accepted-rep-text">{{localize "ep2e.shop.acceptedRep.label"}} {{acceptedRep.text}}</span>
+            <span class="shop-accepted-rep-text">{{localize "ep2e.shop.acceptedRep.label"}} {{{acceptedRep.text}}}</span>
         </div>
     {{/if}}
 </footer>

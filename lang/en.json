@@ -1770,11 +1770,11 @@
       "dialog": {
         "selectNetwork": {
           "label": "Rep Network",
-          "placeholder": "- Select Network -",
+          "placeholder": "- Select -",
           "headline": "Choose Network"
         },
         "loyaltyDiscount": {
-          "label": "Loyalty Discount",
+          "label": "Discount",
           "none": "No discount",
           "option": "{levels} Tier ({percent}%)"
         }
@@ -1784,13 +1784,19 @@
         "noItems": "This shop has no items yet."
       },
       "settings": {
+        "generalHeadline": "General",
         "repHeadline": "Accepted Rep Networks",
+        "repDescription": "Which Rep networks this shop deals in - only these appear as payment options for buying, selling, or cashing in a Favor here.",
         "acceptsSales": "Shop accepts sales",
         "valuationHeadline": "Item Valuation",
+        "valuationDescription": "Maps each item's own cost tier to the Favor tier this shop treats it as - drives both Rep-Test difficulty and price.",
         "loyaltyHeadline": "Loyalty",
         "loyaltyEnabled": "Track loyalty for this shop",
+        "loyaltyPerTierHeadline": "Loyalty per Tier",
         "loyaltyPerTierDescription": "Buying an item or cashing in a Favor grants the buyer loyalty with this shop, scaled by the item's own cost type (not the shop's Rep-tier valuation). Selling never grants loyalty.",
         "loyaltyRecordsHeadline": "Character Loyalty",
+        "loyaltyRecordsDescription": "A live list of every character's current standing at this shop - not a setting, just their tracked Loyalty value. Edit a value directly to correct it manually.",
+        "loyaltyRecordsEmpty": "This shop has no loyal customers yet.",
         "loyaltyRecordDelete": "Delete this character's loyalty record",
         "loyaltyRecordDeleteConfirm": "This will permanently delete this character's loyalty record with this shop.",
         "loyaltyRecordAdd": "Add a character",
@@ -1804,11 +1810,13 @@
         "loyaltyBarOrange": "Orange",
         "loyaltyBarYellow": "Yellow",
         "loyaltyBarGreen": "Green",
-        "sellLimitsHeadline": "Sell Limits",
+        "sellLimitTimeframeHeadline": "Sell Limits per Timeframe",
         "sellLimitsDescription": "Caps how much a character can sell to this shop in one transaction. Reaching a limit locks the character out of further sales here until a long rest, or until the Owner clears it below.",
         "sellLimitMaxItems": "Max Items",
         "sellLimitMaxRep": "Max Rep",
         "sellLockoutsHeadline": "Locked-Out Characters",
+        "sellLockoutsEmpty": "No characters have hit the sell limits yet.",
+        "sellLockoutsDescription": "Characters currently locked out of selling here after reaching a Sell Limit above - clear a lockout to let them sell again before their next long rest.",
         "sellLockoutClear": "Clear this character's lockout",
                 "loyaltyBuyDiscountHeadline": "Buy Discount",
         "loyaltyBuyDiscountDescription": "Percentage discount on Buy, redeemable per Loyalty Tier - spending it drops standing back down by that many Tiers.",

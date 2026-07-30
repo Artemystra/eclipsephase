@@ -1684,11 +1684,11 @@
       "dialog": {
         "selectNetwork": {
           "label": "Red de Reputación",
-          "placeholder": "- Seleccionar red -",
+          "placeholder": "- Seleccionar -",
           "headline": "Elegir red"
         },
         "loyaltyDiscount": {
-          "label": "Descuento de Lealtad",
+          "label": "Descuento",
           "none": "Sin descuento",
           "option": "{levels} Nivel(es) ({percent}%)"
         }
@@ -1698,13 +1698,19 @@
         "noItems": "Esta tienda todavía no tiene objetos."
       },
       "settings": {
+        "generalHeadline": "General",
         "repHeadline": "Redes de Rep Aceptadas",
+        "repDescription": "Qué redes de Rep acepta esta tienda - solo estas aparecen como opción de pago al comprar, vender o cobrar un Favor aquí.",
         "acceptsSales": "La tienda acepta ventas",
         "valuationHeadline": "Valoración de Objetos",
+        "valuationDescription": "Asigna el nivel de costo propio de cada objeto al Nivel de Favor que esta tienda le atribuye - determina tanto la dificultad de la Prueba de Rep como el precio.",
         "loyaltyHeadline": "Lealtad",
         "loyaltyEnabled": "Registrar lealtad para esta tienda",
+        "loyaltyPerTierHeadline": "Lealtad por Nivel",
         "loyaltyPerTierDescription": "Comprar un objeto o canjear un Favor otorga al comprador lealtad con esta tienda, escalada según el tipo de costo propio del objeto (no la valoración por nivel de Rep de la tienda). Vender nunca otorga lealtad.",
         "loyaltyRecordsHeadline": "Lealtad de Personajes",
+        "loyaltyRecordsDescription": "Una lista en vivo del estado actual de lealtad de cada personaje en esta tienda - no es una configuración, solo su valor de Lealtad registrado. Edita un valor directamente para corregirlo manualmente.",
+        "loyaltyRecordsEmpty": "Esta tienda aún no tiene clientes leales.",
         "loyaltyRecordDelete": "Eliminar el registro de lealtad de este personaje",
         "loyaltyRecordDeleteConfirm": "Esto eliminará permanentemente el registro de lealtad de este personaje con esta tienda.",
         "loyaltyRecordAdd": "Añadir personaje",
@@ -1718,11 +1724,13 @@
         "loyaltyBarOrange": "Naranja",
         "loyaltyBarYellow": "Amarillo",
         "loyaltyBarGreen": "Verde",
-        "sellLimitsHeadline": "Límites de Venta",
+        "sellLimitTimeframeHeadline": "Límites de Venta por Periodo",
         "sellLimitsDescription": "Limita cuánto puede vender un personaje a esta tienda en una sola transacción. Al alcanzar un límite, el personaje queda bloqueado para más ventas aquí hasta un descanso largo, o hasta que el Propietario lo desbloquee abajo.",
         "sellLimitMaxItems": "Máx. Objetos",
         "sellLimitMaxRep": "Máx. Rep",
         "sellLockoutsHeadline": "Personajes Bloqueados",
+        "sellLockoutsEmpty": "Ningún personaje ha alcanzado los límites de venta todavía.",
+        "sellLockoutsDescription": "Personajes actualmente bloqueados para vender aquí tras alcanzar un Límite de Venta arriba - elimina un bloqueo para que puedan vender de nuevo antes de su próximo descanso largo.",
         "sellLockoutClear": "Eliminar el bloqueo de este personaje",
                 "loyaltyBuyDiscountHeadline": "Descuento de Compra",
         "loyaltyBuyDiscountDescription": "Descuento porcentual al Comprar, canjeable por Nivel de Lealtad - canjearlo reduce la Lealtad exactamente esa cantidad de Niveles.",

@@ -26,45 +26,88 @@
 
         <div class="tab {{#if (eq tabGroups.primary 'settings')}}active{{/if}}" data-group="primary" data-tab="settings">
             <div class="shop-settings-scroll">
-                <p class="headline5">{{localize "ep2e.shop.settings.repHeadline"}}</p>
+                <div class="contentBox">
+                <div class="flexrow subheader">
+                    <h3 class="subheader">{{localize "ep2e.shop.settings.generalHeadline"}}</h3>
+                    <div class="flexGrowThreeQuarter">
+                        <label class="flexrow flex-group-center">
+                            <input type="checkbox" data-dtype="Boolean" name="system.acceptsSales" {{checked actor.system.acceptsSales}}/>
+                            {{localize "ep2e.shop.settings.acceptsSales"}}
+                        </label>
+                    </div>
+                </div>
+                <div class="shop-settings-column">
+                <p class="headline6">{{localize "ep2e.shop.settings.repHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.repHeadline" data-description="ep2e.shop.settings.repDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                 <div class="shop-settings-networks">
                     {{#each repNetworks as |locKey network|}}
-                        <label class="flexrow flex-group-center">
+                        <label class="flexrow flex-group-center" title="{{localize locKey}}">
                             <input type="checkbox" data-dtype="Boolean" name="system.acceptedRepNetworks.{{network}}" {{checked (lookup @root.acceptedRepNetworks network)}}/>
-                            {{localize locKey}}
+                            <img src="{{lookup @root.config.repIcons network}}" class="shop-rep-icon"/>Rep
                         </label>
                     {{/each}}
                 </div>
+                </div>
 
-                <label class="flexrow flex-group-center">
-                    <input type="checkbox" data-dtype="Boolean" name="system.acceptsSales" {{checked actor.system.acceptsSales}}/>
-                    {{localize "ep2e.shop.settings.acceptsSales"}}
-                </label>
+                {{!-- Sell Limits - lockouts live on each character's own flags (see
+                     _isSellLockedOut() in EPshopSheet.js), not this shop, so a GM-relay socket is
+                     never needed to set/clear them. Only meaningful while the shop accepts sales
+                     at all. --}}
+                <div class="grid-2col">
+                {{#if actor.system.acceptsSales}}
+                    <div class="shop-settings-column">
+                    <p class="headline6">{{localize "ep2e.shop.settings.sellLimitTimeframeHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.sellLimitTimeframeHeadline" data-description="ep2e.shop.settings.sellLimitsDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
+                    <table class="shop-rate-override-table">
+                        <thead>
+                            <tr>
+                                <th>{{localize "ep2e.shop.settings.sellLimitMaxItems"}}</th>
+                                <th>{{localize "ep2e.shop.settings.sellLimitMaxRep"}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="number" data-dtype="Number" name="system.sellLimitMaxItems" value="{{actor.system.sellLimitMaxItems}}"/></td>
+                                <td><input type="number" data-dtype="Number" name="system.sellLimitMaxRep" value="{{actor.system.sellLimitMaxRep}}"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
 
-                <p class="headline5">{{localize "ep2e.shop.settings.valuationHeadline"}}</p>
-                <div class="shop-settings-valuation">
-                    {{#each costTypes as |locKey tier|}}
-                        <div class="flexrow flex-group-center">
-                            <label style="flex: 1;">{{localize locKey}}</label>
-                            <select name="system.valuation.{{tier}}" style="flex: 1;">
-                                {{selectOptions @root.favorTiers selected=(lookup @root.valuation tier) localize=true}}
-                            </select>
+                    <div class="shop-settings-column">
+                    <p class="headline6">{{localize "ep2e.shop.settings.sellLockoutsHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.sellLockoutsHeadline" data-description="ep2e.shop.settings.sellLockoutsDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
+                    {{#if sellLockedCharacters.length}}
+                        <div class="shop-sell-lockout-records">
+                            {{#each sellLockedCharacters as |record|}}
+                                <div class="shop-sell-lockout-record flexrow flex-group-center">
+                                    <span class="shop-sell-lockout-name">{{record.name}}</span>
+                                    <a class="shop-sell-lockout-clear" data-character-id="{{record.characterId}}" title="{{localize 'ep2e.shop.settings.sellLockoutClear'}}"><i class="fas fa-lock-open"></i></a>
+                                </div>
+                            {{/each}}
                         </div>
-                    {{/each}}
+                    {{else}}
+                        <p class="notes">{{localize "ep2e.shop.settings.sellLockoutsEmpty"}}</p>
+                    {{/if}}
+                    </div>
+                {{/if}}
+                </div>
                 </div>
 
                 {{!-- Loyalty tracking - independent of superBrew, gated only by its own master toggle.
                      Buy and Cash-in-Favor grant loyalty (equally), plain Sell never does. --}}
-                <p class="headline5">{{localize "ep2e.shop.settings.loyaltyHeadline"}}</p>
-                <label class="flexrow flex-group-center">
-                    <input type="checkbox" data-dtype="Boolean" name="system.loyaltyEnabled" {{checked loyaltyEnabled}}/>
-                    {{localize "ep2e.shop.settings.loyaltyEnabled"}}
-                </label>
+                <div class="contentBox">
+                <div class="flexrow subheader">
+                    <h3 class="subheader">{{localize "ep2e.shop.settings.loyaltyHeadline"}}</h3>
+                    <div class="flexGrowThreeQuarter">
+                        <label class="flexrow flex-group-center">
+                            <input type="checkbox" data-dtype="Boolean" name="system.loyaltyEnabled" {{checked loyaltyEnabled}}/>
+                            {{localize "ep2e.shop.settings.loyaltyEnabled"}}
+                        </label>
+                    </div>
+                </div>
 
+                <div class="grid-2col">
                 {{#if loyaltyEnabled}}
-                    <div class="shop-cost-overrides-row">
-                    <div class="shop-cost-overrides-column">
-                    <p class="notes">{{localize "ep2e.shop.settings.loyaltyPerTierDescription"}}</p>
+                    <div class="shop-settings-column">
+                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyPerTierHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyPerTierHeadline" data-description="ep2e.shop.settings.loyaltyPerTierDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                     <table class="shop-rate-override-table">
                         <thead>
                             <tr>
@@ -82,15 +125,11 @@
                         </tbody>
                     </table>
 
-                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyBarHeadline"}}</p>
-                    <p class="notes">{{localize "ep2e.shop.settings.loyaltyBarDescription"}}</p>
-                    <div class="flexrow flex-group-center">
-                        <label style="flex: 1;">{{localize "ep2e.shop.settings.loyaltyBarMax"}}</label>
-                        <input type="number" data-dtype="Number" name="system.loyaltyBarMax" value="{{actor.system.loyaltyBarMax}}" style="max-width: 60px;"/>
-                    </div>
+                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyBarHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyBarHeadline" data-description="ep2e.shop.settings.loyaltyBarDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                     <table class="shop-rate-override-table">
                         <thead>
                             <tr>
+                                <th>{{localize "ep2e.shop.settings.loyaltyBarMax"}}</th>
                                 <th>{{localize "ep2e.shop.settings.loyaltyBarRed"}}</th>
                                 <th>{{localize "ep2e.shop.settings.loyaltyBarOrange"}}</th>
                                 <th>{{localize "ep2e.shop.settings.loyaltyBarYellow"}}</th>
@@ -99,6 +138,7 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarMax" value="{{actor.system.loyaltyBarMax}}"/></td>
                                 <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.red" value="{{actor.system.loyaltyBarSegments.red}}"/></td>
                                 <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.orange" value="{{actor.system.loyaltyBarSegments.orange}}"/></td>
                                 <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.yellow" value="{{actor.system.loyaltyBarSegments.yellow}}"/></td>
@@ -107,8 +147,7 @@
                         </tbody>
                     </table>
 
-                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyBuyDiscountHeadline"}}</p>
-                    <p class="notes">{{localize "ep2e.shop.settings.loyaltyBuyDiscountDescription"}}</p>
+                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyBuyDiscountHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyBuyDiscountHeadline" data-description="ep2e.shop.settings.loyaltyBuyDiscountDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                     <table class="shop-rate-override-table">
                         <thead>
                             <tr>
@@ -127,9 +166,9 @@
                     </table>
                     </div>
 
-                    <div class="shop-cost-overrides-column" style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <p class="headline6">{{localize "ep2e.shop.settings.loyaltyRecordsHeadline"}}</p>
+                    <div class="shop-settings-column">
+                    <div class="flexrow flex-between shop-settings-header-row">
+                        <p class="headline6">{{localize "ep2e.shop.settings.loyaltyRecordsHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyRecordsHeadline" data-description="ep2e.shop.settings.loyaltyRecordsDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                         <a class="shop-loyalty-record-add" title="{{localize 'ep2e.shop.settings.loyaltyRecordAdd'}}"><i class="fas fa-plus"></i></a>
                     </div>
                     {{#if loyaltyRecords.length}}
@@ -142,39 +181,9 @@
                                 </div>
                             {{/each}}
                         </div>
+                    {{else}}
+                        <p class="notes">{{localize "ep2e.shop.settings.loyaltyRecordsEmpty"}}</p>
                     {{/if}}
-                    </div>
-                    </div>
-                {{/if}}
-
-                {{!-- Sell Limits - lockouts live on each character's own flags (see
-                     _isSellLockedOut() in EPshopSheet.js), not this shop, so a GM-relay socket is
-                     never needed to set/clear them. --}}
-                <p class="headline5">{{localize "ep2e.shop.settings.sellLimitsHeadline"}}</p>
-
-                <div class="shop-cost-overrides-row">
-                <div class="shop-cost-overrides-column" style="flex: 1;">
-                <p class="notes">{{localize "ep2e.shop.settings.sellLimitsDescription"}}</p>
-                <div class="flexrow flex-group-center">
-                    <label style="flex: 1;">{{localize "ep2e.shop.settings.sellLimitMaxItems"}}</label>
-                    <input type="number" data-dtype="Number" name="system.sellLimitMaxItems" value="{{actor.system.sellLimitMaxItems}}" style="max-width: 60px;"/>
-                </div>
-                <div class="flexrow flex-group-center">
-                    <label style="flex: 1;">{{localize "ep2e.shop.settings.sellLimitMaxRep"}}</label>
-                    <input type="number" data-dtype="Number" name="system.sellLimitMaxRep" value="{{actor.system.sellLimitMaxRep}}" style="max-width: 60px;"/>
-                </div>
-                </div>
-
-                <div class="shop-cost-overrides-column" style="flex: 1;">
-                <p class="headline6">{{localize "ep2e.shop.settings.sellLockoutsHeadline"}}</p>
-                {{#if sellLockedCharacters.length}}
-                    <div class="shop-sell-lockout-records">
-                        {{#each sellLockedCharacters as |record|}}
-                            <div class="shop-sell-lockout-record flexrow flex-group-center">
-                                <span class="shop-sell-lockout-name">{{record.name}}</span>
-                                <a class="shop-sell-lockout-clear" data-character-id="{{record.characterId}}" title="{{localize 'ep2e.shop.settings.sellLockoutClear'}}"><i class="fas fa-lock-open"></i></a>
-                            </div>
-                        {{/each}}
                     </div>
                 {{/if}}
                 </div>
@@ -184,16 +193,34 @@
                      EPshopSheet.js. Blank = no override, falls back to the shown placeholder.
                      flatBuyCost/sellRepGain columns only exist while superBrew is on; sellBonus is
                      never gated. --}}
-                <p class="headline5">{{localize "ep2e.shop.settings.rateOverridesHeadline"}}</p>
+                <div class="contentBox">
+                <div class="flexrow subheader">
+                    <h3 class="subheader">{{localize "ep2e.shop.settings.rateOverridesHeadline"}}</h3>
+                    <div class="flexGrowThreeQuarter"></div>
+                </div>
+                <div class="grid-2col">
+                <div class="shop-settings-column">
+                <p class="headline6">{{localize "ep2e.shop.settings.valuationHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.valuationHeadline" data-description="ep2e.shop.settings.valuationDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
+                <table class="shop-rate-override-table">
+                    <tbody>
+                        {{#each costTypes as |locKey tier|}}
+                            <tr>
+                                <th class="shop-th-side">{{localize locKey}}</th>
+                                <td>
+                                    <select name="system.valuation.{{tier}}">
+                                        {{selectOptions @root.favorTiers selected=(lookup @root.valuation tier) localize=true}}
+                                    </select>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
 
-                <div class="shop-cost-overrides-row">
-                <div class="shop-cost-overrides-column">
-                <p class="headline6">{{localize "ep2e.shop.settings.generalOverridesHeadline"}}</p>
-                <p class="notes">{{localize "ep2e.shop.settings.generalOverridesDescription"}}</p>
+                <p class="headline6">{{localize "ep2e.shop.settings.generalOverridesHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.generalOverridesHeadline" data-description="ep2e.shop.settings.generalOverridesDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                 <table class="shop-rate-override-table">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th class="shop-th-corner"></th>
                             {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.flatBuyCost"}}</th>{{/if}}
                             <th>{{localize "ep2e.shop.purchase.sellBonus"}}</th>
                             {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.sellForRep"}}</th>{{/if}}
@@ -202,7 +229,7 @@
                     <tbody>
                         {{#each generalOverrideGrid as |tierEntry|}}
                             <tr>
-                                <th>{{localize tierEntry.tierLabel}}</th>
+                                <th class="shop-th-side">{{localize tierEntry.tierLabel}}</th>
                                 {{#if @root.superBrewEnabled}}
                                     <td><input type="number" data-dtype="Number" name="system.generalRateOverrides.{{tierEntry.tier}}.flatBuyCost" value="{{tierEntry.flatBuyCost}}" placeholder="{{tierEntry.flatBuyCostPlaceholder}}"/></td>
                                 {{/if}}
@@ -216,8 +243,7 @@
                 </table>
 
                 {{#if superBrewEnabled}}
-                    <p class="headline6">{{localize "ep2e.shop.settings.morphPointOverridesHeadline"}}</p>
-                    <p class="notes">{{localize "ep2e.shop.settings.morphPointOverridesDescription"}}</p>
+                    <p class="headline6">{{localize "ep2e.shop.settings.morphPointOverridesHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.morphPointOverridesHeadline" data-description="ep2e.shop.settings.morphPointOverridesDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                     <table class="shop-rate-override-table">
                         <thead>
                             <tr>
@@ -237,13 +263,12 @@
                 {{/if}}
                 </div>
 
-                <div class="shop-cost-overrides-column">
-                <p class="headline6">{{localize "ep2e.shop.settings.specificOverridesHeadline"}}</p>
-                <p class="notes">{{localize "ep2e.shop.settings.specificOverridesDescription"}}</p>
+                <div class="shop-settings-column">
+                <p class="headline6">{{localize "ep2e.shop.settings.specificOverridesHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.specificOverridesHeadline" data-description="ep2e.shop.settings.specificOverridesDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                 <table class="shop-rate-override-table">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th class="shop-th-corner"></th>
                             {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.flatBuyCost"}}</th>{{/if}}
                             <th>{{localize "ep2e.shop.purchase.sellBonus"}}</th>
                             {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.sellForRep"}}</th>{{/if}}
@@ -252,11 +277,12 @@
                     <tbody>
                         {{#each rateOverrideGrid as |networkEntry|}}
                             <tr class="shop-network-row">
-                                <th colspan="4">{{localize networkEntry.label}}</th>
+                                <th class="shop-th-corner"></th>
+                                <th colspan="{{#if @root.superBrewEnabled}}3{{else}}1{{/if}}" class="shop-th-rep-center" title="{{localize networkEntry.label}}"><img src="{{lookup @root.config.repIcons networkEntry.network}}" class="shop-rep-icon"/>Rep</th>
                             </tr>
                             {{#each networkEntry.tiers as |tierEntry|}}
                                 <tr>
-                                    <th>{{localize tierEntry.tierLabel}}</th>
+                                    <th class="shop-th-side">{{localize tierEntry.tierLabel}}</th>
                                     {{#if @root.superBrewEnabled}}
                                         <td><input type="number" data-dtype="Number" name="system.rateOverrides.{{networkEntry.network}}.{{tierEntry.tier}}.flatBuyCost" value="{{tierEntry.flatBuyCost}}" placeholder="{{tierEntry.flatBuyCostPlaceholder}}"/></td>
                                     {{/if}}
@@ -269,6 +295,7 @@
                         {{/each}}
                     </tbody>
                 </table>
+                </div>
                 </div>
                 </div>
             </div>
