@@ -1686,8 +1686,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           let message = {};
           message.type = "general";
           message.headline = "Rez Not spent";
-          message.subheadline = "Reason";
-          message.copy = game.i18n.localize("ep2e.roll.announce.spendRez.spent") + ledgerUpdate["cost"] + game.i18n.localize("ep2e.roll.announce.spendRez.available") + availableRez;
+          message.boxHeadline = "Reason";
+          message.boxDetail = game.i18n.localize("ep2e.roll.announce.spendRez.spent") + ledgerUpdate["cost"] + game.i18n.localize("ep2e.roll.announce.spendRez.available") + availableRez;
           
           const renderedHtml = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/general-chat-message.html", message);
 

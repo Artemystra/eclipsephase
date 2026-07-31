@@ -3,10 +3,12 @@
   <div style="margin-bottom: 30px;">
     <p>{{{localize headline}}}</p>
 
+    {{#if (or boxHeadline boxDetail)}}
     <p></p><div style="display: block; margin: 0 0 20px 0; padding: 25px 0; background-color: var(--pitchBorder);">
-      <span><b>{{{localize subheadline}}}</b></span><br>
-    <span style="font-size: 14px;">{{{localize copy}}}</span>
+      {{#if boxHeadline}}<span><b>{{{localize boxHeadline}}}</b></span><br>{{/if}}
+      {{#if boxDetail}}<span style="font-size: 14px;">{{{localize boxDetail}}}</span>{{/if}}
     </div>
+    {{/if}}
   </div>
   {{/if}}
 </div>

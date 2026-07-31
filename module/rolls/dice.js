@@ -655,12 +655,13 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
 
         // burnMod clamp must match _useGefallen()'s post-roll clamp (dataset.rollvalue/maxBurn).
+        let shopBurnAmount = 0;
         if(rolledFrom === "shopPurchase"){
             const sellBonus = Number(dataset.sellBonus) || 0;
             if(sellBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.sellBonusModifier', sellBonus))
 
-            const actualBurn = Math.max(0, Math.min(Number(options.burnMod) || 0, Number(dataset.maxBurn) || 0, Number(dataset.rollvalue) || 0));
-            if(actualBurn) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', actualBurn * 2))
+            shopBurnAmount = Math.max(0, Math.min(Number(options.burnMod) || 0, Number(dataset.maxBurn) || 0, Number(dataset.rollvalue) || 0));
+            if(shopBurnAmount) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', shopBurnAmount * 2))
         }
 
         await task.performRoll()
@@ -670,7 +671,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             itemData = weaponSelected
         // Must come before roll.sleight - defineRoll() always inits it to {}, a truthy empty object.
         else if(rolledFrom === "shopPurchase")
-            itemData = { shopUuid: dataset.shopUuid, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings }
+            itemData = { shopUuid: dataset.shopUuid, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings, burnAmount: shopBurnAmount }
         else if(roll.sleight)
             itemData = roll.sleight
 

@@ -1,5 +1,5 @@
 import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors, confirmation, selectBody, moreInfo } from "../common/general-sheet-functions.js";
-import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER, getLoyaltyLevel } from "../common/general-helper-functions.js";
+import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER, getLoyaltyLevel, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js";
 
@@ -277,10 +277,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       if (idItem) {
         const current = Number(idItem.system?.rep?.[network]?.value ?? 0);
         await idItem.update({ [`system.rep.${network}.value`]: current + repGain });
-        ChatMessage.create({
-          speaker: ChatMessage.getSpeaker({ actor: character }),
-          content: `<p>${game.i18n.format("ep2e.shop.toSell.repGainMessage", { character: character.name, amount: repGain, network: network.replace("-rep", "") })}</p>`
-        });
+        await postShopChatMessage(character, "ep2e.shop.toSell.repGainMessage",
+          { character: character.name, network: network.replace("-rep", "") },
+          `${shopRepIconHtml(network)} ${repGain}`);
         // _confirmSell() already rendered once, before this rep grant happened - the shop's own
         // "Accepted Rep" display would otherwise keep showing the pre-gain value until some
         // unrelated re-render happened to catch it up.
@@ -486,9 +485,13 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const wantsBuy = buyAvailable && hasSelection;
     const wantsSell = hasStaged && salesOpen;
 
-    let action = "sell";
+    // "buy" is the idle default (nothing staged for sale, or sales closed) - was previously also
+    // triggered by buyAvailable alone, which wrongly overrode a sell-only state (staged items,
+    // no purchase selection) whenever buying was merely possible, not actually selected.
+    let action;
     if (wantsBuy && wantsSell) action = "trade";
-    else if (wantsBuy || buyAvailable) action = "buy";
+    else if (wantsSell) action = "sell";
+    else action = "buy";
 
     const showFavor = !isOwnerView && purchaseNetworks.length > 0;
     const showAction = buyAvailable || salesOpen;
@@ -1012,7 +1015,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     // Loyalty ease used for this roll (see _getFinalFavorTier()) consumes that many levels
     // instead of the normal purchase gain, never both (see applyLoyaltyTransaction()). No ease
     // used (level 1, or Loyalty off) still grants the normal gain.
-    await completeShopPurchase({
+    const boughtItems = await completeShopPurchase({
       shopUuid: dataset.shopUuid,
       buyerActorId: dataset.buyerActorId,
       itemIds: dataset.itemIds,
@@ -1021,6 +1024,18 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       bodyBindings: bindings,
       redeemLevels: easeApplied
     });
+
+    if (boughtItems.length) {
+      // A Rep Test has no fixed Rep cost, unlike Buy/Trade - the box shows the favor's tier
+      // instead of an amount, plus the burned amount (if any) rather than a flat price paid.
+      const tierLabel = `<span style="font-size: 16px;">${game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier])}</span>`;
+      const boxContent = actualBurn > 0
+        ? `${tierLabel} + ${shopRepIconHtml(network)} ${actualBurn}`
+        : `${shopRepIconHtml(network)} ${tierLabel}`;
+      await postShopChatMessage(character, actualBurn > 0 ? "ep2e.shop.purchase.favorBurnMessage" : "ep2e.shop.purchase.favorMessage",
+        { character: character.name, items: boughtItems.map(item => item.name).join(", "), network: network.replace("-rep", "") },
+        boxContent);
+    }
   }
 
   /**
@@ -1092,6 +1107,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (boughtItems.length) {
       const spent = this._applyDiscount(this._getFlatBuyCost(boughtItems, network), discountPercent);
       await idItem.update({ [`system.rep.${network}.value`]: available - spent });
+      await postShopChatMessage(character, "ep2e.shop.purchase.successMessage",
+        { character: character.name, shop: this.actor.name, items: boughtItems.map(item => item.name).join(", "), network: network.replace("-rep", "") },
+        spent > 0 ? `${shopRepIconHtml(network)} ${spent}` : null);
       // The earlier render() (right after clearing the selection, above) fires before this Rep
       // deduction lands - the shop's "accepted Rep" display (read off the BUYER's item, not this
       // shop's own document, so no automatic re-render hook covers it) would otherwise keep
@@ -1176,6 +1194,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       await character.setFlag("eclipsephase", `shopLockouts.${this.actor.id}`, true);
     }
 
+    // Captured before _confirmSell() clears the staging map.
+    const soldCount = this._toSell.size;
     // Sell side first (item transfer only, no Rep of its own - see _confirmSell()), then the buy side.
     await this._confirmSell();
 
@@ -1197,11 +1217,15 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (actualNet !== 0) {
       await idItem.update({ [`system.rep.${network}.value`]: available - actualNet });
     }
-    if (sellGain > 0) {
-      ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({ actor: character }),
-        content: `<p>${game.i18n.format("ep2e.shop.purchase.tradeInMessage", { character: character.name, amount: sellGain, network: network.replace("-rep", "") })}</p>`
-      });
+    // Still worth reporting even on a perfectly balanced (net 0) trade - what was bought (by name)
+    // and how many items were sold (by count only, names don't matter here).
+    if (boughtItems.length || actualNet !== 0) {
+      const boxContent = actualNet !== 0
+        ? `<span style="font-size: 16px;">${game.i18n.localize(actualNet < 0 ? "ep2e.shop.purchase.tradeReceived" : "ep2e.shop.purchase.tradeSpend")}</span> ${shopRepIconHtml(network)} ${Math.abs(actualNet)}`
+        : null;
+      await postShopChatMessage(character, "ep2e.shop.purchase.tradeInMessage",
+        { character: character.name, items: boughtItems.map(item => item.name).join(", "), soldCount, network: network.replace("-rep", "") },
+        boxContent);
     }
     // The earlier this.render() only covered the cleared selection - the Rep change above
     // happens after that, same staleness reasoning as _useFlatBuy()'s trailing render().

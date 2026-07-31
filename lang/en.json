@@ -1858,8 +1858,12 @@
         "sellBonusModifier": "Sell Bonus",
         "burnBonusModifier": "Burned Rep",
                 "favorDifficultyLockedHint": "Automatically set by this shop's Loyalty standing and how many items you're calling in at once.",
-"successMessage": "{character} bought {items} from {shop}.",
-        "tradeInMessage": "{character} traded in item(s) worth {amount} {network} Rep toward this purchase."
+        "successMessage": "{character} bought {items} from {shop} with {network} Rep.",
+        "favorMessage": "{character} cashed in a favor to get {items}.",
+        "favorBurnMessage": "{character} cashed in a favor to get {items} and burned {network} Rep in the process.",
+        "tradeInMessage": "{character} bought {items}, trading in {soldCount} item(s) worth {network} Rep toward this purchase.",
+        "tradeReceived": "Received",
+        "tradeSpend": "Spent"
       },
       "toSell": {
         "headline": "To Sell",
@@ -1868,7 +1872,7 @@
         "remove": "Remove from To Sell",
         "confirmMessage": "You are about to sell the staged item(s) to this shop.",
         "ownerWarning": "You own this shop. Are you sure you want to sell something to yourself?",
-        "repGainMessage": "{character} gained {amount} {network} Rep from selling."
+        "repGainMessage": "{character} gained {network} Rep from selling."
       },
       "warnings": {
         "systemDisabled": "The shop system is currently disabled - you can activate it via Eclipse Phase's system settings.",

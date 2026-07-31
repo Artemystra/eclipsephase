@@ -1810,8 +1810,12 @@
         "sellBonusModifier": "Verkaufs-Bonus",
         "burnBonusModifier": "Verbrannter Rep",
                 "favorDifficultyLockedHint": "Wird automatisch anhand der Loyalität bei diesem Shop und der Anzahl gleichzeitig erbetener Items bestimmt.",
-"successMessage": "{character} hat {items} von {shop} gekauft.",
-        "tradeInMessage": "{character} hat Gegenstände im Wert von {amount} {network}-Rep in Zahlung gegeben."
+        "successMessage": "{character} hat {items} von {shop} mit {network}-Rep gekauft.",
+        "favorMessage": "{character} hat einen Gefallen eingelöst, um {items} zu erhalten.",
+        "favorBurnMessage": "{character} hat einen Gefallen eingelöst, um {items} zu erhalten, und dabei {network}-Rep verbrannt.",
+        "tradeInMessage": "{character} hat {items} gekauft und dafür {soldCount} Gegenstände in {network}-Rep in Zahlung gegeben.",
+        "tradeReceived": "Erhalten",
+        "tradeSpend": "Ausgegeben"
       },
       "toSell": {
         "headline": "To Sell",
@@ -1820,7 +1824,7 @@
         "remove": "Aus To Sell entfernen",
         "confirmMessage": "Du bist dabei, die vorgemerkten Items an diesen Shop zu verkaufen.",
         "ownerWarning": "Dir gehört dieser Shop. Bist du sicher, dass du etwas an dich selbst verkaufen möchtest?",
-        "repGainMessage": "{character} hat durch den Verkauf {amount} {network}-Rep erhalten."
+        "repGainMessage": "{character} hat durch den Verkauf {network}-Rep erhalten."
       },
       "warnings": {
         "systemDisabled": "Das Shop-System ist aktuell deaktiviert - du kannst es in den Eclipse-Phase-Systemeinstellungen aktivieren.",

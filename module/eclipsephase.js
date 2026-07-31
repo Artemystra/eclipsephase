@@ -695,12 +695,11 @@ Hooks.once("ready", async () => {
 
   for (const entry of pending) {
     const message = {
-      type: "systemNotice",
       noticeLabel: "ep2e.migration.armorStashedNoticeSelf.updateLabel",
       mainCopy: game.i18n.format("ep2e.migration.armorStashedNoticeSelf.main", { count: entry.count, actor: entry.actorName }),
       subCopy: game.i18n.localize("ep2e.migration.armorStashedNoticeSelf.sub")
     };
-    const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
+    const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/system-notice.html", message);
 
     await ChatMessage.create({
       speaker: { alias: "System" },

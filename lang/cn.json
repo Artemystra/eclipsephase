@@ -1779,8 +1779,12 @@
         "sellBonusModifier": "出售加成",
         "burnBonusModifier": "燃烧的信誉",
                 "favorDifficultyLockedHint": "根据你在本商店的忠诚度以及一次请求的物品数量自动确定。",
-"successMessage": "{character} 从 {shop} 购买了 {items}。",
-        "tradeInMessage": "{character} 以价值 {amount} 点{network}信誉的物品折抵了本次购买。"
+        "successMessage": "{character} 用{network}信誉从 {shop} 购买了 {items}。",
+        "favorMessage": "{character} 兑现了一个人情以获得 {items}。",
+        "favorBurnMessage": "{character} 兑现了一个人情以获得 {items}，并在此过程中消耗了{network}信誉。",
+        "tradeInMessage": "{character} 购买了 {items}，并用 {soldCount} 件{network}信誉物品折抵了本次购买。",
+        "tradeReceived": "获得",
+        "tradeSpend": "花费"
       },
       "toSell": {
         "headline": "待售",
@@ -1789,7 +1793,7 @@
         "remove": "从待售中移除",
         "confirmMessage": "你即将把待售物品出售给这家商店。",
         "ownerWarning": "这家商店是你的。你确定要把东西卖给自己吗？",
-        "repGainMessage": "{character} 通过出售获得了 {amount} 点 {network} 信誉。"
+        "repGainMessage": "{character} 通过出售获得了 {network} 信誉。"
       },
       "warnings": {
         "systemDisabled": "商店系统当前已停用——你可以在 Eclipse Phase 的系统设置中启用它。",

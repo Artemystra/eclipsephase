@@ -1772,8 +1772,12 @@
         "sellBonusModifier": "Bono de venta",
         "burnBonusModifier": "Reputación quemada",
                 "favorDifficultyLockedHint": "Se establece automáticamente según la Lealtad con esta tienda y cuántos objetos estás pidiendo a la vez.",
-"successMessage": "{character} compró {items} de {shop}.",
-        "tradeInMessage": "{character} entregó objetos por valor de {amount} de Reputación {network} a cambio de esta compra."
+        "successMessage": "{character} compró {items} de {shop} con Reputación {network}.",
+        "favorMessage": "{character} cobró un favor para conseguir {items}.",
+        "favorBurnMessage": "{character} cobró un favor para conseguir {items} y quemó Reputación {network} en el proceso.",
+        "tradeInMessage": "{character} compró {items}, entregando {soldCount} objeto(s) por Reputación {network} a cambio de esta compra.",
+        "tradeReceived": "Recibido",
+        "tradeSpend": "Gastado"
       },
       "toSell": {
         "headline": "Para Vender",
@@ -1782,7 +1786,7 @@
         "remove": "Quitar de Para Vender",
         "confirmMessage": "Estás a punto de vender los objetos preparados a esta tienda.",
         "ownerWarning": "Esta tienda es tuya. ¿Seguro que quieres venderte algo a ti mismo?",
-        "repGainMessage": "{character} ganó {amount} de Reputación {network} por vender."
+        "repGainMessage": "{character} ganó Reputación {network} por vender."
       },
       "warnings": {
         "systemDisabled": "El sistema de tienda está desactivado actualmente - puedes activarlo en los ajustes del sistema de Eclipse Phase.",

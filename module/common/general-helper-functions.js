@@ -545,7 +545,6 @@ export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, ne
     ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.purchaseItemsGone"));
   }
 
-  const boughtNames = [];
   const boughtItems = [];
   for (const item of items) {
     let created;
@@ -581,7 +580,6 @@ export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, ne
       }
     }
 
-    boughtNames.push(item.name);
     boughtItems.push(item);
   }
 
@@ -611,16 +609,40 @@ export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, ne
     if (!consumed) ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.favorLimitExhausted"));
   }
 
-  if (boughtNames.length) {
-    ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor: character }),
-      content: `<p>${game.i18n.format("ep2e.shop.purchase.successMessage", {
-        character: character.name,
-        shop: shop.name,
-        items: boughtNames.join(", ")
-      })}</p>`
-    });
-  }
-
   return boughtItems;
+}
+
+const GENERAL_CHAT_MESSAGE = "systems/eclipsephase/templates/chat/general-chat-message.html";
+
+/**
+ * <img> markup for a Rep network's icon, sized for the shop chat message box (48x48, no default
+ * margin - sized/styled inline rather than via a shared CSS class, since this is the only
+ * .shop-rep-icon usage that needs to be this large; other usages, e.g. Settings checkboxes, stay
+ * at their normal small size).
+ * @param {string} network
+ * @returns {string}
+ */
+export function shopRepIconHtml(network) {
+  return `<img src="${CONFIG.eclipsephase.repIcons[network]}" class="shop-rep-icon" title="${game.i18n.localize(CONFIG.eclipsephase.repTypes[network])}" style="width: 48px; height: 48px; margin-right: 0;"/>`;
+}
+
+/**
+ * Posts a shop chat message: a copy line plus an optional highlighted box, reusing the existing
+ * generic general-chat-message.html (already used the same way for Rez-spend notices) - its box
+ * only renders when a boxHeadline is actually supplied. Callers build their own box content (via
+ * shopRepIconHtml() plus whatever text/amount belongs next to it) - the box's shape differs per
+ * action: Buy/Sell just show an amount, Trade prefixes Received/Spent, Cash-in-Favor shows a
+ * favor tier instead of an amount (a roll has no fixed Rep cost unless Rep was burned).
+ * @param {Actor} character - speaker
+ * @param {string} copyKey - loc key for the message's top line, formatted with copyData
+ * @param {Object} copyData - game.i18n.format() placeholders for copyKey
+ * @param {string|null} [boxContent] - pre-built HTML for the box; null/omitted skips the box
+ */
+export async function postShopChatMessage(character, copyKey, copyData, boxContent = null) {
+  const content = await foundry.applications.handlebars.renderTemplate(GENERAL_CHAT_MESSAGE, {
+    type: "general",
+    headline: game.i18n.format(copyKey, copyData),
+    boxHeadline: boxContent ? `<span style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 24px;">${boxContent}</span>` : null
+  });
+  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: character }), content });
 }
