@@ -9,6 +9,7 @@
     "customToken": null,
     "type": "info",
     "dur": 30,
+    "morphPoints": 1,
     "insight": 1,
     "moxie": 3,
     "vigor": 0,

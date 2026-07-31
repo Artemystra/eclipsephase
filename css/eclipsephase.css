@@ -1786,7 +1786,7 @@ form.eclipsephase.shop {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 1px solid var(--highlight);
+  border-bottom: 2px solid var(--accentBackground);
   background: var(--pitchBackground);
 }
 
@@ -1807,18 +1807,13 @@ form.eclipsephase.shop {
 .eclipsephase .shop-rate-override-table th.shop-th-side {
   width: 100px;
   border-bottom: none;
-  border-right: 1px solid var(--highlight);
+  border-right: 2px solid var(--accentBackground);
 }
 
 /* Blank corner above the row-label column - same width, adds the side border too. */
 .eclipsephase .shop-rate-override-table th.shop-th-corner {
   width: 100px;
-  border-right: 1px solid var(--highlight);
-}
-
-/* The real <thead> corner doesn't need a divider line below it, unlike tbody's. */
-.eclipsephase .shop-rate-override-table thead th.shop-th-corner {
-  border-bottom: none;
+  border-right: 2px solid var(--accentBackground);
 }
 
 /* Per-network divider row (@-REP/C-REP/...) - same accent background as a subheader bar. */

@@ -800,12 +800,18 @@ Hooks.on("renderTokenApplication", (app, html) => {
 // Foundry doesn't reliably apply the system.json bar-attribute/actorLink schema defaults on actor
 // creation - set them explicitly instead. Goons unlinked (mook tokens), character/npc linked.
 Hooks.on("preCreateActor", (actor, data, options, userId) => {
-  // Shops have no health bars/actorLink concerns and are gated by their own setting instead.
+  // Shops have no health bars, but still get their own token defaults - gated by their own
+  // setting instead of the character/npc/goon logic below.
   if (data.type === "shop") {
     if (!game.settings.get("eclipsephase", "enableShopSystem")) {
       ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.systemDisabled"));
       return false;
     }
+    actor.updateSource({
+      "prototypeToken.displayName": CONST.TOKEN_DISPLAY_MODES.HOVER,
+      "prototypeToken.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+      "prototypeToken.actorLink": false
+    });
     return;
   }
   const update = {

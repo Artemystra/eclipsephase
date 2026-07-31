@@ -9,6 +9,7 @@
     "customToken": null,
     "type": "bio",
     "dur": 40,
+    "morphPoints": 6,
     "insight": 0,
     "moxie": 2,
     "vigor": 1,
