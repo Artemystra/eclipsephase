@@ -73,9 +73,8 @@ export async function usePoolFromChat(data){
                 bodyBindings
             })
             if (boughtItems.length) {
-                // This rescue path only ever fires for shopPurchase rolls (Cash in Favor) - Buy
-                // has no roll to swap-rescue - so the favor-tier box, not a flat successMessage,
-                // is the right message here too, mirroring _useGefallen()'s immediate-success path.
+                // Only fires for shopPurchase rolls (Cash in Favor, Buy has no roll to rescue) -
+                // the favor-tier box is right here too, mirroring _useGefallen()'s success path.
                 const burnAmount = Number(dataset.burnamount) || 0;
                 const tierLabel = `<span style="font-size: 16px;">${game.i18n.localize(eclipsephase.favorTiers[dataset.requiredtier])}</span>`;
                 const boxContent = burnAmount > 0

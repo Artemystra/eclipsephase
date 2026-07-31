@@ -615,10 +615,8 @@ export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, ne
 const GENERAL_CHAT_MESSAGE = "systems/eclipsephase/templates/chat/general-chat-message.html";
 
 /**
- * <img> markup for a Rep network's icon, sized for the shop chat message box (48x48, no default
- * margin - sized/styled inline rather than via a shared CSS class, since this is the only
- * .shop-rep-icon usage that needs to be this large; other usages, e.g. Settings checkboxes, stay
- * at their normal small size).
+ * <img> markup for a Rep network's icon, sized 48x48 inline (not via CSS class - .shop-rep-icon
+ * is shared with small 14px usages elsewhere, e.g. Settings checkboxes).
  * @param {string} network
  * @returns {string}
  */
@@ -627,12 +625,11 @@ export function shopRepIconHtml(network) {
 }
 
 /**
- * Posts a shop chat message: a copy line plus an optional highlighted box, reusing the existing
- * generic general-chat-message.html (already used the same way for Rez-spend notices) - its box
- * only renders when a boxHeadline is actually supplied. Callers build their own box content (via
- * shopRepIconHtml() plus whatever text/amount belongs next to it) - the box's shape differs per
- * action: Buy/Sell just show an amount, Trade prefixes Received/Spent, Cash-in-Favor shows a
- * favor tier instead of an amount (a roll has no fixed Rep cost unless Rep was burned).
+ * Posts a shop chat message: a copy line plus an optional box, reusing general-chat-message.html
+ * (also used for Rez-spend notices) - the box only renders if boxContent is supplied. Callers
+ * build their own box content via shopRepIconHtml() plus whatever belongs next to it - the shape
+ * differs per action: Buy/Sell show an amount, Trade prefixes Received/Spent, Cash-in-Favor shows
+ * a favor tier (a roll has no fixed Rep cost unless Rep was burned).
  * @param {Actor} character - speaker
  * @param {string} copyKey - loc key for the message's top line, formatted with copyData
  * @param {Object} copyData - game.i18n.format() placeholders for copyKey

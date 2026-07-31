@@ -485,9 +485,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const wantsBuy = buyAvailable && hasSelection;
     const wantsSell = hasStaged && salesOpen;
 
-    // "buy" is the idle default (nothing staged for sale, or sales closed) - was previously also
-    // triggered by buyAvailable alone, which wrongly overrode a sell-only state (staged items,
-    // no purchase selection) whenever buying was merely possible, not actually selected.
+    // "buy" is the idle default (nothing staged, or sales closed) - previously also triggered by
+    // buyAvailable alone, wrongly overriding a sell-only state when nothing was selected to buy.
     let action;
     if (wantsBuy && wantsSell) action = "trade";
     else if (wantsSell) action = "sell";
@@ -1026,8 +1025,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     });
 
     if (boughtItems.length) {
-      // A Rep Test has no fixed Rep cost, unlike Buy/Trade - the box shows the favor's tier
-      // instead of an amount, plus the burned amount (if any) rather than a flat price paid.
+      // A Rep Test has no fixed cost - the box shows the favor's tier plus any burned amount.
       const tierLabel = `<span style="font-size: 16px;">${game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier])}</span>`;
       const boxContent = actualBurn > 0
         ? `${tierLabel} + ${shopRepIconHtml(network)} ${actualBurn}`
@@ -1217,8 +1215,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (actualNet !== 0) {
       await idItem.update({ [`system.rep.${network}.value`]: available - actualNet });
     }
-    // Still worth reporting even on a perfectly balanced (net 0) trade - what was bought (by name)
-    // and how many items were sold (by count only, names don't matter here).
+    // Worth reporting even on a balanced (net 0) trade - what was bought by name, what sold by count only.
     if (boughtItems.length || actualNet !== 0) {
       const boxContent = actualNet !== 0
         ? `<span style="font-size: 16px;">${game.i18n.localize(actualNet < 0 ? "ep2e.shop.purchase.tradeReceived" : "ep2e.shop.purchase.tradeSpend")}</span> ${shopRepIconHtml(network)} ${Math.abs(actualNet)}`
