@@ -20,7 +20,7 @@
             {{#if itemGroups.length}}
                 {{#each itemGroups as |group|}}
                     <p class="shop-category-heading">{{group.label}}</p>
-                    {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=group.items readOnly=../readOnly selectable=../selectable selected=../selected}}
+                    {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=group.items readOnly=../readOnly selectable=../selectable selected=../selected hideQuantity=true}}
                 {{/each}}
             {{else}}
                 <p class="notes">{{localize "ep2e.shop.placeholders.noItems"}}</p>

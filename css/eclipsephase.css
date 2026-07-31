@@ -1631,9 +1631,8 @@ form.eclipsephase.shop {
   border-bottom: 1px solid var(--highlightBackground);
 }
 
-/* Tab switching is a pure DOM class toggle in Foundry core (no re-render), so this has to be a
-   CSS rule rather than a Handlebars condition. Only matches Owner's tabbed view - Observer's
-   shop-sheet-body has no Settings tab pane to match against. */
+/* Tab switching is a DOM class toggle in Foundry core (no re-render), so this must be CSS, not a
+   Handlebars condition. Only matches Owner's view - Observer has no Settings tab pane. */
 .eclipsephase .shop-sheet-body:has(.tab[data-tab="settings"].active) ~ .shop-footer .shop-cart-bar {
   display: none;
 }
@@ -1837,9 +1836,8 @@ form.eclipsephase.shop {
   align-items: center;
 }
 
-/* One half of a settings section's .grid-2col row. No margin-bottom here - unlike a grid-2col
-   cell, this can be the last visible thing before a hidden section (e.g. Accepted Rep Networks
-   above a collapsed Sell Limits row), and a fixed margin would leak into that gap unevenly. */
+/* One half of a settings section's .grid-2col row. No margin-bottom - this can be the last
+   visible thing before a hidden section, and a fixed margin would leak into that gap unevenly. */
 .eclipsephase .shop-settings-column {
   padding: 10px 10px;
   background: var(--mainBackground);
@@ -1851,9 +1849,8 @@ form.eclipsephase.shop {
   margin-bottom: 10px;
 }
 
-/* .grid-2col's own margin varied the gap before the next section depending on whether its
-   content was visible (table/column padding adds to it) - zeroed out here, the constant
-   .contentBox margin below is the only spacing between sections now. */
+/* Zeroed out - .grid-2col's own margin varied the gap depending on content visibility.
+   .contentBox's fixed margin below is the only spacing between sections now. */
 .eclipsephase .shop-settings-scroll .grid-2col {
   margin-top: 0;
   margin-bottom: 0;
@@ -3033,7 +3030,7 @@ input[type="text"].ego-combo-input::-webkit-calendar-picker-indicator {
   flex-wrap: wrap;
   align-items: center;
   gap: 5px;
-  min-height: 24px;
+  min-height: 30px;
   padding: 3px 6px;
   border: solid 1px var(--highlightBackground);
   border-radius: 4px;
@@ -3087,11 +3084,12 @@ input[type="text"].multiselect-input:focus {
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
+  width: fit-content;
   margin-top: 2px;
   z-index: 100;
   max-height: 300px;
   overflow-y: auto;
+  padding: 10px 15px;
   background: var(--mainBackground);
   border: solid 1px var(--highlightBackground);
   border-radius: 4px;
@@ -3105,7 +3103,7 @@ input[type="text"].multiselect-input:focus {
 }
 
 .multiselect-option {
-  padding: 4px 10px;
+  padding: 4px 0;
   color: var(--mainText);
   cursor: pointer;
 }
@@ -3257,6 +3255,35 @@ input[type="text"].multiselect-input:focus {
 /* keeps header height stable when description opens */
 .item-row-list-entry .slideShow {
   min-height: 36px;
+}
+
+/* Row-image click-to-zoom overlay - see registerCommonHandlers() in general-sheet-functions.js. */
+.item-image-zoomable {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Sized/anchored to the row image's own fixed 24x24 box, not the (often wider, left-aligned-
+   content) wrapper - inset:0 on the wrapper would center over empty trailing space instead. */
+.item-image-zoom-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.item-image-zoomable:hover .item-image-zoom-icon {
+  opacity: 1;
 }
 
 .noBG {

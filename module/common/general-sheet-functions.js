@@ -230,6 +230,23 @@ export function registerCommonHandlers(html, callerobj) {
       container.style.display = "none";
     });
   }
+
+  // .item-image is reused both as a real thumbnail wrapper and, elsewhere, as a bare styling
+  // class on non-image elements (ammo/damage boxes) or the <img> itself (toggle icons) - only
+  // wrappers with an actual <img> child qualify, so this is a no-op everywhere else.
+  html.querySelectorAll(".item-image").forEach(wrapper => {
+    const img = wrapper.querySelector("img");
+    if (!img || wrapper.classList.contains("item-image-zoomable")) return;
+
+    wrapper.classList.add("item-image-zoomable");
+    const icon = document.createElement("i");
+    icon.className = "fas fa-eye item-image-zoom-icon";
+    wrapper.appendChild(icon);
+
+    wrapper.addEventListener("click", () => {
+      new foundry.applications.apps.ImagePopout({ src: img.src, window: { title: img.title || "" } }).render(true);
+    });
+  });
 }
 
 /**
@@ -519,6 +536,10 @@ export function multiSelectPills(html, actor) {
       });
       dropdown.classList.toggle("noShow", !anyMatch);
       dropdown.classList.toggle("showFlex", anyMatch);
+
+      // left:0 in CSS would anchor to the whole widget's left edge, not the input's - wrong once
+      // pills push the input rightward (or onto a wrapped second row). Align under the input itself.
+      if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
     };
 
     if (input) {
@@ -612,8 +633,13 @@ export function itemTypeFilterPills(html, sheet, filterProperty) {
     const input = widget.querySelector(".multiselect-input");
     const dropdown = widget.querySelector(".multiselect-dropdown");
 
-    const hideDropdown = () => dropdown?.classList.add("noShow");
+    const hideDropdown = () => {
+      dropdown?.classList.add("noShow");
+      dropdown?.classList.remove("showFlex");
+    };
 
+    // showFlex mirrors multiSelectPills()'s own toggling - .multiselect-dropdown.showFlex is what
+    // actually renders the options stacked in a column instead of the browser's inline <a> default.
     const filterDropdown = () => {
       if (!dropdown) return;
       const search = input.value.trim().toLowerCase();
@@ -624,6 +650,11 @@ export function itemTypeFilterPills(html, sheet, filterProperty) {
         if (match) anyMatch = true;
       });
       dropdown.classList.toggle("noShow", !anyMatch);
+      dropdown.classList.toggle("showFlex", anyMatch);
+
+      // left:0 in CSS would anchor to the whole widget's left edge, not the input's - wrong once
+      // pills push the input rightward (or onto a wrapped second row). Align under the input itself.
+      if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
     };
 
     if (input) {

@@ -96,6 +96,37 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
+   * Complexity tier for the item-row badge - the item's own cost tier for ordinary buyable items,
+   * or (morphs have no cost field) derived from morphPoints against this shop's morphPointOverrides
+   * thresholds. Null for item types with neither (traits, aspect, program, specialSkill, id, ...).
+   * @param {Item} item
+   * @returns {"minor"|"moderate"|"major"|"rare"|null}
+   */
+  _getComplexityTier(item) {
+    if (item.type === "morph") {
+      const points = Number(item.system.morphPoints) || 0;
+      const overrides = this.actor.system.morphPointOverrides ?? {};
+      if (overrides.rareMin != null && points >= Number(overrides.rareMin)) return "rare";
+      if (overrides.majorMin != null && points >= Number(overrides.majorMin)) return "major";
+      if (overrides.moderateMin != null && points >= Number(overrides.moderateMin)) return "moderate";
+      return "minor";
+    }
+    const cost = item.system.cost;
+    return ["minor", "moderate", "major", "rare"].includes(cost) ? cost : null;
+  }
+
+  /**
+   * Complexity badge loc key for an item-row template ({{localize}} resolves it) - see
+   * _getComplexityTier().
+   * @param {Item} item
+   * @returns {string|null}
+   */
+  _getComplexityLabel(item) {
+    const tier = this._getComplexityTier(item);
+    return tier ? CONFIG.eclipsephase.costTypes[tier] : null;
+  }
+
+  /**
    * Filtered items grouped by type (localized label), each group sorted alphabetically by name;
    * groups themselves sorted alphabetically by label.
    * @returns {Array<{label: string, items: Item[]}>}
@@ -103,6 +134,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   _getGroupedItems() {
     const groups = new Map();
     for (const item of this._getFilteredItems()) {
+      // Scratch property for the template, same pattern as _getToSellEntries()'s shopStagingKey.
+      item.shopComplexityLabel = this._getComplexityLabel(item);
       const label = game.i18n.localize(`TYPES.Item.${item.type}`);
       if (!groups.has(label)) groups.set(label, []);
       groups.get(label).push(item);
@@ -446,9 +479,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const buyAvailable = !isOwnerView && purchaseNetworks.length > 0 && game.settings.get("eclipsephase", "superBrew");
     const hasSelection = !isOwnerView && this._selectedForPurchase.size > 0;
     const hasStaged = this._toSell.size > 0;
-    // Same "closed" definition as the footer's own accepted-rep display (0 networks or
-    // acceptsSales off) - keeps this from showing a Sell state that would immediately warn at
-    // click time.
+    // Same "closed" definition as the footer's accepted-rep display - avoids showing a Sell
+    // state that would immediately warn at click time.
     const salesOpen = !this._isClosedForSelling();
 
     const wantsBuy = buyAvailable && hasSelection;
@@ -697,9 +729,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const select = networks.length === 1
       ? `<select name="NetworkSelect" class="input-large">${options}</select>`
       : `<select name="NetworkSelect" class="input-large"><option value="" selected>${game.i18n.localize("ep2e.shop.dialog.selectNetwork.placeholder")}</option>${options}</select>`;
-    // A plain div, not a disabled input - this value is never editable, so there's no need to
-    // fight Foundry core's input[type="text"] styling (including its own text-align) just to
-    // display it centered.
+    // Plain div, not a disabled input - never editable, so no need to fight core's
+    // input[type="text"] styling just to center it.
     const hintRow = hint
       ? `<div class="form-group listBackgroundMain"><label class="resource-labelDialog">${hint}</label><div class="shop-hint-value input-large">${hintValue}</div></div>`
       : "";
@@ -1091,9 +1122,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       return ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.sellLockedOut"));
     }
 
-    // Same per-transaction caps as the plain Sell dialog - Trade's sell side is otherwise
-    // identical to _confirmSellDialog()'s, just netted against a purchase instead of granting
-    // Rep on its own.
+    // Same per-transaction caps as the plain Sell dialog - Trade's sell side is identical, just
+    // netted against a purchase instead of granting Rep on its own.
     const maxItems = Number(this.actor.system.sellLimitMaxItems) || 0;
     const maxRep = Number(this.actor.system.sellLimitMaxRep) || 0;
     const itemCount = this._toSell.size;
@@ -1173,9 +1203,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         content: `<p>${game.i18n.format("ep2e.shop.purchase.tradeInMessage", { character: character.name, amount: sellGain, network: network.replace("-rep", "") })}</p>`
       });
     }
-    // completeShopPurchase() already re-renders via the earlier this.render() above only covering
-    // the cleared selection - the Rep change above happens after that, same staleness reasoning
-    // as _useFlatBuy()'s own trailing render().
+    // The earlier this.render() only covered the cleared selection - the Rep change above
+    // happens after that, same staleness reasoning as _useFlatBuy()'s trailing render().
     if (actualNet !== 0 || sellGain > 0) this.render();
   }
 
@@ -1354,8 +1383,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const windowHeader = html.querySelector(".window-header");
     if (windowHeader) windowHeader.style.display = "none";
 
-    // Core disables all form.elements when !isEditable - re-enable for Observer.
-    html.querySelectorAll(".item-purchase-select").forEach(el => el.disabled = false);
+    // Core disables all form.elements when !isEditable (true for both Observer/Limited) -
+    // without this, the type-filter's search input can never focus, so its dropdown never opens.
+    html.querySelectorAll(".item-purchase-select, .multiselect-input").forEach(el => el.disabled = false);
 
     const titlebar = html.querySelector(".ep-sheet-titlebar");
     addWindowControls(this, titlebar);
@@ -1366,6 +1396,43 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     // works for any document, same call EPitemSheet.js makes.
     registerCommonHandlers(html, this.actor);
     itemTypeFilterPills(html, this, "_itemTypeFilter");
+
+    // .shop-column-scroll clips horizontally (overflow-y:auto forces overflow-x:auto), cutting
+    // off the row's absolute tooltip near either column's edge. On hover, switch to
+    // position:fixed (escapes the clip), centered on the row and clamped to this window's bounds.
+    html.querySelectorAll(".shop-two-column .item-row-list-entry").forEach(row => {
+      const tooltip = row.querySelector(":scope > .tooltipText");
+      if (!tooltip) return;
+
+      row.addEventListener("mouseenter", () => {
+        const rowRect = row.getBoundingClientRect();
+        const windowRect = html.getBoundingClientRect();
+        const tooltipWidth = tooltip.offsetWidth;
+        const tooltipHeight = tooltip.offsetHeight;
+
+        const gap = 18;
+        tooltip.style.position = "fixed";
+        if (rowRect.top - tooltipHeight - gap >= windowRect.top) {
+          tooltip.style.top = `${rowRect.top - gap}px`;
+          tooltip.style.transform = "translate(-50%, -100%)";
+        } else {
+          tooltip.style.top = `${rowRect.bottom + gap}px`;
+          tooltip.style.transform = "translate(-50%, 0)";
+        }
+
+        const centerX = rowRect.left + rowRect.width / 2;
+        const minX = windowRect.left + tooltipWidth / 2 + 8;
+        const maxX = windowRect.right - tooltipWidth / 2 - 8;
+        tooltip.style.left = `${Math.min(Math.max(centerX, minX), maxX)}px`;
+      });
+
+      row.addEventListener("mouseleave", () => {
+        tooltip.style.position = "";
+        tooltip.style.top = "";
+        tooltip.style.left = "";
+        tooltip.style.transform = "";
+      });
+    });
 
     // Settings-tab info icons - same moreInfo()/pop-up.html mechanism EPactorSheet.js/
     // EPitemSheet.js already use, Owner-only since only the settings tab has any.

@@ -10,8 +10,13 @@
         {{#if item.system.slotName}}
         <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
         {{/if}}
+        {{#if item.shopComplexityLabel}}
+        <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; width: 70px;">{{localize item.shopComplexityLabel}}</label>
+        {{/if}}
         {{#if item.system.quantity}}
+        {{#unless ../hideQuantity}}
         <label class="flex-group-center alignCenter" style="background: none; margin-left: 10px;">{{item.system.quantity}}</label>
+        {{/unless}}
         {{/if}}
         <div class="flexrow item-controls flex-group-right" style="max-width: 50px; min-width: 50px;">
             {{#unless ../readOnly}}
