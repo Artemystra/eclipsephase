@@ -1781,7 +1781,10 @@
         "morphPointOverridesHeadline": "Morph-Point-Overrides",
         "morphPointOverridesDescription": "Diese Option existiert nur im Homebrew, da Morphs normalerweise nicht kaufbar sind und stattdessen über ein anderes Punktesystem verrechnet werden. Jeder Wert ist der Morph-Points-Schwellenwert, ab dem diese Stufe beginnt - niedrigere Punktkosten fallen automatisch auf die nächstniedrigere Stufe zurück. Sind zwei Schwellenwerte gleich gesetzt, gewinnt die höhere Stufe.",
         "specificOverridesHeadline": "Rep-spezifische Overrides",
-        "specificOverridesDescription": "Für eine feingranularere Einstellung von Shops - zum Beispiel, wenn es Orte gibt, an denen bestimmtes Rep weniger gern gesehen ist als anderes. Alle nicht ausgefüllten Felder fallen auf den Grundwert oder den allgemeinen Override (falls vorhanden) zurück."
+        "specificOverridesDescription": "Für eine feingranularere Einstellung von Shops - zum Beispiel, wenn es Orte gibt, an denen bestimmtes Rep weniger gern gesehen ist als anderes. Alle nicht ausgefüllten Felder fallen auf den Grundwert oder den allgemeinen Override (falls vorhanden) zurück.",
+        "rateTableBuysFor": "Kauft für",
+        "rateTableRollBonus": "Wurf-Bonus",
+        "rateTableSellsFor": "Verkauft für"
       },
       "inventory": {
         "headline": "Inventar"

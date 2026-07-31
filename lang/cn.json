@@ -1750,7 +1750,10 @@
         "morphPointOverridesHeadline": "义体点数覆盖",
         "morphPointOverridesDescription": "此选项仅在家酿规则下存在，因为义体通常不可购买，而是通过另一套点数系统结算。每个数值是该等级开始的义体点数门槛——更低的点数会自动归入更低的等级。若两个门槛设为相同的值，则更高的等级胜出。",
         "specificOverridesHeadline": "信誉专属覆盖",
-        "specificOverridesDescription": "用于更精细地调整商店——例如某些地方对特定信誉网络的接受度较低。未填写的项会回退到基础值，若已设置通用覆盖则回退到通用覆盖。"
+        "specificOverridesDescription": "用于更精细地调整商店——例如某些地方对特定信誉网络的接受度较低。未填写的项会回退到基础值，若已设置通用覆盖则回退到通用覆盖。",
+        "rateTableBuysFor": "购买价",
+        "rateTableRollBonus": "检定加成",
+        "rateTableSellsFor": "出售价"
       },
       "inventory": {
         "headline": "库存"

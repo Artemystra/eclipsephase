@@ -1018,7 +1018,7 @@ input[class="rest"] {
 input[class="rest"]::before,
 input[class="rest"]::after,
 input[class="sheet"]::before,
-input[class="sheet"]::before,
+input[class="sheet"]::after,
 input[class="sheet equipped checkBox"]::before,
 input[class="sheet equipped checkBox"]::after,
 input[class="check-inline-edit"]::before,
@@ -1797,6 +1797,13 @@ form.eclipsephase.shop {
   font-size: 12px;
 }
 
+/* Taller than the base th - only the real column headers, not the tbody side-th/network-row th
+   this table also uses. */
+.eclipsephase .shop-rate-override-table thead th {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 /* Row-label <th> - bordered on the side, not below; fixed width to match across tables. */
 .eclipsephase .shop-rate-override-table th.shop-th-side {
   width: 100px;
@@ -1830,11 +1837,18 @@ form.eclipsephase.shop {
   align-items: center;
 }
 
-/* One half of a settings section's .grid-2col row. */
+/* One half of a settings section's .grid-2col row. No margin-bottom here - unlike a grid-2col
+   cell, this can be the last visible thing before a hidden section (e.g. Accepted Rep Networks
+   above a collapsed Sell Limits row), and a fixed margin would leak into that gap unevenly. */
 .eclipsephase .shop-settings-column {
   padding: 10px 10px;
-  margin-bottom: 10px;
   background: var(--mainBackground);
+}
+
+/* Restores the spacing below a standalone column (not itself inside a .grid-2col) - only applied
+   in the template while the section right after it actually has something to show. */
+.eclipsephase .shop-settings-column-gap {
+  margin-bottom: 10px;
 }
 
 /* .grid-2col's own margin varied the gap before the next section depending on whether its

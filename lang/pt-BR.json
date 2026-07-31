@@ -1757,7 +1757,10 @@
         "morphPointOverridesHeadline": "Substituições de Pontos de Morfo",
         "morphPointOverridesDescription": "Esta opção só existe no Homebrew, já que Morfos normalmente não podem ser comprados e são contabilizados através de outro sistema de pontos. Cada valor é o limite de Pontos de Morfo a partir do qual esse nível começa - custos menores caem automaticamente para o nível inferior. Se dois limites forem definidos com o mesmo valor, o nível mais alto vence.",
         "specificOverridesHeadline": "Substituições Específicas por Reputação",
-        "specificOverridesDescription": "Para um ajuste mais fino da loja - por exemplo, se determinada Reputação é menos bem-vinda em alguns lugares do que em outros. Qualquer campo deixado em branco recorre ao valor base, ou à Substituição Geral, se houver uma definida."
+        "specificOverridesDescription": "Para um ajuste mais fino da loja - por exemplo, se determinada Reputação é menos bem-vinda em alguns lugares do que em outros. Qualquer campo deixado em branco recorre ao valor base, ou à Substituição Geral, se houver uma definida.",
+        "rateTableBuysFor": "Compra por",
+        "rateTableRollBonus": "Bônus de Rolagem",
+        "rateTableSellsFor": "Vende por"
       },
       "inventory": {
         "headline": "Inventário"

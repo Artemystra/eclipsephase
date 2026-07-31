@@ -31,17 +31,17 @@
                     <h3 class="subheader">{{localize "ep2e.shop.settings.generalHeadline"}}</h3>
                     <div class="flexGrowThreeQuarter">
                         <label class="flexrow flex-group-center">
-                            <input type="checkbox" data-dtype="Boolean" name="system.acceptsSales" {{checked actor.system.acceptsSales}}/>
+                            <input type="checkbox" class="sheet" data-dtype="Boolean" name="system.acceptsSales" {{checked actor.system.acceptsSales}}/>
                             {{localize "ep2e.shop.settings.acceptsSales"}}
                         </label>
                     </div>
                 </div>
-                <div class="shop-settings-column">
+                <div class="shop-settings-column {{#if actor.system.acceptsSales}}shop-settings-column-gap{{/if}}">
                 <p class="headline6">{{localize "ep2e.shop.settings.repHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.repHeadline" data-description="ep2e.shop.settings.repDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                 <div class="shop-settings-networks">
                     {{#each repNetworks as |locKey network|}}
                         <label class="flexrow flex-group-center" title="{{localize locKey}}">
-                            <input type="checkbox" data-dtype="Boolean" name="system.acceptedRepNetworks.{{network}}" {{checked (lookup @root.acceptedRepNetworks network)}}/>
+                            <input type="checkbox" class="sheet" data-dtype="Boolean" name="system.acceptedRepNetworks.{{network}}" {{checked (lookup @root.acceptedRepNetworks network)}}/>
                             <img src="{{lookup @root.config.repIcons network}}" class="shop-rep-icon"/>Rep
                         </label>
                     {{/each}}
@@ -98,7 +98,7 @@
                     <h3 class="subheader">{{localize "ep2e.shop.settings.loyaltyHeadline"}}</h3>
                     <div class="flexGrowThreeQuarter">
                         <label class="flexrow flex-group-center">
-                            <input type="checkbox" data-dtype="Boolean" name="system.loyaltyEnabled" {{checked loyaltyEnabled}}/>
+                            <input type="checkbox" class="sheet" data-dtype="Boolean" name="system.loyaltyEnabled" {{checked loyaltyEnabled}}/>
                             {{localize "ep2e.shop.settings.loyaltyEnabled"}}
                         </label>
                     </div>
@@ -221,9 +221,9 @@
                     <thead>
                         <tr>
                             <th class="shop-th-corner"></th>
-                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.flatBuyCost"}}</th>{{/if}}
-                            <th>{{localize "ep2e.shop.purchase.sellBonus"}}</th>
-                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.sellForRep"}}</th>{{/if}}
+                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableSellsFor"}}</th>{{/if}}
+                            <th>{{localize "ep2e.shop.settings.rateTableRollBonus"}}</th>
+                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableBuysFor"}}</th>{{/if}}
                         </tr>
                     </thead>
                     <tbody>
@@ -269,9 +269,9 @@
                     <thead>
                         <tr>
                             <th class="shop-th-corner"></th>
-                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.flatBuyCost"}}</th>{{/if}}
-                            <th>{{localize "ep2e.shop.purchase.sellBonus"}}</th>
-                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.purchase.sellForRep"}}</th>{{/if}}
+                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableSellsFor"}}</th>{{/if}}
+                            <th>{{localize "ep2e.shop.settings.rateTableRollBonus"}}</th>
+                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableBuysFor"}}</th>{{/if}}
                         </tr>
                     </thead>
                     <tbody>

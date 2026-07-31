@@ -1743,7 +1743,10 @@
         "morphPointOverridesHeadline": "Anulaciones de Puntos de Morph",
         "morphPointOverridesDescription": "Esta opción solo existe en Homebrew, ya que los Morphs normalmente no se pueden comprar y en su lugar se contabilizan mediante otro sistema de puntos. Cada valor es el umbral de Puntos de Morph a partir del cual comienza ese nivel - los costos menores caen automáticamente al nivel inferior. Si dos umbrales tienen el mismo valor, gana el nivel más alto.",
         "specificOverridesHeadline": "Anulaciones Específicas por Reputación",
-        "specificOverridesDescription": "Para un ajuste más detallado de la tienda - por ejemplo, si ciertas Reputaciones son menos bienvenidas en algunos lugares que en otros. Cualquier campo vacío recurre al valor base, o a la Anulación General si hay una establecida."
+        "specificOverridesDescription": "Para un ajuste más detallado de la tienda - por ejemplo, si ciertas Reputaciones son menos bienvenidas en algunos lugares que en otros. Cualquier campo vacío recurre al valor base, o a la Anulación General si hay una establecida.",
+        "rateTableBuysFor": "Compra por",
+        "rateTableRollBonus": "Bono de Tirada",
+        "rateTableSellsFor": "Vende por"
       },
       "inventory": {
         "headline": "Inventario"

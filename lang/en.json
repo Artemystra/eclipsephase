@@ -1829,7 +1829,10 @@
         "morphPointOverridesHeadline": "Morph Point Overrides",
         "morphPointOverridesDescription": "This option only exists in Homebrew, since Morphs normally aren't purchasable and are instead accounted for via a different point system. Each value is the Morph Points threshold where that tier begins - lower point costs fall through to a lower tier automatically. If two thresholds are set to the same value, the higher tier wins.",
         "specificOverridesHeadline": "Rep-Specific Overrides",
-        "specificOverridesDescription": "For finer-grained shop tuning - for example, if certain Rep is less welcome in some places than others. Any slot left blank falls back to the base value, or the General Override if one is set."
+        "specificOverridesDescription": "For finer-grained shop tuning - for example, if certain Rep is less welcome in some places than others. Any slot left blank falls back to the base value, or the General Override if one is set.",
+        "rateTableBuysFor": "Buys For",
+        "rateTableRollBonus": "Roll Bonus",
+        "rateTableSellsFor": "Sells For"
       },
       "inventory": {
         "headline": "Inventory"
