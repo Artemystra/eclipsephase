@@ -293,7 +293,7 @@ export async function takeDamage(receiveDamage, currentDamage, bar, overBar, cur
       let html = await foundry.applications.handlebars.renderTemplate(DAMAGE_STATUS_OUTPUT, message);
 
       ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        speaker: ChatMessage.getSpeaker({ actor }),
         flavor: html
       });
     }

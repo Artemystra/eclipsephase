@@ -115,6 +115,9 @@
         "physicalDescription": "{name}s Hülle",
         "registeredId": "Registrierte ID: {name}"
       },
+      "warnings": {
+        "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert."
+      },
       "button": {
         "edit": "Editieren",
         "delete": "Löschen",
@@ -294,6 +297,12 @@
       "rest": {
         "label": "Rast",
         "jammedLabel": "Kein Rasten während des Jammens"
+      }
+    },
+    "token": {
+      "showApproximation": {
+        "label": "Annäherung anzeigen",
+        "hint": "Zeigt Betrachter:innen ohne Ownership-Rechte statt versteckter Bars eine grobe segmentierte Annäherung des Gesundheitszustands."
       }
     },
     "ego": {

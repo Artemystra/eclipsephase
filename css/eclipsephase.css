@@ -441,6 +441,7 @@
   min-height: fit-content;
   background-color: var(--mainBackground);
   padding: 5px 5px;
+  overflow-y: auto;
 }
 
 .eclipsephase .profile-img {
@@ -860,6 +861,15 @@ span.neutral {
 #token-hud .attribute.bar1 input,
 #token-hud .attribute.bar2 input{
   text-align: center;
+}
+
+/* Positioning (top/left) for these two rows is now handled in JS (renderTokenHUD hook in
+   eclipsephase.js), since it has to track the token's actual pixel height, which varies by grid
+   type (hex vs square/gridless) in a way no fixed or percentage-based CSS value can. This just
+   caps the row height so the input doesn't grow taller than the bar it sits on. */
+#token-hud .attribute.bar1,
+#token-hud .attribute.bar2{
+  max-height: 22px;
 }
 
 input[class="sheet"],
@@ -1492,8 +1502,8 @@ a:hover,
   min-height: 0;
 }
 
-.sheet .morph .editor-content{
-  min-height: 322px;
+.sheet .morph prose-mirror{
+  min-height: 255px;
 }
 
 .eclipsephase .sheet-body .tab .editor {

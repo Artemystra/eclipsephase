@@ -25,7 +25,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
   //Fallback config for sheets in general
   // Foundry's own ApplicationV2 already walks the class chain and merges each level's DEFAULT_OPTIONS
   // (concatenating arrays like window.controls) - do not pre-merge super.DEFAULT_OPTIONS here, that
-  // double-counts array entries (e.g. duplicate header-control buttons).
+  // double-counts array entries (e.g. duplicate "Configure Token" header buttons).
   static DEFAULT_OPTIONS = {
     classes: ["eclipsephase", "sheet", "actor"],
     tag: "form",
@@ -41,7 +41,13 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       resizable: false
     },
     actions: {
-      editImage: this._onEditImage
+      editImage: this._onEditImage,
+      // Guards a rare core edge case (actor.token null despite the "Configure Token" control being
+      // shown) instead of letting ActorSheetV2's own handler throw - see project_release_v21_todo.md.
+      configureToken: function () {
+        if (!this.actor.token) return ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.noPlacedToken"));
+        this.actor.token.sheet.render({ force: true });
+      }
     },
     dragDrop: [
       {
