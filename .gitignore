@@ -1,6 +1,7 @@
 # IDE
 .idea/
 .vs/
+*.code-workspace
 
 # macOS
 .DS_Store
