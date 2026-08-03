@@ -677,6 +677,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         let outputData = task.outputData(options, actorWhole, activePool, itemData, rolledFrom, systemOptions)
 
+        outputData.skillKey = roll.type
         outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
@@ -698,7 +699,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         console.log("My outputData", outputData)
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
         
-        if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
+        if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
 
         return rollResult;

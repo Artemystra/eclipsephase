@@ -304,7 +304,7 @@ Hooks.once("ready", async function() {
   let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
   let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
   let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
-  let before210 = foundry.utils.isNewerVersion("2.1", gameVersion);
+  let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -546,17 +546,17 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
-  //2.1 Migration
-  if (before210) {
+  //2.1.5 Migration
+  if (before215) {
     endMigration = false;
-    const messageCopy = "ep2e.migration.210";
+    const messageCopy = "ep2e.migration.215";
     let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
 
     if (migration.cancelled) return;
     startMigration = migration.start;
 
-    let Migration210 = await update.migrationPre210(startMigration);
-    endMigration = Migration210["endMigration"];
+    let Migration215 = await update.migrationPre215(startMigration);
+    endMigration = Migration215["endMigration"];
   }
 
     if(endMigration){
