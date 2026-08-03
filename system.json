@@ -7,8 +7,7 @@
   "version": "2.1.5",
   "compatibility": {
     "verified": "14",
-    "minimum": "14",
-    "maximum": "14"
+    "minimum": "14"
   },
   "authors": [
     {
@@ -208,7 +207,7 @@
   "primaryTokenAttribute": "health.physical",
   "secondaryTokenAttribute": "health.mental",
   "url": "https://github.com/Artemystra/eclipsephase",
-  "manifest": "https://github.com/Artemystra/eclipsephase/raw/Release-v2.1.5/system.json",
-  "download": "https://github.com/Artemystra/eclipsephase/archive/Release-v2.1.5/eclipsephase-Release-v2.1.5.zip",
+  "manifest": "https://github.com/Artemystra/eclipsephase/raw/v2.1.5/system.json",
+  "download": "https://github.com/Artemystra/eclipsephase/archive/v2.1.5/v2.1.5.zip",
   "license": "LICENSE.txt"
 }
