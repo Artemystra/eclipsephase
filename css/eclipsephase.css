@@ -938,6 +938,7 @@ input[class="sheet"],
 input[class="sheet equipped checkBox"],
 input[class="rest"]{
   -webkit-appearance:none;
+  -moz-appearance: none;
   appearance: none;
   flex: 0 0 13px;
   height: 13px;
@@ -997,6 +998,7 @@ body.system-eclipsephase .application.dialog input[type="checkbox"]::after {
 
 input[class="check-inline-edit"]{
   -webkit-appearance:none;
+  -moz-appearance: none;
   appearance: none;
   flex: 0 0 10px;
   height: 10px;
@@ -1596,6 +1598,7 @@ form.eclipsephase.shop {
    directly, it's an exact class-attribute match and this element needs its own class for JS. */
 .eclipsephase input.item-purchase-select {
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   flex: 0 0 13px;
   min-width: 0;
@@ -1701,6 +1704,11 @@ form.eclipsephase.shop {
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 15px;
+}
+
+.eclipsephase .shop-settings-networks label {
+  flex: 0 0 auto;
+  width: 10%;
 }
 
 .eclipsephase .shop-settings-scroll {
@@ -1858,6 +1866,7 @@ form.eclipsephase.shop {
 /* Rep network abbreviation icon - checkboxes, table headers, footer, dialog hints. */
 .eclipsephase .shop-rep-icon {
   display: inline-block;
+  flex: 0 0 auto;
   height: 14px;
   width: 14px;
   vertical-align: middle;
