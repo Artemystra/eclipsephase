@@ -208,7 +208,23 @@
                                 <th class="shop-th-side">{{localize locKey}}</th>
                                 <td>
                                     <select name="system.valuation.{{tier}}">
-                                        {{selectOptions @root.favorTiers selected=(lookup @root.valuation tier) localize=true}}
+                                        {{selectOptions @root.effectiveCostTiers selected=(lookup @root.valuation tier) localize=true}}
+                                    </select>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
+                <p class="headline6">{{localize "ep2e.shop.settings.difficultyMappingHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.difficultyMappingHeadline" data-description="ep2e.shop.settings.difficultyMappingDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
+                <table class="shop-rate-override-table">
+                    <tbody>
+                        {{#each difficultyMappingGrid as |rowEntry|}}
+                            <tr>
+                                <th class="shop-th-side">{{localize rowEntry.rowLabel}}</th>
+                                <td>
+                                    <select name="system.difficultyMapping.{{rowEntry.row}}">
+                                        {{selectOptions @root.favorTiers selected=rowEntry.value localize=true}}
                                     </select>
                                 </td>
                             </tr>

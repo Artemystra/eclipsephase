@@ -86,6 +86,17 @@ eclipsephase.costTypes = {
     rare: "ep2e.item.general.table.cost.rare"
 }
 
+// Shop Item Valuation dropdown values - costTypes plus a shop-only "Free" tier with no RAW
+// equivalent as an item's own cost. Not favorTiers' "trivial" - that's a differently-scoped
+// tier used by the shop's separate Difficulty Mapping step, not this one.
+eclipsephase.effectiveCostTiers = {
+    free: "ep2e.shop.settings.costTierFree",
+    minor: "ep2e.item.general.table.cost.minor",
+    moderate: "ep2e.item.general.table.cost.moderate",
+    major: "ep2e.item.general.table.cost.major",
+    rare: "ep2e.item.general.table.cost.rare"
+}
+
 // Same 7 networks as Item.id.rep in template.json - reused as-is for the Shop's acceptedRepNetworks toggles.
 eclipsephase.repTypes = {
     "@-rep": "ep2e.id.repType.@rep",
@@ -108,7 +119,7 @@ eclipsephase.repIcons = {
 }
 
 // Same RAW favor tiers as the Rep-Test roll dialog's favorMod dropdown (general-modifiers.html) -
-// reused here for the Shop's per-cost-tier valuation table.
+// reused here for the Shop's Difficulty Mapping table.
 eclipsephase.favorTiers = {
     trivial: "ep2e.roll.dialog.reputationMode.trivial",
     minor: "ep2e.roll.dialog.reputationMode.minor",

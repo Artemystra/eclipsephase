@@ -405,9 +405,9 @@ export function requestGMItemTransfer({
 // trivial has no RAW limit so it's absent here (hasFreeFavorSlot/consumeFavorSlot treat it as always free).
 const FAVOR_LIMIT_SLOTS = { minor: ["small1", "small2", "small3"], moderate: ["med1"], major: ["large"] };
 
-// Loyalty gained per item, scaled by the item's own cost type (minor/moderate/major/rare - not the
-// shop's remapped favor tier). Only completeShopPurchase() grants this (Buy/Cash in Favor); plain
-// Sell never does.
+// Loyalty gained per item, scaled by this shop's effective cost tier (Item Valuation) - a "free"
+// tier isn't a key here, so it contributes nothing (see getLoyaltyGain()'s guard below). Only
+// completeShopPurchase() grants this (Buy/Cash in Favor); plain Sell never does.
 export const LOYALTY_PER_TIER = { minor: 1, moderate: 2, major: 3, rare: 4 };
 
 // Takes cost tiers (not items) so the GM-side socket handler can recompute this from data the
@@ -584,7 +584,9 @@ export async function completeShopPurchase({ shopUuid, buyerActorId, itemIds, ne
   }
 
   if (boughtItems.length) {
-    const costTiers = boughtItems.map(item => item.system.cost);
+    // This shop's effective cost tier (Item Valuation), not the item's own raw tier - a Minor
+    // item remapped to Free grants no Loyalty, matching how it's priced.
+    const costTiers = boughtItems.map(item => shop.system.valuation?.[item.system.cost] ?? "free");
     if (shop.isOwner) {
       await applyLoyaltyTransaction(shop, character.id, costTiers, redeemLevels);
     } else {

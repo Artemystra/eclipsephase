@@ -15,12 +15,16 @@ const BONUS_CAP = 30;
 // SELL_BONUS_PER_TIER above, an item staged for one purpose is never staged for the other at once.
 const SELL_REP_PER_TIER = { trivial: 0, minor: 5, moderate: 10, major: 20 };
 
-// Cash-in-Favor batch-difficulty ladder - Rare gear has no RAW favor tier above Major, so this
-// shop's valuation always collapses it there; there is nothing higher to escalate into.
+// Cash-in-Favor batch-difficulty ladder - there is nothing above Major to escalate into.
 const FAVOR_DIFFICULTY_LADDER = ["trivial", "minor", "moderate", "major"];
 // Rulebook "Rep Tests" table (Networking - Using Rep - Favors): the modifier for a Rep Test based
 // on how big a favor is being requested.
 const FAVOR_DIFFICULTY_MODIFIER = { trivial: 30, minor: 10, moderate: 0, major: -30 };
+
+// Which Difficulty Mapping row a Stage-1 effective cost tier (see _effectiveCostTierForItem())
+// feeds into, before the shop's own Difficulty Mapping override is applied. Rare has no row of
+// its own (nothing above Major) so it rides Major's; Free rides Trivial's.
+const STAGE2_ROW_FOR_EFFECTIVE_TIER = { free: "trivial", minor: "minor", moderate: "moderate", major: "major", rare: "major" };
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -96,34 +100,27 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
-   * Complexity tier for the item-row badge - the item's own cost tier for ordinary buyable items,
-   * or (morphs have no cost field) derived from morphPoints against this shop's morphPointOverrides
-   * thresholds. Null for item types with neither (traits, aspect, program, specialSkill, id, ...).
+   * Complexity tier for the item-row badge - the item's own cost tier, remapped through this
+   * shop's Item Valuation (see _effectiveCostTierForItem()). Null for item types with no cost
+   * tier (traits, aspect, program, specialSkill, id, ...).
    * @param {Item} item
-   * @returns {"minor"|"moderate"|"major"|"rare"|null}
+   * @returns {"free"|"minor"|"moderate"|"major"|"rare"|null}
    */
   _getComplexityTier(item) {
-    if (item.type === "morph") {
-      const points = Number(item.system.morphPoints) || 0;
-      const overrides = this.actor.system.morphPointOverrides ?? {};
-      if (overrides.rareMin != null && points >= Number(overrides.rareMin)) return "rare";
-      if (overrides.majorMin != null && points >= Number(overrides.majorMin)) return "major";
-      if (overrides.moderateMin != null && points >= Number(overrides.moderateMin)) return "moderate";
-      return "minor";
-    }
-    const cost = item.system.cost;
-    return ["minor", "moderate", "major", "rare"].includes(cost) ? cost : null;
+    if (!["minor", "moderate", "major", "rare"].includes(item.system.cost)) return null;
+    return this._effectiveCostTierForItem(item);
   }
 
   /**
    * Complexity badge loc key for an item-row template ({{localize}} resolves it) - see
-   * _getComplexityTier().
+   * _getComplexityTier(). Uses effectiveCostTiers, not favorTiers - the latter has no
+   * "free"/"rare" entries and would silently localize to nothing for either.
    * @param {Item} item
    * @returns {string|null}
    */
   _getComplexityLabel(item) {
     const tier = this._getComplexityTier(item);
-    return tier ? CONFIG.eclipsephase.costTypes[tier] : null;
+    return tier ? CONFIG.eclipsephase.effectiveCostTiers[tier] : null;
   }
 
   /**
@@ -337,11 +334,11 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   // Rare gear needs at least Orange (level 2) Loyalty standing, gated behind loyaltyEnabled.
-  // Checked against the item's own cost tier, not the shop's valuation-mapped favor tier
-  // (which collapses rare into major for pricing/difficulty).
+  // Checked against this shop's effective cost tier (Item Valuation), not the item's own raw
+  // tier - an item remapped to/from Rare fully adopts/sheds this gate along with it.
   _isRareBlocked(items, character) {
     if (!this.actor.system.loyaltyEnabled) return false;
-    if (!items.some(item => item.system.cost === "rare")) return false;
+    if (!items.some(item => this._effectiveCostTierForItem(item) === "rare")) return false;
     return this._getLoyaltyLevel(character) < 2;
   }
 
@@ -539,36 +536,79 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   }
 
   /**
-   * The favor tier a single item resolves to, via this shop's cost-tier valuation table.
+   * Stage 1: this shop's effective cost tier for an item, via Item Valuation. Items with no cost
+   * tier of their own (traits, aspect, program, id, ...) resolve to "free".
    * @param {Item} item
-   * @returns {"trivial"|"minor"|"moderate"|"major"}
+   * @returns {"free"|"minor"|"moderate"|"major"|"rare"}
    */
-  _favorTierForItem(item) {
+  _effectiveCostTierForItem(item) {
     const valuation = this.actor.system.valuation ?? {};
-    return valuation[item.system.cost] ?? "trivial";
+    return valuation[item.system.cost] ?? "free";
   }
 
   /**
-   * Highest favor tier among the given items' cost tiers.
-   * @param {Item[]} items
+   * Pricing tier: Stage 1's effective cost tier collapsed into the trivial/minor/moderate/major
+   * domain (STAGE2_ROW_FOR_EFFECTIVE_TIER decides which row Free/Rare collapse into), but NOT
+   * routed through Difficulty Mapping. Drives money, the Favor-Limit slot, and the Required-tier
+   * label - everything Difficulty Mapping must never affect.
+   * @param {Item} item
    * @returns {"trivial"|"minor"|"moderate"|"major"}
    */
-  _getRequiredFavorTier(items) {
+  _pricingTierForItem(item) {
+    return STAGE2_ROW_FOR_EFFECTIVE_TIER[this._effectiveCostTierForItem(item)] ?? "trivial";
+  }
+
+  /**
+   * Difficulty tier: the pricing tier above, routed through this shop's Difficulty Mapping.
+   * Drives only the Rep-Test roll (FAVOR_DIFFICULTY_MODIFIER and the escalation ladder's
+   * starting point) - never money, the Favor-Limit slot, or the Required-tier label.
+   * @param {Item} item
+   * @returns {"trivial"|"minor"|"moderate"|"major"}
+   */
+  _difficultyTierForItem(item) {
+    const row = this._pricingTierForItem(item);
+    const mapping = this.actor.system.difficultyMapping ?? {};
+    return mapping[row] ?? row;
+  }
+
+  // Highest tier among items, by whichever per-item tier function is passed in - shared by the
+  // pricing/difficulty variants below so the two concepts can't drift out of sync with each other.
+  _highestTier(items, tierFn) {
     let highest = "trivial";
     for (const item of items) {
-      const favorTier = this._favorTierForItem(item);
-      if (FAVOR_TIER_RANK[favorTier] > FAVOR_TIER_RANK[highest]) highest = favorTier;
+      const tier = tierFn(item);
+      if (FAVOR_TIER_RANK[tier] > FAVOR_TIER_RANK[highest]) highest = tier;
     }
     return highest;
   }
 
   /**
-   * Cash-in-Favor's final Rep-Test difficulty and how much Loyalty ease it used.
-   * Below Major, difficulty is the highest item's tier +1 step per additional item. Once that
-   * would exceed Major, items are priced by their own tier value (Minor=1/Moderate=2/Major=3)
-   * against a budget of Major(3) plus the available Loyalty ease. Ease used is capped at what
-   * the batch needed; excess is unused. Favor-Limit slot consumption stays tied to the
-   * unescalated _getRequiredFavorTier() result.
+   * Highest pricing tier among the given items - money, the Favor-Limit slot check/consumption,
+   * and the "Required: X" label.
+   * @param {Item[]} items
+   * @returns {"trivial"|"minor"|"moderate"|"major"}
+   */
+  _getRequiredPricingTier(items) {
+    return this._highestTier(items, item => this._pricingTierForItem(item));
+  }
+
+  /**
+   * Highest difficulty tier among the given items - only _getFinalFavorTier()'s escalation
+   * ladder starting point. Never use this for money, the Favor-Limit slot, or the label.
+   * @param {Item[]} items
+   * @returns {"trivial"|"minor"|"moderate"|"major"}
+   */
+  _getRequiredDifficultyTier(items) {
+    return this._highestTier(items, item => this._difficultyTierForItem(item));
+  }
+
+  /**
+   * Cash-in-Favor's final Rep-Test difficulty and how much Loyalty ease it used. Difficulty is
+   * the harder of two estimates: the highest item's tier +1 step per additional item, or the sum
+   * of every item's own tier value (Minor=1/Moderate=2/Major=3) - taking the max instead of
+   * switching between them keeps this monotonic (adding an item never makes the batch easier).
+   * Ease used is capped at what the batch needed; excess is unused. Favor-Limit slot consumption
+   * stays tied to the unescalated _getRequiredPricingTier() result, not this escalation.
    * @param {Item[]} items
    * @param {number} level 1-4
    * @returns {{tier: "trivial"|"minor"|"moderate"|"major", easeApplied: number}|null} null if the
@@ -576,11 +616,10 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
    */
   _getFinalFavorTier(items, level) {
     const majorIndex = FAVOR_DIFFICULTY_LADDER.length - 1;
-    const highestIndex = FAVOR_DIFFICULTY_LADDER.indexOf(this._getRequiredFavorTier(items));
+    const highestIndex = FAVOR_DIFFICULTY_LADDER.indexOf(this._getRequiredDifficultyTier(items));
     const countBasedIndex = highestIndex + (items.length - 1);
-    const preEaseIndex = countBasedIndex <= majorIndex
-      ? countBasedIndex
-      : items.reduce((sum, item) => sum + FAVOR_DIFFICULTY_LADDER.indexOf(this._favorTierForItem(item)), 0);
+    const sumIndex = items.reduce((sum, item) => sum + FAVOR_DIFFICULTY_LADDER.indexOf(this._difficultyTierForItem(item)), 0);
+    const preEaseIndex = Math.max(countBasedIndex, sumIndex);
 
     const ease = level - 1;
     const budget = majorIndex + ease;
@@ -640,7 +679,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
    * @returns {number}
    */
   _getFlatBuyCost(items, network = null) {
-    return items.reduce((sum, item) => sum + this._rateFor("flatBuyCost", this._favorTierForItem(item), network), 0);
+    return items.reduce((sum, item) => sum + this._rateFor("flatBuyCost", this._pricingTierForItem(item), network), 0);
   }
 
   /**
@@ -654,7 +693,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     for (const staged of this._toSell.values()) {
       const item = game.actors.get(staged.sourceActorId)?.items.get(staged.itemId);
       if (!item) continue;
-      total += this._rateFor("sellBonus", this._favorTierForItem(item), network);
+      total += this._rateFor("sellBonus", this._pricingTierForItem(item), network);
     }
     return Math.min(total, BONUS_CAP);
   }
@@ -670,7 +709,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     for (const staged of this._toSell.values()) {
       const item = game.actors.get(staged.sourceActorId)?.items.get(staged.itemId);
       if (!item) continue;
-      total += this._rateFor("sellRepGain", this._favorTierForItem(item), network);
+      total += this._rateFor("sellRepGain", this._pricingTierForItem(item), network);
     }
     return total;
   }
@@ -944,7 +983,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const { cancelled, bindings: autoBindings, wareItems: wareBindingItems, bodyGroups } = await this._resolveWareBindings(character, items);
     if (cancelled) return;
 
-    const requiredTier = this._getRequiredFavorTier(items);
+    const requiredTier = this._getRequiredPricingTier(items);
     const tierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[requiredTier]);
 
     const { network, bindings: dialogBindings } = await this._selectNetworkDialog({
@@ -1310,7 +1349,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.sellForRep = this._getSellRepGainBreakdown();
       if (context.hasSelection) {
         const selectedItems = [...this._selectedForPurchase].map(id => this.actor.items.get(id)).filter(Boolean);
-        context.requiredFavorTierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[this._getRequiredFavorTier(selectedItems)]);
+        context.requiredFavorTierLabel = game.i18n.localize(CONFIG.eclipsephase.favorTiers[this._getRequiredPricingTier(selectedItems)]);
         context.hasFlatBuyCost = this._getFlatBuyCost(selectedItems) > 0;
         context.flatBuyCost = this._getFlatBuyCostBreakdown(selectedItems);
       }
@@ -1321,7 +1360,13 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       context.acceptedRepNetworks = actor.system.acceptedRepNetworks;
       context.costTypes = CONFIG.eclipsephase.costTypes;
       context.favorTiers = CONFIG.eclipsephase.favorTiers;
+      context.effectiveCostTiers = CONFIG.eclipsephase.effectiveCostTiers;
       context.valuation = actor.system.valuation;
+      context.difficultyMappingGrid = ["trivial", "minor", "moderate", "major"].map(row => ({
+        row,
+        rowLabel: CONFIG.eclipsephase.favorTiers[row],
+        value: actor.system.difficultyMapping?.[row] ?? row
+      }));
 
       // Sell-limit lockouts live on each character's own flags, not this shop - scanning all
       // character actors for a match relies on the shop Owner (typically the GM) having read

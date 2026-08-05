@@ -568,7 +568,13 @@
         "minor": "minor",
         "moderate": "moderate",
         "major": "major",
-        "rare": "major"
+        "rare": "rare"
+      },
+      "difficultyMapping": {
+        "trivial": "trivial",
+        "minor": "minor",
+        "moderate": "moderate",
+        "major": "major"
       },
       "loyaltyEnabled": true,
       "loyaltyPerTier": {
