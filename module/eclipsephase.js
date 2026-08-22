@@ -865,6 +865,47 @@ Hooks.on("renderActorDirectory", (app, html) => {
   });
 });
 
+// Core puts CharArt first (ActorDirectory#_getEntryContextOptions) - insert after it, not push, so ours lead the menu.
+Hooks.on("getActorContextOptions", (directory, menuItems) => {
+  const artworkIndex = menuItems.findIndex(entry => entry.label === "SIDEBAR.CharArt");
+  if (artworkIndex === -1) return;
+  menuItems[artworkIndex].label = "ep2e.actorDirectory.showEgoPersona";
+
+  const popout = (actor, src, title) => {
+    if (!src) return;
+    new foundry.applications.apps.ImagePopout({ src, uuid: actor.uuid, window: { title } }).render({ force: true });
+  };
+
+  menuItems.splice(artworkIndex + 1, 0,
+    {
+      label: "ep2e.actorDirectory.showCurrentMorph",
+      icon: '<i class="fas fa-image"></i>',
+      visible: li => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        return actor?.type === "character" && !!actor.items.get(actor.system.activeMorph)?.img;
+      },
+      onClick: (event, li) => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        const morph = actor.items.get(actor.system.activeMorph);
+        popout(actor, morph.img, morph.name);
+      }
+    },
+    {
+      label: "ep2e.actorDirectory.showCurrentId",
+      icon: '<i class="fas fa-image"></i>',
+      visible: li => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        return actor?.type === "character" && !!actor.items.get(actor.system.activeID)?.img;
+      },
+      onClick: (event, li) => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        const id = actor.items.get(actor.system.activeID);
+        popout(actor, id.img, id.name);
+      }
+    }
+  );
+});
+
 Hooks.on("createItem", async (item, options, userId) => {
   if (item.type === "morph" && !item.parent){
     await item.update ({"img": "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg"})

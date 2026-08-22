@@ -158,6 +158,11 @@
         "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>All calculations and tests will be made automatically. New Ware & Traits will be automatically added to your sleeved morph.</p></i>"
       }
     },
+    "actorDirectory": {
+      "showEgoPersona": "Mostrar Persona del Ego",
+      "showCurrentMorph": "Mostrar Morph Actual",
+      "showCurrentId": "Mostrar ID Actual"
+    },
     "healthbar": {
       "tooltip": {
         "physical": {

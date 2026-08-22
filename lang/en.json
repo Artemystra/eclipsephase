@@ -176,6 +176,11 @@
         "itemDeprecatedInfo": "<i><p style='font-size: 11px;'><b>Information:</b>You will be delighted to learn, that the 'traits & flaws'-item can be set to be any type of trait or flaw you might need. Keeping you from adding these legacy traits might not save the world, but it will save yours once these items get deleted for good in a later version of this system.</p></i>"
       }
     },
+    "actorDirectory": {
+      "showEgoPersona": "Show Ego Persona",
+      "showCurrentMorph": "Show Current Morph",
+      "showCurrentId": "Show Current ID"
+    },
     "healthbar": {
       "tooltip": {
         "physical": {

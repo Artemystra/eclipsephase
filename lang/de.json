@@ -165,6 +165,11 @@
         "unjamCopyGeneral": "<b>Vorsicht:</b>Du trennst dich von diesem Fernkörper und kehrst in deinen eigenen Körper zurück."
       }
     },
+    "actorDirectory": {
+      "showEgoPersona": "Ego-Persona anzeigen",
+      "showCurrentMorph": "Aktuellen Morph anzeigen",
+      "showCurrentId": "Aktuelle ID anzeigen"
+    },
     "healthbar": {
       "tooltip": {
         "physical": {
