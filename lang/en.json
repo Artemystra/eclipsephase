@@ -1846,7 +1846,7 @@
         "headline": "Inventory"
       },
       "acceptedRep": {
-        "label": "Accepted Rep -",
+        "label": "Shop Accepts:",
         "loyaltyLabel": "Shop Loyalty:",
         "noCharacter": "You have no active character. Choose an owned character and come back here."
       },

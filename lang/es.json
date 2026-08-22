@@ -1757,7 +1757,7 @@
         "headline": "Inventario"
       },
       "acceptedRep": {
-        "label": "Accepted Rep -",
+        "label": "Shop Accepts:",
         "loyaltyLabel": "Lealtad de la Tienda:",
         "noCharacter": "No tienes un personaje activo. Elige un personaje que te pertenezca y vuelve aquí."
       },

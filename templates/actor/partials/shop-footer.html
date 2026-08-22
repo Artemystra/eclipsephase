@@ -43,19 +43,28 @@
         <p class="shop-footer-notice">{{localize "ep2e.shop.acceptedRep.noCharacter"}}</p>
     {{else}}
         <div class="shop-footer-row">
-            {{#if acceptedRep.character}}<span class="shop-acting-character">{{acceptedRep.character}}</span>{{/if}}
+            {{#if acceptedRep.character}}<div class="shop-acting-character">{{acceptedRep.character}}</div>{{/if}}
             {{#if loyaltyBar}}
-                <span class="shop-loyalty-bar-group">
+                <div class="shop-loyalty-bar-group">
                     <span>{{localize "ep2e.shop.acceptedRep.loyaltyLabel"}}</span>
-                    <div class="shop-loyalty-bar" title="{{loyaltyBar.value}} / {{loyaltyBar.max}}">
-                        {{#each loyaltyBar.segments as |segment|}}
-                            <div class="shop-loyalty-bar-segment shop-loyalty-bar-{{segment.color}}" style="flex-grow: {{segment.weight}};"></div>
-                        {{/each}}
+                    <div class="shop-loyalty-bar-wrapper" title="{{loyaltyBar.value}} / {{loyaltyBar.max}}">
+                        <div class="shop-loyalty-bar">
+                            {{#each loyaltyBar.segments as |segment|}}
+                                <div class="shop-loyalty-bar-segment shop-loyalty-bar-{{segment.color}}" style="flex-grow: {{segment.weight}};"></div>
+                            {{/each}}
+                        </div>
                         <div class="shop-loyalty-bar-marker" style="left: {{loyaltyBar.markerPercent}}%;"></div>
                     </div>
-                </span>
+                </div>
             {{/if}}
-            <span class="shop-accepted-rep-text">{{localize "ep2e.shop.acceptedRep.label"}} {{{acceptedRep.text}}}</span>
+            <div class="shop-accepted-rep-group">
+                <span class="shop-accepted-rep-label">{{localize "ep2e.shop.acceptedRep.label"}}</span>
+                <div class="shop-accepted-rep-list">
+                    {{#each acceptedRep.entries as |entry|}}
+                        <span class="shop-accepted-rep-entry" title="{{entry.title}}"><img src="{{entry.icon}}" class="shop-rep-icon"/><span class="shop-accepted-rep-value">{{entry.value}}</span></span>
+                    {{/each}}
+                </div>
+            </div>
         </div>
     {{/if}}
 </footer>

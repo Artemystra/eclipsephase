@@ -1764,7 +1764,7 @@
         "headline": "库存"
       },
       "acceptedRep": {
-        "label": "Accepted Rep -",
+        "label": "Shop Accepts:",
         "loyaltyLabel": "商店忠诚度：",
         "noCharacter": "你没有已激活的角色。请选择一个你拥有的角色后再回来。"
       },

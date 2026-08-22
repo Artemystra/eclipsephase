@@ -415,7 +415,13 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const networks = this._getAcceptedNetworks();
     if (!networks.length) return { mode: "closed" };
 
-    const icon = network => `<img src="${CONFIG.eclipsephase.repIcons[network]}" class="shop-rep-icon" title="${game.i18n.localize(CONFIG.eclipsephase.repTypes[network])}"/>`;
+    // One entry object per network, rendered as a single non-wrapping icon+value unit in the
+    // template - never a joined string, so a line wrap can't land between an icon and its number.
+    const entry = (network, value) => ({
+      icon: CONFIG.eclipsephase.repIcons[network],
+      title: game.i18n.localize(CONFIG.eclipsephase.repTypes[network]),
+      value
+    });
 
     // An acting character (own or a GM-picked one, see _getActingCharacter()) always wins, even
     // for Owner/GM - only falls back to network-names-only (Owner) or the noCharacter warning
@@ -423,17 +429,14 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const character = this._getActingCharacter();
     if (!character?.isOwner) {
       return isOwnerView
-        ? { mode: "owner", text: networks.map(icon).join(" / ") }
+        ? { mode: "owner", entries: networks.map(network => entry(network, null)) }
         : { mode: "noCharacter" };
     }
 
     const idItem = character.items.get(character.system.activeID);
     const rep = idItem?.system?.rep ?? {};
-    const text = networks.map(network => {
-      const value = Number(rep[network]?.value ?? 0);
-      return `${icon(network)}${value}`;
-    }).join(" / ");
-    return { mode: "observer", character: character.name, text };
+    const entries = networks.map(network => entry(network, Number(rep[network]?.value ?? 0)));
+    return { mode: "observer", character: character.name, entries };
   }
 
   // Same acting-character resolution as _getAcceptedRepDisplay() - the color bar is a per
