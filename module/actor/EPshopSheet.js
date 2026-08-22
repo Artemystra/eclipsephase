@@ -1299,7 +1299,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     if (game.user.isGM || actor.isOwner) {
       return "systems/eclipsephase/templates/actor/shop-sheet.html";
     }
-    return "systems/eclipsephase/templates/actor/shop-sheet-observer.html";
+    return "systems/eclipsephase/templates/actor/shop-sheet-limited.html";
   }
 
   _configureRenderParts(options) {

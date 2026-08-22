@@ -2,8 +2,8 @@
 
     {{!-- Custom title bar: replaces hidden native window-header --}}
     <div class="ep-sheet-titlebar">
-        <div class="ep-titlebar-logo centerBackground">
-            <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+        <div class="ep-titlebar-item-logo">
+            <img class="item-img" src="{{actor.img}}" data-action="editImage" data-field="img" title="{{actor.name}}"/>
         </div>
         <div class="ep-titlebar-name centerBackground">
             <input name="name" type="text" onFocus="this.select()" value="{{actor.name}}" placeholder="{{localize 'ep2e.shop.placeholders.shopName'}}" style="width: 100%;"/>
