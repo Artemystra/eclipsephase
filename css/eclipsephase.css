@@ -1558,9 +1558,12 @@ form.eclipsephase.shop {
   margin-right: 4px;
 }
 
+/* justify-content here, not margin-left:auto on the group - it already grows to fill the row
+   (flex: 1 1 auto), so its own content needs pushing right, not the already-full-width box. */
 .eclipsephase .shop-accepted-rep-group {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
   flex: 1 1 auto;
   min-width: 0;
