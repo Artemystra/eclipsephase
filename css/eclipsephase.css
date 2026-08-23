@@ -1911,9 +1911,20 @@ form.eclipsephase.shop {
   max-width: 55px;
 }
 
-/* Vertically centers a heading next to its icon button. */
+/* Vertically centers a heading next to its icon button; the headline grows to fill all space
+   up to the button (min-width:0 lets it shrink below its text's natural width before wrapping). */
 .eclipsephase .shop-settings-header-row {
   align-items: center;
+  gap: 10px;
+}
+
+.eclipsephase .shop-settings-header-row .headline6 {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.eclipsephase .shop-settings-header-row .shop-loyalty-record-add {
+  flex: 0 0 auto;
 }
 
 /* One half of a settings section's .grid-2col row. No margin-bottom - this can be the last

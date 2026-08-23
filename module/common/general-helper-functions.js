@@ -408,7 +408,7 @@ const FAVOR_LIMIT_SLOTS = { minor: ["small1", "small2", "small3"], moderate: ["m
 // Loyalty gained per item, scaled by this shop's effective cost tier (Item Valuation) - a "free"
 // tier isn't a key here, so it contributes nothing (see getLoyaltyGain()'s guard below). Only
 // completeShopPurchase() grants this (Buy/Cash in Favor); plain Sell never does.
-export const LOYALTY_PER_TIER = { minor: 1, moderate: 2, major: 3, rare: 4 };
+export const LOYALTY_PER_TIER = { minor: 10, moderate: 25, major: 40, rare: 80 };
 
 // Takes cost tiers (not items) so the GM-side socket handler can recompute this from data the
 // buyer sent, even though the purchased items are already gone from the shop's collection by the
@@ -421,20 +421,19 @@ function getLoyaltyGain(shop, costTiers) {
   }, 0);
 }
 
-// Loyalty Bar segment boundaries as raw point values, not percentages - segments are flex-grow
-// weights and aren't required to sum to 100, so boundaries are normalized against their own total
-// rather than assumed to divide loyaltyBarMax evenly.
+// Loyalty Bar segment boundaries as raw point values - segments are % of loyaltyBarMax (capped to
+// sum <=100 in the settings UI, see EPshopSheet.js's _onRender), so each boundary is just its
+// cumulative percentage of max.
 function getLoyaltyLevelBoundaries(shop) {
   const max = Number(shop.system.loyaltyBarMax) || 100;
   const segments = shop.system.loyaltyBarSegments ?? {};
   const order = ["red", "orange", "yellow", "green"];
-  const weights = order.map(color => Number(segments[color]) || 0);
-  const totalWeight = weights.reduce((sum, w) => sum + w, 0) || 1;
+  const percents = order.map(color => Number(segments[color]) || 0);
   const boundaries = [0];
   let cumulative = 0;
   for (let i = 0; i < order.length - 1; i++) {
-    cumulative += weights[i];
-    boundaries.push((cumulative / totalWeight) * max);
+    cumulative += percents[i];
+    boundaries.push((cumulative / 100) * max);
   }
   return boundaries;
 }

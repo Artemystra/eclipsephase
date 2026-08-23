@@ -9,11 +9,11 @@ const FAVOR_TIER_RANK = { trivial: 0, minor: 1, moderate: 2, major: 3 };
 const FLAT_BUY_COST = { trivial: 0, minor: 15, moderate: 30, major: 60 };
 // "Cash in Favor": per-item Sell Bonus contribution when staged in "To Sell", summed and capped
 // at BONUS_CAP - same cap independently applies to the Rep-Burn Bonus (burned points x2).
-const SELL_BONUS_PER_TIER = { trivial: 0, minor: 5, moderate: 15, major: 30 };
+const SELL_BONUS_PER_TIER = { trivial: 0, minor: 10, moderate: 20, major: 30 };
 const BONUS_CAP = 30;
 // Plain "Sell" (no active purchase): per-item Rep gain, summed with no cap - exclusive with
 // SELL_BONUS_PER_TIER above, an item staged for one purpose is never staged for the other at once.
-const SELL_REP_PER_TIER = { trivial: 0, minor: 5, moderate: 10, major: 20 };
+const SELL_REP_PER_TIER = { trivial: 0, minor: 10, moderate: 20, major: 30 };
 
 // Cash-in-Favor batch-difficulty ladder - there is nothing above Major to escalate into.
 const FAVOR_DIFFICULTY_LADDER = ["trivial", "minor", "moderate", "major"];
@@ -441,8 +441,8 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
   // Same acting-character resolution as _getAcceptedRepDisplay() - the color bar is a per
   // (shop, character) value, so it only makes sense once there's someone owned to show it for.
-  // Segment widths are flex-grow weights, not required to sum to 100 - they scale proportionally
-  // either way.
+  // Segment values are % of Bar Max, capped to sum <=100 by _onRender's clamp listener; rendered
+  // as flex-grow weights, which give the same result as literal widths when they sum to 100.
   _getLoyaltyBarDisplay() {
     if (!this.actor.system.loyaltyEnabled) return null;
     const character = this._getActingCharacter();
@@ -1507,6 +1507,26 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     // EPitemSheet.js already use, Owner-only since only the settings tab has any.
     html.querySelectorAll("a.moreInfoDialog").forEach(element => {
       element.addEventListener("click", moreInfo);
+    });
+
+    // Settings-tab number/text inputs select their full value on focus, so typing immediately
+    // overwrites it instead of requiring a manual select-all first.
+    html.querySelectorAll('[data-tab="settings"] input[type="number"], [data-tab="settings"] input[type="text"]').forEach(input => {
+      input.addEventListener("focus", () => input.select());
+    });
+
+    // Loyalty Bar segments are %, capped to a combined 100 - same clamp-on-input idea as
+    // resting.js's distribution dialog, but here the just-edited field snaps back instead of
+    // blocking submission.
+    const loyaltyBarInputs = html.querySelectorAll(".shop-loyalty-bar-segment-input");
+    loyaltyBarInputs.forEach(input => {
+      input.addEventListener("input", () => {
+        const others = Array.from(loyaltyBarInputs)
+          .filter(el => el !== input)
+          .reduce((sum, el) => sum + Math.max(0, parseInt(el.value) || 0), 0);
+        const maxAllowed = Math.max(0, 100 - others);
+        if ((Math.max(0, parseInt(input.value) || 0)) > maxAllowed) input.value = maxAllowed;
+      });
     });
 
     // Opens the item sheet either editable (Owner) or read-only (Observer/Limited, see

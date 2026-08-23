@@ -107,20 +107,11 @@
                 <div class="grid-2col">
                 {{#if loyaltyEnabled}}
                     <div class="shop-settings-column">
-                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyPerTierHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyPerTierHeadline" data-description="ep2e.shop.settings.loyaltyPerTierDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
+                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyBarMaxHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyBarMaxHeadline" data-description="ep2e.shop.settings.loyaltyBarMaxDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                     <table class="shop-rate-override-table">
-                        <thead>
-                            <tr>
-                                {{#each loyaltyTierGrid as |tierEntry|}}
-                                    <th>{{localize tierEntry.tierLabel}}</th>
-                                {{/each}}
-                            </tr>
-                        </thead>
                         <tbody>
                             <tr>
-                                {{#each loyaltyTierGrid as |tierEntry|}}
-                                    <td><input type="number" data-dtype="Number" name="system.loyaltyPerTier.{{tierEntry.tier}}" value="{{tierEntry.value}}" placeholder="{{tierEntry.placeholder}}"/></td>
-                                {{/each}}
+                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarMax" value="{{actor.system.loyaltyBarMax}}"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -129,7 +120,6 @@
                     <table class="shop-rate-override-table">
                         <thead>
                             <tr>
-                                <th>{{localize "ep2e.shop.settings.loyaltyBarMax"}}</th>
                                 <th>{{localize "ep2e.shop.settings.loyaltyBarRed"}}</th>
                                 <th>{{localize "ep2e.shop.settings.loyaltyBarOrange"}}</th>
                                 <th>{{localize "ep2e.shop.settings.loyaltyBarYellow"}}</th>
@@ -138,11 +128,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarMax" value="{{actor.system.loyaltyBarMax}}"/></td>
-                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.red" value="{{actor.system.loyaltyBarSegments.red}}"/></td>
-                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.orange" value="{{actor.system.loyaltyBarSegments.orange}}"/></td>
-                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.yellow" value="{{actor.system.loyaltyBarSegments.yellow}}"/></td>
-                                <td><input type="number" data-dtype="Number" name="system.loyaltyBarSegments.green" value="{{actor.system.loyaltyBarSegments.green}}"/></td>
+                                <td><input type="number" min="0" max="100" data-dtype="Number" class="shop-loyalty-bar-segment-input" name="system.loyaltyBarSegments.red" value="{{actor.system.loyaltyBarSegments.red}}"/></td>
+                                <td><input type="number" min="0" max="100" data-dtype="Number" class="shop-loyalty-bar-segment-input" name="system.loyaltyBarSegments.orange" value="{{actor.system.loyaltyBarSegments.orange}}"/></td>
+                                <td><input type="number" min="0" max="100" data-dtype="Number" class="shop-loyalty-bar-segment-input" name="system.loyaltyBarSegments.yellow" value="{{actor.system.loyaltyBarSegments.yellow}}"/></td>
+                                <td><input type="number" min="0" max="100" data-dtype="Number" class="shop-loyalty-bar-segment-input" name="system.loyaltyBarSegments.green" value="{{actor.system.loyaltyBarSegments.green}}"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -167,6 +156,24 @@
                     </div>
 
                     <div class="shop-settings-column">
+                    <p class="headline6">{{localize "ep2e.shop.settings.loyaltyPerTierHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyPerTierHeadline" data-description="ep2e.shop.settings.loyaltyPerTierDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
+                    <table class="shop-rate-override-table">
+                        <thead>
+                            <tr>
+                                {{#each loyaltyTierGrid as |tierEntry|}}
+                                    <th>{{localize tierEntry.tierLabel}}</th>
+                                {{/each}}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {{#each loyaltyTierGrid as |tierEntry|}}
+                                    <td><input type="number" data-dtype="Number" name="system.loyaltyPerTier.{{tierEntry.tier}}" value="{{tierEntry.value}}" placeholder="{{tierEntry.placeholder}}"/></td>
+                                {{/each}}
+                            </tr>
+                        </tbody>
+                    </table>
+
                     <div class="flexrow flex-between shop-settings-header-row">
                         <p class="headline6">{{localize "ep2e.shop.settings.loyaltyRecordsHeadline"}}<a class="moreInfoDialog shop-info-icon" data-title="ep2e.shop.settings.loyaltyRecordsHeadline" data-description="ep2e.shop.settings.loyaltyRecordsDescription" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a></p>
                         <a class="shop-loyalty-record-add" title="{{localize 'ep2e.shop.settings.loyaltyRecordAdd'}}"><i class="fas fa-plus"></i></a>
@@ -237,9 +244,9 @@
                     <thead>
                         <tr>
                             <th class="shop-th-corner"></th>
-                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableSellsFor"}}</th>{{/if}}
-                            <th>{{localize "ep2e.shop.settings.rateTableRollBonus"}}</th>
                             {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableBuysFor"}}</th>{{/if}}
+                            <th>{{localize "ep2e.shop.settings.rateTableRollBonus"}}</th>
+                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableSellsFor"}}</th>{{/if}}
                         </tr>
                     </thead>
                     <tbody>
@@ -285,9 +292,9 @@
                     <thead>
                         <tr>
                             <th class="shop-th-corner"></th>
-                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableSellsFor"}}</th>{{/if}}
-                            <th>{{localize "ep2e.shop.settings.rateTableRollBonus"}}</th>
                             {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableBuysFor"}}</th>{{/if}}
+                            <th>{{localize "ep2e.shop.settings.rateTableRollBonus"}}</th>
+                            {{#if superBrewEnabled}}<th>{{localize "ep2e.shop.settings.rateTableSellsFor"}}</th>{{/if}}
                         </tr>
                     </thead>
                     <tbody>
