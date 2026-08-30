@@ -61,16 +61,20 @@ export default class EPactor extends Actor {
     const flags = actorModel.flags;
     const items = this.items;
     let gammaCount = 0;
-    let chiCount = 0;    
+    let chiCount = 0;
     let chiMultiplier = 1;
+    let chiBoostDelta = 0;
     if(actorWhole.type === "character" || actorWhole.type === "npc"){
       actorModel.psiStrain ??= { infection: 0, minimumInfection: 0 };
       if (actorModel.psiStrain.infection >= 33){
         chiMultiplier = 2;
       }
+      const wasBoosted = actorModel.additionalSystems.psiChiBoosted === true;
+      const isBoosted = chiMultiplier === 2;
+      if (isBoosted !== wasBoosted) chiBoostDelta = isBoosted ? 1 : -1;
     }
     actorModel.mods.psiMultiplier = chiMultiplier
-    actorModel.currentStatus = [];    
+    actorModel.currentStatus = [];
 
     // Homebrew Switch
     actorModel.homebrew = game.settings.get("eclipsephase", "superBrew");
@@ -171,7 +175,7 @@ export default class EPactor extends Actor {
             flex:    Number(jammedVehicleData.system.flex)   || 0
           }
         : morphValues;
-      this._calculatePools(actorModel, poolSource, chiMultiplier)
+      this._calculatePools(actorModel, poolSource, chiMultiplier, chiBoostDelta, actorWhole)
       if (jammedVehicleData) {
         // Pass the real body's stashed pools through as derived data so the roll dialog can offer them.
         // Ego Flex is shared between both perspectives, so work out how much of it is still unspent from
@@ -422,20 +426,41 @@ export default class EPactor extends Actor {
       : { type: "none", base: 0, full: 0 };
   }
 
-  _calculatePools(actorModel, morphValues, chiMultiplier) {
+  _calculatePools(actorModel, morphValues, chiMultiplier, chiBoostDelta, actorWhole) {
     actorModel.pools.flex.totalFlex = Number(morphValues.flex) +
       Number(actorModel.ego.egoFlex) +
-      eval(actorModel.pools.flex.mod) + 
+      eval(actorModel.pools.flex.mod) +
       (actorModel.pools.flex.chiMod ? (eval(actorModel.pools.flex.chiMod)*chiMultiplier) : 0)
     actorModel.pools.insight.totalInsight = Number(morphValues.insight) +
-      eval(actorModel.pools.insight.mod) + 
+      eval(actorModel.pools.insight.mod) +
       (actorModel.pools.insight.chiMod ? (eval(actorModel.pools.insight.chiMod)*chiMultiplier) : 0)
     actorModel.pools.moxie.totalMoxie = Number(morphValues.moxie) +
-      eval(actorModel.pools.moxie.mod) + 
+      eval(actorModel.pools.moxie.mod) +
       (actorModel.pools.moxie.chiMod ? (eval(actorModel.pools.moxie.chiMod)*chiMultiplier) : 0)
     actorModel.pools.vigor.totalVigor = Number(morphValues.vigor) +
-      eval(actorModel.pools.vigor.mod) + 
+      eval(actorModel.pools.vigor.mod) +
       (actorModel.pools.vigor.chiMod ? (eval(actorModel.pools.vigor.chiMod)*chiMultiplier) : 0)
+
+    if (chiBoostDelta) this._applyChiBoostToPoolValues(actorModel, chiBoostDelta, actorWhole);
+  }
+
+  // Moves each pool's CURRENT value by the same amount the Infection-33 chiMod boost just moved its
+  // max, the pass that boost is gained or lost - fire-and-forget update() from inside prepareData(),
+  // same one-shot idiom as the resleeving refill above (self-clearing via psiChiBoosted so this
+  // doesn't reapply every render).
+  _applyChiBoostToPoolValues(actorModel, chiBoostDelta, actorWhole) {
+    const POOLS = { insight: "totalInsight", moxie: "totalMoxie", vigor: "totalVigor", flex: "totalFlex" };
+    const updates = { "system.additionalSystems.psiChiBoosted": chiBoostDelta > 0 };
+
+    for (const [key, totalField] of Object.entries(POOLS)) {
+      const pool = actorModel.pools[key];
+      const chiModAmount = pool.chiMod ? eval(pool.chiMod) : 0;
+      if (!chiModAmount) continue;
+      const delta = chiModAmount * chiBoostDelta;
+      updates[`system.pools.${key}.value`] = Math.clamp((pool.value ?? 0) + delta, 0, pool[totalField]);
+    }
+
+    actorWhole.update(updates);
   }
 
   _calculateHomebrewEncumberance(actorModel) {

@@ -144,6 +144,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     limited: "physicalDescription"
   };
 
+  // Psi Infection details panel - client-local like tabGroups above, not actor data, so toggling
+  // it never syncs to other owners' simultaneously-open sheets of the same actor.
+  _psiDetailsOpen = true;
+
   static async _onEditImage(event, target) {
     const field = target.dataset.field || "img";
     const current = foundry.utils.getProperty(this.document, field) || "";
@@ -173,7 +177,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     await this._prepareRenderedHTMLContent(context);
 
     context.editable = this.isEditable;
-    
+    context.psiDetailsOpen = this._psiDetailsOpen;
+
     //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
     if (game.user.isGM || actor.isOwner){
       context.tabs = {
@@ -1189,6 +1194,22 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     });
   }
 
+  // Mirrors _syncManualTabGroup above for the Psi Infection details panel - .showFlex carries
+  // !important, so the content pane only needs that class toggled, .noShow/.showMore stay put.
+  _syncPsiDetailsPanel() {
+    const toggle = this.element?.querySelector(".psi-details-toggle");
+    const panel = toggle?.closest(".contentBox")?.querySelector(".listBackground");
+    if (!toggle || !panel) return;
+
+    const [showLabel, hideLabel] = toggle.children;
+    showLabel.classList.toggle("noShow", this._psiDetailsOpen);
+    showLabel.classList.toggle("showFlex", !this._psiDetailsOpen);
+    hideLabel.classList.toggle("noShow", !this._psiDetailsOpen);
+    hideLabel.classList.toggle("showFlex", this._psiDetailsOpen);
+
+    panel.classList.toggle("showFlex", this._psiDetailsOpen);
+  }
+
   /**
    * ===========================
    *      ACTIVE LISTENERS
@@ -1552,8 +1573,27 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     //Reset Psi
     html.querySelectorAll(".strainSelection").forEach(element => {
-      element.addEventListener("change", ev => {
+      element.addEventListener("change", async ev => {
+        // Block core's submitOnChange from persisting the new label before the user confirms -
+        // same triple-stop used by .healthPanelNoSubmit above.
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+
+        const newLabel = ev.target.value;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = game.i18n.localize("ep2e.psi.popUp.subStrainChangeHeadline");
+        const popUpCopy = "ep2e.psi.popUp.subStrainChangeCopy";
+        const popUpPrimary = "ep2e.actorSheet.button.proceed";
+
+        const { confirm } = await confirmation(popUpTitle, popUpHeadline, popUpCopy, undefined, "", popUpPrimary);
+        if (!confirm) {
+          ev.target.value = actor.system.subStrain.label;
+          return;
+        }
+
         actor.update({
+          "system.subStrain.label": newLabel,
           "system.subStrain.influence2.label": "none",
           "system.subStrain.influence2.description": "none",
           "system.subStrain.influence3.label": "none",
@@ -1562,6 +1602,15 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           "system.subStrain.influence5.description": "none",
           "system.subStrain.influence6.description": "none"
         });
+      });
+    });
+
+    // Psi Infection details panel - toggled only by clicking this header, synced locally like
+    // _syncManualTabGroup above instead of a full render, so it survives unrelated sheet changes.
+    html.querySelectorAll(".psi-details-toggle").forEach(element => {
+      element.addEventListener("click", () => {
+        this._psiDetailsOpen = !this._psiDetailsOpen;
+        this._syncPsiDetailsPanel();
       });
     });
 

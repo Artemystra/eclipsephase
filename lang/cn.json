@@ -123,6 +123,7 @@
       "button": {
         "edit": "编辑",
         "delete": "删除",
+        "proceed": "继续",
         "close": "关闭",
         "confirm": "确认",
         "select": "选择",
@@ -749,7 +750,10 @@
       "descriptionPlaceholder": "描述你心中的怪物",
       "gammaHeadline": "伽马灵术",
       "chiHeadline": "希灵术",
-      "autoClose": "自动关闭细节",
+      "popUp": {
+        "subStrainChangeHeadline": "更换亚株？",
+        "subStrainChangeCopy": "<b>警告：</b>更换亚株将永久删除当前记录的所有感染影响文本（结果2至6）。此操作无法撤销。"
+      },
       "strain" : {
         "none": "-选择-",
         "architect": "建筑师",
