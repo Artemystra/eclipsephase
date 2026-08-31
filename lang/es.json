@@ -981,7 +981,12 @@
             "hours": "Hours",
             "sustained": "Sustained"
           },
-          "modifierLabel": "Infection Modifier"
+          "modifierLabel": "Infection Modifier",
+          "damage": {
+            "label": "Daño",
+            "physical": "Físico",
+            "mental": "Mental"
+          }
         }
       },
       "weapon": {
@@ -1492,6 +1497,7 @@
           "calledShot": "Called Shot",
           "calledShotAddition": "Roll 'Greater Success' or better",
           "hit": "You hit with your weapon",
+          "hitPsi": "Golpeó con su Sleight",
           "breakWeapon": "Broke their weapon",
           "singleUse": "Your single use weapon broke",
           "damageDone": "Your damage done",
@@ -1588,7 +1594,8 @@
         "swapResult": "Swap Result",
         "upgradeResult": "Upgrade Result",
         "psiInfection": "Roll Psi Infection",
-        "weaponDamage": "Roll Weapon Damage"
+        "weaponDamage": "Roll Weapon Damage",
+        "psiDamage": "Tirar Daño del Sleight"
       }
     },
     "rule": {

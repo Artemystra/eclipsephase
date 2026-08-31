@@ -1,0 +1,61 @@
+<div class="psiDamageFields">
+<div class="item contentBox" data-item-id="{{item._id}}" data-item-name="{{item.name}}" style="padding-bottom: 5px;">
+    <div class="flexrow">
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-brain awesomeIcon icon-small"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.type.label"}}</span>
+            <select name="system.psiType" data-type="String" style="max-width: 110px;">
+                {{selectOptions config.psiTypes selected=item.system.psiType localize=true}}
+            </select>
+        </div>
+        {{#if (ne item.system.psiType "chi")}}
+        <div class="alignRight flexGrowHalf">
+            <div class="flexrow alignCenter wantToKnowMore" style="justify-content: flex-end; gap: 8px;">
+                <i class="fa-solid fa-burst awesomeIcon icon-small"></i>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.damage.label"}}</span>
+                <select name="system.damage.target" data-type="String" style="min-width: 110px;">
+                    {{selectOptions config.damageTargets selected=item.system.damage.target localize=true}}
+                </select>
+                <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.weapon.table.damageValue"}}</span>
+                <input class="input-xs" type="number" name="system.damage.d10" value="{{item.system.damage.d10}}" placeholder="0"/>
+                <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                <input class="input-xs" type="number" name="system.damage.d6" value="{{item.system.damage.d6}}" placeholder="0"/>
+                <i class="fas fa-plus awesomeIcon"></i>
+                <input class="input-xs" type="number" name="system.damage.bonus" value="{{item.system.damage.bonus}}" placeholder="0"/>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>
+
+<div style="background-color: var(--mainBackground); border-top: solid var(--accentBackground) 3px">
+    <div class="flexrow flex-group-center listBackground grid grid-3col" style="background-color: var(--pitchBorder); margin: 0;">
+        {{#if (ne item.system.psiType "chi")}}
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-bolt awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.action.label"}}</span>
+            <select name="system.actionType" data-type="String">
+                {{selectOptions config.actionTypes selected=item.system.actionType localize=true}}
+            </select>
+        </div>
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-regular fa-hourglass-half awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.duration.label"}}</span>
+            <select name="system.duration" data-type="String">
+                {{selectOptions config.duration selected=item.system.duration localize=true}}
+            </select>
+        </div>
+        {{/if}}
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-virus awesomeIcon" style="font-size: 18px;"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.modifierLabel"}}</span>
+            {{#if (eq item.system.psiType "chi")}}
+                -
+            {{else}}
+                <input class="input-large" type="number" name="system.infection" value="{{item.system.infection}}" placeholder="e.g. 3"/>
+            {{/if}}
+        </div>
+    </div>
+</div>
+</div>

@@ -980,7 +980,12 @@
             "hours": "小时",
             "sustained": "维持"
           },
-          "modifierLabel": "感染调整值"
+          "modifierLabel": "感染调整值",
+          "damage": {
+            "label": "伤害",
+            "physical": "物理",
+            "mental": "精神"
+          }
         }
       },
       "weapon": {
@@ -1499,6 +1504,7 @@
           "calledShot": "预告打击",
           "calledShotAddition": "投出“1个大成功”或更好的结果",
           "hit": "你使用你的武器命中了",
+          "hitPsi": "你使用你的灵术命中了",
           "breakWeapon": "Broke their weapon",
           "singleUse": "Your single use weapon broke",
           "damageDone": "你造成了伤害",
@@ -1595,7 +1601,8 @@
         "swapResult": "Swap Result",
         "upgradeResult": "Upgrade Result",
         "psiInfection": "Roll Psi Infection",
-        "weaponDamage": "Roll Weapon Damage"
+        "weaponDamage": "Roll Weapon Damage",
+        "psiDamage": "投掷灵术伤害"
       }
     },
     "rule": {

@@ -71,11 +71,10 @@ export async function prepareWeapon(data, result, preparedData) {
   }
 }
 
-async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList) {
-  let meleeDamageMod = actorWhole.system.mods.meleeDamageMod;
+// Success-tier bonus and critical-success doubling, shared by dealWeaponDamage and dealPsiDamage.
+function successTierModifier(rollResult) {
   let successModifier = "";
   let criticalModifier = "";
-  let weaponDamage = touchOnly ? "ep2e.item.weapon.table.noDamage" : weaponSelected.weaponDamage;
 
   if (rollResult === 4) {
     successModifier = "+1d6";
@@ -87,6 +86,14 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
     criticalModifier = "2*(";
     successModifier = ")";
   }
+
+  return { successModifier, criticalModifier };
+}
+
+async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList) {
+  let meleeDamageMod = actorWhole.system.mods.meleeDamageMod;
+  let { successModifier, criticalModifier } = successTierModifier(rollResult);
+  let weaponDamage = touchOnly ? "ep2e.item.weapon.table.noDamage" : weaponSelected.weaponDamage;
 
   //Damage Chat Message Constructor
   let intermediateRollFormula;
@@ -141,6 +148,37 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
 
     await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, false, actorWhole.name, recipientList, blind, "rollOutput");
   }
+}
+
+// Rolls and posts a psi sleight's damage (e.g. Psychic Stab, Nightmare) - the GM still judges whether it hit.
+export async function preparePsiDamage(data) {
+  const dataset = data.currentTarget.dataset;
+  const actorWhole = await fromUuid(dataset.actorid);
+  const sleightItem = actorWhole.items.get(dataset.sleightid);
+  if (!sleightItem) return;
+
+  const rollResult = parseInt(dataset.rollresult);
+  const messageId = data.currentTarget.closest("[data-message-id]")?.dataset.messageId;
+  const originMessage = messageId ? game.messages.get(messageId) : null;
+  const blind = originMessage ? originMessage.blind : dataset.rollmode === "blindroll" && !game.user.isGM;
+  const recipientList = originMessage ? originMessage.whisper : prepareRecipients(dataset.rollmode);
+
+  await dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList);
+}
+
+async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList) {
+  const { successModifier, criticalModifier } = successTierModifier(rollResult);
+  const baseDamage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv;
+  const rollFormula = criticalModifier ? criticalModifier + baseDamage + successModifier : baseDamage + successModifier;
+
+  let message = {};
+  message.type = "psiDamage";
+  message.sleightName = sleightItem.name;
+  message.rollTitle = "ep2e.roll.announce.damageDone";
+
+  let roll = await new Roll(rollFormula).evaluate();
+
+  await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput");
 }
 
 

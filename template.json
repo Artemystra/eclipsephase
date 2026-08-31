@@ -1384,7 +1384,13 @@
       "infection": null,
       "psiType": "",
       "actionType": "",
-      "duration": ""
+      "duration": "",
+      "damage": {
+        "target": "physical",
+        "d10": null,
+        "d6": null,
+        "bonus": null
+      }
     },
     "program": {
       "templates": [

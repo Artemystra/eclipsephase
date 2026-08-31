@@ -3797,6 +3797,26 @@ button.epTextlink:hover{
   opacity: 1;
 }
 
+.psiDamageFields .wantToKnowMore .tooltipText {
+  position: fixed;
+  top: auto;
+  left: auto;
+  transform: translateY(-40px);
+}
+
+.psiDamageFields .grid-3col .wantToKnowMore {
+  flex-wrap: nowrap;
+}
+
+.psiDamageFields .grid-3col .awesomeIcon {
+  flex: 0 0 auto;
+}
+
+.psiDamageFields .grid-3col select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .insight,
 .moxie,
 .vigor,

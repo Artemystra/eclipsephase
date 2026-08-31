@@ -80,6 +80,12 @@ export async function addChatListeners(html) {
       return;
     }
 
+    const psiDamage = event.target.closest("button.psiDamage");
+    if (psiDamage) {
+      damageFunctions.preparePsiDamage({ currentTarget: psiDamage });
+      return;
+    }
+
     const resleeve = event.target.closest("button.resleeve");
     if (resleeve) {
       resleeving.sleevingTest({ currentTarget: resleeve });

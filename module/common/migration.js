@@ -3,7 +3,6 @@ export async function migrationLegacy(startMigration, endMigration){
   
         for (let actor of game.actors){
       
-          //Item migration script
           for(let item of actor.items) {
             let itemID = item._id;
             let itemType = item.type;
@@ -548,7 +547,6 @@ export async function migrationLegacy(startMigration, endMigration){
             actor.update({"system.mods.woundMultiplier" : 1})
           }
       
-          //Ego Details migration (only player characters)
           if (actor.type === "character"){
             let genderSelection = actor.system.ego.gender;
             let originSelection = actor.system.ego.origin;
@@ -681,7 +679,6 @@ export async function migrationLegacy(startMigration, endMigration){
             }
           }
           
-          //Update aptitude Names 
             
             actor.update({"system.aptitudes.cog.name" : "ep2e.actorSheet.aptitudes.cog", "system.aptitudes.int.name" : "ep2e.actorSheet.aptitudes.int","system.aptitudes.ref.name" : "ep2e.actorSheet.aptitudes.ref","system.aptitudes.sav.name" : "ep2e.actorSheet.aptitudes.sav","system.aptitudes.som.name" : "ep2e.actorSheet.aptitudes.som","system.aptitudes.wil.name" : "ep2e.actorSheet.aptitudes.wil", "system.aptitudes.cog.label" : "ep2e.actorSheet.aptitudes.cognition", "system.aptitudes.int.label" : "ep2e.actorSheet.aptitudes.intuition", "system.aptitudes.ref.label" : "ep2e.actorSheet.aptitudes.reflexes", "system.aptitudes.sav.label" : "ep2e.actorSheet.aptitudes.savvy", "system.aptitudes.som.label" : "ep2e.actorSheet.aptitudes.somatics", "system.aptitudes.wil.label" : "ep2e.actorSheet.aptitudes.willpower"});
           
@@ -750,7 +747,6 @@ export async function migrationPre09(startMigration, endMigration){
               let armor = {"_id": itemID};
               let movement = {"_id": itemID};
               
-              //Migrate Vehicles & Robots
               if(item.system.type === "vehicle" || item.system.type === "robot"){
                 generalUpdate["system.pools.vig.max"] = vig,
                 generalUpdate["system.pools.vig.curent"] = curVig,
@@ -779,7 +775,6 @@ export async function migrationPre09(startMigration, endMigration){
                 generalUpdate["system.updated"] = latestUpdate
               }
 
-              //Migrate Morphs
               if(item.system.type === "morph"){
                 morphUpdate["system.aptitudes.cog.value"] = cog,
                 morphUpdate["system.aptitudes.int.value"] = int,
@@ -798,7 +793,6 @@ export async function migrationPre09(startMigration, endMigration){
                 morphUpdate["system.updated"] = latestUpdate
               }
 
-              //Migrate Smart Animals
               if(item.system.type === "animal"){
                 animalUpdate["system.aptitudes.cog.value"] = cog,
                 animalUpdate["system.aptitudes.int.value"] = int,
@@ -812,7 +806,6 @@ export async function migrationPre09(startMigration, endMigration){
                 
               }
               
-              //Migrate Vehicles Movement
               for (let type of movementTypes){
                 let toSplit = movementTypes[number].trim();
                 
@@ -824,7 +817,6 @@ export async function migrationPre09(startMigration, endMigration){
                 number++
               }
 
-              //Migrate Vehicles Armor
 
               if(armorTotal === "-" || !armorTotal){
                 armor["system.armor.energy"] = 0;
@@ -864,31 +856,26 @@ export async function migrationPre093(startMigration, endMigration){
               let weaponUpdate = {"_id": itemID};
               let itemUpdate = [];
               
-              //Migrate Energy Weapons
               if(itemName === "Battle Laser" || item.name === "Hand Laser" || item.name === "Laser Pulser (Lethal)" || item.name === "Laser Pulser (Stun)" || item.name === "MW Agonizer (Pain)" || item.name === "MW Agonizer (Roast)" || item.name === "Particle Beam Bolter" || item.name === "Stunner"){
                 weaponUpdate["system.ammoType"] = "beam";
                 weaponUpdate["system.updated"] = latestUpdate
               }
 
-              //Migrate Kinetic Weapons
               else if(itemName === "Holdout" || item.name === "Medium Pistol" || item.name === "Heavy Pistol" || item.name === "Machine Pistol" || item.name === "Submachine Gun" || item.name === "Assault Rifle" || item.name === "Battle Rifle" || item.name === "Machine Gun" || item.name === "Sniper Rifle" || item.name === "Polygun Pistol" || item.name === "Polygun Rifle" || item.name === "Pult Gun - Roast" || item.name === "Pult Gun - Stun" || item.name === "Pult Rifle - Roast" || item.name === "Pult Rifle - Stun" || itemName.includes("Pult")){
                 weaponUpdate["system.ammoType"] = "kinetic";
                 weaponUpdate["system.updated"] = latestUpdate
               }
 
-              //Migrate Seeker Weapons
               else if(itemName === "Disposable Launcher" || item.name === "Seeker Armband" || item.name === "Seeker Pistol" || item.name === "Seeker Rifle" || item.name === "Underbarrel Seeker"){
                 weaponUpdate["system.ammoType"] = "seeker";
                 weaponUpdate["system.updated"] = latestUpdate
               }
 
-              //Migrate Spray Weapons
               else if(itemName === "Buzzer" || item.name === "Freezer" || item.name === "Plasma Rifle" || item.name === "Shard Pistol" || item.name === "Shredder" || item.name === "Sprayer" || item.name === "Torch" || item.name === "Vortex Ring Gun"){
                 weaponUpdate["system.ammoType"] = "spray";
                 weaponUpdate["system.updated"] = latestUpdate
               }
 
-              //Migrate Rail Weapons
               else if(itemName.includes("Rail")){
                 weaponUpdate["system.ammoType"] = "rail";
                 weaponUpdate["system.updated"] = latestUpdate
@@ -968,7 +955,6 @@ export async function migrationPre093(startMigration, endMigration){
     return result ?? { cancelled: true };
   }
 
-  //selectChars results
   function _proWeaponCategorization(form) {
     let weaponUpdateList = [];
 
@@ -1013,20 +999,16 @@ export function migrationPre095(startMigration, endMigration){
           let itemName = item.name;
           let currentVersion = item.system.updated;
 
-          //Convert Item Names
           let nameSplit = itemName.split(" ")
           let nameJoin = nameSplit.join("").toLowerCase()
 
-          //Delete Duplicates & Create New Items
           if (nameJoin.includes("mwagonizer(p") || nameJoin.includes("laserpulser(s") || nameJoin.includes("pultgun-st") || nameJoin.includes("pultrifle-st")){
 
             itemDeletion(actor, itemID);
 
           }
 
-          //Migrate Existing Weapons
           else if ( currentVersion != "0.9.5" ){
-          //Migrate DV
           let d10 = 0;
           let d6 = 0;
           let bonus = 0;
@@ -1056,7 +1038,6 @@ export function migrationPre095(startMigration, endMigration){
 
           }
           
-          //Migrate Weapon Traits
           for (let type of traits){
 
             if (item.system.slotType === "twoHanded"){
@@ -1149,7 +1130,6 @@ export function migrationPre095(startMigration, endMigration){
             number++
           }
           
-          //Migrate Ranged
           if(item.type === "rangedWeapon"){
             weaponUpdate["system.mode1.range"] = range;
             weaponUpdate["system.mode1.d10"] = d10;
@@ -1162,7 +1142,6 @@ export function migrationPre095(startMigration, endMigration){
             }
           }
 
-          //Migrate Melee
           if(item.type === "ccWeapon"){
             weaponUpdate["system.mode1.d10"] = d10;
             weaponUpdate["system.mode1.d6"] = d6;
@@ -1170,7 +1149,6 @@ export function migrationPre095(startMigration, endMigration){
             weaponUpdate["system.updated"] = latestUpdate;
           }
 
-          //Migrate Microwave Agonizer
           if(nameJoin.includes("(roast)")){
 
             weaponUpdate["name"] = "Microwave Agonizer";
@@ -1188,7 +1166,6 @@ export function migrationPre095(startMigration, endMigration){
       
           }
 
-          //Migrate Laser Pulser
           if(nameJoin.includes("(lethal)")){
 
             weaponUpdate["name"] = "Laser Pulser";
@@ -1209,7 +1186,6 @@ export function migrationPre095(startMigration, endMigration){
             
           }
 
-          //Migrate Pult Gun
           if(nameJoin.includes("pultgun-r")){
 
             weaponUpdate["name"] = "Pult Gun";
@@ -1228,7 +1204,6 @@ export function migrationPre095(startMigration, endMigration){
             
           }
 
-          //Migrate Pult Rifle
           if(nameJoin.includes("pultrifle-r")){
 
             weaponUpdate["name"] = "Pult Rifle";
@@ -1249,7 +1224,6 @@ export function migrationPre095(startMigration, endMigration){
             
           }
 
-          //Migrate Vibroblade
           if(nameJoin.includes("vibroblade")){
 
             weaponUpdate["name"] = "Vibroblade";
@@ -1266,7 +1240,6 @@ export function migrationPre095(startMigration, endMigration){
             
           }
 
-          //IMPORTANT: The item will only be updated with the first viable object. All appending objects are ignored.
           itemUpdate.push(weaponUpdate);
             actor.updateEmbeddedDocuments("Item", itemUpdate);
           }
@@ -1496,10 +1469,8 @@ export async function migrationPre150(startMigration, endMigration) {
   const latestUpdate = "1.5";
   if (!startMigration) return { endMigration: false };
 
-  // Actor types we touch
   const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
 
-  // Item types to delete (both on actors AND from world Items directory)
   const DELETE_ITEM_TYPES = new Set(["morphTrait", "trait", "flaw", "morphFlaw"]);
 
   const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
@@ -1510,7 +1481,6 @@ export async function migrationPre150(startMigration, endMigration) {
 
   let doneCount = 0;
 
-  // Load compendium fallback morph once
   const pack = game.packs.get("eclipsephase.morphs");
   if (!pack) {
     console.error(`[EP Migration ${latestUpdate}] Pack eclipsephase.morphs not found`);
@@ -1525,9 +1495,6 @@ export async function migrationPre150(startMigration, endMigration) {
     return { endMigration: false };
   }
 
-  // -----------------------------
-  // 1) Delete world Items (Items tab) of deprecated types
-  // -----------------------------
   try {
     const worldDeleteIds = game.items
       .filter((i) => DELETE_ITEM_TYPES.has(i.type))
@@ -1545,9 +1512,6 @@ export async function migrationPre150(startMigration, endMigration) {
     console.error(`[EP Migration ${latestUpdate}] World Items: deletion failed`, err);
   }
 
-  // -----------------------------
-  // Actors loop
-  // -----------------------------
   for (let i = 0; i < actors.length; i++) {
     if (uiBar.state.cancelled) {
       uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
@@ -1565,9 +1529,6 @@ export async function migrationPre150(startMigration, endMigration) {
     await actor.update({ "flags.eclipsephase.migrating": true });
 
     try {
-      // -----------------------------
-      // 3) Delete ALL Active Effects on actor
-      // -----------------------------
       try {
         const aeIds = actor.effects?.map((e) => e.id) ?? [];
         if (aeIds.length) {
@@ -1583,9 +1544,6 @@ export async function migrationPre150(startMigration, endMigration) {
         );
       }
 
-      // -----------------------------
-      // 1) Delete deprecated items on actor
-      // -----------------------------
       const deleteIds = actor.items
         .filter((i) => DELETE_ITEM_TYPES.has(i.type))
         .map((i) => i.id);
@@ -1597,9 +1555,6 @@ export async function migrationPre150(startMigration, endMigration) {
         );
       }
 
-      // -----------------------------
-      // 2) Create Morph items + (for characters) remap boundTo morphX -> new morph item id
-      // -----------------------------
       const result = await _ep150_createMorphsFromLegacy(actor, baseMorphDoc);
 
       console.log(
@@ -1623,7 +1578,6 @@ export async function migrationPre150(startMigration, endMigration) {
       return { endMigration: false };
     }
 
-    // give the UI a moment to repaint on very heavy loops
     await new Promise(r => setTimeout(r, 0));
   }
 
@@ -1632,19 +1586,13 @@ export async function migrationPre150(startMigration, endMigration) {
   return { endMigration: true };
 }
 
-/**
- * Creates morph items based on legacy actor.system.bodies data.
- * Falls back to baseMorphDoc for npc/goon missing morph.
- *
- * Returns:
- *  { createdIds: string[], keyToItemId: Record<string,string> }
- */
+// Creates morph items from legacy actor.system.bodies data, falling back to baseMorphDoc for
+// npc/goon with no morph. Returns { createdIds: string[], keyToItemId: Record<string,string> }.
 async function _ep150_createMorphsFromLegacy(actor, baseMorphDoc) {
   const bodies = actor.system?.bodies ?? {};
 
-  // ---- CHARACTER: morph1..morph6, only if dur != 0
   if (actor.type === "character") {
-    const activeKey = bodies.activeMorph; // e.g. "morph2"
+    const activeKey = bodies.activeMorph;
     const morphKeys = ["morph1", "morph2", "morph3", "morph4", "morph5", "morph6"];
 
     const docsToCreate = [];
@@ -1654,7 +1602,6 @@ async function _ep150_createMorphsFromLegacy(actor, baseMorphDoc) {
       const legacy = bodies[key];
       const dur = Number(legacy?.dur ?? 0);
 
-      // only create if dur is not 0 (and legacy exists)
       if (!legacy || !dur) continue;
 
       const systemData = _ep150_mapLegacyMorphToItemSystem(legacy);
@@ -1671,7 +1618,6 @@ async function _ep150_createMorphsFromLegacy(actor, baseMorphDoc) {
       });
     }
 
-    // If no legacy morphs created, fall back to compendium morph
     if (!docsToCreate.length) {
       const [createdFallback] = await actor.createEmbeddedDocuments("Item", [
         baseMorphDoc.toObject(),
@@ -1687,33 +1633,26 @@ async function _ep150_createMorphsFromLegacy(actor, baseMorphDoc) {
     const created = await actor.createEmbeddedDocuments("Item", docsToCreate);
     const createdIds = created.map((d) => d.id);
 
-    // Build key -> createdItemId mapping (for boundTo remap)
     const keyToItemId = {};
     for (const [key, idx] of keyToIndex.entries()) {
       keyToItemId[key] = createdIds[idx];
     }
 
-    // set active morph: match old bodies.activeMorph key if possible
     let activeItemId = createdIds[0];
     if (activeKey && keyToItemId[activeKey]) {
       activeItemId = keyToItemId[activeKey];
     }
     await actor.update({ "system.activeMorph": activeItemId });
 
-    // -----------------------------
-    // 2) Remap existing items' system.boundTo morphX -> new morph item id
-    // -----------------------------
     await _ep150_rebindItemsToNewMorphIds(actor, keyToItemId);
 
     return { createdIds, keyToItemId };
   }
 
-  // ---- NPC/GOON: bodies.morph1 OR fallback
   if (actor.type === "npc" || actor.type === "goon") {
     const legacy = bodies.morph1;
     const dur = Number(legacy?.dur ?? 0);
 
-    // If no valid morph -> fallback
     if (!legacy || !dur) {
       const [createdFallback] = await actor.createEmbeddedDocuments("Item", [
         baseMorphDoc.toObject(),
@@ -1747,12 +1686,7 @@ async function _ep150_createMorphsFromLegacy(actor, baseMorphDoc) {
   return { createdIds: [], keyToItemId: {} };
 }
 
-/**
- * Rebinds items so that any item with system.boundTo === "morph1".."morph6"
- * gets rewritten to system.boundTo === "<created morph item id>".
- *
- * Only touches items that still exist AFTER deletions.
- */
+// Rewrites items with system.boundTo === "morph1".."morph6" to the new morph item's id.
 async function _ep150_rebindItemsToNewMorphIds(actor, keyToItemId) {
   if (!keyToItemId || !Object.keys(keyToItemId).length) return;
 
@@ -1761,7 +1695,6 @@ async function _ep150_rebindItemsToNewMorphIds(actor, keyToItemId) {
   for (const item of actor.items) {
     const boundTo = item.system?.boundTo;
 
-    // legacy values are strings like "morph1", "morph2", ...
     if (typeof boundTo === "string" && keyToItemId[boundTo]) {
       updates.push({
         _id: item.id,
@@ -1778,9 +1711,7 @@ async function _ep150_rebindItemsToNewMorphIds(actor, keyToItemId) {
   );
 }
 
-/**
- * Maps the old system.bodies.morphX shape to the new Item(type="morph").system model.
- */
+// Maps the old system.bodies.morphX shape to the new Item(type="morph").system model.
 function _ep150_mapLegacyMorphToItemSystem(legacy) {
   const sys = _ep150_emptyMorphItemSystem();
 
@@ -1793,7 +1724,6 @@ function _ep150_mapLegacyMorphToItemSystem(legacy) {
   sys.vigor = legacy.vigor ?? null;
   sys.flex = legacy.flex ?? null;
 
-  // movement mapping (legacy movement1 -> move1, movement2 -> move2, movement3 -> move3)
   _ep150_applyMovement(sys, legacy.movement1, "move1", true);
   _ep150_applyMovement(sys, legacy.movement2, "move2", false);
   _ep150_applyMovement(sys, legacy.movement3, "move3", false);
@@ -1880,7 +1810,6 @@ export async function migrationPre170(startMigration, endMigration) {
   const latestUpdate = "1.7";
   if (!startMigration) return { endMigration: false };
 
-  // Actor types we touch
   const ACTOR_TYPES = new Set(["character"]);
 
   const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
@@ -1908,7 +1837,6 @@ export async function migrationPre170(startMigration, endMigration) {
     await actor.update({ "flags.eclipsephase.migrating": true });
 
     try {
-      // IDs only exist on characters
       if (actor.type === "character") {
         const idResult = await _ep170_createIdsFromLegacy(actor);
 
@@ -1922,7 +1850,6 @@ export async function migrationPre170(startMigration, endMigration) {
           `[EP Migration ${latestUpdate}] ${actor.name}: created ids=${(idResult?.createdIds ?? []).join(", ")}`
         );
 
-        // Delete legacy ID data after successful migration
         await _ep170_deleteLegacyIdData(actor);
 
         console.log(
@@ -1958,16 +1885,8 @@ export async function migrationPre170(startMigration, endMigration) {
   return { endMigration: true };
 }
 
-/**
- * Migrates legacy actor.system.ego.ids into embedded Items of type "id"
- *
- * Legacy:
- * actor.system.ego.ids.id1 ... id5
- *
- * New:
- * embedded Items of type "id"
- * and actor.system.ego.idSelected rewritten from "id1" etc. to the new embedded item id
- */
+// Migrates actor.system.ego.ids.id1-5 into embedded Items of type "id", rewriting
+// actor.system.ego.idSelected from "id1" etc. to the new embedded item's id.
 async function _ep170_createIdsFromLegacy(actor) {
   const ego = actor.system?.ego ?? {};
   const legacyIds = ego.ids ?? {};
@@ -1981,7 +1900,6 @@ async function _ep170_createIdsFromLegacy(actor) {
     const legacyId = legacyIds[key];
     if (!legacyId) continue;
 
-    // Skip completely empty placeholder IDs like "none"
     const rep = legacyId.rep ?? {};
     const hasAnyRepValue = Object.values(rep).some((r) => {
       const v = r?.value;
@@ -2017,13 +1935,11 @@ async function _ep170_createIdsFromLegacy(actor) {
     keyToItemId[key] = createdIds[idx];
   }
 
-  // Remap selected ID from legacy key ("id1") to actual embedded item id
   if (selectedLegacyKey && keyToItemId[selectedLegacyKey]) {
     await actor.update({
       "system.ego.idSelected": keyToItemId[selectedLegacyKey]
     });
   } else if (createdIds.length) {
-    // fallback: if old selected key no longer exists, pick the first created ID
     await actor.update({
       "system.ego.idSelected": createdIds[0]
     });
@@ -2032,19 +1948,14 @@ async function _ep170_createIdsFromLegacy(actor) {
   return { createdIds, keyToItemId };
 }
 
-/**
- * Deletes the old legacy ID structure after migration
- */
+// Deletes the old legacy ID structure after migration.
 async function _ep170_deleteLegacyIdData(actor) {
-  // If your system supports key deletion syntax, this fully removes ego.ids
   await actor.update({
     "system.ego.ids": foundry.data.operators.ForcedDeletion
   });
 }
 
-/**
- * Maps one legacy ego.ids.idX object to the new Item(type="id").system structure
- */
+// Maps one legacy ego.ids.idX object to the new Item(type="id").system structure.
 function _ep170_mapLegacyIdToItemSystem(legacyId) {
   return {
     tags: [],
@@ -2057,9 +1968,7 @@ function _ep170_mapLegacyIdToItemSystem(legacyId) {
   };
 }
 
-/**
- * Creates a fully populated rep object and overlays legacy values onto it
- */
+// Creates a fully populated rep object and overlays legacy values onto it.
 function _ep170_fullIdRep(legacyRep = {}) {
   const rep = {
     "@-rep": {
@@ -2151,18 +2060,8 @@ function itemDeletion(actor, itemID){
   actor.deleteEmbeddedDocuments("Item", itemDelete);
 }
 
-/**
- * Combined 1.9.6 migration (1.9.5 and 1.9.6 ship together, so their migrations run as one pass):
- *  - Migrates actor.system.ego.languages from a comma-separated string into an array of individual
- *    language strings, for the multi-select pill widget on the Identity tab.
- *  - Replaces stale pre-jamming-update copies of Drone Rig/Drone Affinity with the current compendium
- *    version, so existing characters pick up the jamming behavior.
- *  - Harmonizes the vehicle Item schema with the morph Item schema: flattens the nested "pools" object
- *    into flat vigor/moxie/insight/flex/threat + cur* fields, migrates the old 4-slot {speed,type}
- *    movement into the new 10-slot {label,active,type,base,full} shape, renames the chassis-category
- *    field "type" to "chassisType", removes the dead autoControl/controlType fields, and converts any
- *    vehicle item that was (mis)configured with system.type === "morph" into a real Morph item.
- */
+// Combined 1.9.5/1.9.6 migration: converts ego.languages to an array, refreshes stale Drone
+// Rig/Affinity items, and harmonizes the vehicle Item schema with the morph Item schema.
 export async function migrationPre196(startMigration, endMigration) {
   const latestUpdate = "1.9.6";
   if (!startMigration) return { endMigration: false };
@@ -2186,8 +2085,6 @@ export async function migrationPre196(startMigration, endMigration) {
 
   let doneCount = 0;
 
-  // Stale pre-jamming-update copies of these two items (missing their new Active Effect) get
-  // replaced with the current compendium version, so existing characters pick up the jamming behavior.
   const JAMMING_ITEMS = [
     { type: "ware", name: "Drone Rig", packId: "eclipsephase.ware", compendiumId: "z3tPlA7ET15FGS3E", effectId: "DrRigJamPenalty1" },
     { type: "traits", name: "Drone Affinity", packId: "eclipsephase.traits", compendiumId: "MHw8AZ7y8yPoAkyQ", effectId: "DroneAffinityNoI" }
@@ -2220,7 +2117,6 @@ export async function migrationPre196(startMigration, endMigration) {
     try {
       const legacyLanguages = actor.system?.ego?.languages;
 
-      // Only actors still on the old string format need converting; skip anyone already migrated.
       if (typeof legacyLanguages === "string") {
         const languageArray = legacyLanguages
           .split(",")
@@ -2293,9 +2189,6 @@ export async function migrationPre196(startMigration, endMigration) {
       const sys = item.system;
 
       if (sys.type === "morph") {
-        // This vehicle item was (mis)configured as a "morph" chassis - that option is being removed
-        // entirely, since a vehicle-as-morph was never reachable via the jamming UI in the first place.
-        // Convert it into a real Morph item instead of deleting it, preserving whatever data it can.
         const newMovement = _ep196_convertMovementSlots(sys.movement, `${ownerLabel}/${item.name}`, latestUpdate);
 
         const morphData = {
@@ -2385,8 +2278,7 @@ function _ep196_numOrNull(v) {
 }
 
 // Converts an old 4-slot {speed,type} vehicle movement object into the new 10-slot
-// {label,active,type,base,full} shape shared with morph items. Also used to build a real
-// morph item's movement when converting away from the removed "morph" vehicleType.
+// {label,active,type,base,full} shape shared with morph items.
 function _ep196_convertMovementSlots(oldMovement, contextLabel, latestUpdate) {
   const newMovement = {};
   for (let i = 1; i <= 10; i++) {
@@ -2430,24 +2322,8 @@ function _ep196_convertMovementSlots(oldMovement, contextLabel, latestUpdate) {
   return newMovement;
 }
 
-/**
- * Repairs an actor's active morph Item when its system.type is blank or otherwise not one of
- * "bio"/"synth"/"info", by recovering the real value from the actor's own pre-1.5 legacy data.
- * Root cause: the 1.5 migration (_ep150_mapLegacyMorphToItemSystem) mapped bodies.morphX.type
- * into the new morph Item, but for npc/goon the value that actually drove the old DR calc lived
- * in a separate field, system.bodyType.value (see EPactor.js as of commit 1d0bbdd1~1) - that
- * field was never consulted, so npc/goon morphs frequently landed on system.type === "". Nothing
- * in this codebase ever deletes system.bodies or system.bodyType after that migration, so this
- * legacy data is still sitting untouched on any actor that predates it - see
- * _ep200_resolveLegacyMorphType for exactly which field is read per actor type. That blank/wrong
- * value poisons eclipsephase.damageRatingMultiplier[type] lookups in
- * EPactor.js#_calculatePhysicalHealth, producing a NaN (or silently incorrect) Death Rating.
- * Idempotent - only the active morph is touched, and only when the recovered legacy value
- * differs from what's currently stored.
- *
- * Also fixes already-placed Aversion trait Items via _ep200_fixCollidingAversionTraits - see
- * that function's doc comment for the unrelated bug it repairs.
- */
+// Repairs a blank/invalid active-morph system.type from pre-1.5 legacy data, and fixes
+// already-placed Aversion trait Items (see _ep200_resolveLegacyMorphType/_ep200_fixCollidingAversionTraits).
 export async function migrationPre200(startMigration, endMigration) {
   const latestUpdate = "2.0";
   if (!startMigration) return { endMigration: false };
@@ -2568,16 +2444,69 @@ export async function migrationPre215(startMigration, endMigration) {
   return { endMigration: true };
 }
 
-/**
- * Recovers the pre-1.5 legacy body type for whatever is now an actor's active morph, so it can
- * be cross-checked against the migrated Item's system.type. Returns null if nothing valid can be
- * recovered (e.g. the actor postdates the 1.5 migration and never had this legacy data at all).
- *  - npc/goon: the old DR calc read the separate actor.system.bodyType.value field directly;
- *    bodies.morph1.type was never the field that mattered, but is checked as a weaker fallback.
- *  - character: the old DR calc read activeMorph.type, i.e. bodies[bodies.activeMorph].type -
- *    bodies.activeMorph (old, a string key like "morph2") is the exact legacy slot that became
- *    the current Item, per _ep150_createMorphsFromLegacy's activeKey matching.
- */
+// Damage defaults for the standard psi sleights, matched by name since they aren't localized.
+const _ep23_SLEIGHT_DAMAGE = {
+  "Psychic Stab": { target: "physical", d10: 2, d6: 0, bonus: 0 },
+  "Nightmare": { target: "mental", d10: 2, d6: 0, bonus: 0 }
+};
+
+export async function migrationPre23(startMigration, endMigration) {
+  const latestUpdate = "2.3";
+  if (!startMigration) return { endMigration: false };
+
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+
+  const total = actors.length || 1;
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (const actor of actors) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const updates = actor.items
+        .filter(i => i.type === "aspect" && _ep23_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
+        .map(i => ({ _id: i.id, "system.damage": _ep23_SLEIGHT_DAMAGE[i.name] }));
+      if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: psi sleight damage backfill failed`, err);
+    }
+
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+  }
+
+  try {
+    const worldUpdates = game.items
+      .filter(i => i.type === "aspect" && _ep23_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
+      .map(i => ({ _id: i.id, "system.damage": _ep23_SLEIGHT_DAMAGE[i.name] }));
+    if (worldUpdates.length) await Item.updateDocuments(worldUpdates);
+  } catch (err) {
+    console.error(`[EP Migration ${latestUpdate}] world items: psi sleight damage backfill failed`, err);
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+// Recovers the pre-1.5 legacy body type for an actor's active morph, or null if none can be found.
 function _ep200_resolveLegacyMorphType(actor) {
   const VALID_MORPH_TYPES = new Set(["bio", "synth", "info"]);
   const bodies = actor.system?.bodies;
@@ -2593,16 +2522,7 @@ function _ep200_resolveLegacyMorphType(actor) {
   return VALID_MORPH_TYPES.has(legacyType) ? legacyType : null;
 }
 
-/**
- * Fixes Aversion trait Items (Biomorph/Synthmorph/Infomorph I-III) already placed on an actor
- * before the source compendium was corrected. The old effect wrote two changes to a shared
- * sleeving.aversion.type/.value pair; with more than one Aversion trait active at once, Foundry's
- * "add" change mode string-concatenates same-key values (e.g. "bioinfosynth"), silently breaking
- * the malus for every Aversion trait on that actor, not just the extra ones. The fix replaces the
- * old effect with one that writes to its own sleeving.aversions.<bodyType> key instead, matching
- * the corrected compendium sources. Delete-and-recreate rather than update(), since ActiveEffect's
- * changes array lives at a different schema path in v13 (top-level) vs v14 (system.changes).
- */
+// Replaces already-placed Aversion trait Items' effects with the corrected per-bodyType version.
 async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
   const STALE_KEY = "system.additionalSystems.sleeving.aversion.type";
   const STALE_VALUE_KEY = "system.additionalSystems.sleeving.aversion.value";
@@ -2642,29 +2562,7 @@ async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
   }
 }
 
-/**
- * Part of the 2.0 armor-becomes-body-bound redesign (see EPactor.js#_calculateArmor and
- * effects.js's Case B for the runtime side, which already treat an item with boundTo unset as
- * legacy/untouched). Pre-2.0, Armor items had no boundTo at all and just sat on the actor
- * globally; this maps every one of them into the (character-only) Stash in one shot, rather than
- * guessing at a body - the Stash exists precisely for "figure out where this goes later", so
- * there's no more "no active Morph to bind to" edge case to skip for characters either. NPCs/
- * Goons have no Stash (see stashArmor/EPactorSheet.js), so they keep the original behavior of
- * binding onto whichever Morph body they have.
- *
- * Notifying the owner: a ChatMessage created here would run on the executing GM's client, and a
- * message's AUTHOR sees their own sent messages regardless of whisper targets - confirmed live,
- * neither excluding the GM from `whisper` nor `blind:true` (which instead visibly masks content
- * as "???" for everyone) nor `author: null` stopped the GM from seeing it. The actual fix: for
- * characters, don't create the message here at all - stash a per-user pending-notice flag instead
- * (module/eclipsephase.js's dedicated "ready" hook, ungated by isGM, self-whispers it on that
- * player's own next login and clears the flag). The GM's client never runs that code, so it never
- * sees these. NPC/Goon armor (bound to a body, not the Stash) keeps the old immediate-whisper
- * behavior - a player owning an NPC/Goon is a rare edge case not worth the same treatment.
- * Skips (with a console warning, no notice sent) an NPC/Goon actor that has unbound Armor but no
- * Morph at all to bind it to - Armor could only ever be created without a boundTo pre-2.0, so
- * this should be vanishingly rare, but is left for a human to check by hand rather than guessing.
- */
+// Binds pre-2.0 unbound Armor items to the character Stash, or to the actor's Morph for NPCs/Goons.
 async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
   const unboundArmor = actor.items.filter(i => i.type === "armor" && !i.system.boundTo);
   if (unboundArmor.length === 0) return;
@@ -2686,15 +2584,10 @@ async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
   await actor.updateEmbeddedDocuments("Item", unboundArmor.map(a => ({ _id: a.id, "system.boundTo": bucketKey })));
   console.log(`[EP Migration ${latestUpdate}] ${actor.name}: bound ${unboundArmor.length} Armor item(s) to "${actor.type === "character" ? "Stash" : targetName}"`);
 
-  // GMs own every actor by definition (testUserPermission always passes for them), but don't need
-  // a notice about their own migration run - only actual player owners do. If there's no non-GM
-  // owner (e.g. a GM-only NPC), there's no one to notify.
   const playerOwners = game.users.filter(u => !u.isGM && actor.testUserPermission(u, "OWNER"));
   if (playerOwners.length === 0) return;
 
   if (actor.type === "character") {
-    // Deferred, self-whispered notice (see doc comment above) - one flag entry per affected
-    // character, consumed and cleared by module/eclipsephase.js's dedicated "ready" hook.
     for (const user of playerOwners) {
       const pending = user.getFlag("eclipsephase", "pendingArmorStashNotices") ?? [];
       pending.push({ actorName: actor.name, count: unboundArmor.length });

@@ -980,7 +980,12 @@
             "hours": "Horas",
             "sustained": "Sustentada"
           },
-          "modifierLabel": "Modificador de Infecção"
+          "modifierLabel": "Modificador de Infecção",
+          "damage": {
+            "label": "Dano",
+            "physical": "Físico",
+            "mental": "Mental"
+          }
         }
       },
       "weapon": {
@@ -1505,6 +1510,7 @@
           "calledShot": "Ataque Preciso",
           "calledShotAddition": "Role 'Sucesso Maior' ou melhor",
           "hit": "Você acertou com sua arma",
+          "hitPsi": "Acertou com seu Truque",
           "breakWeapon": "Broke their weapon",
           "singleUse": "Your single use weapon broke",
           "damageDone": "Seu dano causado",
@@ -1601,7 +1607,8 @@
         "swapResult": "Swap Result",
         "upgradeResult": "Upgrade Result",
         "psiInfection": "Roll Psi Infection",
-        "weaponDamage": "Roll Weapon Damage"
+        "weaponDamage": "Roll Weapon Damage",
+        "psiDamage": "Rolar Dano do Truque"
       }
     },
     "rule": {

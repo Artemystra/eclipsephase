@@ -208,7 +208,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
     "systems/eclipsephase/templates/item/partials/item-traits.hbs",
     "systems/eclipsephase/templates/item/partials/additions-tab.hbs",
-    "systems/eclipsephase/templates/item/partials/movement-grid.hbs"
+    "systems/eclipsephase/templates/item/partials/movement-grid.hbs",
+    "systems/eclipsephase/templates/item/partials/aspect-damage-fields.hbs"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -305,6 +306,7 @@ Hooks.once("ready", async function() {
   let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
   let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
   let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
+  let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -557,6 +559,22 @@ Hooks.once("ready", async function() {
 
     let Migration215 = await update.migrationPre215(startMigration);
     endMigration = Migration215["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
+  if (before23) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.23";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration23 = await update.migrationPre23(startMigration);
+    endMigration = Migration23["endMigration"];
   }
 
     if(endMigration){

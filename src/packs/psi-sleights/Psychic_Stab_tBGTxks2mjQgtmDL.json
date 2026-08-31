@@ -15,7 +15,13 @@
     "infection": 6,
     "psiType": "gamma",
     "actionType": "complex",
-    "duration": "instant"
+    "duration": "instant",
+    "damage": {
+      "target": "physical",
+      "d10": 2,
+      "d6": 0,
+      "bonus": 0
+    }
   },
   "folder": "kp6gA22jUj1D588w",
   "_stats": {

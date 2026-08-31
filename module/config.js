@@ -154,6 +154,11 @@ eclipsephase.duration = {
     sustained: "ep2e.item.aspect.table.duration.sustained"
 }
 
+eclipsephase.damageTargets = {
+    physical: "ep2e.item.aspect.table.damage.physical",
+    mental: "ep2e.item.aspect.table.damage.mental"
+}
+
 eclipsephase.aptitudes = {
     cog: "ep2e.actorSheet.aptitudes.cog",
     int: "ep2e.actorSheet.aptitudes.int",

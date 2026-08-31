@@ -996,7 +996,12 @@
             "hours": "Stunden",
             "sustained": "Halten"
           },
-          "modifierLabel": "Infektionsmod"
+          "modifierLabel": "Infektionsmod",
+          "damage": {
+            "label": "Schaden",
+            "physical": "Körperlich",
+            "mental": "Geistig"
+          }
         }
       },
       "weapon": {
@@ -1528,6 +1533,7 @@
           "calledShot": "Gezielter Angriff",
           "calledShotAddition": "Wirf einen 'Grösseren Erfolg' oder besser",
           "hit": "hat mit einer Waffe getroffen",
+          "hitPsi": "hat mit einer Fertigkeit getroffen",
           "breakWeapon": "hat eine Waffe zerstört",
           "singleUse": "Die Waffe ist zerstört",
           "damageDone": "Mit dem folgenden Ergebnis",
@@ -1632,7 +1638,8 @@
         "swapResult": "Würfel Drehen",
         "upgradeResult": "Ergebnis Verbessern",
         "psiInfection": "Psi Infektion Würfeln",
-        "weaponDamage": "Waffenschaden würfeln"
+        "weaponDamage": "Waffenschaden würfeln",
+        "psiDamage": "Fertigkeits-Schaden würfeln"
       }
     },
     "rule": {

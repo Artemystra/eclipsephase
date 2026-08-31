@@ -1,6 +1,6 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
-import { prepareRecipients } from "../common/general-sheet-functions.js";
+import { prepareRecipients, damageValueCalc } from "../common/general-sheet-functions.js";
 
 /*
  * Path constants for dialog templates
@@ -178,8 +178,8 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
     return calcPool
 }
 
-function defineRoll(dataset, actorWhole){
-    
+async function defineRoll(dataset, actorWhole){
+
     let type = dataset.key ? dataset.key.toLowerCase() : null;
     let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
@@ -200,6 +200,11 @@ function defineRoll(dataset, actorWhole){
             sleight.action = sleightItem.system.actionName
             sleight.duration = sleightItem.system.durationName
             sleight.infection = sleightItem.system.infection
+            sleight.sleightID = dataset.itemid
+            if (sleightItem.system.damage?.d10 || sleightItem.system.damage?.d6 || sleightItem.system.damage?.bonus) {
+                sleight.damage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv
+                sleight.damageTarget = sleightItem.system.damage.target
+            }
             }
           break;
         case 'guns':
@@ -589,7 +594,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let proceed
     let options = {}
     let specName = dataset.specname || "";
-    let roll = defineRoll(dataset, actorWhole)
+    let roll = await defineRoll(dataset, actorWhole)
 
     // Psi never works over mesh/cyberbrain, which jamming requires - AE suppression (effects.js)
     // handles passive Chi bonuses, but an active Psi (Gamma) roll needs to be blocked outright.

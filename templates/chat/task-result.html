@@ -165,5 +165,11 @@
      </div>
     {{/if}}
   {{/if}}
+
+  {{#if (and (eq rolledFrom "psiSleight")(eq resultClass "success") itemdata.damage)}}
+   <div class="chatControls">
+     <button type="button" class="chatButton psiDamage privateChatButton" data-actorid="{{actor.uuid}}" data-userid="{{userID}}" data-sleightid="{{itemdata.sleightID}}" data-damagetarget="{{itemdata.damageTarget}}" data-rolledfrom="{{rolledFrom}}" data-rollresult="{{alternatives.originalResult}}" data-rollmode="{{rollMode}}">{{localize "ep2e.chat.buttonLabel.psiDamage"}}</button>
+   </div>
+  {{/if}}
 </div>
 
