@@ -332,25 +332,42 @@
         },
         "subStrain": {
           "label": "",
-          "influence2": {
-            "label": "",
-            "description": ""
-          },
-          "influence3": {
-            "label": "",
-            "description": ""
-          },
-          "influence4": {
-            "label": "",
-            "description": ""
-          },
-          "influence5": {
-            "label": "",
-            "description": ""
-          },
-          "influence6": {
-            "label": "",
-            "description": ""
+          "byArchetype": {
+            "architect": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "beast": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "haunter": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "stranger": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "xenomorph": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            }
           }
         },
         "strainInfluence": {

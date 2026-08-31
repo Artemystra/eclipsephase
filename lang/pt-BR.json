@@ -122,7 +122,6 @@
       "button": {
         "edit": "Editar",
         "delete": "Excluir",
-        "proceed": "Continuar",
         "close": "Fechar",
         "confirm": "Confirmar",
         "select": "Selecionar",
@@ -750,10 +749,6 @@
       "descriptionPlaceholder": "Descreva seu monstro interior",
       "gammaHeadline": "Truques Gama",
       "chiHeadline": "Truques Chi",
-      "popUp": {
-        "subStrainChangeHeadline": "Alterar Subcepa?",
-        "subStrainChangeCopy": "<b>Aviso:</b> Alterar a subcepa excluirá permanentemente todos os textos de influência de Infecção atualmente registrados (resultados 2 a 6). Isso não pode ser desfeito."
-      },
       "strain": {
         "none": "-Selecionar-",
         "architect": "A Arquiteta",

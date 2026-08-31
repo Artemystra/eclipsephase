@@ -126,7 +126,6 @@
       "button": {
         "edit": "Editieren",
         "delete": "Löschen",
-        "proceed": "Fortfahren",
         "close": "Schließen",
         "confirm": "Bestätigen",
         "select": "Auswählen",
@@ -763,10 +762,6 @@
       "descriptionPlaceholder": "Beschreibe dein inneres Monster",
       "gammaHeadline": "Gamma-Fertigkeiten",
       "chiHeadline": "Chi-Fertigkeiten",
-      "popUp": {
-        "subStrainChangeHeadline": "Virenstamm wechseln?",
-        "subStrainChangeCopy": "<b>Warnung:</b> Beim Wechsel des Virenstamms werden alle aktuell erfassten Infektions-Einfluss-Texte (Ergebnisse 2 bis 6) unwiderruflich gelöscht."
-      },
       "strain" : {
         "none": "-Wähle-",
         "architect": "Der Architekt",

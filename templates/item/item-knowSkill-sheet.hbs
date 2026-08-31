@@ -1,20 +1,26 @@
 <form class="{{cssClass}}" autocomplete="off">
+    <div class="ep-sheet-titlebar">
+        <div class="ep-titlebar-logo centerBackground">
+            <img class="logo-img" src="systems/eclipsephase/resources/img/logoalt.webp" title="ep2e logo"/>
+        </div>
+        <div class="ep-titlebar-name centerBackground">
+            <input name="name" type="text" value="{{item.name}}" placeholder="Name" style="width: 100%;"/>
+            <span class="ep-titlebar-name-plain">{{item.name}}</span>
+        </div>
+    </div>
 
     {{!-- Sheet Body --}}
     <section class="item-sheet-body">
         <div class="flexrow flex-group-center">
             <table>
                 <tr>
-                    <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.nameLabel"}}</label></td>
                     <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.valueLabel"}}</label></td>
                     <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.aptitudeLabel"}}</label></td>
                     <td><label class="resource-label">{{localize "ep2e.item.additionalSkill.table.specLabel"}}</label></td>
                 </tr>
                 <tr>
-                    <td><input type="text" name="name" value="{{item.name}}" placeholder="Skill name"/></td>
                     <td><input class="input-small" type="number"
                       name="system.value" value="{{item.system.value}}" data-dtype="Number" placeholder="0"/></td>
-                    {{log "data within know skill " data}}
                     {{#if item.system.isThreat}}
                     {{else}}
                     <td><select class="input-XL" name="system.aptitude" data-type="String">

@@ -1571,40 +1571,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
-    //Reset Psi
-    html.querySelectorAll(".strainSelection").forEach(element => {
-      element.addEventListener("change", async ev => {
-        // Block core's submitOnChange from persisting the new label before the user confirms -
-        // same triple-stop used by .healthPanelNoSubmit above.
-        ev.preventDefault();
-        ev.stopPropagation();
-        ev.stopImmediatePropagation();
-
-        const newLabel = ev.target.value;
-        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
-        const popUpHeadline = game.i18n.localize("ep2e.psi.popUp.subStrainChangeHeadline");
-        const popUpCopy = "ep2e.psi.popUp.subStrainChangeCopy";
-        const popUpPrimary = "ep2e.actorSheet.button.proceed";
-
-        const { confirm } = await confirmation(popUpTitle, popUpHeadline, popUpCopy, undefined, "", popUpPrimary);
-        if (!confirm) {
-          ev.target.value = actor.system.subStrain.label;
-          return;
-        }
-
-        actor.update({
-          "system.subStrain.label": newLabel,
-          "system.subStrain.influence2.label": "none",
-          "system.subStrain.influence2.description": "none",
-          "system.subStrain.influence3.label": "none",
-          "system.subStrain.influence3.description": "none",
-          "system.subStrain.influence4.description": "none",
-          "system.subStrain.influence5.description": "none",
-          "system.subStrain.influence6.description": "none"
-        });
-      });
-    });
-
     // Psi Infection details panel - toggled only by clicking this header, synced locally like
     // _syncManualTabGroup above instead of a full render, so it survives unrelated sheet changes.
     html.querySelectorAll(".psi-details-toggle").forEach(element => {

@@ -127,7 +127,6 @@
       "button": {
         "edit": "Edit",
         "delete": "Delete",
-        "proceed": "Proceed",
         "close": "Close",
         "confirm": "Confirm",
         "select": "Select",
@@ -775,10 +774,6 @@
       "descriptionPlaceholder": "Describe your inner monster",
       "gammaHeadline": "Gamma Sleights",
       "chiHeadline": "Chi Sleights",
-      "popUp": {
-        "subStrainChangeHeadline": "Change Sub-Strain?",
-        "subStrainChangeCopy": "<b>Warning:</b> Changing the sub-strain will permanently delete all currently recorded Infection influence texts (results 2 through 6). This cannot be undone."
-      },
       "strain" : {
         "none": "-Select-",
         "architect": "The Architect",

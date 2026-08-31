@@ -2450,6 +2450,30 @@ const _ep23_SLEIGHT_DAMAGE = {
   "Nightmare": { target: "mental", d10: 2, d6: 0, bonus: 0 }
 };
 
+// Moves an actor's currently-selected archetype's flat influence2-6 fields into the new
+// per-archetype subStrain.byArchetype.<label> bucket, and clears the old flat fields.
+function _ep23_migrateSubStrainByArchetype(actor) {
+  const ARCHETYPES = new Set(["architect", "beast", "haunter", "stranger", "xenomorph"]);
+  const subStrain = actor.system?.subStrain;
+  const label = subStrain?.label;
+  if (!ARCHETYPES.has(label)) return null;
+
+  const legacy = {};
+  for (const key of ["influence2", "influence3", "influence4", "influence5", "influence6"]) {
+    if (subStrain[key]) legacy[key] = subStrain[key];
+  }
+  if (!Object.keys(legacy).length) return null;
+
+  return {
+    [`system.subStrain.byArchetype.${label}`]: legacy,
+    "system.subStrain.-=influence2": null,
+    "system.subStrain.-=influence3": null,
+    "system.subStrain.-=influence4": null,
+    "system.subStrain.-=influence5": null,
+    "system.subStrain.-=influence6": null
+  };
+}
+
 export async function migrationPre23(startMigration, endMigration) {
   const latestUpdate = "2.3";
   if (!startMigration) return { endMigration: false };
@@ -2482,6 +2506,13 @@ export async function migrationPre23(startMigration, endMigration) {
       if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
     } catch (err) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: psi sleight damage backfill failed`, err);
+    }
+
+    try {
+      const subStrainUpdate = _ep23_migrateSubStrainByArchetype(actor);
+      if (subStrainUpdate) await actor.update(subStrainUpdate);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: sub-strain per-archetype migration failed`, err);
     }
 
     doneCount++;

@@ -104,19 +104,20 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
         let psiCopy = "";
 
         if(actorModel.subStrain.label != "custom"){
+            const archetypeData = actorModel.subStrain.byArchetype[actorModel.subStrain.label];
             if(result === 1){
                 message.influenceLabel = "ep2e.psi.effect.physicalDamage";
                 message.influenceCopy = "ep2e.psi.effect.takeDamage";
             }
-            else if (result > 1 && result <=3) {   
-                psiLabel = eval("actorModel.subStrain.influence" + result + ".label");
-                psiCopy = eval("actorModel.subStrain.influence" + result + ".description");
+            else if (result > 1 && result <=3) {
+                psiLabel = archetypeData["influence" + result].label;
+                psiCopy = archetypeData["influence" + result].description;
                 if(psiLabel === "restrictedBehaviour" && actorModel.subStrain.label === "architect"){
-                    message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
+                    message.influenceLabel = eclipsephase.psiStrainLabels[psiLabel];
                     message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.relaxation";
                 }
                 else if(psiLabel === "restrictedBehaviour" && actorModel.subStrain.label === "haunter"){
-                    message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
+                    message.influenceLabel = eclipsephase.psiStrainLabels[psiLabel];
                     message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.empathy";
                 }
                 else if(actorModel.subStrain.label === "xenomorph"){
@@ -124,17 +125,17 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
                     message.influenceCopy = "ep2e.psi.effect.enhancedBehaviour." + psiCopy;
                 }
                 else {
-                    message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
-                    message.influenceCopy = "ep2e.psi.effect." + psiLabel + "." + psiCopy; 
+                    message.influenceLabel = eclipsephase.psiStrainLabels[psiLabel];
+                    message.influenceCopy = "ep2e.psi.effect." + psiLabel + "." + psiCopy;
                 }
             }
             else if (result > 3 && actorModel.subStrain.label != "beast" && actorModel.subStrain.label != "haunter") {
-                psiCopy = eval("actorModel.subStrain.influence" + result + ".description");
+                psiCopy = archetypeData["influence" + result].description;
                 message.influenceLabel = "ep2e.psi.effect.motivation.label";
                 message.influenceCopy = "ep2e.psi.effect.motivation." + psiCopy;
             }
             else if (result > 3 && result <=5){
-                psiCopy = eval("actorModel.subStrain.influence" + result + ".description");
+                psiCopy = archetypeData["influence" + result].description;
                 message.influenceLabel = "ep2e.psi.effect.motivation.label";
                 message.influenceCopy = "ep2e.psi.effect.motivation." + psiCopy;
             }

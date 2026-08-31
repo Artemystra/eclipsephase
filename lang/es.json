@@ -123,7 +123,6 @@
       "button": {
         "edit": "Edit",
         "delete": "Delete",
-        "proceed": "Continuar",
         "close": "Close",
         "confirm": "Confirm",
         "select": "Select",
@@ -751,10 +750,6 @@
       "descriptionPlaceholder": "Describe your inner monster",
       "gammaHeadline": "Gamma Sleights",
       "chiHeadline": "Chi Sleights",
-      "popUp": {
-        "subStrainChangeHeadline": "¿Cambiar Subcepa?",
-        "subStrainChangeCopy": "<b>Advertencia:</b> Cambiar la subcepa eliminará permanentemente todos los textos de influencia de Infección registrados actualmente (resultados 2 a 6). Esto no se puede deshacer."
-      },
       "strain" : {
         "none": "-Select-",
         "architect": "The Architect",
