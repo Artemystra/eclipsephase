@@ -94,6 +94,8 @@
           "hasPsi": null,
           "hasGear": null,
           "psiChiBoosted": false,
+          "psiGammaBoosted": false,
+          "autoPushSelection": "none",
           "puppetSocked": []
         },
         "initiative": {
@@ -1402,6 +1404,7 @@
       "psiType": "",
       "actionType": "",
       "duration": "",
+      "pushed": false,
       "damage": {
         "target": "physical",
         "d10": null,

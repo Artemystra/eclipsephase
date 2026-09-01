@@ -126,6 +126,8 @@
       "button": {
         "edit": "Editieren",
         "delete": "Löschen",
+        "endChiPush": "Push beenden",
+        "pushChiSleight": "Pushen",
         "close": "Schließen",
         "confirm": "Bestätigen",
         "select": "Auswählen",
@@ -762,6 +764,10 @@
       "descriptionPlaceholder": "Beschreibe dein inneres Monster",
       "gammaHeadline": "Gamma-Fertigkeiten",
       "chiHeadline": "Chi-Fertigkeiten",
+      "popUp": {
+        "chiPushEndCopy": "Dies beendet den temporären, verstärkten Effekt der Fertigkeit.",
+        "chiPushStartCopy": "Dies erhöht die Infektionsrate um 5 und löst einen Infektionstest aus."
+      },
       "strain" : {
         "none": "-Wähle-",
         "architect": "Der Architekt",
@@ -970,6 +976,7 @@
         }
       },
       "aspect": {
+        "pushedBadge": "Gepusht",
         "table": {
           "type": {
             "label": "Psi Typ",
@@ -1451,6 +1458,14 @@
           "ownBodyEncumbrance": "Behinderung des eigenen Körpers",
           "ownBodyTraits": "Eigene Traits/Ware",
           "noPsi": "Psi funktioniert nicht während des Jammens. Es wirkt niemals über eine Mesh-Verbindung oder in einem Cyberhirn."
+        },
+        "psi": {
+          "chiPushActive": "Aktiv für {minutes} Minute(n), oder bis zur nächsten Rast.",
+          "pushingSleight": "Pushe {name}",
+          "pushedSleightFeedback": "Gepushte Fertigkeit",
+          "pushedLabel": "Gepusht",
+          "autoLabel": "Auto",
+          "autoPushTooltip": "Auto-Push"
         },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."

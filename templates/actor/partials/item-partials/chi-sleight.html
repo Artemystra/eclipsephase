@@ -1,6 +1,6 @@
 <div class="grid grid-2col noMargin" style="gap: 0 10px;">
     {{#each actor.aspect.chi as |item id|}}
-        <div class="item" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
+        <div class="item {{#if (or item.system.pushed actor.system.additionalSystems.psiChiBoosted)}}chiPushed{{/if}}" style="margin-bottom: 10px;" data-item-id="{{item._id}}">
             <div class="flexrow subheader">
                 <!--Name & Dice Roller-->
                 <div class="flexrow flex-group-left reveal">
@@ -11,6 +11,14 @@
                 </div>
                 <!--Empty Area Left of the Sleight Name-->
                 <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
+                    {{#if item.system.pushed}}
+                    <span class="resource-label chiPushedBadge">{{localize "ep2e.item.aspect.pushedBadge"}}</span>
+                    <a class="endChiPush icon-space" data-item-id="{{item._id}}" title="{{localize 'ep2e.actorSheet.button.endChiPush'}}"><i class="fa-solid fa-circle-stop awesomeIcon"></i></a>
+                    {{else}}
+                    {{#unless actor.system.additionalSystems.psiChiBoosted}}
+                    <a class="pushChiSleight icon-space" data-item-id="{{item._id}}" title="{{localize 'ep2e.actorSheet.button.pushChiSleight'}}"><i class="fa-solid fa-bolt awesomeIcon"></i></a>
+                    {{/unless}}
+                    {{/if}}
                 </div>
             </div>
             <!--Psi Details-->

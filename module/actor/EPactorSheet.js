@@ -9,6 +9,7 @@ import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
+import { endChiPush, confirmChiPush } from "../rolls/psi.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -172,6 +173,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const context = await super._prepareContext(options);
     context.config = CONFIG.eclipsephase;
     context.isGM = game.user.isGM;
+
+    const autoPushSelection = actor.system.additionalSystems?.autoPushSelection;
+    context.autoPushLabel = autoPushSelection && autoPushSelection !== "none" ? game.i18n.localize("ep2e.roll.dialog.push." + autoPushSelection) : "";
 
     await this._prepareCharacterItems(context);
     await this._prepareRenderedHTMLContent(context);
@@ -1577,6 +1581,36 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       element.addEventListener("click", () => {
         this._psiDetailsOpen = !this._psiDetailsOpen;
         this._syncPsiDetailsPanel();
+      });
+    });
+
+    html.querySelectorAll(".endChiPush").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.endChiPush");
+        const popUpCopy = "ep2e.psi.popUp.chiPushEndCopy";
+        const popUpPrimary = "ep2e.actorSheet.button.endChiPush";
+
+        const { confirm } = await confirmation(popUpTitle, popUpHeadline, popUpCopy, undefined, "", popUpPrimary);
+        if (!confirm) return;
+
+        await endChiPush(actor, itemId);
+      });
+    });
+
+    html.querySelectorAll(".pushChiSleight").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.pushChiSleight");
+        const popUpCopy = "ep2e.psi.popUp.chiPushStartCopy";
+        const popUpPrimary = "ep2e.actorSheet.button.pushChiSleight";
+
+        const { confirm, rollMode } = await confirmation(popUpTitle, popUpHeadline, popUpCopy, undefined, "", popUpPrimary, false, true);
+        if (!confirm) return;
+
+        await confirmChiPush(actor, itemId, rollMode);
       });
     });
 

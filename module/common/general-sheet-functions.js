@@ -313,7 +313,8 @@ export async function itemReduction(actor, itemID, itemQuantity){
     popUpInfo,
     popUpTarget,
     popUpPrimary,
-    singleButton
+    singleButton,
+    showRollMode
   ) {
     const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
     const primaryButton = popUpPrimary
@@ -329,7 +330,8 @@ export async function itemReduction(actor, itemID, itemQuantity){
       popUpCopy,
       dialogType,
       popUpInfo,
-      popUpTarget
+      popUpTarget,
+      showRollMode
     });
 
     const buttons = [];
@@ -338,7 +340,7 @@ export async function itemReduction(actor, itemID, itemQuantity){
       action: "confirm",
       label: primaryButton,
       default: true,
-      callback: () => true
+      callback: (event, button) => showRollMode ? { confirm: true, rollMode: button.form.rollMode.value } : true
     });
 
     if (!buttonLayout) {
@@ -359,6 +361,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
       position: { width: 250 }
     });
 
+    if (showRollMode) {
+      return result && typeof result === "object" ? result : { confirm: false, rollMode: "private" };
+    }
     return { confirm: result === true || result === "confirm" };
   }
 

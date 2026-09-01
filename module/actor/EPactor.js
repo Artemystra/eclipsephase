@@ -1,5 +1,8 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
+import { endAllChiPushes } from "../rolls/psi.js"
+
+const gammaAutoPushInFlight = new Set();
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -71,7 +74,18 @@ export default class EPactor extends Actor {
       }
       const wasBoosted = actorModel.additionalSystems.psiChiBoosted === true;
       const isBoosted = chiMultiplier === 2;
-      if (isBoosted !== wasBoosted) chiBoostDelta = isBoosted ? 1 : -1;
+      if (isBoosted !== wasBoosted) {
+        chiBoostDelta = isBoosted ? 1 : -1;
+        actorModel.additionalSystems.psiChiBoosted = isBoosted;
+      }
+      if (chiBoostDelta > 0) endAllChiPushes(actorWhole);
+
+      const wasGammaBoosted = actorModel.additionalSystems.psiGammaBoosted === true;
+      const isGammaBoosted = actorModel.psiStrain.infection >= 66;
+      if (isGammaBoosted !== wasGammaBoosted) {
+        actorModel.additionalSystems.psiGammaBoosted = isGammaBoosted;
+        this._requestGammaAutoPush(actorWhole, isGammaBoosted);
+      }
     }
     actorModel.mods.psiMultiplier = chiMultiplier
     actorModel.currentStatus = [];
@@ -937,24 +951,32 @@ export default class EPactor extends Actor {
     actorModel.psiStrain.minimumInfection = minimumInfection
   }
 
-  async _autoPush(actorModel, actorWhole) {
-    let currentInfection = actorModel.psiStrain.infection ?? 0;
-    let autoPushSelection = actorModel.additionalSystems.autoPushSelection
+  /**
+   * Persists the Infection-66+ crossing state. Gaining the boost prompts the player to pick
+   * their free push effect (RAW: re-asked on every fresh crossing); losing it clears the pick.
+   * @param {Actor} actorWhole
+   * @param {boolean} isGammaBoosted
+   */
+  async _requestGammaAutoPush(actorWhole, isGammaBoosted) {
+    if (gammaAutoPushInFlight.has(actorWhole.id)) return;
+    gammaAutoPushInFlight.add(actorWhole.id);
 
-    switch(currentInfection){
-      case (currentInfection < 33):
-        actorModel.additionalSystems.autoPush = 0;
-        actorModel.additionalSystems.autoPushSelection = false;
-        break;
-      case (currentInfection > 66 && !autoPushSelection):
-        actorModel.additionalSystems.autoPush = 2;
-        let pushSelection = await autoPushSelector("selectAutoPush")
-        let selection = pushSelection.pushType;
-        actorModel.additionalSystems.autoPushSelection = selection;
+    try {
+      if (!isGammaBoosted) {
+        await actorWhole.update({
+          "system.additionalSystems.psiGammaBoosted": false,
+          "system.additionalSystems.autoPushSelection": "none"
+        });
+        return;
+      }
 
-        break;
-      default:
-        break;
+      const pushSelection = await autoPushSelector("selectAutoPush");
+      await actorWhole.update({
+        "system.additionalSystems.psiGammaBoosted": true,
+        "system.additionalSystems.autoPushSelection": pushSelection.pushType || "none"
+      });
+    } finally {
+      gammaAutoPushInFlight.delete(actorWhole.id);
     }
   }
 }

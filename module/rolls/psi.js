@@ -1,7 +1,9 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat} from "./dice.js";
 import * as pools from "./pools.js";
-import { gmList } from "../common/general-sheet-functions.js";
+import { gmList, prepareRecipients } from "../common/general-sheet-functions.js";
+
+const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
 
 /**
  * Formula for the psi-feedback physical damage roll, or null if none applies.
@@ -15,6 +17,29 @@ export function resolvePhysicalDamageFormula(push, virusResultIsOne){
     return null;
 }
 
+/**
+ * What each RAW gamma push effect automates, keyed by the same values used in the push-effect
+ * dropdowns (general-modifiers.html, pop-up.html's selectAutoPush block). Only "effect" has a
+ * mechanical hook today (gamma/epsilon aspect damage, itself only built for a few sleights) -
+ * range/power/penetration/duration/target have no automatable system to hook into yet and are
+ * intentionally left out rather than stubbed, so any future addition is one new entry here, not
+ * a new branch at every consultation site.
+ */
+export const GAMMA_PUSH_EFFECTS = {
+    effect: { damageMultiplier: 2 }
+};
+
+/**
+ * The damage multiplier from a gamma-boosted (Infection 66+) actor's currently selected free
+ * push effect, or 1 if none applies.
+ * @param {Actor} actorWhole
+ * @returns {number}
+ */
+export function gammaAutoPushDamageMultiplier(actorWhole){
+    const selection = actorWhole.system.additionalSystems?.autoPushSelection;
+    return GAMMA_PUSH_EFFECTS[selection]?.damageMultiplier ?? 1;
+}
+
 export async function preparePsi(data){
     const dataset = data.currentTarget.dataset;
     const actorWhole = await fromUuid(dataset.actorid)
@@ -24,6 +49,97 @@ export async function preparePsi(data){
     rollPsiEffect(actorWhole, psiOwner, push, systemOptions)
 }
 
+const POOL_CHIMOD_KEYS = {
+    "system.pools.insight.chiMod": { pool: "insight", total: "totalInsight" },
+    "system.pools.moxie.chiMod": { pool: "moxie", total: "totalMoxie" },
+    "system.pools.vigor.chiMod": { pool: "vigor", total: "totalVigor" },
+    "system.pools.flex.chiMod": { pool: "flex", total: "totalFlex" }
+};
+
+/**
+ * Moves each pool's current value by the same amount a set of chi-push ActiveEffect changes
+ * moved its max, mirroring EPactor.js's _applyChiBoostToPoolValues but scoped to one sleight.
+ * @param {Actor} actorWhole
+ * @param {Array} changes
+ * @param {number} sign - 1 when the boost was just gained, -1 when it was just lost
+ */
+async function _adjustPoolValuesForChiPush(actorWhole, changes, sign){
+    const updates = {};
+    for (const change of changes) {
+        const mapping = POOL_CHIMOD_KEYS[change.key];
+        if (!mapping) continue;
+        const pool = actorWhole.system.pools[mapping.pool];
+        const delta = eval(change.value) * sign;
+        updates[`system.pools.${mapping.pool}.value`] = Math.clamp((pool.value ?? 0) + delta, 0, pool[mapping.total]);
+    }
+    if (Object.keys(updates).length) await actorWhole.update(updates);
+}
+
+/**
+ * Duplicates a chi sleight's own ActiveEffect(s) onto itself, flagged as a temporary push boost,
+ * moves any boosted pool's current value in step, and marks the item pushed. No-ops entirely if
+ * the actor is already Infection-33+ boosted (that already doubles the sleight's bonus globally,
+ * so pushing it individually would double-count) or if the item is already pushed.
+ * @param {Actor} actorWhole
+ * @param {string} itemId
+ */
+export async function pushChiSleight(actorWhole, itemId){
+    const item = actorWhole.items.get(itemId);
+    if (!item || item.system.pushed) return;
+    if (actorWhole.system.additionalSystems?.psiChiBoosted === true) return;
+
+    const sourceEffect = item.effects.find(e => e.changes?.length);
+    if (sourceEffect) {
+        const changes = sourceEffect.changes;
+        const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
+        const newEffectData = {
+            name: `${item.name} (${game.i18n.localize("ep2e.item.aspect.pushedBadge")})`,
+            icon: sourceEffect.icon,
+            origin: sourceEffect.origin,
+            disabled: false,
+            transfer: true,
+            changes,
+            flags: { eclipsephase: { chiPushBoost: true } }
+        };
+        if (isV14Plus) newEffectData.system = { changes };
+        await item.createEmbeddedDocuments("ActiveEffect", [newEffectData]);
+        await _adjustPoolValuesForChiPush(actorWhole, changes, 1);
+    }
+
+    await item.update({ "system.pushed": true });
+}
+
+/**
+ * Ends a chi sleight's temporary push boost: deletes the duplicated effect (reverting any pool
+ * current-value bump it caused) and clears the flag.
+ * @param {Actor} actorWhole
+ * @param {string} itemId
+ */
+export async function endChiPush(actorWhole, itemId){
+    const item = actorWhole.items.get(itemId);
+    if (!item) return;
+
+    const boostEffects = item.effects.filter(e => e.getFlag("eclipsephase", "chiPushBoost"));
+    if (boostEffects.length) {
+        const changes = boostEffects.flatMap(e => e.changes);
+        await item.deleteEmbeddedDocuments("ActiveEffect", boostEffects.map(e => e.id));
+        await _adjustPoolValuesForChiPush(actorWhole, changes, -1);
+    }
+
+    await item.update({ "system.pushed": false });
+}
+
+/**
+ * Ends every currently-pushed chi sleight on the actor, e.g. when the actor rests.
+ * @param {Actor} actorWhole
+ */
+export async function endAllChiPushes(actorWhole){
+    const pushedItems = actorWhole.items.filter(i => i.type === "aspect" && i.system.psiType === "chi" && i.system.pushed);
+    for (const item of pushedItems) {
+        await endChiPush(actorWhole, item.id);
+    }
+}
+
 export async function infectionUpdate(actorWhole, options){
 
     const raiseInfection = parseInt(options.raiseInfection);
@@ -31,21 +147,52 @@ export async function infectionUpdate(actorWhole, options){
     let infectionMod = parseInt(actorModel.psiStrain.infection) + parseInt(options.push ? raiseInfection * 2 : raiseInfection)
 
     if (infectionMod <= 100)
-        actorWhole.update({"system.psiStrain.infection" : infectionMod});
+        await actorWhole.update({"system.psiStrain.infection" : infectionMod});
 
     else if (infectionMod > 100)
-        actorWhole.update({"system.psiStrain.infection" : 100});
+        await actorWhole.update({"system.psiStrain.infection" : 100});
     
 
     return infectionMod
 }
 
-export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
+/**
+ * Executes a chi sleight push end-to-end: charges the flat RAW Infection cost, applies the
+ * temporary boost, announces it, then rolls the mandatory Infection Test. No skill check is
+ * involved - chi sleights are already-active/passive per RAW, unlike gamma's activation roll.
+ * @param {Actor} actorWhole
+ * @param {string} itemId
+ * @param {string} rollMode - "private" (GM-only, default) or "public"
+ */
+export async function confirmChiPush(actorWhole, itemId, rollMode){
+    const psiOwner = game.user._id;
+    const recipientList = prepareRecipients(rollMode);
+    const pushedItem = actorWhole.items.get(itemId);
+    const actingPerson = game.i18n.format("ep2e.roll.announce.psi.pushingSleight", { name: pushedItem?.name });
+
+    const raisedInfection = Math.min(actorWhole.system.psiStrain.infection + 5, 100);
+    await actorWhole.update({ "system.psiStrain.infection": raisedInfection });
+
+    await pushChiSleight(actorWhole, itemId);
+    const minutes = Math.floor(actorWhole.system.aptitudes.wil.value / 5);
+    const chiPushMessage = game.i18n.format("ep2e.roll.announce.psi.chiPushActive", { minutes });
+    await rollToChat(null, { message: chiPushMessage }, CHI_PUSH_OUTPUT, null, actingPerson, recipientList, false);
+
+    const systemOptions = { brewStatus: game.settings.get("eclipsephase", "superBrew") };
+    await rollPsiEffect(actorWhole, psiOwner, false, systemOptions, itemId, rollMode);
+}
+
+export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, chiPushItemId, rollMode){
     //Infection (only relevant for psi checks)
     const actorModel = actorWhole.system;
-    const recipientList = gmList();
-    if(!recipientList.includes(psiOwner))
-        recipientList.push(psiOwner)
+    let recipientList;
+    if (rollMode) {
+        recipientList = prepareRecipients(rollMode);
+    } else {
+        recipientList = gmList();
+        if(!recipientList.includes(psiOwner))
+            recipientList.push(psiOwner)
+    }
 
     const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionTries");
 
@@ -158,17 +305,19 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
 
     }
     
-    physicalDamageRoll = resolvePhysicalDamageFormula(push, d6.total === 1);
+    const effectivePush = chiPushItemId ? false : push;
+    physicalDamageRoll = resolvePhysicalDamageFormula(effectivePush, d6.total === 1);
 
     if (physicalDamageRoll && actorWhole.type === "character"){
-        
+
         const physicalDamage = await new Roll(physicalDamageRoll).evaluate();
         const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionDamage");
 
         let message = {
             "psiDamageValue": physicalDamage.total,
             "type": "defaultDamage",
-            "rollTitle": "ep2e.roll.announce.damageDone"
+            "rollTitle": "ep2e.roll.announce.damageDone",
+            "copy": effectivePush ? "ep2e.roll.announce.psi.pushedSleightFeedback" : "ep2e.psi.effect.takeDamage"
         }
 
         await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false)

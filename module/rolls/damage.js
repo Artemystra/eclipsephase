@@ -2,6 +2,7 @@ import { weaponPreparation } from "../common/weapon-functions.js";
 import { damageValueCalc } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat } from "./dice.js";
 import { prepareRecipients } from "../common/general-sheet-functions.js";
+import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
 
 export async function prepareWeapon(data, result, preparedData) {
   /*const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
@@ -163,13 +164,16 @@ export async function preparePsiDamage(data) {
   const blind = originMessage ? originMessage.blind : dataset.rollmode === "blindroll" && !game.user.isGM;
   const recipientList = originMessage ? originMessage.whisper : prepareRecipients(dataset.rollmode);
 
-  await dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList);
+  await dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, dataset.push);
 }
 
-async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList) {
+export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, manualPush) {
   const { successModifier, criticalModifier } = successTierModifier(rollResult);
   const baseDamage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv;
-  const rollFormula = criticalModifier ? criticalModifier + baseDamage + successModifier : baseDamage + successModifier;
+  const manualPushMultiplier = GAMMA_PUSH_EFFECTS[manualPush]?.damageMultiplier ?? 1;
+  const pushMultiplier = sleightItem.system.psiType !== "chi" ? Math.max(gammaAutoPushDamageMultiplier(actorWhole), manualPushMultiplier) : 1;
+  const baseFormula = criticalModifier ? criticalModifier + baseDamage + successModifier : baseDamage + successModifier;
+  const rollFormula = pushMultiplier > 1 ? `${pushMultiplier}*(${baseFormula})` : baseFormula;
 
   let message = {};
   message.type = "psiDamage";

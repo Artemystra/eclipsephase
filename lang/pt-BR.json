@@ -122,6 +122,8 @@
       "button": {
         "edit": "Editar",
         "delete": "Excluir",
+        "endChiPush": "Encerrar Empurrão",
+        "pushChiSleight": "Empurrar",
         "close": "Fechar",
         "confirm": "Confirmar",
         "select": "Selecionar",
@@ -749,6 +751,10 @@
       "descriptionPlaceholder": "Descreva seu monstro interior",
       "gammaHeadline": "Truques Gama",
       "chiHeadline": "Truques Chi",
+      "popUp": {
+        "chiPushEndCopy": "Isso encerrará o efeito potencializado temporário do sleight.",
+        "chiPushStartCopy": "Isso aumentará seu Grau de Infecção em 5 e fará um Teste de Infecção."
+      },
       "strain": {
         "none": "-Selecionar-",
         "architect": "A Arquiteta",
@@ -954,6 +960,7 @@
         }
       },
       "aspect": {
+        "pushedBadge": "Empurrado",
         "table": {
           "type": {
             "label": "Tipo Psi",
@@ -1428,6 +1435,14 @@
           "ownBodyEncumbrance": "Sobrecarga do corpo próprio",
           "ownBodyTraits": "Trait/Ware do corpo próprio",
           "noPsi": "Psi não funciona enquanto você está jammando. Ele nunca funciona por conexão mesh ou dentro de um cérebro cibernético."
+        },
+        "psi": {
+          "chiPushActive": "Ativo por {minutes} minuto(s), ou até seu próximo descanso.",
+          "pushingSleight": "Empurrando {name}",
+          "pushedSleightFeedback": "Truque Empurrado",
+          "pushedLabel": "Empurrado",
+          "autoLabel": "Auto",
+          "autoPushTooltip": "Push Automático"
         },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."

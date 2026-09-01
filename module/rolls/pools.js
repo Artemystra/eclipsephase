@@ -1,7 +1,7 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
 import { prepareRecipients } from "../common/general-sheet-functions.js";
-import { prepareWeapon } from "./damage.js";
+import { prepareWeapon, dealPsiDamage } from "./damage.js";
 import { completeShopPurchase, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
@@ -57,6 +57,17 @@ export async function usePoolFromChat(data){
             data.rollmode = dataset.rollmode
 
             await prepareWeapon(false, result, data)
+        }
+        else if(rolledFrom === "psiSleight" && dataset.sleightid){
+            const sleightItem = actor.items.get(dataset.sleightid);
+            if(sleightItem?.system.damage?.d10 || sleightItem?.system.damage?.d6 || sleightItem?.system.damage?.bonus){
+                const messageId = data.currentTarget.closest("[data-message-id]")?.dataset.messageId;
+                const originMessage = messageId ? game.messages.get(messageId) : null;
+                const blind = originMessage ? originMessage.blind : dataset.rollmode === "blindroll" && !game.user.isGM;
+                const damageRecipientList = originMessage ? originMessage.whisper : recipientList;
+
+                await dealPsiDamage(actor, sleightItem, parseInt(dataset.newresult), blind, damageRecipientList, dataset.push);
+            }
         }
         else if(rolledFrom === "shopPurchase" && dataset.resultclass === "success"){
             const bodyBindings = {};
@@ -172,8 +183,9 @@ export async function outcomeAlternatives(outputData, pool, systemOptions){
         
         else if(((obj.originalResult + 1) < 6)  && obj.pools.available){
             obj.options["upgrade"] = true
+            obj.result = obj.originalResult + 1
             obj["resultText"] = resultText[(obj.originalResult+1)].text
-         }   
+         }
         
         else if(obj.resultClass === "success" && obj.originalResult === 5 && (obj.value > outputData.rollResult) && obj.pools.available)
             obj.options["swap"] = true

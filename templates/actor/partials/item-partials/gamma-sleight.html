@@ -12,8 +12,16 @@
                 </div>
                 <!--Empty Area Left of the Sleight Name-->
                 <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
-                    <i class="fa-regular fa-virus-covid icon-space awesomeIcon"></i></i>
-                    <h4 class="item-image input-xs noMargin"><strong> {{item.system.infection}}</strong></h4>
+                    {{#if ../autoPushLabel}}
+                    <div class="wantToKnowMore" style="display: flex; align-items: center; margin-right: 10px;">
+                        <i class="fa-regular fa-circle-up awesomeIcon" style="color: var(--positive);"></i>
+                        <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.roll.announce.psi.autoPushTooltip"}}: {{../autoPushLabel}}</span>
+                    </div>
+                    {{/if}}
+                    <div class="flexrow" style="flex: 0 0 auto; align-items: center; gap: 10px;">
+                        <i class="fa-regular fa-virus-covid awesomeIcon"></i>
+                        <h4 class="item-image input-xs noMargin"><strong>{{item.system.infection}}</strong></h4>
+                    </div>
                 </div>
             </div>
             <!--Psi Details-->

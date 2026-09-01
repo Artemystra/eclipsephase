@@ -3817,6 +3817,27 @@ button.epTextlink:hover{
   min-width: 0;
 }
 
+.chiPushed {
+  background-color: var(--insanity);
+  border-radius: 6px;
+}
+
+.chiPushed .subheader {
+  background-color: var(--insanity);
+  border-bottom-color: var(--insanity);
+}
+
+.chiPushed .slideShow {
+  background-color: var(--insanity) !important;
+}
+
+.chiPushedBadge {
+  color: var(--mainText);
+  text-transform: uppercase;
+  font-size: 11px;
+  margin-right: 5px;
+}
+
 .insight,
 .moxie,
 .vigor,

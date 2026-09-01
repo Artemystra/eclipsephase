@@ -127,6 +127,8 @@
       "button": {
         "edit": "Edit",
         "delete": "Delete",
+        "endChiPush": "End Push",
+        "pushChiSleight": "Push",
         "close": "Close",
         "confirm": "Confirm",
         "select": "Select",
@@ -774,6 +776,10 @@
       "descriptionPlaceholder": "Describe your inner monster",
       "gammaHeadline": "Gamma Sleights",
       "chiHeadline": "Chi Sleights",
+      "popUp": {
+        "chiPushEndCopy": "This will end the sleight's temporary boosted effect.",
+        "chiPushStartCopy": "This will raise your Infection Rating by 5 and make an Infection Test."
+      },
       "strain" : {
         "none": "-Select-",
         "architect": "The Architect",
@@ -983,6 +989,7 @@
         }
       },
       "aspect": {
+        "pushedBadge": "Pushed",
         "table": {
           "type": {
             "label": "Psi Type",
@@ -1478,6 +1485,14 @@
           "ownBodyEncumbrance": "Own Body Encumbrance",
           "ownBodyTraits": "Own Body Traits/Ware",
           "noPsi": "Psi doesn't work while jamming. It never works over mesh connection or inside a cyberbrain."
+        },
+        "psi": {
+          "chiPushActive": "Active for {minutes} minute(s), or until your next rest.",
+          "pushingSleight": "Pushing {name}",
+          "pushedSleightFeedback": "Pushed Sleight",
+          "pushedLabel": "Pushed",
+          "autoLabel": "Auto",
+          "autoPushTooltip": "Auto-Push"
         },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."

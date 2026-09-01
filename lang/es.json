@@ -123,6 +123,8 @@
       "button": {
         "edit": "Edit",
         "delete": "Delete",
+        "endChiPush": "Terminar Empuje",
+        "pushChiSleight": "Empujar",
         "close": "Close",
         "confirm": "Confirm",
         "select": "Select",
@@ -750,6 +752,10 @@
       "descriptionPlaceholder": "Describe your inner monster",
       "gammaHeadline": "Gamma Sleights",
       "chiHeadline": "Chi Sleights",
+      "popUp": {
+        "chiPushEndCopy": "Esto terminará el efecto potenciado temporal del sleight.",
+        "chiPushStartCopy": "Esto aumentará tu Índice de Infección en 5 y hará una Prueba de Infección."
+      },
       "strain" : {
         "none": "-Select-",
         "architect": "The Architect",
@@ -955,6 +961,7 @@
         }
       },
       "aspect": {
+        "pushedBadge": "Empujado",
         "table": {
           "type": {
             "label": "Psi Type",
@@ -1415,6 +1422,14 @@
           "ownBodyEncumbrance": "Sobrecarga del cuerpo propio",
           "ownBodyTraits": "Trait/Ware del cuerpo propio",
           "noPsi": "El Psi no funciona mientras estás jammeando. Nunca funciona a través de una conexión mesh o dentro de un cerebro cibernético."
+        },
+        "psi": {
+          "chiPushActive": "Activo durante {minutes} minuto(s), o hasta tu próximo descanso.",
+          "pushingSleight": "Empujando {name}",
+          "pushedSleightFeedback": "Sleight Empujado",
+          "pushedLabel": "Empujado",
+          "autoLabel": "Auto",
+          "autoPushTooltip": "Empuje Automático"
         },
         "armor": {
           "equipped": "He equipado a {morph} con armadura."

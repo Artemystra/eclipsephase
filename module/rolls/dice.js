@@ -13,6 +13,7 @@ export const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage
 export const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
 export const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
 export const DAMAGE_STATUS_OUTPUT = 'systems/eclipsephase/templates/chat/damage-status.html'
+export const SYSTEM_MESSAGE_OUTPUT = 'systems/eclipsephase/templates/chat/system-message.html'
 export const DEFAULT_ROLL = 'systems/eclipsephase/templates/chat/default-roll-to-chat.html'
 
 /*
@@ -452,6 +453,18 @@ export class TaskRoll {
 
     data.itemdata = rollItem
 
+    data.activePushEffects = []
+    if (rolledFrom === "psiSleight" && actorWhole) {
+      const additionalSystems = actorWhole.system?.additionalSystems
+      const autoPush = additionalSystems?.autoPushSelection
+      if (additionalSystems?.psiGammaBoosted && autoPush && autoPush !== "none") {
+        data.activePushEffects.push({ label: game.i18n.localize("ep2e.roll.dialog.push." + autoPush), isAuto: true })
+      }
+      if (options?.push) {
+        data.activePushEffects.push({ label: game.i18n.localize("ep2e.roll.dialog.push." + options.push), isAuto: false })
+      }
+    }
+
     data.modifiers = []
     if(this.modifiers.length > 0) {
       for(let mod of this.modifiers) {
@@ -655,7 +668,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(roll.type === "psi" && actorWhole.type != "goon")
             options.totalInfection = await psi.infectionUpdate(actorWhole, options)
-        
+
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
 
@@ -701,9 +714,8 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        console.log("My outputData", outputData)
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
-        
+
         if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
 

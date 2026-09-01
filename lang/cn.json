@@ -123,6 +123,8 @@
       "button": {
         "edit": "编辑",
         "delete": "删除",
+        "endChiPush": "结束推送",
+        "pushChiSleight": "推送",
         "close": "关闭",
         "confirm": "确认",
         "select": "选择",
@@ -749,6 +751,10 @@
       "descriptionPlaceholder": "描述你心中的怪物",
       "gammaHeadline": "伽马灵术",
       "chiHeadline": "希灵术",
+      "popUp": {
+        "chiPushEndCopy": "这将结束该灵术的临时强化效果。",
+        "chiPushStartCopy": "这将使你的感染深度提高5点，并触发一次感染检定。"
+      },
       "strain" : {
         "none": "-选择-",
         "architect": "建筑师",
@@ -954,6 +960,7 @@
         }
       },
       "aspect": {
+        "pushedBadge": "已推送",
         "table": {
           "type": {
             "label": "灵能类型",
@@ -1422,6 +1429,14 @@
           "ownBodyEncumbrance": "自身负重",
           "ownBodyTraits": "自身特征/插件",
           "noPsi": "干扰状态下心灵能力无法使用。心灵能力永远无法通过网格连接或电子脑运作。"
+        },
+        "psi": {
+          "chiPushActive": "持续{minutes}分钟，或直到下次休息为止。",
+          "pushingSleight": "正在推送{name}",
+          "pushedSleightFeedback": "被推送的灵术",
+          "pushedLabel": "已推送",
+          "autoLabel": "自动",
+          "autoPushTooltip": "自动推送"
         },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"
