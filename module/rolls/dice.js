@@ -609,11 +609,19 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let specName = dataset.specname || "";
     let roll = await defineRoll(dataset, actorWhole)
 
-    // Psi never works over mesh/cyberbrain, which jamming requires - AE suppression (effects.js)
-    // handles passive Chi bonuses, but an active Psi (Gamma) roll needs to be blocked outright.
-    if (roll.type === "psi" && actorModel?.additionalSystems?.isJamming) {
-        ui.notifications.warn(game.i18n.localize("ep2e.roll.announce.jamming.noPsi"));
-        return;
+    // Psi is blocked outright while jamming; Ki is blocked when the own body lacks a Cyberbrain.
+    if (roll.type === "psi" && dataset.itemid) {
+        const sleightItem = actorWhole.items.get(dataset.itemid);
+        const strainFamily = sleightItem?.system?.strainFamily ?? "psi";
+        if (strainFamily === "ki") {
+            if (!actorModel?.additionalSystems?.hasCyberbrainChain) {
+                ui.notifications.warn(game.i18n.localize("ep2e.roll.announce.ki.noCyberbrain"));
+                return;
+            }
+        } else if (actorModel?.additionalSystems?.isJamming) {
+            ui.notifications.warn(game.i18n.localize("ep2e.roll.announce.jamming.noPsi"));
+            return;
+        }
     }
 
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)

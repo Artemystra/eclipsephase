@@ -8,6 +8,13 @@
                 {{selectOptions config.psiTypes selected=item.system.psiType localize=true}}
             </select>
         </div>
+        <div class="flexrow alignCenter wantToKnowMore">
+            <i class="fa-solid fa-dna awesomeIcon icon-small"></i>
+            <span class="tooltipText" style="font-size: 13px;">{{localize "ep2e.item.aspect.table.family.label"}}</span>
+            <select name="system.strainFamily" data-type="String" style="max-width: 90px;" {{#if item.actor}}disabled{{/if}}>
+                {{selectOptions config.strainFamilies selected=item.system.strainFamily localize=true}}
+            </select>
+        </div>
         {{#if (ne item.system.psiType "chi")}}
         <div class="alignRight flexGrowHalf">
             <div class="flexrow alignCenter wantToKnowMore" style="justify-content: flex-end; gap: 8px;">

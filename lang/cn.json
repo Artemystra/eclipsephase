@@ -110,6 +110,7 @@
         "inventoryTab": "物品栏",
         "peripheralsTab": "外设",
         "psiTab": "灵能",
+        "kiTab": "气",
         "effectsTab": "效果",
         "gmInfoTab": "GM Info"
       },
@@ -753,7 +754,14 @@
       "chiHeadline": "希灵术",
       "popUp": {
         "chiPushEndCopy": "这将结束该灵术的临时强化效果。",
-        "chiPushStartCopy": "这将使你的感染深度提高5点，并触发一次感染检定。"
+        "chiPushStartCopy": "这将使你的感染深度提高5点，并触发一次感染检定。",
+        "prerequisiteHeadline": "前置优势",
+        "prerequisiteAddCopy": "没有正确的优势，你无法使用这个灵术。要现在就添加吗？",
+        "prerequisiteUpgradeCopy": "你的优势等级不足以使用这个灵术。要将你的优势等级替换为正确的等级吗？",
+        "prerequisiteBoxLabel": "待添加的优势",
+        "prerequisiteConflictHeadline": "灵术无法使用",
+        "prerequisiteConflictCopy": "该角色已拥有另一流派的优势，无法使用这个灵术。",
+        "prerequisiteMissing": "在魔典中未找到{trait}。"
       },
       "strain" : {
         "none": "-选择-",
@@ -967,6 +975,11 @@
             "gamma": "伽马",
             "chi": "希",
             "epsilon": "厄普西隆"
+          },
+          "family": {
+            "label": "系别",
+            "psi": "灵能",
+            "ki": "气"
           },
           "action": {
             "label": "动作",
@@ -1437,6 +1450,9 @@
           "pushedLabel": "已推送",
           "autoLabel": "自动",
           "autoPushTooltip": "自动推送"
+        },
+        "ki": {
+          "noCyberbrain": "只有干扰链中使用的每一具身体都装有电子脑，气才能运作。"
         },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"

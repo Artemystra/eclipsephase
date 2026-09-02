@@ -274,6 +274,12 @@
             <b>{{popUpTarget}}</b>
             {{{localize popUpInfo}}}
           </div>
+          {{#if popUpBoxValue}}
+          <div style="text-align: center; margin-top: 10px; padding: 20px 0; background-color: var(--pitchBorder);">
+              {{#if popUpBoxLabel}}<div style="font-size: 13px; color: var(--inactive);">{{localize popUpBoxLabel}}</div>{{/if}}
+              <div style="font-size: 20px; font-weight: bold; margin-top: 5px;">{{popUpBoxValue}}</div>
+          </div>
+          {{/if}}
       </div>
       {{#if showRollMode}}
       <div class="contentBoxMargin">

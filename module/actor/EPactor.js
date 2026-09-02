@@ -131,6 +131,12 @@ export default class EPactor extends Actor {
     }
     actorModel.additionalSystems.puppetSocked = puppetSocked;
 
+    const hasCyberbrain = (bodyId) => !!bodyId && items.some(wareCheck =>
+      wareCheck.type === "ware" &&
+      wareCheck.system.boundTo === bodyId &&
+      wareCheck.effects?.some(e => e.changes?.some(c => c.key === "flags.eclipsephase.grantsCyberbrain")));
+    actorModel.additionalSystems.hasCyberbrainChain = hasCyberbrain(activeMorph) && (!activeJam || hasCyberbrain(activeJam));
+
     //Prepares information what type of psi a character uses
     for(let psiTypeCheck of items){
       if (psiTypeCheck.type === "aspect"){

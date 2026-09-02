@@ -109,6 +109,7 @@
         "inventoryTab": "Inventário",
         "peripheralsTab": "Periféricos",
         "psiTab": "Psi",
+        "kiTab": "Ki",
         "effectsTab": "Efeitos",
         "gmInfoTab": "GM Info"
       },
@@ -753,7 +754,14 @@
       "chiHeadline": "Truques Chi",
       "popUp": {
         "chiPushEndCopy": "Isso encerrará o efeito potencializado temporário do sleight.",
-        "chiPushStartCopy": "Isso aumentará seu Grau de Infecção em 5 e fará um Teste de Infecção."
+        "chiPushStartCopy": "Isso aumentará seu Grau de Infecção em 5 e fará um Teste de Infecção.",
+        "prerequisiteHeadline": "Vantagem Pré-requisito",
+        "prerequisiteAddCopy": "Você não pode usar este sleight sem ter a vantagem correta. Deseja adicioná-la agora?",
+        "prerequisiteUpgradeCopy": "Você não possui o nível de vantagem correto para usar este sleight. Deseja substituir seu nível de vantagem pelo correto?",
+        "prerequisiteBoxLabel": "Vantagens a serem adicionadas",
+        "prerequisiteConflictHeadline": "Sleight Inutilizável",
+        "prerequisiteConflictCopy": "Este personagem já possui uma vantagem da outra disciplina e não pode usar este sleight.",
+        "prerequisiteMissing": "{trait} não foi encontrado no compêndio."
       },
       "strain": {
         "none": "-Selecionar-",
@@ -967,6 +975,11 @@
             "gamma": "Gama",
             "chi": "Qui",
             "epsilon": "Épsilon"
+          },
+          "family": {
+            "label": "Família",
+            "psi": "Psi",
+            "ki": "Ki"
           },
           "action": {
             "label": "Ação",
@@ -1443,6 +1456,9 @@
           "pushedLabel": "Empurrado",
           "autoLabel": "Auto",
           "autoPushTooltip": "Push Automático"
+        },
+        "ki": {
+          "noCyberbrain": "Ki só funciona se todos os corpos usados na cadeia de jamming tiverem um Cérebro Cibernético."
         },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."

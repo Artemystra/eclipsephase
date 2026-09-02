@@ -2474,6 +2474,18 @@ function _ep23_migrateSubStrainByArchetype(actor) {
   };
 }
 
+// Adds the Cyberbrain marker effect to a pre-existing Cyberbrain Ware item, matched by name.
+async function _ep23_addCyberbrainMarker(item) {
+  if (item.type !== "ware" || item.name !== "Cyberbrain") return;
+  const hasMarker = item.effects.some(e => e.changes?.some(c => c.key === "flags.eclipsephase.grantsCyberbrain"));
+  if (hasMarker) return;
+  const changes = [{ key: "flags.eclipsephase.grantsCyberbrain", value: "true", priority: null, type: "override" }];
+  const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
+  const effectData = { name: "Cyberbrain", icon: "/icons/svg/mystery-man.svg", disabled: true, transfer: true, changes, flags: {} };
+  if (isV14Plus) effectData.system = { changes };
+  await item.createEmbeddedDocuments("ActiveEffect", [effectData]);
+}
+
 export async function migrationPre23(startMigration, endMigration) {
   const latestUpdate = "2.3";
   if (!startMigration) return { endMigration: false };
@@ -2515,6 +2527,12 @@ export async function migrationPre23(startMigration, endMigration) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: sub-strain per-archetype migration failed`, err);
     }
 
+    try {
+      for (const item of actor.items) await _ep23_addCyberbrainMarker(item);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: cyberbrain marker backfill failed`, err);
+    }
+
     doneCount++;
     uiBar.set(
       Math.floor((doneCount / total) * 100),
@@ -2530,6 +2548,12 @@ export async function migrationPre23(startMigration, endMigration) {
     if (worldUpdates.length) await Item.updateDocuments(worldUpdates);
   } catch (err) {
     console.error(`[EP Migration ${latestUpdate}] world items: psi sleight damage backfill failed`, err);
+  }
+
+  try {
+    for (const item of game.items) await _ep23_addCyberbrainMarker(item);
+  } catch (err) {
+    console.error(`[EP Migration ${latestUpdate}] world items: cyberbrain marker backfill failed`, err);
   }
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);

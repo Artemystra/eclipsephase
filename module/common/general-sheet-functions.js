@@ -314,7 +314,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
     popUpTarget,
     popUpPrimary,
     singleButton,
-    showRollMode
+    showRollMode,
+    popUpBoxLabel,
+    popUpBoxValue
   ) {
     const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
     const primaryButton = popUpPrimary
@@ -331,7 +333,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
       dialogType,
       popUpInfo,
       popUpTarget,
-      showRollMode
+      showRollMode,
+      popUpBoxLabel,
+      popUpBoxValue
     });
 
     const buttons = [];

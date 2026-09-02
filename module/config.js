@@ -140,6 +140,11 @@ eclipsephase.psiTypes = {
     epsilon: "ep2e.item.aspect.table.type.epsilon"
 }
 
+eclipsephase.strainFamilies = {
+    psi: "ep2e.item.aspect.table.family.psi",
+    ki: "ep2e.item.aspect.table.family.ki"
+}
+
 eclipsephase.actionTypes = {
     quick: "ep2e.item.aspect.table.action.quick",
     task: "ep2e.item.aspect.table.action.task",

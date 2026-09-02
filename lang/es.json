@@ -110,6 +110,7 @@
         "inventoryTab": "Inventory",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
+        "kiTab": "Ki",
         "effectsTab": "Effects",
         "gmInfoTab": "GM Info"
       },
@@ -754,7 +755,14 @@
       "chiHeadline": "Chi Sleights",
       "popUp": {
         "chiPushEndCopy": "Esto terminará el efecto potenciado temporal del sleight.",
-        "chiPushStartCopy": "Esto aumentará tu Índice de Infección en 5 y hará una Prueba de Infección."
+        "chiPushStartCopy": "Esto aumentará tu Índice de Infección en 5 y hará una Prueba de Infección.",
+        "prerequisiteHeadline": "Rasgo Prerrequisito",
+        "prerequisiteAddCopy": "No puedes usar este sleight sin tener el rasgo correcto. ¿Quieres añadirlo ahora?",
+        "prerequisiteUpgradeCopy": "No tienes el nivel de rasgo correcto para usar este sleight. ¿Quieres reemplazar tu nivel de rasgo por el correcto?",
+        "prerequisiteBoxLabel": "Rasgos a añadir",
+        "prerequisiteConflictHeadline": "Sleight Inutilizable",
+        "prerequisiteConflictCopy": "Este personaje ya tiene un rasgo de la otra disciplina y no puede usar este sleight.",
+        "prerequisiteMissing": "No se encontró {trait} en el compendio."
       },
       "strain" : {
         "none": "-Select-",
@@ -968,6 +976,11 @@
             "gamma": "Gamma",
             "chi": "Chi",
             "epsilon": "Epsilon"
+          },
+          "family": {
+            "label": "Familia",
+            "psi": "Psi",
+            "ki": "Ki"
           },
           "action": {
             "label": "Action",
@@ -1430,6 +1443,9 @@
           "pushedLabel": "Empujado",
           "autoLabel": "Auto",
           "autoPushTooltip": "Empuje Automático"
+        },
+        "ki": {
+          "noCyberbrain": "El Ki solo funciona si todos los cuerpos usados en la cadena de interferencia tienen un Cerebro Cibernético."
         },
         "armor": {
           "equipped": "He equipado a {morph} con armadura."

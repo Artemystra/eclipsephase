@@ -113,6 +113,7 @@
         "inventoryTab": "Inventar",
         "peripheralsTab": "Peripherie",
         "psiTab": "Psi",
+        "kiTab": "Ki",
         "effectsTab": "Effekte",
         "gmInfoTab": "GM Info"
       },
@@ -766,7 +767,14 @@
       "chiHeadline": "Chi-Fertigkeiten",
       "popUp": {
         "chiPushEndCopy": "Dies beendet den temporären, verstärkten Effekt der Fertigkeit.",
-        "chiPushStartCopy": "Dies erhöht die Infektionsrate um 5 und löst einen Infektionstest aus."
+        "chiPushStartCopy": "Dies erhöht die Infektionsrate um 5 und löst einen Infektionstest aus.",
+        "prerequisiteHeadline": "Vorbedingter Vorteil",
+        "prerequisiteAddCopy": "Du kannst diesen Sleight nicht nutzen, ohne den passenden Vorteil zu besitzen. Möchtest du ihn jetzt hinzufügen?",
+        "prerequisiteUpgradeCopy": "Du hast nicht die passende Vorteilsstufe, um diesen Sleight zu nutzen. Möchtest du deine Vorteilsstufe durch die passende ersetzen?",
+        "prerequisiteBoxLabel": "Hinzuzufügende Vorteile",
+        "prerequisiteConflictHeadline": "Sleight nicht nutzbar",
+        "prerequisiteConflictCopy": "Dieser Charakter hat bereits einen Vorteil aus der jeweils anderen Disziplin und kann diesen Sleight nicht nutzen.",
+        "prerequisiteMissing": "{trait} konnte nicht im Kompendium gefunden werden."
       },
       "strain" : {
         "none": "-Wähle-",
@@ -983,6 +991,11 @@
             "gamma": "Gamma",
             "chi": "Chi",
             "epsilon": "Epsilon"
+          },
+          "family": {
+            "label": "Familie",
+            "psi": "Psi",
+            "ki": "Ki"
           },
           "action": {
             "label": "Aktion",
@@ -1466,6 +1479,9 @@
           "pushedLabel": "Gepusht",
           "autoLabel": "Auto",
           "autoPushTooltip": "Auto-Push"
+        },
+        "ki": {
+          "noCyberbrain": "Ki funktioniert nur, wenn jeder in der Jamming-Kette genutzte Körper ein Cyberhirn hat."
         },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."

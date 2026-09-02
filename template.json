@@ -92,11 +92,13 @@
         },
         "additionalSystems": {
           "hasPsi": null,
+          "hasSleightAccess": false,
           "hasGear": null,
           "psiChiBoosted": false,
           "psiGammaBoosted": false,
           "autoPushSelection": "none",
-          "puppetSocked": []
+          "puppetSocked": [],
+          "hasCyberbrainChain": false
         },
         "initiative": {
           "value": null,
@@ -1402,6 +1404,7 @@
       ],
       "infection": null,
       "psiType": "",
+      "strainFamily": "psi",
       "actionType": "",
       "duration": "",
       "pushed": false,

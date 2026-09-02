@@ -305,7 +305,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
 
     }
     
-    const effectivePush = chiPushItemId ? false : push;
+    const effectivePush = chiPushItemId ? false : (!!push || gammaAutoPushDamageMultiplier(actorWhole) > 1);
     physicalDamageRoll = resolvePhysicalDamageFormula(effectivePush, d6.total === 1);
 
     if (physicalDamageRoll && actorWhole.type === "character"){
@@ -320,7 +320,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
             "copy": effectivePush ? "ep2e.roll.announce.psi.pushedSleightFeedback" : "ep2e.psi.effect.takeDamage"
         }
 
-        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false)
+        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false, "rollOutput")
 
         durUpdate += physicalDamage.total;
 

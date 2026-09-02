@@ -10,6 +10,7 @@ import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush } from "../rolls/psi.js";
+import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -193,6 +194,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       };
 
       context.tabGroups = this.tabGroups;
+
+      const sleightFamily = (actor.aspect?.gamma?.[0] ?? actor.aspect?.chi?.[0])?.system?.strainFamily ?? "psi";
+      if (context.tabs.primary?.psi) {
+        context.tabs.primary.psi.label = sleightFamily === "ki" ? "ep2e.actorSheet.rightTabs.kiTab" : "ep2e.actorSheet.rightTabs.psiTab";
+      }
     }
     else {
       context.tabGroups = { limited: this.tabGroups.limited };
@@ -828,13 +834,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.ids = id;
       actor.currentIdName = actor.ids.find(i => i.id === actor.system.activeID)?.name ?? "";
 
-      // Check if sleights are present and toggle Psi Tab based on this
-      if (actor.aspect.chi.length>0){
-        actorModel.additionalSystems.hasPsi = 1;
-      }
-      else if (actor.aspect.gamma.length>0){
-        actorModel.additionalSystems.hasPsi = 1;
-      }
+      actorModel.additionalSystems.hasSleightAccess = !!actorModel.additionalSystems.hasPsi;
       
 
     /* In case ACTOR DATA is needed */
@@ -849,7 +849,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       await super._onRender(context, options);
 
       if (game.user.isGM || actor.isOwner){
-      await this.changeTab(this.tabGroups.primary, "primary", { force: true });
+      try {
+        await this.changeTab(this.tabGroups.primary, "primary", { force: true });
+      } catch (err) {
+        await this.changeTab(this.constructor.TABS.primary.initial, "primary", { force: true });
+      }
 
       //Sets the opened tab for PC sheets
       if (actor.type === "character"){
@@ -1138,6 +1142,16 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     }
 
     itemModel.updated = game.system.version;
+
+    if (itemData.type === "aspect") {
+      let allowed = true;
+      try {
+        allowed = await checkSleightPrerequisite(actor, itemData);
+      } catch (err) {
+        console.error(`[EP2e] ${actor.name}: sleight prerequisite check failed`, err);
+      }
+      if (!allowed) return null;
+    }
 
     const created = await actor.createEmbeddedDocuments("Item", [itemData]);
 

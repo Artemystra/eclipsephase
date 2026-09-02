@@ -61,6 +61,7 @@
     "updated": "",
     "infection": null,
     "psiType": "chi",
+    "strainFamily": "psi",
     "actionType": "",
     "duration": ""
   },

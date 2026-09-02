@@ -114,6 +114,7 @@
         "inventoryTab": "Inventory",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
+        "kiTab": "Ki",
         "effectsTab": "Effects",
         "gmInfoTab": "GM Info"
       },
@@ -778,7 +779,14 @@
       "chiHeadline": "Chi Sleights",
       "popUp": {
         "chiPushEndCopy": "This will end the sleight's temporary boosted effect.",
-        "chiPushStartCopy": "This will raise your Infection Rating by 5 and make an Infection Test."
+        "chiPushStartCopy": "This will raise your Infection Rating by 5 and make an Infection Test.",
+        "prerequisiteHeadline": "Prerequisite Trait",
+        "prerequisiteAddCopy": "You cannot use this sleight without having the correct trait in place. Do you want to add it now?",
+        "prerequisiteUpgradeCopy": "You do not have the correct trait level to use this sleight. Do you want to replace your trait level with the correct one?",
+        "prerequisiteBoxLabel": "Traits to be added",
+        "prerequisiteConflictHeadline": "Sleight Unusable",
+        "prerequisiteConflictCopy": "This character already has a trait from the other discipline and cannot use this sleight.",
+        "prerequisiteMissing": "{trait} could not be found in the compendium."
       },
       "strain" : {
         "none": "-Select-",
@@ -996,6 +1004,11 @@
             "gamma": "Gamma",
             "chi": "Chi",
             "epsilon": "Epsilon"
+          },
+          "family": {
+            "label": "Family",
+            "psi": "Psi",
+            "ki": "Ki"
           },
           "action": {
             "label": "Action",
@@ -1493,6 +1506,9 @@
           "pushedLabel": "Pushed",
           "autoLabel": "Auto",
           "autoPushTooltip": "Auto-Push"
+        },
+        "ki": {
+          "noCyberbrain": "Ki only works if every body used in the jamming chain does have a cyberbrain."
         },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."
