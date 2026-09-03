@@ -485,3 +485,201 @@ eclipsephase.otherPsiLabels = {
     motivation: "ep2e.psi.effect.motivation.label",
     other: "ep2e.psi.effect.other"
 }
+
+//Ki Influence Dropdowns
+
+eclipsephase.kiStrains = {
+    none: "ep2e.ki.strain.none",
+    crucible: "ep2e.ki.strain.crucible",
+    redline: "ep2e.ki.strain.redline",
+    signal: "ep2e.ki.strain.signal",
+    ruin: "ep2e.ki.strain.ruin",
+    colony: "ep2e.ki.strain.colony"
+}
+
+eclipsephase.crucibleIntegration = {
+    none: "ep2e.ki.strain.none",
+    equipment: "ep2e.ki.effect.crucible.integration.equipment",
+    armor: "ep2e.ki.effect.crucible.integration.armor",
+    weapon: "ep2e.ki.effect.crucible.integration.weapon"
+}
+
+eclipsephase.crucibleReconfiguration = {
+    none: "ep2e.ki.strain.none",
+    forced: "ep2e.ki.effect.crucible.reconfiguration.forced",
+    shutdown: "ep2e.ki.effect.crucible.reconfiguration.shutdown",
+    rearranged: "ep2e.ki.effect.crucible.reconfiguration.rearranged"
+}
+
+eclipsephase.crucibleOvercorrection = {
+    none: "ep2e.ki.strain.none",
+    plating: "ep2e.ki.effect.crucible.overcorrection.plating",
+    sensing: "ep2e.ki.effect.crucible.overcorrection.sensing",
+    limbs: "ep2e.ki.effect.crucible.overcorrection.limbs"
+}
+
+eclipsephase.redlineGovernor = {
+    none: "ep2e.ki.strain.none",
+    limited: "ep2e.ki.effect.redline.governor.limited",
+    overridden: "ep2e.ki.effect.redline.governor.overridden",
+    runaway: "ep2e.ki.effect.redline.governor.runaway"
+}
+
+eclipsephase.redlineCompulsion = {
+    none: "ep2e.ki.strain.none",
+    overdoIt: "ep2e.ki.effect.redline.compulsion.overdoIt",
+    testTheLimits: "ep2e.ki.effect.redline.compulsion.testTheLimits",
+    redTape: "ep2e.ki.effect.redline.compulsion.redTape"
+}
+
+eclipsephase.redlineRerouting = {
+    none: "ep2e.ki.strain.none",
+    crossCategory: "ep2e.ki.effect.redline.rerouting.crossCategory",
+    categorySupport: "ep2e.ki.effect.redline.rerouting.categorySupport",
+    broadShift: "ep2e.ki.effect.redline.rerouting.broadShift"
+}
+
+eclipsephase.signalCarrier = {
+    none: "ep2e.ki.strain.none",
+    location: "ep2e.ki.effect.signal.carrier.location",
+    meshId: "ep2e.ki.effect.signal.carrier.meshId",
+    diagnostics: "ep2e.ki.effect.signal.carrier.diagnostics",
+    sensorFeed: "ep2e.ki.effect.signal.carrier.sensorFeed"
+}
+
+eclipsephase.signalSaturation = {
+    none: "ep2e.ki.strain.none",
+    arOverlays: "ep2e.ki.effect.signal.saturation.arOverlays",
+    crosstalk: "ep2e.ki.effect.signal.saturation.crosstalk",
+    hapticAlerts: "ep2e.ki.effect.signal.saturation.hapticAlerts",
+    sensorNoise: "ep2e.ki.effect.signal.saturation.sensorNoise"
+}
+
+eclipsephase.signalDependency = {
+    none: "ep2e.ki.strain.none",
+    meshConnection: "ep2e.ki.effect.signal.dependency.meshConnection",
+    positioning: "ep2e.ki.effect.signal.dependency.positioning",
+    tacticalNetwork: "ep2e.ki.effect.signal.dependency.tacticalNetwork",
+    devicePing: "ep2e.ki.effect.signal.dependency.devicePing"
+}
+
+eclipsephase.ruinFatigue = {
+    none: "ep2e.ki.strain.none",
+    brittleArmor: "ep2e.ki.effect.ruin.fatigue.brittleArmor",
+    fatiguedActuators: "ep2e.ki.effect.ruin.fatigue.fatiguedActuators",
+    leakingConstruction: "ep2e.ki.effect.ruin.fatigue.leakingConstruction",
+    thermalCracks: "ep2e.ki.effect.ruin.fatigue.thermalCracks"
+}
+
+eclipsephase.ruinSeized = {
+    none: "ep2e.ki.strain.none",
+    limb: "ep2e.ki.effect.ruin.seized.limb",
+    sense: "ep2e.ki.effect.ruin.seized.sense",
+    movement: "ep2e.ki.effect.ruin.seized.movement",
+    mounts: "ep2e.ki.effect.ruin.seized.mounts"
+}
+
+eclipsephase.ruinIntermittent = {
+    none: "ep2e.ki.strain.none",
+    wareFailure: "ep2e.ki.effect.ruin.intermittent.wareFailure",
+    sensorDecay: "ep2e.ki.effect.ruin.intermittent.sensorDecay",
+    powerSag: "ep2e.ki.effect.ruin.intermittent.powerSag"
+}
+
+eclipsephase.ruinShedding = {
+    none: "ep2e.ki.strain.none",
+    armorPlate: "ep2e.ki.effect.ruin.shedding.armorPlate",
+    wareComponent: "ep2e.ki.effect.ruin.shedding.wareComponent",
+    supply: "ep2e.ki.effect.ruin.shedding.supply"
+}
+
+eclipsephase.ruinCollapse = {
+    none: "ep2e.ki.strain.none",
+    mobility: "ep2e.ki.effect.ruin.collapse.mobility",
+    sensory: "ep2e.ki.effect.ruin.collapse.sensory",
+    structural: "ep2e.ki.effect.ruin.collapse.structural",
+    systemic: "ep2e.ki.effect.ruin.collapse.systemic"
+}
+
+eclipsephase.colonyWitnesses = {
+    none: "ep2e.ki.strain.none",
+    eyes: "ep2e.ki.effect.colony.witnesses.eyes",
+    faces: "ep2e.ki.effect.colony.witnesses.faces",
+    attention: "ep2e.ki.effect.colony.witnesses.attention",
+    recognition: "ep2e.ki.effect.colony.witnesses.recognition"
+}
+
+eclipsephase.colonySympathetic = {
+    none: "ep2e.ki.strain.none",
+    activation: "ep2e.ki.effect.colony.sympathetic.activation",
+    inhibition: "ep2e.ki.effect.colony.sympathetic.inhibition",
+    mimicry: "ep2e.ki.effect.colony.sympathetic.mimicry",
+    feedback: "ep2e.ki.effect.colony.sympathetic.feedback"
+}
+
+eclipsephase.colonyBorrowed = {
+    none: "ep2e.ki.strain.none",
+    eye: "ep2e.ki.effect.colony.borrowed.eye",
+    hand: "ep2e.ki.effect.colony.borrowed.hand",
+    voice: "ep2e.ki.effect.colony.borrowed.voice",
+    organ: "ep2e.ki.effect.colony.borrowed.organ"
+}
+
+eclipsephase.colonyGathering = {
+    none: "ep2e.ki.strain.none",
+    procession: "ep2e.ki.effect.colony.gathering.procession",
+    encirclement: "ep2e.ki.effect.colony.gathering.encirclement",
+    docking: "ep2e.ki.effect.colony.gathering.docking",
+    nest: "ep2e.ki.effect.colony.gathering.nest"
+}
+
+eclipsephase.colonyIncarnation = {
+    none: "ep2e.ki.strain.none",
+    chorus: "ep2e.ki.effect.colony.incarnation.chorus",
+    body: "ep2e.ki.effect.colony.incarnation.body",
+    nervousSystem: "ep2e.ki.effect.colony.incarnation.nervousSystem",
+    effigy: "ep2e.ki.effect.colony.incarnation.effigy"
+}
+
+/**
+ * Per-result chat output for every Ki sub-strain, keyed by the d6 result. A row with "base" reads
+ * the player's stored choice and appends it to that base key, a row with "copy" is fixed text.
+ * Result 1 is shared by all sub-strains and handled separately.
+ */
+eclipsephase.kiInfluence = {
+    crucible: {
+        2: { label: "ep2e.ki.effect.crucible.integration.label", base: "ep2e.ki.effect.crucible.integration" },
+        3: { label: "ep2e.ki.effect.crucible.reconfiguration.label", base: "ep2e.ki.effect.crucible.reconfiguration" },
+        4: { label: "ep2e.ki.effect.crucible.overcorrection.label", base: "ep2e.ki.effect.crucible.overcorrection" },
+        5: { label: "ep2e.ki.effect.crucible.motivation.label", copy: "ep2e.ki.effect.crucible.motivation.text" },
+        6: { label: "ep2e.ki.effect.crucible.revision.label", copy: "ep2e.ki.effect.crucible.revision.text" }
+    },
+    redline: {
+        2: { label: "ep2e.ki.effect.redline.governor.label", base: "ep2e.ki.effect.redline.governor" },
+        3: { label: "ep2e.ki.effect.redline.compulsion.label", base: "ep2e.ki.effect.redline.compulsion" },
+        4: { label: "ep2e.ki.effect.redline.experimental.label", copy: "ep2e.ki.effect.redline.experimental.text" },
+        5: { label: "ep2e.ki.effect.redline.rerouting.label", base: "ep2e.ki.effect.redline.rerouting" },
+        6: { label: "ep2e.ki.effect.redline.overclock.label", copy: "ep2e.ki.effect.redline.overclock.text" }
+    },
+    signal: {
+        2: { label: "ep2e.ki.effect.signal.carrier.label", base: "ep2e.ki.effect.signal.carrier" },
+        3: { label: "ep2e.ki.effect.signal.saturation.label", base: "ep2e.ki.effect.signal.saturation" },
+        4: { label: "ep2e.ki.effect.signal.interference.label", copy: "ep2e.ki.effect.signal.interference.text" },
+        5: { label: "ep2e.ki.effect.signal.dependency.label", base: "ep2e.ki.effect.signal.dependency" },
+        6: { label: "ep2e.ki.effect.signal.beacon.label", copy: "ep2e.ki.effect.signal.beacon.text" }
+    },
+    ruin: {
+        2: { label: "ep2e.ki.effect.ruin.fatigue.label", base: "ep2e.ki.effect.ruin.fatigue" },
+        3: { label: "ep2e.ki.effect.ruin.seized.label", base: "ep2e.ki.effect.ruin.seized" },
+        4: { label: "ep2e.ki.effect.ruin.intermittent.label", base: "ep2e.ki.effect.ruin.intermittent" },
+        5: { label: "ep2e.ki.effect.ruin.shedding.label", base: "ep2e.ki.effect.ruin.shedding" },
+        6: { label: "ep2e.ki.effect.ruin.collapse.label", base: "ep2e.ki.effect.ruin.collapse" }
+    },
+    colony: {
+        2: { label: "ep2e.ki.effect.colony.witnesses.label", base: "ep2e.ki.effect.colony.witnesses" },
+        3: { label: "ep2e.ki.effect.colony.sympathetic.label", base: "ep2e.ki.effect.colony.sympathetic" },
+        4: { label: "ep2e.ki.effect.colony.borrowed.label", base: "ep2e.ki.effect.colony.borrowed" },
+        5: { label: "ep2e.ki.effect.colony.gathering.label", base: "ep2e.ki.effect.colony.gathering" },
+        6: { label: "ep2e.ki.effect.colony.incarnation.label", base: "ep2e.ki.effect.colony.incarnation" }
+    }
+}

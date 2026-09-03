@@ -770,6 +770,179 @@
       "noWare": "No Ware Installed",
       "noArmor": "No Armor Installed"
     },
+    "ki": {
+      "strain": {
+        "none": "-Select-",
+        "crucible": "The Crucible",
+        "redline": "The Redline",
+        "signal": "The Signal",
+        "ruin": "The Ruin",
+        "colony": "The Colony"
+      },
+      "effect": {
+        "cognitiveFeedback": "Cognitive Feedback:",
+        "takeStrain": "Take SV 1d6",
+        "crucible": {
+          "integration": {
+            "label": "Uncontrolled Integration:",
+            "equipment": "Equipment",
+            "armor": "Armor",
+            "weapon": "Weapon"
+          },
+          "reconfiguration": {
+            "label": "Compulsive Reconfiguration:",
+            "forced": "Forced Activation",
+            "shutdown": "Total Shutdown",
+            "rearranged": "Improvised Rearrangement"
+          },
+          "overcorrection": {
+            "label": "Overcorrection:",
+            "plating": "Reinforced Plating",
+            "sensing": "Heightened Sensing",
+            "limbs": "Reshaped Limbs"
+          },
+          "motivation": {
+            "label": "Motivation:",
+            "text": "Eliminate Imperfection"
+          },
+          "revision": {
+            "label": "Persistent Revision:",
+            "text": "The GM defines a persistent alteration"
+          }
+        },
+        "redline": {
+          "governor": {
+            "label": "Movement Governor Failure:",
+            "limited": "Limited",
+            "overridden": "Overridden",
+            "runaway": "Runaway"
+          },
+          "compulsion": {
+            "label": "Operational Compulsion:",
+            "overdoIt": "Overdo It",
+            "testTheLimits": "Test the Limits",
+            "redTape": "Red Tape"
+          },
+          "experimental": {
+            "label": "Experimental Execution:",
+            "text": "The GM picks an operating mode"
+          },
+          "rerouting": {
+            "label": "Rerouting:",
+            "crossCategory": "Cross-Category Boost",
+            "categorySupport": "Category Support",
+            "broadShift": "Broad Shift"
+          },
+          "overclock": {
+            "label": "Overclock:",
+            "text": "The GM may raise one result by one degree"
+          }
+        },
+        "signal": {
+          "carrier": {
+            "label": "Open Carrier:",
+            "location": "Exact Location",
+            "meshId": "Public Mesh ID",
+            "diagnostics": "Technical Diagnostics",
+            "sensorFeed": "Sensor Feed Excerpts"
+          },
+          "saturation": {
+            "label": "Receiver Saturation:",
+            "arOverlays": "AR Overlays",
+            "crosstalk": "Audio Crosstalk",
+            "hapticAlerts": "False Haptic Alerts",
+            "sensorNoise": "Sensor Noise"
+          },
+          "interference": {
+            "label": "Interference Pattern:",
+            "text": "A local interference field jams a chosen spectrum"
+          },
+          "dependency": {
+            "label": "Carrier Dependency:",
+            "meshConnection": "Mesh Connection",
+            "positioning": "Positioning Signal",
+            "tacticalNetwork": "Tactical Network Link",
+            "devicePing": "Device Ping"
+          },
+          "beacon": {
+            "label": "Beacon:",
+            "text": "The GM may trigger an uncontrolled transmission"
+          }
+        },
+        "ruin": {
+          "fatigue": {
+            "label": "Material Fatigue:",
+            "brittleArmor": "Brittle Armor",
+            "fatiguedActuators": "Fatigued Actuators",
+            "leakingConstruction": "Leaking Construction",
+            "thermalCracks": "Thermal Cracks"
+          },
+          "seized": {
+            "label": "Seized Function:",
+            "limb": "One Limb",
+            "sense": "One Sense",
+            "movement": "One Movement Mode",
+            "mounts": "Tool and Weapon Mounts"
+          },
+          "intermittent": {
+            "label": "Intermittent Failure:",
+            "wareFailure": "Ware Failure",
+            "sensorDecay": "Sensor Decay",
+            "powerSag": "Power Sag"
+          },
+          "shedding": {
+            "label": "Shedding:",
+            "armorPlate": "Armor Plate",
+            "wareComponent": "Ware Component",
+            "supply": "External Supply"
+          },
+          "collapse": {
+            "label": "False Collapse:",
+            "mobility": "Mobility Collapse",
+            "sensory": "Sensory Collapse",
+            "structural": "Structural Collapse",
+            "systemic": "Systemic Collapse"
+          }
+        },
+        "colony": {
+          "witnesses": {
+            "label": "The Witnesses:",
+            "eyes": "Eyes",
+            "faces": "Faces",
+            "attention": "Attention",
+            "recognition": "Recognition"
+          },
+          "sympathetic": {
+            "label": "Sympathetic Ware:",
+            "activation": "Activation",
+            "inhibition": "Inhibition",
+            "mimicry": "Mimicry",
+            "feedback": "Sympathetic Feedback"
+          },
+          "borrowed": {
+            "label": "Borrowed Body:",
+            "eye": "Borrowed Eye",
+            "hand": "Borrowed Hand",
+            "voice": "Borrowed Voice",
+            "organ": "Borrowed Organ"
+          },
+          "gathering": {
+            "label": "Gathering:",
+            "procession": "Procession",
+            "encirclement": "Encirclement",
+            "docking": "Docking",
+            "nest": "Nest"
+          },
+          "incarnation": {
+            "label": "Incarnation:",
+            "chorus": "Chorus",
+            "body": "Body",
+            "nervousSystem": "Nervous System",
+            "effigy": "Effigy"
+          }
+        }
+      }
+    },
     "psi": {
       "infectionHeadline": "Infection Type",
       "ratingLabel": "Infection Rating",
@@ -1697,6 +1870,221 @@
       }
     },
     "rule": {
+      "psi": {
+        "effect": {
+          "takeDamage": "The infection turns on its host and inflicts 1d6 damage, or 2d6 if the sleight was pushed.",
+          "frenzy": "You lose control and lash out at whatever is closest until the fit passes.",
+          "hallucination": "The infection feeds you sights, sounds or presences that are not there.",
+          "enhancedBehaviour": {
+            "arrogance": "You treat your own judgement as obviously superior and brush aside anyone who questions it.",
+            "curiosity": "You have to investigate anything unexplained, whether or not it is safe or convenient.",
+            "callouseness": "Other people's pain barely registers, and you stay unmoved where you would normally care.",
+            "ruthlessness": "You pursue your goal by whatever means work, no matter who it costs.",
+            "aggression": "You answer friction with force and look for reasons to escalate.",
+            "arousal": "Your appetites push to the front and you act on them openly.",
+            "gluttony": "You consume far past need - food, drugs, resources, whatever is at hand.",
+            "riskTaking": "You take chances you would normally refuse and treat warnings as noise.",
+            "avoidance": "You dodge contact, confrontation and commitment wherever you can.",
+            "mistrust": "You read hidden motives into everything and take nobody at their word.",
+            "denial": "You refuse to accept unwelcome facts, however plainly they are put in front of you.",
+            "nihilism": "Nothing seems worth doing to you, and you make sure everyone hears it.",
+            "unsettlingMannerisms": "You stare, twitch, mutter and hold silences until everyone around you is uneasy.",
+            "deceit": "You lie by preference, even when the truth would serve you better.",
+            "selfSabotage": "You undercut your own plans and successes just as they begin to work.",
+            "cruelty": "You go out of your way to hurt, humiliate or frighten others.",
+            "spite": "You repay every slight, real or imagined, whatever it costs you.",
+            "nonVerbalCommunication": "You stop using words and fall back on gestures, posture, sounds and touch.",
+            "cliquishness": "You split the world into your own group and outsiders, and treat the two very differently.",
+            "grooming": "You constantly clean, tend and rearrange yourself and those closest to you.",
+            "socialize": "You seek company constantly and cannot bear to be alone."
+          },
+          "restrictedBehaviour": {
+            "relaxation": "You cannot rest, idle or unwind - stopping feels intolerable.",
+            "remorse": "You cannot feel or show regret for anything you have done.",
+            "empathy": "You cannot feel or act on what other people are feeling.",
+            "takeResponsibility": "You cannot accept blame or answer for the consequences of your own actions."
+          },
+          "motivation": {
+            "hoard": "You are driven to gather and keep anything of value, and to give none of it up.",
+            "innerWorkings": "You are driven to open things up and expose how they work inside.",
+            "create": "You are driven to build something new, whether or not anyone needs it.",
+            "advancedTech": "You are driven to acquire technology beyond anything you already have.",
+            "discardTies": "You are driven to cut away the emotional attachments that hold you back.",
+            "discoverUnknown": "You are driven to seek out what nobody has seen or recorded yet.",
+            "repurpose": "You are driven to take things apart and remake them for a different use.",
+            "uncoverSecrets": "You are driven to dig out what others keep hidden.",
+            "domination": "You are driven to force others to submit to you.",
+            "noQuarter": "You are driven to finish every fight - no mercy, and no surrender accepted.",
+            "cannibalism": "You are driven to consume the flesh of your own kind.",
+            "claimTerritory": "You are driven to seize a place and hold it as your own.",
+            "eradicate": "You are driven to destroy your enemies completely rather than merely beat them.",
+            "instillFear": "You are driven to make others afraid of you.",
+            "stalkPrey": "You are driven to follow and watch a chosen target long before you act.",
+            "cutTies": "You are driven to sever what connections to other people you still have.",
+            "isolation": "You are driven to remove yourself from everyone, and to keep others apart as well.",
+            "crushHope": "You are driven to take away whatever hope others still hold onto.",
+            "hiddenTruths": "You are driven to drag ugly truths into the open, whatever harm that does.",
+            "releaseFromMisery": "You are driven to end another's suffering, whether or not they want it ended.",
+            "shakeConfidence": "You are driven to break a group's faith in itself and in its plans.",
+            "follPlans": "You are driven to make other people's plans fail.",
+            "manipulation": "You are driven to steer others into doing what you want without their noticing.",
+            "testLimits": "You are driven to find out how far people and systems can be pushed before they break.",
+            "betrayal": "You are driven to break the trust of someone who relies on you.",
+            "covertOpponent": "You are driven to work against someone without ever being identified.",
+            "grandScheme": "You are driven to advance one long, elaborate plan of your own.",
+            "mislead": "You are driven to leave others believing something false.",
+            "twistTruth": "You are driven to bend true facts into whatever shape serves you.",
+            "transform": "You are driven to reshape your surroundings into something more suitable.",
+            "control": "You are driven to bring the territory around you under your control.",
+            "trueForm": "You are driven to show everyone what you have really become.",
+            "eatTheWeak": "You are driven to prey on whoever cannot defend themselves.",
+            "establishColony": "You are driven to found a place where your own kind can grow.",
+            "hibernate": "You are driven to withdraw somewhere safe and sleep through what is coming.",
+            "molt": "You are driven to shed your current shape and emerge changed.",
+            "playWithPrey": "You are driven to draw out a victim's fear instead of finishing it quickly.",
+            "protectTribe": "You are driven to shield your own group from everything outside it."
+          }
+        }
+      },
+      "ki": {
+        "effect": {
+          "takeStrain": "The Ki infection lashes back through the cyberbrain. Take SV 1d6.",
+          "crucible": {
+            "integration": {
+              "equipment": "The morph absorbs a piece of equipment you are touching, or a random carried one if you touch nothing suitable. Below IR 66 the item only works on a 1-2 on 1d6 when you need it; at IR 66+ it is blocked entirely. The morph releases it when the manifestation ends.",
+              "armor": "The morph absorbs a piece of armor you are touching, or a random carried one if you touch nothing suitable. Below IR 66 the item only works on a 1-2 on 1d6 when you need it; at IR 66+ it is blocked entirely. The morph releases it when the manifestation ends.",
+              "weapon": "The morph absorbs a weapon you are touching, or a random carried one if you touch nothing suitable. Below IR 66 the item only works on a 1-2 on 1d6 when you need it; at IR 66+ it is blocked entirely. The morph releases it when the manifestation ends."
+            },
+            "reconfiguration": {
+              "forced": "An installed ware system switches itself on and stays continuously active. The cyberbrain can never be chosen.",
+              "shutdown": "An installed ware system is completely disabled. The cyberbrain can never be chosen.",
+              "rearranged": "The morph rebuilds existing components into a random ware function and disables at least one other ware system in exchange. The cyberbrain can never be chosen."
+            },
+            "overcorrection": {
+              "plating": "Reinforced armor bought with reduced movement. One narrowly defined physical application gains +10, another suffers -20. Duration: 12 hours.",
+              "sensing": "Sharper sensing that overloads your other senses. One narrowly defined physical application gains +10, another suffers -20. Duration: 12 hours.",
+              "limbs": "Additional or reshaped limbs, more specialised but less coordinated. One narrowly defined physical application gains +10, another suffers -20. Duration: 12 hours."
+            },
+            "motivation": {
+              "text": "For the next 24 hours you must take any real opportunity to significantly improve your own morph. Repairs and cosmetic changes do not satisfy this - the change has to remove something you sincerely see as a meaningful weakness."
+            },
+            "revision": {
+              "text": "The GM defines a persistent physical alteration. It may be limiting, disturbing or ambiguously useful, but it should not make you unplayable. A workshop or healing vat with a matching morph blueprint removes it, and Machine Chrysalis can begin reversing it after 12 hours without one."
+            }
+          },
+          "redline": {
+            "governor": {
+              "limited": "The morph may only use its lower listed movement rate.",
+              "overridden": "Whenever the morph moves, it must use at least its higher listed movement rate.",
+              "runaway": "The morph must move its maximum possible distance each action turn. Outside combat it cannot voluntarily remain still."
+            },
+            "compulsion": {
+              "overdoIt": "Gain the motivation Overdo It for 12 hours: you carry out every task with excessive thoroughness.",
+              "testTheLimits": "Gain the motivation Test the Limits for 12 hours: you always push further than the situation requires.",
+              "redTape": "Gain the motivation Red Tape for 12 hours: you act conspicuously slowly and cautiously, sometimes leaving work unfinished for fear of causing damage or breaking a safety limit."
+            },
+            "experimental": {
+              "text": "Once within the next 12 hours, after an action is declared, the GM chooses an operating mode. Efficiency: +10, but the task takes twice as long or an opponent gains +10 in an opposed test. Experimental: -10, but a successful effect is doubled where meaningful. Push the Limit: +10, and at IR 66+ the morph takes DV 1d6 afterwards."
+            },
+            "rerouting": {
+              "crossCategory": "-30 to one skill in a pool category buys +30 to one skill in a different category. Duration: 12 hours.",
+              "categorySupport": "-30 to one skill buys +10 to all other skills in the same category. Duration: 12 hours.",
+              "broadShift": "-10 to all skills in one category buys +10 to all skills in another. Duration: 12 hours."
+            },
+            "overclock": {
+              "text": "Once within the next 24 hours, after a test is rolled, the GM may raise its magnitude by one degree: a success becomes a superior success, a superior success a critical success, a failure a superior failure, a superior failure a critical failure. The direction of the original result is never reversed."
+            }
+          },
+          "signal": {
+            "carrier": {
+              "location": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts your exact location.",
+              "meshId": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts your public Mesh ID.",
+              "diagnostics": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts its technical diagnostics.",
+              "sensorFeed": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts excerpts from an active sensor feed."
+            },
+            "saturation": {
+              "arOverlays": "Incoming signals bleed into your AR overlay. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes.",
+              "crosstalk": "Foreign audio bleeds into your hearing. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes.",
+              "hapticAlerts": "Phantom haptic alerts fire without cause. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes.",
+              "sensorNoise": "Sensor input drowns in noise. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes."
+            },
+            "interference": {
+              "text": "For 1d6 minutes the morph emits a local electromagnetic interference field against a chosen spectrum or device class. Affected wireless links in the immediate area suffer -30, your own and your allies' included."
+            },
+            "dependency": {
+              "meshConnection": "For 12 hours one ware system or physical function only works while a Mesh connection holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded.",
+              "positioning": "For 12 hours one ware system or physical function only works while a positioning signal holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded.",
+              "tacticalNetwork": "For 12 hours one ware system or physical function only works while an active tactical-network link holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded.",
+              "devicePing": "For 12 hours one ware system or physical function only works while a regular ping from another device holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded."
+            },
+            "beacon": {
+              "text": "Once within the next 24 hours the GM may trigger an uncontrolled high-powered transmission. For 1d6 minutes the morph is easy to locate, cannot fall silent and interferes with nearby wireless communication. The transmission carries an unknown data pattern, but it does not transmit the infection."
+            }
+          },
+          "ruin": {
+            "fatigue": {
+              "brittleArmor": "The morph's armor cracks and flakes away: -2/-2 AV for 12 hours. At IR 66+ the numerical penalty is doubled.",
+              "fatiguedActuators": "-10 to SOM-based tests for 12 hours. At IR 66+ the numerical penalty is doubled.",
+              "leakingConstruction": "One existing environmental resistance ceases to function for 12 hours.",
+              "thermalCracks": "-10 to tests under extreme heat or cold for 12 hours. At IR 66+ the numerical penalty is doubled."
+            },
+            "seized": {
+              "limb": "One limb is completely blocked for 1d6 minutes. If the system is paired, only one side fails.",
+              "sense": "One sense is completely blocked for 1d6 minutes. If the system is paired, only one side fails.",
+              "movement": "One movement mode is completely blocked for 1d6 minutes. If the system is paired, only one side fails.",
+              "mounts": "Integrated tool and weapon mounts is completely blocked for 1d6 minutes. If the system is paired, only one side fails."
+            },
+            "intermittent": {
+              "wareFailure": "For 12 hours one ware system only functions on a 1-2 on 1d6 when used. The cyberbrain is excluded.",
+              "sensorDecay": "For 12 hours one sense produces damaged data and relevant tests suffer -20.",
+              "powerSag": "For 12 hours, after using one energy-intensive system the morph must refrain from using another energy-intensive function until its next action."
+            },
+            "shedding": {
+              "armorPlate": "The morph discards an armor plate: -2/-2 AV. It may be recovered, but it cannot be reintegrated or used for 12 hours.",
+              "wareComponent": "The morph expels one ware system as an intact component. It may be recovered, but it cannot be reintegrated or used for 12 hours.",
+              "supply": "The morph discards an external supply such as ammunition, coolant or an energy reserve. It may be recovered, but it cannot be used for 12 hours."
+            },
+            "collapse": {
+              "mobility": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: one movement mode and one limb fail. The morph visibly corrodes, fractures or decays and restores itself afterwards.",
+              "sensory": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: two senses fail. The morph visibly corrodes, fractures or decays and restores itself afterwards.",
+              "structural": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: current AV is halved. The morph visibly corrodes, fractures or decays and restores itself afterwards.",
+              "systemic": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: two ware systems fail. The morph visibly corrodes, fractures or decays and restores itself afterwards."
+            }
+          },
+          "colony": {
+            "witnesses": {
+              "eyes": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: cameras and sensors turn towards you. This grants no access to their data.",
+              "faces": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: displays and status lights form eye-like or face-like patterns. This grants no access to their data.",
+              "attention": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: tools, weapon mounts and movable devices orient towards you. This grants no access to their data.",
+              "recognition": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: local devices mark you with identical symbols or unknown identifiers. This grants no access to their data."
+            },
+            "sympathetic": {
+              "activation": "For 1d6 minutes the ware of a nearby character develops a life of its own: it activates at inappropriate moments. Cyberbrains and life-support systems are excluded.",
+              "inhibition": "For 1d6 minutes the ware of a nearby character develops a life of its own: it refuses to function. Cyberbrains and life-support systems are excluded.",
+              "mimicry": "For 1d6 minutes the ware of a nearby character develops a life of its own: it responds to your movements instead of its user's. Cyberbrains and life-support systems are excluded.",
+              "feedback": "For 1d6 minutes the ware of a nearby character develops a life of its own: using a comparable function in your own morph makes it produce a matching physical response. Cyberbrains and life-support systems are excluded."
+            },
+            "borrowed": {
+              "eye": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: a camera blinks and follows your gaze. It cannot reliably perform its normal function meanwhile.",
+              "hand": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: manipulators repeat your gestures. It cannot reliably perform its normal function meanwhile.",
+              "voice": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: speakers produce breathing, movement noises, word fragments or unintelligible speech. It cannot reliably perform its normal function meanwhile.",
+              "organ": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: doors, pumps, ventilation or lighting pulse in bodily rhythms. It cannot reliably perform its normal function meanwhile."
+            },
+            "gathering": {
+              "procession": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they follow you. They do not deliberately attack.",
+              "encirclement": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they surround you and block paths. They do not deliberately attack.",
+              "docking": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they try to connect physically to your morph. They do not deliberately attack.",
+              "nest": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they gather at one location and work reachable objects into an improvised structure. They do not deliberately attack."
+            },
+            "incarnation": {
+              "chorus": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: speakers, displays and Mesh outputs communicate together. The GM controls its behaviour, and you gain no command over it.",
+              "body": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: bots, manipulators and doors move like parts of one organism. The GM controls its behaviour, and you gain no command over it.",
+              "nervousSystem": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: sensors, lights and radios form a responsive perceptual network. The GM controls its behaviour, and you gain no command over it.",
+              "effigy": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: movable machines arrange themselves into a crude bodily form. The GM controls its behaviour, and you gain no command over it."
+            }
+          }
+        }
+      },
       "weapon": {
         "effect": {
           "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",

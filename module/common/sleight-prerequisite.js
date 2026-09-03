@@ -1,6 +1,6 @@
 import { confirmation } from "./general-sheet-functions.js";
 
-const TIER_TRAIT_NAMES = {
+export const TIER_TRAIT_NAMES = {
   psi: { 1: "Psi I", 2: "Psi II" },
   ki: { 1: "Ki I", 2: "Ki II" }
 };

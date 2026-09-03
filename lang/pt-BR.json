@@ -745,6 +745,179 @@
       "noWare": "Nenhum Implante instalado",
       "noArmor": "Nenhuma Armadura instalada"
     },
+    "ki": {
+      "strain": {
+        "none": "-Selecionar-",
+        "crucible": "O Crisol",
+        "redline": "A Linha Vermelha",
+        "signal": "O Sinal",
+        "ruin": "A Ruína",
+        "colony": "A Colônia"
+      },
+      "effect": {
+        "cognitiveFeedback": "Retroalimentação Cognitiva:",
+        "takeStrain": "Receba VE 1d6",
+        "crucible": {
+          "integration": {
+            "label": "Integração Descontrolada:",
+            "equipment": "Equipamento",
+            "armor": "Armadura",
+            "weapon": "Arma"
+          },
+          "reconfiguration": {
+            "label": "Reconfiguração Compulsiva:",
+            "forced": "Ativação Forçada",
+            "shutdown": "Desligamento Total",
+            "rearranged": "Rearranjo Improvisado"
+          },
+          "overcorrection": {
+            "label": "Correção Excessiva:",
+            "plating": "Blindagem Reforçada",
+            "sensing": "Percepção Aguçada",
+            "limbs": "Membros Remodelados"
+          },
+          "motivation": {
+            "label": "Motivação:",
+            "text": "Eliminar a imperfeição"
+          },
+          "revision": {
+            "label": "Revisão Persistente:",
+            "text": "O Mestre define uma alteração persistente"
+          }
+        },
+        "redline": {
+          "governor": {
+            "label": "Falha do Regulador de Movimento:",
+            "limited": "Limitado",
+            "overridden": "Sobreposto",
+            "runaway": "Desgovernado"
+          },
+          "compulsion": {
+            "label": "Compulsão Operacional:",
+            "overdoIt": "Exagere",
+            "testTheLimits": "Testar os limites",
+            "redTape": "Burocracia"
+          },
+          "experimental": {
+            "label": "Execução Experimental:",
+            "text": "O Mestre escolhe um modo de operação"
+          },
+          "rerouting": {
+            "label": "Redirecionamento:",
+            "crossCategory": "Impulso Entre Categorias",
+            "categorySupport": "Apoio de Categoria",
+            "broadShift": "Deslocamento Amplo"
+          },
+          "overclock": {
+            "label": "Sobrecarga:",
+            "text": "O Mestre pode elevar um resultado em um grau"
+          }
+        },
+        "signal": {
+          "carrier": {
+            "label": "Portadora Aberta:",
+            "location": "Posição Exata",
+            "meshId": "ID Público da Malha",
+            "diagnostics": "Diagnóstico Técnico",
+            "sensorFeed": "Trechos de Sensores"
+          },
+          "saturation": {
+            "label": "Saturação do Receptor:",
+            "arOverlays": "Sobreposições RA",
+            "crosstalk": "Diafonia de Áudio",
+            "hapticAlerts": "Alertas Hápticos Falsos",
+            "sensorNoise": "Ruído de Sensores"
+          },
+          "interference": {
+            "label": "Padrão de Interferência:",
+            "text": "Um campo de interferência local bloqueia um espectro escolhido"
+          },
+          "dependency": {
+            "label": "Dependência de Portadora:",
+            "meshConnection": "Conexão à Malha",
+            "positioning": "Sinal de Posicionamento",
+            "tacticalNetwork": "Enlace de Rede Tática",
+            "devicePing": "Ping de Dispositivo"
+          },
+          "beacon": {
+            "label": "Farol:",
+            "text": "O Mestre pode disparar uma transmissão descontrolada"
+          }
+        },
+        "ruin": {
+          "fatigue": {
+            "label": "Fadiga de Material:",
+            "brittleArmor": "Blindagem Quebradiça",
+            "fatiguedActuators": "Atuadores Fatigados",
+            "leakingConstruction": "Estrutura com Vazamentos",
+            "thermalCracks": "Trincas Térmicas"
+          },
+          "seized": {
+            "label": "Função Travada:",
+            "limb": "Um Membro",
+            "sense": "Um Sentido",
+            "movement": "Um Modo de Movimento",
+            "mounts": "Suportes de Ferramentas e Armas"
+          },
+          "intermittent": {
+            "label": "Falha Intermitente:",
+            "wareFailure": "Falha de Implante",
+            "sensorDecay": "Degradação de Sensores",
+            "powerSag": "Queda de Energia"
+          },
+          "shedding": {
+            "label": "Descarte:",
+            "armorPlate": "Placa de Blindagem",
+            "wareComponent": "Componente de Implante",
+            "supply": "Suprimento Externo"
+          },
+          "collapse": {
+            "label": "Colapso Falso:",
+            "mobility": "Colapso de Mobilidade",
+            "sensory": "Colapso Sensorial",
+            "structural": "Colapso Estrutural",
+            "systemic": "Colapso Sistêmico"
+          }
+        },
+        "colony": {
+          "witnesses": {
+            "label": "As Testemunhas:",
+            "eyes": "Olhos",
+            "faces": "Rostos",
+            "attention": "Atenção",
+            "recognition": "Reconhecimento"
+          },
+          "sympathetic": {
+            "label": "Implante Simpático:",
+            "activation": "Ativação",
+            "inhibition": "Inibição",
+            "mimicry": "Mimetismo",
+            "feedback": "Retroalimentação Simpática"
+          },
+          "borrowed": {
+            "label": "Corpo Emprestado:",
+            "eye": "Olho Emprestado",
+            "hand": "Mão Emprestada",
+            "voice": "Voz Emprestada",
+            "organ": "Órgão Emprestado"
+          },
+          "gathering": {
+            "label": "Reunião:",
+            "procession": "Procissão",
+            "encirclement": "Cerco",
+            "docking": "Acoplamento",
+            "nest": "Ninho"
+          },
+          "incarnation": {
+            "label": "Encarnação:",
+            "chorus": "Coro",
+            "body": "Corpo",
+            "nervousSystem": "Sistema Nervoso",
+            "effigy": "Efígie"
+          }
+        }
+      }
+    },
     "psi": {
       "infectionHeadline": "Tipo de Infecção",
       "ratingLabel": "Grau de Infecção",
@@ -1638,6 +1811,221 @@
       }
     },
     "rule": {
+      "psi": {
+        "effect": {
+          "takeDamage": "O vírus se volta contra o hospedeiro: a infecção causa 1d6 de dano, ou 2d6 se o sleight foi forçado.",
+          "frenzy": "Você perde o controle e ataca o que estiver mais perto até o acesso passar.",
+          "hallucination": "A infecção lhe apresenta imagens, sons ou presenças que não existem.",
+          "enhancedBehaviour": {
+            "arrogance": "Você trata o próprio julgamento como obviamente superior e descarta quem o questione.",
+            "curiosity": "Você precisa investigar tudo o que não tem explicação, seja seguro ou oportuno ou não.",
+            "callouseness": "A dor alheia mal chega até você, e você permanece impassível onde normalmente se importaria.",
+            "ruthlessness": "Você persegue seu objetivo por qualquer meio que funcione, custe a quem custar.",
+            "aggression": "Você responde a qualquer atrito com força e procura motivos para escalar.",
+            "arousal": "Seus apetites vêm à frente e você os satisfaz abertamente.",
+            "gluttony": "Você consome muito além do necessário: comida, drogas, recursos, o que estiver à mão.",
+            "riskTaking": "Você corre riscos que normalmente recusaria e trata avisos como ruído.",
+            "avoidance": "Você evita contato, confronto e compromisso sempre que pode.",
+            "mistrust": "Você enxerga intenções ocultas em tudo e não acredita na palavra de ninguém.",
+            "denial": "Você se recusa a aceitar fatos incômodos por mais claramente que sejam apresentados.",
+            "nihilism": "Nada lhe parece valer a pena, e você faz questão de dizê-lo.",
+            "unsettlingMannerisms": "Você encara, se contorce, resmunga e estica os silêncios até deixar todos desconfortáveis.",
+            "deceit": "Você mente por preferência, mesmo quando a verdade lhe serviria melhor.",
+            "selfSabotage": "Você mina os próprios planos e sucessos justo quando começam a dar certo.",
+            "cruelty": "Você faz questão de ferir, humilhar ou assustar os outros.",
+            "spite": "Você retribui cada desfeita, real ou imaginada, custe o que custar.",
+            "nonVerbalCommunication": "Você deixa de usar palavras e recorre a gestos, postura, sons e toque.",
+            "cliquishness": "Você divide o mundo entre o seu grupo e os de fora, e trata os dois de modo muito diferente.",
+            "grooming": "Você limpa, cuida e reorganiza sem parar a si mesmo e a quem está mais próximo.",
+            "socialize": "Você busca companhia constantemente e não suporta ficar sozinho."
+          },
+          "restrictedBehaviour": {
+            "relaxation": "Você não consegue descansar, ficar ocioso ou relaxar - parar é insuportável.",
+            "remorse": "Você não consegue sentir nem demonstrar arrependimento por nada que tenha feito.",
+            "empathy": "Você não consegue sentir o que os outros sentem nem agir de acordo.",
+            "takeResponsibility": "Você não consegue aceitar culpa nem responder pelas consequências dos próprios atos."
+          },
+          "motivation": {
+            "hoard": "Você é levado a juntar e guardar tudo o que tem valor, sem abrir mão de nada.",
+            "innerWorkings": "Você é levado a abrir as coisas e expor como funcionam por dentro.",
+            "create": "Você é levado a construir algo novo, precise alguém disso ou não.",
+            "advancedTech": "Você é levado a obter tecnologia além de tudo o que já possui.",
+            "discardTies": "Você é levado a cortar os laços afetivos que o seguram.",
+            "discoverUnknown": "Você é levado a procurar o que ninguém ainda viu ou registrou.",
+            "repurpose": "Você é levado a desmontar as coisas e refazê-las para outro uso.",
+            "uncoverSecrets": "Você é levado a desenterrar o que os outros mantêm escondido.",
+            "domination": "Você é levado a forçar os outros a se submeterem a você.",
+            "noQuarter": "Você é levado a terminar toda luta: sem misericórdia e sem aceitar rendição.",
+            "cannibalism": "Você é levado a consumir a carne dos seus semelhantes.",
+            "claimTerritory": "Você é levado a tomar um lugar e mantê-lo como seu.",
+            "eradicate": "Você é levado a destruir seus inimigos por completo em vez de apenas vencê-los.",
+            "instillFear": "Você é levado a fazer com que os outros tenham medo de você.",
+            "stalkPrey": "Você é levado a seguir e observar longamente um alvo antes de agir.",
+            "cutTies": "Você é levado a romper as ligações que ainda tem com outras pessoas.",
+            "isolation": "Você é levado a se afastar de todos e a manter os outros separados também.",
+            "crushHope": "Você é levado a tirar a esperança a que os outros ainda se agarram.",
+            "hiddenTruths": "Você é levado a expor verdades feias, qualquer que seja o estrago.",
+            "releaseFromMisery": "Você é levado a acabar com o sofrimento de outra pessoa, queira ela ou não.",
+            "shakeConfidence": "Você é levado a quebrar a confiança de um grupo em si mesmo e em seus planos.",
+            "follPlans": "Você é levado a fazer os planos dos outros fracassarem.",
+            "manipulation": "Você é levado a conduzir os outros ao que você quer sem que percebam.",
+            "testLimits": "Você é levado a descobrir até onde pessoas e sistemas podem ser forçados antes de quebrar.",
+            "betrayal": "Você é levado a trair a confiança de alguém que depende de você.",
+            "covertOpponent": "Você é levado a agir contra alguém sem nunca ser identificado.",
+            "grandScheme": "Você é levado a levar adiante um único plano longo e elaborado.",
+            "mislead": "Você é levado a deixar os outros acreditando em algo falso.",
+            "twistTruth": "Você é levado a torcer fatos verdadeiros na forma que lhe convém.",
+            "transform": "Você é levado a remodelar o ambiente ao seu redor em algo mais adequado.",
+            "control": "Você é levado a colocar sob seu controle o território à sua volta.",
+            "trueForm": "Você é levado a mostrar a todos no que realmente se tornou.",
+            "eatTheWeak": "Você é levado a caçar quem não consegue se defender.",
+            "establishColony": "Você é levado a fundar um lugar onde os seus possam crescer.",
+            "hibernate": "Você é levado a se recolher a um lugar seguro e dormir enquanto o que vem passa.",
+            "molt": "Você é levado a abandonar sua forma atual e emergir transformado.",
+            "playWithPrey": "Você é levado a prolongar o medo da vítima em vez de terminar depressa.",
+            "protectTribe": "Você é levado a proteger o seu grupo de tudo o que estiver fora dele."
+          }
+        }
+      },
+      "ki": {
+        "effect": {
+          "takeStrain": "A infecção Ki reverbera pelo cibercérebro. Receba VE 1d6.",
+          "crucible": {
+            "integration": {
+              "equipment": "O morfo integra um equipamento que você esteja tocando; se não estiver tocando nada adequado, escolha ao acaso um item carregado. Abaixo de II 66 ele só funciona com 1-2 em 1d6 quando necessário; em II 66+ fica totalmente bloqueado. O morfo o libera quando a manifestação termina.",
+              "armor": "O morfo integra uma peça de armadura que você esteja tocando; se não estiver tocando nada adequado, escolha ao acaso um item carregado. Abaixo de II 66 ele só funciona com 1-2 em 1d6 quando necessário; em II 66+ fica totalmente bloqueado. O morfo o libera quando a manifestação termina.",
+              "weapon": "O morfo integra uma arma que você esteja tocando; se não estiver tocando nada adequado, escolha ao acaso um item carregado. Abaixo de II 66 ele só funciona com 1-2 em 1d6 quando necessário; em II 66+ fica totalmente bloqueado. O morfo o libera quando a manifestação termina."
+            },
+            "reconfiguration": {
+              "forced": "Um sistema de implante instalado se ativa e permanece continuamente ligado. O cibercérebro nunca pode ser escolhido.",
+              "shutdown": "Um sistema de implante instalado é completamente desativado. O cibercérebro nunca pode ser escolhido.",
+              "rearranged": "O morfo rearranja componentes existentes em uma função de implante aleatória e, em troca, desativa pelo menos outro sistema de implante. O cibercérebro nunca pode ser escolhido."
+            },
+            "overcorrection": {
+              "plating": "Blindagem reforçada às custas do movimento. Uma aplicação física bem delimitada recebe +10 e outra sofre -20. Duração: 12 horas.",
+              "sensing": "Percepção mais apurada que sobrecarrega os demais sentidos. Uma aplicação física bem delimitada recebe +10 e outra sofre -20. Duração: 12 horas.",
+              "limbs": "Membros adicionais ou remodelados, mais especializados porém menos coordenados. Uma aplicação física bem delimitada recebe +10 e outra sofre -20. Duração: 12 horas."
+            },
+            "motivation": {
+              "text": "Nas próximas 24 horas você deve aproveitar qualquer oportunidade real de melhorar significativamente o próprio morfo. Reparos e mudanças cosméticas não bastam: a alteração precisa remover algo que você sinceramente considere uma fraqueza relevante."
+            },
+            "revision": {
+              "text": "O Mestre define uma alteração física persistente. Ela pode ser limitante, perturbadora ou de utilidade ambígua, mas não deve tornar o personagem injogável. Uma oficina ou um tanque de cura com o projeto adequado do morfo a remove, e com Crisálida Mecânica você pode começar a revertê-la após 12 horas sem projeto."
+            }
+          },
+          "redline": {
+            "governor": {
+              "limited": "O morfo só pode usar sua taxa de movimento mais baixa.",
+              "overridden": "Sempre que o morfo se mover, ele precisa usar ao menos sua taxa de movimento mais alta.",
+              "runaway": "O morfo precisa percorrer a maior distância possível a cada turno de ação. Fora de combate, ele não consegue ficar parado voluntariamente."
+            },
+            "compulsion": {
+              "overdoIt": "Ganhe a motivação Exagere por 12 horas: você executa cada tarefa com minúcia exagerada.",
+              "testTheLimits": "Ganhe a motivação Testar os limites por 12 horas: você sempre vai além do que a situação exige.",
+              "redTape": "Ganhe a motivação Burocracia por 12 horas: você age de modo ostensivamente lento e cauteloso, às vezes deixando o trabalho incompleto por medo de causar danos ou violar um limite de segurança."
+            },
+            "experimental": {
+              "text": "Uma vez nas próximas 12 horas, depois de uma ação ser declarada, o Mestre escolhe um modo de operação. Eficiência: +10, mas a tarefa leva o dobro do tempo ou um oponente ganha +10 em um teste oposto. Experimental: -10, mas um efeito bem-sucedido é dobrado quando fizer sentido. Forçar o limite: +10 e, em II 66+, o morfo sofre VD 1d6 em seguida."
+            },
+            "rerouting": {
+              "crossCategory": "-30 em uma perícia de uma categoria de reserva compra +30 em uma perícia de outra categoria. Duração: 12 horas.",
+              "categorySupport": "-30 em uma perícia compra +10 em todas as demais perícias da mesma categoria. Duração: 12 horas.",
+              "broadShift": "-10 em todas as perícias de uma categoria compra +10 em todas as perícias de outra. Duração: 12 horas."
+            },
+            "overclock": {
+              "text": "Uma vez nas próximas 24 horas, depois de um teste rolado, o Mestre pode elevar sua magnitude em um grau: sucesso vira sucesso superior, sucesso superior vira sucesso crítico, falha vira falha superior e falha superior vira falha crítica. A direção do resultado original nunca é invertida."
+            }
+          },
+          "signal": {
+            "carrier": {
+              "location": "Por 12 horas o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente sua posição exata.",
+              "meshId": "Por 12 horas o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente seu ID público da Malha.",
+              "diagnostics": "Por 12 horas o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente seus dados de diagnóstico técnico.",
+              "sensorFeed": "Por 12 horas o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente trechos de um feed de sensores ativo."
+            },
+            "saturation": {
+              "arOverlays": "Sinais recebidos invadem sua sobreposição de RA. As ações de Perceber e de Malha afetadas sofrem -20 por 1d6 minutos.",
+              "crosstalk": "Áudio alheio se infiltra na sua audição. As ações de Perceber e de Malha afetadas sofrem -20 por 1d6 minutos.",
+              "hapticAlerts": "Alertas hápticos fantasmas disparam sem motivo. As ações de Perceber e de Malha afetadas sofrem -20 por 1d6 minutos.",
+              "sensorNoise": "A entrada dos sensores afunda em ruído. As ações de Perceber e de Malha afetadas sofrem -20 por 1d6 minutos."
+            },
+            "interference": {
+              "text": "Por 1d6 minutos o morfo emite um campo local de interferência eletromagnética contra um espectro ou classe de dispositivo escolhidos. Os enlaces sem fio afetados na área imediata sofrem -30, inclusive os seus e os de seus aliados."
+            },
+            "dependency": {
+              "meshConnection": "Por 12 horas um sistema de implante ou função física só opera enquanto uma conexão à Malha se mantiver. Se o sinal for interrompido, a função vinculada para de funcionar. O cibercérebro está excluído.",
+              "positioning": "Por 12 horas um sistema de implante ou função física só opera enquanto um sinal de posicionamento se mantiver. Se o sinal for interrompido, a função vinculada para de funcionar. O cibercérebro está excluído.",
+              "tacticalNetwork": "Por 12 horas um sistema de implante ou função física só opera enquanto um enlace ativo de rede tática se mantiver. Se o sinal for interrompido, a função vinculada para de funcionar. O cibercérebro está excluído.",
+              "devicePing": "Por 12 horas um sistema de implante ou função física só opera enquanto um ping regular de outro dispositivo se mantiver. Se o sinal for interrompido, a função vinculada para de funcionar. O cibercérebro está excluído."
+            },
+            "beacon": {
+              "text": "Uma vez nas próximas 24 horas o Mestre pode disparar uma transmissão descontrolada de alta potência. Por 1d6 minutos o morfo é fácil de localizar, não consegue silenciar e interfere na comunicação sem fio próxima. A transmissão carrega um padrão de dados desconhecido, mas não transmite a infecção."
+            }
+          },
+          "ruin": {
+            "fatigue": {
+              "brittleArmor": "A blindagem do morfo racha e se desfaz: -2/-2 VA por 12 horas. Em II 66+ a penalidade numérica é dobrada.",
+              "fatiguedActuators": "-10 em testes baseados em SOM por 12 horas. Em II 66+ a penalidade numérica é dobrada.",
+              "leakingConstruction": "Uma resistência ambiental existente deixa de funcionar por 12 horas.",
+              "thermalCracks": "-10 em testes sob calor ou frio extremos por 12 horas. Em II 66+ a penalidade numérica é dobrada."
+            },
+            "seized": {
+              "limb": "Um membro fica completamente bloqueado por 1d6 minutos. Se o sistema for pareado, apenas um lado falha.",
+              "sense": "Um sentido fica completamente bloqueado por 1d6 minutos. Se o sistema for pareado, apenas um lado falha.",
+              "movement": "Um modo de movimento fica completamente bloqueado por 1d6 minutos. Se o sistema for pareado, apenas um lado falha.",
+              "mounts": "Os suportes integrados de ferramentas e armas fica completamente bloqueado por 1d6 minutos. Se o sistema for pareado, apenas um lado falha."
+            },
+            "intermittent": {
+              "wareFailure": "Por 12 horas um sistema de implante só funciona com 1-2 em 1d6 quando usado. O cibercérebro está excluído.",
+              "sensorDecay": "Por 12 horas um sentido produz dados corrompidos e os testes afetados sofrem -20.",
+              "powerSag": "Por 12 horas, após usar um sistema de alto consumo, o morfo precisa evitar outra função de alto consumo até sua próxima ação."
+            },
+            "shedding": {
+              "armorPlate": "O morfo descarta uma placa de blindagem: -2/-2 VA. Ela pode ser recuperada, mas não pode ser reintegrada nem usada por 12 horas.",
+              "wareComponent": "O morfo expele um sistema de implante como componente intacto. Ele pode ser recuperado, mas não pode ser reintegrado nem usado por 12 horas.",
+              "supply": "O morfo descarta um suprimento externo como munição, refrigerante ou reserva de energia. Ele pode ser recuperado, mas não pode ser usado por 12 horas."
+            },
+            "collapse": {
+              "mobility": "Uma vez nas próximas 24 horas o Mestre pode disparar um colapso de 1d6 minutos: um modo de movimento e um membro falham. O morfo visivelmente corrói, trinca ou se decompõe e depois se restaura.",
+              "sensory": "Uma vez nas próximas 24 horas o Mestre pode disparar um colapso de 1d6 minutos: dois sentidos falham. O morfo visivelmente corrói, trinca ou se decompõe e depois se restaura.",
+              "structural": "Uma vez nas próximas 24 horas o Mestre pode disparar um colapso de 1d6 minutos: o VA atual é reduzido à metade. O morfo visivelmente corrói, trinca ou se decompõe e depois se restaura.",
+              "systemic": "Uma vez nas próximas 24 horas o Mestre pode disparar um colapso de 1d6 minutos: dois sistemas de implante falham. O morfo visivelmente corrói, trinca ou se decompõe e depois se restaura."
+            }
+          },
+          "colony": {
+            "witnesses": {
+              "eyes": "Em algum momento das próximas 12 horas, dispositivos próximos despertam como observadores silenciosos por 1d6 minutos: câmeras e sensores se voltam para você. Isso não concede acesso aos dados deles.",
+              "faces": "Em algum momento das próximas 12 horas, dispositivos próximos despertam como observadores silenciosos por 1d6 minutos: telas e luzes de status formam padrões de olhos ou rostos. Isso não concede acesso aos dados deles.",
+              "attention": "Em algum momento das próximas 12 horas, dispositivos próximos despertam como observadores silenciosos por 1d6 minutos: ferramentas, suportes de armas e dispositivos móveis se orientam para você. Isso não concede acesso aos dados deles.",
+              "recognition": "Em algum momento das próximas 12 horas, dispositivos próximos despertam como observadores silenciosos por 1d6 minutos: os dispositivos locais marcam você com símbolos idênticos ou identificadores desconhecidos. Isso não concede acesso aos dados deles."
+            },
+            "sympathetic": {
+              "activation": "Por 1d6 minutos os implantes de um personagem próximo ganham vida própria: eles se ativam em momentos inoportunos. Cibercérebros e sistemas de suporte vital estão excluídos.",
+              "inhibition": "Por 1d6 minutos os implantes de um personagem próximo ganham vida própria: eles se recusam a funcionar. Cibercérebros e sistemas de suporte vital estão excluídos.",
+              "mimicry": "Por 1d6 minutos os implantes de um personagem próximo ganham vida própria: eles respondem aos seus movimentos, e não aos do próprio usuário. Cibercérebros e sistemas de suporte vital estão excluídos.",
+              "feedback": "Por 1d6 minutos os implantes de um personagem próximo ganham vida própria: quando você usa uma função comparável, eles produzem uma resposta física correspondente. Cibercérebros e sistemas de suporte vital estão excluídos."
+            },
+            "borrowed": {
+              "eye": "Por 1d6 minutos um dispositivo conectado à Malha se comporta como uma parte externa do seu corpo, sem ser controlado: uma câmera pisca e acompanha o seu olhar. Nesse período ele não consegue cumprir com segurança sua função normal.",
+              "hand": "Por 1d6 minutos um dispositivo conectado à Malha se comporta como uma parte externa do seu corpo, sem ser controlado: manipuladores repetem os seus gestos. Nesse período ele não consegue cumprir com segurança sua função normal.",
+              "voice": "Por 1d6 minutos um dispositivo conectado à Malha se comporta como uma parte externa do seu corpo, sem ser controlado: alto-falantes produzem respiração, ruídos de movimento, fragmentos de palavras ou fala ininteligível. Nesse período ele não consegue cumprir com segurança sua função normal.",
+              "organ": "Por 1d6 minutos um dispositivo conectado à Malha se comporta como uma parte externa do seu corpo, sem ser controlado: portas, bombas, ventilação ou iluminação pulsam em ritmos corporais. Nesse período ele não consegue cumprir com segurança sua função normal."
+            },
+            "gathering": {
+              "procession": "Por 1d6 minutos dispositivos móveis ou deslocáveis tentam formar uma estrutura coletiva ao seu redor: eles seguem você. Eles não atacam deliberadamente.",
+              "encirclement": "Por 1d6 minutos dispositivos móveis ou deslocáveis tentam formar uma estrutura coletiva ao seu redor: eles cercam você e bloqueiam caminhos. Eles não atacam deliberadamente.",
+              "docking": "Por 1d6 minutos dispositivos móveis ou deslocáveis tentam formar uma estrutura coletiva ao seu redor: eles tentam se conectar fisicamente ao seu morfo. Eles não atacam deliberadamente.",
+              "nest": "Por 1d6 minutos dispositivos móveis ou deslocáveis tentam formar uma estrutura coletiva ao seu redor: eles se juntam em um ponto e incorporam objetos ao alcance em uma estrutura improvisada. Eles não atacam deliberadamente."
+            },
+            "incarnation": {
+              "chorus": "Uma vez nas próximas 24 horas o Mestre pode despertar vários dispositivos locais conectados à Malha como uma única presença por 1d6 minutos: alto-falantes, telas e saídas da Malha se comunicam em conjunto. O Mestre controla o comportamento dela e você não recebe nenhum comando sobre ela.",
+              "body": "Uma vez nas próximas 24 horas o Mestre pode despertar vários dispositivos locais conectados à Malha como uma única presença por 1d6 minutos: bots, manipuladores e portas se movem como partes de um só organismo. O Mestre controla o comportamento dela e você não recebe nenhum comando sobre ela.",
+              "nervousSystem": "Uma vez nas próximas 24 horas o Mestre pode despertar vários dispositivos locais conectados à Malha como uma única presença por 1d6 minutos: sensores, luzes e rádios formam uma rede perceptiva responsiva. O Mestre controla o comportamento dela e você não recebe nenhum comando sobre ela.",
+              "effigy": "Uma vez nas próximas 24 horas o Mestre pode despertar vários dispositivos locais conectados à Malha como uma única presença por 1d6 minutos: máquinas deslocáveis se organizam em uma forma corporal rudimentar. O Mestre controla o comportamento dela e você não recebe nenhum comando sobre ela."
+            }
+          }
+        }
+      },
       "weapon": {
         "effect": {
           "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",

@@ -226,6 +226,15 @@ Hooks.once('init', async function() {
     return (condition) ? "checked" : "";
   });
 
+  // Helper to build the info icon for a selected influence effect option (Psi/Ki sub-strains)
+  Handlebars.registerHelper("effectInfo", function (base, option) {
+    if (!option || option === "none" || typeof base !== "string") return "";
+    const labelKey = `${base}.${option}`;
+    const ruleKey = helperFunction.effectRuleKey(labelKey);
+    if (!ruleKey) return "";
+    return new Handlebars.SafeString(`<a class="moreInfoDialog icon-space" style="flex: 0 0 auto; margin-left: auto;" data-description="${ruleKey}" data-title="${labelKey}" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a>`);
+  });
+
   registerSystemSettings();
 });
 

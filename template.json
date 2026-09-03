@@ -371,6 +371,41 @@
               "influence4": { "label": "", "description": "" },
               "influence5": { "label": "", "description": "" },
               "influence6": { "label": "", "description": "" }
+            },
+            "crucible": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "redline": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "signal": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "ruin": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "colony": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
             }
           }
         },

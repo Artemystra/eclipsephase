@@ -2,18 +2,39 @@ import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat} from "./dice.js";
 import * as pools from "./pools.js";
 import { gmList, prepareRecipients } from "../common/general-sheet-functions.js";
+import { effectRuleKey } from "../common/general-helper-functions.js";
+import { TIER_TRAIT_NAMES } from "../common/sleight-prerequisite.js";
 
 const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
 
 /**
- * Formula for the psi-feedback physical damage roll, or null if none applies.
- * @param {boolean} push - whether the psi check was pushed
+ * The strain family ("psi" or "ki") an actor belongs to. Taken from their sleights, falling back
+ * to the family's tier traits for characters who own the discipline but no sleight yet.
+ * @param {Actor} actorWhole
+ * @returns {string}
+ */
+export function actorStrainFamily(actorWhole){
+    const sleights = actorWhole?.items?.filter(i => i.type === "aspect") ?? [];
+    const primary = sleights.find(i => i.system?.psiType === "gamma") ?? sleights.find(i => i.system?.psiType === "chi") ?? sleights[0];
+    if (primary?.system?.strainFamily) return primary.system.strainFamily;
+    const kiTraits = Object.values(TIER_TRAIT_NAMES.ki);
+    const hasKiTrait = actorWhole?.items?.some(i => i.type === "traits" && kiTraits.includes(i.name));
+    return hasKiTrait ? "ki" : "psi";
+}
+
+/**
+ * Formula for the psi-feedback physical damage roll, or null if none applies. A manual push
+ * always costs at least 1d6 (doubled on a virus result of 1); a free gamma auto-push only
+ * doubles damage that was already going to happen on a virus result of 1, never causing damage
+ * by itself.
+ * @param {boolean} manualPush - whether the psi check was manually pushed this roll
+ * @param {boolean} autoPushed - whether a free Infection-66+ gamma auto-push is active
  * @param {boolean} virusResultIsOne - whether the infection-influence d6 landed on 1
  * @returns {string|null}
  */
-export function resolvePhysicalDamageFormula(push, virusResultIsOne){
-    if (push && virusResultIsOne) return "2d6";
-    if (virusResultIsOne || push) return "1d6";
+export function resolvePhysicalDamageFormula(manualPush, autoPushed, virusResultIsOne){
+    if (virusResultIsOne) return (manualPush || autoPushed) ? "2d6" : "1d6";
+    if (manualPush) return "1d6";
     return null;
 }
 
@@ -202,6 +223,10 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
     let woundUpdate = actorWhole.system.physical.wounds;
     let death = actorWhole.system.health.death.max + actorWhole.system.health.physical.max
     let woundThreshold = actorWhole.system.physical.wt
+    let mentalUpdate = actorWhole.system.health.mental.value;
+    let traumaUpdate = actorWhole.system.mental.trauma;
+    let insanityMax = actorWhole.system.health.mental.max + actorWhole.system.health.insanity.max
+    let traumaThreshold = actorWhole.system.mental.tt
     let d6 = {}
 
     //Success check of the virus
@@ -231,7 +256,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
     //Effect in case virus was successful
     if(outputData.resultClass === "success"){
         let virusMod = "";
-        if(outputData.result === 5 || outputData.result === 7 || outputData.result === 9){
+        if(outputData.result === 3){
             virusMod = "";
         }
         else if(outputData.result === 4){
@@ -250,7 +275,23 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
         let psiLabel = "";
         let psiCopy = "";
 
-        if(actorModel.subStrain.label != "custom"){
+        const strainFamily = actorStrainFamily(actorWhole);
+
+        if(strainFamily === "ki"){
+            const archetypeData = actorModel.subStrain.byArchetype[actorModel.subStrain.label];
+            const influenceRow = eclipsephase.kiInfluence[actorModel.subStrain.label]?.[result];
+            if(result === 1){
+                message.influenceLabel = "ep2e.ki.effect.cognitiveFeedback";
+                message.influenceCopy = "ep2e.ki.effect.takeStrain";
+            }
+            else if(influenceRow){
+                const choice = archetypeData?.["influence" + result]?.description;
+                message.influenceLabel = influenceRow.label;
+                if(influenceRow.base) message.influenceCopy = choice && choice !== "none" ? influenceRow.base + "." + choice : "";
+                else message.influenceCopy = influenceRow.copy;
+            }
+        }
+        else if(actorModel.subStrain.label != "custom"){
             const archetypeData = actorModel.subStrain.byArchetype[actorModel.subStrain.label];
             if(result === 1){
                 message.influenceLabel = "ep2e.psi.effect.physicalDamage";
@@ -299,40 +340,58 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
             message.influenceCopy = customInfluence.description;
         }
 
-        let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");        
+        if(strainFamily === "ki" || actorModel.subStrain.label != "custom") message.influenceRule = effectRuleKey(message.influenceCopy);
+
+        let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");
     
         await rollToChat(null, message, PSI_INFLUENCE_OUTPUT, d6, actingPerson, recipientList, false)
 
     }
     
-    const effectivePush = chiPushItemId ? false : (!!push || gammaAutoPushDamageMultiplier(actorWhole) > 1);
-    physicalDamageRoll = resolvePhysicalDamageFormula(effectivePush, d6.total === 1);
+    const manualPush = chiPushItemId ? false : !!push;
+    const autoPushed = chiPushItemId ? false : gammaAutoPushDamageMultiplier(actorWhole) > 1;
+    physicalDamageRoll = resolvePhysicalDamageFormula(manualPush, autoPushed, d6.total === 1);
 
     if (physicalDamageRoll && actorWhole.type === "character"){
 
         const physicalDamage = await new Roll(physicalDamageRoll).evaluate();
         const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionDamage");
+        const isKi = actorStrainFamily(actorWhole) === "ki";
 
         let message = {
             "psiDamageValue": physicalDamage.total,
             "type": "defaultDamage",
             "rollTitle": "ep2e.roll.announce.damageDone",
-            "copy": effectivePush ? "ep2e.roll.announce.psi.pushedSleightFeedback" : "ep2e.psi.effect.takeDamage"
+            "copy": manualPush ? "ep2e.roll.announce.psi.pushedSleightFeedback" : (isKi ? "ep2e.ki.effect.takeStrain" : "ep2e.psi.effect.takeDamage")
         }
 
         await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false, "rollOutput")
 
-        durUpdate += physicalDamage.total;
+        if (isKi) {
+            mentalUpdate += physicalDamage.total;
 
-        if (physicalDamage.total >= woundThreshold){
-            woundUpdate += Math.floor(physicalDamage.total/woundThreshold);
+            if (physicalDamage.total >= traumaThreshold){
+                traumaUpdate += Math.floor(physicalDamage.total/traumaThreshold);
+            }
+
+            if (mentalUpdate > insanityMax){
+                mentalUpdate = insanityMax
+            }
+
+            actorWhole.update({"system.health.mental.value" : mentalUpdate, "system.mental.trauma" : traumaUpdate})
+        } else {
+            durUpdate += physicalDamage.total;
+
+            if (physicalDamage.total >= woundThreshold){
+                woundUpdate += Math.floor(physicalDamage.total/woundThreshold);
+            }
+
+            if (durUpdate > death){
+                durUpdate = death
+            }
+
+            actorWhole.update({"system.health.physical.value" : durUpdate, "system.physical.wounds" : woundUpdate})
         }
-
-        if (durUpdate > death){
-            durUpdate = death
-        }
-
-        actorWhole.update({"system.health.physical.value" : durUpdate, "system.physical.wounds" : woundUpdate})
     }
 
 }

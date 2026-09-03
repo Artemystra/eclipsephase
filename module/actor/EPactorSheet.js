@@ -9,7 +9,7 @@ import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
-import { endChiPush, confirmChiPush } from "../rolls/psi.js";
+import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -184,6 +184,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     context.editable = this.isEditable;
     context.psiDetailsOpen = this._psiDetailsOpen;
 
+    context.sleightFamily = actorStrainFamily(actor);
+    context.isKi = context.sleightFamily === "ki";
+    context.subStrainOptions = context.isKi ? CONFIG.eclipsephase.kiStrains : CONFIG.eclipsephase.strains;
+
     //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
     if (game.user.isGM || actor.isOwner){
       context.tabs = {
@@ -195,9 +199,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
       context.tabGroups = this.tabGroups;
 
-      const sleightFamily = (actor.aspect?.gamma?.[0] ?? actor.aspect?.chi?.[0])?.system?.strainFamily ?? "psi";
       if (context.tabs.primary?.psi) {
-        context.tabs.primary.psi.label = sleightFamily === "ki" ? "ep2e.actorSheet.rightTabs.kiTab" : "ep2e.actorSheet.rightTabs.psiTab";
+        context.tabs.primary.psi.label = context.isKi ? "ep2e.actorSheet.rightTabs.kiTab" : "ep2e.actorSheet.rightTabs.psiTab";
       }
     }
     else {

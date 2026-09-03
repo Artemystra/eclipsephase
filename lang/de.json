@@ -758,6 +758,179 @@
       "noWare": "Keine Ware installiert",
       "noArmor": "Keine Rüstung installiert"
     },
+    "ki": {
+      "strain": {
+        "none": "-Auswahl-",
+        "crucible": "Der Schmelztiegel",
+        "redline": "Die Rote Linie",
+        "signal": "Das Signal",
+        "ruin": "Der Verfall",
+        "colony": "Die Kolonie"
+      },
+      "effect": {
+        "cognitiveFeedback": "Kognitive Rückkopplung:",
+        "takeStrain": "Erleide SW 1W6",
+        "crucible": {
+          "integration": {
+            "label": "Unkontrollierte Integration:",
+            "equipment": "Ausrüstung",
+            "armor": "Panzerung",
+            "weapon": "Waffe"
+          },
+          "reconfiguration": {
+            "label": "Zwanghafte Rekonfiguration:",
+            "forced": "Erzwungene Aktivierung",
+            "shutdown": "Vollständige Abschaltung",
+            "rearranged": "Improvisierter Umbau"
+          },
+          "overcorrection": {
+            "label": "Überkorrektur:",
+            "plating": "Verstärkte Panzerung",
+            "sensing": "Geschärfte Wahrnehmung",
+            "limbs": "Umgeformte Gliedmaßen"
+          },
+          "motivation": {
+            "label": "Motivation:",
+            "text": "Unvollkommenheit beseitigen"
+          },
+          "revision": {
+            "label": "Dauerhafte Revision:",
+            "text": "Die SL legt eine dauerhafte Veränderung fest"
+          }
+        },
+        "redline": {
+          "governor": {
+            "label": "Ausfall des Bewegungsreglers:",
+            "limited": "Begrenzt",
+            "overridden": "Übersteuert",
+            "runaway": "Außer Kontrolle"
+          },
+          "compulsion": {
+            "label": "Betriebszwang:",
+            "overdoIt": "Übertreib es",
+            "testTheLimits": "Grenzen ausloten",
+            "redTape": "Vorschrift ist Vorschrift"
+          },
+          "experimental": {
+            "label": "Experimentelle Ausführung:",
+            "text": "Die SL wählt einen Betriebsmodus"
+          },
+          "rerouting": {
+            "label": "Umleitung:",
+            "crossCategory": "Kategorieübergreifender Schub",
+            "categorySupport": "Kategorie-Unterstützung",
+            "broadShift": "Breite Verschiebung"
+          },
+          "overclock": {
+            "label": "Übertaktung:",
+            "text": "Die SL darf ein Ergebnis um einen Grad anheben"
+          }
+        },
+        "signal": {
+          "carrier": {
+            "label": "Offener Träger:",
+            "location": "Genaue Position",
+            "meshId": "Öffentliche Mesh-ID",
+            "diagnostics": "Technische Diagnosedaten",
+            "sensorFeed": "Auszüge eines Sensor-Feeds"
+          },
+          "saturation": {
+            "label": "Empfängersättigung:",
+            "arOverlays": "AR-Overlays",
+            "crosstalk": "Audio-Übersprechen",
+            "hapticAlerts": "Falsche haptische Warnungen",
+            "sensorNoise": "Sensorrauschen"
+          },
+          "interference": {
+            "label": "Störmuster:",
+            "text": "Ein lokales Störfeld blockiert ein gewähltes Spektrum"
+          },
+          "dependency": {
+            "label": "Trägerabhängigkeit:",
+            "meshConnection": "Mesh-Verbindung",
+            "positioning": "Positionssignal",
+            "tacticalNetwork": "Taktisches Netzwerk",
+            "devicePing": "Geräte-Ping"
+          },
+          "beacon": {
+            "label": "Leuchtfeuer:",
+            "text": "Die SL darf eine unkontrollierte Sendung auslösen"
+          }
+        },
+        "ruin": {
+          "fatigue": {
+            "label": "Materialermüdung:",
+            "brittleArmor": "Brüchige Panzerung",
+            "fatiguedActuators": "Ermüdete Aktuatoren",
+            "leakingConstruction": "Undichte Konstruktion",
+            "thermalCracks": "Thermische Risse"
+          },
+          "seized": {
+            "label": "Blockierte Funktion:",
+            "limb": "Ein Gliedmaß",
+            "sense": "Ein Sinn",
+            "movement": "Ein Bewegungsmodus",
+            "mounts": "Werkzeug- und Waffenhalterungen"
+          },
+          "intermittent": {
+            "label": "Sporadischer Ausfall:",
+            "wareFailure": "Ware-Ausfall",
+            "sensorDecay": "Sensorverfall",
+            "powerSag": "Energieeinbruch"
+          },
+          "shedding": {
+            "label": "Abwurf:",
+            "armorPlate": "Panzerplatte",
+            "wareComponent": "Ware-Komponente",
+            "supply": "Externer Vorrat"
+          },
+          "collapse": {
+            "label": "Falscher Zusammenbruch:",
+            "mobility": "Mobilitätskollaps",
+            "sensory": "Sensorischer Kollaps",
+            "structural": "Struktureller Kollaps",
+            "systemic": "Systemischer Kollaps"
+          }
+        },
+        "colony": {
+          "witnesses": {
+            "label": "Die Zeugen:",
+            "eyes": "Augen",
+            "faces": "Gesichter",
+            "attention": "Aufmerksamkeit",
+            "recognition": "Wiedererkennung"
+          },
+          "sympathetic": {
+            "label": "Sympathetische Ware:",
+            "activation": "Aktivierung",
+            "inhibition": "Verweigerung",
+            "mimicry": "Nachahmung",
+            "feedback": "Sympathetische Rückkopplung"
+          },
+          "borrowed": {
+            "label": "Geliehener Körper:",
+            "eye": "Geliehenes Auge",
+            "hand": "Geliehene Hand",
+            "voice": "Geliehene Stimme",
+            "organ": "Geliehenes Organ"
+          },
+          "gathering": {
+            "label": "Versammlung:",
+            "procession": "Prozession",
+            "encirclement": "Einkreisung",
+            "docking": "Andocken",
+            "nest": "Nest"
+          },
+          "incarnation": {
+            "label": "Inkarnation:",
+            "chorus": "Chor",
+            "body": "Körper",
+            "nervousSystem": "Nervensystem",
+            "effigy": "Abbild"
+          }
+        }
+      }
+    },
     "psi": {
       "infectionHeadline": "Infektionstyp",
       "ratingLabel": "Infektionsgrad",
@@ -1669,6 +1842,221 @@
       }
     },
     "rule": {
+      "psi": {
+        "effect": {
+          "takeDamage": "Der Virus wendet sich gegen seinen Wirt: Die Infektion verursacht 1W6 Schaden, bei einer gepushten Fertigkeit 2W6.",
+          "frenzy": "Du verlierst die Kontrolle und schlägst auf alles ein, was in Reichweite ist, bis der Anfall vorbei ist.",
+          "hallucination": "Die Infektion zeigt dir Bilder, Geräusche oder Anwesenheiten, die es nicht gibt.",
+          "enhancedBehaviour": {
+            "arrogance": "Du hältst dein eigenes Urteil für offensichtlich überlegen und wischst jeden Einwand beiseite.",
+            "curiosity": "Du musst allem Unerklärten nachgehen, ob es sicher oder gerade passend ist oder nicht.",
+            "callouseness": "Der Schmerz anderer erreicht dich kaum, und du bleibst ungerührt, wo dich sonst etwas berühren würde.",
+            "ruthlessness": "Du verfolgst dein Ziel mit allen Mitteln, die funktionieren, ganz gleich, wen es trifft.",
+            "aggression": "Du beantwortest jede Reibung mit Gewalt und suchst nach Gründen zu eskalieren.",
+            "arousal": "Deine Begierden drängen nach vorn, und du lebst sie offen aus.",
+            "gluttony": "Du konsumierst weit über den Bedarf hinaus - Essen, Drogen, Ressourcen, was greifbar ist.",
+            "riskTaking": "Du gehst Risiken ein, die du sonst ablehnen würdest, und überhörst jede Warnung.",
+            "avoidance": "Du weichst Kontakt, Konfrontation und Verbindlichkeit aus, wo immer es geht.",
+            "mistrust": "Du unterstellst allem verborgene Absichten und glaubst niemandem sein Wort.",
+            "denial": "Du weigerst dich, unangenehme Tatsachen anzuerkennen, so deutlich sie dir auch vorgelegt werden.",
+            "nihilism": "Nichts erscheint dir der Mühe wert, und du lässt es alle wissen.",
+            "unsettlingMannerisms": "Du starrst, zuckst, murmelst und hältst Pausen, bis allen um dich herum unwohl wird.",
+            "deceit": "Du lügst aus Vorliebe, selbst wenn dir die Wahrheit mehr nützen würde.",
+            "selfSabotage": "Du untergräbst deine eigenen Pläne und Erfolge genau dann, wenn sie zu greifen beginnen.",
+            "cruelty": "Du gehst absichtlich aus deinem Weg, um andere zu verletzen, zu demütigen oder zu ängstigen.",
+            "spite": "Du vergiltst jede Kränkung, ob echt oder eingebildet, was es dich auch kostet.",
+            "nonVerbalCommunication": "Du benutzt keine Worte mehr und verständigst dich über Gesten, Haltung, Laute und Berührung.",
+            "cliquishness": "Du teilst die Welt in deine eigene Gruppe und Außenstehende und behandelst beide völlig unterschiedlich.",
+            "grooming": "Du putzt, pflegst und ordnest ununterbrochen dich selbst und die Menschen um dich herum.",
+            "socialize": "Du suchst ständig Gesellschaft und hältst es allein nicht aus."
+          },
+          "restrictedBehaviour": {
+            "relaxation": "Du kannst nicht ruhen, nichts tun oder abschalten - stillzustehen ist unerträglich.",
+            "remorse": "Du kannst für nichts, was du getan hast, Reue empfinden oder zeigen.",
+            "empathy": "Du kannst nicht nachempfinden, was andere fühlen, und nicht danach handeln.",
+            "takeResponsibility": "Du kannst keine Schuld annehmen und nicht für die Folgen deines Handelns einstehen."
+          },
+          "motivation": {
+            "hoard": "Du bist getrieben, alles Wertvolle zu sammeln und zu behalten und nichts davon herzugeben.",
+            "innerWorkings": "Du bist getrieben, Dinge zu öffnen und ihr Innenleben offenzulegen.",
+            "create": "Du bist getrieben, etwas Neues zu erschaffen, ob es jemand braucht oder nicht.",
+            "advancedTech": "Du bist getrieben, Technik zu beschaffen, die über alles hinausgeht, was du schon hast.",
+            "discardTies": "Du bist getrieben, emotionale Bindungen zu kappen, die dich zurückhalten.",
+            "discoverUnknown": "Du bist getrieben, aufzuspüren, was noch niemand gesehen oder aufgezeichnet hat.",
+            "repurpose": "Du bist getrieben, Dinge zu zerlegen und für einen anderen Zweck neu zu bauen.",
+            "uncoverSecrets": "Du bist getrieben, ans Licht zu holen, was andere verbergen.",
+            "domination": "Du bist getrieben, andere zur Unterwerfung zu zwingen.",
+            "noQuarter": "Du bist getrieben, jeden Kampf zu Ende zu bringen - keine Gnade, keine angenommene Kapitulation.",
+            "cannibalism": "Du bist getrieben, das Fleisch deinesgleichen zu verzehren.",
+            "claimTerritory": "Du bist getrieben, dir einen Ort zu nehmen und ihn als deinen zu halten.",
+            "eradicate": "Du bist getrieben, deine Feinde vollständig zu vernichten, statt sie nur zu besiegen.",
+            "instillFear": "Du bist getrieben, anderen Angst vor dir einzuflößen.",
+            "stalkPrey": "Du bist getrieben, ein ausgewähltes Ziel lange zu verfolgen und zu beobachten, bevor du zuschlägst.",
+            "cutTies": "Du bist getrieben, die letzten Verbindungen zu anderen Menschen zu durchtrennen.",
+            "isolation": "Du bist getrieben, dich allen zu entziehen und auch andere voneinander fernzuhalten.",
+            "crushHope": "Du bist getrieben, anderen die Hoffnung zu nehmen, an der sie noch festhalten.",
+            "hiddenTruths": "Du bist getrieben, hässliche Wahrheiten ans Licht zu zerren, welchen Schaden das auch anrichtet.",
+            "releaseFromMisery": "Du bist getrieben, das Leid eines anderen zu beenden, ob er das will oder nicht.",
+            "shakeConfidence": "Du bist getrieben, das Vertrauen einer Gruppe in sich selbst und ihre Pläne zu erschüttern.",
+            "follPlans": "Du bist getrieben, die Pläne anderer scheitern zu lassen.",
+            "manipulation": "Du bist getrieben, andere unbemerkt dorthin zu lenken, wo du sie haben willst.",
+            "testLimits": "Du bist getrieben, herauszufinden, wie weit sich Menschen und Systeme treiben lassen, bevor sie brechen.",
+            "betrayal": "Du bist getrieben, das Vertrauen von jemandem zu brechen, der sich auf dich verlässt.",
+            "covertOpponent": "Du bist getrieben, gegen jemanden zu arbeiten, ohne je erkannt zu werden.",
+            "grandScheme": "Du bist getrieben, einen einzigen langen, ausgeklügelten Plan voranzutreiben.",
+            "mislead": "Du bist getrieben, andere in einem falschen Glauben zurückzulassen.",
+            "twistTruth": "Du bist getrieben, wahre Tatsachen so zu verbiegen, wie es dir nützt.",
+            "transform": "Du bist getrieben, deine Umgebung in etwas Passenderes umzuformen.",
+            "control": "Du bist getrieben, das Gebiet um dich herum unter deine Kontrolle zu bringen.",
+            "trueForm": "Du bist getrieben, allen zu zeigen, was du wirklich geworden bist.",
+            "eatTheWeak": "Du bist getrieben, jene zu jagen, die sich nicht wehren können.",
+            "establishColony": "Du bist getrieben, einen Ort zu gründen, an dem deinesgleichen wachsen kann.",
+            "hibernate": "Du bist getrieben, dich an einen sicheren Ort zurückzuziehen und zu verschlafen, was kommt.",
+            "molt": "Du bist getrieben, deine jetzige Gestalt abzuwerfen und verändert daraus hervorzugehen.",
+            "playWithPrey": "Du bist getrieben, die Angst eines Opfers auszukosten, statt schnell ein Ende zu machen.",
+            "protectTribe": "Du bist getrieben, deine eigene Gruppe gegen alles außerhalb abzuschirmen."
+          }
+        }
+      },
+      "ki": {
+        "effect": {
+          "takeStrain": "Die Ki-Infektion schlägt durch das Cyberhirn zurück. Erleide SW 1W6.",
+          "crucible": {
+            "integration": {
+              "equipment": "Der Morph integriert einen Ausrüstungsgegenstand, den du berührst - berührst du nichts Passendes, wird ein zufällig mitgeführter Gegenstand gewählt. Unter IV 66 funktioniert er im Bedarfsfall nur bei einer 1-2 auf 1W6, ab IV 66 ist er vollständig blockiert. Der Morph gibt ihn frei, wenn die Manifestation endet.",
+              "armor": "Der Morph integriert ein Panzerungsteil, den du berührst - berührst du nichts Passendes, wird ein zufällig mitgeführter Gegenstand gewählt. Unter IV 66 funktioniert er im Bedarfsfall nur bei einer 1-2 auf 1W6, ab IV 66 ist er vollständig blockiert. Der Morph gibt ihn frei, wenn die Manifestation endet.",
+              "weapon": "Der Morph integriert eine Waffe, den du berührst - berührst du nichts Passendes, wird ein zufällig mitgeführter Gegenstand gewählt. Unter IV 66 funktioniert er im Bedarfsfall nur bei einer 1-2 auf 1W6, ab IV 66 ist er vollständig blockiert. Der Morph gibt ihn frei, wenn die Manifestation endet."
+            },
+            "reconfiguration": {
+              "forced": "Ein installiertes Ware-System schaltet sich ein und bleibt dauerhaft aktiv. Das Cyberhirn darf nie gewählt werden.",
+              "shutdown": "Ein installiertes Ware-System wird vollständig deaktiviert. Das Cyberhirn darf nie gewählt werden.",
+              "rearranged": "Der Morph baut vorhandene Komponenten zu einer zufälligen Ware-Funktion um und deaktiviert dafür mindestens ein anderes Ware-System. Das Cyberhirn darf nie gewählt werden."
+            },
+            "overcorrection": {
+              "plating": "Verstärkte Panzerung, erkauft mit verringerter Bewegung. Eine eng umrissene körperliche Anwendung erhält +10, eine andere -20. Dauer: 12 Stunden.",
+              "sensing": "Geschärfte Wahrnehmung, die deine übrigen Sinne überlastet. Eine eng umrissene körperliche Anwendung erhält +10, eine andere -20. Dauer: 12 Stunden.",
+              "limbs": "Zusätzliche oder umgeformte Gliedmaßen, spezialisierter, aber schlechter koordiniert. Eine eng umrissene körperliche Anwendung erhält +10, eine andere -20. Dauer: 12 Stunden."
+            },
+            "motivation": {
+              "text": "In den nächsten 24 Stunden musst du jede echte Gelegenheit nutzen, deinen eigenen Morph deutlich zu verbessern. Reparaturen und kosmetische Änderungen genügen nicht - die Veränderung muss etwas beseitigen, das du aufrichtig als echte Schwäche empfindest."
+            },
+            "revision": {
+              "text": "Die SL legt eine dauerhafte körperliche Veränderung fest. Sie darf einschränkend, verstörend oder zweideutig nützlich sein, sollte dich aber nicht unspielbar machen. Eine Werkstatt oder ein Heiltank mit passendem Morph-Bauplan entfernt sie; mit Maschinenpuppe kannst du sie nach 12 Stunden auch ohne Bauplan zurückbilden."
+            }
+          },
+          "redline": {
+            "governor": {
+              "limited": "Der Morph darf nur seine niedrigere angegebene Bewegungsrate nutzen.",
+              "overridden": "Sobald der Morph sich bewegt, muss er mindestens seine höhere angegebene Bewegungsrate nutzen.",
+              "runaway": "Der Morph muss in jeder Handlungsrunde seine maximal mögliche Strecke zurücklegen. Außerhalb des Kampfes kann er nicht freiwillig stillstehen."
+            },
+            "compulsion": {
+              "overdoIt": "Erhalte für 12 Stunden die Motivation Übertreib es: Du erledigst jede Aufgabe mit übertriebener Gründlichkeit.",
+              "testTheLimits": "Erhalte für 12 Stunden die Motivation Grenzen ausloten: Du gehst stets weiter, als die Situation es verlangt.",
+              "redTape": "Erhalte für 12 Stunden die Motivation Vorschrift ist Vorschrift: Du handelst auffällig langsam und vorsichtig und lässt Arbeiten manchmal unvollendet, aus Angst, Schaden zu verursachen oder eine Sicherheitsgrenze zu verletzen."
+            },
+            "experimental": {
+              "text": "Einmal in den nächsten 12 Stunden wählt die SL nach dem Ansagen einer Handlung einen Betriebsmodus. Effizienz: +10, aber die Aufgabe dauert doppelt so lange oder ein Gegner erhält +10 in einer vergleichenden Probe. Experimentell: -10, aber ein erfolgreicher Effekt wird verdoppelt, wo es sinnvoll ist. Grenze überschreiten: +10, und ab IV 66 erleidet der Morph danach SW 1W6."
+            },
+            "rerouting": {
+              "crossCategory": "-30 auf eine Fertigkeit einer Pool-Kategorie erkauft +30 auf eine Fertigkeit einer anderen Kategorie. Dauer: 12 Stunden.",
+              "categorySupport": "-30 auf eine Fertigkeit erkauft +10 auf alle übrigen Fertigkeiten derselben Kategorie. Dauer: 12 Stunden.",
+              "broadShift": "-10 auf alle Fertigkeiten einer Kategorie erkauft +10 auf alle Fertigkeiten einer anderen. Dauer: 12 Stunden."
+            },
+            "overclock": {
+              "text": "Einmal in den nächsten 24 Stunden darf die SL nach einer gewürfelten Probe deren Ausmaß um einen Grad anheben: ein Erfolg wird zum überlegenen Erfolg, ein überlegener Erfolg zum kritischen Erfolg, ein Fehlschlag zum überlegenen Fehlschlag, ein überlegener Fehlschlag zum kritischen Fehlschlag. Die Richtung des ursprünglichen Ergebnisses wird nie umgekehrt."
+            }
+          },
+          "signal": {
+            "carrier": {
+              "location": "12 Stunden lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig deine genaue Position.",
+              "meshId": "12 Stunden lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig deine öffentliche Mesh-ID.",
+              "diagnostics": "12 Stunden lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig seine technischen Diagnosedaten.",
+              "sensorFeed": "12 Stunden lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig Auszüge eines aktiven Sensor-Feeds."
+            },
+            "saturation": {
+              "arOverlays": "Eingehende Signale drängen sich in dein AR-Overlay. Betroffene Wahrnehmungs- und Mesh-Handlungen erleiden 1W6 Minuten lang -20.",
+              "crosstalk": "Fremdes Audio mischt sich in dein Gehör. Betroffene Wahrnehmungs- und Mesh-Handlungen erleiden 1W6 Minuten lang -20.",
+              "hapticAlerts": "Grundlose haptische Warnungen feuern ununterbrochen. Betroffene Wahrnehmungs- und Mesh-Handlungen erleiden 1W6 Minuten lang -20.",
+              "sensorNoise": "Sensordaten ersaufen im Rauschen. Betroffene Wahrnehmungs- und Mesh-Handlungen erleiden 1W6 Minuten lang -20."
+            },
+            "interference": {
+              "text": "1W6 Minuten lang erzeugt der Morph ein lokales elektromagnetisches Störfeld gegen ein gewähltes Spektrum oder eine Geräteklasse. Betroffene Funkverbindungen in unmittelbarer Umgebung erleiden -30, deine eigenen und die deiner Verbündeten eingeschlossen."
+            },
+            "dependency": {
+              "meshConnection": "12 Stunden lang funktioniert ein Ware-System oder eine körperliche Funktion nur, solange eine Mesh-Verbindung besteht. Wird das Signal unterbrochen, stellt die gekoppelte Funktion ihren Dienst ein. Das Cyberhirn ist ausgenommen.",
+              "positioning": "12 Stunden lang funktioniert ein Ware-System oder eine körperliche Funktion nur, solange ein Positionssignal besteht. Wird das Signal unterbrochen, stellt die gekoppelte Funktion ihren Dienst ein. Das Cyberhirn ist ausgenommen.",
+              "tacticalNetwork": "12 Stunden lang funktioniert ein Ware-System oder eine körperliche Funktion nur, solange eine aktive Verbindung zum taktischen Netzwerk besteht. Wird das Signal unterbrochen, stellt die gekoppelte Funktion ihren Dienst ein. Das Cyberhirn ist ausgenommen.",
+              "devicePing": "12 Stunden lang funktioniert ein Ware-System oder eine körperliche Funktion nur, solange ein regelmäßiger Ping eines anderen Geräts besteht. Wird das Signal unterbrochen, stellt die gekoppelte Funktion ihren Dienst ein. Das Cyberhirn ist ausgenommen."
+            },
+            "beacon": {
+              "text": "Einmal in den nächsten 24 Stunden darf die SL eine unkontrollierte Hochleistungssendung auslösen. 1W6 Minuten lang ist der Morph leicht zu orten, kann nicht verstummen und stört die Funkkommunikation in der Nähe. Die Sendung enthält ein unbekanntes Datenmuster, überträgt die Infektion aber nicht."
+            }
+          },
+          "ruin": {
+            "fatigue": {
+              "brittleArmor": "Die Panzerung des Morphs reißt und blättert ab: 12 Stunden lang -2/-2 PW. Ab IV 66 verdoppelt sich der Zahlenwert.",
+              "fatiguedActuators": "12 Stunden lang -10 auf KON-basierte Proben. Ab IV 66 verdoppelt sich der Zahlenwert.",
+              "leakingConstruction": "Eine vorhandene Umweltresistenz stellt 12 Stunden lang ihren Dienst ein.",
+              "thermalCracks": "12 Stunden lang -10 auf Proben bei extremer Hitze oder Kälte. Ab IV 66 verdoppelt sich der Zahlenwert."
+            },
+            "seized": {
+              "limb": "Ein Gliedmaß ist 1W6 Minuten lang vollständig blockiert. Ist das System paarig vorhanden, fällt nur eine Seite aus.",
+              "sense": "Ein Sinn ist 1W6 Minuten lang vollständig blockiert. Ist das System paarig vorhanden, fällt nur eine Seite aus.",
+              "movement": "Ein Bewegungsmodus ist 1W6 Minuten lang vollständig blockiert. Ist das System paarig vorhanden, fällt nur eine Seite aus.",
+              "mounts": "Integrierte Werkzeug- und Waffenhalterungen ist 1W6 Minuten lang vollständig blockiert. Ist das System paarig vorhanden, fällt nur eine Seite aus."
+            },
+            "intermittent": {
+              "wareFailure": "12 Stunden lang funktioniert ein Ware-System bei Benutzung nur bei einer 1-2 auf 1W6. Das Cyberhirn ist ausgenommen.",
+              "sensorDecay": "12 Stunden lang liefert ein Sinn beschädigte Daten und betroffene Proben erleiden -20.",
+              "powerSag": "12 Stunden lang muss der Morph nach dem Einsatz eines energieintensiven Systems bis zu seiner nächsten Handlung auf eine weitere energieintensive Funktion verzichten."
+            },
+            "shedding": {
+              "armorPlate": "Der Morph wirft eine Panzerplatte ab: -2/-2 PW. Sie lässt sich bergen, aber 12 Stunden lang weder wieder einbauen noch nutzen.",
+              "wareComponent": "Der Morph stößt ein Ware-System als intakte Komponente aus. Sie lässt sich bergen, aber 12 Stunden lang weder wieder einbauen noch nutzen.",
+              "supply": "Der Morph wirft einen externen Vorrat wie Munition, Kühlmittel oder eine Energiereserve ab. Er lässt sich bergen, aber 12 Stunden lang nicht nutzen."
+            },
+            "collapse": {
+              "mobility": "Einmal in den nächsten 24 Stunden darf die SL einen 1W6 Minuten dauernden Zusammenbruch auslösen: ein Bewegungsmodus und ein Gliedmaß fallen aus. Der Morph korrodiert, bricht oder zerfällt sichtbar und stellt sich danach wieder her.",
+              "sensory": "Einmal in den nächsten 24 Stunden darf die SL einen 1W6 Minuten dauernden Zusammenbruch auslösen: zwei Sinne fallen aus. Der Morph korrodiert, bricht oder zerfällt sichtbar und stellt sich danach wieder her.",
+              "structural": "Einmal in den nächsten 24 Stunden darf die SL einen 1W6 Minuten dauernden Zusammenbruch auslösen: der aktuelle PW wird halbiert. Der Morph korrodiert, bricht oder zerfällt sichtbar und stellt sich danach wieder her.",
+              "systemic": "Einmal in den nächsten 24 Stunden darf die SL einen 1W6 Minuten dauernden Zusammenbruch auslösen: zwei Ware-Systeme fallen aus. Der Morph korrodiert, bricht oder zerfällt sichtbar und stellt sich danach wieder her."
+            }
+          },
+          "colony": {
+            "witnesses": {
+              "eyes": "Irgendwann in den nächsten 12 Stunden erwachen Geräte in der Nähe 1W6 Minuten lang als stille Beobachter: Kameras und Sensoren richten sich auf dich. Zugriff auf ihre Daten gewährt das nicht.",
+              "faces": "Irgendwann in den nächsten 12 Stunden erwachen Geräte in der Nähe 1W6 Minuten lang als stille Beobachter: Displays und Statusleuchten bilden augen- oder gesichtsähnliche Muster. Zugriff auf ihre Daten gewährt das nicht.",
+              "attention": "Irgendwann in den nächsten 12 Stunden erwachen Geräte in der Nähe 1W6 Minuten lang als stille Beobachter: Werkzeuge, Waffenhalterungen und bewegliche Geräte richten sich auf dich aus. Zugriff auf ihre Daten gewährt das nicht.",
+              "recognition": "Irgendwann in den nächsten 12 Stunden erwachen Geräte in der Nähe 1W6 Minuten lang als stille Beobachter: Geräte in der Umgebung markieren dich mit identischen Symbolen oder unbekannten Kennungen. Zugriff auf ihre Daten gewährt das nicht."
+            },
+            "sympathetic": {
+              "activation": "1W6 Minuten lang entwickelt die Ware einer Person in der Nähe ein Eigenleben: sie aktiviert sich zu unpassenden Momenten. Cyberhirne und lebenserhaltende Systeme sind ausgenommen.",
+              "inhibition": "1W6 Minuten lang entwickelt die Ware einer Person in der Nähe ein Eigenleben: sie verweigert den Dienst. Cyberhirne und lebenserhaltende Systeme sind ausgenommen.",
+              "mimicry": "1W6 Minuten lang entwickelt die Ware einer Person in der Nähe ein Eigenleben: sie reagiert auf deine Bewegungen statt auf die ihrer Trägerin. Cyberhirne und lebenserhaltende Systeme sind ausgenommen.",
+              "feedback": "1W6 Minuten lang entwickelt die Ware einer Person in der Nähe ein Eigenleben: nutzt du in deinem eigenen Morph eine vergleichbare Funktion, erzeugt sie eine entsprechende körperliche Reaktion. Cyberhirne und lebenserhaltende Systeme sind ausgenommen."
+            },
+            "borrowed": {
+              "eye": "1W6 Minuten lang verhält sich ein mesh-verbundenes Gerät wie ein äußeres Körperteil, ohne kontrolliert zu werden: eine Kamera blinzelt und folgt deinen Blickbewegungen. Seine normale Funktion kann es währenddessen nicht zuverlässig erfüllen.",
+              "hand": "1W6 Minuten lang verhält sich ein mesh-verbundenes Gerät wie ein äußeres Körperteil, ohne kontrolliert zu werden: Manipulatoren wiederholen deine Gesten. Seine normale Funktion kann es währenddessen nicht zuverlässig erfüllen.",
+              "voice": "1W6 Minuten lang verhält sich ein mesh-verbundenes Gerät wie ein äußeres Körperteil, ohne kontrolliert zu werden: Lautsprecher erzeugen Atem, Bewegungsgeräusche, Wortfetzen oder unverständliche Sprache. Seine normale Funktion kann es währenddessen nicht zuverlässig erfüllen.",
+              "organ": "1W6 Minuten lang verhält sich ein mesh-verbundenes Gerät wie ein äußeres Körperteil, ohne kontrolliert zu werden: Türen, Pumpen, Lüftung oder Beleuchtung pulsieren in körperlichen Rhythmen. Seine normale Funktion kann es währenddessen nicht zuverlässig erfüllen."
+            },
+            "gathering": {
+              "procession": "1W6 Minuten lang versuchen mobile oder bewegliche Geräte, um dich herum eine gemeinsame Struktur zu bilden: sie folgen dir. Sie greifen nicht absichtlich an.",
+              "encirclement": "1W6 Minuten lang versuchen mobile oder bewegliche Geräte, um dich herum eine gemeinsame Struktur zu bilden: sie umringen dich und versperren Wege. Sie greifen nicht absichtlich an.",
+              "docking": "1W6 Minuten lang versuchen mobile oder bewegliche Geräte, um dich herum eine gemeinsame Struktur zu bilden: sie versuchen, sich körperlich mit deinem Morph zu verbinden. Sie greifen nicht absichtlich an.",
+              "nest": "1W6 Minuten lang versuchen mobile oder bewegliche Geräte, um dich herum eine gemeinsame Struktur zu bilden: sie sammeln sich an einem Ort und verbauen erreichbare Objekte zu einer improvisierten Struktur. Sie greifen nicht absichtlich an."
+            },
+            "incarnation": {
+              "chorus": "Einmal in den nächsten 24 Stunden darf die SL mehrere mesh-verbundene Geräte 1W6 Minuten lang als eine einzige Präsenz erwachen lassen: Lautsprecher, Displays und Mesh-Ausgaben kommunizieren gemeinsam. Die SL steuert ihr Verhalten, und du erhältst keine Befehlsgewalt über sie.",
+              "body": "Einmal in den nächsten 24 Stunden darf die SL mehrere mesh-verbundene Geräte 1W6 Minuten lang als eine einzige Präsenz erwachen lassen: Bots, Manipulatoren und Türen bewegen sich wie Teile eines Organismus. Die SL steuert ihr Verhalten, und du erhältst keine Befehlsgewalt über sie.",
+              "nervousSystem": "Einmal in den nächsten 24 Stunden darf die SL mehrere mesh-verbundene Geräte 1W6 Minuten lang als eine einzige Präsenz erwachen lassen: Sensoren, Leuchten und Funkgeräte bilden ein reagierendes Wahrnehmungsnetz. Die SL steuert ihr Verhalten, und du erhältst keine Befehlsgewalt über sie.",
+              "effigy": "Einmal in den nächsten 24 Stunden darf die SL mehrere mesh-verbundene Geräte 1W6 Minuten lang als eine einzige Präsenz erwachen lassen: bewegliche Maschinen ordnen sich zu einer groben Körperform. Die SL steuert ihr Verhalten, und du erhältst keine Befehlsgewalt über sie."
+            }
+          }
+        }
+      },
       "weapon": {
         "effect": {
           "armSlide": "Diese Schieberhalterung kann eine einhändige Waffe unter deinem Ärmel halten und die Waffe mit einem elektronischen Signal oder einer spezifischen Abfolge von Arm-Bewegungen in deine Hand schieben. Du kannst die Waffe ziehen und mit einer einzigen komplexen Aktion angreifen.",
