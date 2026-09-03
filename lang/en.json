@@ -770,24 +770,24 @@
       "noWare": "No Ware Installed",
       "noArmor": "No Armor Installed"
     },
-    "ki": {
+"ki": {
       "strain": {
         "none": "-Select-",
         "crucible": "The Crucible",
         "redline": "The Redline",
         "signal": "The Signal",
         "ruin": "The Ruin",
-        "colony": "The Colony"
+        "colony": "The Colony"
       },
       "effect": {
         "cognitiveFeedback": "Cognitive Feedback:",
         "takeStrain": "Take SV 1d6",
         "crucible": {
-          "integration": {
-            "label": "Uncontrolled Integration:",
-            "equipment": "Equipment",
-            "armor": "Armor",
-            "weapon": "Weapon"
+          "preoccupation": {
+            "label": "Motivation:",
+            "enhance": "Enhance Real Space",
+            "recycle": "Recycle",
+            "research": "Research & Development"
           },
           "reconfiguration": {
             "label": "Compulsive Reconfiguration:",
@@ -795,19 +795,19 @@
             "shutdown": "Total Shutdown",
             "rearranged": "Improvised Rearrangement"
           },
-          "overcorrection": {
-            "label": "Overcorrection:",
-            "plating": "Reinforced Plating",
-            "sensing": "Heightened Sensing",
-            "limbs": "Reshaped Limbs"
+          "recalibration": {
+            "label": "Recalibration:",
+            "weapon": "Weapon",
+            "armor": "Armor",
+            "accessory": "Accessory"
           },
           "motivation": {
             "label": "Motivation:",
             "text": "Eliminate Imperfection"
           },
           "revision": {
-            "label": "Persistent Revision:",
-            "text": "The GM defines a persistent alteration"
+            "label": "Manifestation:",
+            "text": "Uncanny Upgrade"
           }
         },
         "redline": {
@@ -823,101 +823,90 @@
             "testTheLimits": "Test the Limits",
             "redTape": "Red Tape"
           },
-          "experimental": {
-            "label": "Experimental Execution:",
-            "text": "The GM picks an operating mode"
+          "calibration": {
+            "label": "Experimental Calibration:",
+            "efficiency": "Efficiency",
+            "experimental": "Experimental",
+            "pushTheLimit": "Push the Limit"
           },
           "rerouting": {
             "label": "Rerouting:",
-            "crossCategory": "Cross-Category Boost",
-            "categorySupport": "Category Support",
-            "broadShift": "Broad Shift"
+            "boost": "Boost",
+            "support": "Support",
+            "switch": "Switch"
           },
-          "overclock": {
-            "label": "Overclock:",
-            "text": "The GM may raise one result by one degree"
+          "pushing": {
+            "label": "Pushing the Line:",
+            "overclocking": "Overclocking",
+            "dampening": "Dampening",
+            "switching": "Switching"
           }
         },
         "signal": {
           "carrier": {
             "label": "Open Carrier:",
             "location": "Exact Location",
-            "meshId": "Public Mesh ID",
             "diagnostics": "Technical Diagnostics",
             "sensorFeed": "Sensor Feed Excerpts"
           },
           "saturation": {
             "label": "Receiver Saturation:",
-            "arOverlays": "AR Overlays",
-            "crosstalk": "Audio Crosstalk",
-            "hapticAlerts": "False Haptic Alerts",
-            "sensorNoise": "Sensor Noise"
+            "text": "Sensor Noise"
           },
           "interference": {
             "label": "Interference Pattern:",
-            "text": "A local interference field jams a chosen spectrum"
+            "whiteNoise": "White Noise",
+            "signalBoost": "Signal Boost"
           },
           "dependency": {
             "label": "Carrier Dependency:",
-            "meshConnection": "Mesh Connection",
-            "positioning": "Positioning Signal",
-            "tacticalNetwork": "Tactical Network Link",
-            "devicePing": "Device Ping"
+            "tacticalNetwork": "Tactical Network",
+            "ping": "Ping",
+            "experimentalApi": "Experimental API"
           },
           "beacon": {
-            "label": "Beacon:",
-            "text": "The GM may trigger an uncontrolled transmission"
+            "label": "Manifestation:",
+            "text": "Anomalous Interference"
           }
         },
         "ruin": {
-          "fatigue": {
+          "fatigue": {
             "label": "Material Fatigue:",
             "brittleArmor": "Brittle Armor",
             "fatiguedActuators": "Fatigued Actuators",
-            "leakingConstruction": "Leaking Construction",
-            "thermalCracks": "Thermal Cracks"
+            "leakingConstruction": "Leaking Construction"
           },
           "seized": {
             "label": "Seized Function:",
-            "limb": "One Limb",
+            "ware": "One Piece of Ware",
             "sense": "One Sense",
-            "movement": "One Movement Mode",
-            "mounts": "Tool and Weapon Mounts"
+            "movement": "One Movement Mode"
           },
           "intermittent": {
             "label": "Intermittent Failure:",
-            "wareFailure": "Ware Failure",
+            "malfunction": "Subsystem Malfunction",
             "sensorDecay": "Sensor Decay",
-            "powerSag": "Power Sag"
+            "heuristicErrors": "Heuristic Errors"
           },
           "shedding": {
             "label": "Shedding:",
-            "armorPlate": "Armor Plate",
-            "wareComponent": "Ware Component",
-            "supply": "External Supply"
+            "wareComponent": "Intestines",
+            "armorPlate": "Scales"
           },
-          "collapse": {
-            "label": "False Collapse:",
-            "mobility": "Mobility Collapse",
-            "sensory": "Sensory Collapse",
-            "structural": "Structural Collapse",
-            "systemic": "Systemic Collapse"
+          "breakdown": {
+            "label": "Manifestation:",
+            "text": "Breakdown"
           }
         },
         "colony": {
           "witnesses": {
             "label": "The Witnesses:",
             "eyes": "Eyes",
-            "faces": "Faces",
-            "attention": "Attention",
-            "recognition": "Recognition"
+            "attention": "Attention"
           },
           "sympathetic": {
-            "label": "Sympathetic Ware:",
-            "activation": "Activation",
-            "inhibition": "Inhibition",
-            "mimicry": "Mimicry",
-            "feedback": "Sympathetic Feedback"
+            "label": "Sympathetic Feedback:",
+            "text": "Mimicry"
           },
           "borrowed": {
             "label": "Borrowed Body:",
@@ -930,15 +919,11 @@
             "label": "Gathering:",
             "procession": "Procession",
             "encirclement": "Encirclement",
-            "docking": "Docking",
             "nest": "Nest"
           },
-          "incarnation": {
-            "label": "Incarnation:",
-            "chorus": "Chorus",
-            "body": "Body",
-            "nervousSystem": "Nervous System",
-            "effigy": "Effigy"
+          "avatar": {
+            "label": "Manifestation:",
+            "text": "Avatar"
           }
         }
       }
@@ -1946,141 +1931,126 @@
           }
         }
       },
-      "ki": {
+"ki": {
         "effect": {
           "takeStrain": "The Ki infection lashes back through the cyberbrain. Take SV 1d6.",
           "crucible": {
-            "integration": {
-              "equipment": "The morph absorbs a piece of equipment you are touching, or a random carried one if you touch nothing suitable. Below IR 66 the item only works on a 1-2 on 1d6 when you need it; at IR 66+ it is blocked entirely. The morph releases it when the manifestation ends.",
-              "armor": "The morph absorbs a piece of armor you are touching, or a random carried one if you touch nothing suitable. Below IR 66 the item only works on a 1-2 on 1d6 when you need it; at IR 66+ it is blocked entirely. The morph releases it when the manifestation ends.",
-              "weapon": "The morph absorbs a weapon you are touching, or a random carried one if you touch nothing suitable. Below IR 66 the item only works on a 1-2 on 1d6 when you need it; at IR 66+ it is blocked entirely. The morph releases it when the manifestation ends."
+            "preoccupation": {
+              "enhance": "You become preoccupied with an object you see as unusable or in need of improvement - it does not have to be yours, and the GM decides which one it is. You have to try to improve it with an Extended Hardware Test.",
+              "recycle": "You become preoccupied with an object you see as unusable or in need of improvement - it does not have to be yours, and the GM decides which one it is. You want to break it down into its components and put those to some other use.",
+              "research": "You become preoccupied with an object you see as unusable or in need of improvement - it does not have to be yours, and the GM decides which one it is. You want to take it apart far enough to produce a blueprint from it."
             },
             "reconfiguration": {
-              "forced": "An installed ware system switches itself on and stays continuously active. The cyberbrain can never be chosen.",
-              "shutdown": "An installed ware system is completely disabled. The cyberbrain can never be chosen.",
-              "rearranged": "The morph rebuilds existing components into a random ware function and disables at least one other ware system in exchange. The cyberbrain can never be chosen."
+              "forced": "An installed ware system, chosen by the GM, switches itself on and stays continuously active. The cyberbrain can never be chosen.",
+              "shutdown": "An installed ware system, chosen by the GM, is completely disabled. The cyberbrain can never be chosen.",
+              "rearranged": "The morph rebuilds existing components into a random ware function, chosen by the GM, and disables at least one other ware system in exchange. The cyberbrain can never be chosen."
             },
-            "overcorrection": {
-              "plating": "Reinforced armor bought with reduced movement. One narrowly defined physical application gains +10, another suffers -20. Duration: 12 hours.",
-              "sensing": "Sharper sensing that overloads your other senses. One narrowly defined physical application gains +10, another suffers -20. Duration: 12 hours.",
-              "limbs": "Additional or reshaped limbs, more specialised but less coordinated. One narrowly defined physical application gains +10, another suffers -20. Duration: 12 hours."
+            "recalibration": {
+              "weapon": "The infection converts one of your own possessions into a different weapon, chosen by the GM. The replacement is of similar mass and size and serves a similar function. It does not automatically revert to its original form.",
+              "armor": "The infection converts one of your own possessions into a different piece of armor, chosen by the GM. The replacement has roughly the same combined stats (+/- 20%) and serves a similar function. It does not automatically revert to its original form.",
+              "accessory": "The infection converts one of your own possessions into a different accessory, chosen by the GM. The replacement is of similar mass and size and serves a similar function. It does not automatically revert to its original form."
             },
             "motivation": {
-              "text": "For the next 24 hours you must take any real opportunity to significantly improve your own morph. Repairs and cosmetic changes do not satisfy this - the change has to remove something you sincerely see as a meaningful weakness."
+              "text": "The next time, within the next 12 hours, you have the opportunity to enhance your own body, you have to use this opportunity, or try to fight your instinct to become something better."
             },
             "revision": {
-              "text": "The GM defines a persistent physical alteration. It may be limiting, disturbing or ambiguously useful, but it should not make you unplayable. A workshop or healing vat with a matching morph blueprint removes it, and Machine Chrysalis can begin reversing it after 12 hours without one."
+              "text": "The GM defines a persistent physical alteration. It may be limiting, disturbing or ambiguously useful, and its severity and drama should scale to the situation the effect occurs in. The change cannot be revoked for the next 1 hour. After that, a workshop or healing vat with a matching morph blueprint removes it."
             }
           },
           "redline": {
             "governor": {
-              "limited": "The morph may only use its lower listed movement rate.",
-              "overridden": "Whenever the morph moves, it must use at least its higher listed movement rate.",
-              "runaway": "The morph must move its maximum possible distance each action turn. Outside combat it cannot voluntarily remain still."
+              "limited": "In Combat: The Morph can only use its lower listed movement rate. Out of Combat: The Morph moves and acts deliberately slow, as if trying to protect itself from wear and tear. Duration: 1d6 minutes.",
+              "overridden": "In Combat: The Morph must always use at least its higher listed movement rate whenever it moves. Out of Combat: The Morph moves deliberately fast and acts recklessly fast, as if trying to save time. Duration: 1d6 minutes.",
+              "runaway": "In Combat: The Morph must always move its maximum possible distance each action turn. Out of Combat: The Morph cannot stand still, as if stopping and going would be an imperfection leading to more wear, which must be prevented at all cost. Duration: 1d6 minutes."
             },
             "compulsion": {
-              "overdoIt": "Gain the motivation Overdo It for 12 hours: you carry out every task with excessive thoroughness.",
-              "testTheLimits": "Gain the motivation Test the Limits for 12 hours: you always push further than the situation requires.",
-              "redTape": "Gain the motivation Red Tape for 12 hours: you act conspicuously slowly and cautiously, sometimes leaving work unfinished for fear of causing damage or breaking a safety limit."
+              "overdoIt": "Gain the motivation Overdo It for 12 hours: you carry out every task with excessive thoroughness. You won't stop iterating on a task and trying to improve it, even if it is evidently finished. You may attempt a WIL Check to snap out of this compulsion.",
+              "testTheLimits": "Gain the motivation Test the Limits for 12 hours: you always push further than the situation requires. You are prone to even think of additional opportunities to enhance the task at hand, prompting people around you with ideas on how to proceed on an already finished task. You may attempt a WIL Check to snap out of this compulsion.",
+              "redTape": "Gain the motivation Red Tape for 12 hours: you act conspicuously slowly and cautiously, sometimes leaving work unfinished for fear of causing damage or breaking a safety limit. You may attempt a WIL Check to snap out of this compulsion."
             },
-            "experimental": {
-              "text": "Once within the next 12 hours, after an action is declared, the GM chooses an operating mode. Efficiency: +10, but the task takes twice as long or an opponent gains +10 in an opposed test. Experimental: -10, but a successful effect is doubled where meaningful. Push the Limit: +10, and at IR 66+ the morph takes DV 1d6 afterwards."
+            "calibration": {
+              "efficiency": "Once within the next 12 hours, after you declare an action, the GM may choose to run the morph in Efficiency mode: +10, but the task takes twice as long, or an opponent gains +10 in an opposed test.",
+              "experimental": "Once within the next 12 hours, after you declare an action, the GM may choose to run the morph in Experimental mode: -10, but a successful effect is doubled where meaningful.",
+              "pushTheLimit": "Once within the next 12 hours, after you declare an action, the GM may choose to push the morph past its limit: +10, and the morph takes DV 1d6 afterwards."
             },
             "rerouting": {
-              "crossCategory": "-30 to one skill in a pool category buys +30 to one skill in a different category. Duration: 12 hours.",
-              "categorySupport": "-30 to one skill buys +10 to all other skills in the same category. Duration: 12 hours.",
-              "broadShift": "-10 to all skills in one category buys +10 to all skills in another. Duration: 12 hours."
+              "boost": "-30 to one skill in a pool category, chosen by the GM, buys +30 to one skill in a different category, also chosen by the GM. Duration: 1d6 minutes.",
+              "support": "-30 to one skill, chosen by the GM, buys +10 to all other skills in the same category. Duration: 1d6 minutes.",
+              "switch": "-10 to all skills in one category, chosen by the GM, buys +10 to all skills in another category, also chosen by the GM. Duration: 1d6 minutes."
             },
-            "overclock": {
-              "text": "Once within the next 24 hours, after a test is rolled, the GM may raise its magnitude by one degree: a success becomes a superior success, a superior success a critical success, a failure a superior failure, a superior failure a critical failure. The direction of the original result is never reversed."
+            "pushing": {
+              "overclocking": "Once within the next 24 hours, after a test is rolled, the GM may raise its outcome by one degree - for example, turning a plain success into a superior success. The direction of the original result is never reversed. These effects tend to occur at the worst possible moment. They can never occur where doing so would put the Ki user's own physical or mental integrity at risk.",
+              "dampening": "Once within the next 24 hours, after a test is rolled, the GM may lower its outcome by one degree - for example, turning a superior success into a plain success. The direction of the original result is never reversed. These effects tend to occur at the worst possible moment. They can never occur where doing so would put the Ki user's own physical or mental integrity at risk.",
+              "switching": "Once within the next 24 hours the GM may flip-flop the two digits of a roll that has already come to rest - the same effect a pool point normally buys, for example turning a 71 into a 17 - except the GM applies it directly to this one roll instead of it costing you a pool point. These effects tend to occur at the worst possible moment. They can never occur where doing so would put the Ki user's own physical or mental integrity at risk."
             }
           },
           "signal": {
             "carrier": {
-              "location": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts your exact location.",
-              "meshId": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts your public Mesh ID.",
-              "diagnostics": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts its technical diagnostics.",
-              "sensorFeed": "For 12 hours the morph cannot fall completely silent. It involuntarily broadcasts excerpts from an active sensor feed."
+              "location": "For the next 1d6 minutes the morph cannot fall completely silent. It involuntarily broadcasts your exact location.",
+              "diagnostics": "For the next 1d6 minutes the morph cannot fall completely silent. It involuntarily broadcasts its technical diagnostics.",
+              "sensorFeed": "For the next 1d6 minutes the morph cannot fall completely silent. It involuntarily broadcasts excerpts from an active sensor feed."
             },
             "saturation": {
-              "arOverlays": "Incoming signals bleed into your AR overlay. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes.",
-              "crosstalk": "Foreign audio bleeds into your hearing. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes.",
-              "hapticAlerts": "Phantom haptic alerts fire without cause. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes.",
-              "sensorNoise": "Sensor input drowns in noise. Relevant Perceive and Mesh actions suffer -20 for 1d6 minutes."
+              "text": "Incoming signals bleed into your senses and interfaces without cause. Relevant Interface and Perceive tests suffer -20 for 1d6 minutes."
             },
             "interference": {
-              "text": "For 1d6 minutes the morph emits a local electromagnetic interference field against a chosen spectrum or device class. Affected wireless links in the immediate area suffer -30, your own and your allies' included."
+              "whiteNoise": "For 1d6 minutes the morph floods its surroundings with electromagnetic noise. Affected wireless links in the immediate area suffer -30, your own and your allies' included.",
+              "signalBoost": "For 1d6 minutes the morph amplifies the local electromagnetic environment instead. Every signal in the vicinity, your own included, becomes easier to detect and triangulate: +30 to locate them."
             },
             "dependency": {
-              "meshConnection": "For 12 hours one ware system or physical function only works while a Mesh connection holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded.",
-              "positioning": "For 12 hours one ware system or physical function only works while a positioning signal holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded.",
-              "tacticalNetwork": "For 12 hours one ware system or physical function only works while an active tactical-network link holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded.",
-              "devicePing": "For 12 hours one ware system or physical function only works while a regular ping from another device holds. If the signal is interrupted, the linked function ceases to operate. The cyberbrain is excluded."
+              "tacticalNetwork": "For 12 hours you have to stay together with every member of your current group. If the signals separate too far, the network collapses and you suffer -20 to all actions until the group closes ranks again or the 12 hours run out.",
+              "ping": "For 12 hours you have to perform a Ping - a Mesh scan - before you act in a new environment, whenever new people are present or the number of participants changes. Acting without it costs you -20 to all actions.",
+              "experimentalApi": "For 12 hours you may not maintain any passive encryption. For as long as you do, you suffer -20 to all actions."
             },
             "beacon": {
-              "text": "Once within the next 24 hours the GM may trigger an uncontrolled high-powered transmission. For 1d6 minutes the morph is easy to locate, cannot fall silent and interferes with nearby wireless communication. The transmission carries an unknown data pattern, but it does not transmit the infection."
+              "text": "Once within the next 24 hours the GM may trigger an uncontrolled high-powered transmission. For 1d6 minutes the morph is easy to locate and cannot fall silent, and it quietly patches into existing connections nearby, without actually granting the affected user or the infection any real access. The transmission carries an unknown data pattern, such as coordinates, Exsurgent structures, or fragments of alien telemetry, but it does not transmit the infection."
             }
           },
           "ruin": {
-            "fatigue": {
-              "brittleArmor": "The morph's armor cracks and flakes away: -2/-2 AV for 12 hours. At IR 66+ the numerical penalty is doubled.",
-              "fatiguedActuators": "-10 to SOM-based tests for 12 hours. At IR 66+ the numerical penalty is doubled.",
-              "leakingConstruction": "One existing environmental resistance ceases to function for 12 hours.",
-              "thermalCracks": "-10 to tests under extreme heat or cold for 12 hours. At IR 66+ the numerical penalty is doubled."
+            "fatigue": {
+              "brittleArmor": "The morph's Frame armor becomes brittle and flakes away: -4/-4 to its Frame armor for 1d6 minutes.",
+              "fatiguedActuators": "-30 to all SOM-based tests for 1d6 minutes.",
+              "leakingConstruction": "One existing environmental resistance ceases to function for 1d6 minutes."
             },
             "seized": {
-              "limb": "One limb is completely blocked for 1d6 minutes. If the system is paired, only one side fails.",
-              "sense": "One sense is completely blocked for 1d6 minutes. If the system is paired, only one side fails.",
-              "movement": "One movement mode is completely blocked for 1d6 minutes. If the system is paired, only one side fails.",
-              "mounts": "Integrated tool and weapon mounts is completely blocked for 1d6 minutes. If the system is paired, only one side fails."
+              "ware": "Ware installed into the infected morph starts to misbehave - outages are common. One piece of ware, chosen by the GM, is completely blocked for 1d6 minutes.",
+              "sense": "Perception drops out mid-sentence, as if a channel had simply been unplugged. One sense, chosen by the GM, is completely blocked for 1d6 minutes.",
+              "movement": "Drive trains and actuators lock up mid-motion and refuse to answer. One movement mode, chosen by the GM, is completely blocked for 1d6 minutes."
             },
             "intermittent": {
-              "wareFailure": "For 12 hours one ware system only functions on a 1-2 on 1d6 when used. The cyberbrain is excluded.",
-              "sensorDecay": "For 12 hours one sense produces damaged data and relevant tests suffer -20.",
-              "powerSag": "For 12 hours, after using one energy-intensive system the morph must refrain from using another energy-intensive function until its next action."
+              "malfunction": "Load-bearing subsystems answer more reluctantly every time they are pushed. For 12 hours the GM may call for a test whenever one specific piece of ware is used particularly hard. Which piece of ware is affected is decided by the GM the moment the effect first triggers.",
+              "sensorDecay": "The morph's sensor returns drift and smear until nothing reads cleanly. All Perceive tests suffer -20 for 1d6 hours.",
+              "heuristicErrors": "The morph's pattern matching decays and it misreads machines and people alike. Interface and Kinesics tests suffer -20 for 1d6 hours."
             },
             "shedding": {
-              "armorPlate": "The morph discards an armor plate: -2/-2 AV. It may be recovered, but it cannot be reintegrated or used for 12 hours.",
-              "wareComponent": "The morph expels one ware system as an intact component. It may be recovered, but it cannot be reintegrated or used for 12 hours.",
-              "supply": "The morph discards an external supply such as ammunition, coolant or an energy reserve. It may be recovered, but it cannot be used for 12 hours."
+              "wareComponent": "A piece of ware visibly decays and withers while staying attached to the morph. It cannot be repaired for 1d3 hours; once that time passes it recovers and works again on its own, but it still looks visibly broken until it receives an actual repair to hide the damage from view.",
+              "armorPlate": "A plate of the morph's Frame armor visibly decays and flakes while staying attached, and provides no protection for as long as it stays in this brittle state. It cannot be repaired for 1d3 hours; once that time passes it recovers and works again on its own, but it still looks visibly broken until it receives an actual repair to hide the damage from view."
             },
-            "collapse": {
-              "mobility": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: one movement mode and one limb fail. The morph visibly corrodes, fractures or decays and restores itself afterwards.",
-              "sensory": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: two senses fail. The morph visibly corrodes, fractures or decays and restores itself afterwards.",
-              "structural": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: current AV is halved. The morph visibly corrodes, fractures or decays and restores itself afterwards.",
-              "systemic": "Once within the next 24 hours the GM may trigger a collapse lasting 1d6 minutes: two ware systems fail. The morph visibly corrodes, fractures or decays and restores itself afterwards."
+            "breakdown": {
+              "text": "Once in the next 24 hours the GM can trigger a systemic breakdown in a fitting moment. The breakdown can affect a maximum of two systems - a sense and a piece of ware, or two senses, and so on - and holds for 1d6 minutes before the body starts to recover. Depending on the situation this effect can still be visible afterwards if it is not properly repaired, but the Ki user fully recovers from the episode."
             }
           },
           "colony": {
             "witnesses": {
-              "eyes": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: cameras and sensors turn towards you. This grants no access to their data.",
-              "faces": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: displays and status lights form eye-like or face-like patterns. This grants no access to their data.",
-              "attention": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: tools, weapon mounts and movable devices orient towards you. This grants no access to their data.",
-              "recognition": "At some point within the next 12 hours, nearby devices awaken as silent observers for 1d6 minutes: local devices mark you with identical symbols or unknown identifiers. This grants no access to their data."
+              "eyes": "Nearby sensor-equipped devices swing towards you at once: cameras, scanners, every lens in range. The effect works through walls and obstructions and fires even where nothing could actually see you. It is instantaneous and passes the moment attention has been drawn once. Anything that was not already in range - a few metres at most, at the GM's discretion - is not affected if it arrives afterwards. Whatever was recording can be used against you afterwards.",
+              "attention": "Nearby drones and synthmorphs turn towards you. Where a synth is piloted by an ego, that ego involuntarily looks in your direction; if you are hiding, you need a matching test to avoid being spotted, and the affected egos never know why they looked. The effect works through walls and obstructions and fires even where nothing could actually see you. It is instantaneous and passes the moment attention has been drawn once. Anything that was not already in range - a few metres at most, at the GM's discretion - is not affected if it arrives afterwards."
             },
             "sympathetic": {
-              "activation": "For 1d6 minutes the ware of a nearby character develops a life of its own: it activates at inappropriate moments. Cyberbrains and life-support systems are excluded.",
-              "inhibition": "For 1d6 minutes the ware of a nearby character develops a life of its own: it refuses to function. Cyberbrains and life-support systems are excluded.",
-              "mimicry": "For 1d6 minutes the ware of a nearby character develops a life of its own: it responds to your movements instead of its user's. Cyberbrains and life-support systems are excluded.",
-              "feedback": "For 1d6 minutes the ware of a nearby character develops a life of its own: using a comparable function in your own morph makes it produce a matching physical response. Cyberbrains and life-support systems are excluded."
+              "text": "For 1d6 minutes the GM may set off nearby ware or objects whose function resembles whatever you are currently using, causing minor confusion and usually a -10 modifier. Lenses go blurry or unnaturally sharp, limbs move on their own, lights switch themselves on or off. Cyberbrains and life-support systems are excluded."
             },
             "borrowed": {
-              "eye": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: a camera blinks and follows your gaze. It cannot reliably perform its normal function meanwhile.",
-              "hand": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: manipulators repeat your gestures. It cannot reliably perform its normal function meanwhile.",
-              "voice": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: speakers produce breathing, movement noises, word fragments or unintelligible speech. It cannot reliably perform its normal function meanwhile.",
-              "organ": "For 1d6 minutes a Mesh-connected device behaves like an external body part without being controlled: doors, pumps, ventilation or lighting pulse in bodily rhythms. It cannot reliably perform its normal function meanwhile."
+              "eye": "For 1d6 minutes the devices around you replace your own sight: instead of seeing normally, you see through the room's cameras. The GM may call for harder Perceive tests to reflect the unfamiliar viewpoint. The borrowed function is not recorded over the normal Mesh, but other means and other observers can still perceive it.",
+              "hand": "For 1d6 minutes the devices around you replace your own hands: instead of handling things yourself, you grip and move through the room's manipulators. The GM may call for harder tests for any fine manipulation. The borrowed function is not recorded over the normal Mesh, but other means and other observers can still perceive it.",
+              "voice": "For 1d6 minutes the devices around you replace your own voice: instead of speaking normally, you talk through the room's speakers. Anyone present to hear it may get a check to realize something is wrong. The borrowed function is not recorded over the normal Mesh, but other means and other observers can still perceive it.",
+              "organ": "For 1d6 minutes your morph keeps all of its own functions - instead, its state echoes out into the environment. Your thoughts surface in nearby chat windows, your vital signs are displayed as belonging to someone else, doors, pumps, ventilation or lighting pulse in your bodily rhythms. Anyone present to notice these effects may get a check to realize something is wrong. The echo is not recorded over the normal Mesh, but other means and other observers can still perceive it."
             },
             "gathering": {
-              "procession": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they follow you. They do not deliberately attack.",
-              "encirclement": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they surround you and block paths. They do not deliberately attack.",
-              "docking": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they try to connect physically to your morph. They do not deliberately attack.",
-              "nest": "For 1d6 minutes mobile or movable devices try to form a collective structure around you: they gather at one location and work reachable objects into an improvised structure. They do not deliberately attack."
+              "procession": "For 1d6 minutes mobile and movable devices peel away from their tasks and trail after you in a ragged line. They do not deliberately attack, but they mark your path: anyone tracking you gains a bonus at the GM's discretion.",
+              "encirclement": "For 1d6 minutes mobile and movable devices crowd in around you and block the way wherever you turn. They do not deliberately attack, but you move badly and keep stumbling over them for the full 1d6 minutes.",
+              "nest": "For 1d6 minutes mobile and movable devices heap themselves onto you and work every reachable object into an improvised structure. They do not deliberately attack, but the pile blocks your sightlines: you count as distracted, -20 to everything, or at the very least suffer badly degraded visibility."
             },
-            "incarnation": {
-              "chorus": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: speakers, displays and Mesh outputs communicate together. The GM controls its behaviour, and you gain no command over it.",
-              "body": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: bots, manipulators and doors move like parts of one organism. The GM controls its behaviour, and you gain no command over it.",
-              "nervousSystem": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: sensors, lights and radios form a responsive perceptual network. The GM controls its behaviour, and you gain no command over it.",
-              "effigy": "Once within the next 24 hours the GM may awaken several local Mesh-connected devices as a single presence for 1d6 minutes: movable machines arrange themselves into a crude bodily form. The GM controls its behaviour, and you gain no command over it."
+            "avatar": {
+              "text": "Once within the next 24 hours the GM may wake several local Mesh-connected devices as a single presence for 1d6 minutes, drawing on all or part of this list to build something that feels alien: speakers, displays and Mesh outputs communicating together; bots, manipulators and doors moving like parts of one organism; sensors, lights and radios forming a responsive perceptual network. The sensors involved do not feed into the affected devices' normal outputs, which show a Mesh interference signature for the duration instead. The GM controls the presence's behaviour, and you gain no command over it."
             }
           }
         }

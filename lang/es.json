@@ -746,7 +746,7 @@
       "noWare": "No hay Equipamiento instalado",
       "noArmor": "No hay Armadura instalada"
     },
-    "ki": {
+"ki": {
       "strain": {
         "none": "-Seleccionar-",
         "crucible": "El Crisol",
@@ -759,11 +759,11 @@
         "cognitiveFeedback": "Retroalimentación Cognitiva:",
         "takeStrain": "Recibe VS 1d6",
         "crucible": {
-          "integration": {
-            "label": "Integración Descontrolada:",
-            "equipment": "Equipo",
-            "armor": "Armadura",
-            "weapon": "Arma"
+          "preoccupation": {
+            "label": "Motivación:",
+            "enhance": "Mejorar el Espacio Real",
+            "recycle": "Reciclar",
+            "research": "Investigación y Desarrollo"
           },
           "reconfiguration": {
             "label": "Reconfiguración Compulsiva:",
@@ -771,19 +771,19 @@
             "shutdown": "Apagado Total",
             "rearranged": "Reordenación Improvisada"
           },
-          "overcorrection": {
-            "label": "Sobrecorrección:",
-            "plating": "Blindaje Reforzado",
-            "sensing": "Percepción Agudizada",
-            "limbs": "Extremidades Remodeladas"
+          "recalibration": {
+            "label": "Recalibración:",
+            "weapon": "Arma",
+            "armor": "Armadura",
+            "accessory": "Accesorio"
           },
           "motivation": {
             "label": "Motivación:",
             "text": "Eliminar la imperfección"
           },
           "revision": {
-            "label": "Revisión Persistente:",
-            "text": "El DJ define una alteración persistente"
+            "label": "Manifestación:",
+            "text": "Mejora Inquietante"
           }
         },
         "redline": {
@@ -799,50 +799,50 @@
             "testTheLimits": "Poner a prueba los límites",
             "redTape": "Papeleo"
           },
-          "experimental": {
-            "label": "Ejecución Experimental:",
-            "text": "El DJ elige un modo de funcionamiento"
+          "calibration": {
+            "label": "Calibración Experimental:",
+            "efficiency": "Eficiencia",
+            "experimental": "Experimental",
+            "pushTheLimit": "Forzar el límite"
           },
           "rerouting": {
             "label": "Redireccionamiento:",
-            "crossCategory": "Impulso Entre Categorías",
-            "categorySupport": "Apoyo de Categoría",
-            "broadShift": "Desplazamiento Amplio"
+            "boost": "Impulso",
+            "support": "Apoyo",
+            "switch": "Cambio"
           },
-          "overclock": {
-            "label": "Sobreaceleración:",
-            "text": "El DJ puede subir un resultado un grado"
+          "pushing": {
+            "label": "Cruzar la Línea:",
+            "overclocking": "Sobreaceleración",
+            "dampening": "Amortiguación",
+            "switching": "Conmutación"
           }
         },
         "signal": {
           "carrier": {
             "label": "Portadora Abierta:",
             "location": "Ubicación Exacta",
-            "meshId": "ID de Malla Pública",
             "diagnostics": "Diagnóstico Técnico",
             "sensorFeed": "Extractos de Sensores"
           },
           "saturation": {
             "label": "Saturación del Receptor:",
-            "arOverlays": "Superposiciones RA",
-            "crosstalk": "Diafonía de Audio",
-            "hapticAlerts": "Alertas Hápticas Falsas",
-            "sensorNoise": "Ruido de Sensores"
+            "text": "Ruido de Sensores"
           },
           "interference": {
             "label": "Patrón de Interferencia:",
-            "text": "Un campo de interferencia local bloquea un espectro elegido"
+            "whiteNoise": "Ruido Blanco",
+            "signalBoost": "Amplificación de Señal"
           },
           "dependency": {
             "label": "Dependencia de Portadora:",
-            "meshConnection": "Conexión a la Malla",
-            "positioning": "Señal de Posicionamiento",
-            "tacticalNetwork": "Enlace de Red Táctica",
-            "devicePing": "Ping de Dispositivo"
+            "tacticalNetwork": "Red Táctica",
+            "ping": "Ping",
+            "experimentalApi": "API Experimental"
           },
           "beacon": {
-            "label": "Baliza:",
-            "text": "El DJ puede provocar una transmisión descontrolada"
+            "label": "Manifestación:",
+            "text": "Interferencia Anómala"
           }
         },
         "ruin": {
@@ -850,50 +850,39 @@
             "label": "Fatiga de Materiales:",
             "brittleArmor": "Blindaje Quebradizo",
             "fatiguedActuators": "Actuadores Fatigados",
-            "leakingConstruction": "Estructura con Fugas",
-            "thermalCracks": "Grietas Térmicas"
+            "leakingConstruction": "Estructura con Fugas"
           },
           "seized": {
             "label": "Función Bloqueada:",
-            "limb": "Una Extremidad",
+            "ware": "Una Pieza de Implante",
             "sense": "Un Sentido",
-            "movement": "Un Modo de Movimiento",
-            "mounts": "Soportes de Herramientas y Armas"
+            "movement": "Un Modo de Movimiento"
           },
           "intermittent": {
             "label": "Fallo Intermitente:",
-            "wareFailure": "Fallo de Implante",
+            "malfunction": "Fallo de Subsistema",
             "sensorDecay": "Degradación de Sensores",
-            "powerSag": "Caída de Energía"
+            "heuristicErrors": "Errores Heurísticos"
           },
           "shedding": {
             "label": "Desprendimiento:",
-            "armorPlate": "Placa de Blindaje",
-            "wareComponent": "Componente de Implante",
-            "supply": "Suministro Externo"
+            "wareComponent": "Entrañas",
+            "armorPlate": "Escamas"
           },
-          "collapse": {
-            "label": "Colapso Falso:",
-            "mobility": "Colapso de Movilidad",
-            "sensory": "Colapso Sensorial",
-            "structural": "Colapso Estructural",
-            "systemic": "Colapso Sistémico"
+          "breakdown": {
+            "label": "Manifestación:",
+            "text": "Avería"
           }
         },
         "colony": {
           "witnesses": {
             "label": "Los Testigos:",
             "eyes": "Ojos",
-            "faces": "Rostros",
-            "attention": "Atención",
-            "recognition": "Reconocimiento"
+            "attention": "Atención"
           },
           "sympathetic": {
-            "label": "Implantes Simpáticos:",
-            "activation": "Activación",
-            "inhibition": "Inhibición",
-            "mimicry": "Mimetismo",
-            "feedback": "Retroalimentación Simpática"
+            "label": "Retroalimentación Simpática:",
+            "text": "Mimetismo"
           },
           "borrowed": {
             "label": "Cuerpo Prestado:",
@@ -906,15 +895,11 @@
             "label": "Congregación:",
             "procession": "Procesión",
             "encirclement": "Cerco",
-            "docking": "Acoplamiento",
             "nest": "Nido"
           },
-          "incarnation": {
-            "label": "Encarnación:",
-            "chorus": "Coro",
-            "body": "Cuerpo",
-            "nervousSystem": "Sistema Nervioso",
-            "effigy": "Efigie"
+          "avatar": {
+            "label": "Manifestación:",
+            "text": "Avatar"
           }
         }
       }
@@ -1874,141 +1859,126 @@
           }
         }
       },
-      "ki": {
+"ki": {
         "effect": {
           "takeStrain": "La infección Ki repercute a través del cibercerebro. Recibe VS 1d6.",
           "crucible": {
-            "integration": {
-              "equipment": "El morfo integra una pieza de equipo que estés tocando; si no tocas nada apropiado, se elige al azar un objeto que lleves encima. Por debajo de II 66 solo funciona con un 1-2 en 1d6 cuando lo necesitas; a II 66+ queda bloqueado por completo. El morfo lo libera cuando termina la manifestación.",
-              "armor": "El morfo integra una pieza de armadura que estés tocando; si no tocas nada apropiado, se elige al azar un objeto que lleves encima. Por debajo de II 66 solo funciona con un 1-2 en 1d6 cuando lo necesitas; a II 66+ queda bloqueado por completo. El morfo lo libera cuando termina la manifestación.",
-              "weapon": "El morfo integra un arma que estés tocando; si no tocas nada apropiado, se elige al azar un objeto que lleves encima. Por debajo de II 66 solo funciona con un 1-2 en 1d6 cuando lo necesitas; a II 66+ queda bloqueado por completo. El morfo lo libera cuando termina la manifestación."
+            "preoccupation": {
+              "enhance": "Te obsesionas con un objeto que percibes como inservible o necesitado de mejoras; no tiene por qué ser tuyo, y el DJ decide cuál es. Tienes que intentar mejorarlo con una prueba prolongada de Hardware.",
+              "recycle": "Te obsesionas con un objeto que percibes como inservible o necesitado de mejoras; no tiene por qué ser tuyo, y el DJ decide cuál es. Quieres desmontarlo en sus componentes y darles otro uso.",
+              "research": "Te obsesionas con un objeto que percibes como inservible o necesitado de mejoras; no tiene por qué ser tuyo, y el DJ decide cuál es. Quieres desarmarlo lo suficiente como para obtener un plano a partir de él."
             },
             "reconfiguration": {
-              "forced": "Un sistema de implantes instalado se activa y permanece encendido de forma continua. El cibercerebro nunca puede elegirse.",
-              "shutdown": "Un sistema de implantes instalado queda completamente desactivado. El cibercerebro nunca puede elegirse.",
-              "rearranged": "El morfo reorganiza componentes existentes en una función de implante aleatoria y desactiva a cambio al menos otro sistema de implantes. El cibercerebro nunca puede elegirse."
+              "forced": "Un sistema de implantes instalado, elegido por el DJ, se activa y permanece encendido de forma continua. El cibercerebro nunca puede elegirse.",
+              "shutdown": "Un sistema de implantes instalado, elegido por el DJ, queda completamente desactivado. El cibercerebro nunca puede elegirse.",
+              "rearranged": "El morfo reorganiza componentes existentes en una función de implante aleatoria elegida por el DJ y desactiva a cambio al menos otro sistema de implantes. El cibercerebro nunca puede elegirse."
             },
-            "overcorrection": {
-              "plating": "Blindaje reforzado a costa de la movilidad. Una aplicación física concreta gana +10 y otra sufre -20. Duración: 12 horas.",
-              "sensing": "Percepción más aguda que sobrecarga tus demás sentidos. Una aplicación física concreta gana +10 y otra sufre -20. Duración: 12 horas.",
-              "limbs": "Extremidades adicionales o remodeladas, más especializadas pero peor coordinadas. Una aplicación física concreta gana +10 y otra sufre -20. Duración: 12 horas."
+            "recalibration": {
+              "weapon": "La infección convierte una de tus posesiones en otra arma, elegida por el DJ. El recambio tiene masa y tamaño similares y cumple una función parecida. No revierte automáticamente a su forma original.",
+              "armor": "La infección convierte una de tus posesiones en otra pieza de armadura, elegida por el DJ. El recambio tiene aproximadamente las mismas estadísticas combinadas (+/- 20 %) y cumple una función parecida. No revierte automáticamente a su forma original.",
+              "accessory": "La infección convierte una de tus posesiones en otro accesorio, elegido por el DJ. El recambio tiene masa y tamaño similares y cumple una función parecida. No revierte automáticamente a su forma original."
             },
             "motivation": {
-              "text": "Durante las próximas 24 horas debes aprovechar cualquier oportunidad real de mejorar significativamente tu propio morfo. Las reparaciones y los cambios cosméticos no bastan: el cambio debe eliminar algo que percibas sinceramente como una debilidad importante."
+              "text": "La próxima vez que, dentro de las próximas 12 horas, tengas la oportunidad de mejorar tu propio cuerpo, debes aprovecharla, o bien luchar contra tu instinto de convertirte en algo mejor."
             },
             "revision": {
-              "text": "El DJ define una alteración física persistente. Puede ser limitante, perturbadora o de utilidad ambigua, pero no debería volverte injugable. Un taller o un tanque de curación con el plano adecuado del morfo la elimina, y con Crisálida Mecánica puedes empezar a revertirla tras 12 horas sin plano."
+              "text": "El DJ define una alteración física persistente. Puede ser limitante, perturbadora o de utilidad ambigua, y su gravedad y dramatismo deberían ajustarse a la situación en la que se produce el efecto. La alteración no puede revocarse durante la próxima 1 hora. Después, un taller o un tanque de curación con el plano adecuado del morfo la elimina."
             }
           },
           "redline": {
             "governor": {
-              "limited": "El morfo solo puede usar su tasa de movimiento más baja.",
-              "overridden": "Siempre que el morfo se mueva, debe usar al menos su tasa de movimiento más alta.",
-              "runaway": "El morfo debe recorrer su máxima distancia posible en cada turno de acción. Fuera del combate no puede quedarse quieto voluntariamente."
+              "limited": "En combate: el morfo solo puede usar su tasa de movimiento más baja. Fuera de combate: el morfo se mueve y actúa deliberadamente despacio, como si intentara protegerse del desgaste. Duración: 1d6 minutos.",
+              "overridden": "En combate: siempre que el morfo se mueva, debe usar al menos su tasa de movimiento más alta. Fuera de combate: el morfo se mueve deliberadamente rápido y actúa con prisa temeraria, como si intentara ahorrar tiempo. Duración: 1d6 minutos.",
+              "runaway": "En combate: el morfo debe recorrer siempre su máxima distancia posible en cada turno de acción. Fuera de combate: el morfo no puede quedarse quieto, como si detenerse y volver a arrancar fuera una imperfección que provoca más desgaste y hay que evitar a toda costa. Duración: 1d6 minutos."
             },
             "compulsion": {
-              "overdoIt": "Gana la motivación Exagéralo durante 12 horas: realizas cada tarea con una minuciosidad excesiva.",
-              "testTheLimits": "Gana la motivación Poner a prueba los límites durante 12 horas: siempre llegas más lejos de lo que la situación exige.",
-              "redTape": "Gana la motivación Papeleo durante 12 horas: actúas de forma llamativamente lenta y cautelosa, y a veces dejas el trabajo sin terminar por miedo a causar daños o a saltarte un límite de seguridad."
+              "overdoIt": "Gana la motivación Exagéralo durante 12 horas: realizas cada tarea con una minuciosidad excesiva. No dejas de repasar una tarea e intentar mejorarla, aunque esté evidentemente terminada. Puedes intentar una prueba de WIL para librarte de esta compulsión.",
+              "testTheLimits": "Gana la motivación Poner a prueba los límites durante 12 horas: siempre llegas más lejos de lo que la situación exige. Incluso se te ocurren oportunidades adicionales para mejorar la tarea en curso, y acosas a quienes te rodean con ideas sobre cómo continuar un trabajo ya terminado. Puedes intentar una prueba de WIL para librarte de esta compulsión.",
+              "redTape": "Gana la motivación Papeleo durante 12 horas: actúas de forma llamativamente lenta y cautelosa, y a veces dejas el trabajo sin terminar por miedo a causar daños o a saltarte un límite de seguridad. Puedes intentar una prueba de WIL para librarte de esta compulsión."
             },
-            "experimental": {
-              "text": "Una vez en las próximas 12 horas, tras declarar una acción, el DJ elige un modo de funcionamiento. Eficiencia: +10, pero la tarea tarda el doble o un oponente gana +10 en una prueba enfrentada. Experimental: -10, pero un efecto exitoso se duplica cuando tenga sentido. Forzar el límite: +10, y a II 66+ el morfo sufre después VD 1d6."
+            "calibration": {
+              "efficiency": "Una vez en las próximas 12 horas, tras declarar una acción, el DJ puede decidir hacer funcionar el morfo en modo Eficiencia: +10, pero la tarea tarda el doble o un oponente gana +10 en una prueba enfrentada.",
+              "experimental": "Una vez en las próximas 12 horas, tras declarar una acción, el DJ puede decidir hacer funcionar el morfo en modo Experimental: -10, pero un efecto exitoso se duplica cuando tenga sentido.",
+              "pushTheLimit": "Una vez en las próximas 12 horas, tras declarar una acción, el DJ puede decidir llevar el morfo más allá de su límite: +10, y el morfo sufre después VD 1d6."
             },
             "rerouting": {
-              "crossCategory": "-30 a una habilidad de una categoría de reserva compra +30 a una habilidad de otra categoría. Duración: 12 horas.",
-              "categorySupport": "-30 a una habilidad compra +10 a todas las demás habilidades de la misma categoría. Duración: 12 horas.",
-              "broadShift": "-10 a todas las habilidades de una categoría compra +10 a todas las habilidades de otra. Duración: 12 horas."
+              "boost": "-30 a una habilidad de una categoría de reserva, elegida por el DJ, compra +30 a una habilidad de otra categoría, también elegida por el DJ. Duración: 1d6 minutos.",
+              "support": "-30 a una habilidad elegida por el DJ compra +10 a todas las demás habilidades de la misma categoría. Duración: 1d6 minutos.",
+              "switch": "-10 a todas las habilidades de una categoría elegida por el DJ compra +10 a todas las habilidades de otra, también elegida por el DJ. Duración: 1d6 minutos."
             },
-            "overclock": {
-              "text": "Una vez en las próximas 24 horas, tras tirar una prueba, el DJ puede aumentar su magnitud un grado: un éxito pasa a éxito superior, un éxito superior a éxito crítico, un fallo a fallo superior y un fallo superior a fallo crítico. La dirección del resultado original nunca se invierte."
+            "pushing": {
+              "overclocking": "Una vez en las próximas 24 horas, tras tirar una prueba, el DJ puede subir su resultado un grado - por ejemplo, convirtiendo un éxito simple en un éxito superior. La dirección del resultado original nunca se invierte. Estos efectos tienden a producirse en el peor momento posible. Nunca pueden producirse si al hacerlo pusieran en riesgo la integridad física o mental de la propia usuaria de Ki.",
+              "dampening": "Una vez en las próximas 24 horas, tras tirar una prueba, el DJ puede bajar su resultado un grado - por ejemplo, convirtiendo un éxito superior en un éxito simple. La dirección del resultado original nunca se invierte. Estos efectos tienden a producirse en el peor momento posible. Nunca pueden producirse si al hacerlo pusieran en riesgo la integridad física o mental de la propia usuaria de Ki.",
+              "switching": "Una vez en las próximas 24 horas el DJ puede invertir las dos cifras de una tirada que ya se ha detenido - el mismo efecto que normalmente compra un punto de reserva, por ejemplo convirtiendo un 71 en un 17 - salvo que aquí el DJ lo aplica directamente a este resultado sin que te cueste un punto de reserva. Estos efectos tienden a producirse en el peor momento posible. Nunca pueden producirse si al hacerlo pusieran en riesgo la integridad física o mental de la propia usuaria de Ki."
             }
           },
           "signal": {
             "carrier": {
-              "location": "Durante 12 horas el morfo no puede guardar silencio absoluto. Emite involuntariamente tu ubicación exacta.",
-              "meshId": "Durante 12 horas el morfo no puede guardar silencio absoluto. Emite involuntariamente tu ID de malla pública.",
-              "diagnostics": "Durante 12 horas el morfo no puede guardar silencio absoluto. Emite involuntariamente sus datos de diagnóstico técnico.",
-              "sensorFeed": "Durante 12 horas el morfo no puede guardar silencio absoluto. Emite involuntariamente extractos de un flujo de sensores activo."
+              "location": "Durante los próximos 1d6 minutos el morfo no puede guardar silencio absoluto. Emite involuntariamente tu ubicación exacta.",
+              "diagnostics": "Durante los próximos 1d6 minutos el morfo no puede guardar silencio absoluto. Emite involuntariamente sus datos de diagnóstico técnico.",
+              "sensorFeed": "Durante los próximos 1d6 minutos el morfo no puede guardar silencio absoluto. Emite involuntariamente extractos de un flujo de sensores activo."
             },
             "saturation": {
-              "arOverlays": "Las señales entrantes se cuelan en tu superposición de RA. Las acciones de Percibir y de Malla afectadas sufren -20 durante 1d6 minutos.",
-              "crosstalk": "Audio ajeno se filtra en tu oído. Las acciones de Percibir y de Malla afectadas sufren -20 durante 1d6 minutos.",
-              "hapticAlerts": "Alertas hápticas fantasma se disparan sin motivo. Las acciones de Percibir y de Malla afectadas sufren -20 durante 1d6 minutos.",
-              "sensorNoise": "La entrada de sensores se ahoga en ruido. Las acciones de Percibir y de Malla afectadas sufren -20 durante 1d6 minutos."
+              "text": "Las señales entrantes se cuelan en tus sentidos e interfaces sin motivo. Las pruebas de Interfaz y Percibir afectadas sufren -20 durante 1d6 minutos."
             },
             "interference": {
-              "text": "Durante 1d6 minutos el morfo emite un campo local de interferencia electromagnética contra un espectro o clase de dispositivo elegidos. Los enlaces inalámbricos afectados en la zona inmediata sufren -30, incluidos los tuyos y los de tus aliados."
+              "whiteNoise": "Durante 1d6 minutos el morfo inunda su entorno de ruido electromagnético. Los enlaces inalámbricos afectados en la zona inmediata sufren -30, incluidos los tuyos y los de tus aliados.",
+              "signalBoost": "Durante 1d6 minutos el morfo amplifica en cambio el entorno electromagnético local. Cualquier señal de las inmediaciones, incluidas las tuyas, resulta más fácil de detectar y triangular: +30 para localizarlas."
             },
             "dependency": {
-              "meshConnection": "Durante 12 horas un sistema de implantes o una función física solo opera mientras se mantenga una conexión a la Malla. Si la señal se interrumpe, la función vinculada deja de funcionar. El cibercerebro queda excluido.",
-              "positioning": "Durante 12 horas un sistema de implantes o una función física solo opera mientras se mantenga una señal de posicionamiento. Si la señal se interrumpe, la función vinculada deja de funcionar. El cibercerebro queda excluido.",
-              "tacticalNetwork": "Durante 12 horas un sistema de implantes o una función física solo opera mientras se mantenga un enlace activo a la red táctica. Si la señal se interrumpe, la función vinculada deja de funcionar. El cibercerebro queda excluido.",
-              "devicePing": "Durante 12 horas un sistema de implantes o una función física solo opera mientras se mantenga un ping regular de otro dispositivo. Si la señal se interrumpe, la función vinculada deja de funcionar. El cibercerebro queda excluido."
+              "tacticalNetwork": "Durante 12 horas tienes que permanecer junto a cada miembro de tu grupo actual. Si las señales se separan demasiado, la red se desmorona y sufres -20 a todas las acciones hasta que el grupo vuelva a cerrar filas o se agoten las 12 horas.",
+              "ping": "Durante 12 horas tienes que ejecutar un Ping - un escaneo de Malla - antes de actuar en un entorno nuevo, siempre que haya gente nueva presente o cambie el número de participantes. Actuar sin él te cuesta -20 a todas las acciones.",
+              "experimentalApi": "Durante 12 horas no puedes mantener ningún cifrado pasivo. Mientras lo mantengas, sufres -20 a todas las acciones."
             },
             "beacon": {
-              "text": "Una vez en las próximas 24 horas el DJ puede provocar una transmisión descontrolada de alta potencia. Durante 1d6 minutos el morfo es fácil de localizar, no puede guardar silencio e interfiere con las comunicaciones inalámbricas cercanas. La transmisión contiene un patrón de datos desconocido, pero no transmite la infección."
+              "text": "Una vez en las próximas 24 horas el DJ puede provocar una transmisión descontrolada de alta potencia. Durante 1d6 minutos el morfo es fácil de localizar y no puede guardar silencio, y se cuela discretamente en las conexiones cercanas ya existentes sin conceder en realidad ningún acceso auténtico ni al usuario afectado ni a la infección. La transmisión contiene un patrón de datos desconocido, como coordenadas, estructuras Exurgentes o fragmentos de telemetría alienígena, pero no transmite la infección."
             }
           },
           "ruin": {
             "fatigue": {
-              "brittleArmor": "El blindaje del morfo se agrieta y se descascarilla: -2/-2 VB durante 12 horas. A II 66+ la penalización numérica se duplica.",
-              "fatiguedActuators": "-10 a las pruebas basadas en SOM durante 12 horas. A II 66+ la penalización numérica se duplica.",
-              "leakingConstruction": "Una resistencia ambiental existente deja de funcionar durante 12 horas.",
-              "thermalCracks": "-10 a las pruebas bajo calor o frío extremos durante 12 horas. A II 66+ la penalización numérica se duplica."
+              "brittleArmor": "El blindaje de chasis del morfo se vuelve quebradizo y se descascarilla: -4/-4 a su blindaje de chasis durante 1d6 minutos.",
+              "fatiguedActuators": "-30 a todas las pruebas basadas en SOM durante 1d6 minutos.",
+              "leakingConstruction": "Una resistencia ambiental existente deja de funcionar durante 1d6 minutos."
             },
             "seized": {
-              "limb": "Una extremidad queda completamente bloqueado durante 1d6 minutos. Si el sistema es par, solo falla un lado.",
-              "sense": "Un sentido queda completamente bloqueado durante 1d6 minutos. Si el sistema es par, solo falla un lado.",
-              "movement": "Un modo de movimiento queda completamente bloqueado durante 1d6 minutos. Si el sistema es par, solo falla un lado.",
-              "mounts": "Los soportes integrados de herramientas y armas queda completamente bloqueado durante 1d6 minutos. Si el sistema es par, solo falla un lado."
+              "ware": "Los implantes instalados en el morfo infectado empiezan a comportarse mal; los cortes son habituales. Una pieza de implante, elegida por el DJ, queda completamente bloqueada durante 1d6 minutos.",
+              "sense": "La percepción se corta a mitad de frase, como si alguien hubiera desenchufado un canal sin más. Un sentido, elegido por el DJ, queda completamente bloqueado durante 1d6 minutos.",
+              "movement": "Transmisiones y actuadores se traban en pleno movimiento y dejan de responder. Un modo de movimiento, elegido por el DJ, queda completamente bloqueado durante 1d6 minutos."
             },
             "intermittent": {
-              "wareFailure": "Durante 12 horas un sistema de implantes solo funciona con un 1-2 en 1d6 al usarlo. El cibercerebro queda excluido.",
-              "sensorDecay": "Durante 12 horas un sentido produce datos dañados y las pruebas afectadas sufren -20.",
-              "powerSag": "Durante 12 horas, tras usar un sistema de alto consumo el morfo debe abstenerse de usar otra función de alto consumo hasta su siguiente acción."
+              "malfunction": "Los subsistemas que cargan con el peso responden con más desgana cada vez que se les exige. Durante 12 horas el DJ puede pedir una prueba siempre que una pieza concreta de implante se use con especial dureza. Qué pieza de implante se ve afectada lo decide el DJ en el momento en que el efecto se dispara por primera vez.",
+              "sensorDecay": "Las lecturas de los sensores del morfo derivan y se emborronan hasta que nada se lee con claridad. Todas las pruebas de Percibir sufren -20 durante 1d6 horas.",
+              "heuristicErrors": "El reconocimiento de patrones del morfo se degrada y lee mal tanto a las máquinas como a las personas. Las pruebas de Interface y Kinesics sufren -20 durante 1d6 horas."
             },
             "shedding": {
-              "armorPlate": "El morfo se desprende de una placa de blindaje: -2/-2 VB. Puede recuperarse, pero no puede reintegrarse ni usarse durante 12 horas.",
-              "wareComponent": "El morfo expulsa un sistema de implantes como componente intacto. Puede recuperarse, pero no puede reintegrarse ni usarse durante 12 horas.",
-              "supply": "El morfo desecha un suministro externo como munición, refrigerante o una reserva de energía. Puede recuperarse, pero no puede usarse durante 12 horas."
+              "wareComponent": "Una pieza de implante se descompone visiblemente y se marchita mientras permanece unida al morfo. No puede repararse durante 1d3 horas; pasado ese tiempo se recupera y vuelve a funcionar por sí sola, pero sigue teniendo un aspecto visiblemente dañado hasta que recibe una reparación real que oculte el daño a la vista.",
+              "armorPlate": "Una placa del blindaje de chasis del morfo se descompone visiblemente y se descascarilla mientras permanece unida, y no ofrece ninguna protección mientras se mantenga en este estado quebradizo. No puede repararse durante 1d3 horas; pasado ese tiempo se recupera y vuelve a funcionar por sí sola, pero sigue teniendo un aspecto visiblemente dañado hasta que recibe una reparación real que oculte el daño a la vista."
             },
-            "collapse": {
-              "mobility": "Una vez en las próximas 24 horas el DJ puede provocar un colapso de 1d6 minutos: fallan un modo de movimiento y una extremidad. El morfo se corroe, agrieta o descompone visiblemente y después se restaura.",
-              "sensory": "Una vez en las próximas 24 horas el DJ puede provocar un colapso de 1d6 minutos: fallan dos sentidos. El morfo se corroe, agrieta o descompone visiblemente y después se restaura.",
-              "structural": "Una vez en las próximas 24 horas el DJ puede provocar un colapso de 1d6 minutos: el VB actual se reduce a la mitad. El morfo se corroe, agrieta o descompone visiblemente y después se restaura.",
-              "systemic": "Una vez en las próximas 24 horas el DJ puede provocar un colapso de 1d6 minutos: fallan dos sistemas de implantes. El morfo se corroe, agrieta o descompone visiblemente y después se restaura."
+            "breakdown": {
+              "text": "Una vez en las próximas 24 horas el DJ puede provocar una avería sistémica en un momento adecuado. La avería puede afectar como mucho a dos sistemas - por ejemplo un sentido y una pieza de implante, o dos sentidos - y se mantiene 1d6 minutos antes de que el cuerpo empiece a recuperarse. Según la situación, el efecto puede seguir siendo visible después si no se repara como es debido, pero la usuaria de Ki se recupera por completo del episodio."
             }
           },
           "colony": {
             "witnesses": {
-              "eyes": "En algún momento de las próximas 12 horas, los dispositivos cercanos despiertan como observadores silenciosos durante 1d6 minutos: las cámaras y los sensores se vuelven hacia ti. Esto no concede acceso a sus datos.",
-              "faces": "En algún momento de las próximas 12 horas, los dispositivos cercanos despiertan como observadores silenciosos durante 1d6 minutos: las pantallas y las luces de estado forman patrones de ojos o rostros. Esto no concede acceso a sus datos.",
-              "attention": "En algún momento de las próximas 12 horas, los dispositivos cercanos despiertan como observadores silenciosos durante 1d6 minutos: las herramientas, los soportes de armas y los dispositivos móviles se orientan hacia ti. Esto no concede acceso a sus datos.",
-              "recognition": "En algún momento de las próximas 12 horas, los dispositivos cercanos despiertan como observadores silenciosos durante 1d6 minutos: los dispositivos locales te marcan con símbolos idénticos o identificadores desconocidos. Esto no concede acceso a sus datos."
+              "eyes": "Los dispositivos con sensores cercanos giran hacia ti de golpe: cámaras, escáneres, cualquier lente a distancia. El efecto atraviesa muros y obstáculos y se dispara incluso donde nada podría verte realmente. Es instantáneo y pasa en cuanto se ha atraído la atención una sola vez. Lo que no estuviera ya a distancia - unos pocos metros como mucho, a discreción del DJ - no se ve afectado si llega después. Todo lo que estuviera grabando puede usarse después en tu contra.",
+              "attention": "Los drones y synthmorfos cercanos se vuelven hacia ti. Si un synth está pilotado por un ego, ese ego mira involuntariamente en tu dirección; si estás escondido, necesitas una prueba adecuada para que no te descubran, y los egos afectados nunca saben por qué han mirado. El efecto atraviesa muros y obstáculos y se dispara incluso donde nada podría verte realmente. Es instantáneo y pasa en cuanto se ha atraído la atención una sola vez. Lo que no estuviera ya a distancia - unos pocos metros como mucho, a discreción del DJ - no se ve afectado si llega después."
             },
             "sympathetic": {
-              "activation": "Durante 1d6 minutos los implantes de un personaje cercano cobran vida propia: se activan en momentos inoportunos. Los cibercerebros y los sistemas de soporte vital quedan excluidos.",
-              "inhibition": "Durante 1d6 minutos los implantes de un personaje cercano cobran vida propia: se niegan a funcionar. Los cibercerebros y los sistemas de soporte vital quedan excluidos.",
-              "mimicry": "Durante 1d6 minutos los implantes de un personaje cercano cobran vida propia: responden a tus movimientos en lugar de a los de su usuario. Los cibercerebros y los sistemas de soporte vital quedan excluidos.",
-              "feedback": "Durante 1d6 minutos los implantes de un personaje cercano cobran vida propia: al usar tú una función comparable, producen una respuesta física equivalente. Los cibercerebros y los sistemas de soporte vital quedan excluidos."
+              "text": "Durante 1d6 minutos el DJ puede disparar implantes u objetos cercanos cuya función se parezca a la que tú estés usando en ese momento, provocando una confusión menor y normalmente un modificador de -10. Las lentes se vuelven borrosas o antinaturalmente nítidas, las extremidades se mueven solas, las luces se encienden o se apagan. Los cibercerebros y los sistemas de soporte vital quedan excluidos."
             },
             "borrowed": {
-              "eye": "Durante 1d6 minutos un dispositivo conectado a la Malla se comporta como una parte externa de tu cuerpo sin quedar bajo control: una cámara parpadea y sigue tu mirada. Mientras tanto no puede cumplir de forma fiable su función normal.",
-              "hand": "Durante 1d6 minutos un dispositivo conectado a la Malla se comporta como una parte externa de tu cuerpo sin quedar bajo control: unos manipuladores repiten tus gestos. Mientras tanto no puede cumplir de forma fiable su función normal.",
-              "voice": "Durante 1d6 minutos un dispositivo conectado a la Malla se comporta como una parte externa de tu cuerpo sin quedar bajo control: unos altavoces producen respiración, ruidos de movimiento, fragmentos de palabras o habla ininteligible. Mientras tanto no puede cumplir de forma fiable su función normal.",
-              "organ": "Durante 1d6 minutos un dispositivo conectado a la Malla se comporta como una parte externa de tu cuerpo sin quedar bajo control: puertas, bombas, ventilación o iluminación laten con ritmos corporales. Mientras tanto no puede cumplir de forma fiable su función normal."
+              "eye": "Durante 1d6 minutos los dispositivos que te rodean sustituyen tu propia vista: en lugar de ver con normalidad, ves a través de las cámaras de la sala. El DJ puede exigir pruebas de Percibir más difíciles para reflejar el punto de vista inusual. La función prestada no queda registrada en la Malla normal, pero otros medios y otros observadores sí pueden percibirla.",
+              "hand": "Durante 1d6 minutos los dispositivos que te rodean sustituyen tus propias manos: en lugar de manipular tú las cosas, agarras y mueves a través de los manipuladores de la sala. El DJ puede exigir pruebas más difíciles para cualquier manipulación fina. La función prestada no queda registrada en la Malla normal, pero otros medios y otros observadores sí pueden percibirla.",
+              "voice": "Durante 1d6 minutos los dispositivos que te rodean sustituyen tu propia voz: en lugar de hablar con normalidad, hablas por los altavoces de la sala. Cualquiera presente que lo oiga puede intentar una prueba para darse cuenta de que algo anda mal. La función prestada no queda registrada en la Malla normal, pero otros medios y otros observadores sí pueden percibirla.",
+              "organ": "Durante 1d6 minutos tu morfo conserva todas sus funciones; en cambio, su estado resuena hacia el entorno. Tus pensamientos afloran en ventanas de chat cercanas, tus constantes vitales se muestran como si fueran de otra persona, y puertas, bombas, ventilación o iluminación laten con tus ritmos corporales. Cualquiera presente que note estos efectos puede intentar una prueba para darse cuenta de que algo anda mal. El eco no queda registrado en la Malla normal, pero otros medios y otros observadores sí pueden percibirlo."
             },
             "gathering": {
-              "procession": "Durante 1d6 minutos los dispositivos móviles o desplazables intentan formar una estructura colectiva a tu alrededor: te siguen. No atacan deliberadamente.",
-              "encirclement": "Durante 1d6 minutos los dispositivos móviles o desplazables intentan formar una estructura colectiva a tu alrededor: te rodean y bloquean los caminos. No atacan deliberadamente.",
-              "docking": "Durante 1d6 minutos los dispositivos móviles o desplazables intentan formar una estructura colectiva a tu alrededor: intentan conectarse físicamente a tu morfo. No atacan deliberadamente.",
-              "nest": "Durante 1d6 minutos los dispositivos móviles o desplazables intentan formar una estructura colectiva a tu alrededor: se reúnen en un punto e incorporan los objetos a su alcance a una estructura improvisada. No atacan deliberadamente."
+              "procession": "Durante 1d6 minutos los dispositivos móviles o desplazables abandonan sus tareas y te siguen en una hilera desordenada. No atacan deliberadamente, pero marcan tu camino: quien te rastree gana una bonificación a discreción del DJ.",
+              "encirclement": "Durante 1d6 minutos los dispositivos móviles o desplazables se apiñan a tu alrededor y te bloquean el paso vayas donde vayas. No atacan deliberadamente, pero te mueves mal y tropiezas con ellos una y otra vez durante los 1d6 minutos completos.",
+              "nest": "Durante 1d6 minutos los dispositivos móviles o desplazables se amontonan sobre ti e incorporan todo objeto a su alcance a una estructura improvisada. No atacan deliberadamente, pero el montón te tapa las líneas de visión: cuentas como distraído, -20 a todo, o como mínimo sufres una visibilidad gravemente degradada."
             },
-            "incarnation": {
-              "chorus": "Una vez en las próximas 24 horas el DJ puede despertar varios dispositivos locales conectados a la Malla como una única presencia durante 1d6 minutos: altavoces, pantallas y salidas de Malla se comunican al unísono. El DJ controla su comportamiento y tú no obtienes ningún mando sobre ella.",
-              "body": "Una vez en las próximas 24 horas el DJ puede despertar varios dispositivos locales conectados a la Malla como una única presencia durante 1d6 minutos: bots, manipuladores y puertas se mueven como partes de un mismo organismo. El DJ controla su comportamiento y tú no obtienes ningún mando sobre ella.",
-              "nervousSystem": "Una vez en las próximas 24 horas el DJ puede despertar varios dispositivos locales conectados a la Malla como una única presencia durante 1d6 minutos: sensores, luces y radios forman una red perceptiva que reacciona. El DJ controla su comportamiento y tú no obtienes ningún mando sobre ella.",
-              "effigy": "Una vez en las próximas 24 horas el DJ puede despertar varios dispositivos locales conectados a la Malla como una única presencia durante 1d6 minutos: las máquinas desplazables se ordenan formando una tosca figura corporal. El DJ controla su comportamiento y tú no obtienes ningún mando sobre ella."
+            "avatar": {
+              "text": "Una vez en las próximas 24 horas el DJ puede despertar varios dispositivos locales conectados a la Malla como una única presencia durante 1d6 minutos, sirviéndose de toda esta lista o de parte de ella para construir algo que resulte ajeno: altavoces, pantallas y salidas de Malla que se comunican al unísono; bots, manipuladores y puertas que se mueven como partes de un mismo organismo; sensores, luces y radios que forman una red perceptiva que reacciona. Los sensores implicados no alimentan las salidas normales de los dispositivos afectados: estas muestran una firma de interferencia de Malla mientras dura. El DJ controla el comportamiento de la presencia y tú no obtienes ningún mando sobre ella."
             }
           }
         }
