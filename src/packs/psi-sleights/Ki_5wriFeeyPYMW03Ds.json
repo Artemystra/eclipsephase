@@ -1,0 +1,23 @@
+{
+  "name": "Ki",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "5wriFeeyPYMW03Ds",
+  "sort": 0,
+  "color": null,
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788476286853,
+    "modifiedTime": 1788476286853,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!folders!5wriFeeyPYMW03Ds",
+  "description": ""
+}

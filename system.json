@@ -66,7 +66,7 @@
     {
       "banner": "systems/eclipsephase/resources/img/Compendium Banners/bannerPsiSleights.webp",
       "name": "psi-sleights",
-      "label": "Psi Sleights",
+      "label": "Sleights",
       "system": "eclipsephase",
       "path": "packs/psi-sleights.db",
       "type": "Item",

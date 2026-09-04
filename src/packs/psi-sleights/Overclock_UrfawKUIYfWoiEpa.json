@@ -1,0 +1,42 @@
+{
+  "name": "Overclock",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You push the target past its safe operating limits. For WIL ÷ 5 action turns, the target receives +10 to one physical skill (your choice), +10 per superior success. When the duration ends, the target takes 1d6 DV from the strain.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 4,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "Actions Turns",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "UrfawKUIYfWoiEpa",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!UrfawKUIYfWoiEpa"
+}

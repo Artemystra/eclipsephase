@@ -378,7 +378,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
                 mentalUpdate = insanityMax
             }
 
-            actorWhole.update({"system.health.mental.value" : mentalUpdate, "system.mental.trauma" : traumaUpdate})
+            await actorWhole.update({"system.health.mental.value" : mentalUpdate, "system.mental.trauma" : traumaUpdate})
         } else {
             durUpdate += physicalDamage.total;
 
@@ -390,7 +390,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
                 durUpdate = death
             }
 
-            actorWhole.update({"system.health.physical.value" : durUpdate, "system.physical.wounds" : woundUpdate})
+            await actorWhole.update({"system.health.physical.value" : durUpdate, "system.physical.wounds" : woundUpdate})
         }
     }
 

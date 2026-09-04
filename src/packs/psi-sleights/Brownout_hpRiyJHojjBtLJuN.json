@@ -1,0 +1,42 @@
+{
+  "name": "Brownout",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You starve the target's systems of power. The target is impaired, suffering -10 to all actions, plus an extra -10 per superior success, for WIL ÷ 5 action turns.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 6,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "Actions Turns",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "hpRiyJHojjBtLJuN",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!hpRiyJHojjBtLJuN"
+}

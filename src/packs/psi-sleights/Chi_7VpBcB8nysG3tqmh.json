@@ -1,19 +1,23 @@
 {
   "name": "Chi",
   "sorting": "a",
-  "folder": null,
+  "folder": "aXf0giI8sZzhy5Nz",
   "type": "Item",
   "_id": "7VpBcB8nysG3tqmh",
-  "sort": 0,
+  "sort": 87500,
   "color": null,
   "flags": {},
   "_stats": {
     "systemId": "eclipsephase",
     "systemVersion": "1.1",
-    "coreVersion": "11.313",
+    "coreVersion": "14.360",
     "createdTime": 1713603219705,
-    "modifiedTime": 1713603750843,
-    "lastModifiedBy": "bYyHIjslCiShkdKL"
+    "modifiedTime": 1788475761395,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
   },
+  "description": "",
   "_key": "!folders!7VpBcB8nysG3tqmh"
 }

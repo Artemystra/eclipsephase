@@ -1,0 +1,42 @@
+{
+  "name": "Wake",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You give a non-sapient bot or drone within Close range a single simple impulse: one short sentence, such as \"move away from the hatch\" or \"follow that vehicle\". For WIL ÷ 5 action turns, the machine acts on that impulse as if it were its own. This is not jamming and grants no access: you cannot see through the machine, issue further commands, or read its data.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 6,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "Actions Turns",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "0rn9LXdzLJGByoTG",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!0rn9LXdzLJGByoTG"
+}

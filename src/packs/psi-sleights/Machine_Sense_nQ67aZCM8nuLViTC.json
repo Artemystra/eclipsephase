@@ -1,0 +1,42 @@
+{
+  "name": "Machine Sense",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You detect the presence and location (rough direction from yourself) of cyberbrains within Close range - synthmorphs, pods, bots, and any other body or device running one.\n\nEach cyberbrain makes an opposed test against your roll. You suffer modifiers for size, the same as for ranged attacks. Superior successes provide additional details: approximate size, exact distance, type of morph or device, etc. If the target moves during the duration (WIL ÷ 5 action turns), you will have a rough idea of their speed and bearing.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 2,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "Actions Turns",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "nQ67aZCM8nuLViTC",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!nQ67aZCM8nuLViTC"
+}

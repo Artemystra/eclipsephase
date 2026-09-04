@@ -1,0 +1,42 @@
+{
+  "name": "Null Weight",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "An object or machine you touch loses its weight while sustained - not its mass. It can be lifted and pushed no matter how heavy, but keeps its inertia: once moving it stays moving, and whoever wants to stop it has to absorb its full mass. Falling damage does not apply while the sleight lasts.\n\nThe target may be up to human-sized (Medium); each superior success allows one size category larger. You may target yourself, in which case you handle like you would in microgravity: Free Fall Tests apply and you have no propulsion of your own.\n\nOne target only, touch only, no flight and no steering - you lift it, you do not guide it.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 8,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "sustained",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788479783392,
+    "modifiedTime": 1788479783392,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "3UBPYLsbLeZcpVWM",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!3UBPYLsbLeZcpVWM"
+}
