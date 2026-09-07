@@ -1,12 +1,12 @@
 {
   "folder": "DaSyiLnSD2LzihV0",
-  "name": "Emotional Susceptibility",
+  "name": "Submissiveness II",
   "type": "traits",
   "img": "systems/eclipsephase/resources/icons/subtract.png",
   "system": {
     "tags": [],
     "additionalSystems": {},
-    "description": "–20 to resist emotional manipulation. WIL Check against intense emotions or stunned.\b ",
+    "description": "–10 per level to resist Persuade/Provoke from NPCs with superior capabilities or higher social status.\b",
     "active": true,
     "displayCategory": "",
     "updated": "",
@@ -28,11 +28,11 @@
     "modifiedTime": 1766135295410,
     "lastModifiedBy": "As9MwNgJsGddtEep"
   },
-  "_id": "BwmAtcV1MPbJoUWA",
+  "_id": "7O0Obvxd7xv9nqQf",
   "sort": 0,
   "ownership": {
     "default": 0,
     "As9MwNgJsGddtEep": 3
   },
-  "_key": "!items!BwmAtcV1MPbJoUWA"
+  "_key": "!items!7O0Obvxd7xv9nqQf"
 }

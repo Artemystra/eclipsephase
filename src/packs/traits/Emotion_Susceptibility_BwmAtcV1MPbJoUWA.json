@@ -1,27 +1,21 @@
 {
-  "name": "Iproved Beta",
+  "folder": "DaSyiLnSD2LzihV0",
+  "name": "Emotion Susceptibility",
   "type": "traits",
-  "_id": "B1dgbK7g7qC6irmu",
-  "img": "systems/eclipsephase/resources/icons/add.png",
+  "img": "systems/eclipsephase/resources/icons/subtract.png",
   "system": {
     "tags": [],
     "additionalSystems": {},
-    "description": "Choose one benefit for beta forks (see trait description).",
+    "description": "–20 to resist emotional manipulation. WIL Check against intense emotions or stunned.\b ",
     "active": true,
     "displayCategory": "",
     "updated": "",
     "statChange": null,
-    "traitType": "trait",
+    "traitType": "flaw",
     "ego": true,
     "morph": false
   },
   "effects": [],
-  "folder": "hV09BrpxHnLOea0b",
-  "sort": 3400000,
-  "ownership": {
-    "default": 0,
-    "As9MwNgJsGddtEep": 3
-  },
   "flags": {},
   "_stats": {
     "compendiumSource": null,
@@ -30,9 +24,15 @@
     "coreVersion": "13.346",
     "systemId": "eclipsephase",
     "systemVersion": "1.5",
-    "createdTime": 1766087119112,
-    "modifiedTime": 1766667572656,
+    "createdTime": 1766135295410,
+    "modifiedTime": 1766135295410,
     "lastModifiedBy": "As9MwNgJsGddtEep"
   },
-  "_key": "!items!B1dgbK7g7qC6irmu"
+  "_id": "BwmAtcV1MPbJoUWA",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!BwmAtcV1MPbJoUWA"
 }

@@ -6,7 +6,7 @@
   "img": "systems/eclipsephase/resources/icons/subtract.png",
   "system": {
     "additionalSystems": {},
-    "description": "Triggers: Alien/TITAN technology, the unknown, x-risks\n\nThis disorder arises from facing x-risks, aliens, and incomprehensibly advanced technology. It functions much like anxiety; you are helpless in the face of an uncaring and dangerous universe.\n\nEffect: Like anxiety, but when faced with an alien or TITAN\nthreat, make a WIL Check or either flee or collapse in panic.",
+    "description": "Triggers: Alien/TITAN technology, the unknown, x-risks\n\nThis disorder arises from facing x-risks, aliens, and incomprehensibly advanced technology. It functions much like anxiety; you are helpless in the face of an uncaring and dangerous universe.\n\nEffect: Like anxiety, but when faced with an alien or TITAN threat, make a WIL Check or either flee or collapse in panic.",
     "active": true,
     "displayCategory": "",
     "updated": "",

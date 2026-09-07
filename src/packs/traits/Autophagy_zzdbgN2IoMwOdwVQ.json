@@ -1,12 +1,12 @@
 {
   "folder": "13pD5C6BuZ2MCDwG",
-  "name": "Autophagie",
+  "name": "Autophagy",
   "type": "traits",
   "_id": "zzdbgN2IoMwOdwVQ",
   "img": "systems/eclipsephase/resources/icons/subtract.png",
   "system": {
     "additionalSystems": {},
-    "description": "Triggers: Alienation, injury, violence\n\nThis anxiety disorder, characterized by self-cannibalism of the limbs, usually only occurs among neo-octopi.\n\nEffect: You must make a successful WIL Check or begin to\nconsume one of your limbs.",
+    "description": "Triggers: Alienation, injury, violence\n\nThis anxiety disorder, characterized by self-cannibalism of the limbs, usually only occurs among neo-octopi.\n\nEffect: You must make a successful WIL Check or begin to consume one of your limbs.",
     "active": true,
     "displayCategory": "",
     "updated": "",
