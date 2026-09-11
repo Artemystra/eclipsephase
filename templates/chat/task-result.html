@@ -11,9 +11,9 @@
     {{/if}}
   {{/if}}
   {{#if (eq rollMode "gmroll")}}
-    <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.private"}} <i class='fas fa-eye-slash awesomeIcon'></i></h5>
+    <p class="footnote">{{localize "ep2e.roll.rollType.private"}} <i class='fas fa-eye-slash awesomeIcon'></i></p>
   {{else if (eq rollMode "blindroll")}}
-    <h5 style='font-weight: normal; margin: 0;'>{{localize "ep2e.roll.rollType.blind"}} <i class='fas fa-low-vision awesomeIcon'></i></h5>
+    <p class="footnote">{{localize "ep2e.roll.rollType.blind"}} <i class='fas fa-low-vision awesomeIcon'></i></p>
   {{/if}}
 
   {{#if options.raiseInfection}}

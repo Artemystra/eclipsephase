@@ -629,6 +629,10 @@
   margin-left: -7px;
 }
 
+.chat-message .footnote {
+  font-size: 12px;
+}
+
 .eclipsephase .items-list {
   list-style: none;
   margin: 7px 0;

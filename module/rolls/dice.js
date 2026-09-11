@@ -228,15 +228,14 @@ async function defineRoll(dataset, actorWhole){
  * Interprets the roll visibility setting and returns the appropriate roll mode 
  */
 function setRollVisibility(activeRollTarget){
-    const rollModes = CONFIG.ChatMessage?.modes ?? CONST.DICE_ROLL_MODES;
     let rollModeSelection = null
-    console.log(activeRollTarget)
+
     if (activeRollTarget === "" || activeRollTarget === "public") {
-        rollModeSelection = rollModes.PUBLIC
+        rollModeSelection = "publicroll"
     } else if (activeRollTarget === "private") {
-        rollModeSelection = rollModes.GM ?? rollModes.PRIVATE
+        rollModeSelection = "gmroll"
     } else if (activeRollTarget === "blind") {
-        rollModeSelection = rollModes.BLIND
+        rollModeSelection = "blindroll"
     }
 
     return rollModeSelection
