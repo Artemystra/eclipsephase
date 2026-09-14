@@ -101,46 +101,50 @@
       },
       "ware4": {
         "label": "4.",
-        "value": "Compendium.eclipsephase.ware.Item.ws0IespqkhNwO78T"
+        "value": "Compendium.eclipsephase.ware.Item.DsZJsZvcMBXVqqNK"
       },
       "ware5": {
         "label": "5.",
-        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+        "value": "Compendium.eclipsephase.ware.Item.ws0IespqkhNwO78T"
       },
       "ware6": {
         "label": "6.",
-        "value": "Compendium.eclipsephase.ware.Item.jhO6F03fXymKwxIU"
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware7": {
         "label": "7.",
-        "value": "Compendium.eclipsephase.ware.Item.q3iVCdAD0Q9q0knh"
+        "value": "Compendium.eclipsephase.ware.Item.jhO6F03fXymKwxIU"
       },
       "ware8": {
         "label": "8.",
-        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+        "value": "Compendium.eclipsephase.ware.Item.q3iVCdAD0Q9q0knh"
       },
       "ware9": {
         "label": "9.",
-        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware10": {
         "label": "10.",
-        "value": "Compendium.eclipsephase.ware.Item.Odmc5xNT15RN5p2f"
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
       },
       "ware11": {
         "label": "11.",
-        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+        "value": "Compendium.eclipsephase.ware.Item.Odmc5xNT15RN5p2f"
       },
       "ware12": {
         "label": "12.",
-        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware13": {
         "label": "13.",
-        "value": "Compendium.eclipsephase.ware.Item.ec3esdksp8OPPCJ6"
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware14": {
         "label": "14.",
+        "value": "Compendium.eclipsephase.ware.Item.ec3esdksp8OPPCJ6"
+      },
+      "ware15": {
+        "label": "15.",
         "value": "none"
       }
     },

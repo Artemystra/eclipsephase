@@ -101,30 +101,34 @@
       },
       "ware4": {
         "label": "4.",
-        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
+        "value": "Compendium.eclipsephase.ware.Item.DsZJsZvcMBXVqqNK"
       },
       "ware5": {
         "label": "5.",
-        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
       },
       "ware6": {
         "label": "6.",
-        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware7": {
         "label": "7.",
-        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware8": {
         "label": "8.",
-        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
       },
       "ware9": {
         "label": "9.",
-        "value": "Compendium.eclipsephase.ware.Item.1GvkRIDOBTNZySMY"
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware10": {
         "label": "10.",
+        "value": "Compendium.eclipsephase.ware.Item.1GvkRIDOBTNZySMY"
+      },
+      "ware11": {
+        "label": "11.",
         "value": "none"
       }
     },
