@@ -1299,7 +1299,7 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  * @param {Object} message - Provides all values to the html template
  * @param {Class} task - Result of the TaskRoll class 
  * @param {Array} recipientList - List of users to whisper the result to (empty if public)
- * @param {Boolean} blind - If the roll is blind or not (important: due to the API provided by DsN blind rolls will not trigger any 3D dice animations)
+ * @param {Boolean} blind - If the roll is blind or not (DsN suppresses the 3D dice animation for whoever triggers a blind roll, so it is forced on for GMs to keep it from looking broken)
  * @param {String} alias - Alias of the speaker
  * @param {String} htmlTemplate - Path to the html template to use for the chat message
  * @param {*} roll - The roll object (standard: Object. May be an array if multirolls are performed)
@@ -1310,6 +1310,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
     const diceArray = []
     let specialRules = dataset ? dataset : false;
     const showTo = recipientList != null ? recipientList.length > 0 ? recipientList : null : null
+    const hideDice = game.user.isGM ? false : blind
     if(roll){
         if(roll.length > 1){
              for(let array = 0; array < roll.length; array++){
@@ -1324,7 +1325,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
 
                 /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
                 if (game.dice3d) {
-                    game.dice3d.showForRoll(roll[array], game.user, true, showTo, blind)
+                    game.dice3d.showForRoll(roll[array], game.user, true, showTo, hideDice)
                 } else {
                     message.sound = CONFIG.sounds.dice
                 }
@@ -1339,7 +1340,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
             
             /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
             if (game.dice3d) {
-                await game.dice3d.showForRoll(roll, game.user, true, showTo, blind)
+                await game.dice3d.showForRoll(roll, game.user, true, showTo, hideDice)
             } else {
                 message.sound = CONFIG.sounds.dice
             }

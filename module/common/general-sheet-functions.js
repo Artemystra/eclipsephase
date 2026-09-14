@@ -1046,6 +1046,22 @@ export function prepareRecipients(rollMode){
   return recipientList
 }
 
+/**
+ * Reads the visibility of the chat message a clicked button sits in, so that follow-up rolls inherit
+ * the original roll's Public/Private/Blind setting instead of re-deriving it from the button.
+ * @param {String} messageId - The id of the originating chat message
+ * @param {String} rollMode - The button's own roll mode, used only if that message no longer exists
+ * @returns - An object holding the blind flag and the list of recipients
+ */
+export function inheritChatVisibility(messageId, rollMode){
+  const originMessage = messageId ? game.messages.get(messageId) : null;
+
+  if(originMessage)
+    return {blind: originMessage.blind, recipientList: originMessage.whisper}
+
+  return {blind: rollMode === "blindroll" && !game.user.isGM, recipientList: prepareRecipients(rollMode)}
+}
+
 //DV calculator (this translates the three given integers into a human readable roll formula)
 export async function damageValueCalc (object, dvPath, traits, calcType){
   let dv = "";
