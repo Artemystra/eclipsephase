@@ -1,6 +1,7 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
 import { endAllChiPushes } from "../rolls/psi.js"
+import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
 
 const gammaAutoPushInFlight = new Set();
 
@@ -131,11 +132,7 @@ export default class EPactor extends Actor {
     }
     actorModel.additionalSystems.puppetSocked = puppetSocked;
 
-    const hasCyberbrain = (bodyId) => !!bodyId && items.some(wareCheck =>
-      wareCheck.type === "ware" &&
-      wareCheck.system.boundTo === bodyId &&
-      wareCheck.effects?.some(e => e.changes?.some(c => c.key === "flags.eclipsephase.grantsCyberbrain")));
-    actorModel.additionalSystems.hasCyberbrainChain = hasCyberbrain(activeMorph) && (!activeJam || hasCyberbrain(activeJam));
+    actorModel.additionalSystems.hasCyberbrainChain = chainHasWareMarker(actorWhole, CYBERBRAIN_MARKER);
 
     //Prepares information what type of psi a character uses
     for(let psiTypeCheck of items){

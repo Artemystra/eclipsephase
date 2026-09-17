@@ -1,3 +1,5 @@
+import { chainHasWareMarker, CYBERBRAIN_MARKER } from "./common/body-markers.js";
+
 const EP2eActiveEffectBaseDataModel =
   foundry.data?.ActiveEffectTypeDataModel ??
   foundry.abstract.TypeDataModel;
@@ -67,12 +69,7 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
     if (t === "aspect") {
       const strainFamily = item.system?.strainFamily ?? "psi";
       if (strainFamily === "ki") {
-        const hasCyberbrain = (bodyId) => !!bodyId && actor.items?.some(wareCheck =>
-          wareCheck.type === "ware" &&
-          wareCheck.system?.boundTo === bodyId &&
-          wareCheck.effects?.some(e => e.changes?.some(c => c.key === "flags.eclipsephase.grantsCyberbrain")));
-        const activeJam = actor.system?.activeJam;
-        return !hasCyberbrain(actor.system?.activeMorph) || (!!activeJam && !hasCyberbrain(activeJam));
+        return !chainHasWareMarker(actor, CYBERBRAIN_MARKER);
       }
       return !!actor.system?.activeJam || !!foundry.utils.getProperty(actor, "flags.eclipsephase.psiJamSuppression");
     }
