@@ -1666,7 +1666,7 @@
           "autoPushTooltip": "Auto-Push"
         },
         "ki": {
-          "noCyberbrain": "Ki only works if every body used in the jamming chain does have a cyberbrain."
+          "noCyberbrain": "Ki only works from a Cyberbrain. If jamming, every body used in the jamming chain must have a cyberbrain."
         },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."

@@ -1,4 +1,24 @@
-2026/09/02-15:37:01.302257 175853000 Recovering log #137
-2026/09/02-15:37:01.302688 175853000 Delete type=3 #135
-2026/09/02-15:37:01.302735 175853000 Delete type=0 #137
-2026/09/02-15:38:18.750077 173b83000 Moved #136 to level-1 1245 bytes OK: files[ 0 1 1 0 0 0 0 ]
+2026/09/18-00:20:19.603919 1715eb000 Recovering log #151
+2026/09/18-00:20:19.604428 1715eb000 Level-0 table #153: started
+2026/09/18-00:20:19.604587 1715eb000 Level-0 table #153: 1238 bytes OK
+2026/09/18-00:20:19.604884 1715eb000 Delete type=3 #150
+2026/09/18-00:20:19.604920 1715eb000 Delete type=0 #151
+2026/09/18-00:20:19.621086 171e83000 Level-0 table #156: started
+2026/09/18-00:20:19.621550 171e83000 Level-0 table #156: 56721 bytes OK
+2026/09/18-00:20:19.621615 171e83000 Delete type=0 #154
+2026/09/18-00:20:19.621678 171e83000 Manual compaction at level-0 from '!folders!BqAuWSEWfisfuXXd' @ 72057594037927935 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at '!items.effects!uKhS8vByVM8CeBHT.YqjQIkLIvn8wDOS5' @ 2169 : 1
+2026/09/18-00:20:19.621684 171e83000 Compacting 2@0 + 0@1 files
+2026/09/18-00:20:19.622162 171e83000 Generated table #157@0: 208 keys, 56721 bytes
+2026/09/18-00:20:19.622170 171e83000 Compacted 2@0 + 0@1 files => 56721 bytes
+2026/09/18-00:20:19.622209 171e83000 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/09/18-00:20:19.622242 171e83000 Delete type=2 #156
+2026/09/18-00:20:19.622288 171e83000 Delete type=2 #153
+2026/09/18-00:20:19.622327 171e83000 Manual compaction at level-0 from '!items.effects!uKhS8vByVM8CeBHT.YqjQIkLIvn8wDOS5' @ 2169 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at (end)
+2026/09/18-00:20:19.622339 171e83000 Manual compaction at level-1 from '!folders!BqAuWSEWfisfuXXd' @ 72057594037927935 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 2220 : 1
+2026/09/18-00:20:19.622342 171e83000 Compacting 1@1 + 1@2 files
+2026/09/18-00:20:19.622890 171e83000 Generated table #158@1: 207 keys, 56676 bytes
+2026/09/18-00:20:19.622895 171e83000 Compacted 1@1 + 1@2 files => 56676 bytes
+2026/09/18-00:20:19.622930 171e83000 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/09/18-00:20:19.622953 171e83000 Delete type=2 #157
+2026/09/18-00:20:19.622988 171e83000 Delete type=2 #147
+2026/09/18-00:20:19.623321 171e83000 Manual compaction at level-1 from '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 2220 : 1 .. '!items.effects!z3tPlA7ET15FGS3E.DrRigJamPenalty1' @ 0 : 0; will stop at (end)

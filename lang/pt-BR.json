@@ -1616,7 +1616,7 @@
           "autoPushTooltip": "Push Automático"
         },
         "ki": {
-          "noCyberbrain": "Ki só funciona se todos os corpos usados na cadeia de jamming tiverem um Cérebro Cibernético."
+          "noCyberbrain": "Ki só funciona a partir de um Cérebro Cibernético. Ao fazer jamming, todos os corpos usados na cadeia de jamming devem ter um Cérebro Cibernético."
         },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."

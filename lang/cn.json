@@ -1610,7 +1610,7 @@
           "autoPushTooltip": "自动推送"
         },
         "ki": {
-          "noCyberbrain": "只有干扰链中使用的每一具身体都装有电子脑，气才能运作。"
+          "noCyberbrain": "气只能通过电子脑运作。进行干扰时，干扰链中使用的每一具身体都必须装有电子脑。"
         },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"

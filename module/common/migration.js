@@ -2474,14 +2474,20 @@ function _ep23_migrateSubStrainByArchetype(actor) {
   };
 }
 
-// Adds the Cyberbrain marker effect to a pre-existing Cyberbrain Ware item, matched by name.
-async function _ep23_addCyberbrainMarker(item) {
-  if (item.type !== "ware" || item.name !== "Cyberbrain") return;
-  const hasMarker = item.effects.some(e => e.changes?.some(c => c.key === "flags.eclipsephase.grantsCyberbrain"));
+// Adds the Cyberbrain marker effect to a pre-existing Cyberbrain or Core System Ware item, matched by name.
+const _ep23_BRAIN_WARE_MARKERS = {
+  "Cyberbrain": "flags.eclipsephase.grantsCyberbrain",
+  "Core System": "flags.eclipsephase.grantsCyberbrain"
+};
+
+async function _ep23_addBrainWareMarker(item) {
+  const markerKey = item.type === "ware" ? _ep23_BRAIN_WARE_MARKERS[item.name] : undefined;
+  if (!markerKey) return;
+  const hasMarker = item.effects.some(e => e.changes?.some(c => c.key === markerKey));
   if (hasMarker) return;
-  const changes = [{ key: "flags.eclipsephase.grantsCyberbrain", value: "true", priority: null, type: "override" }];
+  const changes = [{ key: markerKey, value: "true", priority: null, type: "override" }];
   const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
-  const effectData = { name: "Cyberbrain", icon: "/icons/svg/mystery-man.svg", disabled: true, transfer: true, changes, flags: {} };
+  const effectData = { name: item.name, icon: "/icons/svg/mystery-man.svg", disabled: true, transfer: true, changes, flags: {} };
   if (isV14Plus) effectData.system = { changes };
   await item.createEmbeddedDocuments("ActiveEffect", [effectData]);
 }
@@ -2528,9 +2534,9 @@ export async function migrationPre23(startMigration, endMigration) {
     }
 
     try {
-      for (const item of actor.items) await _ep23_addCyberbrainMarker(item);
+      for (const item of actor.items) await _ep23_addBrainWareMarker(item);
     } catch (err) {
-      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: cyberbrain marker backfill failed`, err);
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: brain ware marker backfill failed`, err);
     }
 
     doneCount++;
@@ -2551,9 +2557,9 @@ export async function migrationPre23(startMigration, endMigration) {
   }
 
   try {
-    for (const item of game.items) await _ep23_addCyberbrainMarker(item);
+    for (const item of game.items) await _ep23_addBrainWareMarker(item);
   } catch (err) {
-    console.error(`[EP Migration ${latestUpdate}] world items: cyberbrain marker backfill failed`, err);
+    console.error(`[EP Migration ${latestUpdate}] world items: brain ware marker backfill failed`, err);
   }
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);

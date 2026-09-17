@@ -1603,7 +1603,7 @@
           "autoPushTooltip": "Empuje Automático"
         },
         "ki": {
-          "noCyberbrain": "El Ki solo funciona si todos los cuerpos usados en la cadena de interferencia tienen un Cerebro Cibernético."
+          "noCyberbrain": "El Ki solo funciona desde un Cerebro Cibernético. Al interferir, todos los cuerpos usados en la cadena de interferencia deben tener un Cerebro Cibernético."
         },
         "armor": {
           "equipped": "He equipado a {morph} con armadura."
