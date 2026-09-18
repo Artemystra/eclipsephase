@@ -6,11 +6,17 @@
                 <div class="flexrow flex-group-left reveal">
                     <h3 class="subheader truncate">
                         <img src="{{item.img}}" title="{{item.name}}" class="item-image icon-small icon-space"/>
-                        <span style="max-width: 200px; padding-right: 34px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</span>
+                        <span style="max-width: 150px; padding-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name}}</span>
                     </h3>
                 </div>
                 <!--Empty Area Left of the Sleight Name-->
                 <div class="flexrow alignRight flexGrowQuarter reveal" style="align-items: center; justify-content: flex-end;" data-item-id="{{item._id}}">
+                    {{#if ../sleightBlockedLabel}}
+                    <div class="wantToKnowMore" style="display: flex; align-items: center; margin-right: 6px;">
+                        <i class="fa-solid fa-triangle-exclamation awesomeIcon" style="color: var(--negative);"></i>
+                        <span class="tooltipText" style="font-size: 13px;">{{../sleightBlockedLabel}}</span>
+                    </div>
+                    {{/if}}
                     {{#if item.system.pushed}}
                     <span class="resource-label chiPushedBadge">{{localize "ep2e.item.aspect.pushedBadge"}}</span>
                     <a class="endChiPush icon-space" data-item-id="{{item._id}}" title="{{localize 'ep2e.actorSheet.button.endChiPush'}}"><i class="fa-solid fa-circle-stop awesomeIcon"></i></a>

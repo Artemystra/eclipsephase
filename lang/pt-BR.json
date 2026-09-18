@@ -1605,7 +1605,8 @@
           "ownBodyArmor": "Sobrecarga de armadura do corpo próprio",
           "ownBodyEncumbrance": "Sobrecarga do corpo próprio",
           "ownBodyTraits": "Trait/Ware do corpo próprio",
-          "noPsi": "Psi não funciona enquanto você está jammando. Ele nunca funciona por conexão mesh ou dentro de um cérebro cibernético."
+          "noPsi": "Psi não funciona enquanto você está jammando. Ele nunca funciona por conexão mesh ou dentro de um cérebro cibernético.",
+          "noPsiTooltip": "Sem Psi enquanto faz jamming"
         },
         "psi": {
           "chiPushActive": "Ativo por {minutes} minuto(s), ou até seu próximo descanso.",
@@ -1613,10 +1614,15 @@
           "pushedSleightFeedback": "Truque Empurrado",
           "pushedLabel": "Empurrado",
           "autoLabel": "Auto",
-          "autoPushTooltip": "Push Automático"
+          "autoPushTooltip": "Push Automático",
+          "noBioBrain": "Psi só funciona a partir de um cérebro biológico. Um Cérebro Cibernético o bloqueia, e um infomorfo não tem sistema nervoso algum.",
+          "substrateBlockedTooltip": "Psi precisa de um cérebro biológico",
+          "substrateMismatch": "Cérebro biológico em um corpo sintético"
         },
         "ki": {
-          "noCyberbrain": "Ki só funciona a partir de um Cérebro Cibernético. Ao fazer jamming, todos os corpos usados na cadeia de jamming devem ter um Cérebro Cibernético."
+          "noCyberbrain": "Ki só funciona a partir de um Cérebro Cibernético. Ao fazer jamming, todos os corpos usados na cadeia de jamming devem ter um Cérebro Cibernético.",
+          "substrateBlockedTooltip": "Sem Cérebro Cibernético",
+          "substrateMismatch": "Cérebro Cibernético em um corpo biológico"
         },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."

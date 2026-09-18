@@ -1592,7 +1592,8 @@
           "ownBodyArmor": "Sobrecarga de armadura del cuerpo propio",
           "ownBodyEncumbrance": "Sobrecarga del cuerpo propio",
           "ownBodyTraits": "Trait/Ware del cuerpo propio",
-          "noPsi": "El Psi no funciona mientras estás jammeando. Nunca funciona a través de una conexión mesh o dentro de un cerebro cibernético."
+          "noPsi": "El Psi no funciona mientras estás jammeando. Nunca funciona a través de una conexión mesh o dentro de un cerebro cibernético.",
+          "noPsiTooltip": "Sin Psi mientras jammeas"
         },
         "psi": {
           "chiPushActive": "Activo durante {minutes} minuto(s), o hasta tu próximo descanso.",
@@ -1600,10 +1601,15 @@
           "pushedSleightFeedback": "Sleight Empujado",
           "pushedLabel": "Empujado",
           "autoLabel": "Auto",
-          "autoPushTooltip": "Empuje Automático"
+          "autoPushTooltip": "Empuje Automático",
+          "noBioBrain": "El Psi solo funciona desde un cerebro biológico. Un Cerebro Cibernético lo bloquea, y un infomorfo no tiene sistema nervioso alguno.",
+          "substrateBlockedTooltip": "El Psi necesita un cerebro biológico",
+          "substrateMismatch": "Cerebro biológico en un cuerpo sintético"
         },
         "ki": {
-          "noCyberbrain": "El Ki solo funciona desde un Cerebro Cibernético. Al interferir, todos los cuerpos usados en la cadena de interferencia deben tener un Cerebro Cibernético."
+          "noCyberbrain": "El Ki solo funciona desde un Cerebro Cibernético. Al interferir, todos los cuerpos usados en la cadena de interferencia deben tener un Cerebro Cibernético.",
+          "substrateBlockedTooltip": "Sin Cerebro Cibernético",
+          "substrateMismatch": "Cerebro Cibernético en un cuerpo biológico"
         },
         "armor": {
           "equipped": "He equipado a {morph} con armadura."

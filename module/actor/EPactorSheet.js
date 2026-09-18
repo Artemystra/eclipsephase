@@ -10,6 +10,7 @@ import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
+import { strainSubstrate } from "../common/body-markers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -177,6 +178,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const autoPushSelection = actor.system.additionalSystems?.autoPushSelection;
     context.autoPushLabel = autoPushSelection && autoPushSelection !== "none" ? game.i18n.localize("ep2e.roll.dialog.push." + autoPushSelection) : "";
+
+    const substrateFamily = actorStrainFamily(actor) === "ki" ? "ki" : "psi";
+    const substrate = strainSubstrate(actor, substrateFamily);
+    context.sleightBlockedLabel = substrate.blocked ? game.i18n.localize(substrate.jamBlocked ? "ep2e.roll.announce.jamming.noPsiTooltip" : `ep2e.roll.announce.${substrateFamily}.substrateBlockedTooltip`) : "";
+    context.sleightPenaltyLabel = substrate.penalised ? game.i18n.localize(`ep2e.roll.announce.${substrateFamily}.substrateMismatch`) : "";
 
     await this._prepareCharacterItems(context);
     await this._prepareRenderedHTMLContent(context);

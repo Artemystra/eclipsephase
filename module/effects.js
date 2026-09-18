@@ -1,4 +1,4 @@
-import { chainHasWareMarker, CYBERBRAIN_MARKER } from "./common/body-markers.js";
+import { strainSubstrate } from "./common/body-markers.js";
 
 const EP2eActiveEffectBaseDataModel =
   foundry.data?.ActiveEffectTypeDataModel ??
@@ -65,13 +65,9 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
       return suppressed;
     }
 
-    // --- Case C: Psi is suppressed while jamming; Ki is suppressed unless every body in the chain has a Cyberbrain.
+    // --- Case C: brain/nervous-system rules, plus Psi's jamming suppression
     if (t === "aspect") {
-      const strainFamily = item.system?.strainFamily ?? "psi";
-      if (strainFamily === "ki") {
-        return !chainHasWareMarker(actor, CYBERBRAIN_MARKER);
-      }
-      return !!actor.system?.activeJam || !!foundry.utils.getProperty(actor, "flags.eclipsephase.psiJamSuppression");
+      return strainSubstrate(actor, item.system?.strainFamily ?? "psi").blocked;
     }
 
     // Default: don't suppress other item effects

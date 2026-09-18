@@ -1599,7 +1599,8 @@
           "ownBodyArmor": "自身护甲负重",
           "ownBodyEncumbrance": "自身负重",
           "ownBodyTraits": "自身特征/插件",
-          "noPsi": "干扰状态下心灵能力无法使用。心灵能力永远无法通过网格连接或电子脑运作。"
+          "noPsi": "干扰状态下心灵能力无法使用。心灵能力永远无法通过网格连接或电子脑运作。",
+          "noPsiTooltip": "干扰状态下无法使用灵能"
         },
         "psi": {
           "chiPushActive": "持续{minutes}分钟，或直到下次休息为止。",
@@ -1607,10 +1608,15 @@
           "pushedSleightFeedback": "被推送的灵术",
           "pushedLabel": "已推送",
           "autoLabel": "自动",
-          "autoPushTooltip": "自动推送"
+          "autoPushTooltip": "自动推送",
+          "noBioBrain": "灵能只能通过生物大脑运作。电子脑会阻断它，而信息体根本没有神经系统。",
+          "substrateBlockedTooltip": "灵能需要生物大脑",
+          "substrateMismatch": "生物大脑处于合成体内"
         },
         "ki": {
-          "noCyberbrain": "气只能通过电子脑运作。进行干扰时，干扰链中使用的每一具身体都必须装有电子脑。"
+          "noCyberbrain": "气只能通过电子脑运作。进行干扰时，干扰链中使用的每一具身体都必须装有电子脑。",
+          "substrateBlockedTooltip": "没有电子脑",
+          "substrateMismatch": "电子脑处于生物体内"
         },
         "armor": {
           "equipped": "我已为{morph}装备了护甲。"

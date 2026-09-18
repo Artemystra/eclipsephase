@@ -1,6 +1,7 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
 import { prepareRecipients, damageValueCalc } from "../common/general-sheet-functions.js";
+import { strainSubstrate } from "../common/body-markers.js";
 
 /*
  * Path constants for dialog templates
@@ -608,17 +609,15 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let specName = dataset.specname || "";
     let roll = await defineRoll(dataset, actorWhole)
 
-    // Psi is blocked outright while jamming; Ki is blocked when the own body lacks a Cyberbrain.
+    // Brain/nervous-system rules, plus Psi's jamming block
     if (roll.type === "psi" && dataset.itemid) {
         const sleightItem = actorWhole.items.get(dataset.itemid);
         const strainFamily = sleightItem?.system?.strainFamily ?? "psi";
-        if (strainFamily === "ki") {
-            if (!actorModel?.additionalSystems?.hasCyberbrainChain) {
-                ui.notifications.warn(game.i18n.localize("ep2e.roll.announce.ki.noCyberbrain"));
-                return;
-            }
-        } else if (actorModel?.additionalSystems?.isJamming) {
-            ui.notifications.warn(game.i18n.localize("ep2e.roll.announce.jamming.noPsi"));
+        const substrate = strainSubstrate(actorWhole, strainFamily);
+        if (substrate.blocked) {
+            ui.notifications.warn(game.i18n.localize(substrate.jamBlocked
+                ? "ep2e.roll.announce.jamming.noPsi"
+                : strainFamily === "ki" ? "ep2e.roll.announce.ki.noCyberbrain" : "ep2e.roll.announce.psi.noBioBrain"));
             return;
         }
     }
@@ -876,6 +875,12 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
 
     if(trauma > 0 && rolledFrom !== "vehicleSkill")
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
+
+    if(rollType === "psi"){
+        const strainFamily = psi.actorStrainFamily(actorWhole)
+        if(strainSubstrate(actorWhole, strainFamily).penalised)
+            task.addModifier(new TaskRollModifier(strainFamily === "ki" ? 'ep2e.roll.announce.ki.substrateMismatch' : 'ep2e.roll.announce.psi.substrateMismatch', -30))
+    }
 
 
     /* Encumberance (Armor) Malus */

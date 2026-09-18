@@ -1655,7 +1655,8 @@
           "ownBodyArmor": "Own Body Armor Encumbrance",
           "ownBodyEncumbrance": "Own Body Encumbrance",
           "ownBodyTraits": "Own Body Traits/Ware",
-          "noPsi": "Psi doesn't work while jamming. It never works over mesh connection or inside a cyberbrain."
+          "noPsi": "Psi doesn't work while jamming. It never works over mesh connection or inside a cyberbrain.",
+          "noPsiTooltip": "No Psi while jamming"
         },
         "psi": {
           "chiPushActive": "Active for {minutes} minute(s), or until your next rest.",
@@ -1663,10 +1664,15 @@
           "pushedSleightFeedback": "Pushed Sleight",
           "pushedLabel": "Pushed",
           "autoLabel": "Auto",
-          "autoPushTooltip": "Auto-Push"
+          "autoPushTooltip": "Auto-Push",
+          "noBioBrain": "Psi only works from a biological brain. A Cyberbrain blocks it, and an infomorph has no nervous system to work through.",
+          "substrateBlockedTooltip": "Psi needs a biological brain",
+          "substrateMismatch": "Biological brain in a synthetic body"
         },
         "ki": {
-          "noCyberbrain": "Ki only works from a Cyberbrain. If jamming, every body used in the jamming chain must have a cyberbrain."
+          "noCyberbrain": "Ki only works from a Cyberbrain. If jamming, every body used in the jamming chain must have a cyberbrain.",
+          "substrateBlockedTooltip": "No Cyberbrain",
+          "substrateMismatch": "Cyberbrain in a biological body"
         },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."

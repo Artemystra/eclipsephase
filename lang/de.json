@@ -1628,7 +1628,8 @@
           "ownBodyArmor": "Rüstungsbehinderung des eigenen Körpers",
           "ownBodyEncumbrance": "Behinderung des eigenen Körpers",
           "ownBodyTraits": "Eigene Traits/Ware",
-          "noPsi": "Psi funktioniert nicht während des Jammens. Es wirkt niemals über eine Mesh-Verbindung oder in einem Cyberhirn."
+          "noPsi": "Psi funktioniert nicht während des Jammens. Es wirkt niemals über eine Mesh-Verbindung oder in einem Cyberhirn.",
+          "noPsiTooltip": "Kein Psi während des Jammens"
         },
         "psi": {
           "chiPushActive": "Aktiv für {minutes} Minute(n), oder bis zur nächsten Rast.",
@@ -1636,10 +1637,15 @@
           "pushedSleightFeedback": "Gepushte Fertigkeit",
           "pushedLabel": "Gepusht",
           "autoLabel": "Auto",
-          "autoPushTooltip": "Auto-Push"
+          "autoPushTooltip": "Auto-Push",
+          "noBioBrain": "Psi funktioniert nur aus einem biologischen Gehirn. Ein Cyberhirn blockiert es, und ein Infomorph hat gar kein Nervensystem.",
+          "substrateBlockedTooltip": "Psi braucht ein biologisches Gehirn",
+          "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper"
         },
         "ki": {
-          "noCyberbrain": "Ki funktioniert nur aus einem Cyberhirn. Beim Jammen muss jeder in der Jamming-Kette genutzte Körper ein Cyberhirn haben."
+          "noCyberbrain": "Ki funktioniert nur aus einem Cyberhirn. Beim Jammen muss jeder in der Jamming-Kette genutzte Körper ein Cyberhirn haben.",
+          "substrateBlockedTooltip": "Kein Cyberhirn",
+          "substrateMismatch": "Cyberhirn in einem biologischen Körper"
         },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."
