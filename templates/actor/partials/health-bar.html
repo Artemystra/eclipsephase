@@ -13,7 +13,7 @@
     </div>
     <div class="flexrow flex-group-center listBackground health grid grid-4col" style="background-color: var(--highlightBackground); margin: 0;">
         <!-- Physical Health Overlay -->
-        <div class="tooltip" style="z-index: 19;">
+        <div class="tooltip">
             <div role="healthOverlay">
                 <div class="healthtipOverTheTopBorder">
                     <div class="healthtipOverTheTop">
@@ -110,7 +110,7 @@
         </div>
         {{#if (eq actor.type "character")}}
         <!-- Mental Health Overlay -->
-        <div class="tooltip"  style="z-index: 20;">
+        <div class="tooltip">
             <div role="healthOverlay">
                 <div class="healthtipOverTheTopBorder">
                     <div class="healthtipOverTheTop">
@@ -193,7 +193,7 @@
             <span class="resource-label alignCenter" style="margin-left: 5px;">{{actor.system.initiative.display}}</span>
         </div>
         <!-- Rez Points -->
-        <div class="tooltip"  style="z-index: 20;">
+        <div class="tooltip">
             <div role="rezOverlay">
                 <div class="rez-tab-border">
                     <div class="rez-tab">
@@ -252,7 +252,7 @@
         -->
 
         {{else if (eq actor.type "npc")}}
-        <div class="tooltip"  style="z-index: 20;">
+        <div class="tooltip">
             <div role="healthOverlay">
                 <div class="healthtipOverTheTopBorder">
                     <div class="healthtipOverTheTop">
