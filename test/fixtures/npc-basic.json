@@ -1,0 +1,36 @@
+{
+  "name": "NPC Guard",
+  "type": "npc",
+  "system": {
+    "aptitudes": {
+      "cog": {
+        "value": 14
+      },
+      "int": {
+        "value": 14
+      },
+      "ref": {
+        "value": 14
+      },
+      "sav": {
+        "value": 14
+      },
+      "som": {
+        "value": 14
+      },
+      "wil": {
+        "value": 14
+      }
+    },
+    "activeMorph": "o4auLt59iyV8732k",
+    "skillsVig": {
+      "guns": {
+        "value": 35
+      }
+    }
+  },
+  "items": [],
+  "packItems": [
+    "morphs/Ghost_o4auLt59iyV8732k.json"
+  ]
+}

@@ -3,7 +3,11 @@
   "version": "0.4.9.4",
   "description": "Eclipse Phase system for Foundry VTT",
   "scripts": {
-    "test": "jest test/"
+    "test": "jest",
+    "test:unit": "jest test/unit",
+    "test:pipeline": "jest test/pipeline",
+    "test:data": "jest test/data test/hygiene",
+    "test:watch": "jest --watch"
   },
   "author": "John Doe",
   "license": "MIT",
@@ -14,6 +18,7 @@
     "@babel/preset-env": "^7.14.4",
     "@foundryvtt/foundryvtt-cli": "^3.0.4",
     "babel-jest": "^27.0.2",
+    "handlebars": "^4.7.9",
     "jest": "^27.0.4"
   },
   "babel": {

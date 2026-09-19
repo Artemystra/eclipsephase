@@ -1,0 +1,70 @@
+{
+  "name": "Ki Adept",
+  "type": "character",
+  "system": {
+    "aptitudes": {
+      "cog": {
+        "value": 18
+      },
+      "int": {
+        "value": 18
+      },
+      "ref": {
+        "value": 18
+      },
+      "sav": {
+        "value": 18
+      },
+      "som": {
+        "value": 18
+      },
+      "wil": {
+        "value": 18
+      }
+    },
+    "activeMorph": "wjoBBYD1ZRDtVMTm",
+    "skillsMox": {
+      "psi": {
+        "value": 45
+      }
+    },
+    "psiStrain": {
+      "name": "Crucible",
+      "strainType": 1,
+      "infection": 40
+    },
+    "subStrain": {
+      "label": "crucible"
+    }
+  },
+  "packItems": [
+    "morphs/Splicer_Liquid_Silver_wjoBBYD1ZRDtVMTm.json",
+    "traits/Ki_II_HCkndL0KddtSiMM4.json",
+    "ware/Cyberbrain_DsZJsZvcMBXVqqNK.json"
+  ],
+  "items": [
+    {
+      "_id": "aspectkichi0001",
+      "name": "Ki Focus",
+      "type": "aspect",
+      "system": {
+        "psiType": "chi",
+        "strainFamily": "ki",
+        "infection": 0,
+        "actionType": "quick",
+        "duration": "sustained"
+      }
+    },
+    {
+      "_id": "aspectkigamma01",
+      "name": "Ki Surge",
+      "type": "aspect",
+      "system": {
+        "psiType": "gamma",
+        "strainFamily": "ki",
+        "infection": 5,
+        "actionType": "complex"
+      }
+    }
+  ]
+}
