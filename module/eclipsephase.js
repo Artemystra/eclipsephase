@@ -11,6 +11,7 @@ import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
+import  { registerPsiEffectSocket } from "./rolls/psi.js"
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
@@ -701,6 +702,16 @@ Hooks.once("ready", () => {
 // Helper to handle item transfers between players
 Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
+  registerPsiEffectSocket();
+});
+
+// Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll
+// or by editing the field, so neither the dialog nor the pool write happens on every client at once.
+Hooks.on("updateActor", async (actor, changed, options, userId) => {
+  if (userId !== game.user.id) return;
+  if (foundry.utils.getProperty(changed, "system.psiStrain.infection") === undefined) return;
+  await actor.applyChiBoostCrossing?.();
+  await actor.requestGammaAutoPushOnCrossing?.();
 });
 
 // Clears a character's shop sell-limit lockouts when they take a long rest.

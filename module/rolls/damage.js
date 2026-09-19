@@ -44,7 +44,7 @@ export async function prepareWeapon(data, result, preparedData) {
 
   let weaponSelected = await weaponPreparation(actorWhole, skillKey, rolledFrom, weaponID, selectedWeaponMode);
 
-  if (rollResult > 2 && rollResult < 6 || rollResult === 7 || rollResult === 9) {
+  if (isHit(rollResult)) {
     await dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList);
   }
   else if (weaponSelected.weaponTraits.automatedEffects.dvOnMiss) {
@@ -68,6 +68,16 @@ export async function prepareWeapon(data, result, preparedData) {
 
     await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, roll, actorWhole.name, recipientList, blind, "rollOutput");
   }
+}
+
+/**
+ * Whether a task result is a hit and therefore rolls damage: any degree of ordinary success, a
+ * critical success or an auto-success. Nothing deals damage on a miss.
+ * @param {Number} rollResult - The task result tier
+ * @returns - True when damage should be rolled
+ */
+function isHit(rollResult) {
+  return (rollResult > 2 && rollResult < 6) || rollResult === 7 || rollResult === 9;
 }
 
 // Success-tier bonus and critical-success doubling, shared by dealWeaponDamage and dealPsiDamage.
@@ -164,6 +174,8 @@ export async function preparePsiDamage(data) {
 }
 
 export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, manualPush) {
+  if (!isHit(rollResult)) return;
+
   const { successModifier, criticalModifier } = successTierModifier(rollResult);
   const baseDamage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv;
   const manualPushMultiplier = GAMMA_PUSH_EFFECTS[manualPush]?.damageMultiplier ?? 1;

@@ -975,8 +975,6 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
       let weaponSelected
       const actorModel = actorWhole.system;
 
-      console.log("I rolled from", rolledFrom)
-
       if (rolledFrom === "psiSleight") {
         dataset.rollvalue = actorModel.skillsMox.psi.roll;
         dataset.specname = actorModel.skillsMox.psi.specname;
@@ -1004,9 +1002,6 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
         rolledFrom = weaponSelected.rolledFrom
 
       }
-
-      console.log("my weapon", weaponSelected)
-      console.log("this is my dataset", dataset)
 
       DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }

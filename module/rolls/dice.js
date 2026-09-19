@@ -722,8 +722,10 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             return
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
+        const blindRollMode = options.rollMode === "blind" ? "blind" : undefined
+
         if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
-            psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
+            await psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions, undefined, blindRollMode)
 
         return rollResult;
     }
@@ -1032,7 +1034,6 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.sizeXL";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    console.log("My options", options)
     if (options.range === "range" && options.prone) {
         modValue = -20
         announce = "ep2e.roll.announce.combat.ranged.rangeProne";

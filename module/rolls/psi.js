@@ -1,7 +1,7 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat} from "./dice.js";
 import * as pools from "./pools.js";
-import { gmList, prepareRecipients } from "../common/general-sheet-functions.js";
+import { gmList, prepareRecipients, inheritChatVisibility } from "../common/general-sheet-functions.js";
 import { effectRuleKey } from "../common/general-helper-functions.js";
 import { TIER_TRAIT_NAMES } from "../common/sleight-prerequisite.js";
 
@@ -23,17 +23,16 @@ export function actorStrainFamily(actorWhole){
 }
 
 /**
- * Formula for the psi-feedback physical damage roll, or null if none applies. A manual push
- * always costs at least 1d6 (doubled on a virus result of 1); a free gamma auto-push only
- * doubles damage that was already going to happen on a virus result of 1, never causing damage
- * by itself.
+ * Formula for the psi-feedback physical damage roll, or null if none applies. A manual push always
+ * costs at least 1d6, doubled on a virus result of 1. The free Infection-66+ gamma auto-push is
+ * deliberately absent here: it costs nothing to use, so it neither causes feedback damage nor
+ * doubles it - it only doubles the sleight's own damage, via gammaAutoPushDamageMultiplier.
  * @param {boolean} manualPush - whether the psi check was manually pushed this roll
- * @param {boolean} autoPushed - whether a free Infection-66+ gamma auto-push is active
  * @param {boolean} virusResultIsOne - whether the infection-influence d6 landed on 1
  * @returns {string|null}
  */
-export function resolvePhysicalDamageFormula(manualPush, autoPushed, virusResultIsOne){
-    if (virusResultIsOne) return (manualPush || autoPushed) ? "2d6" : "1d6";
+export function resolvePhysicalDamageFormula(manualPush, virusResultIsOne){
+    if (virusResultIsOne) return manualPush ? "2d6" : "1d6";
     if (manualPush) return "1d6";
     return null;
 }
@@ -67,7 +66,9 @@ export async function preparePsi(data){
     const psiOwner = dataset.userid
     const push = dataset.psipush === "false" ? false : dataset.psipush;
     const systemOptions = {"brewStatus" : game.settings.get("eclipsephase", "superBrew")}
-    rollPsiEffect(actorWhole, psiOwner, push, systemOptions)
+    const messageId = data.currentTarget.closest("[data-message-id]")?.dataset.messageId
+    const blindRollMode = inheritChatVisibility(messageId, dataset.rollmode).blind ? "blind" : undefined
+    await rollPsiEffect(actorWhole, psiOwner, push, systemOptions, undefined, blindRollMode)
 }
 
 const POOL_CHIMOD_KEYS = {
@@ -203,17 +204,60 @@ export async function confirmChiPush(actorWhole, itemId, rollMode){
     await rollPsiEffect(actorWhole, psiOwner, false, systemOptions, itemId, rollMode);
 }
 
+const PSI_SOCKET_NAME = "system.eclipsephase";
+
+let psiEffectSocketRegistered = false;
+
+/**
+ * Registers the GM-side listener that runs an Infection Test on behalf of a player. Foundry shows a
+ * whispered message to its author no matter what the whisper list says, so a test authored by the
+ * player would leave a countable card in their own log even when it is blind.
+ */
+export function registerPsiEffectSocket(){
+    if (psiEffectSocketRegistered) return;
+    psiEffectSocketRegistered = true;
+    game.socket.on(PSI_SOCKET_NAME, async payload => {
+        if (!game.user.isGM || payload?.action !== "rollPsiEffect") return;
+        const primaryGM = game.users.activeGM;
+        if (primaryGM && primaryGM.id !== game.user.id) return;
+        const actorWhole = await fromUuid(payload.actorUuid);
+        if (!actorWhole) return;
+        const systemOptions = { brewStatus: game.settings.get("eclipsephase", "superBrew") };
+        await rollPsiEffect(actorWhole, payload.psiOwner, payload.push, systemOptions, payload.chiPushItemId, payload.rollMode);
+    });
+}
+
+/**
+ * Rolls the Infection Test and everything it triggers: the influence effect on a success and the
+ * feedback damage on a result of 1. Always runs on the primary GM's client, delegating there via
+ * socket when a player triggered it, so that a blind test leaves nothing at all in the player's
+ * chat log. Falls back to local execution when no GM is connected.
+ * @param {Actor} actorWhole - The infected actor
+ * @param {String} psiOwner - Id of the user the result is whispered to alongside the GMs
+ * @param {Boolean|String} push - Whether the triggering sleight was pushed
+ * @param {Object} systemOptions - Holds the homebrew setting used for result texts
+ * @param {String} chiPushItemId - Id of the pushed chi sleight, if a chi push triggered this
+ * @param {String} rollMode - Visibility of the originating roll, "blind" hides the test entirely
+ */
 export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, chiPushItemId, rollMode){
-    //Infection (only relevant for psi checks)
-    const actorModel = actorWhole.system;
-    let recipientList;
-    if (rollMode) {
-        recipientList = prepareRecipients(rollMode);
-    } else {
-        recipientList = gmList();
-        if(!recipientList.includes(psiOwner))
-            recipientList.push(psiOwner)
+    if (!game.user.isGM && game.users.activeGM) {
+        game.socket.emit(PSI_SOCKET_NAME, {
+            action: "rollPsiEffect",
+            actorUuid: actorWhole.uuid,
+            psiOwner,
+            push,
+            chiPushItemId,
+            rollMode
+        });
+        return;
     }
+
+    const actorModel = actorWhole.system;
+    const blind = rollMode === "blind" || rollMode === "blindroll";
+    const isPublic = rollMode === "public" || rollMode === "publicroll";
+    let recipientList = rollMode ? prepareRecipients(rollMode) : gmList();
+    if (!blind && !isPublic && !recipientList.includes(psiOwner))
+        recipientList.push(psiOwner)
 
     const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionTries");
 
@@ -250,7 +294,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
 
     
 
-    await rollToChat(null, message, TASK_RESULT_OUTPUT, roll, actingPerson, recipientList, false)
+    await rollToChat(null, message, TASK_RESULT_OUTPUT, roll, actingPerson, recipientList, blind)
 
 
     //Effect in case virus was successful
@@ -344,13 +388,12 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
 
         let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");
     
-        await rollToChat(null, message, PSI_INFLUENCE_OUTPUT, d6, actingPerson, recipientList, false)
+        await rollToChat(null, message, PSI_INFLUENCE_OUTPUT, d6, actingPerson, recipientList, blind)
 
     }
     
     const manualPush = chiPushItemId ? false : !!push;
-    const autoPushed = chiPushItemId ? false : gammaAutoPushDamageMultiplier(actorWhole) > 1;
-    physicalDamageRoll = resolvePhysicalDamageFormula(manualPush, autoPushed, d6.total === 1);
+    physicalDamageRoll = resolvePhysicalDamageFormula(manualPush, d6.total === 1);
 
     if (physicalDamageRoll && actorWhole.type === "character"){
 
@@ -365,7 +408,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
             "copy": manualPush ? "ep2e.roll.announce.psi.pushedSleightFeedback" : (isKi ? "ep2e.ki.effect.takeStrain" : "ep2e.psi.effect.takeDamage")
         }
 
-        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, false, "rollOutput")
+        await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, blind, "rollOutput")
 
         if (isKi) {
             mentalUpdate += physicalDamage.total;

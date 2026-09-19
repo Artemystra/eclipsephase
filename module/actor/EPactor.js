@@ -67,25 +67,10 @@ export default class EPactor extends Actor {
     let gammaCount = 0;
     let chiCount = 0;
     let chiMultiplier = 1;
-    let chiBoostDelta = 0;
     if(actorWhole.type === "character" || actorWhole.type === "npc"){
       actorModel.psiStrain ??= { infection: 0, minimumInfection: 0 };
       if (actorModel.psiStrain.infection >= 33){
         chiMultiplier = 2;
-      }
-      const wasBoosted = actorModel.additionalSystems.psiChiBoosted === true;
-      const isBoosted = chiMultiplier === 2;
-      if (isBoosted !== wasBoosted) {
-        chiBoostDelta = isBoosted ? 1 : -1;
-        actorModel.additionalSystems.psiChiBoosted = isBoosted;
-      }
-      if (chiBoostDelta > 0) endAllChiPushes(actorWhole);
-
-      const wasGammaBoosted = actorModel.additionalSystems.psiGammaBoosted === true;
-      const isGammaBoosted = actorModel.psiStrain.infection >= 66;
-      if (isGammaBoosted !== wasGammaBoosted) {
-        actorModel.additionalSystems.psiGammaBoosted = isGammaBoosted;
-        this._requestGammaAutoPush(actorWhole, isGammaBoosted);
       }
     }
     actorModel.mods.psiMultiplier = chiMultiplier
@@ -192,7 +177,7 @@ export default class EPactor extends Actor {
             flex:    Number(jammedVehicleData.system.flex)   || 0
           }
         : morphValues;
-      this._calculatePools(actorModel, poolSource, chiMultiplier, chiBoostDelta, actorWhole)
+      this._calculatePools(actorModel, poolSource, chiMultiplier)
       if (jammedVehicleData) {
         // Pass the real body's stashed pools through as derived data so the roll dialog can offer them.
         // Ego Flex is shared between both perspectives, so work out how much of it is still unspent from
@@ -443,7 +428,7 @@ export default class EPactor extends Actor {
       : { type: "none", base: 0, full: 0 };
   }
 
-  _calculatePools(actorModel, morphValues, chiMultiplier, chiBoostDelta, actorWhole) {
+  _calculatePools(actorModel, morphValues, chiMultiplier) {
     actorModel.pools.flex.totalFlex = Number(morphValues.flex) +
       Number(actorModel.ego.egoFlex) +
       eval(actorModel.pools.flex.mod) +
@@ -458,13 +443,23 @@ export default class EPactor extends Actor {
       eval(actorModel.pools.vigor.mod) +
       (actorModel.pools.vigor.chiMod ? (eval(actorModel.pools.vigor.chiMod)*chiMultiplier) : 0)
 
-    if (chiBoostDelta) this._applyChiBoostToPoolValues(actorModel, chiBoostDelta, actorWhole);
   }
 
-  // Moves each pool's CURRENT value by the same amount the Infection-33 chiMod boost just moved its
-  // max, the pass that boost is gained or lost - fire-and-forget update() from inside prepareData(),
-  // same one-shot idiom as the resleeving refill above (self-clearing via psiChiBoosted so this
-  // doesn't reapply every render).
+  /**
+   * Applies an Infection-33 chi boost crossing: ends any manual chi pushes when the free boost is
+   * gained, and moves each pool's current value by the same amount its max just moved. Called from
+   * the updateActor hook by the single client whose user changed the Infection Rating, so it never
+   * runs on a client that lacks permission to write this actor.
+   */
+  async applyChiBoostCrossing() {
+    const isBoosted = this.system.psiStrain?.infection >= 33;
+    if (isBoosted === (this.system.additionalSystems?.psiChiBoosted === true)) return;
+
+    if (isBoosted) await endAllChiPushes(this);
+    this._applyChiBoostToPoolValues(this.system, isBoosted ? 1 : -1, this);
+  }
+
+  // Moves each pool's CURRENT value by the same amount the Infection-33 chiMod boost moved its max.
   _applyChiBoostToPoolValues(actorModel, chiBoostDelta, actorWhole) {
     const POOLS = { insight: "totalInsight", moxie: "totalMoxie", vigor: "totalVigor", flex: "totalFlex" };
     const updates = { "system.additionalSystems.psiChiBoosted": chiBoostDelta > 0 };
@@ -955,12 +950,16 @@ export default class EPactor extends Actor {
   }
 
   /**
-   * Persists the Infection-66+ crossing state. Gaining the boost prompts the player to pick
-   * their free push effect (RAW: re-asked on every fresh crossing); losing it clears the pick.
-   * @param {Actor} actorWhole
-   * @param {boolean} isGammaBoosted
+   * Persists the Infection-66+ crossing state, if this actor just crossed it in either direction.
+   * Gaining the boost prompts for the free push effect (RAW: re-asked on every fresh crossing),
+   * losing it clears the pick. Called from the updateActor hook by the single client whose user
+   * made the change, so the dialog reaches that person alone - a roll and a manual edit of the
+   * Infection Rating both route through here.
    */
-  async _requestGammaAutoPush(actorWhole, isGammaBoosted) {
+  async requestGammaAutoPushOnCrossing() {
+    const actorWhole = this;
+    const isGammaBoosted = this.system.psiStrain?.infection >= 66;
+    if (isGammaBoosted === (this.system.additionalSystems?.psiGammaBoosted === true)) return;
     if (gammaAutoPushInFlight.has(actorWhole.id)) return;
     gammaAutoPushInFlight.add(actorWhole.id);
 

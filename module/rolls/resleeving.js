@@ -134,7 +134,6 @@ export async function result (data) {
             flavor: html
         })
     }
-    console.log("resultData", resultData)
     const stressResult = (resultData[1].result === undefined || resultData[1].result === "") ? null : Number(resultData[1].result)
     await calcEffects (actorWhole, actorModel, Number(resultData[0].result), stressResult)
 }
