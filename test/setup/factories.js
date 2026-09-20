@@ -1,15 +1,17 @@
 const fs = require("fs");
 const path = require("path");
 
-const { SYSTEM_ROOT, setSetting, seedRolls, resetMock } = global.__ep;
+const { SYSTEM_ROOT, setSetting, seedRolls, seedDialogs, resetMock } = global.__ep;
 
 const EPactor = require(path.join(SYSTEM_ROOT, "module", "actor", "EPactor.js")).default;
 const EPitem = require(path.join(SYSTEM_ROOT, "module", "item", "EPitem.js")).default;
 const { eclipsephase } = require(path.join(SYSTEM_ROOT, "module", "config.js"));
+const { registerRegistryHelpers } = require(path.join(SYSTEM_ROOT, "module", "api", "registry.js"));
 
 global.CONFIG.Actor.documentClass = EPactor;
 global.CONFIG.Item.documentClass = EPitem;
 global.CONFIG.eclipsephase = eclipsephase;
+registerRegistryHelpers();
 
 /**
  * The template.json defaults for one document sub-type.
@@ -121,5 +123,6 @@ module.exports = {
   modelFor,
   resetWorld,
   setSetting,
-  seedRolls
+  seedRolls,
+  seedDialogs
 };

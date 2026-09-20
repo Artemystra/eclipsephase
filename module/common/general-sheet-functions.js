@@ -1,6 +1,7 @@
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
+import { getRollSource } from "../api/registry.js";
 
 /**
  * Foundry VTTs item creation & deletion functions
@@ -975,13 +976,19 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
       let weaponSelected
       const actorModel = actorWhole.system;
 
-      if (rolledFrom === "psiSleight") {
+      const registeredSkill = getRollSource(rolledFrom)?.skillRoll?.(actorModel, actorWhole.items, dataset);
+
+      if (registeredSkill) {
+        dataset.rollvalue = registeredSkill.rollvalue;
+        dataset.specname = registeredSkill.specname;
+        if (registeredSkill.poolType) dataset.pooltype = registeredSkill.poolType;
+      }
+      else if (rolledFrom === "psiSleight") {
         dataset.rollvalue = actorModel.skillsMox.psi.roll;
         dataset.specname = actorModel.skillsMox.psi.specname;
         dataset.pooltype = "Moxie";
       }
-
-      if (rolledFrom === "rangedWeapon") {
+      else if (rolledFrom === "rangedWeapon") {
         dataset.rollvalue = actorModel.skillsVig.guns.roll;
         dataset.specname = actorModel.skillsVig.guns.specname;
         dataset.pooltype = "Vigor";

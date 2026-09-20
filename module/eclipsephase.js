@@ -15,6 +15,7 @@ import  { registerPsiEffectSocket } from "./rolls/psi.js"
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
+import { registerRegistryHelpers, registerRollSource, registerPoolOption } from "./api/registry.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -236,8 +237,38 @@ Hooks.once('init', async function() {
     return new Handlebars.SafeString(`<a class="moreInfoDialog icon-space" style="flex: 0 0 auto; margin-left: auto;" data-description="${ruleKey}" data-title="${labelKey}" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a>`);
   });
 
+  registerRegistryHelpers();
+  registerCoreRollSources();
+
   registerSystemSettings();
 });
+
+/**
+ * Registers the roll sources and pool options the core system owns, so the roll pipeline resolves
+ * them through the same registry an external module would use.
+ * @returns {void}
+ */
+function registerCoreRollSources() {
+  registerRollSource("rangedWeapon", {
+    skillRoll: actorSystem => ({
+      rollvalue: actorSystem.skillsVig?.guns?.roll,
+      specname: actorSystem.skillsVig?.guns?.specname,
+      poolType: "Vigor"
+    })
+  });
+  registerRollSource("ccWeapon", {
+    skillRoll: actorSystem => ({
+      rollvalue: actorSystem.skillsVig?.melee?.roll,
+      specname: actorSystem.skillsVig?.melee?.specname,
+      poolType: "Vigor"
+    })
+  });
+  registerPoolOption({
+    value: "ignoreInfection",
+    label: "ep2e.roll.dialog.ignoreInfection",
+    when: context => context.rollType === "psi"
+  });
+}
 
 /**
  * Helper to build itemlists of all traits/flaws/wares available via compendiums for various items 

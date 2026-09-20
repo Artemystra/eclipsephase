@@ -1,5 +1,6 @@
 
 <div class="alignCenter">
+  {{{epSlot "chatCard.header" this}}}
   <p>{{localize "ep2e.roll.announce.rolled"}} <span class="resource-value">{{localize taskName}}</span></p>
   {{#if (eq rolledFrom "psiSleight")}}
     <p><span class="resource-value">{{itemdata.name}} </span><a class="GMinfo"><i class="fa-regular fa-circle-info moreInfo awesomeIcon" data-title="{{itemdata.name}}" data-resource="{{options.raiseInfection}}" data-description="{{itemdata.description}}" data-action="{{itemdata.action}}" data-duration="{{itemdata.duration}}"  data-rolledfrom="{{rolledFrom}}"></i></a></p>
@@ -177,5 +178,6 @@
      <button type="button" class="chatButton psiDamage privateChatButton" data-action="psiDamage">{{localize "ep2e.chat.buttonLabel.psiDamage"}}</button>
    </div>
   {{/if}}
+  {{{epSlot "chatCard.buttons" this}}}
 </div>
 

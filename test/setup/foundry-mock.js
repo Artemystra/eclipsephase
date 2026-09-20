@@ -562,7 +562,37 @@ function getHandlebars() {
     numberFormat: value => String(value ?? "")
   });
   handlebarsReady = true;
+  global.Handlebars = handlebars;
   return handlebars;
+}
+
+/**
+ * Resolves a template path as Foundry would and reads it, returning null when it does not exist.
+ * @param {String} templatePath - A path of the form systems/eclipsephase/templates/...
+ * @returns {String|null} The template source
+ */
+function readTemplate(templatePath) {
+  const relative = String(templatePath).replace(/^systems\/eclipsephase\//, "");
+  const full = path.join(SYSTEM_ROOT, relative);
+  return fs.existsSync(full) ? fs.readFileSync(full, "utf8") : null;
+}
+
+/**
+ * Registers every partial a template refers to, recursively, so real templates render outside
+ * Foundry without the system's own preload step.
+ * @param {String} source - The template source to scan
+ * @returns {void}
+ */
+function registerReferencedPartials(source) {
+  const handlebars = getHandlebars();
+  for (const match of source.matchAll(/\{\{>\s*([^\s}]+)/g)) {
+    const name = match[1];
+    if (handlebars.partials[name]) continue;
+    const partialSource = readTemplate(name);
+    if (partialSource === null) continue;
+    handlebars.registerPartial(name, partialSource);
+    registerReferencedPartials(partialSource);
+  }
 }
 
 /**
@@ -572,10 +602,22 @@ function getHandlebars() {
  * @returns {Promise<String>} The rendered HTML
  */
 async function renderTemplate(templatePath, data) {
-  const relative = String(templatePath).replace(/^systems\/eclipsephase\//, "");
-  const full = path.join(SYSTEM_ROOT, relative);
-  if (!fs.existsSync(full)) return "";
-  return getHandlebars().compile(fs.readFileSync(full, "utf8"))(data);
+  const source = readTemplate(templatePath);
+  if (source === null) return "";
+  registerReferencedPartials(source);
+  return getHandlebars().compile(source)(data);
+}
+
+const dialogQueue = [];
+
+/**
+ * Queues the values the next roll dialogs return, so a roll can be driven without a browser.
+ * @param {...Object} results - One result object per upcoming dialog, consumed in order
+ * @returns {void}
+ */
+function seedDialogs(...results) {
+  dialogQueue.length = 0;
+  dialogQueue.push(...results);
 }
 
 /**
@@ -586,6 +628,7 @@ function resetMock() {
   resetSettings();
   resetIds();
   rollQueue.length = 0;
+  dialogQueue.length = 0;
   createdMessages.length = 0;
   notifications.warn.length = 0;
   notifications.error.length = 0;
@@ -625,13 +668,20 @@ global.foundry = {
   },
   applications: {
     handlebars: { renderTemplate, loadTemplates: async () => {} },
-    api: { DialogV2: class DialogV2 {} },
+    api: {
+      DialogV2: class DialogV2 {
+        static async wait() {
+          return dialogQueue.length ? dialogQueue.shift() : { cancelled: true };
+        }
+      }
+    },
     ux: { TextEditor: { implementation: { enrichHTML: async html => html ?? "" } } }
   },
   documents: {}
 };
 
 global.Hooks = Hooks;
+global.Handlebars = getHandlebars();
 global.ChatMessage = MockChatMessage;
 global.Roll = MockRoll;
 global.Collection = MockCollection;
@@ -651,7 +701,8 @@ global.CONFIG = {
   Item: { documentClass: MockItem, dataModels: {} },
   ActiveEffect: { dataModels: {}, phases: {} },
   Dice: { randomUniform: Math.random },
-  ChatMessage: {}
+  ChatMessage: {},
+  sounds: { dice: "sounds/dice.wav" }
 };
 
 global.ui = {
@@ -700,6 +751,7 @@ global.__ep = {
   uuidRegistry,
   setSetting,
   seedRolls,
+  seedDialogs,
   resetMock,
   buildModel,
   applyChange

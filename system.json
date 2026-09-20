@@ -188,6 +188,12 @@
       "flags": {}
     },
     {
+      "lang": "es",
+      "name": "Español",
+      "path": "lang/es.json",
+      "flags": {}
+    },
+    {
       "lang": "cn",
       "name": "Chinese",
       "path": "lang/cn.json",

@@ -1,8 +1,6 @@
 {
-  "note": "Recorded 2026-09-19. New keys must appear in every language file, and new migration copy stays English only; this baseline tolerates only the gaps and translated migration keys that already existed.",
-  "undeclaredLanguageFiles": [
-    "es"
-  ],
+  "note": "Recorded 2026-09-19, updated 2026-09-20 after lang/es.json was declared in system.json. New keys must appear in every language file, and new migration copy stays English only; this baseline tolerates only the gaps and translated migration keys that already existed.",
+  "undeclaredLanguageFiles": [],
   "missingAgainstEnglish": {
     "de": [
       "TYPES.Item.traits",

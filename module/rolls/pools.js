@@ -40,6 +40,8 @@ export async function usePoolFromChat(data){
             blind: blind
         })
 
+        Hooks.callAll("eclipsephase.poolResult", {context, actor, rolledFrom, newResult: context.alternatives.result, blind, recipientList})
+
         if(rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
             await prepareWeapon(false, context.alternatives.result, context)
         }
