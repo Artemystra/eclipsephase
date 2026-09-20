@@ -16,6 +16,7 @@ import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption } from "./api/registry.js";
+import { api } from "./api/index.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -139,7 +140,9 @@ Hooks.once('init', async function() {
     EPactor,
     EPitem,
     rollItemMacro,
-    rollWeaponMacro: sheetFunction.rollFromSheet
+    rollWeaponMacro: sheetFunction.rollFromSheet,
+    version: game.system.version,
+    api
   };
 
   /**
@@ -241,6 +244,11 @@ Hooks.once('init', async function() {
   registerCoreRollSources();
 
   registerSystemSettings();
+});
+
+// Signals that game.eclipsephase.api is in place, so a module can register against it.
+Hooks.once("ready", () => {
+  Hooks.callAll("eclipsephase.ready", game.eclipsephase);
 });
 
 /**

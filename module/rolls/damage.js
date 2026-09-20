@@ -69,8 +69,12 @@ function isHit(rollResult) {
   return (rollResult > 2 && rollResult < 6) || rollResult === 7 || rollResult === 9;
 }
 
-// Success-tier bonus and critical-success doubling, shared by dealWeaponDamage and dealPsiDamage.
-function successTierModifier(rollResult) {
+/**
+ * Success-tier bonus and critical-success doubling, shared by dealWeaponDamage and dealPsiDamage.
+ * @param {Number} rollResult - The task result tier
+ * @returns {Object} successModifier and criticalModifier roll formula fragments
+ */
+export function applySuccessTierBonus(rollResult) {
   let successModifier = "";
   let criticalModifier = "";
 
@@ -90,7 +94,7 @@ function successTierModifier(rollResult) {
 
 async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDamage, biomorphTarget, touchOnly, blind, recipientList) {
   let meleeDamageMod = actorWhole.system.mods.meleeDamageMod;
-  let { successModifier, criticalModifier } = successTierModifier(rollResult);
+  let { successModifier, criticalModifier } = applySuccessTierBonus(rollResult);
   let weaponDamage = touchOnly ? "ep2e.item.weapon.table.noDamage" : weaponSelected.weaponDamage;
 
   //Damage Chat Message Constructor
@@ -163,7 +167,7 @@ export async function preparePsiDamage(data) {
 export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, manualPush) {
   if (!isHit(rollResult)) return;
 
-  const { successModifier, criticalModifier } = successTierModifier(rollResult);
+  const { successModifier, criticalModifier } = applySuccessTierBonus(rollResult);
   const baseDamage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv;
   const manualPushMultiplier = GAMMA_PUSH_EFFECTS[manualPush]?.damageMultiplier ?? 1;
   const pushMultiplier = sleightItem.system.psiType !== "chi" ? Math.max(gammaAutoPushDamageMultiplier(actorWhole), manualPushMultiplier) : 1;

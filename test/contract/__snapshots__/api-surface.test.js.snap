@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`game.eclipsephase.api surface matches the recorded snapshot 1`] = `
+Object {
+  "actors": Object {
+    "CYBERBRAIN_MARKER": "flags.eclipsephase.grantsCyberbrain",
+    "bodyBindingKey": [Function],
+    "bodyHasWareMarker": [Function],
+    "bodyNervousSystem": [Function],
+    "chainHasWareMarker": [Function],
+    "requestGMItemTransfer": [Function],
+    "sleevedNervousSystem": [Function],
+    "tempEffectCreation": [Function],
+    "tempEffectDeletion": [Function],
+    "transferItemBetweenActors": [Function],
+  },
+  "chat": Object {
+    "readRollContext": [Function],
+  },
+  "rolls": Object {
+    "RollCheck": [Function],
+    "TaskRoll": [Function],
+    "TaskRollModifier": [Function],
+    "applySuccessTierBonus": [Function],
+    "damageValueCalc": [Function],
+    "gmList": [Function],
+    "inheritChatVisibility": [Function],
+    "prepareRecipients": [Function],
+    "rollCalc": [Function],
+    "rollToChat": [Function],
+  },
+  "ui": Object {
+    "addDragSupport": [Function],
+    "addMinimizeSupport": [Function],
+    "addWindowControls": [Function],
+    "confirmation": [Function],
+    "itemTypeFilterPills": [Function],
+    "moreInfo": [Function],
+    "registerCommonHandlers": [Function],
+    "selectBody": [Function],
+    "slideToggleVisibility": [Function],
+    "systemMessage": [Function],
+  },
+}
+`;
