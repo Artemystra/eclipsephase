@@ -149,6 +149,33 @@ export function renderPoolOptions(options, poolType) {
   return markup;
 }
 
+let rezSpendOptions = null;
+
+/**
+ * Replaces the table the Rez spending dialog offers, for a feature that changes what Rez buys.
+ * @param {Object} definition - Needs options, the entries of the dialog, and costMatrix, their Rez cost by id
+ * @returns {Boolean} Whether the table was registered
+ */
+export function registerRezSpendOptions(definition = {}) {
+  if (!definition.options || typeof definition.options !== "object") {
+    return reject("A Rez spending table", "it needs an options object");
+  }
+  if (!definition.costMatrix || typeof definition.costMatrix !== "object") {
+    return reject("A Rez spending table", "it needs a costMatrix object");
+  }
+  if (rezSpendOptions) return reject("A Rez spending table", "another one is already registered");
+  rezSpendOptions = definition;
+  return true;
+}
+
+/**
+ * The registered Rez spending table, if any.
+ * @returns {Object|null} The table, or null while the core one applies
+ */
+export function getRezSpendOptions() {
+  return rezSpendOptions;
+}
+
 /**
  * Registers the Handlebars helpers the core templates use to reach the registry.
  * @returns {void}
@@ -168,6 +195,7 @@ export function resetRegistry() {
   rollSources.clear();
   poolOptions.length = 0;
   slots.clear();
+  rezSpendOptions = null;
 }
 
 export const registry = { rollSources, poolOptions, slots };

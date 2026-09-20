@@ -12,6 +12,7 @@ import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
 import { strainSubstrate } from "../common/body-markers.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
+import { getRezSpendOptions } from "../api/registry.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -24,6 +25,63 @@ function hasAnyMovement(bodyItem) {
 
 
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+
+  // The Rez spending dialog: what a point of Rez may be spent on, and what each entry costs.
+  // A registered table replaces both wholesale; see rezSpendTable().
+  static REZ_COST_MATRIX = {
+    "rep": 1,
+    "skill": 1,
+    "spec": 1,
+    "psi": 1,
+    "lang": 1,
+    "apt": 1,
+    "flex": 2,
+    "traits": 1,
+    "repH": 1,
+    "skill33": 1,
+    "skill3366": 1,
+    "skill66": 1,
+    "specH": 5,
+    "psiH": 5,
+    "langH": 5,
+    "aptH": 5,
+    "flexH": 10,
+    "traitsH": 1
+  }
+
+  static REZ_SPEND_RAW = { options: {
+    0: { id: "rep", label: "ep2e.healthbar.tooltip.spendRez.rep.label", description: "ep2e.healthbar.tooltip.spendRez.rep.description", type: "input" },
+    1: { id: "skill", label: "ep2e.healthbar.tooltip.spendRez.skill.label", description: "ep2e.healthbar.tooltip.spendRez.skill.description", type: "input" },
+    2: { id: "spec", label: "ep2e.healthbar.tooltip.spendRez.spec.label", description: "ep2e.healthbar.tooltip.spendRez.spec.description", type: "input" },
+    3: { id: "psi", label: "ep2e.healthbar.tooltip.spendRez.psi.label", description: "ep2e.healthbar.tooltip.spendRez.psi.description", type: "input" },
+    4: { id: "lang", label: "ep2e.healthbar.tooltip.spendRez.lang.label", description: "ep2e.healthbar.tooltip.spendRez.lang.description", type: "input" },
+    5: { id: "apt", label: "ep2e.healthbar.tooltip.spendRez.apt.label", description: "ep2e.healthbar.tooltip.spendRez.apt.description", type: "input" },
+    6: { id: "flex", label: "ep2e.healthbar.tooltip.spendRez.flex.label", description: "ep2e.healthbar.tooltip.spendRez.flex.description", type: "input" },
+    7: { id: "traits", label: "ep2e.healthbar.tooltip.spendRez.traits.label", description: "ep2e.healthbar.tooltip.spendRez.traits.description", type: "input" }
+  }, costMatrix: EPactorSheet.REZ_COST_MATRIX }
+
+  static REZ_SPEND_HOMEBREW = { options: {
+    0: { id: "repH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.description", type: "input" },
+    1: { id: "skill33", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.description", type: "input" },
+    2: { id: "skill3366", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.description", type: "input" },
+    3: { id: "skill66", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.description", type: "input" },
+    4: { id: "specH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.description", type: "input" },
+    5: { id: "psiH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.description", type: "input" },
+    6: { id: "langH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.description", type: "input" },
+    7: { id: "aptH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.description", type: "input" },
+    8: { id: "flexH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.description", type: "input" },
+    9: { id: "traitsH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.description", type: "input" }
+  }, costMatrix: EPactorSheet.REZ_COST_MATRIX }
+
+  /**
+   * The table the Rez spending dialog offers. A registered table replaces the core one entirely.
+   * @param {Boolean} brewStatus - Whether the house rules are active
+   * @returns {Object} An object holding the dialog options and their Rez cost by id
+   */
+  static rezSpendTable(brewStatus) {
+    return getRezSpendOptions() ?? (brewStatus ? EPactorSheet.REZ_SPEND_HOMEBREW : EPactorSheet.REZ_SPEND_RAW);
+  }
+
   
   //Fallback config for sheets in general
   // Foundry's own ApplicationV2 already walks the class chain and merges each level's DEFAULT_OPTIONS
@@ -212,6 +270,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     else {
       context.tabGroups = { limited: this.tabGroups.limited };
     }
+
+    Hooks.callAll("eclipsephase.prepareActorSheetContext", this, context);
 
     return context;
   }
@@ -1660,53 +1720,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const spentRez = actorModel.rezPoints.spent;
         const ledger = actorModel.rezPoints.ledger;
 
-        if (!brewStatus) {
-          object = {
-            0: { id: "rep", label: "ep2e.healthbar.tooltip.spendRez.rep.label", description: "ep2e.healthbar.tooltip.spendRez.rep.description", type: "input" },
-            1: { id: "skill", label: "ep2e.healthbar.tooltip.spendRez.skill.label", description: "ep2e.healthbar.tooltip.spendRez.skill.description", type: "input" },
-            2: { id: "spec", label: "ep2e.healthbar.tooltip.spendRez.spec.label", description: "ep2e.healthbar.tooltip.spendRez.spec.description", type: "input" },
-            3: { id: "psi", label: "ep2e.healthbar.tooltip.spendRez.psi.label", description: "ep2e.healthbar.tooltip.spendRez.psi.description", type: "input" },
-            4: { id: "lang", label: "ep2e.healthbar.tooltip.spendRez.lang.label", description: "ep2e.healthbar.tooltip.spendRez.lang.description", type: "input" },
-            5: { id: "apt", label: "ep2e.healthbar.tooltip.spendRez.apt.label", description: "ep2e.healthbar.tooltip.spendRez.apt.description", type: "input" },
-            6: { id: "flex", label: "ep2e.healthbar.tooltip.spendRez.flex.label", description: "ep2e.healthbar.tooltip.spendRez.flex.description", type: "input" },
-            7: { id: "traits", label: "ep2e.healthbar.tooltip.spendRez.traits.label", description: "ep2e.healthbar.tooltip.spendRez.traits.description", type: "input" }
-          };
-        }
-        else {
-          object = {
-            0: { id: "repH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.description", type: "input" },
-            1: { id: "skill33", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.description", type: "input" },
-            2: { id: "skill3366", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.description", type: "input" },
-            3: { id: "skill66", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.description", type: "input" },
-            4: { id: "specH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.description", type: "input" },
-            5: { id: "psiH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.description", type: "input" },
-            6: { id: "langH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.description", type: "input" },
-            7: { id: "aptH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.description", type: "input" },
-            8: { id: "flexH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.description", type: "input" },
-            9: { id: "traitsH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.description", type: "input" }
-          };
-        }
+        const rezTable = EPactorSheet.rezSpendTable(brewStatus);
+        object = rezTable.options;
 
-        const costMatrix = {
-          "rep": 1,
-          "skill": 1,
-          "spec": 1,
-          "psi": 1,
-          "lang": 1,
-          "apt": 1,
-          "flex": 2,
-          "traits": 1,
-          "repH": 1,
-          "skill33": 1,
-          "skill3366": 1,
-          "skill66": 1,
-          "specH": 5,
-          "psiH": 5,
-          "langH": 5,
-          "aptH": 5,
-          "flexH": 10,
-          "traitsH": 1
-        };
+        const costMatrix = rezTable.costMatrix;
 
         let total = 0;
         const date = new Date().toLocaleDateString("en-EN");

@@ -690,7 +690,25 @@ global.foundry = {
         static async wait() {
           return dialogQueue.length ? dialogQueue.shift() : { cancelled: true };
         }
-      }
+      },
+      ApplicationV2: class ApplicationV2 {
+        static DEFAULT_OPTIONS = {};
+        static PARTS = {};
+        constructor(options = {}) { this.options = options; }
+        async _prepareContext() { return {}; }
+        render() { return this; }
+      },
+      HandlebarsApplicationMixin: Base => class extends Base {}
+    },
+    sheets: {
+      ActorSheetV2: class ActorSheetV2 {
+        static DEFAULT_OPTIONS = {};
+        static PARTS = {};
+        constructor(options = {}) { this.options = options; }
+        async _prepareContext() { return {}; }
+        render() { return this; }
+      },
+      ItemSheetV2: class ItemSheetV2 {}
     },
     ux: { TextEditor: { implementation: { enrichHTML: async html => html ?? "" } } }
   },
