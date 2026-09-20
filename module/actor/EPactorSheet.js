@@ -1506,7 +1506,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           return actor.update({ [poolUpdate]: newPoolValue });
 
         } else {
-          let chatData = { type: "notEnoughPool", poolName: poolName, brewStatus: brewStatus, poolType: pool };
+          let chatData = { type: "notEnoughPool", poolName: poolName, poolType: pool };
           let renderedHtml = await foundry.applications.handlebars.renderTemplate(result, chatData);
 
           ChatMessage.create({
@@ -1565,7 +1565,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       element.addEventListener("click", ev => {
         ev.preventDefault();
         const dataset = ev.currentTarget.dataset;
-        const systemOptions = { "askForOptions": ev.shiftKey, "optionsSettings": game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus": game.settings.get("eclipsephase", "superBrew") };
+        const systemOptions = { "askForOptions": ev.shiftKey, "optionsSettings": game.settings.get("eclipsephase", "showTaskOptions") };
         DICE.RollCheck({
           "name": dataset.name,
           "rolltype": "skill",
@@ -1834,7 +1834,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     let rolledFrom = dataset.rolledfrom? dataset.rolledfrom : "";
     //console.log("This is my rolled from", rolledFrom, "because my skillKey is", dataset.key)
     let weaponID = dataset.weaponid ? dataset.weaponid : "";
-    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
+    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions")}
 
     SHEET.rollFromSheet(actorWhole, dataset, rolledFrom, weaponID, systemOptions)
     

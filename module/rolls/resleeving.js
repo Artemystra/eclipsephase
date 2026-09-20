@@ -10,7 +10,7 @@ export async function sleevingTest (data) {
     const btndata = data.currentTarget.dataset
     const actorWhole = game.actors.get(btndata.actorid)
     const actorModel = actorWhole.system
-    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
+    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions")}
     let integrationTest
     let stressTest
     let dataset = {}

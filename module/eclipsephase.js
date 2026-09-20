@@ -12,10 +12,11 @@ import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
 import  { registerPsiEffectSocket } from "./rolls/psi.js"
+import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
-import { registerRegistryHelpers, registerRollSource, registerPoolOption } from "./api/registry.js";
+import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
 import { api } from "./api/index.js";
 
 async function registerSystemSettings() {
@@ -244,6 +245,10 @@ Hooks.once('init', async function() {
   registerCoreRollSources();
 
   registerSystemSettings();
+});
+
+Hooks.once("ready", () => {
+  if (game.settings.get("eclipsephase", "superBrew")) registerTaskResultText(HOMEBREW_TASK_RESULT_TEXT);
 });
 
 // Signals that game.eclipsephase.api is in place, so a module can register against it.
@@ -1082,8 +1087,7 @@ const dataset = {
 
 const systemOptions = {
   askForOptions: false,
-  optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
-  brewStatus: game.settings.get("eclipsephase", "superBrew")
+  optionsSettings: game.settings.get("eclipsephase", "showTaskOptions")
 };
 
 await game.eclipsephase.rollWeaponMacro(actor, dataset, "${rolledFrom}", "${itemId}", systemOptions);

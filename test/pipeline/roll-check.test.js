@@ -2,7 +2,7 @@ import { RollCheck, TaskRollModifier } from "../../module/rolls/dice.js";
 import { registerRollSource, registerPoolOption, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs } from "../setup/factories.js";
 
-const SYSTEM_OPTIONS = { askForOptions: false, optionsSettings: false, brewStatus: false };
+const SYSTEM_OPTIONS = { askForOptions: false, optionsSettings: false };
 
 /**
  * A dialog answer that accepts the roll without choosing any option.
@@ -187,5 +187,20 @@ describe("RollCheck registry use", () => {
     });
     const actor = makeRoller();
     expect(actor.system.skillsVig.infiltrate.roll).toBeGreaterThan(0);
+  });
+});
+
+describe("RollCheck without brewStatus", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  test("a roll completes normally when systemOptions carries no brewStatus at all", async () => {
+    const actor = makeRoller();
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, { askForOptions: false, optionsSettings: false }, null, "skill");
+
+    expect(global.__ep.createdMessages).toHaveLength(1);
+    expect(global.__ep.createdMessages[0].flags.eclipsephase.roll.rolledFrom).toEqual("skill");
   });
 });

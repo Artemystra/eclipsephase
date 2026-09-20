@@ -30,8 +30,6 @@ async function _restCheckboxListener(html, actor) {
   html.querySelectorAll(".rest").forEach(element => {
     element.addEventListener("click", async func => {
       const dataset = func.currentTarget.dataset;
-      const brewStatus = false;
-      //const brewStatus = game.settings.get("eclipsephase", "superBrew"); -> Out of order for the time being (25.07.2025)
       const restReset = game.settings.get("eclipsephase", "restReset");
       const actorWhole = actor;
       const actorModel = actor.system;
@@ -64,12 +62,7 @@ async function _restCheckboxListener(html, actor) {
         await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", ["woundIgnore", "traumaIgnore"]);
       }
 
-      if (!brewStatus) {
-        poolSpend = (maxInsight - curInsight) + (maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
-      }
-      else {
-        poolSpend = (maxInsight - curInsight) + (maxVigor - curVigor) + (maxMoxie - curMoxie);
-      }
+      poolSpend = (maxInsight - curInsight) + (maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
 
       let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod) * actorModel.mods.psiMultiplier : "") + (actorModel.mods.recoverBonus ? " + " + eval(actorModel.mods.recoverBonus) : "");
       let roll = await new Roll(rollFormula).evaluate();
@@ -86,7 +79,7 @@ async function _restCheckboxListener(html, actor) {
         restValue = roll.total;
       }
 
-      if (restType === "long" && !brewStatus) {
+      if (restType === "long") {
         let label = game.i18n.localize("ep2e.roll.announce.rest.long");
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker({ actor: actor }),
@@ -101,35 +94,12 @@ async function _restCheckboxListener(html, actor) {
           "system.psiStrain.infection": resetInfection
         });
       }
-      else if (restType === "long" && brewStatus) {
-        let label = game.i18n.localize("ep2e.roll.announce.rest.long");
-        ChatMessage.create({
-          speaker: ChatMessage.getSpeaker({ actor: actor }),
-          flavor: label
-        });
-        return applyRest(actorWhole, restType, {
-          "system.pools.insight.value": maxInsight,
-          "system.pools.vigor.value": maxVigor,
-          "system.pools.moxie.value": maxMoxie,
-          "system.rest.restValue": null,
-          "system.psiStrain.infection": resetInfection
-        });
-      }
-      else if (restValue >= poolSpend && !brewStatus) {
+      else if (restValue >= poolSpend) {
         return applyRest(actorWhole, restType, {
           "system.pools.insight.value": maxInsight,
           "system.pools.vigor.value": maxVigor,
           "system.pools.moxie.value": maxMoxie,
           "system.pools.flex.value": maxFlex,
-          "system.rest.restValue": null,
-          "system.psiStrain.infection": easeInfection
-        });
-      }
-      else if (restValue >= poolSpend && brewStatus) {
-        return applyRest(actorWhole, restType, {
-          "system.pools.insight.value": maxInsight,
-          "system.pools.vigor.value": maxVigor,
-          "system.pools.moxie.value": maxMoxie,
           "system.rest.restValue": null,
           "system.psiStrain.infection": easeInfection
         });

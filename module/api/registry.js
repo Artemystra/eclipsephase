@@ -149,6 +149,29 @@ export function renderPoolOptions(options, poolType) {
   return markup;
 }
 
+let taskResultText = null;
+
+/**
+ * Replaces the success-tier text table a finished roll and its pool-swap alternatives are labelled
+ * with, for a feature that changes those labels.
+ * @param {Object} table - A result-index-to-{class, text} table, in the shape of dice.js's own tables
+ * @returns {Boolean} Whether the table was registered
+ */
+export function registerTaskResultText(table) {
+  if (!table || typeof table !== "object") return reject("A task result text table", "it needs a result-to-label object");
+  if (taskResultText) return reject("A task result text table", "another one is already registered");
+  taskResultText = table;
+  return true;
+}
+
+/**
+ * The registered success-tier text table, if any.
+ * @returns {Object|null} The table, or null while the core one applies
+ */
+export function getTaskResultText() {
+  return taskResultText;
+}
+
 let rezSpendOptions = null;
 
 /**
@@ -195,6 +218,7 @@ export function resetRegistry() {
   rollSources.clear();
   poolOptions.length = 0;
   slots.clear();
+  taskResultText = null;
   rezSpendOptions = null;
 }
 

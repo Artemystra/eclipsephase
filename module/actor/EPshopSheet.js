@@ -1011,8 +1011,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
     const systemOptions = {
       askForOptions: false,
-      optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
-      brewStatus: game.settings.get("eclipsephase", "superBrew")
+      optionsSettings: game.settings.get("eclipsephase", "showTaskOptions")
     };
     // Pool-swap rescue re-enters via usePoolFromChat() in pools.js using ids stashed on the chat button.
     const dataset = {

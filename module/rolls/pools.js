@@ -1,6 +1,7 @@
 import { eclipsephase } from "../config.js";
-import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
+import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT_TEXT } from "./dice.js";
 import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
+import { getTaskResultText } from "../api/registry.js";
 import { prepareWeapon, dealPsiDamage } from "./damage.js";
 import { completeShopPurchase, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
 
@@ -149,7 +150,7 @@ export async function update(options, pool, task, actorWhole){
  * @returns - An object containing the outcome of the analysis
  */
 export async function outcomeAlternatives(outputData, pool, systemOptions){
-    let resultText = systemOptions.brewStatus ? HOMEBREW_TASK_RESULT_TEXT : TASK_RESULT_TEXT;
+    let resultText = getTaskResultText() ?? TASK_RESULT_TEXT;
     let obj = {options: {swap: false, upgrade: false, mitigate: false}} 
     obj.value = await swapDice(outputData.rollResult);
     obj.result =  rollCalc(obj.value, outputData.targetNumber)

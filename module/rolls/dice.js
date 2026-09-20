@@ -2,7 +2,7 @@ import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
 import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/general-sheet-functions.js";
 import { strainSubstrate } from "../common/body-markers.js";
-import { getRollSource, applicablePoolOptions } from "../api/registry.js";
+import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 
 /*
  * Path constants for dialog templates
@@ -433,7 +433,7 @@ export class TaskRoll {
   outputData(options, actorWhole, pool, rollItem, rolledFrom, systemOptions) {
     let data = {}
     
-    let resultText = systemOptions.brewStatus ? HOMEBREW_TASK_RESULT_TEXT[this._result] : TASK_RESULT_TEXT[this._result]
+    let resultText = (getTaskResultText() ?? TASK_RESULT_TEXT)[this._result]
 
     data.userID = game.user._id
     data.actor = actorWhole
@@ -601,7 +601,7 @@ function getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom) {
  * @param {Object} dataset - The dataset object that contains all the necessary information for the roll. It is derived from the html element that was clicked to trigger the roll
  * @param {Object} actorModel - The actor's system object that the roll is being performed from
  * @param {Object} actorWhole - The actor object that the roll is being performed from
- * @param {Object} systemOptions - The system options selected mainly to determine whether homebrew rules are in effect
+ * @param {Object} systemOptions - askForOptions/optionsSettings the dialog was opened with
  * @param {Object} weaponSelected - The weapon object that is being used for the roll (This is important for attack rolls (melee/guns) only)
  * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
  * @returns 

@@ -65,7 +65,7 @@ export async function preparePsi(data){
     const actorWhole = await fromUuid(context.actorUuid)
     const psiOwner = context.userId
     const push = context.options.push;
-    const systemOptions = {"brewStatus" : game.settings.get("eclipsephase", "superBrew")}
+    const systemOptions = {}
     const blindRollMode = inheritChatVisibility(context.messageId, context.options.rollMode).blind ? "blind" : undefined
     await rollPsiEffect(actorWhole, psiOwner, push, systemOptions, undefined, blindRollMode)
 }
@@ -199,7 +199,7 @@ export async function confirmChiPush(actorWhole, itemId, rollMode){
     const chiPushMessage = game.i18n.format("ep2e.roll.announce.psi.chiPushActive", { minutes });
     await rollToChat(null, { message: chiPushMessage }, CHI_PUSH_OUTPUT, null, actingPerson, recipientList, false);
 
-    const systemOptions = { brewStatus: game.settings.get("eclipsephase", "superBrew") };
+    const systemOptions = {};
     await rollPsiEffect(actorWhole, psiOwner, false, systemOptions, itemId, rollMode);
 }
 
@@ -221,7 +221,7 @@ export function registerPsiEffectSocket(){
         if (primaryGM && primaryGM.id !== game.user.id) return;
         const actorWhole = await fromUuid(payload.actorUuid);
         if (!actorWhole) return;
-        const systemOptions = { brewStatus: game.settings.get("eclipsephase", "superBrew") };
+        const systemOptions = {};
         await rollPsiEffect(actorWhole, payload.psiOwner, payload.push, systemOptions, payload.chiPushItemId, payload.rollMode);
     });
 }
@@ -234,7 +234,7 @@ export function registerPsiEffectSocket(){
  * @param {Actor} actorWhole - The infected actor
  * @param {String} psiOwner - Id of the user the result is whispered to alongside the GMs
  * @param {Boolean|String} push - Whether the triggering sleight was pushed
- * @param {Object} systemOptions - Holds the homebrew setting used for result texts
+ * @param {Object} systemOptions - Forwarded to TaskRoll.outputData(); no field of it is read here
  * @param {String} chiPushItemId - Id of the pushed chi sleight, if a chi push triggered this
  * @param {String} rollMode - Visibility of the originating roll, "blind" hides the test entirely
  */
