@@ -17,6 +17,12 @@ Object {
   "chat": Object {
     "readRollContext": [Function],
   },
+  "migration": Object {
+    "createProgressDialog": [Function],
+    "forEachActor": [Function],
+    "forEachItem": [Function],
+    "postNotice": [Function],
+  },
   "rolls": Object {
     "RollCheck": [Function],
     "TaskRoll": [Function],

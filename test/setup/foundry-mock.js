@@ -655,6 +655,8 @@ function resetMock() {
   uuidRegistry.clear();
   global.game.messages.clear();
   global.game.actors.clear();
+  global.game.items.clear();
+  global.game.packs.clear();
 }
 
 global.foundry = {
@@ -687,6 +689,12 @@ global.foundry = {
     handlebars: { renderTemplate, loadTemplates: async () => {} },
     api: {
       DialogV2: class DialogV2 {
+        constructor(options = {}) {
+          this.options = options;
+          this.element = { querySelector: () => null };
+        }
+        render() { return this; }
+        close() { return this; }
         static async wait() {
           return dialogQueue.length ? dialogQueue.shift() : { cancelled: true };
         }
@@ -763,12 +771,12 @@ global.game = {
   },
   user: { id: "testuser", _id: "testuser", isGM: true, name: "Tester" },
   users: { activeGM: null, filter: () => [], find: () => null, get: () => null },
-  messages: new Map(),
-  actors: new Map(),
-  items: new Map(),
-  packs: new Map(),
-  macros: new Map(),
-  modules: new Map(),
+  messages: new MockCollection(),
+  actors: new MockCollection(),
+  items: new MockCollection(),
+  packs: new MockCollection(),
+  macros: new MockCollection(),
+  modules: new MockCollection(),
   socket: { on: () => {}, emit: () => {} },
   eclipsephase: {}
 };

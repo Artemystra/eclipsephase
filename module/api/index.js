@@ -20,6 +20,7 @@ import {
   tempEffectDeletion
 } from "../common/general-sheet-functions.js";
 import { requestGMItemTransfer, slideToggleVisibility } from "../common/general-helper-functions.js";
+import { epCreateProgressDialog, forEachActor, forEachItem, postNotice } from "../common/migration.js";
 import {
   bodyBindingKey,
   bodyHasWareMarker,
@@ -89,7 +90,20 @@ export const chat = {
 };
 
 /**
+ * Migration helpers a module can run its own data updates through, in the same style the system's
+ * own migrations use: a cancellable progress dialog, one document at a time, one broken document
+ * isolated from the rest.
+ * @since 2.5
+ */
+export const migration = {
+  createProgressDialog: epCreateProgressDialog,
+  forEachActor,
+  forEachItem,
+  postNotice
+};
+
+/**
  * The full game.eclipsephase.api surface, grouped by area.
  * @since 2.5
  */
-export const api = { rolls, actors, ui, chat };
+export const api = { rolls, actors, ui, chat, migration };

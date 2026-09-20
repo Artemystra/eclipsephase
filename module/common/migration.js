@@ -2664,7 +2664,7 @@ async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
   });
 }
 
-function epCreateProgressDialog(title = "Migration") {
+export function epCreateProgressDialog(title = "Migration") {
   const state = { cancelled: false };
 
   const content = `
@@ -2720,4 +2720,96 @@ function epCreateProgressDialog(title = "Migration") {
   };
 
   return { dlg, set, done, fail, state };
-}
+}
+/**
+ * Runs fn once per document, showing a cancellable progress dialog and isolating each document's
+ * own error so one broken document does not stop the rest. Shared by forEachActor and forEachItem.
+ * @param {Array} documents - The documents to process
+ * @param {Function} fn - async (document) => void, run once per document
+ * @param {String} label - The progress dialog's title
+ * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
+ */
+async function runOverDocuments(documents, fn, label) {
+  const total = documents.length;
+  const uiBar = total ? epCreateProgressDialog(label) : null;
+  const errors = [];
+  let completed = 0;
+
+  for (const document of documents) {
+    if (uiBar?.state.cancelled) {
+      uiBar.fail(`Cancelled (${completed}/${total})`);
+      return { completed, total, cancelled: true, errors };
+    }
+
+    uiBar?.set(Math.floor((completed / total) * 100), document.name ?? "", `${completed + 1}/${total}`);
+
+    try {
+      await fn(document);
+    } catch (error) {
+      console.error(`[EP Migration] ${document.name ?? document.id}: failed`, error);
+      errors.push({ document, error });
+    }
+
+    completed++;
+    uiBar?.set(Math.floor((completed / total) * 100), document.name ?? "", `${completed}/${total}`);
+  }
+
+  uiBar?.done(`Finished (${completed}/${total})`);
+  return { completed, total, cancelled: false, errors };
+}
+
+/**
+ * Runs fn once for every actor in the world, so a module can migrate its own data the same way
+ * the system's own migrations do.
+ * @param {Function} fn - async (actor) => void, run once per actor
+ * @param {Object} [options] - label for the progress dialog; filter(actor) => boolean to narrow the set
+ * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
+ */
+export async function forEachActor(fn, { label = "Migration", filter } = {}) {
+  const actors = game.actors.filter(actor => typeof filter !== "function" || filter(actor));
+  return runOverDocuments(actors, fn, label);
+}
+
+/**
+ * Runs fn once for every item in the world: unembedded world items, every actor's embedded items,
+ * and optionally items inside world item compendiums.
+ * @param {Function} fn - async (item) => void, run once per item
+ * @param {Object} [options] - label; filter(item) => boolean; includeCompendiums to also cover world item packs
+ * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
+ */
+export async function forEachItem(fn, { label = "Migration", filter, includeCompendiums = false } = {}) {
+  const items = [];
+  const passes = item => typeof filter !== "function" || filter(item);
+
+  for (const item of game.items) if (passes(item)) items.push(item);
+  for (const actor of game.actors) for (const item of actor.items) if (passes(item)) items.push(item);
+
+  if (includeCompendiums) {
+    const worldItemPacks = game.packs.filter(pack => pack.metadata?.type === "Item" && pack.metadata?.package === "world");
+    for (const pack of worldItemPacks) {
+      for (const item of await pack.getDocuments()) if (passes(item)) items.push(item);
+    }
+  }
+
+  return runOverDocuments(items, fn, label);
+}
+
+/**
+ * Whispers a localized notice to an actor's non-GM owners, the pattern the migration self-whisper
+ * notices use (e.g. the armor stash notice). Does nothing when the actor has no such owner.
+ * @param {Actor} actor - The actor the notice is about
+ * @param {String} key - A localization key, formatted with data
+ * @param {Object} [data] - Values interpolated into the localized string
+ * @returns {Promise<Boolean>} Whether a message was posted
+ */
+export async function postNotice(actor, key, data = {}) {
+  const playerOwners = game.users.filter(user => !user.isGM && actor.testUserPermission(user, "OWNER"));
+  if (playerOwners.length === 0) return false;
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    whisper: playerOwners.map(user => user.id),
+    content: game.i18n.format(key, data)
+  });
+  return true;
+}

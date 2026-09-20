@@ -45,6 +45,8 @@ api.ui      // confirmation, selectBody, moreInfo, systemMessage, addWindowContr
             // addDragSupport, addMinimizeSupport, registerCommonHandlers,
             // itemTypeFilterPills, slideToggleVisibility
 api.chat    // readRollContext(element)
+api.migration // createProgressDialog(title), forEachActor(fn, options), forEachItem(fn, options),
+              // postNotice(actor, key, data)
 ```
 
 `api.rolls.RollCheck` runs the full task-roll pipeline (dialog, pool spend, chat card) and is
@@ -52,6 +54,29 @@ what a custom roll source hooks into via `eclipsephase.preRollDialog`/`preRoll`/
 `api.chat.readRollContext(element)` takes any element inside a chat card (typically the button a
 listener fired on) and returns the roll context described in "Chat message context" below,
 falling back to the card's legacy `data-*` attributes for cards created before this existed.
+
+`api.migration` lets a module run its own data updates the same way the system's own migrations
+do:
+
+```js
+await api.migration.forEachActor(async actor => {
+  // update actor
+}, { label: "My Module Migration", filter: actor => actor.type === "character" });
+
+await api.migration.forEachItem(async item => {
+  // update item
+}, { includeCompendiums: true });
+
+await api.migration.postNotice(actor, "my-module.migrationNotice", { count: 3 });
+```
+
+Both iterators show a cancellable progress dialog, isolate one document's error from the rest (it
+is logged and collected, not thrown), and resolve to
+`{ completed, total, cancelled, errors }`. `forEachActor` covers every world actor.
+`forEachItem` covers world items and every actor's embedded items by default, and world item
+compendiums as well when `includeCompendiums` is `true`. `postNotice` whispers a localized chat
+message to an actor's non-GM owners and does nothing when it has none - the pattern the system's
+own migrations use for a one-time "your data changed" notice.
 
 ## `eclipsephase.ready`
 
