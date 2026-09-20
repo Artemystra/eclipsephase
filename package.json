@@ -3,7 +3,7 @@
   "version": "0.4.9.4",
   "description": "Eclipse Phase system for Foundry VTT",
   "scripts": {
-    "test": "jest",
+    "test": "node scripts/check-feature-boundaries.mjs && jest",
     "test:unit": "jest test/unit",
     "test:pipeline": "jest test/pipeline",
     "test:data": "jest test/data test/hygiene",
