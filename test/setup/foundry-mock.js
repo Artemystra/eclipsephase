@@ -535,6 +535,36 @@ const Hooks = {
   }
 };
 
+let handlebarsReady = false;
+
+/**
+ * Registers the comparison and localization helpers Foundry provides to every template, plus the
+ * ones this system adds in its init hook, so real templates can be rendered outside Foundry.
+ * @returns {Object} The prepared Handlebars instance
+ */
+function getHandlebars() {
+  const handlebars = require("handlebars");
+  if (handlebarsReady) return handlebars;
+  handlebars.registerHelper({
+    localize: value => (typeof value === "string" ? global.game.i18n.localize(value) : value),
+    eq: (a, b) => a === b,
+    ne: (a, b) => a !== b,
+    lt: (a, b) => a < b,
+    gt: (a, b) => a > b,
+    lte: (a, b) => a <= b,
+    gte: (a, b) => a >= b,
+    and: (...args) => args.slice(0, -1).every(Boolean),
+    or: (...args) => args.slice(0, -1).some(Boolean),
+    not: value => !value,
+    concat: (...args) => args.slice(0, -1).join(""),
+    toLowerCase: value => String(value ?? "").toLowerCase(),
+    checkedIf: condition => (condition ? "checked" : ""),
+    numberFormat: value => String(value ?? "")
+  });
+  handlebarsReady = true;
+  return handlebars;
+}
+
 /**
  * Renders a system template with real Handlebars, so template changes surface in tests.
  * @param {String} templatePath - A path of the form systems/eclipsephase/templates/...
@@ -542,11 +572,10 @@ const Hooks = {
  * @returns {Promise<String>} The rendered HTML
  */
 async function renderTemplate(templatePath, data) {
-  const handlebars = require("handlebars");
   const relative = String(templatePath).replace(/^systems\/eclipsephase\//, "");
   const full = path.join(SYSTEM_ROOT, relative);
   if (!fs.existsSync(full)) return "";
-  return handlebars.compile(fs.readFileSync(full, "utf8"))(data);
+  return getHandlebars().compile(fs.readFileSync(full, "utf8"))(data);
 }
 
 /**

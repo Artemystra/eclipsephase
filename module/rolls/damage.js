@@ -1,33 +1,22 @@
 import { weaponPreparation } from "../common/weapon-functions.js";
 import { damageValueCalc } from "../common/general-sheet-functions.js";
 import { WEAPON_DAMAGE_OUTPUT, DAMAGE_STATUS_OUTPUT, rollToChat } from "./dice.js";
-import { inheritChatVisibility } from "../common/general-sheet-functions.js";
+import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { gammaAutoPushDamageMultiplier, GAMMA_PUSH_EFFECTS } from "./psi.js";
 
-export async function prepareWeapon(data, result, preparedData) {
-  /*const messageID = data.target.closest(`[data-message-id]`).dataset.messageId
-  console.log("messageID: ", game.messages.get(messageID))*/
-  const dataset = preparedData ? preparedData : data.currentTarget.dataset;
+export async function prepareWeapon(data, result, preparedContext) {
+  const context = preparedContext ?? readRollContext(data.currentTarget);
 
-  /*let unlinkedActorToken
-  if(dataset.tokenid){
-    unlinkedActorToken = await fromUuid(dataset.tokenid)
-    console.log("Ping")
-    console.log(unlinkedActorToken)
-    console.log(unlinkedActorToken.actors.values().next().value)
-  }*/
-
-  const actorWhole = await fromUuid(dataset.actorid);
-  const weaponID = dataset.weaponid;
-  const selectedWeaponMode = dataset.weaponmode;
-  const rolledFrom = dataset.rolledfrom;
+  const actorWhole = await fromUuid(context.actorUuid);
+  const weaponID = context.item.weaponId;
+  const selectedWeaponMode = context.item.weaponMode;
+  const rolledFrom = context.rolledFrom;
   const skillKey = rolledFrom === "ccWeapon" ? "melee" : "guns";
-  const rollResult = dataset.rollresult ? parseInt(dataset.rollresult) : result;
-  const biomorphTarget = dataset.biomorphtarget === "true" ? true : false;
-  const touchOnly = dataset.touchonly === "true" ? true : false;
-  const attackMode = dataset.attackmode;
-  const messageId = dataset.messageid ?? data?.currentTarget?.closest("[data-message-id]")?.dataset.messageId;
-  const {blind, recipientList} = inheritChatVisibility(messageId, dataset.rollmode);
+  const rollResult = Number.isFinite(result) ? result : context.alternatives.originalResult;
+  const biomorphTarget = context.options.biomorphTarget;
+  const touchOnly = context.options.touchOnly;
+  const attackMode = context.options.attackMode;
+  const {blind, recipientList} = inheritChatVisibility(context.messageId, context.options.rollMode);
   let modeDamage;
   if (attackMode === "burst" || attackMode === "aggressive" || attackMode === "aggressiveCharge") {
     modeDamage = "+1d10";
@@ -161,16 +150,14 @@ async function dealWeaponDamage(actorWhole, weaponSelected, rollResult, modeDama
 
 // Rolls and posts a psi sleight's damage (e.g. Psychic Stab, Nightmare) - the GM still judges whether it hit.
 export async function preparePsiDamage(data) {
-  const dataset = data.currentTarget.dataset;
-  const actorWhole = await fromUuid(dataset.actorid);
-  const sleightItem = actorWhole.items.get(dataset.sleightid);
+  const context = readRollContext(data.currentTarget);
+  const actorWhole = await fromUuid(context.actorUuid);
+  const sleightItem = actorWhole.items.get(context.item.sleightId);
   if (!sleightItem) return;
 
-  const rollResult = parseInt(dataset.rollresult);
-  const messageId = data.currentTarget.closest("[data-message-id]")?.dataset.messageId;
-  const {blind, recipientList} = inheritChatVisibility(messageId, dataset.rollmode);
+  const {blind, recipientList} = inheritChatVisibility(context.messageId, context.options.rollMode);
 
-  await dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, dataset.push);
+  await dealPsiDamage(actorWhole, sleightItem, context.alternatives.originalResult, blind, recipientList, context.options.push);
 }
 
 export async function dealPsiDamage(actorWhole, sleightItem, rollResult, blind, recipientList, manualPush) {

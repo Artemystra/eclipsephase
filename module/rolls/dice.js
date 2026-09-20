@@ -1,6 +1,6 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
-import { prepareRecipients, damageValueCalc } from "../common/general-sheet-functions.js";
+import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/general-sheet-functions.js";
 import { strainSubstrate } from "../common/body-markers.js";
 
 /*
@@ -703,6 +703,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         outputData.skillKey = roll.type
         outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
+        outputData.rollContext = buildRollContext(outputData, actorWhole, options, itemData)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
 
@@ -1367,7 +1368,8 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
         content: html,
         whisper: showTo,
         sound: message.sound,
-        blind: blind
+        blind: blind,
+        flags: message.rollContext ? {eclipsephase: {roll: message.rollContext}} : {}
     })
 
     return message;

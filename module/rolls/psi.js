@@ -1,7 +1,7 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TASK_RESULT_OUTPUT, PSI_INFLUENCE_OUTPUT, WEAPON_DAMAGE_OUTPUT, rollToChat} from "./dice.js";
 import * as pools from "./pools.js";
-import { gmList, prepareRecipients, inheritChatVisibility } from "../common/general-sheet-functions.js";
+import { gmList, prepareRecipients, inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { effectRuleKey } from "../common/general-helper-functions.js";
 import { TIER_TRAIT_NAMES } from "../common/sleight-prerequisite.js";
 
@@ -61,13 +61,12 @@ export function gammaAutoPushDamageMultiplier(actorWhole){
 }
 
 export async function preparePsi(data){
-    const dataset = data.currentTarget.dataset;
-    const actorWhole = await fromUuid(dataset.actorid)
-    const psiOwner = dataset.userid
-    const push = dataset.psipush === "false" ? false : dataset.psipush;
+    const context = readRollContext(data.currentTarget);
+    const actorWhole = await fromUuid(context.actorUuid)
+    const psiOwner = context.userId
+    const push = context.options.push;
     const systemOptions = {"brewStatus" : game.settings.get("eclipsephase", "superBrew")}
-    const messageId = data.currentTarget.closest("[data-message-id]")?.dataset.messageId
-    const blindRollMode = inheritChatVisibility(messageId, dataset.rollmode).blind ? "blind" : undefined
+    const blindRollMode = inheritChatVisibility(context.messageId, context.options.rollMode).blind ? "blind" : undefined
     await rollPsiEffect(actorWhole, psiOwner, push, systemOptions, undefined, blindRollMode)
 }
 
