@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { api } from "../../module/api/index.js";
+import * as registrySource from "../../module/api/registry.js";
 
 const SYSTEM_ROOT = path.resolve(__dirname, "..", "..");
 const system = JSON.parse(fs.readFileSync(path.join(SYSTEM_ROOT, "system.json"), "utf8"));
@@ -50,6 +51,16 @@ function hookNamesInDocs() {
 describe("game.eclipsephase.api surface", () => {
   test("matches the recorded snapshot", () => {
     expect(api).toMatchSnapshot();
+  });
+});
+
+describe("api.registry", () => {
+  test("re-exports the real registry.js functions unchanged", () => {
+    expect(api.registry.registerRollSource).toBe(registrySource.registerRollSource);
+    expect(api.registry.registerPoolOption).toBe(registrySource.registerPoolOption);
+    expect(api.registry.registerSlot).toBe(registrySource.registerSlot);
+    expect(api.registry.registerRezSpendOptions).toBe(registrySource.registerRezSpendOptions);
+    expect(api.registry.registerTaskResultText).toBe(registrySource.registerTaskResultText);
   });
 });
 

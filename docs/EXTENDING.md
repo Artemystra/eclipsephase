@@ -118,12 +118,13 @@ an actor type your module contributes via a module sub-type (see below) is left 
 
 ## Registries
 
-Registration functions live in `systems/eclipsephase/module/api/registry.js` and can be imported
-by absolute path from a module:
+Registration functions are under `game.eclipsephase.api.registry`, available once
+`eclipsephase.ready` has fired:
 
 ```js
-import { registerRollSource, registerPoolOption, registerSlot, registerRezSpendOptions }
-  from "/systems/eclipsephase/module/api/registry.js";
+Hooks.once("eclipsephase.ready", ({ api }) => {
+  api.registry.registerRollSource(/* ... */);
+});
 ```
 
 A rejected registration (missing field, duplicate id) is logged with `console.error` and returns
@@ -135,7 +136,7 @@ Lets a roll use `id` as its `rolledFrom` value and resolve its own skill/pool da
 being matched by a hardcoded string inside the roll pipeline.
 
 ```js
-registerRollSource("myRoll", {
+api.registry.registerRollSource("myRoll", {
   skillRoll(actorModel) {
     // returns { rollvalue, specname, poolType } or null
   },
@@ -152,7 +153,7 @@ The core system registers `rangedWeapon` and `ccWeapon` this way.
 Adds an entry to every pool `<select>` in the roll dialog.
 
 ```js
-registerPoolOption({
+api.registry.registerPoolOption({
   value: "myOption",
   label: "my-module.rollDialog.myOption",
   when(context) {
@@ -167,7 +168,7 @@ registerPoolOption({
 Renders a Handlebars partial at a named place inside a core template.
 
 ```js
-registerSlot("chatCard.buttons", {
+api.registry.registerSlot("chatCard.buttons", {
   template: "modules/my-module/templates/my-button.html",
   order: 10,          // ascending; default 0
   when(context) {}    // optional, receives the slot's render context
@@ -195,9 +196,22 @@ Replaces the Rez-spending table the character sheet offers wholesale. Only one r
 accepted; call it once, from your module's `init` or `ready`.
 
 ```js
-registerRezSpendOptions({
+api.registry.registerRezSpendOptions({
   options: { /* the dialog's entries, same shape as the core table */ },
   costMatrix: { /* Rez cost per option id */ }
+});
+```
+
+### `registerTaskResultText(table)`
+
+Replaces the success-tier text table (`outputData()`'s `resultText`, and `outcomeAlternatives()`'s
+pool-swap alternatives) wholesale. Only one registration is accepted; call it once, from your
+module's `init` or `ready`.
+
+```js
+api.registry.registerTaskResultText({
+  0: { class: "fail", text: "my-module.roll.result.majorFailure" },
+  // ... one entry per TASK_RESULT tier, 0-9
 });
 ```
 
@@ -279,15 +293,13 @@ Foundry's shorthand global for `foundry.data.operators.ForcedReplacement.create`
 
 ```js
 // module.js
-import { registerPoolOption } from "/systems/eclipsephase/module/api/registry.js";
-
 Hooks.once("eclipsephase.ready", (ep) => {
   if (foundry.utils.isNewerVersion("2.5", ep.version)) {
     ui.notifications.error("Eclipse Phase Example requires system version 2.5 or later.");
     return;
   }
 
-  registerPoolOption({
+  ep.api.registry.registerPoolOption({
     value: "exampleIgnore",
     label: "eclipsephase-example.rollDialog.exampleIgnore",
     when: context => context.rolledFrom === "exampleRoll"

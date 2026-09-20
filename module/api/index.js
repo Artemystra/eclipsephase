@@ -29,6 +29,13 @@ import {
   sleevedNervousSystem,
   CYBERBRAIN_MARKER
 } from "../common/body-markers.js";
+import {
+  registerRollSource,
+  registerPoolOption,
+  registerSlot,
+  registerRezSpendOptions,
+  registerTaskResultText
+} from "./registry.js";
 
 /**
  * The task-roll pipeline: dialog, resolution and chat output.
@@ -103,7 +110,20 @@ export const migration = {
 };
 
 /**
+ * Registration functions for a module's own roll sources, pool options, template slots, Rez-spend
+ * table and result-text table - the mutating counterpart to the read-only state in `registry`.
+ * @since 2.5
+ */
+export const registry = {
+  registerRollSource,
+  registerPoolOption,
+  registerSlot,
+  registerRezSpendOptions,
+  registerTaskResultText
+};
+
+/**
  * The full game.eclipsephase.api surface, grouped by area.
  * @since 2.5
  */
-export const api = { rolls, actors, ui, chat, migration };
+export const api = { rolls, actors, ui, chat, migration, registry };

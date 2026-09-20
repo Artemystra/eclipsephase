@@ -23,6 +23,13 @@ Object {
     "forEachItem": [Function],
     "postNotice": [Function],
   },
+  "registry": Object {
+    "registerPoolOption": [Function],
+    "registerRezSpendOptions": [Function],
+    "registerRollSource": [Function],
+    "registerSlot": [Function],
+    "registerTaskResultText": [Function],
+  },
   "rolls": Object {
     "RollCheck": [Function],
     "TaskRoll": [Function],
