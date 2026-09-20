@@ -641,7 +641,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
     rollContext.pool = pool
     const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset, rollContext)
+    let values = systemOptions?.skipDialog
+        ? { cancelled: false, ...systemOptions.presetOptions }
+        : await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset, rollContext)
 
     if(values.cancelled)
         return

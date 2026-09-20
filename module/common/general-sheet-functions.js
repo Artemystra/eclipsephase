@@ -319,6 +319,10 @@ export async function itemReduction(actor, itemID, itemQuantity){
     popUpBoxLabel,
     popUpBoxValue
   ) {
+    if (game.eclipsephase?.testing?.autoConfirm) {
+      return showRollMode ? { confirm: true, rollMode: popUpBoxValue || "public" } : { confirm: true };
+    }
+
     const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
     const primaryButton = popUpPrimary
       ? game.i18n.localize(popUpPrimary)

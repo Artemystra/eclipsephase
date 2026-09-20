@@ -18,6 +18,7 @@ import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
 import { api } from "./api/index.js";
+import "./tests/quench/index.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -143,7 +144,8 @@ Hooks.once('init', async function() {
     rollItemMacro,
     rollWeaponMacro: sheetFunction.rollFromSheet,
     version: game.system.version,
-    api
+    api,
+    testing: { autoConfirm: false }
   };
 
   /**
@@ -903,13 +905,9 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
     "prototypeToken.bar1.attribute": "health.physical",
     "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
   };
-  if (data.type === "goon") {
-    update["prototypeToken.actorLink"] = false;
-  } else {
-    update["prototypeToken.actorLink"] = true;
-    // NPCs don't get bar2 automatically (no default Mental Health bar) - GMs can still set it by hand.
-    if (data.type === "character") update["prototypeToken.bar2.attribute"] = "health.mental";
-  }
+  // null, not omission: system.json's secondaryTokenAttribute would otherwise give every type a bar2.
+  update["prototypeToken.bar2.attribute"] = data.type === "character" ? "health.mental" : null;
+  update["prototypeToken.actorLink"] = data.type !== "goon";
   actor.updateSource(update);
 });
 

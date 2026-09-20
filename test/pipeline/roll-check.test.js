@@ -204,3 +204,41 @@ describe("RollCheck without brewStatus", () => {
     expect(global.__ep.createdMessages[0].flags.eclipsephase.roll.rolledFrom).toEqual("skill");
   });
 });
+
+describe("RollCheck skipDialog seam", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  test("presetOptions answers the roll without opening a dialog", async () => {
+    const actor = makeRoller();
+    seedRolls([42]);
+
+    await RollCheck(
+      skillDataset(),
+      actor.system,
+      actor,
+      { skipDialog: true, presetOptions: plainDialogAnswer() },
+      null,
+      "skill"
+    );
+
+    expect(global.__ep.createdMessages).toHaveLength(1);
+    expect(global.__ep.createdMessages[0].flags.eclipsephase.roll.rolledFrom).toEqual("skill");
+  });
+
+  test("a preset globalMod reaches the roll the same way a dialog answer would", async () => {
+    const actor = makeRoller();
+    seedRolls([42]);
+
+    await RollCheck(
+      skillDataset(),
+      actor.system,
+      actor,
+      { skipDialog: true, presetOptions: plainDialogAnswer({ globalMod: -10 }) },
+      null,
+      "skill"
+    );
+
+    const card = global.__ep.createdMessages[0];
+    expect(card.content).toContain("-10");
+  });
+});
