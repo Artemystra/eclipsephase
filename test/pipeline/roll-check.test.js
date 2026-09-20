@@ -48,12 +48,9 @@ describe("RollCheck hooks", () => {
 
     await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
 
-    const fired = global.__ep.hookCalls.map(call => call.event).filter(event => event.startsWith("eclipsephase."));
-    expect(fired).toEqual([
-      "eclipsephase.preRollDialog",
-      "eclipsephase.preRoll",
-      "eclipsephase.postRoll"
-    ]);
+    const rollHooks = ["eclipsephase.preRollDialog", "eclipsephase.preRoll", "eclipsephase.postRoll"];
+    const fired = global.__ep.hookCalls.map(call => call.event).filter(event => rollHooks.includes(event));
+    expect(fired).toEqual(rollHooks);
   });
 
   test("a preRollDialog handler returning false cancels the roll", async () => {

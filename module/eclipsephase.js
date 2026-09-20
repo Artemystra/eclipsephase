@@ -884,6 +884,8 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
     });
     return;
   }
+  // Token defaults only make sense for the actor types this system prepares data for.
+  if (!EPactor.MANAGED_TYPES.includes(data.type)) return;
   const update = {
     "prototypeToken.bar1.attribute": "health.physical",
     "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
@@ -900,7 +902,7 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
 
 //Gives every character a flat-morph from start using the compendiumpack as a source
 Hooks.on("createActor", async (actor, options, userId) => {
-  if (actor.type === "shop") return;
+  if (!EPactor.MANAGED_TYPES.includes(actor.type)) return;
   if (actor.system.activeMorph || actor.system.activeID) {
     await actor.setFlag("eclipsephase", "defaultIdAdded", true);
     await actor.setFlag("eclipsephase", "defaultMorphAdded", true);

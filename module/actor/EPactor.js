@@ -32,6 +32,10 @@ export default class EPactor extends Actor {
   ]
 
   static STANDARD_MORPH = { dur: 30, type: "bio", description: "", img: "systems/eclipsephase/resources/img/anObjectificationByMichaelSilverRIP.jpg", insight: null, moxie: null, vigor: null, flex: null}
+
+  // The actor types this class prepares data for. Everything else, including a type a module
+  // contributes, is left to whoever owns it.
+  static MANAGED_TYPES = ["character", "npc", "goon"]
   /**
    * Augment the basic actor data with additional dynamic data.
    */
@@ -39,9 +43,9 @@ export default class EPactor extends Actor {
   prepareData() {
     super.prepareData();
     if (this.getFlag("eclipsephase", "migrating")) return super.prepareData();
-    // Shops have none of the morph/health/pools data this pipeline is built around - nothing below
-    // this point applies to them.
-    if (this.type === "shop") return;
+    // Only the actor types this pipeline is built around carry morph, health and pool data. Any
+    // other type, including one a module contributes, passes through untouched.
+    if (!EPactor.MANAGED_TYPES.includes(this.type)) return;
     const actorWhole = this;
     const actorModel = actorWhole.system;
     const actorPools = actorModel.pools
@@ -81,6 +85,8 @@ export default class EPactor extends Actor {
 
     // Trust Mode
     actorModel.editAll = game.settings.get("eclipsephase", "editAll");
+
+    Hooks.callAll("eclipsephase.prepareActorMods", actorWhole, actorModel);
 
     if (game.user.isGM){
 
@@ -275,6 +281,8 @@ export default class EPactor extends Actor {
           "system.pools.moxie.value": actorPools.moxie.totalMoxie,
           "flags.eclipsephase.resleeving": false })
     }
+
+    Hooks.callAll("eclipsephase.prepareActorDerived", actorWhole, actorModel);
   }
 
   // Native modifyTokenAttribute() (Token HUD bar-edit, macros) clamps to attr.max - for our two split
@@ -747,6 +755,8 @@ export default class EPactor extends Actor {
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
       actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "appeal" : actorModel.additionalSystems.sleeving.integrationIssues.appeal, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
     }
+
+    Hooks.callAll("eclipsephase.prepareActorStatus", actorWhole, actorModel);
 
     if(actorModel.currentStatus.generalModifier || actorModel.currentStatus.generalModifier || actorModel.currentStatus.armorModifier || actorModel.currentStatus.encumberanceModifier || actorModel.currentStatus.specialModifiers.length >= 1){
       actorModel.currentStatus.statusPresent = true

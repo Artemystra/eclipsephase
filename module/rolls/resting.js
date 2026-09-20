@@ -14,6 +14,18 @@ export function restingListeners(html, actor) {
   _restResetListener(html, actor);
 }
 
+/**
+ * Fires the rest hook so a feature can extend the payload, then writes it to the actor.
+ * @param {Actor} actorWhole - The resting actor
+ * @param {String} restType - Either "short" or "long"
+ * @param {Object} updates - The update payload the rest branch assembled
+ * @returns {Promise} The actor update
+ */
+async function applyRest(actorWhole, restType, updates) {
+  Hooks.callAll("eclipsephase.postRest", actorWhole, restType, updates);
+  return actorWhole.update(updates);
+}
+
 async function _restCheckboxListener(html, actor) {
   html.querySelectorAll(".rest").forEach(element => {
     element.addEventListener("click", async func => {
@@ -80,7 +92,7 @@ async function _restCheckboxListener(html, actor) {
           speaker: ChatMessage.getSpeaker({ actor: actor }),
           flavor: label
         });
-        return actorWhole.update({
+        return applyRest(actorWhole, restType, {
           "system.pools.insight.value": maxInsight,
           "system.pools.vigor.value": maxVigor,
           "system.pools.moxie.value": maxMoxie,
@@ -95,7 +107,7 @@ async function _restCheckboxListener(html, actor) {
           speaker: ChatMessage.getSpeaker({ actor: actor }),
           flavor: label
         });
-        return actorWhole.update({
+        return applyRest(actorWhole, restType, {
           "system.pools.insight.value": maxInsight,
           "system.pools.vigor.value": maxVigor,
           "system.pools.moxie.value": maxMoxie,
@@ -104,7 +116,7 @@ async function _restCheckboxListener(html, actor) {
         });
       }
       else if (restValue >= poolSpend && !brewStatus) {
-        return actorWhole.update({
+        return applyRest(actorWhole, restType, {
           "system.pools.insight.value": maxInsight,
           "system.pools.vigor.value": maxVigor,
           "system.pools.moxie.value": maxMoxie,
@@ -114,7 +126,7 @@ async function _restCheckboxListener(html, actor) {
         });
       }
       else if (restValue >= poolSpend && brewStatus) {
-        return actorWhole.update({
+        return applyRest(actorWhole, restType, {
           "system.pools.insight.value": maxInsight,
           "system.pools.vigor.value": maxVigor,
           "system.pools.moxie.value": maxMoxie,
@@ -123,7 +135,7 @@ async function _restCheckboxListener(html, actor) {
         });
       }
       else {
-        await actorWhole.update({
+        await applyRest(actorWhole, restType, {
           "system.psiStrain.infection": easeInfection
         });
         await _showDistributionDialog(actorWhole, restValue, maxInsight, maxVigor, maxMoxie, maxFlex, curInsight, curVigor, curMoxie, curFlex);

@@ -66,11 +66,10 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
     }
 
     // --- Case C: brain/nervous-system rules, plus Psi's jamming suppression
-    if (t === "aspect") {
-      return strainSubstrate(actor, item.system?.strainFamily ?? "psi").blocked;
-    }
-
-    // Default: don't suppress other item effects
-    return false;
+    const result = { suppressed: t === "aspect"
+      ? strainSubstrate(actor, item.system?.strainFamily ?? "psi").blocked
+      : false };
+    Hooks.callAll("eclipsephase.effectSuppression", item, actor, result);
+    return result.suppressed;
   }
 }

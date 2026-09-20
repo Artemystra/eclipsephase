@@ -504,6 +504,23 @@ class MockChatMessage {
   }
 }
 
+/**
+ * Runs one hook listener the way Foundry does: a listener that throws is logged and swallowed, so
+ * a broken listener cannot break the caller.
+ * @param {String} event - The hook name
+ * @param {Function} fn - The listener
+ * @param {Array} args - The hook arguments
+ * @returns {*} Whatever the listener returned, or undefined when it threw
+ */
+function safeCall(event, fn, args) {
+  try {
+    return fn(...args);
+  } catch (error) {
+    notifications.error.push(`Hook ${event}: ${error?.message ?? error}`);
+    return undefined;
+  }
+}
+
 const Hooks = {
   on(event, fn) {
     if (!hookHandlers.has(event)) hookHandlers.set(event, []);
@@ -521,13 +538,13 @@ const Hooks = {
   call(event, ...args) {
     hookCalls.push({ event, args });
     for (const fn of hookHandlers.get(event) ?? []) {
-      if (fn(...args) === false) return false;
+      if (safeCall(event, fn, args) === false) return false;
     }
     return true;
   },
   callAll(event, ...args) {
     hookCalls.push({ event, args });
-    for (const fn of hookHandlers.get(event) ?? []) fn(...args);
+    for (const fn of hookHandlers.get(event) ?? []) safeCall(event, fn, args);
     return true;
   },
   onError(source, error) {

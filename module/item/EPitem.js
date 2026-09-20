@@ -66,6 +66,8 @@ export default class EPitem extends Item {
           else if (mp >= moderateMin) itemModel.cost = "moderate";
           else itemModel.cost = "minor";
         }
+
+        Hooks.callAll("eclipsephase.prepareItemData", item, itemModel);
       }
 
     chatTemplate = {
