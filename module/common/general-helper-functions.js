@@ -260,9 +260,10 @@ export function registerItemTransferSocket() {
     }
 
     // Morph trades between characters are blocked (active/sleeved morph has state that a plain
-    // item transfer can't handle safely) - a shop's morphs are never active, so exempt those.
+    // item transfer can't handle safely). A source the system does not prepare - a shop, whoever
+    // owns the type - never has an active morph, so those are exempt.
     const blockedTypes = new Set(["morph"]);
-    if (sourceActor.type !== "shop" && blockedTypes.has(item.type)) {
+    if (CONFIG.Actor.documentClass.MANAGED_TYPES.includes(sourceActor.type) && blockedTypes.has(item.type)) {
       return _replyToUser(userId, {
         requestId,
         ok: false,
@@ -297,9 +298,10 @@ export function registerItemTransferSocket() {
         boundToOverride
       });
 
-      // Shop morphs come with unfilled Enhancement slots - auto-apply them on purchase (no
-      // Standard/Flat choice dialog possible here, runs unattended on the GM's client).
-      if (item.type === "morph" && sourceActor.type === "shop" && created) {
+      // Morphs from an unmanaged source (a shop's stock) come with unfilled Enhancement slots -
+      // auto-apply them on purchase (no Standard/Flat choice dialog possible here, runs
+      // unattended on the GM's client).
+      if (item.type === "morph" && !CONFIG.Actor.documentClass.MANAGED_TYPES.includes(sourceActor.type) && created) {
         const { boundToFor } = MORPHFUNCTION.getBodyBindingInfo(targetActor);
         const boundTo = boundToFor(created);
         await MORPHFUNCTION.applyStandardEnhancements(targetActor, created, boundTo);
