@@ -625,6 +625,20 @@ async function renderTemplate(templatePath, data) {
   return getHandlebars().compile(source)(data);
 }
 
+/**
+ * The initial value of a schema, resolved recursively, matching how Foundry seeds a new document
+ * from its data model.
+ * @param {Object} schema - A map of field name to field instance
+ * @returns {Object} The initial data
+ */
+function initialFor(schema) {
+  const out = {};
+  for (const [key, field] of Object.entries(schema ?? {})) {
+    out[key] = typeof field?.getInitialValue === "function" ? field.getInitialValue() : undefined;
+  }
+  return out;
+}
+
 const dialogQueue = [];
 
 /**
@@ -676,14 +690,49 @@ global.foundry = {
   abstract: {
     TypeDataModel: class TypeDataModel {
       constructor(data = {}, options = {}) {
-        Object.assign(this, data);
+        Object.assign(this, initialFor(this.constructor.defineSchema()), data);
         this.parent = options.parent ?? null;
       }
       static defineSchema() {
         return {};
       }
+      /**
+       * The values this schema starts a fresh document with, the way Foundry seeds one.
+       * @returns {Object} The initial data
+       */
+      static cleanData() {
+        return initialFor(this.defineSchema());
+      }
     },
     DataModel: class DataModel {}
+  },
+  data: {
+    fields: {
+      SchemaField: class SchemaField {
+        constructor(fields = {}) { this.fields = fields; }
+        getInitialValue() { return initialFor(this.fields); }
+      },
+      BooleanField: class BooleanField {
+        constructor(options = {}) { this.options = options; }
+        getInitialValue() { return this.options.initial ?? false; }
+      },
+      NumberField: class NumberField {
+        constructor(options = {}) { this.options = options; }
+        getInitialValue() { return this.options.initial === undefined ? null : this.options.initial; }
+      },
+      StringField: class StringField {
+        constructor(options = {}) { this.options = options; }
+        getInitialValue() { return this.options.initial ?? ""; }
+      },
+      ObjectField: class ObjectField {
+        constructor(options = {}) { this.options = options; }
+        getInitialValue() { return this.options.initial ?? {}; }
+      },
+      ArrayField: class ArrayField {
+        constructor(element, options = {}) { this.element = element; this.options = options; }
+        getInitialValue() { return this.options.initial ?? []; }
+      }
+    }
   },
   applications: {
     handlebars: { renderTemplate, loadTemplates: async () => {} },

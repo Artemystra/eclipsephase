@@ -1,0 +1,188 @@
+{
+  "acceptedRepNetworks": {
+    "@-rep": true,
+    "c-rep": true,
+    "f-rep": true,
+    "g-rep": true,
+    "i-rep": true,
+    "r-rep": true,
+    "x-rep": true
+  },
+  "acceptsSales": true,
+  "sellLimitMaxItems": 0,
+  "sellLimitMaxRep": 0,
+  "valuation": {
+    "minor": "minor",
+    "moderate": "moderate",
+    "major": "major",
+    "rare": "rare"
+  },
+  "difficultyMapping": {
+    "trivial": "trivial",
+    "minor": "minor",
+    "moderate": "moderate",
+    "major": "major"
+  },
+  "loyaltyEnabled": true,
+  "loyaltyPerTier": {
+    "minor": null,
+    "moderate": null,
+    "major": null,
+    "rare": null
+  },
+  "loyaltyBarMax": 100,
+  "loyaltyBarSegments": {
+    "red": 25,
+    "orange": 25,
+    "yellow": 25,
+    "green": 25
+  },
+  "loyaltyBuyDiscount": {
+    "level2": 10,
+    "level3": 20,
+    "level4": 30
+  },
+  "generalRateOverrides": {
+    "minor": {
+      "flatBuyCost": null,
+      "sellBonus": null,
+      "sellRepGain": null
+    },
+    "moderate": {
+      "flatBuyCost": null,
+      "sellBonus": null,
+      "sellRepGain": null
+    },
+    "major": {
+      "flatBuyCost": null,
+      "sellBonus": null,
+      "sellRepGain": null
+    }
+  },
+  "morphPointOverrides": {
+    "moderateMin": null,
+    "majorMin": null,
+    "rareMin": null
+  },
+  "rateOverrides": {
+    "@-rep": {
+      "minor": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "moderate": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "major": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      }
+    },
+    "c-rep": {
+      "minor": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "moderate": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "major": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      }
+    },
+    "f-rep": {
+      "minor": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "moderate": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "major": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      }
+    },
+    "g-rep": {
+      "minor": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "moderate": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "major": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      }
+    },
+    "i-rep": {
+      "minor": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "moderate": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "major": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      }
+    },
+    "r-rep": {
+      "minor": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "moderate": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "major": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      }
+    },
+    "x-rep": {
+      "minor": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "moderate": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      },
+      "major": {
+        "flatBuyCost": null,
+        "sellBonus": null,
+        "sellRepGain": null
+      }
+    }
+  }
+}

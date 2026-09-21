@@ -7,19 +7,26 @@ const EPactor = require(path.join(SYSTEM_ROOT, "module", "actor", "EPactor.js"))
 const EPitem = require(path.join(SYSTEM_ROOT, "module", "item", "EPitem.js")).default;
 const { eclipsephase } = require(path.join(SYSTEM_ROOT, "module", "config.js"));
 const { registerRegistryHelpers } = require(path.join(SYSTEM_ROOT, "module", "api", "registry.js"));
+const ShopModel = require(path.join(SYSTEM_ROOT, "module", "features", "shop", "shop-model.js")).default;
 
 global.CONFIG.Actor.documentClass = EPactor;
 global.CONFIG.Item.documentClass = EPitem;
 global.CONFIG.eclipsephase = eclipsephase;
+// The shop's schema lives in its own data model rather than template.json, so register it here
+// the way the feature does at init - otherwise a shop actor would start with no system data.
+global.CONFIG.Actor.dataModels.shop = ShopModel;
 registerRegistryHelpers();
 
 /**
- * The template.json defaults for one document sub-type.
+ * The defaults for one document sub-type: a registered data model if the type has one, otherwise
+ * template.json, matching how Foundry resolves a sub-type's schema.
  * @param {String} documentName - Either "Actor" or "Item"
  * @param {String} type - The sub-type, e.g. "character"
  * @returns {Object} A fresh copy of the defaults
  */
 function modelFor(documentName, type) {
+  const dataModel = global.CONFIG[documentName]?.dataModels?.[type];
+  if (dataModel) return dataModel.cleanData();
   return foundry.utils.deepClone(global.game.model[documentName]?.[type] ?? {});
 }
 

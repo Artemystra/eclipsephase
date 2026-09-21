@@ -1,4 +1,5 @@
 import EPshopSheet from "./shop-sheet.js";
+import ShopModel from "./shop-model.js";
 import { applyLoyaltyTransaction, completeShopPurchase, postShopChatMessage, shopRepIconHtml } from "./shop-logic.js";
 
 const SOCKET_NAME = "system.eclipsephase";
@@ -31,6 +32,7 @@ Hooks.once("init", () => {
     default: true
   });
 
+  CONFIG.Actor.dataModels.shop = ShopModel;
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPshopSheet, { types: ["shop"], makeDefault: true });
   foundry.applications.handlebars.loadTemplates(SHOP_TEMPLATES);
 });
