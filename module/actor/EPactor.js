@@ -68,8 +68,6 @@ export default class EPactor extends Actor {
 
     const flags = actorModel.flags;
     const items = this.items;
-    let gammaCount = 0;
-    let chiCount = 0;
     let chiMultiplier = 1;
     if(actorWhole.type === "character" || actorWhole.type === "npc"){
       actorModel.psiStrain ??= { infection: 0, minimumInfection: 0 };
@@ -124,18 +122,6 @@ export default class EPactor extends Actor {
     actorModel.additionalSystems.puppetSocked = puppetSocked;
 
     actorModel.additionalSystems.hasCyberbrainChain = chainHasWareMarker(actorWhole, CYBERBRAIN_MARKER);
-
-    //Prepares information what type of psi a character uses
-    for(let psiTypeCheck of items){
-      if (psiTypeCheck.type === "aspect"){
-        if(psiTypeCheck.system.psiType === "chi"){
-          chiCount++
-        }
-        else if(psiTypeCheck.system.psiType === "gamma"){
-          gammaCount++
-        }
-      }
-    }
 
     // When jamming, Durability/Armor come from the jammed body instead of the sleeved morph. A
     // jammed Vehicle has no "type" of its own (drones/vehicles/robots count as synth, animals as
@@ -206,7 +192,7 @@ export default class EPactor extends Actor {
         };
       }
       this._calculateMentalHealth(actorModel, chiMultiplier)
-      this._minimumInfection(actorModel, gammaCount, chiCount);
+      this._minimumInfection(actorModel);
     }
 
     // Aptitudes
@@ -940,18 +926,19 @@ export default class EPactor extends Actor {
     skill.specialized = skill.roll + 10
   }
 
-  _minimumInfection(actorModel, gammaCount, chiCount) {
+  _minimumInfection(actorModel) {
     actorModel.psiStrain ??= { infection: 0, minimumInfection: 0 };
-    let minimumInfection = 0;
+    const tier = actorModel.additionalSystems?.hasPsi ?? 0;
     let currentInfection = actorModel.psiStrain.infection ?? 0;
 
-    if (gammaCount > 0){
+    let minimumInfection = 0;
+    if (tier >= 2){
       minimumInfection = 20
     }
-    else if (chiCount > 0){
+    else if (tier >= 1){
       minimumInfection = 10
     }
-    
+
     if (currentInfection < minimumInfection){
       actorModel.psiStrain.infection = minimumInfection;
     }

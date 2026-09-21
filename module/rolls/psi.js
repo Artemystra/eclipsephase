@@ -68,11 +68,16 @@ export function gammaAutoPushDamageMultiplier(actorWhole){
 export async function preparePsi(data){
     const context = readRollContext(data.currentTarget);
     const actorWhole = await fromUuid(context.actorUuid)
+    if(!actorWhole){
+        ui.notifications.warn(game.i18n.localize("ep2e.roll.announce.psi.actorGone"))
+        return
+    }
     const psiOwner = context.userId
     const push = context.options.push;
     const systemOptions = {}
-    const blindRollMode = inheritChatVisibility(context.messageId, context.options.rollMode).blind ? "blind" : undefined
-    await rollPsiEffect(actorWhole, psiOwner, push, systemOptions, undefined, blindRollMode)
+    const inherited = inheritChatVisibility(context.messageId, context.options.rollMode)
+    const rollMode = inherited.blind ? "blindroll" : context.options.rollMode
+    await rollPsiEffect(actorWhole, psiOwner, push, systemOptions, undefined, rollMode)
 }
 
 const POOL_CHIMOD_KEYS = {

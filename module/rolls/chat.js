@@ -36,15 +36,12 @@ export async function playerVision(html){
  * @param {*} html 
  */
 export async function ownerVision(html){ 
-    const button = html.querySelector(".privateChatButton")
-    
-    if(!button) {
-        return;
-    }
-    const actor = game.actors.get(html.querySelector(".privateChatButton").getAttribute("data-ownerid"))
+    for(const button of html.querySelectorAll(".privateChatButton")){
+        const actor = game.actors.get(button.getAttribute("data-ownerid"))
 
-    if(actor && !actor.isOwner){
-        button.classList.add("noShow")
+        if(actor && !actor.isOwner){
+            button.classList.add("noShow")
+        }
     }
 }
 

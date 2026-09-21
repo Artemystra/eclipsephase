@@ -1447,6 +1447,7 @@
           "pushedLabel": "Empujado",
           "autoLabel": "Auto",
           "autoPushTooltip": "Empuje Automático",
+          "actorGone": "El personaje al que pertenece esta prueba de infección ya no existe.",
           "noBioBrain": "El Psi solo funciona desde un cerebro biológico. Un Cerebro Cibernético lo bloquea, y un infomorfo no tiene sistema nervioso alguno.",
           "substrateBlockedTooltip": "El Psi necesita un cerebro biológico",
           "substrateMismatch": "Cerebro biológico en un cuerpo sintético"

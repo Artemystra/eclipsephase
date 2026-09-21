@@ -746,10 +746,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         rollContext.rollMode = options.rollMode
         Hooks.callAll("eclipsephase.postRoll", rollContext)
 
-        const blindRollMode = options.rollMode === "blind" ? "blind" : undefined
 
         if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
-            await psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions, undefined, blindRollMode)
+            await psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions, undefined, options.rollMode)
 
         return rollResult;
     }

@@ -1510,6 +1510,7 @@
           "pushedLabel": "Pushed",
           "autoLabel": "Auto",
           "autoPushTooltip": "Auto-Push",
+          "actorGone": "The character this Infection Test belongs to no longer exists.",
           "noBioBrain": "Psi only works from a biological brain. A Cyberbrain blocks it, and an infomorph has no nervous system to work through.",
           "substrateBlockedTooltip": "Psi needs a biological brain",
           "substrateMismatch": "Biological brain in a synthetic body"

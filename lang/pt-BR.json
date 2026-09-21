@@ -1461,6 +1461,7 @@
           "pushedLabel": "Empurrado",
           "autoLabel": "Auto",
           "autoPushTooltip": "Push Automático",
+          "actorGone": "O personagem ao qual este teste de infecção pertence não existe mais.",
           "noBioBrain": "Psi só funciona a partir de um cérebro biológico. Um Cérebro Cibernético o bloqueia, e um infomorfo não tem sistema nervoso algum.",
           "substrateBlockedTooltip": "Psi precisa de um cérebro biológico",
           "substrateMismatch": "Cérebro biológico em um corpo sintético"

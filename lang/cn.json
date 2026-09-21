@@ -1454,6 +1454,7 @@
           "pushedLabel": "已推送",
           "autoLabel": "自动",
           "autoPushTooltip": "自动推送",
+          "actorGone": "此感染检定所属的角色已不存在。",
           "noBioBrain": "灵能只能通过生物大脑运作。电子脑会阻断它，而信息体根本没有神经系统。",
           "substrateBlockedTooltip": "灵能需要生物大脑",
           "substrateMismatch": "生物大脑处于合成体内"
