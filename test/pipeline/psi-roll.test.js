@@ -217,3 +217,74 @@ describe("a Chi push asks about the body for itself", () => {
     expect(actor.system.psiStrain.infection).toBeGreaterThan(before);
   });
 });
+
+describe("a third family's influence card", () => {
+  /**
+   * Runs one Infection Test to the influence card and reports what that card was given.
+   * @param {Object} actor - The sleight user
+   * @param {Number} result - The influence d6 result to force
+   * @returns {Promise<Object>} The label and copy the card received
+   */
+  async function influenceCardFor(actor, result) {
+    const captured = [];
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data = {}) => {
+      if (String(template).includes("psi-influence")) captured.push(data);
+      return realRender(template, data);
+    };
+    seedRolls([1, result]);
+    try {
+      await rollPsiEffect(actor, game.user._id, false, {}, null, "public");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    return captured.at(-1) ?? {};
+  }
+
+  /**
+   * A sleight user belonging to a family the core does not own.
+   * @param {String} family - The family id
+   * @param {String} archetype - The sub-strain label
+   * @returns {Object} The prepared actor
+   */
+  function thirdFamilyUser(family, archetype) {
+    const actor = makeSleightUser({ nervousSystem: "bio", family });
+    actor.system.subStrain.label = archetype;
+    actor.system.psiStrain.infection = 90;
+    return actor;
+  }
+
+  test("it uses its own resolver, not Psi's", async () => {
+    registerStrainFamily("static", {
+      substrate: () => ({ blocked: false, jamBlocked: false, penalised: false, reasonKey: "", tooltipKey: "" }),
+      influence: () => ({ label: "x.label", copy: "x.copy", withRule: false })
+    });
+
+    const card = await influenceCardFor(thirdFamilyUser("static", "architect"), 3);
+
+    expect(card.influenceLabel).toEqual("x.label");
+    expect(card.influenceCopy).toEqual("x.copy");
+  });
+
+  test("a family with no resolver gets an empty card instead of Psi's rules", async () => {
+    registerStrainFamily("silent", {
+      substrate: () => ({ blocked: false, jamBlocked: false, penalised: false, reasonKey: "", tooltipKey: "" })
+    });
+
+    const card = await influenceCardFor(thirdFamilyUser("silent", "architect"), 3);
+
+    expect(card.influenceLabel).toBeUndefined();
+    expect(card.influenceCopy).toBeUndefined();
+  });
+
+  test("a sub-strain label of its own no longer throws inside the roll", async () => {
+    registerStrainFamily("ownlabel", {
+      substrate: () => ({ blocked: false, jamBlocked: false, penalised: false, reasonKey: "", tooltipKey: "" }),
+      influence: result => ({ label: `own.${result}`, copy: "own.copy", withRule: false })
+    });
+
+    const card = await influenceCardFor(thirdFamilyUser("ownlabel", "somethingElse"), 4);
+
+    expect(card.influenceLabel).toEqual("own.4");
+  });
+});

@@ -1,0 +1,736 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`what the Ki influence card says colony across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.ki.effect.takeStrain",
+    "label": "ep2e.ki.effect.cognitiveFeedback",
+    "rule": "ep2e.rule.ki.effect.takeStrain",
+  },
+  "2": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.colony.witnesses.label",
+    "rule": "",
+  },
+  "3": Object {
+    "copy": "ep2e.ki.effect.colony.sympathetic.text",
+    "label": "ep2e.ki.effect.colony.sympathetic.label",
+    "rule": "ep2e.rule.ki.effect.colony.sympathetic.text",
+  },
+  "4": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.colony.borrowed.label",
+    "rule": "",
+  },
+  "5": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.colony.gathering.label",
+    "rule": "",
+  },
+  "6": Object {
+    "copy": "ep2e.ki.effect.colony.avatar.text",
+    "label": "ep2e.ki.effect.colony.avatar.label",
+    "rule": "ep2e.rule.ki.effect.colony.avatar.text",
+  },
+}
+`;
+
+exports[`what the Ki influence card says crucible across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.ki.effect.takeStrain",
+    "label": "ep2e.ki.effect.cognitiveFeedback",
+    "rule": "ep2e.rule.ki.effect.takeStrain",
+  },
+  "2": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.crucible.preoccupation.label",
+    "rule": "",
+  },
+  "3": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.crucible.reconfiguration.label",
+    "rule": "",
+  },
+  "4": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.crucible.recalibration.label",
+    "rule": "",
+  },
+  "5": Object {
+    "copy": "ep2e.ki.effect.crucible.motivation.text",
+    "label": "ep2e.ki.effect.crucible.motivation.label",
+    "rule": "ep2e.rule.ki.effect.crucible.motivation.text",
+  },
+  "6": Object {
+    "copy": "ep2e.ki.effect.crucible.revision.text",
+    "label": "ep2e.ki.effect.crucible.revision.label",
+    "rule": "ep2e.rule.ki.effect.crucible.revision.text",
+  },
+}
+`;
+
+exports[`what the Ki influence card says redline across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.ki.effect.takeStrain",
+    "label": "ep2e.ki.effect.cognitiveFeedback",
+    "rule": "ep2e.rule.ki.effect.takeStrain",
+  },
+  "2": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.redline.governor.label",
+    "rule": "",
+  },
+  "3": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.redline.compulsion.label",
+    "rule": "",
+  },
+  "4": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.redline.calibration.label",
+    "rule": "",
+  },
+  "5": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.redline.rerouting.label",
+    "rule": "",
+  },
+  "6": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.redline.pushing.label",
+    "rule": "",
+  },
+}
+`;
+
+exports[`what the Ki influence card says ruin across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.ki.effect.takeStrain",
+    "label": "ep2e.ki.effect.cognitiveFeedback",
+    "rule": "ep2e.rule.ki.effect.takeStrain",
+  },
+  "2": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.ruin.fatigue.label",
+    "rule": "",
+  },
+  "3": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.ruin.seized.label",
+    "rule": "",
+  },
+  "4": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.ruin.intermittent.label",
+    "rule": "",
+  },
+  "5": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.ruin.shedding.label",
+    "rule": "",
+  },
+  "6": Object {
+    "copy": "ep2e.ki.effect.ruin.breakdown.text",
+    "label": "ep2e.ki.effect.ruin.breakdown.label",
+    "rule": "ep2e.rule.ki.effect.ruin.breakdown.text",
+  },
+}
+`;
+
+exports[`what the Ki influence card says signal across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.ki.effect.takeStrain",
+    "label": "ep2e.ki.effect.cognitiveFeedback",
+    "rule": "ep2e.rule.ki.effect.takeStrain",
+  },
+  "2": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.signal.carrier.label",
+    "rule": "",
+  },
+  "3": Object {
+    "copy": "ep2e.ki.effect.signal.saturation.text",
+    "label": "ep2e.ki.effect.signal.saturation.label",
+    "rule": "ep2e.rule.ki.effect.signal.saturation.text",
+  },
+  "4": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.signal.interference.label",
+    "rule": "",
+  },
+  "5": Object {
+    "copy": "",
+    "label": "ep2e.ki.effect.signal.dependency.label",
+    "rule": "",
+  },
+  "6": Object {
+    "copy": "ep2e.ki.effect.signal.beacon.text",
+    "label": "ep2e.ki.effect.signal.beacon.label",
+    "rule": "ep2e.rule.ki.effect.signal.beacon.text",
+  },
+}
+`;
+
+exports[`what the Psi influence card says a custom virus reads its own influence table 1`] = `
+Object {
+  "1": Object {
+    "copy": "none",
+    "label": null,
+    "rule": null,
+  },
+  "2": Object {
+    "copy": "none",
+    "label": null,
+    "rule": null,
+  },
+  "3": Object {
+    "copy": "none",
+    "label": null,
+    "rule": null,
+  },
+  "4": Object {
+    "copy": "none",
+    "label": null,
+    "rule": null,
+  },
+  "5": Object {
+    "copy": "none",
+    "label": null,
+    "rule": null,
+  },
+  "6": Object {
+    "copy": "none",
+    "label": null,
+    "rule": null,
+  },
+}
+`;
+
+exports[`what the Psi influence card says architect with enhancedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says architect with none across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says architect with restrictedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.relaxation",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.relaxation",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.relaxation",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.relaxation",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says beast with enhancedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.frenzy",
+    "label": null,
+    "rule": "ep2e.rule.psi.effect.frenzy",
+  },
+}
+`;
+
+exports[`what the Psi influence card says beast with none across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.frenzy",
+    "label": null,
+    "rule": "ep2e.rule.psi.effect.frenzy",
+  },
+}
+`;
+
+exports[`what the Psi influence card says beast with restrictedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.none",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.none",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.frenzy",
+    "label": null,
+    "rule": "ep2e.rule.psi.effect.frenzy",
+  },
+}
+`;
+
+exports[`what the Psi influence card says haunter with enhancedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.hallucination",
+    "label": null,
+    "rule": "ep2e.rule.psi.effect.hallucination",
+  },
+}
+`;
+
+exports[`what the Psi influence card says haunter with none across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.hallucination",
+    "label": null,
+    "rule": "ep2e.rule.psi.effect.hallucination",
+  },
+}
+`;
+
+exports[`what the Psi influence card says haunter with restrictedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.empathy",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.empathy",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.empathy",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.empathy",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.hallucination",
+    "label": null,
+    "rule": "ep2e.rule.psi.effect.hallucination",
+  },
+}
+`;
+
+exports[`what the Psi influence card says stranger with enhancedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says stranger with none across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.none.none",
+    "label": "ep2e.psi.strain.none",
+    "rule": "ep2e.rule.psi.effect.none.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says stranger with restrictedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.none",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.restrictedBehaviour.none",
+    "label": "ep2e.psi.effect.restrictedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.restrictedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says xenomorph with enhancedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says xenomorph with none across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;
+
+exports[`what the Psi influence card says xenomorph with restrictedBehaviour across every result 1`] = `
+Object {
+  "1": Object {
+    "copy": "ep2e.psi.effect.takeDamage",
+    "label": "ep2e.psi.effect.physicalDamage",
+    "rule": "ep2e.rule.psi.effect.takeDamage",
+  },
+  "2": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "3": Object {
+    "copy": "ep2e.psi.effect.enhancedBehaviour.none",
+    "label": "ep2e.psi.effect.enhancedBehaviour.label",
+    "rule": "ep2e.rule.psi.effect.enhancedBehaviour.none",
+  },
+  "4": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "5": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+  "6": Object {
+    "copy": "ep2e.psi.effect.motivation.none",
+    "label": "ep2e.psi.effect.motivation.label",
+    "rule": "ep2e.rule.psi.effect.motivation.none",
+  },
+}
+`;

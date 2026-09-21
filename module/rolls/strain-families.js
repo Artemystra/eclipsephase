@@ -23,6 +23,10 @@ function reject(what, reason) {
  * entry instead of branched on by id. Only the differences belong here - infection rate, push
  * economy, the Chi and Gamma mechanics and the aspect item type are shared by every family.
  * @param {String} id - The value a sleight carries in system.strainFamily
+ * influence(result, {strainLabel, archetypeData, actorModel}) returns what the infection card should
+ * say - {label, copy, withRule} - or null when the family has nothing for that result. Every family
+ * resolves its own, so no family is ever routed into another's rules.
+ * @param {String} id - The value a sleight carries in system.strainFamily
  * @param {Object} definition - May hold label, tabLabel, substrate, subStrains, influence, tierTraits, feedback, mismatchKey, dataPath and detailsPartial
  * @returns {Boolean} Whether the family was registered
  */
@@ -39,7 +43,7 @@ export function registerStrainFamily(id, definition = {}) {
     tabLabel: definition.tabLabel ?? "",
     substrate: definition.substrate ?? PERMISSIVE_SUBSTRATE,
     subStrains: definition.subStrains ?? {},
-    influence: definition.influence ?? null,
+    influence: typeof definition.influence === "function" ? definition.influence : null,
     tierTraits: definition.tierTraits ?? {},
     feedback: definition.feedback ?? { target: "physical", copyKey: "" },
     mismatchKey: definition.mismatchKey ?? "",
@@ -111,7 +115,38 @@ export function registerCoreStrainFamilies() {
       };
     },
     subStrains: CONFIG.eclipsephase.strains,
-    influence: null,
+    influence(result, { strainLabel, archetypeData, actorModel }) {
+      const labels = CONFIG.eclipsephase.psiStrainLabels;
+
+      if (strainLabel === "custom") {
+        const custom = actorModel?.strainInfluence?.["influence" + result];
+        if (!custom) return null;
+        return { label: CONFIG.eclipsephase.otherPsiLabels[custom.label], copy: custom.description, withRule: false };
+      }
+
+      if (result === 1) return { label: "ep2e.psi.effect.physicalDamage", copy: "ep2e.psi.effect.takeDamage", withRule: true };
+
+      const slot = archetypeData?.["influence" + result];
+      if (!slot) return null;
+
+      if (result <= 3) {
+        if (slot.label === "restrictedBehaviour" && strainLabel === "architect") {
+          return { label: labels[slot.label], copy: "ep2e.psi.effect.restrictedBehaviour.relaxation", withRule: true };
+        }
+        if (slot.label === "restrictedBehaviour" && strainLabel === "haunter") {
+          return { label: labels[slot.label], copy: "ep2e.psi.effect.restrictedBehaviour.empathy", withRule: true };
+        }
+        if (strainLabel === "xenomorph") {
+          return { label: labels.enhancedBehaviour, copy: "ep2e.psi.effect.enhancedBehaviour." + slot.description, withRule: true };
+        }
+        return { label: labels[slot.label], copy: "ep2e.psi.effect." + slot.label + "." + slot.description, withRule: true };
+      }
+
+      if (result === 6 && strainLabel === "beast") return { copy: "ep2e.psi.effect.frenzy", withRule: true };
+      if (result === 6 && strainLabel === "haunter") return { copy: "ep2e.psi.effect.hallucination", withRule: true };
+
+      return { label: "ep2e.psi.effect.motivation.label", copy: "ep2e.psi.effect.motivation." + slot.description, withRule: true };
+    },
     tierTraits: {
       1: { name: "Psi I", pack: "eclipsephase.traits" },
       2: { name: "Psi II", pack: "eclipsephase.traits" }
@@ -138,7 +173,15 @@ export function registerCoreStrainFamilies() {
       };
     },
     subStrains: CONFIG.eclipsephase.kiStrains,
-    influence: CONFIG.eclipsephase.kiInfluence,
+    influence(result, { strainLabel, archetypeData }) {
+      if (result === 1) return { label: "ep2e.ki.effect.cognitiveFeedback", copy: "ep2e.ki.effect.takeStrain", withRule: true };
+
+      const row = CONFIG.eclipsephase.kiInfluence[strainLabel]?.[result];
+      const choice = archetypeData?.["influence" + result]?.description;
+      const copy = row?.base ? (choice && choice !== "none" ? row.base + "." + choice : "") : row?.copy;
+
+      return { label: row?.label, copy, withRule: true };
+    },
     tierTraits: {
       1: { name: "Ki I", pack: "eclipsephase.traits" },
       2: { name: "Ki II", pack: "eclipsephase.traits" }

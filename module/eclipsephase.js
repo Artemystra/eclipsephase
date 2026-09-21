@@ -629,6 +629,7 @@ Hooks.once("ready", async function() {
   }
 
   if (before25 && !update.migrationPre25Needed()) {
+    endMigration = false;
     await game.settings.set("eclipsephase", "migrationVersion", "2.5");
   }
   else if (before25) {

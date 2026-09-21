@@ -336,76 +336,18 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
 
         let message = {};
         let result = d6.total > 6 ? 6 : d6.total;
-        let psiLabel = "";
-        let psiCopy = "";
 
         const strainFamily = actorStrainFamily(actorWhole);
         const family = getStrainFamily(strainFamily);
+        const strainLabel = actorModel.subStrain.label;
+        const archetypeData = foundry.utils.getProperty(actorWhole, family.dataPath)?.[strainLabel];
 
-        if(family.influence){
-            const archetypeData = foundry.utils.getProperty(actorWhole, family.dataPath)?.[actorModel.subStrain.label];
-            const influenceRow = family.influence[actorModel.subStrain.label]?.[result];
-            if(result === 1){
-                message.influenceLabel = "ep2e.ki.effect.cognitiveFeedback";
-                message.influenceCopy = "ep2e.ki.effect.takeStrain";
-            }
-            else if(influenceRow){
-                const choice = archetypeData?.["influence" + result]?.description;
-                message.influenceLabel = influenceRow.label;
-                if(influenceRow.base) message.influenceCopy = choice && choice !== "none" ? influenceRow.base + "." + choice : "";
-                else message.influenceCopy = influenceRow.copy;
-            }
+        const influence = family.influence?.(result, { strainLabel, archetypeData, actorModel }) ?? null;
+        if (influence) {
+            message.influenceLabel = influence.label;
+            message.influenceCopy = influence.copy;
+            if (influence.withRule) message.influenceRule = effectRuleKey(influence.copy);
         }
-        else if(actorModel.subStrain.label != "custom"){
-            const archetypeData = foundry.utils.getProperty(actorWhole, family.dataPath)?.[actorModel.subStrain.label];
-            if(result === 1){
-                message.influenceLabel = "ep2e.psi.effect.physicalDamage";
-                message.influenceCopy = "ep2e.psi.effect.takeDamage";
-            }
-            else if (result > 1 && result <=3) {
-                psiLabel = archetypeData["influence" + result].label;
-                psiCopy = archetypeData["influence" + result].description;
-                if(psiLabel === "restrictedBehaviour" && actorModel.subStrain.label === "architect"){
-                    message.influenceLabel = eclipsephase.psiStrainLabels[psiLabel];
-                    message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.relaxation";
-                }
-                else if(psiLabel === "restrictedBehaviour" && actorModel.subStrain.label === "haunter"){
-                    message.influenceLabel = eclipsephase.psiStrainLabels[psiLabel];
-                    message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.empathy";
-                }
-                else if(actorModel.subStrain.label === "xenomorph"){
-                    message.influenceLabel = eclipsephase.psiStrainLabels.enhancedBehaviour;
-                    message.influenceCopy = "ep2e.psi.effect.enhancedBehaviour." + psiCopy;
-                }
-                else {
-                    message.influenceLabel = eclipsephase.psiStrainLabels[psiLabel];
-                    message.influenceCopy = "ep2e.psi.effect." + psiLabel + "." + psiCopy;
-                }
-            }
-            else if (result > 3 && actorModel.subStrain.label != "beast" && actorModel.subStrain.label != "haunter") {
-                psiCopy = archetypeData["influence" + result].description;
-                message.influenceLabel = "ep2e.psi.effect.motivation.label";
-                message.influenceCopy = "ep2e.psi.effect.motivation." + psiCopy;
-            }
-            else if (result > 3 && result <=5){
-                psiCopy = archetypeData["influence" + result].description;
-                message.influenceLabel = "ep2e.psi.effect.motivation.label";
-                message.influenceCopy = "ep2e.psi.effect.motivation." + psiCopy;
-            }
-            else if (result === 6 && actorModel.subStrain.label === "beast"){
-                message.influenceCopy = "ep2e.psi.effect.frenzy"
-            }
-            else if (result === 6 && actorModel.subStrain.label === "haunter"){
-                message.influenceCopy = "ep2e.psi.effect.hallucination"
-            }
-        }
-        else{
-            const customInfluence = actorModel.strainInfluence["influence" + result];
-            message.influenceLabel = eclipsephase.otherPsiLabels[customInfluence.label];
-            message.influenceCopy = customInfluence.description;
-        }
-
-        if(family.influence || actorModel.subStrain.label != "custom") message.influenceRule = effectRuleKey(message.influenceCopy);
 
         let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");
     

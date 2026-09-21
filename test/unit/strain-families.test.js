@@ -62,6 +62,11 @@ describe("the fields a definition leaves out", () => {
     expect(family.detailsPartial).toEqual("");
   });
 
+  test("an influence that is not a function is refused rather than stored", () => {
+    registerStrainFamily("table", { influence: { 1: { label: "x" } } });
+    expect(getStrainFamily("table").influence).toBeNull();
+  });
+
   test("a family without its own substrate rule permits everything", () => {
     registerStrainFamily("bare", {});
     expect(getStrainFamily("bare").substrate({})).toMatchObject({ blocked: false, penalised: false });
@@ -111,9 +116,20 @@ describe("the families the core registers", () => {
     expect(getStrainFamily("ki").detailsPartial).toContain("strain-details-ki.html");
   });
 
-  test("only ki is table-driven; psi's influence branch is bespoke", () => {
-    expect(getStrainFamily("ki").influence).toBe(CONFIG.eclipsephase.kiInfluence);
-    expect(getStrainFamily("psi").influence).toBeNull();
+  test("both families resolve their own influence, so neither can be routed into the other's rules", () => {
+    expect(typeof getStrainFamily("psi").influence).toEqual("function");
+    expect(typeof getStrainFamily("ki").influence).toEqual("function");
+  });
+
+  test("each family answers with its own copy for the same result", () => {
+    const context = { strainLabel: "crucible", archetypeData: {}, actorModel: {} };
+    expect(getStrainFamily("ki").influence(1, context).copy).toEqual("ep2e.ki.effect.takeStrain");
+    expect(getStrainFamily("psi").influence(1, { ...context, strainLabel: "architect" }).copy).toEqual("ep2e.psi.effect.takeDamage");
+  });
+
+  test("a resolver returns null rather than throwing when the actor has no data for that result", () => {
+    const context = { strainLabel: "architect", archetypeData: undefined, actorModel: {} };
+    expect(getStrainFamily("psi").influence(3, context)).toBeNull();
   });
 
   test("feedback damage goes to a different track per family", () => {
