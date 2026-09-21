@@ -36,8 +36,9 @@ same function is reachable both through `api` and through its original module pa
 listed here is considered stable for a module to depend on.
 
 ```js
-api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, prepareRecipients,
-            // gmList, inheritChatVisibility, damageValueCalc, applySuccessTierBonus
+api.rolls   // RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc, usePoolFromChat,
+            // prepareRecipients, gmList, inheritChatVisibility, damageValueCalc,
+            // applySuccessTierBonus
 api.actors  // bodyBindingKey, bodyHasWareMarker, chainHasWareMarker, bodyNervousSystem,
             // sleevedNervousSystem, CYBERBRAIN_MARKER, transferItemBetweenActors,
             // requestGMItemTransfer, tempEffectCreation, tempEffectDeletion
@@ -230,7 +231,6 @@ card's `[data-message-id]`). The returned object:
   alternatives: { usageType, result, value, originalResult, resultClass, resultText },
   options: { push, attackMode, biomorphTarget, touchOnly, rollMode },
   item: { weaponId, weaponMode, sleightId, damageTarget },
-  shop: { shopUuid, buyerActorId, itemIds, network, requiredTier, bodyBindings, burnAmount },
   messageId
 }
 ```
@@ -238,6 +238,18 @@ card's `[data-message-id]`). The returned object:
 A card created before this existed has no flags; `readRollContext()` falls back to translating
 the button's own `data-*` attributes into the same shape (`version: 0`), so existing chat logs
 keep working. Visibility (`blind`/whisper) is read from the `ChatMessage` itself, not stored here.
+
+The system stores only its own keys here. To put your own block on the card, assign it to
+`context.flags` in `eclipsephase.preRoll`; those keys are merged over the stored context, so a key
+you name is yours outright. This is the only route by which a chat button clicked later - a pool
+spend, say - can reach data your module gathered at roll time.
+
+```js
+Hooks.on("eclipsephase.preRoll", context => {
+  if (context.rolledFrom !== "myRoll") return;
+  context.flags.myModule = { orderId: "abc", discountSteps: 2 };
+});
+```
 
 ## Module sub-types for your own document types
 

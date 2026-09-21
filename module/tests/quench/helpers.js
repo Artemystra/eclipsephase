@@ -97,13 +97,15 @@ export function restoreDice() {
 
 /**
  * The uniform value CONFIG.Dice.randomUniform must return for a die with the given number of
- * sides to land on a specific face, matching Foundry's own Math.ceil(randomUniform() * sides).
+ * sides to land on a specific face. Foundry 14 maps a uniform with DiceTerm#mapRandomFace,
+ * Math.ceil((1 - u) * faces), which inverts the order older versions used - ask for the face, not
+ * for the fraction.
  * @param {Number} face - The desired face, 1-based
  * @param {Number} sides - The die's number of sides (100 for a percentile check)
  * @returns {Number} A value that, fed to seedDice(), produces that face
  */
 export function uniformForFace(face, sides) {
-  return (face - 0.5) / sides;
+  return (sides - face + 0.5) / sides;
 }
 
 /**

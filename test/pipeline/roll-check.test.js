@@ -242,3 +242,22 @@ describe("RollCheck skipDialog seam", () => {
     expect(card.content).toContain("-10");
   });
 });
+
+describe("a module's own chat-context block", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  test("a preRoll handler's flags land whole in the stored roll context", async () => {
+    const actor = makeRoller();
+    Hooks.on("eclipsephase.preRoll", context => {
+      context.flags.shop = { shopUuid: "Actor.shop0001", redeemLevels: 2 };
+    });
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+
+    const stored = global.__ep.createdMessages[0].flags.eclipsephase.roll;
+    expect(stored.shop).toEqual({ shopUuid: "Actor.shop0001", redeemLevels: 2 });
+    expect(stored.item.weaponId).toEqual("");
+  });
+});

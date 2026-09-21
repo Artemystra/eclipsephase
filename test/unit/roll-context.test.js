@@ -58,12 +58,16 @@ describe("buildRollContext", () => {
     expect(context.options.touchOnly).toBe(false);
   });
 
-  test("survives a roll without alternatives, item or shop payload", () => {
+  test("survives a roll without alternatives or item payload", () => {
     const context = buildRollContext({ rolledFrom: "skill" }, {}, {}, undefined);
     expect(context.alternatives.usageType).toEqual("");
     expect(context.alternatives.result).toBeNull();
     expect(context.item.weaponId).toEqual("");
-    expect(context.shop.burnAmount).toEqual(0);
+  });
+
+  test("carries no block for a type a module owns - those arrive through the preRoll hook's flags", () => {
+    const context = buildRollContext({ rolledFrom: "shopPurchase" }, {}, {}, { shopUuid: "Actor.x" });
+    expect(context.shop).toBeUndefined();
   });
 });
 

@@ -140,3 +140,29 @@ describe("usePoolFromChat", () => {
     expect(global.__ep.createdMessages[0].flavor).toContain("71");
   });
 });
+
+describe("a module's own block on the way to poolResult", () => {
+  beforeEach(() => resetWorld());
+
+  test("whatever a module stored on the card reaches its poolResult listener intact", async () => {
+    const { context } = setUpRescue();
+    context.shop = { shopUuid: "Actor.shop0001", redeemLevels: 2, itemIds: "item1" };
+    let seen = null;
+    Hooks.on("eclipsephase.poolResult", payload => { seen = payload; });
+
+    await usePoolFromChat(clickOn({ usepool: "pool" }, "origin1"));
+
+    expect(seen).not.toBeNull();
+    expect(seen.context.shop).toEqual({ shopUuid: "Actor.shop0001", redeemLevels: 2, itemIds: "item1" });
+  });
+
+  test("a card without a module block reaches the listener without one", async () => {
+    setUpRescue();
+    let seen = null;
+    Hooks.on("eclipsephase.poolResult", payload => { seen = payload; });
+
+    await usePoolFromChat(clickOn({ usepool: "pool" }, "origin1"));
+
+    expect(seen.context.shop).toBeUndefined();
+  });
+});

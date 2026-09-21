@@ -1,4 +1,5 @@
 import { RollCheck, rollToChat, TaskRoll, TaskRollModifier, rollCalc } from "../rolls/dice.js";
+import { usePoolFromChat } from "../rolls/pools.js";
 import { applySuccessTierBonus } from "../rolls/damage.js";
 import {
   prepareRecipients,
@@ -48,6 +49,7 @@ export const rolls = {
   TaskRoll,
   TaskRollModifier,
   rollCalc,
+  usePoolFromChat,
   prepareRecipients,
   gmList,
   inheritChatVisibility,

@@ -1074,7 +1074,8 @@ export function inheritChatVisibility(messageId, rollMode){
  * @param {Object} outputData - The task roll's output data, with its alternatives already attached
  * @param {Actor} actorWhole - The rolling actor
  * @param {Object} options - The options the roll dialog returned
- * @param {Object} itemData - Weapon, sleight or shop payload of the roll
+ * @param {Object} itemData - Weapon or sleight payload of the roll; a module's own payload arrives
+ *                            through the preRoll hook's flags instead
  * @returns {Object} The roll context stored in the message flags
  */
 export function buildRollContext(outputData, actorWhole, options, itemData){
@@ -1115,15 +1116,6 @@ export function buildRollContext(outputData, actorWhole, options, itemData){
       weaponMode: itemData?.weaponMode ?? "",
       sleightId: itemData?.sleightID ?? "",
       damageTarget: itemData?.damageTarget ?? ""
-    },
-    shop: {
-      shopUuid: itemData?.shopUuid ?? "",
-      buyerActorId: itemData?.buyerActorId ?? "",
-      itemIds: itemData?.itemIds ?? "",
-      network: itemData?.network ?? "",
-      requiredTier: itemData?.requiredTier ?? "",
-      bodyBindings: itemData?.bodyBindings ?? "",
-      burnAmount: Number(itemData?.burnAmount) || 0
     }
   };
 }
@@ -1174,15 +1166,6 @@ export function legacyRollContext(dataset = {}){
       weaponMode: dataset.weaponmode ?? "",
       sleightId: dataset.sleightid ?? dataset.itemid ?? "",
       damageTarget: dataset.damagetarget ?? ""
-    },
-    shop: {
-      shopUuid: dataset.shopuuid ?? "",
-      buyerActorId: dataset.buyeractorid ?? "",
-      itemIds: dataset.itemids ?? "",
-      network: dataset.network ?? "",
-      requiredTier: dataset.requiredtier ?? "",
-      bodyBindings: dataset.bodybindings ?? "",
-      burnAmount: number(dataset.burnamount) ?? 0
     }
   };
 }

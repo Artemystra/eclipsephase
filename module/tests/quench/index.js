@@ -124,6 +124,8 @@ Hooks.on("quenchReady", quench => {
           const message = lastMessage();
           assert.exists(message);
           assert.strictEqual(message.flags.eclipsephase.roll.rolledFrom, "skill");
+          assert.isDefined(message.flags.eclipsephase.roll.alternatives.originalResult);
+          assert.strictEqual(lastMessage().content.includes("42"), true, "the seeded die must be the die that rolled");
         });
       });
 

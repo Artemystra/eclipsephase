@@ -45,6 +45,7 @@ Object {
     "prepareRecipients": [Function],
     "rollCalc": [Function],
     "rollToChat": [Function],
+    "usePoolFromChat": [Function],
   },
   "ui": Object {
     "addDragSupport": [Function],
