@@ -3,7 +3,6 @@ import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT_TEXT } from "./dice.j
 import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { getTaskResultText } from "../api/registry.js";
 import { prepareWeapon, dealPsiDamage } from "./damage.js";
-import { completeShopPurchase, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 
@@ -50,33 +49,6 @@ export async function usePoolFromChat(data){
             const sleightItem = actor.items.get(context.item.sleightId);
             if(sleightItem?.system.damage?.d10 || sleightItem?.system.damage?.d6 || sleightItem?.system.damage?.bonus){
                 await dealPsiDamage(actor, sleightItem, context.alternatives.result, blind, recipientList, context.options.push);
-            }
-        }
-        else if(rolledFrom === "shopPurchase" && context.alternatives.resultClass === "success"){
-            const bodyBindings = {};
-            (context.shop.bodyBindings || "").split(",").filter(Boolean).forEach(pair => {
-                const [id, boundTo] = pair.split(":");
-                bodyBindings[id] = boundTo;
-            });
-            const boughtItems = await completeShopPurchase({
-                shopUuid: context.shop.shopUuid,
-                buyerActorId: context.shop.buyerActorId,
-                itemIds: context.shop.itemIds,
-                network: context.shop.network,
-                favorTier: context.shop.requiredTier,
-                bodyBindings
-            })
-            if (boughtItems.length) {
-                // Only fires for shopPurchase rolls (Cash in Favor, Buy has no roll to rescue) -
-                // the favor-tier box is right here too, mirroring _useGefallen()'s success path.
-                const burnAmount = context.shop.burnAmount;
-                const tierLabel = `<span style="font-size: 16px;">${game.i18n.localize(eclipsephase.favorTiers[context.shop.requiredTier])}</span>`;
-                const boxContent = burnAmount > 0
-                    ? `${tierLabel} + ${shopRepIconHtml(context.shop.network)} ${burnAmount}`
-                    : `${shopRepIconHtml(context.shop.network)} ${tierLabel}`;
-                await postShopChatMessage(actor, burnAmount > 0 ? "ep2e.shop.purchase.favorBurnMessage" : "ep2e.shop.purchase.favorMessage",
-                    { character: actor.name, items: boughtItems.map(item => item.name).join(", "), network: context.shop.network.replace("-rep", "") },
-                    boxContent);
             }
         }
     }

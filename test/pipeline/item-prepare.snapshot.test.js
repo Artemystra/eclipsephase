@@ -26,15 +26,14 @@ describe("EPitem.prepareData", () => {
     }
   });
 
-  test("a shop parent's thresholds override the defaults", async () => {
-    const shop = makeActor({
-      type: "shop",
-      system: { morphPointOverrides: { moderateMin: 10, majorMin: 20, rareMin: 30 } },
-      items: [{ _id: "shopmorphtier01", name: "Flat", type: "morph", system: { morphPoints: 8 } }]
+  test("the default thresholds decide the tier when nothing overrides them", async () => {
+    const actor = makeActor({
+      type: "character",
+      items: [{ _id: "coremorphtier01", name: "Flat", type: "morph", system: { morphPoints: 8 } }]
     });
-    const morph = shop.items.get("shopmorphtier01");
+    const morph = actor.items.get("coremorphtier01");
     await morph.prepareData();
-    expect(morph.system.cost).toEqual("minor");
+    expect(morph.system.cost).toEqual("rare");
   });
 
   test("armor is active only while bound to the sleeved body", async () => {

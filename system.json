@@ -20,7 +20,8 @@
     "module/effects.js"
   ],
   "styles": [
-    "css/eclipsephase.css"
+    "css/eclipsephase.css",
+    "css/features/shop.css"
   ],
   "packs": [
     {

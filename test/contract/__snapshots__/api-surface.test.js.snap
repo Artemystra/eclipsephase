@@ -4,11 +4,15 @@ exports[`game.eclipsephase.api surface matches the recorded snapshot 1`] = `
 Object {
   "actors": Object {
     "CYBERBRAIN_MARKER": "flags.eclipsephase.grantsCyberbrain",
+    "applyFrame": [Function],
+    "applyStandardEnhancements": [Function],
     "bodyBindingKey": [Function],
     "bodyHasWareMarker": [Function],
     "bodyNervousSystem": [Function],
     "chainHasWareMarker": [Function],
+    "getBodyBindingInfo": [Function],
     "requestGMItemTransfer": [Function],
+    "resolveBodyForItem": [Function],
     "sleevedNervousSystem": [Function],
     "tempEffectCreation": [Function],
     "tempEffectDeletion": [Function],

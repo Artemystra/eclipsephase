@@ -1,5 +1,6 @@
 import { RollCheck, TaskRollModifier } from "../../rolls/dice.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
+import "./shop.js";
 import {
   withTempActor,
   withTempItem,

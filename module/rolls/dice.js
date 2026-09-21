@@ -652,10 +652,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         options[entry] = values[entry] || false
     }
 
-    // Shop purchases with Loyalty active replace the player-facing favor-difficulty dropdown
-    // with an auto-calculated value (general-modifiers.html renders it disabled), but the value
-    // is force-applied here too since favorDifficultyModifier can legitimately be 0 (Moderate),
-    // which the `|| false` fallback above would otherwise wipe.
+    // A caller may pre-compute the favor difficulty and lock the dropdown (general-modifiers.html
+    // renders it disabled). The value is force-applied here too since favorDifficultyModifier can
+    // legitimately be 0 (Moderate), which the `|| false` fallback above would otherwise wipe.
     if (dataset.favorDifficultyLocked) {
         options.favorMod = Number(dataset.favorDifficultyModifier) || 0;
     }
@@ -697,16 +696,6 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
 
-        // burnMod clamp must match _useGefallen()'s post-roll clamp (dataset.rollvalue/maxBurn).
-        let shopBurnAmount = 0;
-        if(rolledFrom === "shopPurchase"){
-            const sellBonus = Number(dataset.sellBonus) || 0;
-            if(sellBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.sellBonusModifier', sellBonus))
-
-            shopBurnAmount = Math.max(0, Math.min(Number(options.burnMod) || 0, Number(dataset.maxBurn) || 0, Number(dataset.rollvalue) || 0));
-            if(shopBurnAmount) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', shopBurnAmount * 2))
-        }
-
         rollContext.options = options
         rollContext.task = task
         rollContext.pool = activePool
@@ -722,9 +711,6 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         let itemData = {}
         if(weaponSelected)
             itemData = weaponSelected
-        // Must come before roll.sleight - defineRoll() always inits it to {}, a truthy empty object.
-        else if(rolledFrom === "shopPurchase")
-            itemData = { shopUuid: dataset.shopUuid, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings, burnAmount: shopBurnAmount }
         else if(roll.sleight)
             itemData = roll.sleight
 

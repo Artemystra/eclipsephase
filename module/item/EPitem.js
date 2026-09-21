@@ -1,6 +1,7 @@
 import { eclipsephase } from "../config.js"
 
-// Default Morph Points -> cost-tier thresholds, overridable per shop. RAW MP range is 0-12.
+// Default Morph Points -> cost-tier thresholds. RAW MP range is 0-12. A feature may override
+// the resulting tier through the prepareItemData hook.
 const MORPH_TIER_THRESHOLDS = { moderate: 2, major: 5, rare: 8 };
 
 export default class EPitem extends Item {
@@ -51,19 +52,15 @@ export default class EPitem extends Item {
         }
 
         // Morph cost tier is derived live from Morph Points, unlike Gear/Ware's manually-set
-        // system.cost. Uses the parent shop's morphPointOverrides if present, else the defaults.
-        // Each threshold is the MP value where that tier starts (mp >= threshold); anything below
-        // it falls through to the next lower tier. Checked highest-first, so if two thresholds are
-        // set to the same value, the higher tier wins the tie.
+        // system.cost. Each threshold is the MP value where that tier starts (mp >= threshold);
+        // anything below it falls through to the next lower tier. Checked highest-first, so if two
+        // thresholds are set to the same value, the higher tier wins the tie. A feature may
+        // override the thresholds afterwards via the prepareItemData hook below.
         if (item.type === "morph") {
           const mp = Number(itemModel.morphPoints) || 0;
-          const shopOverrides = item.parent?.type === "shop" ? item.parent.system.morphPointOverrides : null;
-          const moderateMin = shopOverrides?.moderateMin ?? MORPH_TIER_THRESHOLDS.moderate;
-          const majorMin = shopOverrides?.majorMin ?? MORPH_TIER_THRESHOLDS.major;
-          const rareMin = shopOverrides?.rareMin ?? MORPH_TIER_THRESHOLDS.rare;
-          if (mp >= rareMin) itemModel.cost = "rare";
-          else if (mp >= majorMin) itemModel.cost = "major";
-          else if (mp >= moderateMin) itemModel.cost = "moderate";
+          if (mp >= MORPH_TIER_THRESHOLDS.rare) itemModel.cost = "rare";
+          else if (mp >= MORPH_TIER_THRESHOLDS.major) itemModel.cost = "major";
+          else if (mp >= MORPH_TIER_THRESHOLDS.moderate) itemModel.cost = "moderate";
           else itemModel.cost = "minor";
         }
 

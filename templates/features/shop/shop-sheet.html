@@ -21,7 +21,7 @@
 
     <section class="shop-sheet-body">
         <div class="tab {{#if (eq tabGroups.primary 'shop')}}active{{/if}}" data-group="primary" data-tab="shop">
-            {{> systems/eclipsephase/templates/actor/partials/shop-inventory-panel.html}}
+            {{> systems/eclipsephase/templates/features/shop/shop-inventory-panel.html}}
         </div>
 
         <div class="tab {{#if (eq tabGroups.primary 'settings')}}active{{/if}}" data-group="primary" data-tab="settings">
@@ -325,5 +325,5 @@
         </div>
     </section>
 
-    {{> systems/eclipsephase/templates/actor/partials/shop-footer.html}}
+    {{> systems/eclipsephase/templates/features/shop/shop-footer.html}}
 </form>

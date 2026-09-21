@@ -7,7 +7,7 @@
         <p class="headline5">{{localize "ep2e.shop.toSell.headline"}}</p>
         <div class="shop-column-scroll">
             {{#if toSellEntries.length}}
-                {{> systems/eclipsephase/templates/actor/partials/shop-to-sell-list.html entries=toSellEntries}}
+                {{> systems/eclipsephase/templates/features/shop/shop-to-sell-list.html entries=toSellEntries}}
             {{else}}
                 <p class="notes">{{localize "ep2e.shop.toSell.empty"}}</p>
             {{/if}}

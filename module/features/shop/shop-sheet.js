@@ -1,7 +1,12 @@
-import { addWindowControls, addDragSupport, addMinimizeSupport, registerCommonHandlers, itemTypeFilterPills, transferItemBetweenActors, confirmation, selectBody, moreInfo } from "../common/general-sheet-functions.js";
-import { requestGMItemTransfer, completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER, getLoyaltyLevel, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
-import * as DICE from "../rolls/dice.js";
-import * as MORPHFUNCTION from "../common/morp-functions.js";
+import { completeShopPurchase, hasFreeFavorSlot, LOYALTY_PER_TIER, getLoyaltyLevel, postShopChatMessage, shopRepIconHtml } from "./shop-logic.js";
+
+/**
+ * The system's public API. Read lazily, since this feature is imported before init builds it.
+ * @returns {Object} game.eclipsephase.api
+ */
+function api() {
+  return game.eclipsephase.api;
+}
 
 const FAVOR_TIER_RANK = { trivial: 0, minor: 1, moderate: 2, major: 3 };
 // "Buy" (Laph's Special Brew house rule, superBrew setting): flat Rep cost, no roll - Trivial
@@ -58,7 +63,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
 
   static PARTS = {
     body: {
-      template: "systems/eclipsephase/templates/actor/shop-sheet.html",
+      template: "systems/eclipsephase/templates/features/shop/shop-sheet.html",
       root: true,
       scrollable: [".shop-to-sell-column .shop-column-scroll", ".shop-inventory-column .shop-column-scroll", ".shop-settings-scroll"]
     }
@@ -257,7 +262,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       render: networks.length ? (event, dialog) => this._syncNetworkSelectConfirm(dialog) : undefined
     });
     // A falsy callback return (e.g. bare null) breaks DialogV2 resolution on this Foundry version -
-    // every button here must resolve truthy, same convention as selectBody()/showOptionsDialog().
+    // every button here must resolve truthy, same convention as api().ui.selectBody()/showOptionsDialog().
     if (!result || result.cancelled) return;
     const network = result.network;
 
@@ -301,9 +306,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       const quantity = Math.max(1, Math.min(staged.quantity, liveQty));
 
       if (sourceActor.isOwner && this.actor.isOwner) {
-        await transferItemBetweenActors({ sourceActor, targetActor: this.actor, item, quantity });
+        await api().actors.transferItemBetweenActors({ sourceActor, targetActor: this.actor, item, quantity });
       } else {
-        const result = await requestGMItemTransfer({
+        const result = await api().actors.requestGMItemTransfer({
           sourceActorUuid: sourceActor.uuid,
           targetActorUuid: this.actor.uuid,
           itemId: item.id,
@@ -817,7 +822,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     sync();
   }
 
-  // Same pattern as selectBody() in general-sheet-functions.js: confirm stays disabled until a
+  // Same pattern as api().ui.selectBody() in general-sheet-functions.js: confirm stays disabled until a
   // non-empty value is chosen. Used by _confirmSellDialog()'s own inline dialog, which never has
   // Ware body rows to also account for - see _syncPurchaseDialogConfirm() for that combined case.
   _syncNetworkSelectConfirm(dialog) {
@@ -878,7 +883,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       }
     });
     // A falsy callback return (e.g. bare null) breaks DialogV2 resolution on this Foundry version -
-    // every button here must resolve truthy, same convention as selectBody()/showOptionsDialog().
+    // every button here must resolve truthy, same convention as api().ui.selectBody()/showOptionsDialog().
     const cancelled = !result || result.cancelled;
     return {
       network: cancelled ? null : (result.selection || null),
@@ -924,10 +929,10 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const wareItems = items.filter(i => i.type === "ware");
     if (!wareItems.length) return { cancelled: false, bindings: {}, wareItems: [], bodyGroups: [] };
 
-    const { bodies, boundToFor, buildBodyGroups } = MORPHFUNCTION.getBodyBindingInfo(character);
+    const { bodies, boundToFor, buildBodyGroups } = api().actors.getBodyBindingInfo(character);
 
     if (bodies.length === 0) {
-      await MORPHFUNCTION.resolveBodyForItem(character, "ep2e.systemMessage.itemAttachment.noBodyWare");
+      await api().actors.resolveBodyForItem(character, "ep2e.systemMessage.itemAttachment.noBodyWare");
       return { cancelled: true, bindings: {}, wareItems: [], bodyGroups: [] };
     }
 
@@ -1027,10 +1032,10 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       maxBurn: BONUS_CAP / 2,
       bodyBindings: Object.entries(bindings).map(([id, boundTo]) => `${id}:${boundTo}`).join(","),
       favorDifficultyModifier,
-      ...(loyaltyActive ? { favorDifficultyLocked: true } : {})
+      ...(loyaltyActive ? { favorDifficultyLocked: true, favorDifficultyLockedHint: "ep2e.shop.purchase.favorDifficultyLockedHint" } : {})
     };
 
-    const rollResult = await DICE.RollCheck(dataset, character.system, character, systemOptions, false, "shopPurchase");
+    const rollResult = await api().rolls.RollCheck(dataset, character.system, character, systemOptions, false, "shopPurchase");
     if (!rollResult) return; // cancelled in the options dialog - nothing spent yet, stop here
 
     // Clamp must match dice.js's clamp on the roll's own burn modifier.
@@ -1296,9 +1301,9 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
   _getSheetTemplate() {
     const actor = this.document;
     if (game.user.isGM || actor.isOwner) {
-      return "systems/eclipsephase/templates/actor/shop-sheet.html";
+      return "systems/eclipsephase/templates/features/shop/shop-sheet.html";
     }
-    return "systems/eclipsephase/templates/actor/shop-sheet-limited.html";
+    return "systems/eclipsephase/templates/features/shop/shop-sheet-limited.html";
   }
 
   _configureRenderParts(options) {
@@ -1456,14 +1461,14 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
     html.querySelectorAll(".item-purchase-select, .multiselect-input").forEach(el => el.disabled = false);
 
     const titlebar = html.querySelector(".ep-sheet-titlebar");
-    addWindowControls(this, titlebar);
-    addDragSupport(this, titlebar);
-    addMinimizeSupport(this, titlebar);
+    api().ui.addWindowControls(this, titlebar);
+    api().ui.addDragSupport(this, titlebar);
+    api().ui.addMinimizeSupport(this, titlebar);
 
     // Description-reveal toggle (.slideShow, powers item-row-list.hbs's expand/collapse) - generic,
     // works for any document, same call EPitemSheet.js makes.
-    registerCommonHandlers(html, this.actor);
-    itemTypeFilterPills(html, this, "_itemTypeFilter");
+    api().ui.registerCommonHandlers(html, this.actor);
+    api().ui.itemTypeFilterPills(html, this, "_itemTypeFilter");
 
     // .shop-column-scroll clips horizontally (overflow-y:auto forces overflow-x:auto), cutting
     // off the row's absolute tooltip near either column's edge. On hover, switch to
@@ -1502,7 +1507,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
       });
     });
 
-    // Settings-tab info icons - same moreInfo()/pop-up.html mechanism EPactorSheet.js/
+    // Settings-tab info icons - same api().ui.moreInfo()/pop-up.html mechanism EPactorSheet.js/
     // EPitemSheet.js already use, Owner-only since only the settings tab has any.
     html.querySelectorAll("a.moreInfoDialog").forEach(element => {
       element.addEventListener("click", moreInfo);
@@ -1606,7 +1611,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         return ui.notifications.info(game.i18n.localize("ep2e.shop.warnings.noEligibleCharacters"));
       }
 
-      const { selection, cancelled } = await selectBody(
+      const { selection, cancelled } = await api().ui.selectBody(
         [{ label: game.i18n.localize("ep2e.shop.settings.loyaltyRecordsHeadline"), options }],
         "ep2e.shop.settings.loyaltyRecordAddTitle",
         "ep2e.shop.settings.loyaltyRecordAddHeadline",
@@ -1626,7 +1631,7 @@ export default class EPshopSheet extends HandlebarsApplicationMixin(ActorSheetV2
         if (!characterId) return;
         const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
         const popUpHeadline = `${game.i18n.localize("ep2e.actorSheet.button.delete")} ${characterName}`;
-        const { confirm } = await confirmation(popUpTitle, popUpHeadline, "ep2e.shop.settings.loyaltyRecordDeleteConfirm");
+        const { confirm } = await api().ui.confirmation(popUpTitle, popUpHeadline, "ep2e.shop.settings.loyaltyRecordDeleteConfirm");
         if (!confirm) return;
         await this.actor.unsetFlag("eclipsephase", `characterState.${characterId}.loyalty`);
       });

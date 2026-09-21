@@ -29,6 +29,7 @@ import {
   sleevedNervousSystem,
   CYBERBRAIN_MARKER
 } from "../common/body-markers.js";
+import { getBodyBindingInfo, resolveBodyForItem, applyStandardEnhancements, applyFrame } from "../common/morp-functions.js";
 import {
   registerRollSource,
   registerPoolOption,
@@ -65,6 +66,10 @@ export const actors = {
   bodyNervousSystem,
   sleevedNervousSystem,
   CYBERBRAIN_MARKER,
+  getBodyBindingInfo,
+  resolveBodyForItem,
+  applyStandardEnhancements,
+  applyFrame,
   transferItemBetweenActors,
   requestGMItemTransfer,
   tempEffectCreation,
