@@ -433,7 +433,6 @@ const SETTING_DEFAULTS = {
   restReset: false,
   ammoRules: false,
   hideNPCs: false,
-  enableShopSystem: true,
   effectPanel: false,
   editAll: false,
   GMmenu: true,

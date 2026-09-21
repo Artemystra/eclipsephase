@@ -1,4 +1,4 @@
-import { makeActorFromFixture, fixtureNames, resetWorld } from "../setup/factories.js";
+import { makeActor, makeActorFromFixture, fixtureNames, resetWorld } from "../setup/factories.js";
 
 describe("EPactor.prepareData", () => {
   beforeEach(() => resetWorld());
@@ -17,8 +17,8 @@ describe("EPactor.prepareData", () => {
     expect(JSON.stringify(actor.system)).toEqual(first);
   });
 
-  test("a shop is skipped by the character pipeline", () => {
-    const shop = makeActorFromFixture("shop-basic");
+  test("a type the system does not manage is skipped by the character pipeline", () => {
+    const shop = makeActor({ type: "shop", name: "Stub Shop", system: { acceptsSales: true } });
     expect(shop.system.pools).toBeUndefined();
     expect(shop.system.acceptsSales).toBe(true);
   });

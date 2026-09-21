@@ -1,5 +1,5 @@
 {
-  "SETTINGS":{
+  "SETTINGS": {
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -14,10 +14,6 @@
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
-    },
-    "enableShopSystem": {
-      "name": "Activar sistema de tienda",
-      "hint": "Activa el tipo de actor Tienda. Si se desactiva, las tiendas existentes se ocultan y no se pueden crear nuevas."
     },
     "gmMenu": {
       "name": "Enable GM Menu",
@@ -52,30 +48,35 @@
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
-  "TYPES.Actor.character" : "Player Character",
-  "TYPES.Actor.npc" : "Non-Player Character",
-  "TYPES.Actor.goon" : "Threat",
-  "TYPES.Actor.shop" : "Tienda",
-  "TYPES.Item.gear" : "Gear",
-  "TYPES.Item.rangedWeapon" : "Ranged Weapon",
-  "TYPES.Item.ccWeapon" : "Close Combat Weapon",
-  "TYPES.Item.armor" : "Armor",
-  "TYPES.Item.grenade" : "Grenade",
-  "TYPES.Item.trait" : "Trait",
-  "TYPES.Item.flaw" : "Flaw",
-  "TYPES.Item.morphTrait" : "Morph Trait",
-  "TYPES.Item.morphFlaw" : "Morph Flaw",
-  "TYPES.Item.ware" : "Ware",
-  "TYPES.Item.aspect" : "Psi Sleight",
-  "TYPES.Item.program" : "Program",
-  "TYPES.Item.specialSkill" : "Special Skill",
-  "TYPES.Item.knowSkill" : "Know Skill",
-  "TYPES.Item.vehicle" : "Cuerpo Remoto",
-  "TYPES.Item.drug" : "Drug",
-  "TYPES.Item.ammo" : "Ammo",
-  "TYPES.Item.id" : "ID",
-  "TYPES.Item.morph" : "Morph",
-
+  "TYPES": {
+    "Actor": {
+      "character": "Player Character",
+      "npc": "Non-Player Character",
+      "goon": "Threat",
+      "shop": "Tienda"
+    },
+    "Item": {
+      "gear": "Gear",
+      "rangedWeapon": "Ranged Weapon",
+      "ccWeapon": "Close Combat Weapon",
+      "armor": "Armor",
+      "grenade": "Grenade",
+      "trait": "Trait",
+      "flaw": "Flaw",
+      "morphTrait": "Morph Trait",
+      "morphFlaw": "Morph Flaw",
+      "ware": "Ware",
+      "aspect": "Psi Sleight",
+      "program": "Program",
+      "specialSkill": "Special Skill",
+      "knowSkill": "Know Skill",
+      "vehicle": "Cuerpo Remoto",
+      "drug": "Drug",
+      "ammo": "Ammo",
+      "id": "ID",
+      "morph": "Morph"
+    }
+  },
   "ep2e": {
     "actorSheet": {
       "placeholders": {
@@ -197,7 +198,7 @@
           "takeDamage": "Take Mental Damage"
         },
         "heal": {
-          "bodyFull":{
+          "bodyFull": {
             "bio": "Full Heal",
             "synth": "Full Repair",
             "info": "Full Defragmentation"
@@ -213,80 +214,80 @@
         "spendRez": {
           "label": "Spend Rez",
           "rep": {
-            "label" : "x 5 Rep Points",
+            "label": "x 5 Rep Points",
             "description": " (1 Rez each)"
           },
           "skill": {
-            "label" : "x 5 Skill Points",
+            "label": "x 5 Skill Points",
             "description": " (1 Rez each)"
           },
           "spec": {
-            "label" : "x 1 Specialization",
+            "label": "x 1 Specialization",
             "description": " (1 Rez each)"
           },
           "psi": {
-            "label" : "x 1 Psi Slieght",
+            "label": "x 1 Psi Slieght",
             "description": " (1 Rez each)"
           },
           "lang": {
-            "label" : "x 1 Language",
+            "label": "x 1 Language",
             "description": " (1 Rez each)"
           },
           "apt": {
-            "label" : "x 1 Aptitude",
+            "label": "x 1 Aptitude",
             "description": " (1 Rez each)"
           },
           "flex": {
-            "label" : "x 1 Ego-Flex (To a total of 3)",
+            "label": "x 1 Ego-Flex (To a total of 3)",
             "description": " (2 Rez each)"
           },
           "traits": {
-            "label" : "Any number of traits",
+            "label": "Any number of traits",
             "description": " (Put in the summed cost)"
           },
           "homebrew": {
             "rep": {
-              "label" : "x 1 Rep Points",
+              "label": "x 1 Rep Points",
               "description": " (1 Rez each)"
             },
             "spec": {
-              "label" : "x 1 Specialization",
+              "label": "x 1 Specialization",
               "description": " (5 Rez each)"
             },
             "psi": {
-              "label" : "x 1 Psi Slieght",
+              "label": "x 1 Psi Slieght",
               "description": " (5 Rez each)"
             },
             "lang": {
-              "label" : "x 1 Language",
+              "label": "x 1 Language",
               "description": " (5 Rez each)"
             },
             "apt": {
-              "label" : "x 1 Aptitude",
+              "label": "x 1 Aptitude",
               "description": " (5 Rez each)"
             },
             "flex": {
-              "label" : "x 1 Ego-Flex (To a total of 3)",
+              "label": "x 1 Ego-Flex (To a total of 3)",
               "description": " (10 Rez each)"
             },
             "traits": {
-              "label" : "Any number of traits",
+              "label": "Any number of traits",
               "description": " (Put in the summed cost)"
             },
             "skill33": {
-              "label" : "x 2 Skill Points (Skill < 34)",
+              "label": "x 2 Skill Points (Skill < 34)",
               "description": " (1 Rez each)"
             },
             "skill3366": {
-              "label" : "x 1 Skill Points (Skill 34 - 66)",
+              "label": "x 1 Skill Points (Skill 34 - 66)",
               "description": " (1 Rez each)"
             },
             "skill66": {
-              "label" : "x 1 Skill Points (Skill > 66)",
+              "label": "x 1 Skill Points (Skill > 66)",
               "description": " (2 Rez each)"
             }
-        }
-        }, 
+          }
+        },
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",
         "stressluc": "Stress/Luc",
@@ -445,7 +446,7 @@
       "bracketsMuse": "(Muse)",
       "museOf": "Muse of:"
     },
-    "skills":{
+    "skills": {
       "placeholders": {
         "specialization": "Specialization",
         "additionalSpec": "No Spec"
@@ -474,7 +475,7 @@
         },
         "button": {
           "resetRest": "Reset Rest",
-          "distribute": "Distribute" 
+          "distribute": "Distribute"
         }
       },
       "insightSkills": {
@@ -746,7 +747,7 @@
       "noWare": "No hay Equipamiento instalado",
       "noArmor": "No hay Armadura instalada"
     },
-"ki": {
+    "ki": {
       "strain": {
         "none": "-Seleccionar-",
         "crucible": "El Crisol",
@@ -922,7 +923,7 @@
         "prerequisiteConflictCopy": "Este personaje ya tiene un rasgo de la otra disciplina y no puede usar este sleight.",
         "prerequisiteMissing": "No se encontró {trait} en el compendio."
       },
-      "strain" : {
+      "strain": {
         "none": "-Select-",
         "architect": "The Architect",
         "beast": "The Beast",
@@ -931,11 +932,11 @@
         "xenomorph": "The Xenomorph",
         "custom": "The Custom"
       },
-      "effect" : {
-        "physicalDamage" : "Physical Damage:",
-        "takeDamage" : "Take 1d6 damage",
-        "frenzy" : "Frenzy",
-        "hallucination" : "Hallucination",
+      "effect": {
+        "physicalDamage": "Physical Damage:",
+        "takeDamage": "Take 1d6 damage",
+        "frenzy": "Frenzy",
+        "hallucination": "Hallucination",
         "other": "Other",
         "enhancedBehaviour": {
           "label": "Enhanced Bahaviour:",
@@ -1028,7 +1029,6 @@
         "spec": "Spec",
         "flex": "Flex",
         "traits": "Traits"
-
       }
     },
     "sideCar": {
@@ -1109,7 +1109,7 @@
           "descriptionPlaceholder": "Add a description"
         }
       },
-      "traits":{
+      "traits": {
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1179,7 +1179,7 @@
             "none": "None",
             "kinetic": "Kinetic",
             "energy": "Energy"
-            },
+          },
           "firingMode": {
             "label": "Firing Mode",
             "ss": "SS",
@@ -1304,7 +1304,7 @@
             "intruder": "Intruder",
             "user": "User",
             "admin": "Admin",
-            "owner": "Owner"            
+            "owner": "Owner"
           }
         }
       },
@@ -1320,7 +1320,7 @@
             "robot": "Robot",
             "vehicle": "Vehicle",
             "morph": "Morph",
-            "animal": "Smart-Animal"          
+            "animal": "Smart-Animal"
           },
           "size": {
             "label": "Size",
@@ -1495,10 +1495,10 @@
               "vms": "Very much smaller (-30)",
               "ms": "Much smaller (-20)",
               "s": "Smaller (-10)",
-              "none": "Equal Size" ,
-              "l": "Larger (+10)" ,
-              "ml": "Much larger (+20)" ,
-              "vml": "Very much larger (+30)" 
+              "none": "Equal Size",
+              "l": "Larger (+10)",
+              "ml": "Much larger (+20)",
+              "vml": "Very much larger (+30)"
             },
             "type": {
               "label": "Attack Type",
@@ -1626,7 +1626,7 @@
           "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
         },
         "spendRez": {
-          "spent": "You overspent your rez. <br> Spent:", 
+          "spent": "You overspent your rez. <br> Spent:",
           "available": "<br> Available:"
         },
         "heal": {
@@ -1693,7 +1693,7 @@
           "damageDone": "Your damage done",
           "additionalEffects": "Additional Effects",
           "melee": {
-            "sizeDifference": "Reach", 
+            "sizeDifference": "Reach",
             "charge": "Charging",
             "chargeAddition": "(+1d6DV)",
             "agressive": "Agressive Hit",
@@ -1865,7 +1865,7 @@
           }
         }
       },
-"ki": {
+      "ki": {
         "effect": {
           "takeStrain": "La infección Ki repercute a través del cibercerebro. Recibe VS 1d6.",
           "crucible": {
@@ -2077,144 +2077,6 @@
         "itemRebound": "{name} reasignada a {body}.",
         "unknownTraitType": "Tipo de Trait desconocido. Selecciona al menos una opción - ego o morph - para usar este trait.",
         "enhancementsAdded": "{count} mejora(s) añadida(s) a {body}."
-      }
-    },
-    "shop": {
-      "tabs": {
-        "shop": "Tienda",
-        "settings": "Ajustes"
-      },
-      "filter": {
-        "placeholder": "Filtrar por tipo de objeto..."
-      },
-      "dialog": {
-        "selectNetwork": {
-          "label": "Red de Reputación",
-          "placeholder": "- Seleccionar -",
-          "headline": "Elegir red"
-        },
-        "loyaltyDiscount": {
-          "label": "Descuento",
-          "none": "Sin descuento",
-          "option": "{levels} Nivel(es) ({percent}%)"
-        }
-      },
-      "placeholders": {
-        "shopName": "Nombre de la tienda",
-        "noItems": "Esta tienda todavía no tiene objetos."
-      },
-      "settings": {
-        "generalHeadline": "General",
-        "repHeadline": "Redes de Rep Aceptadas",
-        "repDescription": "Qué redes de Rep acepta esta tienda - solo estas aparecen como opción de pago al comprar, vender o cobrar un Favor aquí.",
-        "acceptsSales": "La tienda acepta ventas",
-        "valuationHeadline": "Valoración de Objetos",
-        "valuationDescription": "Asigna el nivel de costo propio de cada objeto al nivel de costo efectivo de esta tienda, de Free a Rare. Rare se bloquea tras la Lealtad (si está activada) independientemente del precio; la dificultad de la Prueba de Rep y el precio se establecen por separado más abajo, en Mapeo de Dificultad.",
-        "costTierFree": "Gratis",
-        "difficultyMappingHeadline": "Mapeo de Dificultad",
-        "difficultyMappingDescription": "Vuelve a mapear los niveles de costo efectivos propios de esta tienda (establecidos arriba en Valoración de Objetos) al Nivel de Favor usado para la dificultad de la Prueba de Rep y el precio - te permite hacer que cada objeto de nivel Minor aquí se tire o cueste como Moderate, sin tocar qué objetos son Minor en primer lugar. Un objeto Free permanece gratis a menos que su fila Trivial se remapee aquí.",
-        "loyaltyHeadline": "Lealtad",
-        "loyaltyEnabled": "Registrar lealtad para esta tienda",
-        "loyaltyPerTierHeadline": "Lealtad por Nivel",
-        "loyaltyPerTierDescription": "Comprar un objeto o canjear un Favor otorga al comprador lealtad con esta tienda, escalada según el tipo de costo propio del objeto (no la valoración por nivel de Rep de la tienda). Vender nunca otorga lealtad.",
-        "loyaltyRecordsHeadline": "Lealtad Actual de Personajes",
-        "loyaltyRecordsDescription": "Una lista en vivo del estado actual de lealtad de cada personaje en esta tienda - no es una configuración, solo su valor de Lealtad registrado. Edita un valor directamente para corregirlo manualmente.",
-        "loyaltyRecordsEmpty": "Esta tienda aún no tiene clientes leales.",
-        "loyaltyRecordDelete": "Eliminar el registro de lealtad de este personaje",
-        "loyaltyRecordDeleteConfirm": "Esto eliminará permanentemente el registro de lealtad de este personaje con esta tienda.",
-        "loyaltyRecordAdd": "Añadir personaje",
-        "loyaltyRecordAddTitle": "Añadir Personaje",
-        "loyaltyRecordAddHeadline": "Selecciona un personaje para añadirlo a la lista de lealtad de esta tienda.",
-        "loyaltyRecordAddWindowTitle": "Toquetear el Tablero de Lealtad",
-        "loyaltyBarMaxHeadline": "Lealtad Máxima para esta Tienda",
-        "loyaltyBarMaxDescription": "El valor máximo de Lealtad que rastrea esta tienda. La barra de colores y el marcador del pie de página se escalan según este número.",
-        "loyaltyBarHeadline": "Segmentos de la Barra de Lealtad en %",
-        "loyaltyBarDescription": "Divide la barra en cuatro bandas porcentuales (Rojo/Naranja/Amarillo/Verde). Juntas nunca pueden superar el 100% de la Lealtad Máxima indicada arriba.",
-        "loyaltyBarRed": "Rojo (T1)",
-        "loyaltyBarOrange": "Naranja (T2)",
-        "loyaltyBarYellow": "Amarillo (T3)",
-        "loyaltyBarGreen": "Verde (T4)",
-        "sellLimitTimeframeHeadline": "Límites de Venta por Periodo",
-        "sellLimitsDescription": "Limita cuánto puede vender un personaje a esta tienda en una sola transacción. Al alcanzar un límite, el personaje queda bloqueado para más ventas aquí hasta un descanso largo, o hasta que el Propietario lo desbloquee abajo.",
-        "sellLimitMaxItems": "Máx. Objetos",
-        "sellLimitMaxRep": "Máx. Rep",
-        "sellLockoutsHeadline": "Personajes Bloqueados",
-        "sellLockoutsEmpty": "Ningún personaje ha alcanzado los límites de venta todavía.",
-        "sellLockoutsDescription": "Personajes actualmente bloqueados para vender aquí tras alcanzar un Límite de Venta arriba - elimina un bloqueo para que puedan vender de nuevo antes de su próximo descanso largo.",
-        "sellLockoutClear": "Eliminar el bloqueo de este personaje",
-                "loyaltyBuyDiscountHeadline": "Descuento de Compra",
-        "loyaltyBuyDiscountDescription": "Descuento porcentual al Comprar, canjeable por Nivel de Lealtad - canjearlo reduce la Lealtad exactamente esa cantidad de Niveles.",
-        "loyaltyBuyDiscountLevel2": "Nivel 2 (%)",
-        "loyaltyBuyDiscountLevel3": "Nivel 3 (%)",
-        "loyaltyBuyDiscountLevel4": "Nivel 4 (%)",
-"rateOverridesHeadline": "Anulaciones de Costo",
-        "generalOverridesHeadline": "Anulaciones Generales",
-        "generalOverridesDescription": "Establece los precios base de la tienda. Permite hacer que esta tienda sea más cara o más barata en general, de forma rápida y sencilla.",
-        "morphPointOverridesHeadline": "Anulaciones de Puntos de Morph",
-        "morphPointOverridesDescription": "Esta opción solo existe en Homebrew, ya que los Morphs normalmente no se pueden comprar y en su lugar se contabilizan mediante otro sistema de puntos. Cada valor es el umbral de Puntos de Morph a partir del cual comienza ese nivel - los costos menores caen automáticamente al nivel inferior. Si dos umbrales tienen el mismo valor, gana el nivel más alto.",
-        "specificOverridesHeadline": "Anulaciones Específicas por Reputación",
-        "specificOverridesDescription": "Para un ajuste más detallado de la tienda - por ejemplo, si ciertas Reputaciones son menos bienvenidas en algunos lugares que en otros. Cualquier campo vacío recurre al valor base, o a la Anulación General si hay una establecida.",
-        "rateTableBuysFor": "Compra por",
-        "rateTableRollBonus": "Bono de Tirada",
-        "rateTableSellsFor": "Vende por"
-      },
-      "inventory": {
-        "headline": "Inventario"
-      },
-      "acceptedRep": {
-        "label": "Shop Accepts:",
-        "loyaltyLabel": "Lealtad de la Tienda:",
-        "noCharacter": "No tienes un personaje activo. Elige un personaje que te pertenezca y vuelve aquí."
-      },
-      "purchase": {
-        "confirm": "Comprar",
-        "trade": "Intercambiar",
-        "favorConfirm": "Cobrar Favor",
-        "required": "Favor requerido:",
-        "flatBuyCost": "Costo de compra:",
-        "netCost": "Costo neto:",
-        "otherwiseLabel": "En otro caso:",
-        "sellBonus": "Bono de Tirada de Venta:",
-        "sellForRep": "Vender por Reputación:",
-        "repBenefitsHeadline": "Beneficios de Reputación",
-        "burnRep": "Quemar Reputación:",
-        "burnRepHint": "Bono: Reputación quemada x 2<br>(Máx. 15 Reputación)",
-        "sellBonusModifier": "Bono de venta",
-        "burnBonusModifier": "Reputación quemada",
-                "favorDifficultyLockedHint": "Se establece automáticamente según la Lealtad con esta tienda y cuántos objetos estás pidiendo a la vez.",
-        "successMessage": "{character} compró {items} de {shop} con Reputación {network}.",
-        "favorMessage": "{character} cobró un favor para conseguir {items}.",
-        "favorBurnMessage": "{character} cobró un favor para conseguir {items} y quemó Reputación {network} en el proceso.",
-        "tradeInMessage": "{character} compró {items}, entregando {soldCount} objeto(s) por Reputación {network} a cambio de esta compra.",
-        "tradeReceived": "Recibido",
-        "tradeSpend": "Gastado"
-      },
-      "toSell": {
-        "headline": "Para Vender",
-        "empty": "Arrastra objetos desde tu propia hoja aquí para venderlos a esta tienda.",
-        "confirm": "Vender",
-        "remove": "Quitar de Para Vender",
-        "confirmMessage": "Estás a punto de vender los objetos preparados a esta tienda.",
-        "ownerWarning": "Esta tienda es tuya. ¿Seguro que quieres venderte algo a ti mismo?",
-        "repGainMessage": "{character} ganó Reputación {network} por vender."
-      },
-      "warnings": {
-        "systemDisabled": "El sistema de tienda está desactivado actualmente - puedes activarlo en los ajustes del sistema de Eclipse Phase.",
-        "sellFailed": "No se pudo completar la venta.",
-        "purchaseFailed": "No se pudo completar la compra.",
-        "purchaseItemsGone": "Algunos de los artículos comprados ya no están disponibles.",
-        "favorLimitExhausted": "No hay ningún favor de este nivel disponible ahora mismo - el límite semanal o de arco argumental ya se agotó.",
-        "notEnoughRepToBurn": "No hay suficiente Reputación disponible para quemar esa cantidad - reducido a lo disponible.",
-        "notEnoughRepToBuy": "No hay suficiente Reputación disponible para comprar esto.",
-        "shopClosed": "Esta tienda está cerrada actualmente.",
-        "salesClosed": "Esta tienda está actualmente cerrada para ventas.",
-        "differentActingCharacter": "Ya estás vendiendo artículos para otro personaje - termina o elimina esos primero.",
-        "noEligibleCharacters": "No quedan personajes elegibles para añadir - todos los personajes vinculados a un jugador ya tienen un registro de lealtad aquí.",
-                "sellLockedOut": "Has vendido demasiado a esta tienda recientemente. Descansa para ser bienvenido de nuevo, o pide al Propietario que levante la restricción.",
-        "sellLimitExceeded": "Eso es demasiado para una sola transacción aquí. Reduce tu selección e inténtalo de nuevo.",
-        "rareLoyaltyRequired": "Este objeto es Raro - necesitas al menos nivel de Lealtad Naranja con esta tienda para adquirirlo.",
-        "favorBatchTooLarge": "Son demasiados objetos para pedir como un solo favor aquí - reduce tu selección.",
-"morphsBlocked": "Los Morphs no se pueden comprar con Reputación. En su lugar, se adquieren mediante los Puntos de Morph de la misión."
       }
     }
   }

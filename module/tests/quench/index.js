@@ -1,6 +1,5 @@
 import { RollCheck, TaskRollModifier } from "../../rolls/dice.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
-import "./shop.js";
 import {
   withTempActor,
   withTempItem,
@@ -99,18 +98,12 @@ Hooks.on("quenchReady", quench => {
         });
       });
 
-      it("MANAGED_TYPES guard: a shop actor gets its own token defaults instead", async function () {
-        const wasEnabled = game.settings.get("eclipsephase", "enableShopSystem");
-        if (!wasEnabled) await game.settings.set("eclipsephase", "enableShopSystem", true);
-        try {
-          await withTempActor({ type: "shop" }, actor => {
-            assert.notStrictEqual(actor.prototypeToken.displayBars, CONST.TOKEN_DISPLAY_MODES.HOVER);
-            assert.notOk(actor.getFlag("eclipsephase", "defaultMorphAdded"));
-            assert.strictEqual(actor.prototypeToken.actorLink, false);
-          });
-        } finally {
-          if (!wasEnabled) await game.settings.set("eclipsephase", "enableShopSystem", false);
-        }
+      it("MANAGED_TYPES guard: a type the system does not manage is left alone", async function () {
+        await withTempActor({ type: "shop" }, actor => {
+          assert.notStrictEqual(actor.prototypeToken.displayBars, CONST.TOKEN_DISPLAY_MODES.HOVER);
+          assert.notOk(actor.getFlag("eclipsephase", "defaultMorphAdded"));
+          assert.notOk(actor.system.pools, "the character pipeline should not have run");
+        });
       });
     });
   }, { displayName: "Eclipse Phase: Actor creation" });
@@ -260,18 +253,6 @@ Hooks.on("quenchReady", quench => {
     const { describe, it, assert } = context;
 
     describe("creation gating", function () {
-      it("blocks creating a shop while the shop system is disabled", async function () {
-        const wasEnabled = game.settings.get("eclipsephase", "enableShopSystem");
-        if (wasEnabled) await game.settings.set("eclipsephase", "enableShopSystem", false);
-        try {
-          const created = await Actor.create({ type: "shop", name: "Quench Disabled Shop Probe" });
-          assert.notExists(created, "creation should be cancelled by preCreateActor");
-          assert.notExists(game.actors.getName("Quench Disabled Shop Probe"));
-        } finally {
-          if (wasEnabled) await game.settings.set("eclipsephase", "enableShopSystem", true);
-        }
-      });
-
       it("allows creating the current traits item type normally", async function () {
         await withTempItem({ type: "traits", name: "Quench Probe Trait" }, item => {
           assert.strictEqual(item.type, "traits");

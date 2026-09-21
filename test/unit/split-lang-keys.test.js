@@ -49,6 +49,9 @@ describe("splitByEntries", () => {
   });
 });
 
+// Any namespace the system still owns will do - the shop's moved into its own module.
+const PREFIX = "ep2e.psi.";
+
 describe("runSplit, on copies of the real language files", () => {
   let languagesDir;
   let outDir;
@@ -68,9 +71,9 @@ describe("runSplit, on copies of the real language files", () => {
     const { runSplit, LANGUAGES } = await loadScript();
     const before = fs.readFileSync(path.join(languagesDir, "en.json"));
 
-    const results = runSplit({ languagesDir, entries: ["ep2e.shop."], outDir, dryRun: true });
+    const results = runSplit({ languagesDir, entries: [PREFIX], outDir, dryRun: true });
 
-    for (const language of LANGUAGES) expect(results[language].extractedCount).toEqual(112);
+    for (const language of LANGUAGES) expect(results[language].extractedCount).toEqual(96);
     expect(fs.existsSync(outDir)).toBe(false);
     expect(fs.readFileSync(path.join(languagesDir, "en.json"))).toEqual(before);
   });
@@ -80,21 +83,21 @@ describe("runSplit, on copies of the real language files", () => {
     const originalEn = JSON.parse(fs.readFileSync(path.join(languagesDir, "en.json"), "utf8"));
     const originalKeys = new Set(Object.keys(flattenKeys(originalEn)));
 
-    runSplit({ languagesDir, entries: ["ep2e.shop."], outDir, dryRun: false });
+    runSplit({ languagesDir, entries: [PREFIX], outDir, dryRun: false });
 
     const extracted = JSON.parse(fs.readFileSync(path.join(outDir, "en.json"), "utf8"));
     const remaining = JSON.parse(fs.readFileSync(path.join(languagesDir, "en.json"), "utf8"));
     const combinedKeys = new Set([...Object.keys(flattenKeys(extracted)), ...Object.keys(flattenKeys(remaining))]);
 
     expect(combinedKeys).toEqual(originalKeys);
-    expect(Object.keys(flattenKeys(extracted)).every(key => key.startsWith("ep2e.shop."))).toBe(true);
-    expect(Object.keys(flattenKeys(remaining)).some(key => key.startsWith("ep2e.shop."))).toBe(false);
+    expect(Object.keys(flattenKeys(extracted)).every(key => key.startsWith(PREFIX))).toBe(true);
+    expect(Object.keys(flattenKeys(remaining)).some(key => key.startsWith(PREFIX))).toBe(false);
   });
 
   test("preserves each language file's own line-ending style", async () => {
     const { runSplit } = await loadScript();
 
-    runSplit({ languagesDir, entries: ["ep2e.shop."], outDir, dryRun: false });
+    runSplit({ languagesDir, entries: [PREFIX], outDir, dryRun: false });
 
     const expectCrlf = { "en.json": true, "de.json": true, "es.json": false, "cn.json": false, "pt-BR.json": false };
     for (const [file, crlf] of Object.entries(expectCrlf)) {

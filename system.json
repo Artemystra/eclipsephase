@@ -15,13 +15,21 @@
       "flags": {}
     }
   ],
+  "relationships": {
+    "recommends": [
+      {
+        "id": "eclipsephase-shop",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/Artemystra/eclipsephase-shop/main/module.json"
+      }
+    ]
+  },
   "esmodules": [
     "module/eclipsephase.js",
     "module/effects.js"
   ],
   "styles": [
-    "css/eclipsephase.css",
-    "css/features/shop.css"
+    "css/eclipsephase.css"
   ],
   "packs": [
     {

@@ -7,14 +7,10 @@ const EPactor = require(path.join(SYSTEM_ROOT, "module", "actor", "EPactor.js"))
 const EPitem = require(path.join(SYSTEM_ROOT, "module", "item", "EPitem.js")).default;
 const { eclipsephase } = require(path.join(SYSTEM_ROOT, "module", "config.js"));
 const { registerRegistryHelpers } = require(path.join(SYSTEM_ROOT, "module", "api", "registry.js"));
-const ShopModel = require(path.join(SYSTEM_ROOT, "module", "features", "shop", "shop-model.js")).default;
 
 global.CONFIG.Actor.documentClass = EPactor;
 global.CONFIG.Item.documentClass = EPitem;
 global.CONFIG.eclipsephase = eclipsephase;
-// The shop's schema lives in its own data model rather than template.json, so register it here
-// the way the feature does at init - otherwise a shop actor would start with no system data.
-global.CONFIG.Actor.dataModels.shop = ShopModel;
 registerRegistryHelpers();
 
 /**

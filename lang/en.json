@@ -1,5 +1,5 @@
 {
-  "SETTINGS":{
+  "SETTINGS": {
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -14,10 +14,6 @@
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
-    },
-    "enableShopSystem": {
-      "name": "Enable Shop System",
-      "hint": "Enables the Shop actor type. If deactivated, existing shops are hidden and new ones can't be created."
     },
     "gmMenu": {
       "name": "Enable GM Menu",
@@ -52,31 +48,36 @@
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
-  "TYPES.Actor.character" : "Player Character",
-  "TYPES.Actor.npc" : "Non-Player Character",
-  "TYPES.Actor.goon" : "Threat",
-  "TYPES.Actor.shop" : "Shop",
-  "TYPES.Item.gear" : "Gear",
-  "TYPES.Item.rangedWeapon" : "Ranged Weapon",
-  "TYPES.Item.ccWeapon" : "Close Combat Weapon",
-  "TYPES.Item.armor" : "Armor",
-  "TYPES.Item.grenade" : "Grenade",
-  "TYPES.Item.traits" : "Traits & Flaws",
-  "TYPES.Item.trait" : "Trait (DEPRECATED)",
-  "TYPES.Item.flaw" : "Flaw (DEPRECATED)",
-  "TYPES.Item.morphTrait" : "Morph Trait (DEPRECATED)",
-  "TYPES.Item.morphFlaw" : "Morph Flaw (DEPRECATED)",
-  "TYPES.Item.ware" : "Ware",
-  "TYPES.Item.aspect" : "Psi Sleight",
-  "TYPES.Item.program" : "Program",
-  "TYPES.Item.specialSkill" : "Special Skill",
-  "TYPES.Item.knowSkill" : "Know Skill",
-  "TYPES.Item.vehicle" : "Remote Body",
-  "TYPES.Item.drug" : "Drug",
-  "TYPES.Item.ammo" : "Ammo",
-  "TYPES.Item.id" : "ID",
-  "TYPES.Item.morph" : "Morph",
-
+  "TYPES": {
+    "Actor": {
+      "character": "Player Character",
+      "npc": "Non-Player Character",
+      "goon": "Threat",
+      "shop": "Shop"
+    },
+    "Item": {
+      "gear": "Gear",
+      "rangedWeapon": "Ranged Weapon",
+      "ccWeapon": "Close Combat Weapon",
+      "armor": "Armor",
+      "grenade": "Grenade",
+      "traits": "Traits & Flaws",
+      "trait": "Trait (DEPRECATED)",
+      "flaw": "Flaw (DEPRECATED)",
+      "morphTrait": "Morph Trait (DEPRECATED)",
+      "morphFlaw": "Morph Flaw (DEPRECATED)",
+      "ware": "Ware",
+      "aspect": "Psi Sleight",
+      "program": "Program",
+      "specialSkill": "Special Skill",
+      "knowSkill": "Know Skill",
+      "vehicle": "Remote Body",
+      "drug": "Drug",
+      "ammo": "Ammo",
+      "id": "ID",
+      "morph": "Morph"
+    }
+  },
   "ep2e": {
     "actorSheet": {
       "placeholders": {
@@ -215,7 +216,7 @@
           "takeDamage": "Take Mental Damage"
         },
         "heal": {
-          "bodyFull":{
+          "bodyFull": {
             "bio": "Full Heal",
             "synth": "Full Repair",
             "info": "Full Defragmentation"
@@ -231,80 +232,80 @@
         "spendRez": {
           "label": "Spend Rez",
           "rep": {
-            "label" : "x 5 Rep Points",
+            "label": "x 5 Rep Points",
             "description": " (1 Rez each)"
           },
           "skill": {
-            "label" : "x 5 Skill Points",
+            "label": "x 5 Skill Points",
             "description": " (1 Rez each)"
           },
           "spec": {
-            "label" : "x 1 Specialization",
+            "label": "x 1 Specialization",
             "description": " (1 Rez each)"
           },
           "psi": {
-            "label" : "x 1 Psi Slieght",
+            "label": "x 1 Psi Slieght",
             "description": " (1 Rez each)"
           },
           "lang": {
-            "label" : "x 1 Language",
+            "label": "x 1 Language",
             "description": " (1 Rez each)"
           },
           "apt": {
-            "label" : "x 1 Aptitude",
+            "label": "x 1 Aptitude",
             "description": " (1 Rez each)"
           },
           "flex": {
-            "label" : "x 1 Ego-Flex (To a total of 3)",
+            "label": "x 1 Ego-Flex (To a total of 3)",
             "description": " (2 Rez each)"
           },
           "traits": {
-            "label" : "Any number of traits",
+            "label": "Any number of traits",
             "description": " (Put in the summed cost)"
           },
           "homebrew": {
             "rep": {
-              "label" : "x 1 Rep Points",
+              "label": "x 1 Rep Points",
               "description": " (1 Rez each)"
             },
             "spec": {
-              "label" : "x 1 Specialization",
+              "label": "x 1 Specialization",
               "description": " (5 Rez each)"
             },
             "psi": {
-              "label" : "x 1 Psi Slieght",
+              "label": "x 1 Psi Slieght",
               "description": " (5 Rez each)"
             },
             "lang": {
-              "label" : "x 1 Language",
+              "label": "x 1 Language",
               "description": " (5 Rez each)"
             },
             "apt": {
-              "label" : "x 1 Aptitude",
+              "label": "x 1 Aptitude",
               "description": " (5 Rez each)"
             },
             "flex": {
-              "label" : "x 1 Ego-Flex (To a total of 3)",
+              "label": "x 1 Ego-Flex (To a total of 3)",
               "description": " (10 Rez each)"
             },
             "traits": {
-              "label" : "Any number of traits",
+              "label": "Any number of traits",
               "description": " (Put in the summed cost)"
             },
             "skill33": {
-              "label" : "x 2 Skill Points (Skill < 34)",
+              "label": "x 2 Skill Points (Skill < 34)",
               "description": " (1 Rez each)"
             },
             "skill3366": {
-              "label" : "x 1 Skill Points (Skill 34 - 66)",
+              "label": "x 1 Skill Points (Skill 34 - 66)",
               "description": " (1 Rez each)"
             },
             "skill66": {
-              "label" : "x 1 Skill Points (Skill > 66)",
+              "label": "x 1 Skill Points (Skill > 66)",
               "description": " (2 Rez each)"
             }
-        }
-        }, 
+          }
+        },
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",
         "stressluc": "Stress/Luc",
@@ -463,7 +464,7 @@
       "bracketsMuse": "(Muse)",
       "museOf": "Muse of:"
     },
-    "skills":{
+    "skills": {
       "placeholders": {
         "specialization": "Specialization",
         "additionalSpec": "No Spec"
@@ -492,7 +493,7 @@
         },
         "button": {
           "resetRest": "Reset Rest",
-          "distribute": "Distribute" 
+          "distribute": "Distribute"
         }
       },
       "insightSkills": {
@@ -770,14 +771,14 @@
       "noWare": "No Ware Installed",
       "noArmor": "No Armor Installed"
     },
-"ki": {
+    "ki": {
       "strain": {
         "none": "-Select-",
         "crucible": "The Crucible",
         "redline": "The Redline",
         "signal": "The Signal",
         "ruin": "The Ruin",
-        "colony": "The Colony"
+        "colony": "The Colony"
       },
       "effect": {
         "cognitiveFeedback": "Cognitive Feedback:",
@@ -870,7 +871,7 @@
           }
         },
         "ruin": {
-          "fatigue": {
+          "fatigue": {
             "label": "Material Fatigue:",
             "brittleArmor": "Brittle Armor",
             "fatiguedActuators": "Fatigued Actuators",
@@ -946,7 +947,7 @@
         "prerequisiteConflictCopy": "This character already has a trait from the other discipline and cannot use this sleight.",
         "prerequisiteMissing": "{trait} could not be found in the compendium."
       },
-      "strain" : {
+      "strain": {
         "none": "-Select-",
         "architect": "The Architect",
         "beast": "The Beast",
@@ -955,11 +956,11 @@
         "xenomorph": "The Xenomorph",
         "custom": "The Custom"
       },
-      "effect" : {
-        "physicalDamage" : "Physical Damage:",
-        "takeDamage" : "Take 1d6 damage",
-        "frenzy" : "Frenzy",
-        "hallucination" : "Hallucination",
+      "effect": {
+        "physicalDamage": "Physical Damage:",
+        "takeDamage": "Take 1d6 damage",
+        "frenzy": "Frenzy",
+        "hallucination": "Hallucination",
         "other": "Other",
         "enhancedBehaviour": {
           "label": "Enhanced Bahaviour:",
@@ -1052,7 +1053,6 @@
         "spec": "Spec",
         "flex": "Flex",
         "traits": "Traits"
-
       }
     },
     "sideCar": {
@@ -1137,7 +1137,7 @@
           "descriptionPlaceholder": "Add a description"
         }
       },
-      "traits":{
+      "traits": {
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1345,7 +1345,7 @@
             "intruder": "Intruder",
             "user": "User",
             "admin": "Admin",
-            "owner": "Owner"            
+            "owner": "Owner"
           }
         }
       },
@@ -1516,7 +1516,7 @@
               "beyond": "Beyond (-20)",
               "beyondPlus": "Beyond+ (-30)",
               "ignoreMalus": "Weapon ignores range malus",
-              "ignore" : "No range modifiers"
+              "ignore": "No range modifiers"
             },
             "visual": {
               "label": "Visual Malus",
@@ -1556,10 +1556,10 @@
               "vms": "Very much smaller (-30)",
               "ms": "Much smaller (-20)",
               "s": "Smaller (-10)",
-              "none": "Equal Size" ,
-              "l": "Larger (+10)" ,
-              "ml": "Much larger (+20)" ,
-              "vml": "Very much larger (+30)" 
+              "none": "Equal Size",
+              "l": "Larger (+10)",
+              "ml": "Much larger (+20)",
+              "vml": "Very much larger (+30)"
             },
             "type": {
               "label": "Attack Type",
@@ -1689,7 +1689,7 @@
           "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
         },
         "spendRez": {
-          "spent": "You overspent your rez. <br> Spent:", 
+          "spent": "You overspent your rez. <br> Spent:",
           "available": "<br> Available:"
         },
         "heal": {
@@ -1756,7 +1756,7 @@
           "damageDone": "With the result",
           "additionalEffects": "Additional Effects",
           "melee": {
-            "sizeDifference": "Reach", 
+            "sizeDifference": "Reach",
             "charge": "Charging",
             "chargeAddition": "(+1d6DV)",
             "agressive": "Agressive Hit",
@@ -1937,7 +1937,7 @@
           }
         }
       },
-"ki": {
+      "ki": {
         "effect": {
           "takeStrain": "The Ki infection lashes back through the cyberbrain. Take SV 1d6.",
           "crucible": {
@@ -2013,7 +2013,7 @@
             }
           },
           "ruin": {
-            "fatigue": {
+            "fatigue": {
               "brittleArmor": "The morph's Frame armor becomes brittle and flakes away: -4/-4 to its Frame armor for 1d6 minutes.",
               "fatiguedActuators": "-30 to all SOM-based tests for 1d6 minutes.",
               "leakingConstruction": "One existing environmental resistance ceases to function for 1d6 minutes."
@@ -2110,6 +2110,13 @@
       }
     },
     "migration": {
+      "23": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Psi Now Interacts With Its Environment (Mostly Your Brain...)<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update brings a few changes to the Psi system, and three of them touch data you already have:</p><ul><li>Any Aspect item (Gamma/Epsilon sleights) can now carry an optional damage formula, set on its own sheet, and roll it via a new button after a successful cast - the GM still judges whether it actually hit, same as weapon damage.</li><li><b>Psychic Stab</b> and <b>Nightmare</b> are backfilled with their book damage automatically, on every character/NPC/goon that already owns a copy, and in the world items list.</li><li>Sub-strain <b>Influence Effect</b> tables are now kept per archetype, so you can switch strain without the table you filled in for the previous one being deleted.</li><li>A Cyberbrain now has a concrete effect on Psi, and so does a synthmorph carrying a <b>Brain Box</b>; to make that possible, Cyberbrain and Core System ware you already own gets an invisible marker so the system can recognise it.</li></ul><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "110": "<span class='resource-label' style='flex: 100%'><p>Dice Roll Refactoring<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a major update restructuring all dice rolls within the system.</b><p/><p>In order to work properly, there are some minor tweaks made on NPC/Threat level. This might cause you to reinstate any NPC/Threat token to currently active encounters, as only the main instance of these tokens (aka the NPC/Threat in the actors list) will be updated accordingly.</p></div></span>",
+      "150": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>All new Morphs!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>This is THE major update on morphs and it will fundamentally change the way they're working in the future. I did my best to create a migration script, that helps you to keep most of your data running, though I'm still a hobbyist developer and you might want to create a new world altogether if you're just yet started. Just know that I'm running a campaign on this system for 6 years now, so if there's anything I missed rest assured that it will bite me as well.</b><p/><p> That said, the most common issues you might experience are the following:<br><ul><li>The migration will delete all old 'morphflaws', 'flaws', 'morphtraits' and 'traits' everywhere (also on your characters). This is so protect your system from crashing in my future updates from this one on. (also you'll be prevented from creating these items - use the 'traits and flaws'-item instead)</li><li>Morphs are items now, so player characters can have more than 6. The script will go through all your characters and create morph-items according to the information provided. To prevent the system from mixing up your players morph wait a moment till you're receiving the final 'migration done'-message.</li><li>The way active effects work changed fundamentally between the update from v12 to v13 so the migration script will delete all active effects from your characters including temporary wound/trauma ignore and anything you might have added by hand. Sorry for the inconvenience.</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.5'>gitHub</a>.<p/><p><b>Also it's christmas!</b><br>If you feel generous please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "170": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Identify yourself!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>Another major, but less severe update this time: IDs are coming back to the system!</b><p/><p> That includes the following:<br><ul><li>Your old ids that are still saved with legacy characters are deleted and recreated as ID items</li><li>This will only be the case if the IDs have had a name OR a rep value to them, Otherwise no new ID item will be created</li><li>You can roll and edit your IDs as before, though now they're items and for that will be prone to some changes in the future, giving you an option to show a picture and a description to every ID (and maybe some more feature, we will see)</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.7'>gitHub</a>.<p/><p><b>Also this system lives from the fact that I believe that some of you care that it exists.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "196": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Languages Get a Glow-Up, Vehicles Get in Line<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li>Your character's <b>Languages</b> field is now a proper multi-select with pills instead of a single comma-separated text box — whatever you had typed in before gets automatically split up so nothing gets lost.</li><li><b>Drones, vehicles, robots and smart animals</b> now share the same underlying data shape as morphs, fixing a bunch of inconsistencies around jamming. The old 'Morph' chassis option (never actually usable in play) is gone — any vehicle still set to it gets converted into a real Morph item automatically.</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v1.9.6'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "200": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Getting Attached to Your Armor?<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li><b>Armor is now body-bound</b>, just like Ware and Traits already were. Existing characters' Armor is still to be found in the inventory, but with an all new button to it: the Equip button on the right hand side, next to the +. From here on, Armor only counts while its body is actually sleeved (or jammed into), and you can equip a piece from there, or rebind an already-equipped piece to a different body, anytime.</li><li>Some older characters, NPCs and goons ended up with a blank (or wrong) Body Type on their active Morph, because a past migration never carried it over correctly, making their <b>Death Rating show up as NaN</b>. This migration repairs that where it can recover the missing data - if nothing usable could be found for a particular actor, nothing is changed on them and you'll want to double check that Morph's Body Type by hand.</li><li>All 135 Morphs, 15 Smart Animals, and 39 Vehicles/Drones in the compendium now carry their complete, book-accurate Frame, Ware, and Trait values (Gear and Weapons are still due for the same treatment).</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v2.0'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "215": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Your Tokens are Vital now!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles a small fix to Prototype Tokens:</p><ul><li><b>Bar 1</b> now defaults to Physical Health for every actor type.</li><li><b>Bar 2</b> defaults to Mental Health, but only for Characters - NPCs don't get it automatically (set it by hand if you want it there too).</li><li><b>Display Bars</b> now defaults to \"Hovered by Anyone\" instead of \"Never Displayed\", so the bars are actually visible.</li></ul><p><b>Note:</b> this only updates each actor's Prototype Token. Tokens already placed on your scenes keep whatever they currently have - right-click a placed token &gt; Configure Token to apply the same defaults there by hand.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "headlineStart": "<h3 class='subheader dialog'>Dear System User</h3>",
       "headlineEnd": "<h3 class='subheader dialog'>You are all set!</h3>",
       "done": "<label class='resource-label'>Have fun fighting TITAN and rescuing the universe, or whatever it is that floats your boat!</i></p></label>",
@@ -2123,19 +2130,12 @@
       "0985": "<span class='resource-label' style='flex: 100%'><p>NPC/Threat Initiative Update<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a minor update with a major effect:</b></p><p>In the past NPCs & Threats had a input field in their health bar indicating that the ini mod will go there. This has been updated to be more specific. While the initiative is calculated based on the aptitudes & ware/traits/active effects of your npc/threat, you're now able to put in an additional modifier by hand. <b>Please note that any npcs/threats you designed that used this old input field now need to be revisited, as their manual modifier was reset to 0!</b> We hope that this gives more clarity on how this particular modifier is meant to be used.<p>Thank you and have a great day playing!</p></span>",
       "099": "<span class='resource-label' style='flex: 100%'><p>Healing Update<p/><p><b>IMPORTANT: Biomods & medichines now add active effects to let character sheets know that they're added. In order for automatic healing calculation to work properly, you might want to replace BIOMODS and MEDICHINES for all important (player)-characters. They will NOT be updated automatically</b><p/><p>Thank you and have a great day playing!</p></span>",
       "0992": "<span class='resource-label' style='flex: 100%'><p>Morph Movement & Healing Fixes<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>These are some minor bugfixes & preparations towards a general morph updated coming after the 1.0 release.</b><p/><p>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v0.9.9.2'>gitHub</a>.<p/><p><b>Also it's christmas!</b><br>If you feel generous please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
-      "110": "<span class='resource-label' style='flex: 100%'><p>Dice Roll Refactoring<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a major update restructuring all dice rolls within the system.</b><p/><p>In order to work properly, there are some minor tweaks made on NPC/Threat level. This might cause you to reinstate any NPC/Threat token to currently active encounters, as only the main instance of these tokens (aka the NPC/Threat in the actors list) will be updated accordingly.</p></div></span>",
-      "150": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>All new Morphs!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>This is THE major update on morphs and it will fundamentally change the way they're working in the future. I did my best to create a migration script, that helps you to keep most of your data running, though I'm still a hobbyist developer and you might want to create a new world altogether if you're just yet started. Just know that I'm running a campaign on this system for 6 years now, so if there's anything I missed rest assured that it will bite me as well.</b><p/><p> That said, the most common issues you might experience are the following:<br><ul><li>The migration will delete all old 'morphflaws', 'flaws', 'morphtraits' and 'traits' everywhere (also on your characters). This is so protect your system from crashing in my future updates from this one on. (also you'll be prevented from creating these items - use the 'traits and flaws'-item instead)</li><li>Morphs are items now, so player characters can have more than 6. The script will go through all your characters and create morph-items according to the information provided. To prevent the system from mixing up your players morph wait a moment till you're receiving the final 'migration done'-message.</li><li>The way active effects work changed fundamentally between the update from v12 to v13 so the migration script will delete all active effects from your characters including temporary wound/trauma ignore and anything you might have added by hand. Sorry for the inconvenience.</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.5'>gitHub</a>.<p/><p><b>Also it's christmas!</b><br>If you feel generous please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
-      "170": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Identify yourself!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>Another major, but less severe update this time: IDs are coming back to the system!</b><p/><p> That includes the following:<br><ul><li>Your old ids that are still saved with legacy characters are deleted and recreated as ID items</li><li>This will only be the case if the IDs have had a name OR a rep value to them, Otherwise no new ID item will be created</li><li>You can roll and edit your IDs as before, though now they're items and for that will be prone to some changes in the future, giving you an option to show a picture and a description to every ID (and maybe some more feature, we will see)</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.7'>gitHub</a>.<p/><p><b>Also this system lives from the fact that I believe that some of you care that it exists.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
-      "196": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Languages Get a Glow-Up, Vehicles Get in Line<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li>Your character's <b>Languages</b> field is now a proper multi-select with pills instead of a single comma-separated text box — whatever you had typed in before gets automatically split up so nothing gets lost.</li><li><b>Drones, vehicles, robots and smart animals</b> now share the same underlying data shape as morphs, fixing a bunch of inconsistencies around jamming. The old 'Morph' chassis option (never actually usable in play) is gone — any vehicle still set to it gets converted into a real Morph item automatically.</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v1.9.6'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "armorBoundNotice": "<p><b>Armor update:</b> {count} Armor item(s) on this character got automatically bound to <b>{body}</b>, since Armor now belongs to a specific body instead of just sitting in your inventory. Use the rebind button next to an Armor item (on the Morph tab) to move it to a different body anytime.</p>",
       "armorStashedNoticeSelf": {
         "updateLabel": "Update Notice",
         "main": "<b>Armor update:</b> {count} Armor item(s) on <b style='color: var(--highlight);'>{actor}</b> got automatically moved to their Stash.",
         "sub": "Since Armor now belongs to a specific body instead of just sitting in your inventory. You'll find it under Stashed Armor (Gear tab) - use the Equip button next to it to assign it to a body anytime."
-      },
-      "23": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Psi Now Interacts With Its Environment (Mostly Your Brain...)<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update brings a few changes to the Psi system, and three of them touch data you already have:</p><ul><li>Any Aspect item (Gamma/Epsilon sleights) can now carry an optional damage formula, set on its own sheet, and roll it via a new button after a successful cast - the GM still judges whether it actually hit, same as weapon damage.</li><li><b>Psychic Stab</b> and <b>Nightmare</b> are backfilled with their book damage automatically, on every character/NPC/goon that already owns a copy, and in the world items list.</li><li>Sub-strain <b>Influence Effect</b> tables are now kept per archetype, so you can switch strain without the table you filled in for the previous one being deleted.</li><li>A Cyberbrain now has a concrete effect on Psi, and so does a synthmorph carrying a <b>Brain Box</b>; to make that possible, Cyberbrain and Core System ware you already own gets an invisible marker so the system can recognise it.</li></ul><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
-      "215": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Your Tokens are Vital now!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles a small fix to Prototype Tokens:</p><ul><li><b>Bar 1</b> now defaults to Physical Health for every actor type.</li><li><b>Bar 2</b> defaults to Mental Health, but only for Characters - NPCs don't get it automatically (set it by hand if you want it there too).</li><li><b>Display Bars</b> now defaults to \"Hovered by Anyone\" instead of \"Never Displayed\", so the bars are actually visible.</li></ul><p><b>Note:</b> this only updates each actor's Prototype Token. Tokens already placed on your scenes keep whatever they currently have - right-click a placed token &gt; Configure Token to apply the same defaults there by hand.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
-      "200": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Getting Attached to Your Armor?<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li><b>Armor is now body-bound</b>, just like Ware and Traits already were. Existing characters' Armor is still to be found in the inventory, but with an all new button to it: the Equip button on the right hand side, next to the +. From here on, Armor only counts while its body is actually sleeved (or jammed into), and you can equip a piece from there, or rebind an already-equipped piece to a different body, anytime.</li><li>Some older characters, NPCs and goons ended up with a blank (or wrong) Body Type on their active Morph, because a past migration never carried it over correctly, making their <b>Death Rating show up as NaN</b>. This migration repairs that where it can recover the missing data - if nothing usable could be found for a particular actor, nothing is changed on them and you'll want to double check that Morph's Body Type by hand.</li><li>All 135 Morphs, 15 Smart Animals, and 39 Vehicles/Drones in the compendium now carry their complete, book-accurate Frame, Ware, and Trait values (Gear and Weapons are still due for the same treatment).</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v2.0'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>"
+      }
     },
     "systemMessage": {
       "general": {
@@ -2164,144 +2164,6 @@
         "itemRebound": "{name} rebound to {body}.",
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
         "enhancementsAdded": "{count} Enhancement(s) added to {body}."
-      }
-    },
-    "shop": {
-      "tabs": {
-        "shop": "Shop",
-        "settings": "Settings"
-      },
-      "filter": {
-        "placeholder": "Filter by item type..."
-      },
-      "dialog": {
-        "selectNetwork": {
-          "label": "Rep Network",
-          "placeholder": "- Select -",
-          "headline": "Choose Network"
-        },
-        "loyaltyDiscount": {
-          "label": "Discount",
-          "none": "No discount",
-          "option": "{levels} Tier ({percent}%)"
-        }
-      },
-      "placeholders": {
-        "shopName": "Shop Name",
-        "noItems": "This shop has no items yet."
-      },
-      "settings": {
-        "generalHeadline": "General",
-        "repHeadline": "Accepted Rep Networks",
-        "repDescription": "Which Rep networks this shop deals in - only these appear as payment options for buying, selling, or cashing in a Favor here.",
-        "acceptsSales": "Shop accepts sales",
-        "valuationHeadline": "Item Valuation",
-        "valuationDescription": "Maps each item's own cost tier to this shop's effective cost tier, Free through Rare. Rare gates behind Loyalty (if enabled) independent of price; Rep-Test difficulty and price are set separately below, in Difficulty Mapping.",
-        "costTierFree": "Free",
-        "difficultyMappingHeadline": "Difficulty Mapping",
-        "difficultyMappingDescription": "Remaps this shop's own effective cost tiers (set above in Item Valuation) onto the Favor tier used for Rep-Test difficulty and price - lets you make every Minor-tier item here roll or cost like Moderate, without touching which items are Minor in the first place. A Free item stays free unless its Trivial row is remapped here.",
-        "loyaltyHeadline": "Loyalty",
-        "loyaltyEnabled": "Track loyalty for this shop",
-        "loyaltyPerTierHeadline": "Loyalty per Tier",
-        "loyaltyPerTierDescription": "Buying an item or cashing in a Favor grants the buyer loyalty with this shop, scaled by the item's own cost type (not the shop's Rep-tier valuation). Selling never grants loyalty.",
-        "loyaltyRecordsHeadline": "Current Character Loyalty",
-        "loyaltyRecordsDescription": "A live list of every character's current standing at this shop - not a setting, just their tracked Loyalty value. Edit a value directly to correct it manually.",
-        "loyaltyRecordsEmpty": "This shop has no loyal customers yet.",
-        "loyaltyRecordDelete": "Delete this character's loyalty record",
-        "loyaltyRecordDeleteConfirm": "This will permanently delete this character's loyalty record with this shop.",
-        "loyaltyRecordAdd": "Add a character",
-        "loyaltyRecordAddTitle": "Add Character",
-        "loyaltyRecordAddHeadline": "Select a character to add to this shop's loyalty list.",
-        "loyaltyRecordAddWindowTitle": "Tamper with the Loyalty Board",
-        "loyaltyBarMaxHeadline": "Maximum Loyalty for this Shop",
-        "loyaltyBarMaxDescription": "The highest Loyalty value this shop tracks. The footer's color bar and marker are scaled against this number.",
-        "loyaltyBarHeadline": "Loyalty Bar Segments in %",
-        "loyaltyBarDescription": "Splits the bar into four percentage bands (Red/Orange/Yellow/Green). Together they can never exceed 100% of the Maximum Loyalty above.",
-        "loyaltyBarRed": "Red (T1)",
-        "loyaltyBarOrange": "Orange (T2)",
-        "loyaltyBarYellow": "Yellow (T3)",
-        "loyaltyBarGreen": "Green (T4)",
-        "sellLimitTimeframeHeadline": "Sell Limits per Timeframe",
-        "sellLimitsDescription": "Caps how much a character can sell to this shop in one transaction. Reaching a limit locks the character out of further sales here until a long rest, or until the Owner clears it below.",
-        "sellLimitMaxItems": "Max Items",
-        "sellLimitMaxRep": "Max Rep",
-        "sellLockoutsHeadline": "Locked-Out Characters",
-        "sellLockoutsEmpty": "No characters have hit the sell limits yet.",
-        "sellLockoutsDescription": "Characters currently locked out of selling here after reaching a Sell Limit above - clear a lockout to let them sell again before their next long rest.",
-        "sellLockoutClear": "Clear this character's lockout",
-                "loyaltyBuyDiscountHeadline": "Buy Discount",
-        "loyaltyBuyDiscountDescription": "Percentage discount on Buy, redeemable per Loyalty Tier - spending it drops standing back down by that many Tiers.",
-        "loyaltyBuyDiscountLevel2": "Tier 2 (%)",
-        "loyaltyBuyDiscountLevel3": "Tier 3 (%)",
-        "loyaltyBuyDiscountLevel4": "Tier 4 (%)",
-"rateOverridesHeadline": "Cost Overrides",
-        "generalOverridesHeadline": "General Overrides",
-        "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
-        "morphPointOverridesHeadline": "Morph Point Overrides",
-        "morphPointOverridesDescription": "This option only exists in Homebrew, since Morphs normally aren't purchasable and are instead accounted for via a different point system. Each value is the Morph Points threshold where that tier begins - lower point costs fall through to a lower tier automatically. If two thresholds are set to the same value, the higher tier wins.",
-        "specificOverridesHeadline": "Rep-Specific Overrides",
-        "specificOverridesDescription": "For finer-grained shop tuning - for example, if certain Rep is less welcome in some places than others. Any slot left blank falls back to the base value, or the General Override if one is set.",
-        "rateTableBuysFor": "Buys For",
-        "rateTableRollBonus": "Roll Bonus",
-        "rateTableSellsFor": "Sells For"
-      },
-      "inventory": {
-        "headline": "Inventory"
-      },
-      "acceptedRep": {
-        "label": "Shop Accepts:",
-        "loyaltyLabel": "Shop Loyalty:",
-        "noCharacter": "You have no active character. Choose an owned character and come back here."
-      },
-      "purchase": {
-        "confirm": "Buy",
-        "trade": "Trade",
-        "favorConfirm": "Cash in Favor",
-        "required": "Required favor:",
-        "flatBuyCost": "Buy cost:",
-        "netCost": "Net cost:",
-        "otherwiseLabel": "Other:",
-        "sellBonus": "Sell Roll Bonus:",
-        "sellForRep": "Sell for Rep:",
-        "repBenefitsHeadline": "Rep Benefits",
-        "burnRep": "Burn Rep:",
-        "burnRepHint": "Bonus: Burned Rep x 2<br>(Max. 15 Rep)",
-        "sellBonusModifier": "Sell Bonus",
-        "burnBonusModifier": "Burned Rep",
-                "favorDifficultyLockedHint": "Automatically set by this shop's Loyalty standing and how many items you're calling in at once.",
-        "successMessage": "{character} bought {items} from {shop} with {network} Rep.",
-        "favorMessage": "{character} cashed in a favor to get {items}.",
-        "favorBurnMessage": "{character} cashed in a favor to get {items} and burned {network} Rep in the process.",
-        "tradeInMessage": "{character} bought {items}, trading in {soldCount} item(s) worth {network} Rep toward this purchase.",
-        "tradeReceived": "Received",
-        "tradeSpend": "Spent"
-      },
-      "toSell": {
-        "headline": "To Sell",
-        "empty": "Drag items here from your own sheet to sell them to this shop.",
-        "confirm": "Sell",
-        "remove": "Remove from To Sell",
-        "confirmMessage": "You are about to sell the staged item(s) to this shop.",
-        "ownerWarning": "You own this shop. Are you sure you want to sell something to yourself?",
-        "repGainMessage": "{character} gained {network} Rep from selling."
-      },
-      "warnings": {
-        "systemDisabled": "The shop system is currently disabled - you can activate it via Eclipse Phase's system settings.",
-        "sellFailed": "The sale could not be completed.",
-        "purchaseFailed": "The purchase could not be completed.",
-        "purchaseItemsGone": "Some of the purchased items are no longer available.",
-        "favorLimitExhausted": "No favor of this tier is available right now - the weekly or story-arc limit is already used up.",
-        "notEnoughRepToBurn": "Not enough Rep available to burn that much - reduced to what's available.",
-        "notEnoughRepToBuy": "Not enough Rep available to buy this.",
-        "shopClosed": "This shop is currently closed.",
-        "salesClosed": "This shop is currently closed for sales.",
-        "differentActingCharacter": "You're already selling items for another character - finish or remove those first.",
-        "noEligibleCharacters": "No eligible characters left to add - every player-linked character already has a loyalty record here.",
-                "sellLockedOut": "You've sold too much to this shop recently. Rest to be welcomed back, or ask the Owner to lift the restriction.",
-        "sellLimitExceeded": "That's too much for one transaction here. Reduce your selection and try again.",
-        "rareLoyaltyRequired": "This item is Rare - you need at least Orange Loyalty standing with this shop to acquire it.",
-        "favorBatchTooLarge": "That's too many items to call in as one favor here - reduce your selection.",
-"morphsBlocked": "Morphs can't be purchased with Rep. They're acquired via the mission's Morph Points instead."
       }
     }
   }

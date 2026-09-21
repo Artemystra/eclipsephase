@@ -17,7 +17,6 @@ import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
 import { api } from "./api/index.js";
-import "./features/shop/index.js";
 import "./tests/quench/index.js";
 
 async function registerSystemSettings() {

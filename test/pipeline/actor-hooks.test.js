@@ -85,8 +85,8 @@ describe("the managed type guard", () => {
     expect(EPactor.MANAGED_TYPES).toEqual(["character", "npc", "goon"]);
   });
 
-  test("a shop is skipped entirely, hooks included", () => {
-    makeActorFromFixture("shop-basic");
+  test("a stub type the system does not manage is skipped entirely, hooks included", () => {
+    makeActor({ type: "shop", name: "Stub Shop" });
     expect(firedActorHooks()).toEqual([]);
   });
 
