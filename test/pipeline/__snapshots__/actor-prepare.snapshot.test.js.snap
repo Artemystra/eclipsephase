@@ -604,50 +604,8 @@ Object {
           "label": "",
         },
       },
-      "colony": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "crucible": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "colony": Object {},
+      "crucible": Object {},
       "haunter": Object {
         "influence2": Object {
           "description": "",
@@ -670,72 +628,9 @@ Object {
           "label": "",
         },
       },
-      "redline": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "ruin": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "signal": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "redline": Object {},
+      "ruin": Object {},
+      "signal": Object {},
       "stranger": Object {
         "influence2": Object {
           "description": "",
@@ -1402,50 +1297,8 @@ Object {
           "label": "",
         },
       },
-      "colony": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "crucible": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "colony": Object {},
+      "crucible": Object {},
       "haunter": Object {
         "influence2": Object {
           "description": "",
@@ -1468,72 +1321,9 @@ Object {
           "label": "",
         },
       },
-      "redline": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "ruin": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "signal": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "redline": Object {},
+      "ruin": Object {},
+      "signal": Object {},
       "stranger": Object {
         "influence2": Object {
           "description": "",
@@ -2188,50 +1978,8 @@ Object {
           "label": "",
         },
       },
-      "colony": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "crucible": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "colony": Object {},
+      "crucible": Object {},
       "haunter": Object {
         "influence2": Object {
           "description": "",
@@ -2254,72 +2002,9 @@ Object {
           "label": "",
         },
       },
-      "redline": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "ruin": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "signal": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "redline": Object {},
+      "ruin": Object {},
+      "signal": Object {},
       "stranger": Object {
         "influence2": Object {
           "description": "",
@@ -2974,50 +2659,8 @@ Object {
           "label": "",
         },
       },
-      "colony": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "crucible": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "colony": Object {},
+      "crucible": Object {},
       "haunter": Object {
         "influence2": Object {
           "description": "",
@@ -3040,72 +2683,9 @@ Object {
           "label": "",
         },
       },
-      "redline": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "ruin": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "signal": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "redline": Object {},
+      "ruin": Object {},
+      "signal": Object {},
       "stranger": Object {
         "influence2": Object {
           "description": "",
@@ -3760,50 +3340,8 @@ Object {
           "label": "",
         },
       },
-      "colony": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "crucible": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "colony": Object {},
+      "crucible": Object {},
       "haunter": Object {
         "influence2": Object {
           "description": "",
@@ -3826,72 +3364,9 @@ Object {
           "label": "",
         },
       },
-      "redline": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "ruin": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "signal": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "redline": Object {},
+      "ruin": Object {},
+      "signal": Object {},
       "stranger": Object {
         "influence2": Object {
           "description": "",
@@ -4424,50 +3899,8 @@ Object {
           "label": "",
         },
       },
-      "colony": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "crucible": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "colony": Object {},
+      "crucible": Object {},
       "haunter": Object {
         "influence2": Object {
           "description": "",
@@ -4490,72 +3923,9 @@ Object {
           "label": "",
         },
       },
-      "redline": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "ruin": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "signal": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "redline": Object {},
+      "ruin": Object {},
+      "signal": Object {},
       "stranger": Object {
         "influence2": Object {
           "description": "",
@@ -5098,50 +4468,8 @@ Object {
           "label": "",
         },
       },
-      "colony": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "crucible": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "colony": Object {},
+      "crucible": Object {},
       "haunter": Object {
         "influence2": Object {
           "description": "",
@@ -5164,72 +4492,9 @@ Object {
           "label": "",
         },
       },
-      "redline": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "ruin": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
-      "signal": Object {
-        "influence2": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence3": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence4": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence5": Object {
-          "description": "",
-          "label": "",
-        },
-        "influence6": Object {
-          "description": "",
-          "label": "",
-        },
-      },
+      "redline": Object {},
+      "ruin": Object {},
+      "signal": Object {},
       "stranger": Object {
         "influence2": Object {
           "description": "",

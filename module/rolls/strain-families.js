@@ -145,7 +145,7 @@ export function registerCoreStrainFamilies() {
     },
     feedback: { target: "mental", copyKey: "ep2e.ki.effect.takeStrain" },
     mismatchKey: "ep2e.roll.announce.ki.substrateMismatch",
-    dataPath: "system.subStrain.byArchetype",
+    dataPath: "flags.eclipsephase-ki.subStrain",
     detailsPartial: "systems/eclipsephase/templates/actor/partials/tabs/strain-details-ki.html"
   });
 }

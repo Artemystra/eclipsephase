@@ -353,6 +353,7 @@ Hooks.once("ready", async function() {
   let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
   let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
   let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
+  let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -621,6 +622,25 @@ Hooks.once("ready", async function() {
 
     let Migration23 = await update.migrationPre23(startMigration);
     endMigration = Migration23["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
+  if (before25 && !update.migrationPre25Needed()) {
+    await game.settings.set("eclipsephase", "migrationVersion", "2.5");
+  }
+  else if (before25) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.25";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration25 = await update.migrationPre25(startMigration);
+    endMigration = Migration25["endMigration"];
   }
 
     if(endMigration){

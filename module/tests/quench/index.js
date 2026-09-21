@@ -1,6 +1,6 @@
 import { RollCheck, TaskRollModifier } from "../../rolls/dice.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
-import { _ep23_migrateSubStrainByArchetype } from "../../common/migration.js";
+import { _ep23_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
 import { getStrainFamily, listStrainFamilies } from "../../rolls/strain-families.js";
 import { strainSubstrate } from "../../common/body-markers.js";
 import {
@@ -340,6 +340,87 @@ Hooks.on("quenchReady", quench => {
       });
     });
   }, { displayName: "Eclipse Phase: Strain families" });
+
+  // Read through the registry's dataPath, never through getFlag: a flag scope whose module is not
+  // active throws, and the Ki module does not exist yet. The migration writes the same way.
+  quench.registerBatch("eclipsephase.ki.migration", context => {
+    const { describe, it, assert } = context;
+
+    const KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
+
+    describe("moving a Ki character's sub-strain choices into the module's flags", function () {
+      it("writes the flags, clears the system keys and keeps the values", async function () {
+        const stored = { influence2: { label: "label2", description: "quenchChoice" } };
+        await withTempActor({
+          type: "character",
+          name: "Quench Ki Migrant",
+          system: { subStrain: { label: "crucible", byArchetype: { crucible: stored } } }
+        }, async actor => {
+          const update = _ep25_migrateKiSubStrain(actor);
+          assert.isNotNull(update, "the fixture has to look like an unmigrated character");
+          await actor.update(update);
+
+          const moved = foundry.utils.getProperty(actor, getStrainFamily("ki").dataPath);
+          assert.strictEqual(moved.crucible.influence2.description, "quenchChoice", "the choice has to survive the move");
+          assert.notOk(actor._source.system.subStrain.byArchetype.crucible?.influence2, "the system copy has to be gone");
+          assert.strictEqual(actor.system.subStrain.label, "crucible", "the chosen sub-strain itself stays in the core");
+        });
+      });
+
+      it("a second run has nothing left to do", async function () {
+        await withTempActor({
+          type: "character",
+          name: "Quench Ki Migrated",
+          system: { subStrain: { label: "ruin", byArchetype: { ruin: { influence2: { label: "l", description: "d" } } } } }
+        }, async actor => {
+          await actor.update(_ep25_migrateKiSubStrain(actor));
+          assert.isNull(_ep25_migrateKiSubStrain(actor), "an already migrated actor must not be written to again");
+        });
+      });
+
+      it("a Psi character is left entirely alone", async function () {
+        await withTempActor({
+          type: "character",
+          name: "Quench Psi Untouched",
+          system: { subStrain: { label: "architect", byArchetype: { architect: { influence2: { label: "l", description: "psiChoice" } } } } }
+        }, async actor => {
+          assert.isNull(_ep25_migrateKiSubStrain(actor));
+          assert.strictEqual(actor.system.subStrain.byArchetype.architect.influence2.description, "psiChoice");
+          assert.isUndefined(foundry.utils.getProperty(actor, getStrainFamily("ki").dataPath));
+        });
+      });
+    });
+
+    describe("whether this world is asked to migrate at all", function () {
+      it("says no while no actor carries Ki data in system data", function () {
+        assert.isFalse(migrationPre25Needed(), "a world without unmigrated Ki characters must not be prompted");
+      });
+
+      it("says yes as soon as one does", async function () {
+        await withTempActor({
+          type: "character",
+          name: "Quench Ki Unmigrated",
+          system: { subStrain: { label: "signal", byArchetype: { signal: { influence2: { label: "l", description: "d" } } } } }
+        }, async () => {
+          assert.isTrue(migrationPre25Needed());
+        });
+      });
+    });
+
+    describe("where each family's choices are read from", function () {
+      it("the registry points Ki at the flags and Psi at system data", function () {
+        assert.strictEqual(getStrainFamily("ki").dataPath, "flags.eclipsephase-ki.subStrain");
+        assert.strictEqual(getStrainFamily("psi").dataPath, "system.subStrain.byArchetype");
+      });
+
+      it("the core schema keeps the Ki keys only as empty stubs", function () {
+        for (const strain of KI_STRAINS) {
+          assert.deepEqual(game.model.Actor.character.subStrain.byArchetype[strain], {}, `${strain} should be a stub`);
+        }
+        assert.isOk(game.model.Actor.character.subStrain.byArchetype.architect.influence2, "Psi keeps its full schema");
+      });
+    });
+  }, { displayName: "Eclipse Phase: Ki sub-strain migration" });
 
   quench.registerBatch("eclipsephase.core.migration", context => {
     const { describe, it, assert } = context;

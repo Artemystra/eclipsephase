@@ -2569,6 +2569,79 @@ export async function migrationPre23(startMigration, endMigration) {
   return { endMigration: true };
 }
 
+// The sub-strains the Ki module owns. The five Psi archetypes stay in system data.
+const _ep25_KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
+
+// Moves an actor's Ki sub-strain choices out of system data and into the Ki module's flags,
+// leaving the Psi archetypes where they are. Returns null when there is nothing to move, so an
+// actor is only written to once and a second run finds nothing left to do.
+export function _ep25_migrateKiSubStrain(actor) {
+  const byArchetype = actor.system?.subStrain?.byArchetype ?? {};
+  const update = {};
+
+  for (const strain of _ep25_KI_STRAINS) {
+    const stored = byArchetype[strain];
+    if (!stored || !Object.keys(stored).length) continue;
+    update[`flags.eclipsephase-ki.subStrain.${strain}`] = foundry.utils.deepClone(stored);
+    update[`system.subStrain.byArchetype.${strain}`] = new foundry.data.operators.ForcedDeletion();
+  }
+
+  return Object.keys(update).length ? update : null;
+}
+
+// Whether any actor still carries Ki sub-strain data in system data. Ki only ever reached a world
+// through the unreleased 2.3 branch, so most worlds have nothing to move and should not be asked.
+// Anything migrationPre25 learns to do later has to be reflected here, or those worlds skip it.
+export function migrationPre25Needed() {
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  return game.actors.some(actor => ACTOR_TYPES.has(actor.type) && _ep25_migrateKiSubStrain(actor) !== null);
+}
+
+export async function migrationPre25(startMigration, endMigration) {
+  const latestUpdate = "2.5";
+  if (!startMigration) return { endMigration: false };
+
+  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+
+  const total = actors.length || 1;
+  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
+  uiBar.set(0, "Preparing migration…", `0/${total}`);
+
+  let doneCount = 0;
+
+  for (const actor of actors) {
+    if (uiBar.state.cancelled) {
+      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
+      return { endMigration: false };
+    }
+
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processing: ${actor.name}`,
+      `${doneCount + 1}/${total}`
+    );
+
+    try {
+      const update = _ep25_migrateKiSubStrain(actor);
+      if (update) await actor.update(update);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: Ki sub-strain migration failed`, err);
+    }
+
+    doneCount++;
+    uiBar.set(
+      Math.floor((doneCount / total) * 100),
+      `Processed: ${actor.name}`,
+      `${doneCount}/${total}`
+    );
+  }
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
+  uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
 // Recovers the pre-1.5 legacy body type for an actor's active morph, or null if none can be found.
 function _ep200_resolveLegacyMorphType(actor) {
   const VALID_MORPH_TYPES = new Set(["bio", "synth", "info"]);
