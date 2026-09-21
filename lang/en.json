@@ -1640,6 +1640,7 @@
         "wounds": "Wounds/Trauma",
         "woundModifier": "Wound Modifier",
         "traumaModifier": "Trauma Modifier",
+        "strainFamilyMissing": "This sleight belongs to a strain family no active module provides. Its rolls and pushes stay blocked until that module is enabled.",
         "rolled": "rolled",
         "appliedMods": "Applied Mods",
         "baseValue": "Base Value",

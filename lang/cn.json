@@ -1586,6 +1586,7 @@
         "wounds": "损伤/创伤",
         "woundModifier": "损伤调整值",
         "traumaModifier": "创伤调整值",
+        "strainFamilyMissing": "此异能属于某个未由已启用模组提供的异能族系。在启用该模组之前，其检定与推进将保持锁定。",
         "rolled": "投骰",
         "appliedMods": "附加调整值",
         "baseValue": "基础值",

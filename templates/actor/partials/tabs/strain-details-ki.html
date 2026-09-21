@@ -1,0 +1,295 @@
+<!-- The Crucible -->
+{{#if (eq actor.system.subStrain.label "crucible")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.cognitiveFeedback"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.takeStrain"}}</div>
+        {{effectInfo "ep2e.ki.effect" "takeStrain"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.crucible.preoccupation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        <select name="system.subStrain.byArchetype.crucible.influence2.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.cruciblePreoccupation selected=actor.system.subStrain.byArchetype.crucible.influence2.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.crucible.preoccupation" actor.system.subStrain.byArchetype.crucible.influence2.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.crucible.reconfiguration.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        <select name="system.subStrain.byArchetype.crucible.influence3.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.crucibleReconfiguration selected=actor.system.subStrain.byArchetype.crucible.influence3.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.crucible.reconfiguration" actor.system.subStrain.byArchetype.crucible.influence3.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.crucible.recalibration.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.byArchetype.crucible.influence4.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.crucibleRecalibration selected=actor.system.subStrain.byArchetype.crucible.influence4.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.crucible.recalibration" actor.system.subStrain.byArchetype.crucible.influence4.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.crucible.motivation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.crucible.motivation.text"}}</div>
+        {{effectInfo "ep2e.ki.effect.crucible.motivation" "text"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.crucible.revision.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.crucible.revision.text"}}</div>
+        {{effectInfo "ep2e.ki.effect.crucible.revision" "text"}}
+    </div>
+</li>
+{{/if}}
+
+<!-- The Redline -->
+{{#if (eq actor.system.subStrain.label "redline")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.cognitiveFeedback"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.takeStrain"}}</div>
+        {{effectInfo "ep2e.ki.effect" "takeStrain"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.redline.governor.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        <select name="system.subStrain.byArchetype.redline.influence2.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.redlineGovernor selected=actor.system.subStrain.byArchetype.redline.influence2.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.redline.governor" actor.system.subStrain.byArchetype.redline.influence2.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.redline.compulsion.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        <select name="system.subStrain.byArchetype.redline.influence3.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.redlineCompulsion selected=actor.system.subStrain.byArchetype.redline.influence3.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.redline.compulsion" actor.system.subStrain.byArchetype.redline.influence3.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.redline.calibration.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.byArchetype.redline.influence4.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.redlineCalibration selected=actor.system.subStrain.byArchetype.redline.influence4.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.redline.calibration" actor.system.subStrain.byArchetype.redline.influence4.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.redline.rerouting.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.byArchetype.redline.influence5.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.redlineRerouting selected=actor.system.subStrain.byArchetype.redline.influence5.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.redline.rerouting" actor.system.subStrain.byArchetype.redline.influence5.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.redline.pushing.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <select name="system.subStrain.byArchetype.redline.influence6.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.redlinePushing selected=actor.system.subStrain.byArchetype.redline.influence6.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.redline.pushing" actor.system.subStrain.byArchetype.redline.influence6.description}}
+    </div>
+</li>
+{{/if}}
+
+<!-- The Signal -->
+{{#if (eq actor.system.subStrain.label "signal")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.cognitiveFeedback"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.takeStrain"}}</div>
+        {{effectInfo "ep2e.ki.effect" "takeStrain"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.signal.carrier.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        <select name="system.subStrain.byArchetype.signal.influence2.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.signalCarrier selected=actor.system.subStrain.byArchetype.signal.influence2.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.signal.carrier" actor.system.subStrain.byArchetype.signal.influence2.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.signal.saturation.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.signal.saturation.text"}}</div>
+        {{effectInfo "ep2e.ki.effect.signal.saturation" "text"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.signal.interference.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.byArchetype.signal.influence4.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.signalInterference selected=actor.system.subStrain.byArchetype.signal.influence4.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.signal.interference" actor.system.subStrain.byArchetype.signal.influence4.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.signal.dependency.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.byArchetype.signal.influence5.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.signalDependency selected=actor.system.subStrain.byArchetype.signal.influence5.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.signal.dependency" actor.system.subStrain.byArchetype.signal.influence5.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.signal.beacon.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.signal.beacon.text"}}</div>
+        {{effectInfo "ep2e.ki.effect.signal.beacon" "text"}}
+    </div>
+</li>
+{{/if}}
+
+<!-- The Ruin -->
+{{#if (eq actor.system.subStrain.label "ruin")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.cognitiveFeedback"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.takeStrain"}}</div>
+        {{effectInfo "ep2e.ki.effect" "takeStrain"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.ruin.fatigue.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        <select name="system.subStrain.byArchetype.ruin.influence2.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.ruinFatigue selected=actor.system.subStrain.byArchetype.ruin.influence2.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.ruin.fatigue" actor.system.subStrain.byArchetype.ruin.influence2.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.ruin.seized.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        <select name="system.subStrain.byArchetype.ruin.influence3.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.ruinSeized selected=actor.system.subStrain.byArchetype.ruin.influence3.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.ruin.seized" actor.system.subStrain.byArchetype.ruin.influence3.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.ruin.intermittent.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.byArchetype.ruin.influence4.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.ruinIntermittent selected=actor.system.subStrain.byArchetype.ruin.influence4.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.ruin.intermittent" actor.system.subStrain.byArchetype.ruin.influence4.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.ruin.shedding.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.byArchetype.ruin.influence5.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.ruinShedding selected=actor.system.subStrain.byArchetype.ruin.influence5.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.ruin.shedding" actor.system.subStrain.byArchetype.ruin.influence5.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.ruin.breakdown.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.ruin.breakdown.text"}}</div>
+        {{effectInfo "ep2e.ki.effect.ruin.breakdown" "text"}}
+    </div>
+</li>
+{{/if}}
+
+<!-- The Colony -->
+{{#if (eq actor.system.subStrain.label "colony")}}
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.cognitiveFeedback"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">1</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.takeStrain"}}</div>
+        {{effectInfo "ep2e.ki.effect" "takeStrain"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.colony.witnesses.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">2</div>
+        <select name="system.subStrain.byArchetype.colony.influence2.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.colonyWitnesses selected=actor.system.subStrain.byArchetype.colony.influence2.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.colony.witnesses" actor.system.subStrain.byArchetype.colony.influence2.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.colony.sympathetic.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">3</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.colony.sympathetic.text"}}</div>
+        {{effectInfo "ep2e.ki.effect.colony.sympathetic" "text"}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.colony.borrowed.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">4</div>
+        <select name="system.subStrain.byArchetype.colony.influence4.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.colonyBorrowed selected=actor.system.subStrain.byArchetype.colony.influence4.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.colony.borrowed" actor.system.subStrain.byArchetype.colony.influence4.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.colony.gathering.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">5</div>
+        <select name="system.subStrain.byArchetype.colony.influence5.description" class="psiFormElement" data-type="String">
+            {{selectOptions config.colonyGathering selected=actor.system.subStrain.byArchetype.colony.influence5.description localize=true}}
+        </select>
+        {{effectInfo "ep2e.ki.effect.colony.gathering" actor.system.subStrain.byArchetype.colony.influence5.description}}
+    </div>
+</li>
+<li class="psiInfluenceContainer">
+    <label>{{localize "ep2e.ki.effect.colony.avatar.label"}}</label>
+    <div class="flexrow flex-group-center">
+        <div class="psi-circle">6</div>
+        <div type="text" class="psiFreeTextElement">{{localize "ep2e.ki.effect.colony.avatar.text"}}</div>
+        {{effectInfo "ep2e.ki.effect.colony.avatar" "text"}}
+    </div>
+</li>
+{{/if}}

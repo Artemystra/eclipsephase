@@ -1579,6 +1579,7 @@
         "wounds": "Wounds/Trauma",
         "woundModifier": "Wound Modifier",
         "traumaModifier": "Trauma Modifier",
+        "strainFamilyMissing": "Esta habilidad pertenece a una familia de tensión que ningún módulo activo proporciona. Sus tiradas y empujes seguirán bloqueados hasta que se active ese módulo.",
         "rolled": "rolled",
         "appliedMods": "Applied Mods",
         "baseValue": "Base Value",

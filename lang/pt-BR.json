@@ -1593,6 +1593,7 @@
         "wounds": "Ferimentos/Traumas",
         "woundModifier": "Modificador de Ferimento",
         "traumaModifier": "Modificador de Trauma",
+        "strainFamilyMissing": "Este dom pertence a uma família de tensão que nenhum módulo ativo fornece. Suas rolagens e impulsos permanecem bloqueados até que esse módulo seja ativado.",
         "rolled": "rolou",
         "appliedMods": "Mods Aplicados",
         "baseValue": "Valor Base",

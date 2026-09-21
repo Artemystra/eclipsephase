@@ -3,13 +3,16 @@ import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TA
 import * as pools from "./pools.js";
 import { gmList, prepareRecipients, inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { effectRuleKey } from "../common/general-helper-functions.js";
-import { TIER_TRAIT_NAMES } from "../common/sleight-prerequisite.js";
+import { getStrainFamily, listStrainFamilies } from "./strain-families.js";
+import { strainSubstrate } from "../common/body-markers.js";
 
 const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
 
+const DEFAULT_STRAIN_FAMILY = "psi";
+
 /**
- * The strain family ("psi" or "ki") an actor belongs to. Taken from their sleights, falling back
- * to the family's tier traits for characters who own the discipline but no sleight yet.
+ * The strain family an actor belongs to. Taken from their sleights, falling back to a family's
+ * tier traits for characters who own the discipline but no sleight yet, and to Psi otherwise.
  * @param {Actor} actorWhole
  * @returns {string}
  */
@@ -17,9 +20,11 @@ export function actorStrainFamily(actorWhole){
     const sleights = actorWhole?.items?.filter(i => i.type === "aspect") ?? [];
     const primary = sleights.find(i => i.system?.psiType === "gamma") ?? sleights.find(i => i.system?.psiType === "chi") ?? sleights[0];
     if (primary?.system?.strainFamily) return primary.system.strainFamily;
-    const kiTraits = Object.values(TIER_TRAIT_NAMES.ki);
-    const hasKiTrait = actorWhole?.items?.some(i => i.type === "traits" && kiTraits.includes(i.name));
-    return hasKiTrait ? "ki" : "psi";
+    const ownsTrait = name => !!actorWhole?.items?.some(i => i.type === "traits" && i.name === name);
+    const owned = listStrainFamilies()
+        .filter(family => family.id !== DEFAULT_STRAIN_FAMILY)
+        .find(family => Object.values(family.tierTraits).some(trait => ownsTrait(trait.name)));
+    return owned ? owned.id : DEFAULT_STRAIN_FAMILY;
 }
 
 /**
@@ -97,6 +102,20 @@ async function _adjustPoolValuesForChiPush(actorWhole, changes, sign){
 }
 
 /**
+ * Whether the actor's own strain family works in the body they currently act through, warning
+ * the user when it does not. A Chi push runs entirely off the sheet and never reaches the roll
+ * pipeline, so it has to ask for itself.
+ * @param {Actor} actorWhole
+ * @returns {boolean} true when the push may go ahead
+ */
+function chiPushAllowed(actorWhole){
+    const substrate = strainSubstrate(actorWhole, actorStrainFamily(actorWhole));
+    if (!substrate.blocked) return true;
+    ui.notifications.warn(game.i18n.localize(substrate.reasonKey));
+    return false;
+}
+
+/**
  * Duplicates a chi sleight's own ActiveEffect(s) onto itself, flagged as a temporary push boost,
  * moves any boosted pool's current value in step, and marks the item pushed. No-ops entirely if
  * the actor is already Infection-33+ boosted (that already doubles the sleight's bonus globally,
@@ -105,6 +124,7 @@ async function _adjustPoolValuesForChiPush(actorWhole, changes, sign){
  * @param {string} itemId
  */
 export async function pushChiSleight(actorWhole, itemId){
+    if (!chiPushAllowed(actorWhole)) return;
     const item = actorWhole.items.get(itemId);
     if (!item || item.system.pushed) return;
     if (actorWhole.system.additionalSystems?.psiChiBoosted === true) return;
@@ -186,6 +206,7 @@ export async function infectionUpdate(actorWhole, options){
  * @param {string} rollMode - "private" (GM-only, default) or "public"
  */
 export async function confirmChiPush(actorWhole, itemId, rollMode){
+    if (!chiPushAllowed(actorWhole)) return;
     const psiOwner = game.user._id;
     const recipientList = prepareRecipients(rollMode);
     const pushedItem = actorWhole.items.get(itemId);
@@ -319,10 +340,11 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
         let psiCopy = "";
 
         const strainFamily = actorStrainFamily(actorWhole);
+        const family = getStrainFamily(strainFamily);
 
-        if(strainFamily === "ki"){
-            const archetypeData = actorModel.subStrain.byArchetype[actorModel.subStrain.label];
-            const influenceRow = eclipsephase.kiInfluence[actorModel.subStrain.label]?.[result];
+        if(family.influence){
+            const archetypeData = foundry.utils.getProperty(actorWhole, family.dataPath)?.[actorModel.subStrain.label];
+            const influenceRow = family.influence[actorModel.subStrain.label]?.[result];
             if(result === 1){
                 message.influenceLabel = "ep2e.ki.effect.cognitiveFeedback";
                 message.influenceCopy = "ep2e.ki.effect.takeStrain";
@@ -335,7 +357,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
             }
         }
         else if(actorModel.subStrain.label != "custom"){
-            const archetypeData = actorModel.subStrain.byArchetype[actorModel.subStrain.label];
+            const archetypeData = foundry.utils.getProperty(actorWhole, family.dataPath)?.[actorModel.subStrain.label];
             if(result === 1){
                 message.influenceLabel = "ep2e.psi.effect.physicalDamage";
                 message.influenceCopy = "ep2e.psi.effect.takeDamage";
@@ -383,7 +405,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
             message.influenceCopy = customInfluence.description;
         }
 
-        if(strainFamily === "ki" || actorModel.subStrain.label != "custom") message.influenceRule = effectRuleKey(message.influenceCopy);
+        if(family.influence || actorModel.subStrain.label != "custom") message.influenceRule = effectRuleKey(message.influenceCopy);
 
         let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");
     
@@ -398,18 +420,18 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions, c
 
         const physicalDamage = await new Roll(physicalDamageRoll).evaluate();
         const actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionDamage");
-        const isKi = actorStrainFamily(actorWhole) === "ki";
+        const feedback = getStrainFamily(actorStrainFamily(actorWhole)).feedback;
 
         let message = {
             "psiDamageValue": physicalDamage.total,
             "type": "defaultDamage",
             "rollTitle": "ep2e.roll.announce.damageDone",
-            "copy": manualPush ? "ep2e.roll.announce.psi.pushedSleightFeedback" : (isKi ? "ep2e.ki.effect.takeStrain" : "ep2e.psi.effect.takeDamage")
+            "copy": manualPush ? "ep2e.roll.announce.psi.pushedSleightFeedback" : feedback.copyKey
         }
 
         await rollToChat(null, message, WEAPON_DAMAGE_OUTPUT, physicalDamage, actingPerson, recipientList, blind, "rollOutput")
 
-        if (isKi) {
+        if (feedback.target === "mental") {
             mentalUpdate += physicalDamage.total;
 
             if (physicalDamage.total >= traumaThreshold){

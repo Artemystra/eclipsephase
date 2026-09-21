@@ -1614,6 +1614,7 @@
         "wounds": "Wunde(n)/Trauma",
         "woundModifier": "Woundmodifikator",
         "traumaModifier": "Traumamodifikator",
+        "strainFamilyMissing": "Diese Fertigkeit gehört zu einer Strain-Familie, die kein aktives Modul bereitstellt. Ihre Würfe und Pushes bleiben gesperrt, bis dieses Modul aktiviert ist.",
         "rolled": "würfelt",
         "appliedMods": "Angewandte Modifikatoren",
         "baseValue": "Grundwert",

@@ -10,7 +10,7 @@ import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
-import { strainSubstrate } from "../common/body-markers.js";
+import { getStrainFamily } from "../rolls/strain-families.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 import { getRezSpendOptions } from "../api/registry.js";
 
@@ -237,10 +237,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const autoPushSelection = actor.system.additionalSystems?.autoPushSelection;
     context.autoPushLabel = autoPushSelection && autoPushSelection !== "none" ? game.i18n.localize("ep2e.roll.dialog.push." + autoPushSelection) : "";
 
-    const substrateFamily = actorStrainFamily(actor) === "ki" ? "ki" : "psi";
-    const substrate = strainSubstrate(actor, substrateFamily);
-    context.sleightBlockedLabel = substrate.blocked ? game.i18n.localize(substrate.jamBlocked ? "ep2e.roll.announce.jamming.noPsiTooltip" : `ep2e.roll.announce.${substrateFamily}.substrateBlockedTooltip`) : "";
-    context.sleightPenaltyLabel = substrate.penalised ? game.i18n.localize(`ep2e.roll.announce.${substrateFamily}.substrateMismatch`) : "";
+    const strainFamily = getStrainFamily(actorStrainFamily(actor));
+    const substrate = strainFamily.substrate(actor);
+    context.sleightBlockedLabel = substrate.blocked ? game.i18n.localize(substrate.tooltipKey) : "";
+    context.sleightPenaltyLabel = substrate.penalised ? game.i18n.localize(strainFamily.mismatchKey) : "";
 
     await this._prepareCharacterItems(context);
     await this._prepareRenderedHTMLContent(context);
@@ -248,9 +248,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     context.editable = this.isEditable;
     context.psiDetailsOpen = this._psiDetailsOpen;
 
-    context.sleightFamily = actorStrainFamily(actor);
-    context.isKi = context.sleightFamily === "ki";
-    context.subStrainOptions = context.isKi ? CONFIG.eclipsephase.kiStrains : CONFIG.eclipsephase.strains;
+    context.sleightFamily = strainFamily.id;
+    context.subStrainOptions = strainFamily.subStrains;
+    context.strainDetailsPartial = strainFamily.detailsPartial;
 
     //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
     if (game.user.isGM || actor.isOwner){
@@ -264,7 +264,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       context.tabGroups = this.tabGroups;
 
       if (context.tabs.primary?.psi) {
-        context.tabs.primary.psi.label = context.isKi ? "ep2e.actorSheet.rightTabs.kiTab" : "ep2e.actorSheet.rightTabs.psiTab";
+        context.tabs.primary.psi.label = strainFamily.tabLabel || "ep2e.actorSheet.rightTabs.psiTab";
       }
     }
     else {

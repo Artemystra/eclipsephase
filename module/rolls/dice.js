@@ -2,6 +2,7 @@ import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
 import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/general-sheet-functions.js";
 import { strainSubstrate } from "../common/body-markers.js";
+import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 
 /*
@@ -619,9 +620,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         const strainFamily = sleightItem?.system?.strainFamily ?? "psi";
         const substrate = strainSubstrate(actorWhole, strainFamily);
         if (substrate.blocked) {
-            ui.notifications.warn(game.i18n.localize(substrate.jamBlocked
-                ? "ep2e.roll.announce.jamming.noPsi"
-                : strainFamily === "ki" ? "ep2e.roll.announce.ki.noCyberbrain" : "ep2e.roll.announce.psi.noBioBrain"));
+            ui.notifications.warn(game.i18n.localize(substrate.reasonKey));
             return;
         }
     }
@@ -910,7 +909,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     if(rollType === "psi"){
         const strainFamily = psi.actorStrainFamily(actorWhole)
         if(strainSubstrate(actorWhole, strainFamily).penalised)
-            task.addModifier(new TaskRollModifier(strainFamily === "ki" ? 'ep2e.roll.announce.ki.substrateMismatch' : 'ep2e.roll.announce.psi.substrateMismatch', -30))
+            task.addModifier(new TaskRollModifier(getStrainFamily(strainFamily).mismatchKey, -30))
     }
 
 

@@ -105,6 +105,44 @@ function setProperty(object, key, value) {
 }
 
 /**
+ * Removes a dot-path from an object, the way a ForcedDeletion does on a real document.
+ * @param {Object} object - The object to delete from
+ * @param {String} key - A dot-separated path
+ * @returns {Boolean} True when something was removed
+ */
+function deleteProperty(object, key) {
+  if (!key || !object) return false;
+  const parts = key.split(".");
+  let target = object;
+  for (const part of parts.slice(0, -1)) {
+    if (!isPlainObject(target[part])) return false;
+    target = target[part];
+  }
+  const last = parts[parts.length - 1];
+  if (!(last in target)) return false;
+  delete target[last];
+  return true;
+}
+
+class DataFieldOperator {
+  static get(value) {
+    return value instanceof DataFieldOperator ? value.value : value;
+  }
+}
+
+class ForcedDeletion extends DataFieldOperator {}
+
+class ForcedReplacement extends DataFieldOperator {
+  constructor(value) {
+    super();
+    this.value = value;
+  }
+  static create(value) {
+    return new ForcedReplacement(value);
+  }
+}
+
+/**
  * Turns a flattened dot-path object into a nested one.
  * @param {Object} flat - An object whose keys may be dot-paths
  * @returns {Object} The expanded object
@@ -253,6 +291,11 @@ class MockDocument {
 
   async update(changes = {}) {
     for (const [key, value] of Object.entries(changes)) {
+      if (value instanceof ForcedDeletion) {
+        deleteProperty(this._source, key);
+        deleteProperty(this, key);
+        continue;
+      }
       setProperty(this._source, key, value);
       setProperty(this, key, value);
     }
@@ -706,6 +749,7 @@ global.foundry = {
     DataModel: class DataModel {}
   },
   data: {
+    operators: { DataFieldOperator, ForcedDeletion, ForcedReplacement },
     fields: {
       SchemaField: class SchemaField {
         constructor(fields = {}) { this.fields = fields; }
@@ -796,6 +840,19 @@ global.CONFIG = {
   sounds: { dice: "sounds/dice.wav" }
 };
 
+// The system assigns CONFIG.eclipsephase from config.js during init. Resolved lazily for the same
+// reason as the api above, and require's cache keeps it identical across reads.
+let configOverride = null;
+Object.defineProperty(global.CONFIG, "eclipsephase", {
+  configurable: true,
+  get() {
+    return configOverride ?? require(path.join(SYSTEM_ROOT, "module", "config.js")).eclipsephase;
+  },
+  set(value) {
+    configOverride = value;
+  }
+});
+
 global.ui = {
   notifications: {
     warn: message => notifications.warn.push(message),
@@ -828,6 +885,19 @@ global.game = {
   socket: { on: () => {}, emit: () => {} },
   eclipsephase: {}
 };
+
+// The system publishes game.eclipsephase.api during init. Resolved lazily so requiring the api
+// does not run at setup time, and so a suite that never touches it never pays for it.
+let apiOverride = null;
+Object.defineProperty(global.game.eclipsephase, "api", {
+  configurable: true,
+  get() {
+    return apiOverride ?? require(path.join(SYSTEM_ROOT, "module", "api", "index.js"));
+  },
+  set(value) {
+    apiOverride = value;
+  }
+});
 
 global.fromUuid = async uuid => uuidRegistry.get(uuid) ?? null;
 global.getDocumentClass = name => (name === "Actor" ? MockActor : MockItem);

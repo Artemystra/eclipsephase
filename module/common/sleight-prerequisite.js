@@ -1,18 +1,26 @@
 import { confirmation } from "./general-sheet-functions.js";
-
-export const TIER_TRAIT_NAMES = {
-  psi: { 1: "Psi I", 2: "Psi II" },
-  ki: { 1: "Ki I", 2: "Ki II" }
-};
+import { getStrainFamily, listStrainFamilies } from "../rolls/strain-families.js";
 
 function requiredTier(psiType) {
   return psiType === "chi" ? 1 : 2;
 }
 
-async function findTraitByName(name) {
-  const pack = game.packs.get("eclipsephase.traits");
+// The tier traits of one family, by tier, as plain names.
+export function tierTraitNames(family) {
+  const traits = getStrainFamily(family).tierTraits;
+  return Object.fromEntries(Object.entries(traits).map(([tier, trait]) => [tier, trait.name]));
+}
+
+// Every registered family other than the given one.
+function otherFamilies(family) {
+  return listStrainFamilies().filter(entry => entry.id !== family);
+}
+
+async function findTrait(trait) {
+  const pack = game.packs.get(trait.pack);
+  if (!pack) return null;
   const index = await pack.getIndex();
-  const entry = index.find(i => i.name === name);
+  const entry = index.find(i => i.name === trait.name);
   return entry ? fromUuid(entry.uuid) : null;
 }
 
@@ -25,12 +33,12 @@ async function findTraitByName(name) {
  */
 export async function checkSleightPrerequisite(actor, itemData) {
   const family = itemData.system?.strainFamily ?? "psi";
-  const opposite = family === "psi" ? "ki" : "psi";
-  const traitNames = TIER_TRAIT_NAMES[family];
-  const oppositeTraitNames = TIER_TRAIT_NAMES[opposite];
+  const traits = getStrainFamily(family).tierTraits;
 
   const ownedTrait = (name) => actor.items.find(i => i.type === "traits" && i.name === name);
-  const hasOpposite = ownedTrait(oppositeTraitNames[1]) || ownedTrait(oppositeTraitNames[2]);
+  const hasOpposite = otherFamilies(family)
+    .flatMap(entry => Object.values(entry.tierTraits))
+    .some(trait => ownedTrait(trait.name));
   if (hasOpposite) {
     await confirmation(
       game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
@@ -44,12 +52,14 @@ export async function checkSleightPrerequisite(actor, itemData) {
     return false;
   }
 
-  const tier1Owned = ownedTrait(traitNames[1]);
-  const tier2Owned = ownedTrait(traitNames[2]);
+  const tier1Owned = traits[1] && ownedTrait(traits[1].name);
+  const tier2Owned = traits[2] && ownedTrait(traits[2].name);
   const tier = requiredTier(itemData.system?.psiType);
   if (tier2Owned || (tier === 1 && tier1Owned)) return true;
 
-  const targetName = traitNames[tier];
+  const targetTrait = traits[tier];
+  if (!targetTrait) return true;
+  const targetName = targetTrait.name;
   const { confirm } = await confirmation(
     game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded"),
     game.i18n.localize("ep2e.psi.popUp.prerequisiteHeadline"),
@@ -64,7 +74,7 @@ export async function checkSleightPrerequisite(actor, itemData) {
   );
   if (!confirm) return true;
 
-  const traitDoc = await findTraitByName(targetName);
+  const traitDoc = await findTrait(targetTrait);
   if (!traitDoc) {
     ui.notifications.warn(game.i18n.format("ep2e.psi.popUp.prerequisiteMissing", { trait: targetName }));
     return true;

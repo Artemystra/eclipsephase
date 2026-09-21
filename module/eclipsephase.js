@@ -16,6 +16,7 @@ import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
+import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -150,6 +151,7 @@ Hooks.once('init', async function() {
   // Define custom Entity classes
   CONFIG.Actor.documentClass = EPactor;
   CONFIG.eclipsephase = eclipsephase;
+  registerCoreStrainFamilies();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;
@@ -179,6 +181,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/tabs/npcgear.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-details.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/strain-details-psi.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/strain-details-ki.html",
     "systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html",

@@ -1,5 +1,8 @@
 import { RollCheck, TaskRollModifier } from "../../rolls/dice.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
+import { _ep23_migrateSubStrainByArchetype } from "../../common/migration.js";
+import { getStrainFamily, listStrainFamilies } from "../../rolls/strain-families.js";
+import { strainSubstrate } from "../../common/body-markers.js";
 import {
   withTempActor,
   withTempItem,
@@ -289,13 +292,81 @@ Hooks.on("quenchReady", quench => {
     });
   }, { displayName: "Eclipse Phase: Sheet rendering" });
 
+  quench.registerBatch("eclipsephase.psi.families", context => {
+    const { describe, it, assert } = context;
+
+    describe("the strain families the core registers", function () {
+      it("offers Psi and Ki, each with its own tables and partial", function () {
+        assert.deepEqual(listStrainFamilies().map(family => family.id), ["psi", "ki"]);
+        assert.strictEqual(getStrainFamily("psi").subStrains, CONFIG.eclipsephase.strains);
+        assert.strictEqual(getStrainFamily("ki").subStrains, CONFIG.eclipsephase.kiStrains);
+        assert.notStrictEqual(getStrainFamily("psi").detailsPartial, getStrainFamily("ki").detailsPartial);
+      });
+
+      it("has both details partials loaded, so a sheet can render either", function () {
+        assert.isFunction(Handlebars.partials[getStrainFamily("psi").detailsPartial]);
+        assert.isFunction(Handlebars.partials[getStrainFamily("ki").detailsPartial]);
+      });
+
+      it("refuses a family nobody registered instead of treating it as Psi", function () {
+        const family = getStrainFamily("quench-nonesuch");
+        assert.isTrue(family.missing);
+        assert.isTrue(family.substrate({}).blocked);
+        assert.strictEqual(family.substrate({}).reasonKey, "ep2e.roll.announce.strainFamilyMissing");
+      });
+    });
+
+    describe("the same body judged by both families", function () {
+      it("a biological body carries Psi and refuses Ki", async function () {
+        await withTempActor({ type: "character", name: "Quench Sleeved" }, async actor => {
+          await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"));
+
+          const psi = strainSubstrate(actor, "psi");
+          const ki = strainSubstrate(actor, "ki");
+
+          assert.isFalse(psi.blocked, "a default biological morph must not block Psi");
+          assert.isTrue(ki.blocked, "Ki needs a Cyberbrain, which a default morph has not got");
+          assert.strictEqual(ki.reasonKey, "ep2e.roll.announce.ki.noCyberbrain");
+        });
+      });
+
+      it("every localisation key a blocked body reports really exists", function () {
+        for (const id of ["psi", "ki"]) {
+          const family = getStrainFamily(id);
+          assert.isTrue(game.i18n.has(family.mismatchKey), `${id} is missing ${family.mismatchKey}`);
+          assert.isTrue(game.i18n.has(family.tabLabel), `${id} is missing ${family.tabLabel}`);
+        }
+        assert.isTrue(game.i18n.has("ep2e.roll.announce.strainFamilyMissing"));
+      });
+    });
+  }, { displayName: "Eclipse Phase: Strain families" });
+
   quench.registerBatch("eclipsephase.core.migration", context => {
     const { describe, it, assert } = context;
 
-    describe("migrations", function () {
-      it("is a placeholder - real migration coverage is added in D1", function () {
-        assert.ok(true);
+    describe("the 2.3 per-archetype sub-strain migration", function () {
+      it("deletes the flat fields for real, with no legacy key left to warn about", async function () {
+        const legacy = { label: "Two", description: "second" };
+        await withTempActor({
+          type: "character",
+          name: "Quench Sub-strain",
+          system: { subStrain: { label: "architect", influence2: legacy } }
+        }, async actor => {
+          assert.isDefined(actor._source.system.subStrain.influence2, "the fixture has to carry the pre-2.3 key");
+
+          const mode = CONFIG.compatibility.mode;
+          CONFIG.compatibility.mode = CONST.COMPATIBILITY_MODES.FAILURE;
+          try {
+            await actor.update(_ep23_migrateSubStrainByArchetype(actor));
+          } finally {
+            CONFIG.compatibility.mode = mode;
+          }
+
+          assert.notProperty(actor._source.system.subStrain, "influence2", "the server has to return the deletion in its diff");
+          assert.deepEqual(actor._source.system.subStrain.byArchetype.architect.influence2, legacy);
+          assert.isNull(_ep23_migrateSubStrainByArchetype(actor), "a second run has nothing left to do");
+        });
       });
     });
-  }, { displayName: "Eclipse Phase: Migrations (placeholder)" });
+  }, { displayName: "Eclipse Phase: Migrations" });
 });

@@ -2451,8 +2451,9 @@ const _ep23_SLEIGHT_DAMAGE = {
 };
 
 // Moves an actor's currently-selected archetype's flat influence2-6 fields into the new
-// per-archetype subStrain.byArchetype.<label> bucket, and clears the old flat fields.
-function _ep23_migrateSubStrainByArchetype(actor) {
+// per-archetype subStrain.byArchetype.<label> bucket, and clears the old flat fields. Those keys
+// left the schema in 2.3, so nothing refills them and the deletion is real work.
+export function _ep23_migrateSubStrainByArchetype(actor) {
   const ARCHETYPES = new Set(["architect", "beast", "haunter", "stranger", "xenomorph"]);
   const subStrain = actor.system?.subStrain;
   const label = subStrain?.label;
@@ -2464,13 +2465,14 @@ function _ep23_migrateSubStrainByArchetype(actor) {
   }
   if (!Object.keys(legacy).length) return null;
 
+  const { ForcedDeletion } = foundry.data.operators;
   return {
     [`system.subStrain.byArchetype.${label}`]: legacy,
-    "system.subStrain.-=influence2": null,
-    "system.subStrain.-=influence3": null,
-    "system.subStrain.-=influence4": null,
-    "system.subStrain.-=influence5": null,
-    "system.subStrain.-=influence6": null
+    "system.subStrain.influence2": new ForcedDeletion(),
+    "system.subStrain.influence3": new ForcedDeletion(),
+    "system.subStrain.influence4": new ForcedDeletion(),
+    "system.subStrain.influence5": new ForcedDeletion(),
+    "system.subStrain.influence6": new ForcedDeletion()
   };
 }
 
