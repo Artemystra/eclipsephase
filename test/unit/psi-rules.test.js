@@ -35,19 +35,13 @@ beforeEach(() => {
 
 describe("which bodies each strain family works in", () => {
   const cases = [
-    // family, body, cyberbrain, jamming, blocked, penalised
+    // body, cyberbrain, jamming, blocked, penalised
     ["psi", "bio", false, false, false, false],
     ["psi", "synth", false, false, false, true],
     ["psi", "bio", true, false, true, false],
     ["psi", "synth", true, false, true, false],
     ["psi", "info", false, false, true, false],
     ["psi", "bio", false, true, true, false],
-    ["ki", "bio", false, false, true, false],
-    ["ki", "synth", false, false, true, false],
-    ["ki", "bio", true, false, false, true],
-    ["ki", "synth", true, false, false, false],
-    ["ki", "info", true, false, true, false],
-    ["ki", "synth", true, true, false, false]
   ];
 
   test.each(cases)("%s in a %s body, cyberbrain %p, jamming %p", (family, nervousSystem, cyberbrain, jamming, blocked, penalised) => {
@@ -66,17 +60,14 @@ describe("which bodies each strain family works in", () => {
     expect(strainSubstrate(sleeved({ jamSuppressed: true }), "psi").blocked).toBe(true);
   });
 
-  test("jamming blocks psi but never ki", () => {
-    const jamming = sleeved({ nervousSystem: "synth", cyberbrain: true, jamming: true });
-    expect(strainSubstrate(jamming, "psi").jamBlocked).toBe(true);
-    expect(strainSubstrate(jamming, "ki").jamBlocked).toBe(false);
+  test("jamming blocks psi wherever it is sleeved", () => {
+    expect(strainSubstrate(sleeved({ nervousSystem: "synth", jamming: true }), "psi").jamBlocked).toBe(true);
   });
 });
 
 describe("the key each family explains itself with", () => {
   test("a blocked roll names the family's own reason", () => {
     expect(strainSubstrate(sleeved({ cyberbrain: true }), "psi").reasonKey).toEqual("ep2e.roll.announce.psi.noBioBrain");
-    expect(strainSubstrate(sleeved({ nervousSystem: "bio" }), "ki").reasonKey).toEqual("ep2e.roll.announce.ki.noCyberbrain");
   });
 
   test("jamming has a reason of its own", () => {
@@ -90,14 +81,12 @@ describe("the key each family explains itself with", () => {
 
   test("the mismatch penalty reads from the family, not from the id", () => {
     expect(getStrainFamily("psi").mismatchKey).toEqual("ep2e.roll.announce.psi.substrateMismatch");
-    expect(getStrainFamily("ki").mismatchKey).toEqual("ep2e.roll.announce.ki.substrateMismatch");
   });
 });
 
 describe("the prerequisite traits a sleight asks for", () => {
-  test("each family offers its own two tiers", () => {
+  test("the core family offers its own two tiers", () => {
     expect(tierTraitNames("psi")).toEqual({ 1: "Psi I", 2: "Psi II" });
-    expect(tierTraitNames("ki")).toEqual({ 1: "Ki I", 2: "Ki II" });
   });
 
   test("an unregistered family offers none", () => {

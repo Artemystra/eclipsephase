@@ -91,7 +91,7 @@ describe("a family nobody registered", () => {
   });
 });
 
-describe("the families the core registers", () => {
+describe("the family the core registers", () => {
   beforeEach(() => {
     registerCoreStrainFamilies();
   });
@@ -101,44 +101,58 @@ describe("the families the core registers", () => {
     expect(getStrainFamily("psi").missing).toBeUndefined();
   });
 
-  test("ki is there too, until its module takes it over", () => {
-    expect(hasStrainFamily("ki")).toBe(true);
+  test("ki is not, since it belongs to its own module now", () => {
+    expect(hasStrainFamily("ki")).toBe(false);
+    expect(getStrainFamily("ki").missing).toBe(true);
   });
 
-  test("listing reports both, psi first", () => {
-    expect(listStrainFamilies().map(family => family.id)).toEqual(["psi", "ki"]);
+  test("listing reports psi alone", () => {
+    expect(listStrainFamilies().map(family => family.id)).toEqual(["psi"]);
   });
 
-  test("each family carries its own sub-strain table and details partial", () => {
+  test("psi carries its own sub-strain table and details partial", () => {
     expect(getStrainFamily("psi").subStrains).toBe(CONFIG.eclipsephase.strains);
-    expect(getStrainFamily("ki").subStrains).toBe(CONFIG.eclipsephase.kiStrains);
     expect(getStrainFamily("psi").detailsPartial).toContain("strain-details-psi.html");
-    expect(getStrainFamily("ki").detailsPartial).toContain("strain-details-ki.html");
   });
 
-  test("both families resolve their own influence, so neither can be routed into the other's rules", () => {
+  test("psi resolves its own influence", () => {
     expect(typeof getStrainFamily("psi").influence).toEqual("function");
-    expect(typeof getStrainFamily("ki").influence).toEqual("function");
-  });
-
-  test("each family answers with its own copy for the same result", () => {
-    const context = { strainLabel: "crucible", archetypeData: {}, actorModel: {} };
-    expect(getStrainFamily("ki").influence(1, context).copy).toEqual("ep2e.ki.effect.takeStrain");
-    expect(getStrainFamily("psi").influence(1, { ...context, strainLabel: "architect" }).copy).toEqual("ep2e.psi.effect.takeDamage");
+    expect(getStrainFamily("psi").influence(1, { strainLabel: "architect", archetypeData: {}, actorModel: {} }).copy)
+      .toEqual("ep2e.psi.effect.takeDamage");
   });
 
   test("a resolver returns null rather than throwing when the actor has no data for that result", () => {
-    const context = { strainLabel: "architect", archetypeData: undefined, actorModel: {} };
-    expect(getStrainFamily("psi").influence(3, context)).toBeNull();
+    expect(getStrainFamily("psi").influence(3, { strainLabel: "architect", archetypeData: undefined, actorModel: {} })).toBeNull();
   });
 
-  test("feedback damage goes to a different track per family", () => {
+  test("psi's feedback goes to the physical track", () => {
     expect(getStrainFamily("psi").feedback).toEqual({ target: "physical", copyKey: "ep2e.psi.effect.takeDamage" });
-    expect(getStrainFamily("ki").feedback).toEqual({ target: "mental", copyKey: "ep2e.ki.effect.takeStrain" });
   });
 
   test("tier traits carry their pack, not just their name", () => {
     expect(getStrainFamily("psi").tierTraits[1]).toEqual({ name: "Psi I", pack: "eclipsephase.traits" });
-    expect(getStrainFamily("ki").tierTraits[2]).toEqual({ name: "Ki II", pack: "eclipsephase.traits" });
+  });
+});
+
+describe("what the strain tab is called", () => {
+  /**
+   * The label the sheet would put on the strain tab for a given family.
+   * @param {Object} strainFamily - A registry entry, registered or missing
+   * @returns {String} The label key, or the family's own id
+   */
+  function tabLabelFor(strainFamily) {
+    if (strainFamily.tabLabel) return strainFamily.tabLabel;
+    if (!strainFamily.missing || !strainFamily.id) return "ep2e.actorSheet.rightTabs.psiTab";
+    return strainFamily.id.charAt(0).toUpperCase() + strainFamily.id.slice(1);
+  }
+
+  test("a registered family uses its own localised label", () => {
+    registerCoreStrainFamilies();
+    expect(tabLabelFor(getStrainFamily("psi"))).toEqual("ep2e.actorSheet.rightTabs.psiTab");
+  });
+
+  test("a family whose module is missing is named after itself, not after Psi", () => {
+    expect(tabLabelFor(getStrainFamily("ki"))).toEqual("Ki");
+    expect(tabLabelFor(getStrainFamily("gamma-wave"))).toEqual("Gamma-wave");
   });
 });

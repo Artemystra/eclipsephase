@@ -73,7 +73,7 @@ describe("runSplit, on copies of the real language files", () => {
 
     const results = runSplit({ languagesDir, entries: [PREFIX], outDir, dryRun: true });
 
-    for (const language of LANGUAGES) expect(results[language].extractedCount).toEqual(96);
+    for (const language of LANGUAGES) expect(results[language].extractedCount).toEqual(98);
     expect(fs.existsSync(outDir)).toBe(false);
     expect(fs.readFileSync(path.join(languagesDir, "en.json"))).toEqual(before);
   });

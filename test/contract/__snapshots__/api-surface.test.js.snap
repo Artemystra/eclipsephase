@@ -28,10 +28,14 @@ Object {
     "postNotice": [Function],
   },
   "registry": Object {
+    "getStrainFamily": [Function],
+    "hasStrainFamily": [Function],
+    "listStrainFamilies": [Function],
     "registerPoolOption": [Function],
     "registerRezSpendOptions": [Function],
     "registerRollSource": [Function],
     "registerSlot": [Function],
+    "registerStrainFamily": [Function],
     "registerTaskResultText": [Function],
   },
   "rolls": Object {

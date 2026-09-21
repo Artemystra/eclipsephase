@@ -28,8 +28,8 @@ describe("EPactor.prepareData", () => {
     expect(actor.system.additionalSystems.hasPsi).toEqual(2);
   });
 
-  test("the Cyberbrain marker is readable on the Ki fixture", () => {
-    const actor = makeActorFromFixture("character-ki");
+  test("the Cyberbrain marker is readable on a sleeved character", () => {
+    const actor = makeActorFromFixture("character-cyberbrain");
     const ware = actor.items.find(item => item.type === "ware");
     const keys = ware.effects.flatMap(effect => effect.changes.map(change => change.key));
     expect(keys).toContain("flags.eclipsephase.grantsCyberbrain");

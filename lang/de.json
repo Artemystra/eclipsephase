@@ -114,7 +114,6 @@
         "inventoryTab": "Inventar",
         "peripheralsTab": "Peripherie",
         "psiTab": "Psi",
-        "kiTab": "Ki",
         "effectsTab": "Effekte",
         "gmInfoTab": "GM Info"
       },
@@ -759,165 +758,11 @@
       "noWare": "Keine Ware installiert",
       "noArmor": "Keine Rüstung installiert"
     },
-    "ki": {
-      "strain": {
-        "none": "-Auswahl-",
-        "crucible": "Der Schmelztiegel",
-        "redline": "Die Rote Linie",
-        "signal": "Das Signal",
-        "ruin": "Der Verfall",
-        "colony": "Die Kolonie"
-      },
-      "effect": {
-        "cognitiveFeedback": "Kognitive Rückkopplung:",
-        "takeStrain": "Erleide SW 1W6",
-        "crucible": {
-          "preoccupation": {
-            "label": "Motivation:",
-            "enhance": "Realraum verbessern",
-            "recycle": "Wiederverwerten",
-            "research": "Forschung & Entwicklung"
-          },
-          "reconfiguration": {
-            "label": "Zwanghafte Rekonfiguration:",
-            "forced": "Erzwungene Aktivierung",
-            "shutdown": "Vollständige Abschaltung",
-            "rearranged": "Improvisierter Umbau"
-          },
-          "recalibration": {
-            "label": "Neukalibrierung:",
-            "weapon": "Waffe",
-            "armor": "Panzerung",
-            "accessory": "Zubehör"
-          },
-          "motivation": {
-            "label": "Motivation:",
-            "text": "Unvollkommenheit beseitigen"
-          },
-          "revision": {
-            "label": "Manifestation:",
-            "text": "Unheimliches Upgrade"
-          }
-        },
-        "redline": {
-          "governor": {
-            "label": "Ausfall des Bewegungsreglers:",
-            "limited": "Begrenzt",
-            "overridden": "Übersteuert",
-            "runaway": "Außer Kontrolle"
-          },
-          "compulsion": {
-            "label": "Betriebszwang:",
-            "overdoIt": "Übertreib es",
-            "testTheLimits": "Grenzen ausloten",
-            "redTape": "Vorschrift ist Vorschrift"
-          },
-          "calibration": {
-            "label": "Experimentelle Kalibrierung:",
-            "efficiency": "Effizienz",
-            "experimental": "Experimentell",
-            "pushTheLimit": "Grenze überschreiten"
-          },
-          "rerouting": {
-            "label": "Umleitung:",
-            "boost": "Schub",
-            "support": "Unterstützung",
-            "switch": "Umschaltung"
-          },
-          "pushing": {
-            "label": "Die Linie überschreiten:",
-            "overclocking": "Übertaktung",
-            "dampening": "Dämpfung",
-            "switching": "Umschlagen"
-          }
-        },
-        "signal": {
-          "carrier": {
-            "label": "Offener Träger:",
-            "location": "Genaue Position",
-            "diagnostics": "Technische Diagnosedaten",
-            "sensorFeed": "Auszüge eines Sensor-Feeds"
-          },
-          "saturation": {
-            "label": "Empfängersättigung:",
-            "text": "Sensorrauschen"
-          },
-          "interference": {
-            "label": "Störmuster:",
-            "whiteNoise": "Weißes Rauschen",
-            "signalBoost": "Signalverstärkung"
-          },
-          "dependency": {
-            "label": "Trägerabhängigkeit:",
-            "tacticalNetwork": "Taktisches Netzwerk",
-            "ping": "Ping",
-            "experimentalApi": "Experimentelle API"
-          },
-          "beacon": {
-            "label": "Manifestation:",
-            "text": "Anomale Störung"
-          }
-        },
-        "ruin": {
-          "fatigue": {
-            "label": "Materialermüdung:",
-            "brittleArmor": "Brüchige Panzerung",
-            "fatiguedActuators": "Ermüdete Aktuatoren",
-            "leakingConstruction": "Undichte Konstruktion"
-          },
-          "seized": {
-            "label": "Blockierte Funktion:",
-            "ware": "Ein Ware-Teil",
-            "sense": "Ein Sinn",
-            "movement": "Ein Bewegungsmodus"
-          },
-          "intermittent": {
-            "label": "Sporadischer Ausfall:",
-            "malfunction": "Subsystem-Fehlfunktion",
-            "sensorDecay": "Sensorverfall",
-            "heuristicErrors": "Heuristikfehler"
-          },
-          "shedding": {
-            "label": "Fellwechsel:",
-            "wareComponent": "Eingeweide",
-            "armorPlate": "Schuppen"
-          },
-          "breakdown": {
-            "label": "Manifestation:",
-            "text": "Zusammenbruch"
-          }
-        },
-        "colony": {
-          "witnesses": {
-            "label": "Die Zeugen:",
-            "eyes": "Augen",
-            "attention": "Aufmerksamkeit"
-          },
-          "sympathetic": {
-            "label": "Sympathetische Rückkopplung:",
-            "text": "Nachahmung"
-          },
-          "borrowed": {
-            "label": "Geliehener Körper:",
-            "eye": "Geliehenes Auge",
-            "hand": "Geliehene Hand",
-            "voice": "Geliehene Stimme",
-            "organ": "Geliehenes Organ"
-          },
-          "gathering": {
-            "label": "Versammlung:",
-            "procession": "Prozession",
-            "encirclement": "Einkreisung",
-            "nest": "Nest"
-          },
-          "avatar": {
-            "label": "Manifestation:",
-            "text": "Avatar"
-          }
-        }
-      }
-    },
     "psi": {
+      "moduleMissing": {
+        "headline": "Modul fehlt",
+        "copy": "Dieser Charakter nutzt übernatürliche, strain-basierte Fähigkeiten aus einem anderen Modul, das nicht Teil der Grundregeln ist. Bitte aktiviere zuerst das entsprechende Modul, um diese Fähigkeiten zu verwenden."
+      },
       "infectionHeadline": "Infektionstyp",
       "ratingLabel": "Infektionsgrad",
       "strainPlaceholder": "Name des Virenstamms",
@@ -1152,8 +997,7 @@
           },
           "family": {
             "label": "Familie",
-            "psi": "Psi",
-            "ki": "Ki"
+            "psi": "Psi"
           },
           "action": {
             "label": "Aktion",
@@ -1643,11 +1487,6 @@
           "substrateBlockedTooltip": "Psi braucht ein biologisches Gehirn",
           "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper"
         },
-        "ki": {
-          "noCyberbrain": "Ki funktioniert nur aus einem Cyberhirn. Beim Jammen muss jeder in der Jamming-Kette genutzte Körper ein Cyberhirn haben.",
-          "substrateBlockedTooltip": "Kein Cyberhirn",
-          "substrateMismatch": "Cyberhirn in einem biologischen Körper"
-        },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."
         },
@@ -1907,130 +1746,6 @@
             "molt": "Du bist getrieben, deine jetzige Gestalt abzuwerfen und verändert daraus hervorzugehen.",
             "playWithPrey": "Du bist getrieben, die Angst eines Opfers auszukosten, statt schnell ein Ende zu machen.",
             "protectTribe": "Du bist getrieben, deine eigene Gruppe gegen alles außerhalb abzuschirmen."
-          }
-        }
-      },
-      "ki": {
-        "effect": {
-          "takeStrain": "Die Ki-Infektion schlägt durch das Cyberhirn zurück. Erleide SW 1W6.",
-          "crucible": {
-            "preoccupation": {
-              "enhance": "Du bist wie besessen von einem Gegenstand, den du als unbrauchbar oder verbesserungswürdig empfindest - er muss nicht dir gehören, und die SL entscheidet, um welchen Gegenstand es sich handelt. Du musst versuchen, ihn mit einer erweiterten Hardware-Probe zu verbessern.",
-              "recycle": "Du bist wie besessen von einem Gegenstand, den du als unbrauchbar oder verbesserungswürdig empfindest - er muss nicht dir gehören, und die SL entscheidet, um welchen Gegenstand es sich handelt. Du willst ihn in seine Bestandteile zerlegen und diese anderweitig verwenden.",
-              "research": "Du bist wie besessen von einem Gegenstand, den du als unbrauchbar oder verbesserungswürdig empfindest - er muss nicht dir gehören, und die SL entscheidet, um welchen Gegenstand es sich handelt. Du willst ihn so weit auseinandernehmen, dass du einen Bauplan daraus gewinnst."
-            },
-            "reconfiguration": {
-              "forced": "Ein installiertes Ware-System, von der SL bestimmt, schaltet sich ein und bleibt dauerhaft aktiv. Das Cyberhirn darf nie gewählt werden.",
-              "shutdown": "Ein installiertes Ware-System, von der SL bestimmt, wird vollständig deaktiviert. Das Cyberhirn darf nie gewählt werden.",
-              "rearranged": "Der Morph baut vorhandene Komponenten zu einer zufälligen, von der SL bestimmten Ware-Funktion um und deaktiviert dafür mindestens ein anderes Ware-System. Das Cyberhirn darf nie gewählt werden."
-            },
-            "recalibration": {
-              "weapon": "Die Infektion wandelt einen deiner eigenen Besitzgegenstände in eine andere Waffe um, die die SL bestimmt. Der Ersatz hat ähnliche Masse und Größe und erfüllt eine ähnliche Funktion. Er kehrt nicht automatisch in seine ursprüngliche Form zurück.",
-              "armor": "Die Infektion wandelt einen deiner eigenen Besitzgegenstände in ein anderes Panzerungsteil um, das die SL bestimmt. Der Ersatz hat ungefähr dieselben Gesamtwerte (+/- 20 %) und erfüllt eine ähnliche Funktion. Es kehrt nicht automatisch in seine ursprüngliche Form zurück.",
-              "accessory": "Die Infektion wandelt einen deiner eigenen Besitzgegenstände in ein anderes Zubehörteil um, das die SL bestimmt. Der Ersatz hat ähnliche Masse und Größe und erfüllt eine ähnliche Funktion. Es kehrt nicht automatisch in seine ursprüngliche Form zurück."
-            },
-            "motivation": {
-              "text": "Sobald sich dir das nächste Mal in den nächsten 12 Stunden die Gelegenheit bietet, deinen eigenen Körper aufzuwerten, musst du sie nutzen - oder gegen deinen Drang ankämpfen, etwas Besseres zu werden."
-            },
-            "revision": {
-              "text": "Die SL legt eine dauerhafte körperliche Veränderung fest. Sie darf einschränkend, verstörend oder zweideutig nützlich sein, und ihre Schwere und Dramatik sollte zu der Situation passen, in der der Effekt auftritt. Die Veränderung lässt sich in der nächsten 1 Stunde nicht rückgängig machen. Danach entfernt sie eine Werkstatt oder ein Heiltank mit passendem Morph-Bauplan."
-            }
-          },
-          "redline": {
-            "governor": {
-              "limited": "Im Kampf: Der Morph darf nur seine niedrigere angegebene Bewegungsrate nutzen. Außerhalb des Kampfes: Der Morph bewegt und verhält sich betont langsam, als wolle er sich vor Verschleiß schützen. Dauer: 1W6 Minuten.",
-              "overridden": "Im Kampf: Sobald der Morph sich bewegt, muss er stets mindestens seine höhere angegebene Bewegungsrate nutzen. Außerhalb des Kampfes: Der Morph bewegt sich betont schnell und handelt waghalsig hastig, als wolle er Zeit sparen. Dauer: 1W6 Minuten.",
-              "runaway": "Im Kampf: Der Morph muss in jeder Handlungsrunde stets seine maximal mögliche Strecke zurücklegen. Außerhalb des Kampfes: Der Morph kann nicht stillstehen, als wäre Anhalten und Wiederanfahren eine Unvollkommenheit, die zu mehr Verschleiß führt und um jeden Preis vermieden werden muss. Dauer: 1W6 Minuten."
-            },
-            "compulsion": {
-              "overdoIt": "Erhalte für 12 Stunden die Motivation Übertreib es: Du erledigst jede Aufgabe mit übertriebener Gründlichkeit. Du hörst nicht auf, eine Aufgabe immer weiter zu überarbeiten und verbessern zu wollen, selbst wenn sie erkennbar fertig ist. Du darfst eine WIL-Probe versuchen, um dich aus diesem Zwang zu befreien.",
-              "testTheLimits": "Erhalte für 12 Stunden die Motivation Grenzen ausloten: Du gehst stets weiter, als die Situation es verlangt. Dir fallen sogar noch zusätzliche Möglichkeiten ein, die vorliegende Aufgabe aufzuwerten, und du drängst deinen Mitmenschen Ideen auf, wie mit einer längst erledigten Aufgabe weiterzuverfahren sei. Du darfst eine WIL-Probe versuchen, um dich aus diesem Zwang zu befreien.",
-              "redTape": "Erhalte für 12 Stunden die Motivation Vorschrift ist Vorschrift: Du handelst auffällig langsam und vorsichtig und lässt Arbeiten manchmal unvollendet, aus Angst, Schaden zu verursachen oder eine Sicherheitsgrenze zu verletzen. Du darfst eine WIL-Probe versuchen, um dich aus diesem Zwang zu befreien."
-            },
-            "calibration": {
-              "efficiency": "Einmal in den nächsten 12 Stunden darf die SL nach dem Ansagen einer Handlung entscheiden, den Morph im Modus Effizienz zu betreiben: +10, aber die Aufgabe dauert doppelt so lange oder ein Gegner erhält +10 in einer vergleichenden Probe.",
-              "experimental": "Einmal in den nächsten 12 Stunden darf die SL nach dem Ansagen einer Handlung entscheiden, den Morph im Modus Experimentell zu betreiben: -10, aber ein erfolgreicher Effekt wird verdoppelt, wo es sinnvoll ist.",
-              "pushTheLimit": "Einmal in den nächsten 12 Stunden darf die SL nach dem Ansagen einer Handlung entscheiden, den Morph über seine Grenze zu treiben: +10, und der Morph erleidet danach SW 1W6."
-            },
-            "rerouting": {
-              "boost": "-30 auf eine von der SL bestimmte Fertigkeit einer Pool-Kategorie erkauft +30 auf eine ebenfalls von der SL bestimmte Fertigkeit einer anderen Kategorie. Dauer: 1W6 Minuten.",
-              "support": "-30 auf eine von der SL bestimmte Fertigkeit erkauft +10 auf alle übrigen Fertigkeiten derselben Kategorie. Dauer: 1W6 Minuten.",
-              "switch": "-10 auf alle Fertigkeiten einer von der SL bestimmten Kategorie erkauft +10 auf alle Fertigkeiten einer anderen, ebenfalls von der SL bestimmten Kategorie. Dauer: 1W6 Minuten."
-            },
-            "pushing": {
-              "overclocking": "Einmal in den nächsten 24 Stunden darf die SL nach einer gewürfelten Probe deren Ergebnis um einen Grad anheben - zum Beispiel, indem sie einen einfachen Erfolg zu einem überlegenen Erfolg macht. Die Richtung des ursprünglichen Ergebnisses wird nie umgekehrt. Diese Effekte treten mit Vorliebe im denkbar ungünstigsten Moment auf. Sie können nie eintreten, wenn sie die körperliche oder geistige Unversehrtheit der Ki-Nutzerin selbst gefährden würden.",
-              "dampening": "Einmal in den nächsten 24 Stunden darf die SL nach einer gewürfelten Probe deren Ergebnis um einen Grad absenken - zum Beispiel, indem sie einen überlegenen Erfolg zu einem einfachen Erfolg macht. Die Richtung des ursprünglichen Ergebnisses wird nie umgekehrt. Diese Effekte treten mit Vorliebe im denkbar ungünstigsten Moment auf. Sie können nie eintreten, wenn sie die körperliche oder geistige Unversehrtheit der Ki-Nutzerin selbst gefährden würden.",
-              "switching": "Einmal in den nächsten 24 Stunden darf die SL die beiden Ziffern eines bereits liegenden Wurfs vertauschen - denselben Effekt, den sonst ein Pool-Punkt erkauft, zum Beispiel eine 71 in eine 17 zu verwandeln - nur wendet die SL es hier direkt auf dieses eine Ergebnis an, ohne dass es einen Pool-Punkt kostet. Diese Effekte treten mit Vorliebe im denkbar ungünstigsten Moment auf. Sie können nie eintreten, wenn sie die körperliche oder geistige Unversehrtheit der Ki-Nutzerin selbst gefährden würden."
-            }
-          },
-          "signal": {
-            "carrier": {
-              "location": "Die nächsten 1W6 Minuten lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig deine genaue Position.",
-              "diagnostics": "Die nächsten 1W6 Minuten lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig seine technischen Diagnosedaten.",
-              "sensorFeed": "Die nächsten 1W6 Minuten lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig Auszüge eines aktiven Sensor-Feeds."
-            },
-            "saturation": {
-              "text": "Eingehende Signale drängen sich grundlos in deine Sinne und Interfaces. Betroffene Interface- und Wahrnehmungsproben erleiden 1W6 Minuten lang -20."
-            },
-            "interference": {
-              "whiteNoise": "1W6 Minuten lang flutet der Morph seine Umgebung mit elektromagnetischem Rauschen. Betroffene Funkverbindungen in unmittelbarer Umgebung erleiden -30, deine eigenen und die deiner Verbündeten eingeschlossen.",
-              "signalBoost": "1W6 Minuten lang verstärkt der Morph stattdessen die lokale elektromagnetische Umgebung. Jedes Signal in der Nähe, deine eigenen eingeschlossen, lässt sich leichter aufspüren und anpeilen: +30 darauf, es zu orten."
-            },
-            "dependency": {
-              "tacticalNetwork": "12 Stunden lang musst du mit jedem Mitglied deiner aktuellen Gruppe zusammenbleiben. Trennen sich die Signale zu weit, bricht das Netzwerk zusammen und du erleidest -20 auf alle Handlungen, bis die Gruppe wieder zusammenfindet oder die 12 Stunden ablaufen.",
-              "ping": "12 Stunden lang musst du vor jeder Handlung in einer neuen Umgebung einen Ping ausführen - einen Mesh-Scan -, ebenso, sobald neue Personen anwesend sind oder sich die Zahl der Beteiligten ändert. Handelst du ohne ihn, kostet dich das -20 auf alle Handlungen.",
-              "experimentalApi": "12 Stunden lang darfst du keine passive Verschlüsselung aufrechterhalten. Solange du es doch tust, erleidest du -20 auf alle Handlungen."
-            },
-            "beacon": {
-              "text": "Einmal in den nächsten 24 Stunden darf die SL eine unkontrollierte Hochleistungssendung auslösen. 1W6 Minuten lang ist der Morph leicht zu orten und kann nicht verstummen, und er klinkt sich still in bestehende Verbindungen in der Nähe ein, ohne der betroffenen Person oder der Infektion dadurch tatsächlich echten Zugriff zu verschaffen. Die Sendung enthält ein unbekanntes Datenmuster wie Koordinaten, exsurgente Strukturen oder Bruchstücke fremder Telemetrie, überträgt die Infektion aber nicht."
-            }
-          },
-          "ruin": {
-            "fatigue": {
-              "brittleArmor": "Die Frame-Panzerung des Morphs wird brüchig und blättert ab: 1W6 Minuten lang -4/-4 auf seine Frame-Panzerung.",
-              "fatiguedActuators": "1W6 Minuten lang -30 auf alle KON-basierten Proben.",
-              "leakingConstruction": "Eine vorhandene Umweltresistenz stellt 1W6 Minuten lang ihren Dienst ein."
-            },
-            "seized": {
-              "ware": "Die im infizierten Morph verbaute Ware fängt an zu spinnen - Aussetzer sind an der Tagesordnung. Ein Ware-Teil, von der SL bestimmt, ist 1W6 Minuten lang vollständig blockiert.",
-              "sense": "Die Wahrnehmung fällt mitten im Satz aus, als hätte jemand schlicht einen Kanal abgezogen. Ein Sinn, von der SL bestimmt, ist 1W6 Minuten lang vollständig blockiert.",
-              "movement": "Antriebe und Aktuatoren verklemmen mitten in der Bewegung und reagieren nicht mehr. Ein Bewegungsmodus, von der SL bestimmt, ist 1W6 Minuten lang vollständig blockiert."
-            },
-            "intermittent": {
-              "malfunction": "Tragende Subsysteme antworten jedes Mal widerwilliger, wenn man sie fordert. 12 Stunden lang darf die SL eine Probe verlangen, sobald ein bestimmtes Ware-Teil besonders hart beansprucht wird. Welches Ware-Teil betroffen ist, legt die SL in dem Moment fest, in dem der Effekt zum ersten Mal auslöst.",
-              "sensorDecay": "Die Sensordaten des Morphs driften und verschmieren, bis nichts mehr sauber ablesbar ist. Alle Wahrnehmungsproben erleiden 1W6 Stunden lang -20.",
-              "heuristicErrors": "Die Mustererkennung des Morphs zerfällt, und er liest Maschinen wie Menschen falsch. Interface- und Kinesik-Proben erleiden 1W6 Stunden lang -20."
-            },
-            "shedding": {
-              "wareComponent": "Ein Ware-Teil verfällt sichtbar und verkümmert, bleibt dabei aber am Morph angebracht. Es lässt sich 1W3 Stunden lang nicht reparieren; danach erholt es sich von selbst und funktioniert wieder, sieht aber weiterhin sichtbar beschädigt aus, bis es tatsächlich repariert wird, um den Schaden zu verbergen.",
-              "armorPlate": "Eine Platte der Frame-Panzerung verfällt sichtbar und blättert ab, bleibt dabei aber angebracht, und bietet, solange sie in diesem brüchigen Zustand ist, überhaupt keinen Schutz. Sie lässt sich 1W3 Stunden lang nicht reparieren; danach erholt sie sich von selbst und funktioniert wieder, sieht aber weiterhin sichtbar beschädigt aus, bis sie tatsächlich repariert wird, um den Schaden zu verbergen."
-            },
-            "breakdown": {
-              "text": "Einmal in den nächsten 24 Stunden kann die SL in einem passenden Moment einen systemischen Zusammenbruch auslösen. Der Zusammenbruch darf höchstens zwei Systeme betreffen - etwa einen Sinn und ein Ware-Teil oder zwei Sinne - und hält 1W6 Minuten an, bevor der Körper sich zu erholen beginnt. Je nach Situation kann der Effekt danach sichtbar bleiben, wenn er nicht ordentlich repariert wird, doch die Ki-Nutzerin erholt sich vollständig von dem Vorfall."
-            }
-          },
-          "colony": {
-            "witnesses": {
-              "eyes": "Sensorbestückte Geräte in der Nähe schwenken auf einen Schlag zu dir herum: Kameras, Scanner, jede Linse in Reichweite. Der Effekt wirkt durch Wände und Hindernisse hindurch und greift auch dort, wo dich nichts tatsächlich sehen könnte. Er ist augenblicklich und vergeht, sobald die Aufmerksamkeit einmal erregt wurde. Was nicht bereits in Reichweite war - höchstens wenige Meter, nach Ermessen der SL -, bleibt unberührt, wenn es erst danach eintrifft. Was dabei aufgezeichnet hat, kann später gegen dich verwendet werden.",
-              "attention": "Drohnen und Synthmorphe in der Nähe drehen sich zu dir. Wird ein Synth von einem Ego gesteuert, blickt dieses Ego unwillkürlich in deine Richtung; versteckst du dich, brauchst du eine entsprechende Probe, um nicht entdeckt zu werden, und die betroffenen Egos wissen nie, warum sie hingesehen haben. Der Effekt wirkt durch Wände und Hindernisse hindurch und greift auch dort, wo dich nichts tatsächlich sehen könnte. Er ist augenblicklich und vergeht, sobald die Aufmerksamkeit einmal erregt wurde. Was nicht bereits in Reichweite war - höchstens wenige Meter, nach Ermessen der SL -, bleibt unberührt, wenn es erst danach eintrifft."
-            },
-            "sympathetic": {
-              "text": "1W6 Minuten lang darf die SL Ware oder Gegenstände in der Nähe auslösen, deren Funktion dem ähnelt, was du gerade selbst benutzt; das stiftet kleinere Verwirrung und meist einen Modifikator von -10. Linsen werden unscharf oder unnatürlich scharf, Gliedmaßen bewegen sich von allein, Lichter schalten sich ein oder aus. Cyberhirne und lebenserhaltende Systeme sind ausgenommen."
-            },
-            "borrowed": {
-              "eye": "1W6 Minuten lang ersetzen die Geräte um dich herum dein eigenes Sehen: Statt normal zu sehen, siehst du durch die Kameras des Raums. Die SL kann für die ungewohnte Perspektive schwerere Wahrnehmen-Proben verlangen. Die geliehene Funktion wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen.",
-              "hand": "1W6 Minuten lang ersetzen die Geräte um dich herum deine eigenen Hände: Statt selbst zuzugreifen, greifst und bewegst du dich durch die Manipulatoren des Raums. Die SL kann für jede feinmotorische Handlung schwerere Proben verlangen. Die geliehene Funktion wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen.",
-              "voice": "1W6 Minuten lang ersetzen die Geräte um dich herum deine eigene Stimme: Statt normal zu sprechen, redest du durch die Lautsprecher des Raums. Wer es hört, darf eine Probe versuchen, um zu bemerken, dass etwas nicht stimmt. Die geliehene Funktion wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen.",
-              "organ": "1W6 Minuten lang behält dein Morph all seine eigenen Funktionen - stattdessen hallt sein Zustand in die Umgebung hinaus. Deine Gedanken tauchen in Chatfenstern in der Nähe auf, deine Vitalwerte werden als die einer anderen Person angezeigt, Türen, Pumpen, Lüftung oder Beleuchtung pulsieren in deinen körperlichen Rhythmen. Wer diese Effekte bemerkt, darf eine Probe versuchen, um zu erkennen, dass etwas nicht stimmt. Das Echo wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen."
-            },
-            "gathering": {
-              "procession": "1W6 Minuten lang lösen sich mobile und bewegliche Geräte von ihren Aufgaben und ziehen in einer unordentlichen Reihe hinter dir her. Sie greifen nicht absichtlich an, markieren aber deinen Weg: Wer dich verfolgt, erhält nach Ermessen der SL einen Bonus.",
-              "encirclement": "1W6 Minuten lang drängen sich mobile und bewegliche Geräte um dich und versperren dir den Weg, wohin du dich auch wendest. Sie greifen nicht absichtlich an, doch du kommst schlecht voran und stolperst die vollen 1W6 Minuten lang immer wieder über sie.",
-              "nest": "1W6 Minuten lang häufen sich mobile und bewegliche Geräte auf dir auf und verbauen jedes erreichbare Objekt zu einer improvisierten Struktur. Sie greifen nicht absichtlich an, doch der Haufen verstellt dir die Sichtlinien: Du giltst als abgelenkt, -20 auf alles, oder erleidest zumindest stark eingeschränkte Sicht."
-            },
-            "avatar": {
-              "text": "Einmal in den nächsten 24 Stunden darf die SL mehrere mesh-verbundene Geräte vor Ort 1W6 Minuten lang als eine einzige Präsenz erwachen lassen und sich dabei aus dieser Liste ganz oder teilweise bedienen, um etwas Fremdartiges zu bauen: Lautsprecher, Displays und Mesh-Ausgaben, die gemeinsam kommunizieren; Bots, Manipulatoren und Türen, die sich wie Teile eines Organismus bewegen; Sensoren, Leuchten und Funkgeräte, die ein reagierendes Wahrnehmungsnetz bilden. Die beteiligten Sensoren speisen nicht in die normalen Ausgaben der betroffenen Geräte ein - diese zeigen für die Dauer stattdessen eine Mesh-Störsignatur. Die SL steuert das Verhalten der Präsenz, und du erhältst keine Befehlsgewalt über sie."
-            }
           }
         }
       },

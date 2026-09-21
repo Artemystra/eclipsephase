@@ -3692,3 +3692,17 @@ body.system-eclipsephase * {
 li:has(.ep-system-notice) .message-header {
   display: none !important;
 }
+
+/* A strain tab whose module is missing shows one centred panel. actor-sheet.html wraps each tab
+   partial in its own .tab div, which has no height of its own, so the pane inside it cannot resolve
+   height: 100% - the wrapper is given the height here, and only for this state. */
+.contentcenter .primary-body > .tab:has(> #psiPane[data-strain-missing]) {
+  height: 100%;
+}
+
+#psiPane[data-strain-missing] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: hidden;
+}

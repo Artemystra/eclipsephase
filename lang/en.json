@@ -115,7 +115,6 @@
         "inventoryTab": "Inventory",
         "peripheralsTab": "Peripherals",
         "psiTab": "Psi",
-        "kiTab": "Ki",
         "effectsTab": "Effects",
         "gmInfoTab": "GM Info"
       },
@@ -771,165 +770,11 @@
       "noWare": "No Ware Installed",
       "noArmor": "No Armor Installed"
     },
-    "ki": {
-      "strain": {
-        "none": "-Select-",
-        "crucible": "The Crucible",
-        "redline": "The Redline",
-        "signal": "The Signal",
-        "ruin": "The Ruin",
-        "colony": "The Colony"
-      },
-      "effect": {
-        "cognitiveFeedback": "Cognitive Feedback:",
-        "takeStrain": "Take SV 1d6",
-        "crucible": {
-          "preoccupation": {
-            "label": "Motivation:",
-            "enhance": "Enhance Real Space",
-            "recycle": "Recycle",
-            "research": "Research & Development"
-          },
-          "reconfiguration": {
-            "label": "Compulsive Reconfiguration:",
-            "forced": "Forced Activation",
-            "shutdown": "Total Shutdown",
-            "rearranged": "Improvised Rearrangement"
-          },
-          "recalibration": {
-            "label": "Recalibration:",
-            "weapon": "Weapon",
-            "armor": "Armor",
-            "accessory": "Accessory"
-          },
-          "motivation": {
-            "label": "Motivation:",
-            "text": "Eliminate Imperfection"
-          },
-          "revision": {
-            "label": "Manifestation:",
-            "text": "Uncanny Upgrade"
-          }
-        },
-        "redline": {
-          "governor": {
-            "label": "Movement Governor Failure:",
-            "limited": "Limited",
-            "overridden": "Overridden",
-            "runaway": "Runaway"
-          },
-          "compulsion": {
-            "label": "Operational Compulsion:",
-            "overdoIt": "Overdo It",
-            "testTheLimits": "Test the Limits",
-            "redTape": "Red Tape"
-          },
-          "calibration": {
-            "label": "Experimental Calibration:",
-            "efficiency": "Efficiency",
-            "experimental": "Experimental",
-            "pushTheLimit": "Push the Limit"
-          },
-          "rerouting": {
-            "label": "Rerouting:",
-            "boost": "Boost",
-            "support": "Support",
-            "switch": "Switch"
-          },
-          "pushing": {
-            "label": "Pushing the Line:",
-            "overclocking": "Overclocking",
-            "dampening": "Dampening",
-            "switching": "Switching"
-          }
-        },
-        "signal": {
-          "carrier": {
-            "label": "Open Carrier:",
-            "location": "Exact Location",
-            "diagnostics": "Technical Diagnostics",
-            "sensorFeed": "Sensor Feed Excerpts"
-          },
-          "saturation": {
-            "label": "Receiver Saturation:",
-            "text": "Sensor Noise"
-          },
-          "interference": {
-            "label": "Interference Pattern:",
-            "whiteNoise": "White Noise",
-            "signalBoost": "Signal Boost"
-          },
-          "dependency": {
-            "label": "Carrier Dependency:",
-            "tacticalNetwork": "Tactical Network",
-            "ping": "Ping",
-            "experimentalApi": "Experimental API"
-          },
-          "beacon": {
-            "label": "Manifestation:",
-            "text": "Anomalous Interference"
-          }
-        },
-        "ruin": {
-          "fatigue": {
-            "label": "Material Fatigue:",
-            "brittleArmor": "Brittle Armor",
-            "fatiguedActuators": "Fatigued Actuators",
-            "leakingConstruction": "Leaking Construction"
-          },
-          "seized": {
-            "label": "Seized Function:",
-            "ware": "One Piece of Ware",
-            "sense": "One Sense",
-            "movement": "One Movement Mode"
-          },
-          "intermittent": {
-            "label": "Intermittent Failure:",
-            "malfunction": "Subsystem Malfunction",
-            "sensorDecay": "Sensor Decay",
-            "heuristicErrors": "Heuristic Errors"
-          },
-          "shedding": {
-            "label": "Shedding:",
-            "wareComponent": "Intestines",
-            "armorPlate": "Scales"
-          },
-          "breakdown": {
-            "label": "Manifestation:",
-            "text": "Breakdown"
-          }
-        },
-        "colony": {
-          "witnesses": {
-            "label": "The Witnesses:",
-            "eyes": "Eyes",
-            "attention": "Attention"
-          },
-          "sympathetic": {
-            "label": "Sympathetic Feedback:",
-            "text": "Mimicry"
-          },
-          "borrowed": {
-            "label": "Borrowed Body:",
-            "eye": "Borrowed Eye",
-            "hand": "Borrowed Hand",
-            "voice": "Borrowed Voice",
-            "organ": "Borrowed Organ"
-          },
-          "gathering": {
-            "label": "Gathering:",
-            "procession": "Procession",
-            "encirclement": "Encirclement",
-            "nest": "Nest"
-          },
-          "avatar": {
-            "label": "Manifestation:",
-            "text": "Avatar"
-          }
-        }
-      }
-    },
     "psi": {
+      "moduleMissing": {
+        "headline": "Module Missing",
+        "copy": "This Character uses super-natural strain-based abilities of another module, which is not part of the ground rules. Please activate the module to use the respective abilities first."
+      },
       "infectionHeadline": "Infection Type",
       "ratingLabel": "Infection Rating",
       "strainPlaceholder": "Sub-Strain Name",
@@ -1165,8 +1010,7 @@
           },
           "family": {
             "label": "Family",
-            "psi": "Psi",
-            "ki": "Ki"
+            "psi": "Psi"
           },
           "action": {
             "label": "Action",
@@ -1670,11 +1514,6 @@
           "substrateBlockedTooltip": "Psi needs a biological brain",
           "substrateMismatch": "Biological brain in a synthetic body"
         },
-        "ki": {
-          "noCyberbrain": "Ki only works from a Cyberbrain. If jamming, every body used in the jamming chain must have a cyberbrain.",
-          "substrateBlockedTooltip": "No Cyberbrain",
-          "substrateMismatch": "Cyberbrain in a biological body"
-        },
         "armor": {
           "equipped": "I have equipped my {morph} with some armor."
         },
@@ -1938,130 +1777,6 @@
           }
         }
       },
-      "ki": {
-        "effect": {
-          "takeStrain": "The Ki infection lashes back through the cyberbrain. Take SV 1d6.",
-          "crucible": {
-            "preoccupation": {
-              "enhance": "You become preoccupied with an object you see as unusable or in need of improvement - it does not have to be yours, and the GM decides which one it is. You have to try to improve it with an Extended Hardware Test.",
-              "recycle": "You become preoccupied with an object you see as unusable or in need of improvement - it does not have to be yours, and the GM decides which one it is. You want to break it down into its components and put those to some other use.",
-              "research": "You become preoccupied with an object you see as unusable or in need of improvement - it does not have to be yours, and the GM decides which one it is. You want to take it apart far enough to produce a blueprint from it."
-            },
-            "reconfiguration": {
-              "forced": "An installed ware system, chosen by the GM, switches itself on and stays continuously active. The cyberbrain can never be chosen.",
-              "shutdown": "An installed ware system, chosen by the GM, is completely disabled. The cyberbrain can never be chosen.",
-              "rearranged": "The morph rebuilds existing components into a random ware function, chosen by the GM, and disables at least one other ware system in exchange. The cyberbrain can never be chosen."
-            },
-            "recalibration": {
-              "weapon": "The infection converts one of your own possessions into a different weapon, chosen by the GM. The replacement is of similar mass and size and serves a similar function. It does not automatically revert to its original form.",
-              "armor": "The infection converts one of your own possessions into a different piece of armor, chosen by the GM. The replacement has roughly the same combined stats (+/- 20%) and serves a similar function. It does not automatically revert to its original form.",
-              "accessory": "The infection converts one of your own possessions into a different accessory, chosen by the GM. The replacement is of similar mass and size and serves a similar function. It does not automatically revert to its original form."
-            },
-            "motivation": {
-              "text": "The next time, within the next 12 hours, you have the opportunity to enhance your own body, you have to use this opportunity, or try to fight your instinct to become something better."
-            },
-            "revision": {
-              "text": "The GM defines a persistent physical alteration. It may be limiting, disturbing or ambiguously useful, and its severity and drama should scale to the situation the effect occurs in. The change cannot be revoked for the next 1 hour. After that, a workshop or healing vat with a matching morph blueprint removes it."
-            }
-          },
-          "redline": {
-            "governor": {
-              "limited": "In Combat: The Morph can only use its lower listed movement rate. Out of Combat: The Morph moves and acts deliberately slow, as if trying to protect itself from wear and tear. Duration: 1d6 minutes.",
-              "overridden": "In Combat: The Morph must always use at least its higher listed movement rate whenever it moves. Out of Combat: The Morph moves deliberately fast and acts recklessly fast, as if trying to save time. Duration: 1d6 minutes.",
-              "runaway": "In Combat: The Morph must always move its maximum possible distance each action turn. Out of Combat: The Morph cannot stand still, as if stopping and going would be an imperfection leading to more wear, which must be prevented at all cost. Duration: 1d6 minutes."
-            },
-            "compulsion": {
-              "overdoIt": "Gain the motivation Overdo It for 12 hours: you carry out every task with excessive thoroughness. You won't stop iterating on a task and trying to improve it, even if it is evidently finished. You may attempt a WIL Check to snap out of this compulsion.",
-              "testTheLimits": "Gain the motivation Test the Limits for 12 hours: you always push further than the situation requires. You are prone to even think of additional opportunities to enhance the task at hand, prompting people around you with ideas on how to proceed on an already finished task. You may attempt a WIL Check to snap out of this compulsion.",
-              "redTape": "Gain the motivation Red Tape for 12 hours: you act conspicuously slowly and cautiously, sometimes leaving work unfinished for fear of causing damage or breaking a safety limit. You may attempt a WIL Check to snap out of this compulsion."
-            },
-            "calibration": {
-              "efficiency": "Once within the next 12 hours, after you declare an action, the GM may choose to run the morph in Efficiency mode: +10, but the task takes twice as long, or an opponent gains +10 in an opposed test.",
-              "experimental": "Once within the next 12 hours, after you declare an action, the GM may choose to run the morph in Experimental mode: -10, but a successful effect is doubled where meaningful.",
-              "pushTheLimit": "Once within the next 12 hours, after you declare an action, the GM may choose to push the morph past its limit: +10, and the morph takes DV 1d6 afterwards."
-            },
-            "rerouting": {
-              "boost": "-30 to one skill in a pool category, chosen by the GM, buys +30 to one skill in a different category, also chosen by the GM. Duration: 1d6 minutes.",
-              "support": "-30 to one skill, chosen by the GM, buys +10 to all other skills in the same category. Duration: 1d6 minutes.",
-              "switch": "-10 to all skills in one category, chosen by the GM, buys +10 to all skills in another category, also chosen by the GM. Duration: 1d6 minutes."
-            },
-            "pushing": {
-              "overclocking": "Once within the next 24 hours, after a test is rolled, the GM may raise its outcome by one degree - for example, turning a plain success into a superior success. The direction of the original result is never reversed. These effects tend to occur at the worst possible moment. They can never occur where doing so would put the Ki user's own physical or mental integrity at risk.",
-              "dampening": "Once within the next 24 hours, after a test is rolled, the GM may lower its outcome by one degree - for example, turning a superior success into a plain success. The direction of the original result is never reversed. These effects tend to occur at the worst possible moment. They can never occur where doing so would put the Ki user's own physical or mental integrity at risk.",
-              "switching": "Once within the next 24 hours the GM may flip-flop the two digits of a roll that has already come to rest - the same effect a pool point normally buys, for example turning a 71 into a 17 - except the GM applies it directly to this one roll instead of it costing you a pool point. These effects tend to occur at the worst possible moment. They can never occur where doing so would put the Ki user's own physical or mental integrity at risk."
-            }
-          },
-          "signal": {
-            "carrier": {
-              "location": "For the next 1d6 minutes the morph cannot fall completely silent. It involuntarily broadcasts your exact location.",
-              "diagnostics": "For the next 1d6 minutes the morph cannot fall completely silent. It involuntarily broadcasts its technical diagnostics.",
-              "sensorFeed": "For the next 1d6 minutes the morph cannot fall completely silent. It involuntarily broadcasts excerpts from an active sensor feed."
-            },
-            "saturation": {
-              "text": "Incoming signals bleed into your senses and interfaces without cause. Relevant Interface and Perceive tests suffer -20 for 1d6 minutes."
-            },
-            "interference": {
-              "whiteNoise": "For 1d6 minutes the morph floods its surroundings with electromagnetic noise. Affected wireless links in the immediate area suffer -30, your own and your allies' included.",
-              "signalBoost": "For 1d6 minutes the morph amplifies the local electromagnetic environment instead. Every signal in the vicinity, your own included, becomes easier to detect and triangulate: +30 to locate them."
-            },
-            "dependency": {
-              "tacticalNetwork": "For 12 hours you have to stay together with every member of your current group. If the signals separate too far, the network collapses and you suffer -20 to all actions until the group closes ranks again or the 12 hours run out.",
-              "ping": "For 12 hours you have to perform a Ping - a Mesh scan - before you act in a new environment, whenever new people are present or the number of participants changes. Acting without it costs you -20 to all actions.",
-              "experimentalApi": "For 12 hours you may not maintain any passive encryption. For as long as you do, you suffer -20 to all actions."
-            },
-            "beacon": {
-              "text": "Once within the next 24 hours the GM may trigger an uncontrolled high-powered transmission. For 1d6 minutes the morph is easy to locate and cannot fall silent, and it quietly patches into existing connections nearby, without actually granting the affected user or the infection any real access. The transmission carries an unknown data pattern, such as coordinates, Exsurgent structures, or fragments of alien telemetry, but it does not transmit the infection."
-            }
-          },
-          "ruin": {
-            "fatigue": {
-              "brittleArmor": "The morph's Frame armor becomes brittle and flakes away: -4/-4 to its Frame armor for 1d6 minutes.",
-              "fatiguedActuators": "-30 to all SOM-based tests for 1d6 minutes.",
-              "leakingConstruction": "One existing environmental resistance ceases to function for 1d6 minutes."
-            },
-            "seized": {
-              "ware": "Ware installed into the infected morph starts to misbehave - outages are common. One piece of ware, chosen by the GM, is completely blocked for 1d6 minutes.",
-              "sense": "Perception drops out mid-sentence, as if a channel had simply been unplugged. One sense, chosen by the GM, is completely blocked for 1d6 minutes.",
-              "movement": "Drive trains and actuators lock up mid-motion and refuse to answer. One movement mode, chosen by the GM, is completely blocked for 1d6 minutes."
-            },
-            "intermittent": {
-              "malfunction": "Load-bearing subsystems answer more reluctantly every time they are pushed. For 12 hours the GM may call for a test whenever one specific piece of ware is used particularly hard. Which piece of ware is affected is decided by the GM the moment the effect first triggers.",
-              "sensorDecay": "The morph's sensor returns drift and smear until nothing reads cleanly. All Perceive tests suffer -20 for 1d6 hours.",
-              "heuristicErrors": "The morph's pattern matching decays and it misreads machines and people alike. Interface and Kinesics tests suffer -20 for 1d6 hours."
-            },
-            "shedding": {
-              "wareComponent": "A piece of ware visibly decays and withers while staying attached to the morph. It cannot be repaired for 1d3 hours; once that time passes it recovers and works again on its own, but it still looks visibly broken until it receives an actual repair to hide the damage from view.",
-              "armorPlate": "A plate of the morph's Frame armor visibly decays and flakes while staying attached, and provides no protection for as long as it stays in this brittle state. It cannot be repaired for 1d3 hours; once that time passes it recovers and works again on its own, but it still looks visibly broken until it receives an actual repair to hide the damage from view."
-            },
-            "breakdown": {
-              "text": "Once in the next 24 hours the GM can trigger a systemic breakdown in a fitting moment. The breakdown can affect a maximum of two systems - a sense and a piece of ware, or two senses, and so on - and holds for 1d6 minutes before the body starts to recover. Depending on the situation this effect can still be visible afterwards if it is not properly repaired, but the Ki user fully recovers from the episode."
-            }
-          },
-          "colony": {
-            "witnesses": {
-              "eyes": "Nearby sensor-equipped devices swing towards you at once: cameras, scanners, every lens in range. The effect works through walls and obstructions and fires even where nothing could actually see you. It is instantaneous and passes the moment attention has been drawn once. Anything that was not already in range - a few metres at most, at the GM's discretion - is not affected if it arrives afterwards. Whatever was recording can be used against you afterwards.",
-              "attention": "Nearby drones and synthmorphs turn towards you. Where a synth is piloted by an ego, that ego involuntarily looks in your direction; if you are hiding, you need a matching test to avoid being spotted, and the affected egos never know why they looked. The effect works through walls and obstructions and fires even where nothing could actually see you. It is instantaneous and passes the moment attention has been drawn once. Anything that was not already in range - a few metres at most, at the GM's discretion - is not affected if it arrives afterwards."
-            },
-            "sympathetic": {
-              "text": "For 1d6 minutes the GM may set off nearby ware or objects whose function resembles whatever you are currently using, causing minor confusion and usually a -10 modifier. Lenses go blurry or unnaturally sharp, limbs move on their own, lights switch themselves on or off. Cyberbrains and life-support systems are excluded."
-            },
-            "borrowed": {
-              "eye": "For 1d6 minutes the devices around you replace your own sight: instead of seeing normally, you see through the room's cameras. The GM may call for harder Perceive tests to reflect the unfamiliar viewpoint. The borrowed function is not recorded over the normal Mesh, but other means and other observers can still perceive it.",
-              "hand": "For 1d6 minutes the devices around you replace your own hands: instead of handling things yourself, you grip and move through the room's manipulators. The GM may call for harder tests for any fine manipulation. The borrowed function is not recorded over the normal Mesh, but other means and other observers can still perceive it.",
-              "voice": "For 1d6 minutes the devices around you replace your own voice: instead of speaking normally, you talk through the room's speakers. Anyone present to hear it may get a check to realize something is wrong. The borrowed function is not recorded over the normal Mesh, but other means and other observers can still perceive it.",
-              "organ": "For 1d6 minutes your morph keeps all of its own functions - instead, its state echoes out into the environment. Your thoughts surface in nearby chat windows, your vital signs are displayed as belonging to someone else, doors, pumps, ventilation or lighting pulse in your bodily rhythms. Anyone present to notice these effects may get a check to realize something is wrong. The echo is not recorded over the normal Mesh, but other means and other observers can still perceive it."
-            },
-            "gathering": {
-              "procession": "For 1d6 minutes mobile and movable devices peel away from their tasks and trail after you in a ragged line. They do not deliberately attack, but they mark your path: anyone tracking you gains a bonus at the GM's discretion.",
-              "encirclement": "For 1d6 minutes mobile and movable devices crowd in around you and block the way wherever you turn. They do not deliberately attack, but you move badly and keep stumbling over them for the full 1d6 minutes.",
-              "nest": "For 1d6 minutes mobile and movable devices heap themselves onto you and work every reachable object into an improvised structure. They do not deliberately attack, but the pile blocks your sightlines: you count as distracted, -20 to everything, or at the very least suffer badly degraded visibility."
-            },
-            "avatar": {
-              "text": "Once within the next 24 hours the GM may wake several local Mesh-connected devices as a single presence for 1d6 minutes, drawing on all or part of this list to build something that feels alien: speakers, displays and Mesh outputs communicating together; bots, manipulators and doors moving like parts of one organism; sensors, lights and radios forming a responsive perceptual network. The sensors involved do not feed into the affected devices' normal outputs, which show a Mesh interference signature for the duration instead. The GM controls the presence's behaviour, and you gain no command over it."
-            }
-          }
-        }
-      },
       "weapon": {
         "effect": {
           "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",
@@ -2111,8 +1826,8 @@
       }
     },
     "migration": {
-      "25": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Ki Moves Into Its Own Module<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Eclipse Phase 2.5 splits the system into a smaller core plus optional modules. Ki is one of them, and this migration moves its data to where the module will look for it:</p><ul><li>The five Ki sub-strains - The Crucible, Redline, Signal, Ruin and Colony - keep every choice you made, but those choices now live in the Ki module's own data instead of the character's system data. Nothing you see on the sheet changes.</li><li>The five Psi archetypes are not touched. Psi stays part of the core system.</li><li>Your Infection Rate, your push economy and the Chi and Gamma mechanics are shared by both disciplines and stay exactly where they are.</li></ul><p>If you play Ki, install the Eclipse Phase Ki module once it is available. Until then your data sits safely in the flags this migration writes, and the sheet keeps working as before.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "23": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Psi Now Interacts With Its Environment (Mostly Your Brain...)<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update brings a few changes to the Psi system, and three of them touch data you already have:</p><ul><li>Any Aspect item (Gamma/Epsilon sleights) can now carry an optional damage formula, set on its own sheet, and roll it via a new button after a successful cast - the GM still judges whether it actually hit, same as weapon damage.</li><li><b>Psychic Stab</b> and <b>Nightmare</b> are backfilled with their book damage automatically, on every character/NPC/goon that already owns a copy, and in the world items list.</li><li>Sub-strain <b>Influence Effect</b> tables are now kept per archetype, so you can switch strain without the table you filled in for the previous one being deleted.</li><li>A Cyberbrain now has a concrete effect on Psi, and so does a synthmorph carrying a <b>Brain Box</b>; to make that possible, Cyberbrain and Core System ware you already own gets an invisible marker so the system can recognise it.</li></ul><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "25": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Ki Moves Into Its Own Module<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>Eclipse Phase 2.5 splits the system into a smaller core plus optional modules. Ki is one of them, and this migration moves its data to where the module will look for it:</p><ul><li>The five Ki sub-strains - The Crucible, Redline, Signal, Ruin and Colony - keep every choice you made, but those choices now live in the Ki module's own data instead of the character's system data. Nothing you see on the sheet changes.</li><li>The five Psi archetypes are not touched. Psi stays part of the core system.</li><li>Your Infection Rate, your push economy and the Chi and Gamma mechanics are shared by both disciplines and stay exactly where they are.</li></ul><p>If you play Ki, install the Eclipse Phase Ki module once it is available. Until then your data sits safely in the flags this migration writes, and the sheet keeps working as before.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "110": "<span class='resource-label' style='flex: 100%'><p>Dice Roll Refactoring<p/><p><b>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</b><p/><p><b>This is a major update restructuring all dice rolls within the system.</b><p/><p>In order to work properly, there are some minor tweaks made on NPC/Threat level. This might cause you to reinstate any NPC/Threat token to currently active encounters, as only the main instance of these tokens (aka the NPC/Threat in the actors list) will be updated accordingly.</p></div></span>",
       "150": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>All new Morphs!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>This is THE major update on morphs and it will fundamentally change the way they're working in the future. I did my best to create a migration script, that helps you to keep most of your data running, though I'm still a hobbyist developer and you might want to create a new world altogether if you're just yet started. Just know that I'm running a campaign on this system for 6 years now, so if there's anything I missed rest assured that it will bite me as well.</b><p/><p> That said, the most common issues you might experience are the following:<br><ul><li>The migration will delete all old 'morphflaws', 'flaws', 'morphtraits' and 'traits' everywhere (also on your characters). This is so protect your system from crashing in my future updates from this one on. (also you'll be prevented from creating these items - use the 'traits and flaws'-item instead)</li><li>Morphs are items now, so player characters can have more than 6. The script will go through all your characters and create morph-items according to the information provided. To prevent the system from mixing up your players morph wait a moment till you're receiving the final 'migration done'-message.</li><li>The way active effects work changed fundamentally between the update from v12 to v13 so the migration script will delete all active effects from your characters including temporary wound/trauma ignore and anything you might have added by hand. Sorry for the inconvenience.</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.5'>gitHub</a>.<p/><p><b>Also it's christmas!</b><br>If you feel generous please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "170": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Identify yourself!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p><b>Another major, but less severe update this time: IDs are coming back to the system!</b><p/><p> That includes the following:<br><ul><li>Your old ids that are still saved with legacy characters are deleted and recreated as ID items</li><li>This will only be the case if the IDs have had a name OR a rep value to them, Otherwise no new ID item will be created</li><li>You can roll and edit your IDs as before, though now they're items and for that will be prone to some changes in the future, giving you an option to show a picture and a description to every ID (and maybe some more feature, we will see)</li></ul>To get a full list of all fixes included visit <a href='https://github.com/DerDiemen/eclipsephase/releases/tag/v1.7'>gitHub</a>.<p/><p><b>Also this system lives from the fact that I believe that some of you care that it exists.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",

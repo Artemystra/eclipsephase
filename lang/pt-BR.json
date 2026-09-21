@@ -111,7 +111,6 @@
         "inventoryTab": "Inventário",
         "peripheralsTab": "Periféricos",
         "psiTab": "Psi",
-        "kiTab": "Ki",
         "effectsTab": "Efeitos",
         "gmInfoTab": "GM Info"
       },
@@ -747,165 +746,11 @@
       "noWare": "Nenhum Implante instalado",
       "noArmor": "Nenhuma Armadura instalada"
     },
-    "ki": {
-      "strain": {
-        "none": "-Selecionar-",
-        "crucible": "O Crisol",
-        "redline": "A Linha Vermelha",
-        "signal": "O Sinal",
-        "ruin": "A Ruína",
-        "colony": "A Colônia"
-      },
-      "effect": {
-        "cognitiveFeedback": "Retroalimentação Cognitiva:",
-        "takeStrain": "Receba VE 1d6",
-        "crucible": {
-          "preoccupation": {
-            "label": "Motivação:",
-            "enhance": "Melhorar o Espaço Real",
-            "recycle": "Reciclar",
-            "research": "Pesquisa e Desenvolvimento"
-          },
-          "reconfiguration": {
-            "label": "Reconfiguração Compulsiva:",
-            "forced": "Ativação Forçada",
-            "shutdown": "Desligamento Total",
-            "rearranged": "Rearranjo Improvisado"
-          },
-          "recalibration": {
-            "label": "Recalibração:",
-            "weapon": "Arma",
-            "armor": "Armadura",
-            "accessory": "Acessório"
-          },
-          "motivation": {
-            "label": "Motivação:",
-            "text": "Eliminar a imperfeição"
-          },
-          "revision": {
-            "label": "Manifestação:",
-            "text": "Melhoria Inquietante"
-          }
-        },
-        "redline": {
-          "governor": {
-            "label": "Falha do Regulador de Movimento:",
-            "limited": "Limitado",
-            "overridden": "Sobreposto",
-            "runaway": "Desgovernado"
-          },
-          "compulsion": {
-            "label": "Compulsão Operacional:",
-            "overdoIt": "Exagere",
-            "testTheLimits": "Testar os limites",
-            "redTape": "Burocracia"
-          },
-          "calibration": {
-            "label": "Calibração Experimental:",
-            "efficiency": "Eficiência",
-            "experimental": "Experimental",
-            "pushTheLimit": "Forçar o limite"
-          },
-          "rerouting": {
-            "label": "Redirecionamento:",
-            "boost": "Impulso",
-            "support": "Apoio",
-            "switch": "Troca"
-          },
-          "pushing": {
-            "label": "Cruzar a Linha:",
-            "overclocking": "Sobrecarga",
-            "dampening": "Amortecimento",
-            "switching": "Comutação"
-          }
-        },
-        "signal": {
-          "carrier": {
-            "label": "Portadora Aberta:",
-            "location": "Posição Exata",
-            "diagnostics": "Diagnóstico Técnico",
-            "sensorFeed": "Trechos de Sensores"
-          },
-          "saturation": {
-            "label": "Saturação do Receptor:",
-            "text": "Ruído de Sensores"
-          },
-          "interference": {
-            "label": "Padrão de Interferência:",
-            "whiteNoise": "Ruído Branco",
-            "signalBoost": "Amplificação de Sinal"
-          },
-          "dependency": {
-            "label": "Dependência de Portadora:",
-            "tacticalNetwork": "Rede Tática",
-            "ping": "Ping",
-            "experimentalApi": "API Experimental"
-          },
-          "beacon": {
-            "label": "Manifestação:",
-            "text": "Interferência Anômala"
-          }
-        },
-        "ruin": {
-          "fatigue": {
-            "label": "Fadiga de Material:",
-            "brittleArmor": "Blindagem Quebradiça",
-            "fatiguedActuators": "Atuadores Fatigados",
-            "leakingConstruction": "Estrutura com Vazamentos"
-          },
-          "seized": {
-            "label": "Função Travada:",
-            "ware": "Uma Peça de Implante",
-            "sense": "Um Sentido",
-            "movement": "Um Modo de Movimento"
-          },
-          "intermittent": {
-            "label": "Falha Intermitente:",
-            "malfunction": "Falha de Subsistema",
-            "sensorDecay": "Degradação de Sensores",
-            "heuristicErrors": "Erros Heurísticos"
-          },
-          "shedding": {
-            "label": "Descarte:",
-            "wareComponent": "Entranhas",
-            "armorPlate": "Escamas"
-          },
-          "breakdown": {
-            "label": "Manifestação:",
-            "text": "Pane"
-          }
-        },
-        "colony": {
-          "witnesses": {
-            "label": "As Testemunhas:",
-            "eyes": "Olhos",
-            "attention": "Atenção"
-          },
-          "sympathetic": {
-            "label": "Retroalimentação Simpática:",
-            "text": "Mimetismo"
-          },
-          "borrowed": {
-            "label": "Corpo Emprestado:",
-            "eye": "Olho Emprestado",
-            "hand": "Mão Emprestada",
-            "voice": "Voz Emprestada",
-            "organ": "Órgão Emprestado"
-          },
-          "gathering": {
-            "label": "Reunião:",
-            "procession": "Procissão",
-            "encirclement": "Cerco",
-            "nest": "Ninho"
-          },
-          "avatar": {
-            "label": "Manifestação:",
-            "text": "Avatar"
-          }
-        }
-      }
-    },
     "psi": {
+      "moduleMissing": {
+        "headline": "Módulo ausente",
+        "copy": "Este personagem usa habilidades sobrenaturais baseadas em tensão de outro módulo, que não faz parte das regras básicas. Ative o módulo correspondente antes de usar essas habilidades."
+      },
       "infectionHeadline": "Tipo de Infecção",
       "ratingLabel": "Grau de Infecção",
       "strainPlaceholder": "Nome da Subcepa",
@@ -1137,8 +982,7 @@
           },
           "family": {
             "label": "Família",
-            "psi": "Psi",
-            "ki": "Ki"
+            "psi": "Psi"
           },
           "action": {
             "label": "Ação",
@@ -1621,11 +1465,6 @@
           "substrateBlockedTooltip": "Psi precisa de um cérebro biológico",
           "substrateMismatch": "Cérebro biológico em um corpo sintético"
         },
-        "ki": {
-          "noCyberbrain": "Ki só funciona a partir de um Cérebro Cibernético. Ao fazer jamming, todos os corpos usados na cadeia de jamming devem ter um Cérebro Cibernético.",
-          "substrateBlockedTooltip": "Sem Cérebro Cibernético",
-          "substrateMismatch": "Cérebro Cibernético em um corpo biológico"
-        },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."
         },
@@ -1877,130 +1716,6 @@
             "molt": "Você é levado a abandonar sua forma atual e emergir transformado.",
             "playWithPrey": "Você é levado a prolongar o medo da vítima em vez de terminar depressa.",
             "protectTribe": "Você é levado a proteger o seu grupo de tudo o que estiver fora dele."
-          }
-        }
-      },
-      "ki": {
-        "effect": {
-          "takeStrain": "A infecção Ki reverbera pelo cibercérebro. Receba VE 1d6.",
-          "crucible": {
-            "preoccupation": {
-              "enhance": "Você fica obcecado por um objeto que considera inutilizável ou carente de melhorias; ele não precisa ser seu, e o Mestre decide qual é. Você precisa tentar melhorá-lo com um teste estendido de Hardware.",
-              "recycle": "Você fica obcecado por um objeto que considera inutilizável ou carente de melhorias; ele não precisa ser seu, e o Mestre decide qual é. Você quer desmontá-lo em seus componentes e dar a eles outro uso.",
-              "research": "Você fica obcecado por um objeto que considera inutilizável ou carente de melhorias; ele não precisa ser seu, e o Mestre decide qual é. Você quer desmontá-lo o bastante para extrair dele um projeto."
-            },
-            "reconfiguration": {
-              "forced": "Um sistema de implante instalado, escolhido pelo Mestre, se ativa e permanece continuamente ligado. O cibercérebro nunca pode ser escolhido.",
-              "shutdown": "Um sistema de implante instalado, escolhido pelo Mestre, é completamente desativado. O cibercérebro nunca pode ser escolhido.",
-              "rearranged": "O morfo rearranja componentes existentes em uma função de implante aleatória escolhida pelo Mestre e, em troca, desativa pelo menos outro sistema de implante. O cibercérebro nunca pode ser escolhido."
-            },
-            "recalibration": {
-              "weapon": "A infecção converte um dos seus próprios pertences em outra arma, escolhida pelo Mestre. A substituta tem massa e tamanho semelhantes e cumpre uma função parecida. Ela não volta automaticamente à sua forma original.",
-              "armor": "A infecção converte um dos seus próprios pertences em outra peça de armadura, escolhida pelo Mestre. A substituta tem aproximadamente os mesmos atributos combinados (+/- 20 %) e cumpre uma função parecida. Ela não volta automaticamente à sua forma original.",
-              "accessory": "A infecção converte um dos seus próprios pertences em outro acessório, escolhido pelo Mestre. A substituta tem massa e tamanho semelhantes e cumpre uma função parecida. Ela não volta automaticamente à sua forma original."
-            },
-            "motivation": {
-              "text": "Na próxima vez em que, nas próximas 12 horas, você tiver a oportunidade de aprimorar o próprio corpo, precisa aproveitá-la - ou lutar contra o seu instinto de se tornar algo melhor."
-            },
-            "revision": {
-              "text": "O Mestre define uma alteração física persistente. Ela pode ser limitante, perturbadora ou de utilidade ambígua, e sua gravidade e seu drama devem se ajustar à situação em que o efeito ocorre. A alteração não pode ser revogada durante a próxima 1 hora. Depois disso, uma oficina ou um tanque de cura com o projeto adequado do morfo a remove."
-            }
-          },
-          "redline": {
-            "governor": {
-              "limited": "Em combate: o morfo só pode usar sua taxa de movimento mais baixa. Fora de combate: o morfo se move e age deliberadamente devagar, como se tentasse se proteger do desgaste. Duração: 1d6 minutos.",
-              "overridden": "Em combate: sempre que o morfo se mover, ele precisa usar ao menos sua taxa de movimento mais alta. Fora de combate: o morfo se move deliberadamente rápido e age com pressa imprudente, como se tentasse economizar tempo. Duração: 1d6 minutos.",
-              "runaway": "Em combate: o morfo precisa percorrer sempre a maior distância possível a cada turno de ação. Fora de combate: o morfo não consegue ficar parado, como se parar e voltar a andar fosse uma imperfeição que gera mais desgaste e precisa ser evitada a todo custo. Duração: 1d6 minutos."
-            },
-            "compulsion": {
-              "overdoIt": "Ganhe a motivação Exagere por 12 horas: você executa cada tarefa com minúcia exagerada. Você não para de revisar uma tarefa e tentar melhorá-la, mesmo que ela esteja evidentemente pronta. Você pode tentar um teste de VON para se livrar dessa compulsão.",
-              "testTheLimits": "Ganhe a motivação Testar os limites por 12 horas: você sempre vai além do que a situação exige. Você chega a imaginar oportunidades adicionais de aprimorar a tarefa em curso e enche quem está por perto de ideias sobre como prosseguir num trabalho já concluído. Você pode tentar um teste de VON para se livrar dessa compulsão.",
-              "redTape": "Ganhe a motivação Burocracia por 12 horas: você age de modo ostensivamente lento e cauteloso, às vezes deixando o trabalho incompleto por medo de causar danos ou violar um limite de segurança. Você pode tentar um teste de VON para se livrar dessa compulsão."
-            },
-            "calibration": {
-              "efficiency": "Uma vez nas próximas 12 horas, depois de declarar uma ação, o Mestre pode decidir operar o morfo em modo Eficiência: +10, mas a tarefa leva o dobro do tempo ou um oponente ganha +10 em um teste oposto.",
-              "experimental": "Uma vez nas próximas 12 horas, depois de declarar uma ação, o Mestre pode decidir operar o morfo em modo Experimental: -10, mas um efeito bem-sucedido é dobrado quando fizer sentido.",
-              "pushTheLimit": "Uma vez nas próximas 12 horas, depois de declarar uma ação, o Mestre pode decidir levar o morfo além do seu limite: +10, e o morfo sofre VD 1d6 em seguida."
-            },
-            "rerouting": {
-              "boost": "-30 em uma perícia de uma categoria de reserva, escolhida pelo Mestre, compra +30 em uma perícia de outra categoria, também escolhida pelo Mestre. Duração: 1d6 minutos.",
-              "support": "-30 em uma perícia escolhida pelo Mestre compra +10 em todas as demais perícias da mesma categoria. Duração: 1d6 minutos.",
-              "switch": "-10 em todas as perícias de uma categoria escolhida pelo Mestre compra +10 em todas as perícias de outra, também escolhida pelo Mestre. Duração: 1d6 minutos."
-            },
-            "pushing": {
-              "overclocking": "Uma vez nas próximas 24 horas, depois de um teste rolado, o Mestre pode elevar seu resultado em um grau - por exemplo, transformando um sucesso simples em um sucesso superior. A direção do resultado original nunca é invertida. Esses efeitos tendem a ocorrer no pior momento possível. Eles nunca podem ocorrer se isso puser em risco a integridade física ou mental da própria usuária de Ki.",
-              "dampening": "Uma vez nas próximas 24 horas, depois de um teste rolado, o Mestre pode rebaixar seu resultado em um grau - por exemplo, transformando um sucesso superior em um sucesso simples. A direção do resultado original nunca é invertida. Esses efeitos tendem a ocorrer no pior momento possível. Eles nunca podem ocorrer se isso puser em risco a integridade física ou mental da própria usuária de Ki.",
-              "switching": "Uma vez nas próximas 24 horas o Mestre pode inverter os dois dígitos de um teste que já parou - o mesmo efeito que um ponto de reserva normalmente compra, por exemplo transformando um 71 em um 17 - exceto que aqui o Mestre o aplica diretamente a esse resultado sem custar um ponto de reserva. Esses efeitos tendem a ocorrer no pior momento possível. Eles nunca podem ocorrer se isso puser em risco a integridade física ou mental da própria usuária de Ki."
-            }
-          },
-          "signal": {
-            "carrier": {
-              "location": "Pelos próximos 1d6 minutos o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente sua posição exata.",
-              "diagnostics": "Pelos próximos 1d6 minutos o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente seus dados de diagnóstico técnico.",
-              "sensorFeed": "Pelos próximos 1d6 minutos o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente trechos de um feed de sensores ativo."
-            },
-            "saturation": {
-              "text": "Sinais recebidos invadem seus sentidos e interfaces sem motivo. Os testes de Interface e Perceber afetados sofrem -20 por 1d6 minutos."
-            },
-            "interference": {
-              "whiteNoise": "Por 1d6 minutos o morfo inunda o entorno de ruído eletromagnético. Os enlaces sem fio afetados na área imediata sofrem -30, inclusive os seus e os de seus aliados.",
-              "signalBoost": "Por 1d6 minutos o morfo, em vez disso, amplifica o ambiente eletromagnético local. Todo sinal nas redondezas, inclusive os seus, fica mais fácil de detectar e triangular: +30 para localizá-los."
-            },
-            "dependency": {
-              "tacticalNetwork": "Por 12 horas você precisa permanecer junto de cada integrante do seu grupo atual. Se os sinais se afastarem demais, a rede desmorona e você sofre -20 em todas as ações até o grupo se reunir novamente ou as 12 horas se esgotarem.",
-              "ping": "Por 12 horas você precisa executar um Ping - uma varredura de Malha - antes de agir em um ambiente novo, sempre que houver pessoas novas presentes ou o número de participantes mudar. Agir sem ele custa -20 em todas as ações.",
-              "experimentalApi": "Por 12 horas você não pode manter nenhuma criptografia passiva. Enquanto mantiver, você sofre -20 em todas as ações."
-            },
-            "beacon": {
-              "text": "Uma vez nas próximas 24 horas o Mestre pode disparar uma transmissão descontrolada de alta potência. Por 1d6 minutos o morfo é fácil de localizar e não consegue silenciar, e ele se enxerta discretamente em conexões já existentes por perto, sem de fato conceder qualquer acesso real ao usuário afetado nem à infecção. A transmissão carrega um padrão de dados desconhecido, como coordenadas, estruturas Exsurgentes ou fragmentos de telemetria alienígena, mas não transmite a infecção."
-            }
-          },
-          "ruin": {
-            "fatigue": {
-              "brittleArmor": "A blindagem do chassi do morfo fica quebradiça e se desfaz: -4/-4 na blindagem do chassi por 1d6 minutos.",
-              "fatiguedActuators": "-30 em todos os testes baseados em SOM por 1d6 minutos.",
-              "leakingConstruction": "Uma resistência ambiental existente deixa de funcionar por 1d6 minutos."
-            },
-            "seized": {
-              "ware": "Os implantes instalados no morfo infectado começam a se comportar mal - as falhas são frequentes. Uma peça de implante, escolhida pelo Mestre, fica completamente bloqueada por 1d6 minutos.",
-              "sense": "A percepção some no meio da frase, como se alguém simplesmente tivesse desligado um canal. Um sentido, escolhido pelo Mestre, fica completamente bloqueado por 1d6 minutos.",
-              "movement": "Transmissões e atuadores travam em pleno movimento e param de responder. Um modo de movimento, escolhido pelo Mestre, fica completamente bloqueado por 1d6 minutos."
-            },
-            "intermittent": {
-              "malfunction": "Os subsistemas que sustentam a carga respondem com mais relutância a cada vez que são exigidos. Por 12 horas o Mestre pode pedir um teste sempre que uma peça específica de implante for usada com muita força. Qual peça de implante é afetada o Mestre decide no momento em que o efeito dispara pela primeira vez.",
-              "sensorDecay": "As leituras dos sensores do morfo derivam e borram até que nada seja lido com clareza. Todos os testes de Perceber sofrem -20 por 1d6 horas.",
-              "heuristicErrors": "O reconhecimento de padrões do morfo se degrada e ele lê mal tanto máquinas quanto pessoas. Os testes de Interface e Cinésica sofrem -20 por 1d6 horas."
-            },
-            "shedding": {
-              "wareComponent": "Uma peça de implante decai visivelmente e murcha enquanto permanece presa ao morfo. Ela não pode ser reparada por 1d3 horas; passado esse tempo, ela se recupera e volta a funcionar sozinha, mas continua com aparência visivelmente danificada até receber um reparo de verdade que esconda o dano à vista.",
-              "armorPlate": "Uma placa da blindagem do chassi do morfo decai visivelmente e se esfarela enquanto permanece presa, e não oferece proteção alguma enquanto permanecer nesse estado quebradiço. Ela não pode ser reparada por 1d3 horas; passado esse tempo, ela se recupera e volta a funcionar sozinha, mas continua com aparência visivelmente danificada até receber um reparo de verdade que esconda o dano à vista."
-            },
-            "breakdown": {
-              "text": "Uma vez nas próximas 24 horas o Mestre pode disparar uma pane sistêmica em um momento adequado. A pane pode afetar no máximo dois sistemas - por exemplo um sentido e uma peça de implante, ou dois sentidos - e se mantém por 1d6 minutos antes de o corpo começar a se recuperar. Dependendo da situação, o efeito ainda pode ficar visível depois, caso não seja devidamente reparado, mas a usuária de Ki se recupera por completo do episódio."
-            }
-          },
-          "colony": {
-            "witnesses": {
-              "eyes": "Dispositivos com sensores por perto giram na sua direção de uma só vez: câmeras, escâneres, cada lente ao alcance. O efeito atravessa paredes e obstáculos e dispara mesmo onde nada poderia realmente ver você. Ele é instantâneo e passa assim que a atenção é atraída uma única vez. O que ainda não estava ao alcance - poucos metros, no máximo, a critério do Mestre - não é afetado se chegar depois. Tudo o que estava gravando pode ser usado contra você depois.",
-              "attention": "Drones e synthmorfos por perto se voltam para você. Quando um synth é pilotado por um ego, esse ego olha involuntariamente na sua direção; se você estiver escondido, precisa de um teste correspondente para não ser avistado, e os egos afetados nunca sabem por que olharam. O efeito atravessa paredes e obstáculos e dispara mesmo onde nada poderia realmente ver você. Ele é instantâneo e passa assim que a atenção é atraída uma única vez. O que ainda não estava ao alcance - poucos metros, no máximo, a critério do Mestre - não é afetado se chegar depois."
-            },
-            "sympathetic": {
-              "text": "Por 1d6 minutos o Mestre pode disparar implantes ou objetos próximos cuja função se pareça com a que você está usando no momento, causando uma confusão menor e normalmente um modificador de -10. Lentes ficam embaçadas ou nitidamente artificiais, membros se movem sozinhos, luzes se acendem ou se apagam. Cibercérebros e sistemas de suporte vital estão excluídos."
-            },
-            "borrowed": {
-              "eye": "Por 1d6 minutos os dispositivos ao seu redor substituem a sua própria visão: em vez de enxergar normalmente, você enxerga pelas câmeras da sala. O Mestre pode exigir testes de Perceber mais difíceis para refletir o ponto de vista incomum. A função emprestada não é registrada pela Malha normal, mas outros meios e outros observadores ainda podem percebê-la.",
-              "hand": "Por 1d6 minutos os dispositivos ao seu redor substituem as suas próprias mãos: em vez de manusear as coisas você mesmo, você agarra e move pelos manipuladores da sala. O Mestre pode exigir testes mais difíceis para qualquer manipulação fina. A função emprestada não é registrada pela Malha normal, mas outros meios e outros observadores ainda podem percebê-la.",
-              "voice": "Por 1d6 minutos os dispositivos ao seu redor substituem a sua própria voz: em vez de falar normalmente, você fala pelos alto-falantes da sala. Qualquer um presente que ouça pode tentar um teste para perceber que algo está errado. A função emprestada não é registrada pela Malha normal, mas outros meios e outros observadores ainda podem percebê-la.",
-              "organ": "Por 1d6 minutos o seu morfo mantém todas as próprias funções - em vez disso, o estado dele ecoa para o ambiente. Seus pensamentos surgem em janelas de chat próximas, seus sinais vitais aparecem como sendo de outra pessoa, e portas, bombas, ventilação ou iluminação pulsam nos seus ritmos corporais. Qualquer um presente que note esses efeitos pode tentar um teste para perceber que algo está errado. O eco não é registrado pela Malha normal, mas outros meios e outros observadores ainda podem percebê-lo."
-            },
-            "gathering": {
-              "procession": "Por 1d6 minutos dispositivos móveis ou deslocáveis abandonam suas tarefas e seguem atrás de você em uma fila desalinhada. Eles não atacam deliberadamente, mas marcam o seu caminho: quem rastrear você ganha um bônus a critério do Mestre.",
-              "encirclement": "Por 1d6 minutos dispositivos móveis ou deslocáveis se amontoam ao seu redor e bloqueiam o caminho para onde quer que você vá. Eles não atacam deliberadamente, mas você se move mal e tropeça neles o tempo todo pelos 1d6 minutos completos.",
-              "nest": "Por 1d6 minutos dispositivos móveis ou deslocáveis se empilham sobre você e incorporam cada objeto ao alcance em uma estrutura improvisada. Eles não atacam deliberadamente, mas a pilha bloqueia suas linhas de visão: você conta como distraído, -20 em tudo, ou no mínimo sofre uma visibilidade gravemente degradada."
-            },
-            "avatar": {
-              "text": "Uma vez nas próximas 24 horas o Mestre pode despertar vários dispositivos locais conectados à Malha como uma única presença por 1d6 minutos, usando toda esta lista ou parte dela para construir algo que soe alienígena: alto-falantes, telas e saídas da Malha se comunicando em conjunto; bots, manipuladores e portas se movendo como partes de um só organismo; sensores, luzes e rádios formando uma rede perceptiva responsiva. Os sensores envolvidos não alimentam as saídas normais dos dispositivos afetados, que exibem uma assinatura de interferência de Malha enquanto durar. O Mestre controla o comportamento da presença e você não recebe nenhum comando sobre ela."
-            }
           }
         }
       },

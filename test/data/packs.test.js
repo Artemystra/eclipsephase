@@ -52,8 +52,8 @@ describe("compendium sources", () => {
     expect(offenders.map(o => `${o.pack}/${o.file}`)).toEqual([]);
   });
 
-  test("sleights declare a known strain family and psi type", () => {
-    const families = new Set(["psi", "ki"]);
+  test("every core sleight is Psi, since Ki ships as its own module", () => {
+    const families = new Set(["psi"]);
     const psiTypes = new Set(["chi", "gamma", "epsilon"]);
     const sleights = documents.filter(({ data }) => data.type === "aspect");
     expect(sleights.length).toBeGreaterThan(0);

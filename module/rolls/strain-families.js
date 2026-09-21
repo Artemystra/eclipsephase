@@ -90,10 +90,8 @@ export function resetStrainFamilies() {
 }
 
 /**
- * Registers the families the core system owns. Psi stays here for good; Ki is registered here for
- * now and moves into its own module unchanged, which is why both blocks reach the body helpers
- * through the public API instead of importing them - that also keeps this file from importing the
- * one that dispatches to it.
+ * Registers the family the core system owns. Ki lives in its own module and registers itself the
+ * same way any other module would.
  * @returns {void}
  */
 export function registerCoreStrainFamilies() {
@@ -155,40 +153,5 @@ export function registerCoreStrainFamilies() {
     mismatchKey: "ep2e.roll.announce.psi.substrateMismatch",
     dataPath: "system.subStrain.byArchetype",
     detailsPartial: "systems/eclipsephase/templates/actor/partials/tabs/strain-details-psi.html"
-  });
-
-  registerStrainFamily("ki", {
-    label: "ep2e.item.aspect.table.family.ki",
-    tabLabel: "ep2e.actorSheet.rightTabs.kiTab",
-    substrate(actor) {
-      const { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } = game.eclipsephase.api.actors;
-      const nervousSystem = sleevedNervousSystem(actor);
-      const blocked = nervousSystem === "info" || !chainHasWareMarker(actor, CYBERBRAIN_MARKER);
-      return {
-        blocked,
-        jamBlocked: false,
-        penalised: !blocked && nervousSystem === "bio",
-        reasonKey: "ep2e.roll.announce.ki.noCyberbrain",
-        tooltipKey: "ep2e.roll.announce.ki.substrateBlockedTooltip"
-      };
-    },
-    subStrains: CONFIG.eclipsephase.kiStrains,
-    influence(result, { strainLabel, archetypeData }) {
-      if (result === 1) return { label: "ep2e.ki.effect.cognitiveFeedback", copy: "ep2e.ki.effect.takeStrain", withRule: true };
-
-      const row = CONFIG.eclipsephase.kiInfluence[strainLabel]?.[result];
-      const choice = archetypeData?.["influence" + result]?.description;
-      const copy = row?.base ? (choice && choice !== "none" ? row.base + "." + choice : "") : row?.copy;
-
-      return { label: row?.label, copy, withRule: true };
-    },
-    tierTraits: {
-      1: { name: "Ki I", pack: "eclipsephase.traits" },
-      2: { name: "Ki II", pack: "eclipsephase.traits" }
-    },
-    feedback: { target: "mental", copyKey: "ep2e.ki.effect.takeStrain" },
-    mismatchKey: "ep2e.roll.announce.ki.substrateMismatch",
-    dataPath: "flags.eclipsephase-ki.subStrain",
-    detailsPartial: "systems/eclipsephase/templates/actor/partials/tabs/strain-details-ki.html"
   });
 }

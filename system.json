@@ -21,6 +21,11 @@
         "id": "eclipsephase-shop",
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/Artemystra/eclipsephase-shop/main/module.json"
+      },
+      {
+        "id": "eclipsephase-ki",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/Artemystra/eclipsephase-ki/main/module.json"
       }
     ]
   },
@@ -75,7 +80,7 @@
     {
       "banner": "systems/eclipsephase/resources/img/Compendium Banners/bannerPsiSleights.webp",
       "name": "psi-sleights",
-      "label": "Sleights",
+      "label": "Psi Sleights",
       "system": "eclipsephase",
       "path": "packs/psi-sleights.db",
       "type": "Item",

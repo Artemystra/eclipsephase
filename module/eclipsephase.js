@@ -182,7 +182,6 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/tabs/psi-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-details.html",
     "systems/eclipsephase/templates/actor/partials/tabs/strain-details-psi.html",
-    "systems/eclipsephase/templates/actor/partials/tabs/strain-details-ki.html",
     "systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html",

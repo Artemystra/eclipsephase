@@ -1,7 +1,7 @@
 import { RollCheck, TaskRollModifier } from "../../rolls/dice.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
 import { _ep23_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
-import { getStrainFamily, listStrainFamilies } from "../../rolls/strain-families.js";
+import { getStrainFamily, listStrainFamilies, hasStrainFamily } from "../../rolls/strain-families.js";
 import { strainSubstrate } from "../../common/body-markers.js";
 import {
   withTempActor,
@@ -295,17 +295,15 @@ Hooks.on("quenchReady", quench => {
   quench.registerBatch("eclipsephase.psi.families", context => {
     const { describe, it, assert } = context;
 
-    describe("the strain families the core registers", function () {
-      it("offers Psi and Ki, each with its own tables and partial", function () {
-        assert.deepEqual(listStrainFamilies().map(family => family.id), ["psi", "ki"]);
+    describe("the strain family the core registers", function () {
+      it("offers Psi, with its own table and partial", function () {
+        assert.include(listStrainFamilies().map(family => family.id), "psi");
         assert.strictEqual(getStrainFamily("psi").subStrains, CONFIG.eclipsephase.strains);
-        assert.strictEqual(getStrainFamily("ki").subStrains, CONFIG.eclipsephase.kiStrains);
-        assert.notStrictEqual(getStrainFamily("psi").detailsPartial, getStrainFamily("ki").detailsPartial);
+        assert.isFunction(getStrainFamily("psi").influence);
       });
 
-      it("has both details partials loaded, so a sheet can render either", function () {
+      it("has Psi's details partial loaded, so the sheet can render it", function () {
         assert.isFunction(Handlebars.partials[getStrainFamily("psi").detailsPartial]);
-        assert.isFunction(Handlebars.partials[getStrainFamily("ki").detailsPartial]);
       });
 
       it("refuses a family nobody registered instead of treating it as Psi", function () {
@@ -314,32 +312,87 @@ Hooks.on("quenchReady", quench => {
         assert.isTrue(family.substrate({}).blocked);
         assert.strictEqual(family.substrate({}).reasonKey, "ep2e.roll.announce.strainFamilyMissing");
       });
-    });
 
-    describe("the same body judged by both families", function () {
-      it("a biological body carries Psi and refuses Ki", async function () {
+      it("a biological body carries Psi", async function () {
         await withTempActor({ type: "character", name: "Quench Sleeved" }, async actor => {
           await waitUntil(() => actor.getFlag("eclipsephase", "defaultMorphAdded"));
-
-          const psi = strainSubstrate(actor, "psi");
-          const ki = strainSubstrate(actor, "ki");
-
-          assert.isFalse(psi.blocked, "a default biological morph must not block Psi");
-          assert.isTrue(ki.blocked, "Ki needs a Cyberbrain, which a default morph has not got");
-          assert.strictEqual(ki.reasonKey, "ep2e.roll.announce.ki.noCyberbrain");
+          assert.isFalse(strainSubstrate(actor, "psi").blocked, "a default biological morph must not block Psi");
         });
       });
 
-      it("every localisation key a blocked body reports really exists", function () {
-        for (const id of ["psi", "ki"]) {
-          const family = getStrainFamily(id);
-          assert.isTrue(game.i18n.has(family.mismatchKey), `${id} is missing ${family.mismatchKey}`);
-          assert.isTrue(game.i18n.has(family.tabLabel), `${id} is missing ${family.tabLabel}`);
-        }
+      it("every localisation key Psi reports really exists", function () {
+        const psi = getStrainFamily("psi");
+        assert.isTrue(game.i18n.has(psi.mismatchKey));
+        assert.isTrue(game.i18n.has(psi.tabLabel));
         assert.isTrue(game.i18n.has("ep2e.roll.announce.strainFamilyMissing"));
       });
     });
   }, { displayName: "Eclipse Phase: Strain families" });
+
+  // Ki belongs to the eclipsephase-ki module. Both states are asserted rather than skipped, so a
+  // run reports a real result whether or not the module happens to be installed.
+  quench.registerBatch("eclipsephase.ki.moduleAbsent", context => {
+    const { describe, it, assert } = context;
+
+    /**
+     * Whether the Ki module is installed and switched on in this world.
+     * @returns {Boolean} True while the module provides the Ki family
+     */
+    function kiActive() {
+      return game.modules.get("eclipsephase-ki")?.active === true;
+    }
+
+    describe("who owns the Ki family", function () {
+      it("the core never registers it; only the module does", function () {
+        if (kiActive()) {
+          assert.isTrue(hasStrainFamily("ki"), "with the module on, Ki has to be registered");
+          assert.isUndefined(getStrainFamily("ki").missing);
+        } else {
+          assert.isFalse(hasStrainFamily("ki"), "without the module, the core must not know Ki");
+          assert.isTrue(getStrainFamily("ki").missing);
+        }
+      });
+
+      it("its data path and partial come from the module, never from the core", function () {
+        const family = getStrainFamily("ki");
+        if (kiActive()) {
+          assert.strictEqual(family.dataPath, "flags.eclipsephase-ki.subStrain");
+          assert.include(family.detailsPartial, "modules/eclipsephase-ki/");
+          assert.isFunction(Handlebars.partials[family.detailsPartial]);
+        } else {
+          assert.strictEqual(family.dataPath, "");
+          assert.strictEqual(family.detailsPartial, "");
+        }
+      });
+
+      it("the Ki sub-strain table is on CONFIG only while the module provides it", function () {
+        if (kiActive()) {
+          assert.isOk(CONFIG.eclipsephase.kiStrains, "the module has to contribute its table");
+          assert.strictEqual(getStrainFamily("ki").subStrains, CONFIG.eclipsephase.kiStrains);
+        } else {
+          assert.isUndefined(CONFIG.eclipsephase.kiStrains, "the core must not keep a Ki table");
+          assert.deepEqual(getStrainFamily("ki").subStrains, {});
+        }
+      });
+    });
+
+    describe("a Ki sleight the core cannot resolve", function () {
+      it("is refused outright rather than falling back to Psi", function () {
+        const bodiless = { system: {}, items: { some: () => false, get: () => null } };
+        const substrate = strainSubstrate(bodiless, "quench-unregistered-family");
+
+        assert.isTrue(substrate.blocked, "an unregistered family must never roll");
+        assert.strictEqual(substrate.reasonKey, "ep2e.roll.announce.strainFamilyMissing");
+        assert.notInclude(substrate.reasonKey, "psi", "the message must not be Psi's");
+      });
+
+      it("says so in a message the world can actually show", function () {
+        assert.isTrue(game.i18n.has("ep2e.roll.announce.strainFamilyMissing"));
+        assert.isTrue(game.i18n.has("ep2e.psi.moduleMissing.headline"));
+        assert.isTrue(game.i18n.has("ep2e.psi.moduleMissing.copy"));
+      });
+    });
+  }, { displayName: "Eclipse Phase: Ki without its module" });
 
   // Read through the registry's dataPath, never through getFlag: a flag scope whose module is not
   // active throws, and the Ki module does not exist yet. The migration writes the same way.
@@ -347,6 +400,7 @@ Hooks.on("quenchReady", quench => {
     const { describe, it, assert } = context;
 
     const KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
+    const KI_SUBSTRAIN_PATH = "flags.eclipsephase-ki.subStrain";
 
     describe("moving a Ki character's sub-strain choices into the module's flags", function () {
       it("writes the flags, clears the system keys and keeps the values", async function () {
@@ -360,7 +414,7 @@ Hooks.on("quenchReady", quench => {
           assert.isNotNull(update, "the fixture has to look like an unmigrated character");
           await actor.update(update);
 
-          const moved = foundry.utils.getProperty(actor, getStrainFamily("ki").dataPath);
+          const moved = foundry.utils.getProperty(actor, KI_SUBSTRAIN_PATH);
           assert.strictEqual(moved.crucible.influence2.description, "quenchChoice", "the choice has to survive the move");
           assert.notOk(actor._source.system.subStrain.byArchetype.crucible?.influence2, "the system copy has to be gone");
           assert.strictEqual(actor.system.subStrain.label, "crucible", "the chosen sub-strain itself stays in the core");
@@ -386,7 +440,7 @@ Hooks.on("quenchReady", quench => {
         }, async actor => {
           assert.isNull(_ep25_migrateKiSubStrain(actor));
           assert.strictEqual(actor.system.subStrain.byArchetype.architect.influence2.description, "psiChoice");
-          assert.isUndefined(foundry.utils.getProperty(actor, getStrainFamily("ki").dataPath));
+          assert.isUndefined(foundry.utils.getProperty(actor, KI_SUBSTRAIN_PATH));
         });
       });
     });
@@ -408,8 +462,7 @@ Hooks.on("quenchReady", quench => {
     });
 
     describe("where each family's choices are read from", function () {
-      it("the registry points Ki at the flags and Psi at system data", function () {
-        assert.strictEqual(getStrainFamily("ki").dataPath, "flags.eclipsephase-ki.subStrain");
+      it("Psi reads from system data; the Ki half is the module's to declare", function () {
         assert.strictEqual(getStrainFamily("psi").dataPath, "system.subStrain.byArchetype");
       });
 

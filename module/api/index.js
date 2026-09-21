@@ -38,6 +38,7 @@ import {
   registerRezSpendOptions,
   registerTaskResultText
 } from "./registry.js";
+import { registerStrainFamily, getStrainFamily, listStrainFamilies, hasStrainFamily } from "../rolls/strain-families.js";
 
 /**
  * The task-roll pipeline: dialog, resolution and chat output.
@@ -126,7 +127,11 @@ export const registry = {
   registerPoolOption,
   registerSlot,
   registerRezSpendOptions,
-  registerTaskResultText
+  registerTaskResultText,
+  registerStrainFamily,
+  getStrainFamily,
+  listStrainFamilies,
+  hasStrainFamily
 };
 
 /**

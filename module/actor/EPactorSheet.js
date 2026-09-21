@@ -24,6 +24,19 @@ function hasAnyMovement(bodyItem) {
 }
 
 
+/**
+ * The label the strain tab carries. A family whose module is missing has no localised name to
+ * offer, so its own id stands in - that still tells the reader which discipline the character
+ * uses, where a fallback to "Psi" would name the wrong one.
+ * @param {Object} strainFamily - The registry entry, registered or missing
+ * @returns {String} A localisation key, or the family id when there is none
+ */
+function strainTabLabel(strainFamily) {
+  if (strainFamily.tabLabel) return strainFamily.tabLabel;
+  if (!strainFamily.missing || !strainFamily.id) return "ep2e.actorSheet.rightTabs.psiTab";
+  return strainFamily.id.charAt(0).toUpperCase() + strainFamily.id.slice(1);
+}
+
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   // The Rez spending dialog: what a point of Rez may be spent on, and what each entry costs.
@@ -251,6 +264,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     context.sleightFamily = strainFamily.id;
     context.subStrainOptions = strainFamily.subStrains;
     context.strainDetailsPartial = strainFamily.detailsPartial;
+    context.strainFamilyMissing = strainFamily.missing === true;
 
     //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
     if (game.user.isGM || actor.isOwner){
@@ -264,7 +278,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       context.tabGroups = this.tabGroups;
 
       if (context.tabs.primary?.psi) {
-        context.tabs.primary.psi.label = strainFamily.tabLabel || "ep2e.actorSheet.rightTabs.psiTab";
+        context.tabs.primary.psi.label = strainTabLabel(strainFamily);
       }
     }
     else {

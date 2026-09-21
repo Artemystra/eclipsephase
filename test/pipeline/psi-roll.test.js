@@ -62,13 +62,6 @@ beforeEach(() => {
 });
 
 describe("a sleight the body cannot carry is refused before it rolls", () => {
-  test("Ki without a Cyberbrain does not roll", async () => {
-    const actor = makeSleightUser({ nervousSystem: "synth", cyberbrain: false, family: "ki" });
-    await RollCheck(sleightDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "psi");
-
-    expect(global.__ep.createdMessages.length).toEqual(0);
-    expect(global.__ep.notifications.warn).toContain("ep2e.roll.announce.ki.noCyberbrain");
-  });
 
   test("Psi from inside a Cyberbrain does not roll", async () => {
     const actor = makeSleightUser({ nervousSystem: "synth", cyberbrain: true, family: "psi" });
@@ -113,13 +106,6 @@ describe("the substrate mismatch penalty", () => {
     expect(lastBreakdown()).toContain("-30");
   });
 
-  test("Ki in a biological body takes -30 under its own label", async () => {
-    const actor = makeSleightUser({ nervousSystem: "bio", cyberbrain: true, family: "ki" });
-    await RollCheck(sleightDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "psi");
-
-    expect(lastBreakdown()).toContain("ep2e.roll.announce.ki.substrateMismatch");
-    expect(lastBreakdown()).toContain("-30");
-  });
 
   test("a body that suits the family takes no penalty", async () => {
     const actor = makeSleightUser({ nervousSystem: "bio", family: "psi" });
@@ -181,30 +167,16 @@ describe("where feedback damage lands", () => {
     expect(updatedKeys(actor)).not.toContain("system.health.mental.value");
   });
 
-  test("Ki feedback hits Stress and trauma instead", async () => {
-    const actor = recordingUser({ nervousSystem: "synth", cyberbrain: true, family: "ki" });
-    seedRolls([3, 3]);
-    await rollPsiEffect(actor, game.user._id, true, {}, null, "public");
-
-    expect(updatedKeys(actor)).toEqual(expect.arrayContaining(["system.health.mental.value", "system.mental.trauma"]));
-    expect(updatedKeys(actor)).not.toContain("system.health.physical.value");
-  });
 });
 
 describe("a Chi push asks about the body for itself", () => {
-  test("it is refused when the family cannot work in this body", async () => {
-    const actor = makeSleightUser({ nervousSystem: "synth", cyberbrain: false, family: "ki" });
+
+  test("a family no module registered is refused", async () => {
+    const actor = makeSleightUser({ nervousSystem: "bio", family: "gamma-wave" });
     const before = actor.system.psiStrain.infection;
     await confirmChiPush(actor, "sleight1", "public");
 
     expect(actor.system.psiStrain.infection).toEqual(before);
-    expect(global.__ep.notifications.warn).toContain("ep2e.roll.announce.ki.noCyberbrain");
-  });
-
-  test("a family no module registered is refused too", async () => {
-    const actor = makeSleightUser({ nervousSystem: "bio", family: "gamma-wave" });
-    await confirmChiPush(actor, "sleight1", "public");
-
     expect(global.__ep.notifications.warn).toContain("ep2e.roll.announce.strainFamilyMissing");
   });
 
