@@ -48,3 +48,22 @@ describe("system.json", () => {
     expect(system.download).toContain(branch);
   });
 });
+
+describe("the modules the system recommends", () => {
+  const recommends = system.relationships?.recommends ?? [];
+
+  test("both modules extracted in 2.5 are offered", () => {
+    expect(recommends.map(entry => entry.id).sort()).toEqual(["eclipsephase-ki", "eclipsephase-shop"]);
+  });
+
+  test("each is declared as a module, not a system", () => {
+    for (const entry of recommends) expect(entry.type).toEqual("module");
+  });
+
+  test("each carries a manifest URL Foundry can install from", () => {
+    for (const entry of recommends) {
+      expect(entry.manifest).toMatch(/^https:\/\/raw\.githubusercontent\.com\/.+\/module\.json$/);
+      expect(entry.manifest).toContain(entry.id);
+    }
+  });
+});

@@ -216,6 +216,67 @@ api.registry.registerTaskResultText({
 });
 ```
 
+### `registerStrainFamily(id, definition)`
+
+Registers a discipline that works like Psi: its own substrate rule, its own sub-strain table, its
+own influence results and its own feedback target. `id` is what a sleight carries in
+`system.strainFamily`. The core registers `psi`; the Eclipse Phase Ki module registers `ki` the
+same way, through this same function.
+
+```js
+api.registry.registerStrainFamily("myFamily", {
+  label: "my-module.family.label",        // the option in the sleight's family dropdown
+  tabLabel: "my-module.family.tab",       // the character sheet's strain tab
+
+  substrate(actor) {
+    // Where can this discipline work? Read the body through the public API, never by importing
+    // the system's own files.
+    const { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } = game.eclipsephase.api.actors;
+    const blocked = sleevedNervousSystem(actor) === "info";
+    return {
+      blocked,
+      jamBlocked: false,                   // true only when jamming is what blocks it
+      penalised: false,                    // true applies the -30 substrate mismatch
+      reasonKey: "my-module.roll.blocked", // shown when a roll is refused
+      tooltipKey: "my-module.roll.blockedShort"
+    };
+  },
+
+  influence(result, { strainLabel, archetypeData, actorModel }) {
+    // What the Infection Test's influence card says for a d6 result of 1-6. Return null when
+    // the family has nothing for that result; never throw.
+    return { label: "my-module.effect.label", copy: "my-module.effect.copy", withRule: true };
+  },
+
+  subStrains: CONFIG.eclipsephase.myFamilyStrains,   // the sub-strain dropdown
+  tierTraits: {                                      // the prerequisite a dropped sleight asks for
+    1: { name: "My Family I", pack: "my-module.my-sleights" },
+    2: { name: "My Family II", pack: "my-module.my-sleights" }
+  },
+  feedback: { target: "mental", copyKey: "my-module.effect.takeStrain" },
+  mismatchKey: "my-module.roll.substrateMismatch",
+  dataPath: "flags.my-module.subStrain",             // where the per-actor choices live
+  detailsPartial: "modules/my-module/templates/details.html"
+});
+```
+
+Four things are worth knowing before you build one:
+
+- **`dataPath` should point into your own flags**, not into `system`. The core's schema does not
+  know your family, and a field it does not declare is not yours to rely on. Write it with
+  `actor.update({"flags.my-module.subStrain.x": ...})` - **never `setFlag`**, which throws for a
+  module that is not active, and a migration may well run before yours is.
+- **A family nobody registered is refused, not guessed.** `getStrainFamily(id)` answers with
+  `{missing: true}` and a substrate that blocks, so a sleight whose module is switched off cannot
+  quietly resolve as Psi. The sheet shows a "module missing" panel instead of the sleight list.
+- **`influence` is a function, not a table.** Psi's results depend on the player's own per-slot
+  choices and on the archetype; a table cannot express that. Yours may ignore the arguments and
+  return a constant if it is simpler.
+- **`tierTraits` carries the pack**, so the trait can live in your module's own compendium.
+
+`getStrainFamily(id)`, `listStrainFamilies()` and `hasStrainFamily(id)` are on `api.registry` too,
+for reading the registry back.
+
 ## Chat message context
 
 `RollCheck()` stores the data a chat card's buttons need in `flags.eclipsephase.roll` on the
