@@ -920,8 +920,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actorModel.additionalSystems.hasSleightAccess = !!actorModel.additionalSystems.hasPsi;
       
 
-    /* In case ACTOR DATA is needed */
-    //console.log(this)
 
   }
 
@@ -1016,7 +1014,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     };
 
-    //console.log("This is my dragData", dragData)
 
     event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
   }
@@ -1846,7 +1843,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const dataset = element.dataset;
     const actorWhole = this.actor;
     let rolledFrom = dataset.rolledfrom? dataset.rolledfrom : "";
-    //console.log("This is my rolled from", rolledFrom, "because my skillKey is", dataset.key)
     let weaponID = dataset.weaponid ? dataset.weaponid : "";
     const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions")}
 

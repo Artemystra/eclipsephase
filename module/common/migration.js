@@ -2502,9 +2502,7 @@ async function _ep25_addBrainWareMarker(item) {
   const hasMarker = item.effects.some(e => e.changes?.some(c => c.key === markerKey));
   if (hasMarker) return;
   const changes = [{ key: markerKey, value: "true", priority: null, type: "override" }];
-  const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
-  const effectData = { name: item.name, icon: "/icons/svg/mystery-man.svg", disabled: true, transfer: true, changes, flags: {} };
-  if (isV14Plus) effectData.system = { changes };
+  const effectData = { name: item.name, icon: "/icons/svg/mystery-man.svg", disabled: true, transfer: true, changes, flags: {}, system: { changes } };
   await item.createEmbeddedDocuments("ActiveEffect", [effectData]);
 }
 
@@ -2632,8 +2630,6 @@ function _ep200_resolveLegacyMorphType(actor) {
 async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
   const STALE_KEY = "system.additionalSystems.sleeving.aversion.type";
   const STALE_VALUE_KEY = "system.additionalSystems.sleeving.aversion.value";
-  const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
-
   const staleTraits = actor.items.filter(i =>
     i.type === "traits" &&
     i.effects?.some(e => e.changes?.some(c => c.key === STALE_KEY))
@@ -2657,9 +2653,9 @@ async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
       origin: staleEffect.origin,
       disabled: staleEffect.disabled,
       transfer: staleEffect.transfer,
-      changes: newChanges
+      changes: newChanges,
+      system: { changes: newChanges }
     };
-    if (isV14Plus) newEffectData.system = { changes: newChanges };
 
     await trait.deleteEmbeddedDocuments("ActiveEffect", [staleEffect.id]);
     await trait.createEmbeddedDocuments("ActiveEffect", [newEffectData]);

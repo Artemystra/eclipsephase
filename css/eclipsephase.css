@@ -811,12 +811,6 @@ span.neutral {
   backdrop-filter: blur(4px);
 }
 
-.window-app.eclipsephase.sheet.actor .window-content{
-  background-color: rgba(65,65,65,0.4)!important;
-  z-index: -1;
-  overflow-y: hidden;
-  backdrop-filter: blur(5px);
-}
 
 .app.window-app.dialog .window-content{
   display: flex;
@@ -1617,9 +1611,6 @@ optgroup .Default .Roll .Mode,
   background: #1d1d1d;
 }
 
-.window-app.eclipsephase.sheet .window-header {
-  display: none !important;
-}
 
 /* Remove the 1rem padding FoundryVTT V13 injects into .window-content */
 .application.eclipsephase.sheet .window-content {
