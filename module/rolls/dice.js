@@ -181,7 +181,7 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
 function defineRoll(dataset, actorWhole){
     
     let type = dataset.key ? dataset.key.toLowerCase() : null;
-    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
+    let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
     let template
     let templateSize = {width: 276}
@@ -600,13 +600,21 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
     const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom)
-    
+    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset)
+
     if(values.cancelled)
         return
 
     for (let entry in values){
         options[entry] = values[entry] || false
+    }
+
+    // Shop purchases with Loyalty active replace the player-facing favor-difficulty dropdown
+    // with an auto-calculated value (general-modifiers.html renders it disabled), but the value
+    // is force-applied here too since favorDifficultyModifier can legitimately be 0 (Moderate),
+    // which the `|| false` fallback above would otherwise wipe.
+    if (dataset.favorDifficultyLocked) {
+        options.favorMod = Number(dataset.favorDifficultyModifier) || 0;
     }
 
     let numberOfTargets = 1
@@ -645,17 +653,31 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
-        
+
+        // burnMod clamp must match _useGefallen()'s post-roll clamp (dataset.rollvalue/maxBurn).
+        let shopBurnAmount = 0;
+        if(rolledFrom === "shopPurchase"){
+            const sellBonus = Number(dataset.sellBonus) || 0;
+            if(sellBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.sellBonusModifier', sellBonus))
+
+            shopBurnAmount = Math.max(0, Math.min(Number(options.burnMod) || 0, Number(dataset.maxBurn) || 0, Number(dataset.rollvalue) || 0));
+            if(shopBurnAmount) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', shopBurnAmount * 2))
+        }
+
         await task.performRoll()
 
         let itemData = {}
         if(weaponSelected)
             itemData = weaponSelected
+        // Must come before roll.sleight - defineRoll() always inits it to {}, a truthy empty object.
+        else if(rolledFrom === "shopPurchase")
+            itemData = { shopUuid: dataset.shopUuid, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings, burnAmount: shopBurnAmount }
         else if(roll.sleight)
             itemData = roll.sleight
-        
+
         let outputData = task.outputData(options, actorWhole, activePool, itemData, rolledFrom, systemOptions)
 
+        outputData.skillKey = roll.type
         outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
@@ -677,12 +699,10 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         console.log("My outputData", outputData)
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
         
-        if (!outputData.alternatives.options.available && outputData.taskName === "Psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
+        if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
             psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
 
-        //Returns a rollResult in case it's needed
-        
-        if(dataset.preventPrintToChat === true) return rollResult;
+        return rollResult;
     }
 }
 
@@ -698,7 +718,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
  * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
  * @returns {Promise<Object>} - The values of the form when submitted
  */
-async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom) {
+async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom, dataset) {
 let specialEffects;
 const actorType = actorWhole.type;
 
@@ -715,7 +735,8 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     traits,
     specialEffects,
     rolledFrom,
-    rollData
+    rollData,
+    dataset
 });
 
 function extractFormValues(form) {
@@ -1310,13 +1331,15 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
     //Returns a roll without producing the output directly to the chat
     if(specialRules.preventPrintToChat) return message;
 
-    ChatMessage.create({
+    message.chatMessage = await ChatMessage.create({
         speaker: ChatMessage.getSpeaker({alias: alias}),
         content: html,
         whisper: showTo,
         sound: message.sound,
         blind: blind
     })
+
+    return message;
 }
 
 function breakdown(roll){

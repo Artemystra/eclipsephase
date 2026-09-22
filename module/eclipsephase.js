@@ -5,6 +5,7 @@ import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
+import  EPshopSheet from "./actor/EPshopSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
@@ -71,6 +72,15 @@ async function registerSystemSettings() {
     scope: "world",
     name: "SETTINGS.hideNPCs.name",
     hint: 'SETTINGS.hideNPCs.hint',
+    type: Boolean,
+    default: true
+  });
+
+  game.settings.register("eclipsephase", "enableShopSystem", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.enableShopSystem.name",
+    hint: "SETTINGS.enableShopSystem.hint",
     type: Boolean,
     default: true
   });
@@ -149,6 +159,7 @@ Hooks.once('init', async function() {
   // Register sheet application classes
   foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
+  foundry.documents.collections.Actors.registerSheet("eclipsephase", EPshopSheet, {types: ["shop"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
   Handlebars.registerHelper('concat', function() {
@@ -165,6 +176,9 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/health-bar.html",
     "systems/eclipsephase/templates/actor/partials/multiselect-pills.html",
+    "systems/eclipsephase/templates/actor/partials/shop-footer.html",
+    "systems/eclipsephase/templates/actor/partials/shop-inventory-panel.html",
+    "systems/eclipsephase/templates/actor/partials/shop-to-sell-list.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html",
@@ -290,7 +304,7 @@ Hooks.once("ready", async function() {
   let before170 = foundry.utils.isNewerVersion("1.7", gameVersion);
   let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
   let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
-  let before210 = foundry.utils.isNewerVersion("2.1", gameVersion);
+  let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -532,17 +546,17 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
-  //2.1 Migration
-  if (before210) {
+  //2.1.5 Migration
+  if (before215) {
     endMigration = false;
-    const messageCopy = "ep2e.migration.210";
+    const messageCopy = "ep2e.migration.215";
     let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
 
     if (migration.cancelled) return;
     startMigration = migration.start;
 
-    let Migration210 = await update.migrationPre210(startMigration);
-    endMigration = Migration210["endMigration"];
+    let Migration215 = await update.migrationPre215(startMigration);
+    endMigration = Migration215["endMigration"];
   }
 
     if(endMigration){
@@ -662,6 +676,11 @@ Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
 });
 
+// Clears a character's shop sell-limit lockouts when they take a long rest.
+Hooks.once("ready", () => {
+  helperFunction.registerRestLockoutReset();
+});
+
 // Delivers pending "your Armor moved to your Stash" notices from the 2.0 migration
 // (module/common/migration.js's _ep200_migrateArmorToBoundBodies), one self-whispered chat
 // message per affected character this user owns. Deliberately NOT gated on isGM - runs for every
@@ -676,12 +695,11 @@ Hooks.once("ready", async () => {
 
   for (const entry of pending) {
     const message = {
-      type: "systemNotice",
       noticeLabel: "ep2e.migration.armorStashedNoticeSelf.updateLabel",
       mainCopy: game.i18n.format("ep2e.migration.armorStashedNoticeSelf.main", { count: entry.count, actor: entry.actorName }),
       subCopy: game.i18n.localize("ep2e.migration.armorStashedNoticeSelf.sub")
     };
-    const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/damage-result.html", message);
+    const content = await foundry.applications.handlebars.renderTemplate("systems/eclipsephase/templates/chat/system-notice.html", message);
 
     await ChatMessage.create({
       speaker: { alias: "System" },
@@ -782,6 +800,21 @@ Hooks.on("renderTokenApplication", (app, html) => {
 // Foundry doesn't reliably apply the system.json bar-attribute/actorLink schema defaults on actor
 // creation - set them explicitly instead. Goons unlinked (mook tokens), character/npc linked.
 Hooks.on("preCreateActor", (actor, data, options, userId) => {
+  // Shops have no health bars, but still get their own token defaults - gated by their own
+  // setting instead of the character/npc/goon logic below.
+  if (data.type === "shop") {
+    if (!game.settings.get("eclipsephase", "enableShopSystem")) {
+      ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.systemDisabled"));
+      return false;
+    }
+    actor.updateSource({
+      "img": "systems/eclipsephase/resources/icons/Currency/currency-c.svg",
+      "prototypeToken.displayName": CONST.TOKEN_DISPLAY_MODES.HOVER,
+      "prototypeToken.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+      "prototypeToken.actorLink": false
+    });
+    return;
+  }
   const update = {
     "prototypeToken.bar1.attribute": "health.physical",
     "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
@@ -798,6 +831,7 @@ Hooks.on("preCreateActor", (actor, data, options, userId) => {
 
 //Gives every character a flat-morph from start using the compendiumpack as a source
 Hooks.on("createActor", async (actor, options, userId) => {
+  if (actor.type === "shop") return;
   if (actor.system.activeMorph || actor.system.activeID) {
     await actor.setFlag("eclipsephase", "defaultIdAdded", true);
     await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
@@ -821,6 +855,56 @@ Hooks.on("createActor", async (actor, options, userId) => {
 
   await actor.setFlag("eclipsephase", "defaultIdAdded", true);
   await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
+});
+
+// First-pass behavior for a disabled shop system: hide existing shops from the sidebar directory
+// rather than making them read-only or deleting them.
+Hooks.on("renderActorDirectory", (app, html) => {
+  if (game.settings.get("eclipsephase", "enableShopSystem")) return;
+  html.querySelectorAll("li.directory-item[data-entry-id]").forEach(li => {
+    if (game.actors.get(li.dataset.entryId)?.type === "shop") li.remove();
+  });
+});
+
+// Core puts CharArt first (ActorDirectory#_getEntryContextOptions) - insert after it, not push, so ours lead the menu.
+Hooks.on("getActorContextOptions", (directory, menuItems) => {
+  const artworkIndex = menuItems.findIndex(entry => entry.label === "SIDEBAR.CharArt");
+  if (artworkIndex === -1) return;
+  menuItems[artworkIndex].label = "ep2e.actorDirectory.showEgoPersona";
+
+  const popout = (actor, src, title) => {
+    if (!src) return;
+    new foundry.applications.apps.ImagePopout({ src, uuid: actor.uuid, window: { title } }).render({ force: true });
+  };
+
+  menuItems.splice(artworkIndex + 1, 0,
+    {
+      label: "ep2e.actorDirectory.showCurrentMorph",
+      icon: '<i class="fas fa-image"></i>',
+      visible: li => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        return actor?.type === "character" && !!actor.items.get(actor.system.activeMorph)?.img;
+      },
+      onClick: (event, li) => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        const morph = actor.items.get(actor.system.activeMorph);
+        popout(actor, morph.img, morph.name);
+      }
+    },
+    {
+      label: "ep2e.actorDirectory.showCurrentId",
+      icon: '<i class="fas fa-image"></i>',
+      visible: li => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        return actor?.type === "character" && !!actor.items.get(actor.system.activeID)?.img;
+      },
+      onClick: (event, li) => {
+        const actor = directory.collection.get(li.dataset.entryId);
+        const id = actor.items.get(actor.system.activeID);
+        popout(actor, id.img, id.name);
+      }
+    }
+  );
 });
 
 Hooks.on("createItem", async (item, options, userId) => {

@@ -1,0 +1,12 @@
+{{!-- Staged-for-sale rows - not the shop's own items, so this can't reuse item-row-list.hbs's
+  delete icon (that deletes from the SHOP's collection, not from staging). See EPshopSheet.js's
+  .to-sell-remove handler and _confirmSell(). --}}
+{{#each entries as |entry|}}
+    <div class="item flexrow offHand flex-group-center item-row-list-entry" data-staging-key="{{entry.shopStagingKey}}">
+        <div class="item-image flex-group-left input-small"><img src="{{entry.img}}" title="{{entry.name}}" width="24" height="24"/></div>
+        <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{entry.name}}</strong></label>
+        <div class="flexrow item-controls flex-group-right" style="max-width: 50px; min-width: 50px;">
+            <a class="item-control to-sell-remove resource-label editWithLabel input-xs alignRight" title="{{localize 'ep2e.shop.toSell.remove'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+        </div>
+    </div>
+{{/each}}

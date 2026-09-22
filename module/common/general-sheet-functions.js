@@ -230,6 +230,23 @@ export function registerCommonHandlers(html, callerobj) {
       container.style.display = "none";
     });
   }
+
+  // .item-image is reused both as a real thumbnail wrapper and, elsewhere, as a bare styling
+  // class on non-image elements (ammo/damage boxes) or the <img> itself (toggle icons) - only
+  // wrappers with an actual <img> child qualify, so this is a no-op everywhere else.
+  html.querySelectorAll(".item-image").forEach(wrapper => {
+    const img = wrapper.querySelector("img");
+    if (!img || wrapper.classList.contains("item-image-zoomable")) return;
+
+    wrapper.classList.add("item-image-zoomable");
+    const icon = document.createElement("i");
+    icon.className = "fas fa-eye item-image-zoom-icon";
+    wrapper.appendChild(icon);
+
+    wrapper.addEventListener("click", () => {
+      new foundry.applications.apps.ImagePopout({ src: img.src, window: { title: img.title || "" } }).render(true);
+    });
+  });
 }
 
 /**
@@ -519,6 +536,10 @@ export function multiSelectPills(html, actor) {
       });
       dropdown.classList.toggle("noShow", !anyMatch);
       dropdown.classList.toggle("showFlex", anyMatch);
+
+      // left:0 in CSS would anchor to the whole widget's left edge, not the input's - wrong once
+      // pills push the input rightward (or onto a wrapped second row). Align under the input itself.
+      if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
     };
 
     if (input) {
@@ -591,6 +612,86 @@ export function multiSelectPills(html, actor) {
 
         values.splice(index, 1);
         await actor.update({ [path]: values });
+      });
+    });
+  });
+}
+
+/**
+ * Sister to multiSelectPills() for a purely client-side filter that is never persisted to a
+ * document - reuses the same ".multiselect-widget" markup/CSS (see
+ * templates/actor/partials/multiselect-pills.html), but add/remove mutate an array on the sheet
+ * instance itself and re-render, instead of writing to actor data. No free-text entry - only
+ * clicking a suggested option adds it, matched via its data-key (the raw filter value, distinct
+ * from the localized data-value used for display).
+ * @param {Object} html - The HTML object to which the event listeners are added
+ * @param {Object} sheet - The ApplicationV2 sheet instance whose `filterProperty` array holds the active filter
+ * @param {String} filterProperty - The property name on `sheet` holding the filter array
+ */
+export function itemTypeFilterPills(html, sheet, filterProperty) {
+  html.querySelectorAll(`.multiselect-widget[data-path="${filterProperty}"]`).forEach(widget => {
+    const input = widget.querySelector(".multiselect-input");
+    const dropdown = widget.querySelector(".multiselect-dropdown");
+
+    const hideDropdown = () => {
+      dropdown?.classList.add("noShow");
+      dropdown?.classList.remove("showFlex");
+    };
+
+    // showFlex mirrors multiSelectPills()'s own toggling - .multiselect-dropdown.showFlex is what
+    // actually renders the options stacked in a column instead of the browser's inline <a> default.
+    const filterDropdown = () => {
+      if (!dropdown) return;
+      const search = input.value.trim().toLowerCase();
+      let anyMatch = false;
+      dropdown.querySelectorAll(".multiselect-option").forEach(option => {
+        const match = (option.textContent ?? "").trim().toLowerCase().includes(search);
+        option.classList.toggle("noShow", !match);
+        if (match) anyMatch = true;
+      });
+      dropdown.classList.toggle("noShow", !anyMatch);
+      dropdown.classList.toggle("showFlex", anyMatch);
+
+      // left:0 in CSS would anchor to the whole widget's left edge, not the input's - wrong once
+      // pills push the input rightward (or onto a wrapped second row). Align under the input itself.
+      if (anyMatch) dropdown.style.left = `${input.offsetLeft}px`;
+    };
+
+    if (input) {
+      input.addEventListener("focus", filterDropdown);
+      input.addEventListener("input", filterDropdown);
+      input.addEventListener("blur", hideDropdown);
+      input.addEventListener("keydown", ev => {
+        if (ev.key === "Escape") {
+          ev.preventDefault();
+          hideDropdown();
+        }
+      });
+    }
+
+    if (dropdown) {
+      // mousedown would normally move focus off the input, firing its blur handler and closing
+      // the dropdown before the click can land - swallow it, same as multiSelectPills().
+      dropdown.addEventListener("mousedown", ev => ev.preventDefault());
+
+      dropdown.querySelectorAll(".multiselect-option").forEach(option => {
+        option.addEventListener("click", ev => {
+          ev.preventDefault();
+          hideDropdown();
+          const key = ev.currentTarget.dataset.key;
+          if (!key || sheet[filterProperty].includes(key)) return;
+          sheet[filterProperty].push(key);
+          sheet.render();
+        });
+      });
+    }
+
+    widget.querySelectorAll(".multiselect-pill-remove").forEach(element => {
+      element.addEventListener("click", ev => {
+        const index = Number(ev.currentTarget.dataset.index);
+        if (Number.isNaN(index) || !sheet[filterProperty][index]) return;
+        sheet[filterProperty].splice(index, 1);
+        sheet.render();
       });
     });
   });
@@ -703,23 +804,32 @@ export function itemToggle(html, item) {
  * @param {Array<{label: String, options: Array<{id: String, name: String}>}>} bodyGroups -
  *   Bodies grouped for <optgroup> rendering (e.g. "Morphs" vs "Remote Bodies"). Empty groups
  *   should be filtered out by the caller before passing them in.
- * @param {String} [dialogTitle] - localization key for the window title
+ * @param {String} [dialogTitle] - localization key for the in-content subheadline (also used as
+ *   the window title unless windowTitle is given separately)
  * @param {String} [headline] - localization key for the headline shown above the dropdown
  * @param {String} [copy] - localization key for the explanatory copy shown above the dropdown
+ * @param {String} [defaultBodyId]
+ * @param {String} [placeholderKey] - localization key for the dropdown's disabled placeholder
+ *   option, defaults to the generic "- Select Body -" text - override for non-body pickers
+ *   (e.g. selecting a character) reusing this same dropdown-only dialog shape.
+ * @param {String} [windowTitle] - localization key for the window chrome title, if it should
+ *   read differently from the in-content subheadline (dialogTitle).
  * @returns {Promise<{cancelled: true}|{selection: String}>}
  */
-  export async function selectBody(bodyGroups, dialogTitle, headline, copy, defaultBodyId) {
+  export async function selectBody(bodyGroups, dialogTitle, headline, copy, defaultBodyId, placeholderKey, windowTitle) {
     const title = dialogTitle
       ? game.i18n.localize(dialogTitle)
       : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+    const chromeTitle = windowTitle ? game.i18n.localize(windowTitle) : title;
     const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
     const useButton = game.i18n.localize("ep2e.actorSheet.button.select");
-    const placeholder = game.i18n.localize("ep2e.dialog.selectBody.placeholder");
+    const placeholder = game.i18n.localize(placeholderKey ?? "ep2e.dialog.selectBody.placeholder");
     const template = "systems/eclipsephase/templates/chat/list-dialog.html";
 
     const content = await foundry.applications.handlebars.renderTemplate(template, {
       bodyGroups,
       dialogType: "selectBody",
+      title,
       headline,
       copy,
       placeholder,
@@ -727,7 +837,7 @@ export function itemToggle(html, item) {
     });
 
     const result = await foundry.applications.api.DialogV2.wait({
-      window: { title },
+      window: { title: chromeTitle },
       classes: ["ep2e-primary-right"],
       content,
       buttons: [

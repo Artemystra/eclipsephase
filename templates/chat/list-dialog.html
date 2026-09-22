@@ -204,25 +204,26 @@
 
     {{else if (eq dialogType "selectBody")}}
 
-        {{#if copy}}
-            <div style="padding: 10px 0;">
-                {{#if headline}}
-                    <span class="headline5">{{localize headline}}</span><br>
-                {{/if}}
-                {{localize copy}}
-            </div>
-        {{/if}}
-        <div style="padding: 10px 0;">
-            <select name="BodySelect" style="width: 100%;">
-                <option value="" disabled {{#unless defaultSelection}}selected{{/unless}}>{{placeholder}}</option>
-                {{#each bodyGroups}}
-                <optgroup label="{{label}}">
-                    {{#each options}}
-                    <option value="{{id}}" {{#if (eq id ../../defaultSelection)}}selected{{/if}}>{{name}}</option>
+        <div class="contentBoxMargin">
+            <div class="flexrow subheader"><h3 class="subheader dialog">{{title}}</h3></div>
+            {{#if headline}}
+                <p><strong>{{localize headline}}</strong></p>
+            {{/if}}
+            {{#if copy}}
+                <p>{{localize copy}}</p>
+            {{/if}}
+            <div class="form-group listBackgroundMain">
+                <select name="BodySelect" style="width: 100%;">
+                    <option value="" disabled {{#unless defaultSelection}}selected{{/unless}}>{{placeholder}}</option>
+                    {{#each bodyGroups}}
+                    <optgroup label="{{label}}">
+                        {{#each options}}
+                        <option value="{{id}}" {{#if (eq id ../../defaultSelection)}}selected{{/if}}>{{name}}</option>
+                        {{/each}}
+                    </optgroup>
                     {{/each}}
-                </optgroup>
-                {{/each}}
-            </select>
+                </select>
+            </div>
         </div>
     {{/if}}
 </form>

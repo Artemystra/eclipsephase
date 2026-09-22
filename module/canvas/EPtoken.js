@@ -1,5 +1,4 @@
-// Physical/Mental health bars are two-part (health zone + Death Rating/Insanity overflow zone) on
-// the actor sheet - mirror that split here instead of drawing a plain single-fill native bar.
+// Physical/Mental bars are two-part (health zone + Death Rating/Insanity overflow), like the actor sheet, not a single-fill native bar.
 const { Token } = foundry.canvas.placeables;
 
 const OVERFLOW_BY_ATTRIBUTE = {
@@ -10,39 +9,32 @@ const OVERFLOW_BY_ATTRIBUTE = {
 const APPROXIMATION_SEGMENTS = 6;
 const BAR_ANIMATION_STEP_MS = 7; // matches damage.js's barUp()/barDown() pacing on the actor sheet
 
-// Coarse view for non-owners: quantize the combined health+overflow fill into fixed segments instead
-// of a smooth fill, keeping the two-tone split so "wounded but stable" vs "bleeding into Death Rating/
-// Insanity" still reads at a glance. Ceils so a barely-alive token never rounds down to "looks dead".
+// Coarse non-owner view: segment slots per zone are reserved by width share (same ratio as the exact
+// bar), then each zone independently lights up its own slots by its own fill.
 function drawApproximatedFill(bar, baseWidth, overflowWidth, baseFill, overflowFill, bh, s, colors) {
   const totalWidth = baseWidth + overflowWidth;
-  const overallFraction = (baseFill * baseWidth + overflowFill * overflowWidth) / totalWidth;
-  const filledSegments = overallFraction > 0
-    ? Math.max(1, Math.ceil(overallFraction * APPROXIMATION_SEGMENTS))
-    : 0;
+  const baseSlots = Math.round(baseWidth / totalWidth * APPROXIMATION_SEGMENTS);
+  const overflowSlots = APPROXIMATION_SEGMENTS - baseSlots;
 
-  const overflowShare = overflowWidth / totalWidth;
-  const overflowSegments = overflowFill > 0
-    ? Math.min(filledSegments, Math.ceil(overflowShare * APPROXIMATION_SEGMENTS))
-    : 0;
-  const baseSegments = filledSegments - overflowSegments;
+  const litBaseSegments = baseFill > 0 ? Math.max(1, Math.ceil(baseFill * baseSlots)) : 0;
+  const litOverflowSegments = overflowFill > 0 ? Math.max(1, Math.ceil(overflowFill * overflowSlots)) : 0;
 
   const gap = 2 * s;
   const segmentWidth = (totalWidth - gap * (APPROXIMATION_SEGMENTS - 1)) / APPROXIMATION_SEGMENTS;
-  for (let i = 0; i < filledSegments; i++) {
-    const color = i < baseSegments ? colors[0] : colors[1];
-    bar.beginFill(color, 1.0).drawRoundedRect(i * (segmentWidth + gap), 0, segmentWidth, bh, 1 * s);
+  for (let i = 0; i < litBaseSegments; i++) {
+    bar.beginFill(colors[0], 1.0).drawRoundedRect(i * (segmentWidth + gap), 0, segmentWidth, bh, 1 * s);
+  }
+  for (let i = 0; i < litOverflowSegments; i++) {
+    bar.beginFill(colors[1], 1.0).drawRoundedRect((baseSlots + i) * (segmentWidth + gap), 0, segmentWidth, bh, 1 * s);
   }
 }
 
 export default class EPtoken extends Token {
-  // Per bar index (0/1): the single animated scalar (0..combinedMax) currently displayed, and its
-  // current target. One number instead of separate base/overflow fractions - see _drawBar for why.
+  // Per bar index: displayed/target scalar (0..combinedMax) driving the fill animation.
   #barFill = {};
   #barAnimId = {};
 
-  // Bar2 now sits below the token (see _drawBar) - move the nameplate above instead of native's
-  // below-token spot so the two don't collide. Anchor flips to bottom (1) so the text grows upward.
-  // The elevation/resource tooltip text moves to the token's left instead, to stay clear of both.
+  // Bar2 sits below the token (see _drawBar), so nameplate/tooltip are repositioned to avoid it.
   _refreshSize() {
     super._refreshSize();
     const { width, height } = this.document.getSize();
@@ -66,15 +58,10 @@ export default class EPtoken extends Token {
       return;
     }
 
-    // Source the target from the actor's own settled derived data, NOT from `data`/`overflow` - those
-    // reflect the TokenDocument's bar1/bar2 mirror, which Foundry's native Token#animate({bar1,bar2})
-    // (TokenDocument#_onRelatedUpdate) smoothly tweens frame-by-frame on every actor update, firing
-    // drawBars()/_drawBar() on every tween tick with an intermediate, not-yet-final value. Reading the
-    // actor's raw persisted value instead means every one of those redundant redraws recomputes the
-    // same already-final target, so our own animation only ever starts once. death.value is purely
-    // DERIVED from physical.value (EPactor.js), so animating physical.value as a single scalar and
-    // deriving both fill fractions from it each frame gives "base fills first, then overflow" for
-    // free - base/overflow were never two independent animatable quantities to begin with.
+    // Source the target from the actor's own persisted data, not `data`/`overflow` (the TokenDocument
+    // bar mirror, which Foundry tweens through intermediate values on every redraw) - keeps our own
+    // animation single-shot. death.value derives from physical.value, so animating physical.value
+    // alone gives base-then-overflow fill for free.
     const rawValue = Number(foundry.utils.getProperty(this.actor.system, data.attribute)?.value ?? 0);
     const combinedMax = data.max + overflow.max;
     const target = Math.clamp(rawValue, 0, combinedMax);
@@ -120,9 +107,8 @@ export default class EPtoken extends Token {
     const showApprox = this.document.getFlag("eclipsephase", "showApproximation") ?? true;
     const useApproximation = showApprox && !this.document.isOwner;
 
-    // Fill fractions are DERIVED from the single animated scalar, mirroring EPactor.js's own
-    // _calculatePhysicalHealth logic (death.value stays 0 until physical.value crosses physical.max)
-    // - "base fills first, then overflow starts" falls out for free at every frame.
+    // Fill fractions derive from the single animated scalar, mirroring EPactor.js's
+    // _calculatePhysicalHealth (death stays 0 until physical crosses its max).
     const baseFill = Math.clamp(displayedValue, 0, data.max) / data.max;
     const overflowFill = Math.clamp(displayedValue - data.max, 0, overflow.max) / overflow.max;
 

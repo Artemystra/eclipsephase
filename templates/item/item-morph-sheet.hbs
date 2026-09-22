@@ -28,20 +28,25 @@
     <section class="item-sheet-body" style="min-height: 255px; height: fit-content; overflow-y: scroll">
         <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details" style="min-height: 255px;">
             {{#if (eq item.system.type "synth")}}
-            <div class="itemRowPadded" style="display: grid; grid-template-columns: repeat(3, 1fr); justify-items: start;">
+            <div class="itemRowPadded" style="display: flex; justify-content: space-between;">
                 <div class="itemGroup">
                     <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
                     <input class="input-small" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="0" style="text-align: center"/>
                 </div>
-                <div class="itemGroup" style="justify-self: center;">
+                <div class="itemGroup wantToKnowMore">
+                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphPointsShortLabel"}}</label>
+                    <span class="tooltipText" style="top: 50%; transform: translateY(-50%); left: auto; right: 100%; margin-right: 6px;">{{localize "ep2e.morph.currentMorph.morphPointsLabel"}}</span>
+                    <input class="input-small" type="number" name="system.morphPoints" value="{{item.system.morphPoints}}" placeholder="0" style="text-align: center"/>
+                </div>
+                <div class="itemGroup">
                     <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
                     <select style="max-width: 100px;" class="selectSpecApt" name="system.type" data-type="String">
                         {{selectOptions config.bodyTypes selected=item.system.type localize=true}}
                     </select>
                 </div>
-                <div class="itemGroup" style="justify-self: end;">
+                <div class="itemGroup">
                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.frame.label"}}</label>
                     <select style="max-width: 130px;" class="selectSpecApt" name="system.frame" data-type="String">
                         {{selectOptions itemList.frame selected=frameDefault}}
@@ -49,13 +54,18 @@
                 </div>
             </div>
             {{else}}
-            <div class="itemRowPadded" style="display: grid; grid-template-columns: 1fr 1fr; justify-items: start;">
+            <div class="itemRowPadded" style="display: flex; justify-content: space-between;">
                 <div class="itemGroup">
                     <i class="fa-solid fa-heart-pulse awesomeIcon icon-small"></i>
                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.durabilityLabel"}}</label>
                     <input class="input-small" type="number" name="system.dur" value="{{item.system.dur}}" placeholder="0" style="text-align: center"/>
                 </div>
-                <div class="itemGroup" style="justify-self: end;">
+                <div class="itemGroup wantToKnowMore">
+                    <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphPointsShortLabel"}}</label>
+                    <span class="tooltipText" style="top: 50%; transform: translateY(-50%); left: auto; right: 100%; margin-right: 6px;">{{localize "ep2e.morph.currentMorph.morphPointsLabel"}}</span>
+                    <input class="input-small" type="number" name="system.morphPoints" value="{{item.system.morphPoints}}" placeholder="0" style="text-align: center"/>
+                </div>
+                <div class="itemGroup">
                     <img src="systems/eclipsephase/resources/icons/bodyType.webp" class="icon-small"/>
                     <label class="resource-value">{{localize "ep2e.morph.currentMorph.morphType.label"}}</label>
                     <select style="max-width: 100px;" class="selectSpecApt" name="system.type" data-type="String">

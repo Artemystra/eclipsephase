@@ -3,6 +3,18 @@ import { TaskRollModifier, TaskRoll, TASK_RESULT, TASK_RESULT_TEXT, rollCalc, TA
 import * as pools from "./pools.js";
 import { gmList } from "../common/general-sheet-functions.js";
 
+/**
+ * Formula for the psi-feedback physical damage roll, or null if none applies.
+ * @param {boolean} push - whether the psi check was pushed
+ * @param {boolean} virusResultIsOne - whether the infection-influence d6 landed on 1
+ * @returns {string|null}
+ */
+export function resolvePhysicalDamageFormula(push, virusResultIsOne){
+    if (push && virusResultIsOne) return "2d6";
+    if (virusResultIsOne || push) return "1d6";
+    return null;
+}
+
 export async function preparePsi(data){
     const dataset = data.currentTarget.dataset;
     const actorWhole = await fromUuid(dataset.actorid)
@@ -108,8 +120,8 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
                     message.influenceCopy = "ep2e.psi.effect.restrictedBehaviour.empathy";
                 }
                 else if(actorModel.subStrain.label === "xenomorph"){
-                    message.influenceLabel = eval("eclipsephase.psiStrainLabels.enhancedBehaviour");
-                    message.influenceCopy = "ep2e.psi.effect." + psiLabel + "." + psiCopy; 
+                    message.influenceLabel = eclipsephase.psiStrainLabels.enhancedBehaviour;
+                    message.influenceCopy = "ep2e.psi.effect.enhancedBehaviour." + psiCopy;
                 }
                 else {
                     message.influenceLabel = eval("eclipsephase.psiStrainLabels." + psiLabel);
@@ -133,9 +145,10 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
                 message.influenceCopy = "ep2e.psi.effect.hallucination"
             }
         }
-        else{   
-            message.influenceLabel = eclipsephase.psiCustomLabels + "." + actorModel.strainInfluence.influence + result + ".label";
-            message.influenceCopy = actorModel.strainInfluence.influence + result + ".description";
+        else{
+            const customInfluence = actorModel.strainInfluence["influence" + result];
+            message.influenceLabel = eclipsephase.otherPsiLabels[customInfluence.label];
+            message.influenceCopy = customInfluence.description;
         }
 
         let actingPerson = game.i18n.localize("ep2e.roll.dialog.push.infectionInfluence");        
@@ -144,12 +157,7 @@ export async function rollPsiEffect(actorWhole, psiOwner, push, systemOptions){
 
     }
     
-    if (push && d6.total === 1){
-        physicalDamageRoll += "2d6";
-    }
-    else if (d6.total === 1 || push){
-        physicalDamageRoll = "1d6";
-    }
+    physicalDamageRoll = resolvePhysicalDamageFormula(push, d6.total === 1);
 
     if (physicalDamageRoll && actorWhole.type === "character"){
         

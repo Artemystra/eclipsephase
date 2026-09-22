@@ -15,6 +15,10 @@
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
     },
+    "enableShopSystem": {
+      "name": "Enable Shop System",
+      "hint": "Enables the Shop actor type. If deactivated, existing shops are hidden and new ones can't be created."
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -44,13 +48,14 @@
       "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
     },
     "superBrew": {
-      "name": "Diemen's Special Brew",
-      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+      "name": "Laph's Special Brew",
+      "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
   "TYPES.Actor.character" : "Player Character",
   "TYPES.Actor.npc" : "Non-Player Character",
   "TYPES.Actor.goon" : "Threat",
+  "TYPES.Actor.shop" : "Shop",
   "TYPES.Item.gear" : "Gear",
   "TYPES.Item.rangedWeapon" : "Ranged Weapon",
   "TYPES.Item.ccWeapon" : "Close Combat Weapon",
@@ -170,6 +175,11 @@
         "itemDeprecatedCopy": "<p><b>Morphflaws, Morphtraits, Flaws and Traits are no longer supported. Please create the new 'traits & flaws'-item instead!</b></p>",
         "itemDeprecatedInfo": "<i><p style='font-size: 11px;'><b>Information:</b>You will be delighted to learn, that the 'traits & flaws'-item can be set to be any type of trait or flaw you might need. Keeping you from adding these legacy traits might not save the world, but it will save yours once these items get deleted for good in a later version of this system.</p></i>"
       }
+    },
+    "actorDirectory": {
+      "showEgoPersona": "Show Ego Persona",
+      "showCurrentMorph": "Show Current Morph",
+      "showCurrentId": "Show Current ID"
     },
     "healthbar": {
       "tooltip": {
@@ -603,6 +613,8 @@
           "label": "Frame"
         },
         "durabilityLabel": "Durability",
+        "morphPointsLabel": "Morph Points",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "Movement",
           "speed": "Speed",
@@ -1613,7 +1625,8 @@
       "selectBody": {
         "header": "Select Body",
         "copy": "This item is bound to a body. Choose which one should receive it.",
-        "placeholder": "- Select Body -"
+        "placeholder": "- Select Body -",
+        "placeholderEgo": "- Select Ego -"
       },
       "reassignArmor": {
         "header": "Reassign Armor",
@@ -1719,7 +1732,7 @@
         "main": "<b>Armor update:</b> {count} Armor item(s) on <b style='color: var(--highlight);'>{actor}</b> got automatically moved to their Stash.",
         "sub": "Since Armor now belongs to a specific body instead of just sitting in your inventory. You'll find it under Stashed Armor (Gear tab) - use the Equip button next to it to assign it to a body anytime."
       },
-      "210": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Your Tokens are Vital now!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles a small fix to Prototype Tokens:</p><ul><li><b>Bar 1</b> now defaults to Physical Health for every actor type.</li><li><b>Bar 2</b> defaults to Mental Health, but only for Characters - NPCs don't get it automatically (set it by hand if you want it there too).</li><li><b>Display Bars</b> now defaults to \"Hovered by Anyone\" instead of \"Never Displayed\", so the bars are actually visible.</li></ul><p><b>Note:</b> this only updates each actor's Prototype Token. Tokens already placed on your scenes keep whatever they currently have - right-click a placed token &gt; Configure Token to apply the same defaults there by hand.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
+      "215": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Your Tokens are Vital now!<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles a small fix to Prototype Tokens:</p><ul><li><b>Bar 1</b> now defaults to Physical Health for every actor type.</li><li><b>Bar 2</b> defaults to Mental Health, but only for Characters - NPCs don't get it automatically (set it by hand if you want it there too).</li><li><b>Display Bars</b> now defaults to \"Hovered by Anyone\" instead of \"Never Displayed\", so the bars are actually visible.</li></ul><p><b>Note:</b> this only updates each actor's Prototype Token. Tokens already placed on your scenes keep whatever they currently have - right-click a placed token &gt; Configure Token to apply the same defaults there by hand.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>",
       "200": "<span class='resource-label' style='flex: 100%'><p style='font-size: 25px'>Getting Attached to Your Armor?<p/><p style='font-size: 11px'><b><i>IMPORTANT: At this point your data has not been updated nor changed. If you have not yet saved your world click the cancel button and create a backup to avoid any data loss during migration.</i></b><p/><p>This update bundles two changes:</p><ul><li><b>Armor is now body-bound</b>, just like Ware and Traits already were. Existing characters' Armor is still to be found in the inventory, but with an all new button to it: the Equip button on the right hand side, next to the +. From here on, Armor only counts while its body is actually sleeved (or jammed into), and you can equip a piece from there, or rebind an already-equipped piece to a different body, anytime.</li><li>Some older characters, NPCs and goons ended up with a blank (or wrong) Body Type on their active Morph, because a past migration never carried it over correctly, making their <b>Death Rating show up as NaN</b>. This migration repairs that where it can recover the missing data - if nothing usable could be found for a particular actor, nothing is changed on them and you'll want to double check that Morph's Body Type by hand.</li><li>All 135 Morphs, 15 Smart Animals, and 39 Vehicles/Drones in the compendium now carry their complete, book-accurate Frame, Ware, and Trait values (Gear and Weapons are still due for the same treatment).</li></ul><p>For the full list of everything that changed, check <a href='https://github.com/Artemystra/eclipsephase/releases/tag/v2.0'>GitHub</a>.</p><p><b>Also, this system only exists because some of you clearly enjoy suffering through my code as much as I enjoy writing it.</b><br>If you feel that way please consider<p/><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Writing something nice</div><a href='https://discordapp.com/users/186786554230996993' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #6d77f7; border: solid 2px #262e8a; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/discordLogo.png' style='max-height:25px; margin-right: 15px'/> Discord</div></a></div><div style='display: flex; align-items: center; justify-content: center; flex-wrap: wrap;'><div style='min-width: 100%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px'>Buying me a kofi</div><a href='https://ko-fi.com/diemen' style='text-decoration: none; color: #fff; min-width:50%'><div style='min-width: 50%; background-color: #00b9fe; border: solid 2px #0e698b; display: flex; align-items: center; justify-content: center; min-height: 50px; margin-bottom: 20px'><img src='systems/eclipsephase/resources/img/kofiLogo.png' style='max-height:25px; margin-right: 15px'/> Ko-fi</div></a></div></span>"
     },
     "systemMessage": {
@@ -1749,6 +1762,144 @@
         "itemRebound": "{name} rebound to {body}.",
         "unknownTraitType": "Unknown trait type. Please select at least one - ego or morph - to use this trait.",
         "enhancementsAdded": "{count} Enhancement(s) added to {body}."
+      }
+    },
+    "shop": {
+      "tabs": {
+        "shop": "Shop",
+        "settings": "Settings"
+      },
+      "filter": {
+        "placeholder": "Filter by item type..."
+      },
+      "dialog": {
+        "selectNetwork": {
+          "label": "Rep Network",
+          "placeholder": "- Select -",
+          "headline": "Choose Network"
+        },
+        "loyaltyDiscount": {
+          "label": "Discount",
+          "none": "No discount",
+          "option": "{levels} Tier ({percent}%)"
+        }
+      },
+      "placeholders": {
+        "shopName": "Shop Name",
+        "noItems": "This shop has no items yet."
+      },
+      "settings": {
+        "generalHeadline": "General",
+        "repHeadline": "Accepted Rep Networks",
+        "repDescription": "Which Rep networks this shop deals in - only these appear as payment options for buying, selling, or cashing in a Favor here.",
+        "acceptsSales": "Shop accepts sales",
+        "valuationHeadline": "Item Valuation",
+        "valuationDescription": "Maps each item's own cost tier to this shop's effective cost tier, Free through Rare. Rare gates behind Loyalty (if enabled) independent of price; Rep-Test difficulty and price are set separately below, in Difficulty Mapping.",
+        "costTierFree": "Free",
+        "difficultyMappingHeadline": "Difficulty Mapping",
+        "difficultyMappingDescription": "Remaps this shop's own effective cost tiers (set above in Item Valuation) onto the Favor tier used for Rep-Test difficulty and price - lets you make every Minor-tier item here roll or cost like Moderate, without touching which items are Minor in the first place. A Free item stays free unless its Trivial row is remapped here.",
+        "loyaltyHeadline": "Loyalty",
+        "loyaltyEnabled": "Track loyalty for this shop",
+        "loyaltyPerTierHeadline": "Loyalty per Tier",
+        "loyaltyPerTierDescription": "Buying an item or cashing in a Favor grants the buyer loyalty with this shop, scaled by the item's own cost type (not the shop's Rep-tier valuation). Selling never grants loyalty.",
+        "loyaltyRecordsHeadline": "Current Character Loyalty",
+        "loyaltyRecordsDescription": "A live list of every character's current standing at this shop - not a setting, just their tracked Loyalty value. Edit a value directly to correct it manually.",
+        "loyaltyRecordsEmpty": "This shop has no loyal customers yet.",
+        "loyaltyRecordDelete": "Delete this character's loyalty record",
+        "loyaltyRecordDeleteConfirm": "This will permanently delete this character's loyalty record with this shop.",
+        "loyaltyRecordAdd": "Add a character",
+        "loyaltyRecordAddTitle": "Add Character",
+        "loyaltyRecordAddHeadline": "Select a character to add to this shop's loyalty list.",
+        "loyaltyRecordAddWindowTitle": "Tamper with the Loyalty Board",
+        "loyaltyBarMaxHeadline": "Maximum Loyalty for this Shop",
+        "loyaltyBarMaxDescription": "The highest Loyalty value this shop tracks. The footer's color bar and marker are scaled against this number.",
+        "loyaltyBarHeadline": "Loyalty Bar Segments in %",
+        "loyaltyBarDescription": "Splits the bar into four percentage bands (Red/Orange/Yellow/Green). Together they can never exceed 100% of the Maximum Loyalty above.",
+        "loyaltyBarRed": "Red (T1)",
+        "loyaltyBarOrange": "Orange (T2)",
+        "loyaltyBarYellow": "Yellow (T3)",
+        "loyaltyBarGreen": "Green (T4)",
+        "sellLimitTimeframeHeadline": "Sell Limits per Timeframe",
+        "sellLimitsDescription": "Caps how much a character can sell to this shop in one transaction. Reaching a limit locks the character out of further sales here until a long rest, or until the Owner clears it below.",
+        "sellLimitMaxItems": "Max Items",
+        "sellLimitMaxRep": "Max Rep",
+        "sellLockoutsHeadline": "Locked-Out Characters",
+        "sellLockoutsEmpty": "No characters have hit the sell limits yet.",
+        "sellLockoutsDescription": "Characters currently locked out of selling here after reaching a Sell Limit above - clear a lockout to let them sell again before their next long rest.",
+        "sellLockoutClear": "Clear this character's lockout",
+                "loyaltyBuyDiscountHeadline": "Buy Discount",
+        "loyaltyBuyDiscountDescription": "Percentage discount on Buy, redeemable per Loyalty Tier - spending it drops standing back down by that many Tiers.",
+        "loyaltyBuyDiscountLevel2": "Tier 2 (%)",
+        "loyaltyBuyDiscountLevel3": "Tier 3 (%)",
+        "loyaltyBuyDiscountLevel4": "Tier 4 (%)",
+"rateOverridesHeadline": "Cost Overrides",
+        "generalOverridesHeadline": "General Overrides",
+        "generalOverridesDescription": "Sets the shop's baseline prices. Lets you quickly make this shop more expensive or cheaper across the board.",
+        "morphPointOverridesHeadline": "Morph Point Overrides",
+        "morphPointOverridesDescription": "This option only exists in Homebrew, since Morphs normally aren't purchasable and are instead accounted for via a different point system. Each value is the Morph Points threshold where that tier begins - lower point costs fall through to a lower tier automatically. If two thresholds are set to the same value, the higher tier wins.",
+        "specificOverridesHeadline": "Rep-Specific Overrides",
+        "specificOverridesDescription": "For finer-grained shop tuning - for example, if certain Rep is less welcome in some places than others. Any slot left blank falls back to the base value, or the General Override if one is set.",
+        "rateTableBuysFor": "Buys For",
+        "rateTableRollBonus": "Roll Bonus",
+        "rateTableSellsFor": "Sells For"
+      },
+      "inventory": {
+        "headline": "Inventory"
+      },
+      "acceptedRep": {
+        "label": "Shop Accepts:",
+        "loyaltyLabel": "Shop Loyalty:",
+        "noCharacter": "You have no active character. Choose an owned character and come back here."
+      },
+      "purchase": {
+        "confirm": "Buy",
+        "trade": "Trade",
+        "favorConfirm": "Cash in Favor",
+        "required": "Required favor:",
+        "flatBuyCost": "Buy cost:",
+        "netCost": "Net cost:",
+        "otherwiseLabel": "Other:",
+        "sellBonus": "Sell Roll Bonus:",
+        "sellForRep": "Sell for Rep:",
+        "repBenefitsHeadline": "Rep Benefits",
+        "burnRep": "Burn Rep:",
+        "burnRepHint": "Bonus: Burned Rep x 2<br>(Max. 15 Rep)",
+        "sellBonusModifier": "Sell Bonus",
+        "burnBonusModifier": "Burned Rep",
+                "favorDifficultyLockedHint": "Automatically set by this shop's Loyalty standing and how many items you're calling in at once.",
+        "successMessage": "{character} bought {items} from {shop} with {network} Rep.",
+        "favorMessage": "{character} cashed in a favor to get {items}.",
+        "favorBurnMessage": "{character} cashed in a favor to get {items} and burned {network} Rep in the process.",
+        "tradeInMessage": "{character} bought {items}, trading in {soldCount} item(s) worth {network} Rep toward this purchase.",
+        "tradeReceived": "Received",
+        "tradeSpend": "Spent"
+      },
+      "toSell": {
+        "headline": "To Sell",
+        "empty": "Drag items here from your own sheet to sell them to this shop.",
+        "confirm": "Sell",
+        "remove": "Remove from To Sell",
+        "confirmMessage": "You are about to sell the staged item(s) to this shop.",
+        "ownerWarning": "You own this shop. Are you sure you want to sell something to yourself?",
+        "repGainMessage": "{character} gained {network} Rep from selling."
+      },
+      "warnings": {
+        "systemDisabled": "The shop system is currently disabled - you can activate it via Eclipse Phase's system settings.",
+        "sellFailed": "The sale could not be completed.",
+        "purchaseFailed": "The purchase could not be completed.",
+        "purchaseItemsGone": "Some of the purchased items are no longer available.",
+        "favorLimitExhausted": "No favor of this tier is available right now - the weekly or story-arc limit is already used up.",
+        "notEnoughRepToBurn": "Not enough Rep available to burn that much - reduced to what's available.",
+        "notEnoughRepToBuy": "Not enough Rep available to buy this.",
+        "shopClosed": "This shop is currently closed.",
+        "salesClosed": "This shop is currently closed for sales.",
+        "differentActingCharacter": "You're already selling items for another character - finish or remove those first.",
+        "noEligibleCharacters": "No eligible characters left to add - every player-linked character already has a loyalty record here.",
+                "sellLockedOut": "You've sold too much to this shop recently. Rest to be welcomed back, or ask the Owner to lift the restriction.",
+        "sellLimitExceeded": "That's too much for one transaction here. Reduce your selection and try again.",
+        "rareLoyaltyRequired": "This item is Rare - you need at least Orange Loyalty standing with this shop to acquire it.",
+        "favorBatchTooLarge": "That's too many items to call in as one favor here - reduce your selection.",
+"morphsBlocked": "Morphs can't be purchased with Rep. They're acquired via the mission's Morph Points instead."
       }
     }
   }

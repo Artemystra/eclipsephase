@@ -15,6 +15,10 @@
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
     },
+    "enableShopSystem": {
+      "name": "Ativar Sistema de Loja",
+      "hint": "Ativa o tipo de ator Loja. Se desativado, lojas existentes ficam ocultas e novas não podem ser criadas."
+    },
     "gmMenu": {
       "name": "Enable GM Menu",
       "hint": "Shows special GM menu on the lefthand side of the game canvas (marked in blue)"
@@ -44,13 +48,14 @@
       "hint": "Check this option to show the skill-modification-dialog per default when clicking any roll icon on the character sheet"
     },
     "superBrew": {
-      "name": "Diemen's Special Brew",
-      "hint": "Check this to activate Diemen's special homebrew rules. WARNING: NOT THE REAL THING!"
+      "name": "Laph's Special Brew",
+      "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
   "TYPES.Actor.character": "Personagem do Jogador",
   "TYPES.Actor.npc": "Personagem Não Jogador",
   "TYPES.Actor.goon": "Ameaça",
+  "TYPES.Actor.shop": "Loja",
   "TYPES.Item.gear": "Equipamento",
   "TYPES.Item.rangedWeapon": "Arma de Distância",
   "TYPES.Item.ccWeapon": "Arma de Combate Próximo",
@@ -151,6 +156,11 @@
         "sleeveCopyGeneral": "<b>Warning:</b>You are about to sleeve into a new morph",
         "sleeveAdditionalInfo": "<i><p style='font-size: 11px;'>All calculations and tests will be made automatically. New Ware & Traits will be automatically added to your sleeved morph.</p></i>"
       }
+    },
+    "actorDirectory": {
+      "showEgoPersona": "Mostrar Persona do Ego",
+      "showCurrentMorph": "Mostrar Morph Atual",
+      "showCurrentId": "Mostrar ID Atual"
     },
     "healthbar": {
       "tooltip": {
@@ -583,6 +593,8 @@
           "label": "Chassi"
         },
         "durabilityLabel": "Durabilidade",
+        "morphPointsLabel": "Pontos de Morfo",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "Movimento",
           "speed": "Velocidade",
@@ -1555,7 +1567,8 @@
       "selectBody": {
         "header": "Selecionar Corpo",
         "copy": "Este item está vinculado a um corpo. Escolha qual deve recebê-lo.",
-        "placeholder": "- Selecionar Corpo -"
+        "placeholder": "- Selecionar Corpo -",
+        "placeholderEgo": "- Selecionar Ego -"
       },
       "reassignArmor": {
         "header": "Reatribuir Armadura",
@@ -1677,6 +1690,144 @@
         "itemRebound": "{name} reatribuída a {body}.",
         "unknownTraitType": "Tipo de Trait desconhecido. Selecione pelo menos uma opção - ego ou morfo - para usar este trait.",
         "enhancementsAdded": "{count} aprimoramento(s) adicionado(s) a {body}."
+      }
+    },
+    "shop": {
+      "tabs": {
+        "shop": "Loja",
+        "settings": "Configurações"
+      },
+      "filter": {
+        "placeholder": "Filtrar por tipo de item..."
+      },
+      "dialog": {
+        "selectNetwork": {
+          "label": "Rede de Reputação",
+          "placeholder": "- Selecionar -",
+          "headline": "Escolher rede"
+        },
+        "loyaltyDiscount": {
+          "label": "Desconto",
+          "none": "Sem desconto",
+          "option": "{levels} Nível(is) ({percent}%)"
+        }
+      },
+      "placeholders": {
+        "shopName": "Nome da Loja",
+        "noItems": "Esta loja ainda não tem itens."
+      },
+      "settings": {
+        "generalHeadline": "Geral",
+        "repHeadline": "Redes de Rep Aceitas",
+        "repDescription": "Quais redes de Rep esta loja aceita - apenas estas aparecem como opção de pagamento ao comprar, vender ou resgatar um Favor aqui.",
+        "acceptsSales": "Loja aceita vendas",
+        "valuationHeadline": "Avaliação de Itens",
+        "valuationDescription": "Mapeia o próprio nível de custo de cada item para o nível de custo efetivo desta loja, de Free a Rare. Rare é bloqueado pela Lealdade (se ativada), independentemente do preço; a dificuldade do Teste de Rep e o preço são definidos separadamente abaixo, em Mapeamento de Dificuldade.",
+        "costTierFree": "Grátis",
+        "difficultyMappingHeadline": "Mapeamento de Dificuldade",
+        "difficultyMappingDescription": "Remapeia os próprios níveis de custo efetivos desta loja (definidos acima em Avaliação de Itens) para o Nível de Favor usado na dificuldade do Teste de Rep e no preço - permite fazer com que todo item de nível Minor aqui role ou custe como Moderate, sem alterar quais itens são Minor. Um item Free permanece grátis, a menos que sua linha Trivial seja remapeada aqui.",
+        "loyaltyHeadline": "Lealdade",
+        "loyaltyEnabled": "Rastrear lealdade para esta loja",
+        "loyaltyPerTierHeadline": "Lealdade por Nível",
+        "loyaltyPerTierDescription": "Comprar um item ou resgatar um Favor concede ao comprador lealdade com esta loja, escalada de acordo com o próprio tipo de custo do item (não a avaliação por nível de Rep da loja). Vender nunca concede lealdade.",
+        "loyaltyRecordsHeadline": "Lealdade Atual dos Personagens",
+        "loyaltyRecordsDescription": "Uma lista em tempo real da lealdade atual de cada personagem nesta loja - não é uma configuração, apenas o valor de Lealdade rastreado. Edite um valor diretamente para corrigi-lo manualmente.",
+        "loyaltyRecordsEmpty": "Esta loja ainda não tem clientes fiéis.",
+        "loyaltyRecordDelete": "Excluir o registro de lealdade deste personagem",
+        "loyaltyRecordDeleteConfirm": "Isso excluirá permanentemente o registro de lealdade deste personagem com esta loja.",
+        "loyaltyRecordAdd": "Adicionar personagem",
+        "loyaltyRecordAddTitle": "Adicionar Personagem",
+        "loyaltyRecordAddHeadline": "Selecione um personagem para adicionar à lista de lealdade desta loja.",
+        "loyaltyRecordAddWindowTitle": "Mexendo no Quadro de Lealdade",
+        "loyaltyBarMaxHeadline": "Lealdade Máxima para esta Loja",
+        "loyaltyBarMaxDescription": "O valor máximo de Lealdade que esta loja rastreia. A barra colorida e o marcador do rodapé são escalados de acordo com este número.",
+        "loyaltyBarHeadline": "Segmentos da Barra de Lealdade em %",
+        "loyaltyBarDescription": "Divide a barra em quatro faixas percentuais (Vermelho/Laranja/Amarelo/Verde). Juntas, elas nunca podem ultrapassar 100% da Lealdade Máxima acima.",
+        "loyaltyBarRed": "Vermelho (T1)",
+        "loyaltyBarOrange": "Laranja (T2)",
+        "loyaltyBarYellow": "Amarelo (T3)",
+        "loyaltyBarGreen": "Verde (T4)",
+        "sellLimitTimeframeHeadline": "Limites de Venda por Período",
+        "sellLimitsDescription": "Limita quanto um personagem pode vender a esta loja em uma única transação. Ao atingir um limite, o personagem fica impedido de vender mais aqui até um descanso longo, ou até que o Proprietário remova a restrição abaixo.",
+        "sellLimitMaxItems": "Máx. Itens",
+        "sellLimitMaxRep": "Máx. Rep",
+        "sellLockoutsHeadline": "Personagens Bloqueados",
+        "sellLockoutsEmpty": "Nenhum personagem atingiu os limites de venda ainda.",
+        "sellLockoutsDescription": "Personagens atualmente impedidos de vender aqui por terem atingido um Limite de Venda acima - remova um bloqueio para que possam vender novamente antes do próximo descanso longo.",
+        "sellLockoutClear": "Remover o bloqueio deste personagem",
+                "loyaltyBuyDiscountHeadline": "Desconto de Compra",
+        "loyaltyBuyDiscountDescription": "Desconto percentual ao Comprar, resgatável por Nível de Lealdade - resgatá-lo reduz a Lealdade exatamente por essa quantidade de Níveis.",
+        "loyaltyBuyDiscountLevel2": "Nível 2 (%)",
+        "loyaltyBuyDiscountLevel3": "Nível 3 (%)",
+        "loyaltyBuyDiscountLevel4": "Nível 4 (%)",
+"rateOverridesHeadline": "Substituições de Custo",
+        "generalOverridesHeadline": "Substituições Gerais",
+        "generalOverridesDescription": "Define os preços base da loja. Permite tornar esta loja mais cara ou mais barata de forma rápida e geral.",
+        "morphPointOverridesHeadline": "Substituições de Pontos de Morfo",
+        "morphPointOverridesDescription": "Esta opção só existe no Homebrew, já que Morfos normalmente não podem ser comprados e são contabilizados através de outro sistema de pontos. Cada valor é o limite de Pontos de Morfo a partir do qual esse nível começa - custos menores caem automaticamente para o nível inferior. Se dois limites forem definidos com o mesmo valor, o nível mais alto vence.",
+        "specificOverridesHeadline": "Substituições Específicas por Reputação",
+        "specificOverridesDescription": "Para um ajuste mais fino da loja - por exemplo, se determinada Reputação é menos bem-vinda em alguns lugares do que em outros. Qualquer campo deixado em branco recorre ao valor base, ou à Substituição Geral, se houver uma definida.",
+        "rateTableBuysFor": "Compra por",
+        "rateTableRollBonus": "Bônus de Rolagem",
+        "rateTableSellsFor": "Vende por"
+      },
+      "inventory": {
+        "headline": "Inventário"
+      },
+      "acceptedRep": {
+        "label": "Shop Accepts:",
+        "loyaltyLabel": "Lealdade da Loja:",
+        "noCharacter": "Você não tem um personagem ativo. Escolha um personagem seu e volte aqui."
+      },
+      "purchase": {
+        "confirm": "Comprar",
+        "trade": "Trocar",
+        "favorConfirm": "Resgatar Favor",
+        "required": "Favor necessário:",
+        "flatBuyCost": "Custo de compra:",
+        "netCost": "Custo líquido:",
+        "otherwiseLabel": "Caso contrário:",
+        "sellBonus": "Bônus de Rolagem de Venda:",
+        "sellForRep": "Vender por Reputação:",
+        "repBenefitsHeadline": "Benefícios de Reputação",
+        "burnRep": "Queimar Reputação:",
+        "burnRepHint": "Bônus: Reputação queimada x 2<br>(Máx. 15 Reputação)",
+        "sellBonusModifier": "Bônus de venda",
+        "burnBonusModifier": "Reputação queimada",
+                "favorDifficultyLockedHint": "Definido automaticamente pela Lealdade nesta loja e por quantos itens você está pedindo de uma vez.",
+        "successMessage": "{character} comprou {items} de {shop} com Reputação {network}.",
+        "favorMessage": "{character} cobrou um favor para conseguir {items}.",
+        "favorBurnMessage": "{character} cobrou um favor para conseguir {items} e queimou Reputação {network} no processo.",
+        "tradeInMessage": "{character} comprou {items}, dando {soldCount} item(ns) por Reputação {network} como parte de pagamento desta compra.",
+        "tradeReceived": "Recebido",
+        "tradeSpend": "Gasto"
+      },
+      "toSell": {
+        "headline": "Para Vender",
+        "empty": "Arraste itens da sua própria ficha para cá para vendê-los a esta loja.",
+        "confirm": "Vender",
+        "remove": "Remover de Para Vender",
+        "confirmMessage": "Você está prestes a vender os itens em espera para esta loja.",
+        "ownerWarning": "Esta loja é sua. Tem certeza de que quer vender algo para si mesmo?",
+        "repGainMessage": "{character} ganhou Reputação {network} ao vender."
+      },
+      "warnings": {
+        "systemDisabled": "O sistema de loja está desativado no momento - você pode ativá-lo nas configurações do sistema Eclipse Phase.",
+        "sellFailed": "Não foi possível concluir a venda.",
+        "purchaseFailed": "Não foi possível concluir a compra.",
+        "purchaseItemsGone": "Alguns dos itens comprados não estão mais disponíveis.",
+        "favorLimitExhausted": "Nenhum favor deste nível está disponível agora - o limite semanal ou de arco de história já foi usado.",
+        "notEnoughRepToBurn": "Não há Reputação suficiente disponível para queimar essa quantidade - reduzido ao disponível.",
+        "notEnoughRepToBuy": "Não há Reputação suficiente disponível para comprar isto.",
+        "shopClosed": "Esta loja está fechada no momento.",
+        "salesClosed": "Esta loja está atualmente fechada para vendas.",
+        "differentActingCharacter": "Você já está vendendo itens para outro personagem - termine ou remova esses itens primeiro.",
+        "noEligibleCharacters": "Não há mais personagens elegíveis para adicionar - todo personagem vinculado a um jogador já possui um registro de lealdade aqui.",
+                "sellLockedOut": "Você vendeu demais para esta loja recentemente. Descanse para ser bem-vindo novamente, ou peça ao Proprietário para remover a restrição.",
+        "sellLimitExceeded": "Isso é demais para uma única transação aqui. Reduza sua seleção e tente novamente.",
+        "rareLoyaltyRequired": "Este item é Raro - você precisa de pelo menos nível de Lealdade Laranja com esta loja para adquiri-lo.",
+        "favorBatchTooLarge": "São itens demais para pedir como um único favor aqui - reduza sua seleção.",
+"morphsBlocked": "Morfos não podem ser comprados com Reputação. Eles são adquiridos através dos Pontos de Morfo da missão."
       }
     }
   }

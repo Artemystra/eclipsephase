@@ -9,6 +9,7 @@
     "customToken": null,
     "type": "synth",
     "dur": 65,
+    "morphPoints": 9,
     "insight": 1,
     "moxie": 0,
     "vigor": 4,

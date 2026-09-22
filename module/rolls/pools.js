@@ -2,6 +2,7 @@ import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
 import { prepareRecipients } from "../common/general-sheet-functions.js";
 import { prepareWeapon } from "./damage.js";
+import { completeShopPurchase, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 
@@ -56,6 +57,33 @@ export async function usePoolFromChat(data){
             data.rollmode = dataset.rollmode
 
             await prepareWeapon(false, result, data)
+        }
+        else if(rolledFrom === "shopPurchase" && dataset.resultclass === "success"){
+            const bodyBindings = {};
+            (dataset.bodybindings || "").split(",").filter(Boolean).forEach(pair => {
+                const [id, boundTo] = pair.split(":");
+                bodyBindings[id] = boundTo;
+            });
+            const boughtItems = await completeShopPurchase({
+                shopUuid: dataset.shopuuid,
+                buyerActorId: dataset.buyeractorid,
+                itemIds: dataset.itemids,
+                network: dataset.network,
+                favorTier: dataset.requiredtier,
+                bodyBindings
+            })
+            if (boughtItems.length) {
+                // Only fires for shopPurchase rolls (Cash in Favor, Buy has no roll to rescue) -
+                // the favor-tier box is right here too, mirroring _useGefallen()'s success path.
+                const burnAmount = Number(dataset.burnamount) || 0;
+                const tierLabel = `<span style="font-size: 16px;">${game.i18n.localize(eclipsephase.favorTiers[dataset.requiredtier])}</span>`;
+                const boxContent = burnAmount > 0
+                    ? `${tierLabel} + ${shopRepIconHtml(dataset.network)} ${burnAmount}`
+                    : `${shopRepIconHtml(dataset.network)} ${tierLabel}`;
+                await postShopChatMessage(actor, burnAmount > 0 ? "ep2e.shop.purchase.favorBurnMessage" : "ep2e.shop.purchase.favorMessage",
+                    { character: actor.name, items: boughtItems.map(item => item.name).join(", "), network: dataset.network.replace("-rep", "") },
+                    boxContent);
+            }
         }
     }
 

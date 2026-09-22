@@ -1,0 +1,71 @@
+{{!-- Shop-wide footer, sibling of .shop-sheet-body so it stays visible across every tab
+  (Owner's Shop/Einstellungen tabs and Observer's single view alike) - see EPshopSheet.js
+  _getAcceptedRepDisplay()/_getActingCharacter(). --}}
+{{#if acceptedRep}}
+<footer class="shop-footer">
+    {{!-- Hiding this on the Settings tab is done in CSS (.shop-sheet-body:has(...)), not here -
+         clicking a top-level tab is a pure DOM class toggle in Foundry core, it never re-renders
+         this template, so a Handlebars condition on tabGroups.primary would only ever reflect
+         whichever tab was active at the last full render. --}}
+    {{#if cartState.visible}}
+        <div class="shop-cart-bar">
+            <div class="shop-cart-column">
+                {{#if cartState.showAction}}
+                    {{#if hasFlatBuyCost}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.flatBuyCost"}} {{{flatBuyCost}}}</p>{{/if}}
+                    {{#if hasSellForRep}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellForRep"}} +{{{sellForRep}}}</p>{{/if}}
+                    <a class="shop-cart-action {{#if cartState.actionDisabled}}disabled{{/if}}">
+                        {{#if (eq cartState.action "trade")}}
+                            <i class="fas fa-exchange-alt awesomeIcon shop-cart-icon"></i>{{localize "ep2e.shop.purchase.trade"}}
+                        {{else if (eq cartState.action "buy")}}
+                            <i class="far fa-money-bill awesomeIcon shop-cart-icon"></i>{{localize "ep2e.shop.purchase.confirm"}}
+                        {{else}}
+                            <i class="far fa-money-bill awesomeIcon shop-cart-icon"></i>{{localize "ep2e.shop.toSell.confirm"}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </div>
+            <div class="shop-cart-column">
+                {{#if cartState.showFavor}}
+                    {{#if requiredFavorTierLabel}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.required"}} {{requiredFavorTierLabel}}</p>{{/if}}
+                    {{#if hasSellBonus}}<p class="shop-purchase-hint">{{localize "ep2e.shop.purchase.sellBonus"}} +{{{sellBonus}}}</p>{{/if}}
+                    {{!-- <a>, not <button> - core auto-disables buttons when !isEditable, locking Observer out.
+                         Rep network (and, for Cash in Favor, the Rep-Burn amount) is chosen inside the
+                         confirm dialog, not here. --}}
+                    <a class="shop-purchase-favor {{#if cartState.favorDisabled}}disabled{{/if}}"><img src="systems/eclipsephase/resources/icons/d100.svg" class="shop-cart-icon"/>{{localize "ep2e.shop.purchase.favorConfirm"}}</a>
+                {{/if}}
+            </div>
+        </div>
+    {{/if}}
+
+    {{#if (eq acceptedRep.mode "closed")}}
+        <p class="shop-footer-notice">{{localize "ep2e.shop.warnings.shopClosed"}}</p>
+    {{else if (eq acceptedRep.mode "noCharacter")}}
+        <p class="shop-footer-notice">{{localize "ep2e.shop.acceptedRep.noCharacter"}}</p>
+    {{else}}
+        <div class="shop-footer-row">
+            {{#if acceptedRep.character}}<div class="shop-acting-character">{{acceptedRep.character}}</div>{{/if}}
+            {{#if loyaltyBar}}
+                <div class="shop-loyalty-bar-group">
+                    <span>{{localize "ep2e.shop.acceptedRep.loyaltyLabel"}}</span>
+                    <div class="shop-loyalty-bar-wrapper" title="{{loyaltyBar.value}} / {{loyaltyBar.max}}">
+                        <div class="shop-loyalty-bar">
+                            {{#each loyaltyBar.segments as |segment|}}
+                                <div class="shop-loyalty-bar-segment shop-loyalty-bar-{{segment.color}}" style="flex-grow: {{segment.weight}};"></div>
+                            {{/each}}
+                        </div>
+                        <div class="shop-loyalty-bar-marker" style="left: {{loyaltyBar.markerPercent}}%;"></div>
+                    </div>
+                </div>
+            {{/if}}
+            <div class="shop-accepted-rep-group">
+                <span class="shop-accepted-rep-label">{{localize "ep2e.shop.acceptedRep.label"}}</span>
+                <div class="shop-accepted-rep-list">
+                    {{#each acceptedRep.entries as |entry|}}
+                        <span class="shop-accepted-rep-entry" title="{{entry.title}}"><img src="{{entry.icon}}" class="shop-rep-icon"/><span class="shop-accepted-rep-value">{{entry.value}}</span></span>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    {{/if}}
+</footer>
+{{/if}}

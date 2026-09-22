@@ -15,6 +15,10 @@
       "name": "Keine Editiereinschränkungen",
       "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Rast mit ein."
     },
+    "enableShopSystem": {
+      "name": "Shop-System aktivieren",
+      "hint": "Aktiviert den Shop-Actor-Typ. Wenn deaktiviert, werden bestehende Shops versteckt und es können keine neuen erstellt werden."
+    },
     "gmMenu": {
       "name": "SL Menü",
       "hint": "Zeigt das SL-Menü auf der linken Seite (nur für Spielleiter:innen)"
@@ -44,13 +48,14 @@
       "hint": "Zeigt standardmässig einen Würfeldialog, wenn ein Skill geürfelt wird."
     },
     "superBrew": {
-      "name": "Diemen's Spezialbräu",
-      "hint": "Macht Dinge die Diemen in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
+      "name": "Laphs Spezialbräu",
+      "hint": "Macht Dinge die Laph in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
     }
   },
   "TYPES.Actor.character" : "Spielercharakter",
   "TYPES.Actor.npc" : "Nichtspielercharakter",
   "TYPES.Actor.goon" : "Bedrohung",
+  "TYPES.Actor.shop" : "Shop",
   "TYPES.Item.gear" : "Spezialausrüstung",
   "TYPES.Item.rangedWeapon" : "Fernkampfwaffe",
   "TYPES.Item.ccWeapon" : "Nahkampfwaffe",
@@ -159,6 +164,11 @@
         "needPuppetSockToJam": "Benötigt einen Puppet Sock, um zu jammen",
         "unjamCopyGeneral": "<b>Vorsicht:</b>Du trennst dich von diesem Fernkörper und kehrst in deinen eigenen Körper zurück."
       }
+    },
+    "actorDirectory": {
+      "showEgoPersona": "Ego-Persona anzeigen",
+      "showCurrentMorph": "Aktuellen Morph anzeigen",
+      "showCurrentId": "Aktuelle ID anzeigen"
     },
     "healthbar": {
       "tooltip": {
@@ -591,6 +601,8 @@
           "label": "Frame"
         },
         "durabilityLabel": "Ausdauer",
+        "morphPointsLabel": "Morph-Points",
+        "morphPointsShortLabel": "MP",
         "movement": {
           "label": "Fortbewegung",
           "speed": "Geschw.",
@@ -1586,7 +1598,8 @@
       "selectBody": {
         "header": "Körper Wählen",
         "copy": "Dieses Item ist an einen Körper gebunden. Wähle aus, welcher es erhalten soll.",
-        "placeholder": "- Körper Wählen -"
+        "placeholder": "- Körper Wählen -",
+        "placeholderEgo": "- Ego Wählen -"
       },
       "reassignArmor": {
         "header": "Rüstung Neu Zuweisen",
@@ -1701,6 +1714,144 @@
         "itemRebound": "{name} wurde {body} zugewiesen.",
         "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
         "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
+      }
+    },
+    "shop": {
+      "tabs": {
+        "shop": "Shop",
+        "settings": "Einstellungen"
+      },
+      "filter": {
+        "placeholder": "Nach Itemart filtern..."
+      },
+      "dialog": {
+        "selectNetwork": {
+          "label": "Rep-Netzwerk",
+          "placeholder": "- Wählen -",
+          "headline": "Netzwerk wählen"
+        },
+        "loyaltyDiscount": {
+          "label": "Rabatt",
+          "none": "Kein Rabatt",
+          "option": "{levels} Stufe(n) ({percent}%)"
+        }
+      },
+      "placeholders": {
+        "shopName": "Shop-Name",
+        "noItems": "Dieser Shop hat noch keine Items."
+      },
+      "settings": {
+        "generalHeadline": "Allgemein",
+        "repHeadline": "Akzeptierte Rep-Netzwerke",
+        "repDescription": "Welche Rep-Netzwerke dieser Shop akzeptiert - nur diese stehen beim Kaufen, Verkaufen oder Einlösen eines Gefallens hier als Zahlungsoption zur Verfügung.",
+        "acceptsSales": "Shop nimmt Verkäufe entgegen",
+        "valuationHeadline": "Item-Bewertung",
+        "valuationDescription": "Ordnet jeder eigenen Item-Kostenstufe die effektive Kostenstufe dieses Shops zu, Free bis Rare. Rare sperrt bei aktivierter Loyalty unabhängig vom Preis; Schwierigkeit des Rep-Tests und Preis werden separat weiter unten unter Difficulty Mapping festgelegt.",
+        "costTierFree": "Frei",
+        "difficultyMappingHeadline": "Schwierigkeits-Zuordnung",
+        "difficultyMappingDescription": "Ordnet die effektiven Kostenstufen dieses Shops (oben unter Item-Bewertung festgelegt) der Favor-Stufe zu, die für die Schwierigkeit des Rep-Tests und den Preis verwendet wird - so kannst du z.B. jedes Minor-Item hier wie Moderate würfeln oder kosten lassen, ohne dass sich ändert, welche Items als Minor gelten. Ein Free-Item bleibt frei, solange seine Trivial-Zeile hier nicht umgemappt wird.",
+        "loyaltyHeadline": "Loyalität",
+        "loyaltyEnabled": "Loyalität für diesen Shop verfolgen",
+        "loyaltyPerTierHeadline": "Loyalität pro Stufe",
+        "loyaltyPerTierDescription": "Der Kauf eines Items oder das Einlösen eines Gefallens gewährt dem Käufer Loyalität bei diesem Shop, gestaffelt nach der eigenen Kostenstufe des Items (nicht nach der Rep-Stufen-Bewertung des Shops). Verkaufen gewährt niemals Loyalität.",
+        "loyaltyRecordsHeadline": "Aktuelle Charakter-Loyalität",
+        "loyaltyRecordsDescription": "Eine Live-Liste des aktuellen Loyalitätsstands jedes Charakters bei diesem Shop - keine Einstellung, nur der verfolgte Wert. Ein Wert kann direkt bearbeitet werden, um ihn manuell zu korrigieren.",
+        "loyaltyRecordsEmpty": "Dieser Shop hat noch keine treuen Kunden.",
+        "loyaltyRecordDelete": "Loyalitätseintrag dieses Charakters löschen",
+        "loyaltyRecordDeleteConfirm": "Dies löscht den Loyalitätseintrag dieses Charakters bei diesem Shop dauerhaft.",
+        "loyaltyRecordAdd": "Charakter hinzufügen",
+        "loyaltyRecordAddTitle": "Charakter hinzufügen",
+        "loyaltyRecordAddHeadline": "Wähle einen Charakter aus, der zur Loyalitäts-Liste dieses Shops hinzugefügt werden soll.",
+        "loyaltyRecordAddWindowTitle": "Am Loyalitäts-Brett herumpfuschen",
+        "loyaltyBarMaxHeadline": "Maximale Loyalität für diesen Shop",
+        "loyaltyBarMaxDescription": "Der höchste Loyalitätswert, den dieser Shop erfasst. Der Farbbalken und die Markierung im Footer werden anhand dieser Zahl skaliert.",
+        "loyaltyBarHeadline": "Loyalitätsbalken-Segmente in %",
+        "loyaltyBarDescription": "Teilt den Balken in vier prozentuale Bereiche auf (Rot/Orange/Gelb/Grün). Zusammen dürfen sie nie mehr als 100% der oben angegebenen maximalen Loyalität ergeben.",
+        "loyaltyBarRed": "Rot (T1)",
+        "loyaltyBarOrange": "Orange (T2)",
+        "loyaltyBarYellow": "Gelb (T3)",
+        "loyaltyBarGreen": "Grün (T4)",
+        "sellLimitTimeframeHeadline": "Verkaufslimits pro Zeitraum",
+        "sellLimitsDescription": "Begrenzt, wie viel ein Charakter in einer einzigen Transaktion an diesen Shop verkaufen kann. Wird ein Limit erreicht, ist der Charakter von weiteren Verkäufen hier gesperrt, bis eine lange Ruhe stattfindet oder der Owner die Sperre unten aufhebt.",
+        "sellLimitMaxItems": "Max. Items",
+        "sellLimitMaxRep": "Max. Rep",
+        "sellLockoutsHeadline": "Gesperrte Charaktere",
+        "sellLockoutsEmpty": "Noch kein Charakter hat die Verkaufslimits erreicht.",
+        "sellLockoutsDescription": "Charaktere, die aktuell vom Verkaufen hier gesperrt sind, weil sie ein Verkaufslimit oben erreicht haben - eine Sperre aufheben, damit sie schon vor der nächsten langen Ruhe wieder verkaufen können.",
+        "sellLockoutClear": "Sperre dieses Charakters aufheben",
+                "loyaltyBuyDiscountHeadline": "Kauf-Rabatt",
+        "loyaltyBuyDiscountDescription": "Prozentualer Rabatt beim Kaufen, einlösbar pro Loyalitäts-Stufe - das Einlösen senkt die Loyalität um genau so viele Stufen wieder ab.",
+        "loyaltyBuyDiscountLevel2": "Stufe 2 (%)",
+        "loyaltyBuyDiscountLevel3": "Stufe 3 (%)",
+        "loyaltyBuyDiscountLevel4": "Stufe 4 (%)",
+"rateOverridesHeadline": "Preis-Overrides",
+        "generalOverridesHeadline": "Allgemeine Overrides",
+        "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
+        "morphPointOverridesHeadline": "Morph-Point-Overrides",
+        "morphPointOverridesDescription": "Diese Option existiert nur im Homebrew, da Morphs normalerweise nicht kaufbar sind und stattdessen über ein anderes Punktesystem verrechnet werden. Jeder Wert ist der Morph-Points-Schwellenwert, ab dem diese Stufe beginnt - niedrigere Punktkosten fallen automatisch auf die nächstniedrigere Stufe zurück. Sind zwei Schwellenwerte gleich gesetzt, gewinnt die höhere Stufe.",
+        "specificOverridesHeadline": "Rep-spezifische Overrides",
+        "specificOverridesDescription": "Für eine feingranularere Einstellung von Shops - zum Beispiel, wenn es Orte gibt, an denen bestimmtes Rep weniger gern gesehen ist als anderes. Alle nicht ausgefüllten Felder fallen auf den Grundwert oder den allgemeinen Override (falls vorhanden) zurück.",
+        "rateTableBuysFor": "Kauft für",
+        "rateTableRollBonus": "Wurf-Bonus",
+        "rateTableSellsFor": "Verkauft für"
+      },
+      "inventory": {
+        "headline": "Inventar"
+      },
+      "acceptedRep": {
+        "label": "Shop Accepts:",
+        "loyaltyLabel": "Shop-Loyalität:",
+        "noCharacter": "Du hast keinen aktiven Charakter. Wähle einen dir gehörenden Charakter und komm dann zurück."
+      },
+      "purchase": {
+        "confirm": "Kaufen",
+        "trade": "Tauschen",
+        "favorConfirm": "Gefallen einlösen",
+        "required": "Benötigter Gefallen:",
+        "flatBuyCost": "Kaufkosten:",
+        "netCost": "Nettokosten:",
+        "otherwiseLabel": "Sonst:",
+        "sellBonus": "Verkaufswurf-Bonus:",
+        "sellForRep": "Verkauf für Rep:",
+        "repBenefitsHeadline": "Rep-Vorteile",
+        "burnRep": "Rep verbrennen:",
+        "burnRepHint": "Bonus: Verbrannter Rep x 2<br>(Max. 15 Rep)",
+        "sellBonusModifier": "Verkaufs-Bonus",
+        "burnBonusModifier": "Verbrannter Rep",
+                "favorDifficultyLockedHint": "Wird automatisch anhand der Loyalität bei diesem Shop und der Anzahl gleichzeitig erbetener Items bestimmt.",
+        "successMessage": "{character} hat {items} von {shop} mit {network}-Rep gekauft.",
+        "favorMessage": "{character} hat einen Gefallen eingelöst, um {items} zu erhalten.",
+        "favorBurnMessage": "{character} hat einen Gefallen eingelöst, um {items} zu erhalten, und dabei {network}-Rep verbrannt.",
+        "tradeInMessage": "{character} hat {items} gekauft und dafür {soldCount} Gegenstände in {network}-Rep in Zahlung gegeben.",
+        "tradeReceived": "Erhalten",
+        "tradeSpend": "Ausgegeben"
+      },
+      "toSell": {
+        "headline": "To Sell",
+        "empty": "Ziehe Items von deinem eigenen Bogen hierher, um sie an diesen Shop zu verkaufen.",
+        "confirm": "Verkaufen",
+        "remove": "Aus To Sell entfernen",
+        "confirmMessage": "Du bist dabei, die vorgemerkten Items an diesen Shop zu verkaufen.",
+        "ownerWarning": "Dir gehört dieser Shop. Bist du sicher, dass du etwas an dich selbst verkaufen möchtest?",
+        "repGainMessage": "{character} hat durch den Verkauf {network}-Rep erhalten."
+      },
+      "warnings": {
+        "systemDisabled": "Das Shop-System ist aktuell deaktiviert - du kannst es in den Eclipse-Phase-Systemeinstellungen aktivieren.",
+        "sellFailed": "Der Verkauf konnte nicht abgeschlossen werden.",
+        "purchaseFailed": "Der Kauf konnte nicht abgeschlossen werden.",
+        "purchaseItemsGone": "Einige der gekauften Items sind nicht mehr verfügbar.",
+        "favorLimitExhausted": "Kein Gefallen dieser Stufe mehr verfügbar - das Wochen- bzw. Story-Arc-Limit ist bereits ausgeschöpft.",
+        "notEnoughRepToBurn": "Nicht genug Rep zum Verbrennen vorhanden - auf das Verfügbare reduziert.",
+        "notEnoughRepToBuy": "Nicht genug Rep zum Kaufen vorhanden.",
+        "shopClosed": "Der Shop ist derzeitig geschlossen.",
+        "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen.",
+        "differentActingCharacter": "Du verkaufst gerade schon Items für einen anderen Charakter - schließe das erst ab oder entferne diese Items.",
+        "noEligibleCharacters": "Keine passenden Charaktere mehr übrig - jeder mit einem Spieler verbundene Charakter hat hier bereits einen Loyalitäts-Eintrag.",
+                "sellLockedOut": "Du hast diesem Shop zuletzt zu viel verkauft. Ruhe dich aus, um wieder willkommen zu sein, oder bitte den Owner, die Sperre aufzuheben.",
+        "sellLimitExceeded": "Das ist zu viel für eine einzelne Transaktion hier. Verkleinere deine Auswahl und versuch es erneut.",
+        "rareLoyaltyRequired": "Dieses Item ist Rare - du brauchst mindestens Orange-Loyalität bei diesem Shop, um es zu erwerben.",
+        "favorBatchTooLarge": "Das sind zu viele Items für einen einzigen Gefallen hier - verkleinere deine Auswahl.",
+"morphsBlocked": "Morphs können nicht mit Rep erstanden werden. Sie werden stattdessen über die Morph-Points der Mission erworben."
       }
     }
   }

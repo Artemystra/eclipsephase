@@ -275,7 +275,12 @@ async _onRender(context, options) {
     element.addEventListener("click", moreInfo);
   });
 
-  if (!this.isEditable) return;
+  if (!this.isEditable) {
+    // Fields would otherwise look editable but silently fail to save for non-owners
+    html.querySelectorAll("input, select, textarea").forEach(element => element.disabled = true);
+    html.querySelectorAll('[data-action="editImage"]').forEach(element => element.removeAttribute("data-action"));
+    return;
+  }
 
   registerEffectHandlers(html, item);
   registerCommonHandlers(html, item);

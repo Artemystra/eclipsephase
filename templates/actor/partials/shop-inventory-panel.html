@@ -1,0 +1,30 @@
+{{!-- Shared shop content - used by shop-sheet.html's "Shop" tab (Owner) and shop-sheet-limited.html
+  (Observer and Limited alike, see EPshopSheet.js's _getSheetTemplate). --}}
+{{> systems/eclipsephase/templates/actor/partials/multiselect-pills.html items=itemTypeFilterPills path="_itemTypeFilter" placeholderKey="ep2e.shop.filter.placeholder" suggestions=itemTypeFilterSuggestions}}
+
+<div class="shop-two-column">
+    <div class="shop-to-sell-column">
+        <p class="headline5">{{localize "ep2e.shop.toSell.headline"}}</p>
+        <div class="shop-column-scroll">
+            {{#if toSellEntries.length}}
+                {{> systems/eclipsephase/templates/actor/partials/shop-to-sell-list.html entries=toSellEntries}}
+            {{else}}
+                <p class="notes">{{localize "ep2e.shop.toSell.empty"}}</p>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="shop-inventory-column">
+        <p class="headline5">{{localize "ep2e.shop.inventory.headline"}}</p>
+        <div class="shop-column-scroll">
+            {{#if itemGroups.length}}
+                {{#each itemGroups as |group|}}
+                    <p class="shop-category-heading">{{group.label}}</p>
+                    {{> systems/eclipsephase/templates/global-partials/item-row-list.hbs item=group.items readOnly=../readOnly selectable=../selectable selected=../selected hideQuantity=true}}
+                {{/each}}
+            {{else}}
+                <p class="notes">{{localize "ep2e.shop.placeholders.noItems"}}</p>
+            {{/if}}
+        </div>
+    </div>
+</div>

@@ -86,6 +86,47 @@ eclipsephase.costTypes = {
     rare: "ep2e.item.general.table.cost.rare"
 }
 
+// Shop Item Valuation dropdown values - costTypes plus a shop-only "Free" tier with no RAW
+// equivalent as an item's own cost. Not favorTiers' "trivial" - that's a differently-scoped
+// tier used by the shop's separate Difficulty Mapping step, not this one.
+eclipsephase.effectiveCostTiers = {
+    free: "ep2e.shop.settings.costTierFree",
+    minor: "ep2e.item.general.table.cost.minor",
+    moderate: "ep2e.item.general.table.cost.moderate",
+    major: "ep2e.item.general.table.cost.major",
+    rare: "ep2e.item.general.table.cost.rare"
+}
+
+// Same 7 networks as Item.id.rep in template.json - reused as-is for the Shop's acceptedRepNetworks toggles.
+eclipsephase.repTypes = {
+    "@-rep": "ep2e.id.repType.@rep",
+    "c-rep": "ep2e.id.repType.crep",
+    "f-rep": "ep2e.id.repType.frep",
+    "g-rep": "ep2e.id.repType.grep",
+    "i-rep": "ep2e.id.repType.irep",
+    "r-rep": "ep2e.id.repType.rrep",
+    "x-rep": "ep2e.id.repType.xrep"
+}
+
+eclipsephase.repIcons = {
+    "@-rep": "systems/eclipsephase/resources/icons/Currency/currency-at.svg",
+    "c-rep": "systems/eclipsephase/resources/icons/Currency/currency-c.svg",
+    "f-rep": "systems/eclipsephase/resources/icons/Currency/currency-f.svg",
+    "g-rep": "systems/eclipsephase/resources/icons/Currency/currency-g.svg",
+    "i-rep": "systems/eclipsephase/resources/icons/Currency/currency-i.svg",
+    "r-rep": "systems/eclipsephase/resources/icons/Currency/currency-r.svg",
+    "x-rep": "systems/eclipsephase/resources/icons/Currency/currency-x.svg"
+}
+
+// Same RAW favor tiers as the Rep-Test roll dialog's favorMod dropdown (general-modifiers.html) -
+// reused here for the Shop's Difficulty Mapping table.
+eclipsephase.favorTiers = {
+    trivial: "ep2e.roll.dialog.reputationMode.trivial",
+    minor: "ep2e.roll.dialog.reputationMode.minor",
+    moderate: "ep2e.roll.dialog.reputationMode.moderate",
+    major: "ep2e.roll.dialog.reputationMode.major"
+}
+
 eclipsephase.programLevels = {
     intruder: "ep2e.item.program.table.level.intruder",
     user: "ep2e.item.program.table.level.user",
