@@ -1,4 +1,4 @@
-import { _ep23_migrateSubStrainByArchetype } from "../../module/common/migration.js";
+import { _ep25_migrateSubStrainByArchetype } from "../../module/common/migration.js";
 
 const { ForcedDeletion } = foundry.data.operators;
 const FLAT_KEYS = ["influence2", "influence3", "influence4", "influence5", "influence6"];
@@ -24,34 +24,34 @@ const legacyFields = {
 
 describe("the 2.3 per-archetype sub-strain migration", () => {
   test("it moves the flat fields into the selected archetype's bucket", () => {
-    const update = _ep23_migrateSubStrainByArchetype(actorWith("architect", legacyFields));
+    const update = _ep25_migrateSubStrainByArchetype(actorWith("architect", legacyFields));
     expect(update["system.subStrain.byArchetype.architect"]).toEqual(legacyFields);
   });
 
   test("it deletes the flat fields with a ForcedDeletion", () => {
-    const update = _ep23_migrateSubStrainByArchetype(actorWith("beast", legacyFields));
+    const update = _ep25_migrateSubStrainByArchetype(actorWith("beast", legacyFields));
     for (const key of FLAT_KEYS) {
       expect(update[`system.subStrain.${key}`]).toBeInstanceOf(ForcedDeletion);
     }
   });
 
   test("no key uses the legacy deletion syntax, which Foundry 14 refuses under FAILURE mode", () => {
-    const update = _ep23_migrateSubStrainByArchetype(actorWith("haunter", legacyFields));
+    const update = _ep25_migrateSubStrainByArchetype(actorWith("haunter", legacyFields));
     expect(Object.keys(update).filter(key => key.includes("-="))).toEqual([]);
   });
 
   test("an actor on a label the migration does not cover is left alone", () => {
-    expect(_ep23_migrateSubStrainByArchetype(actorWith("", legacyFields))).toBeNull();
-    expect(_ep23_migrateSubStrainByArchetype(actorWith("crucible", legacyFields))).toBeNull();
+    expect(_ep25_migrateSubStrainByArchetype(actorWith("", legacyFields))).toBeNull();
+    expect(_ep25_migrateSubStrainByArchetype(actorWith("crucible", legacyFields))).toBeNull();
   });
 
   test("an archetype without flat fields needs no update", () => {
-    expect(_ep23_migrateSubStrainByArchetype(actorWith("stranger"))).toBeNull();
+    expect(_ep25_migrateSubStrainByArchetype(actorWith("stranger"))).toBeNull();
   });
 
   test("it does not run a second time on an already migrated actor", () => {
     const migrated = actorWith("xenomorph", {}, { xenomorph: legacyFields });
-    expect(_ep23_migrateSubStrainByArchetype(migrated)).toBeNull();
+    expect(_ep25_migrateSubStrainByArchetype(migrated)).toBeNull();
   });
 });
 
@@ -62,7 +62,7 @@ describe("applying that update to a document", () => {
       type: "character",
       system: { subStrain: { label: "architect", ...legacyFields } }
     });
-    await actor.update(_ep23_migrateSubStrainByArchetype(actor));
+    await actor.update(_ep25_migrateSubStrainByArchetype(actor));
 
     expect(actor._source.system.subStrain.influence2).toBeUndefined();
     expect(actor._source.system.subStrain.influence4).toBeUndefined();

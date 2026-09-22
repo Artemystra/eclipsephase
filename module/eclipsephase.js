@@ -611,30 +611,18 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
-  if (before23) {
-    endMigration = false;
-    const messageCopy = "ep2e.migration.23";
-    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
-
-    if (migration.cancelled) return;
-    startMigration = migration.start;
-
-    let Migration23 = await update.migrationPre23(startMigration);
-    endMigration = Migration23["endMigration"];
-  }
-
-    if(endMigration){
-      await migrationEnd(endMigration)
-  }
-
-  if (before25 && !update.migrationPre25Needed()) {
+  // 2.2 and 2.3 never shipped, so their work rides along with 2.5 as one migration and one notice.
+  // A world off the released line (before23) always gets the full run: migrationPre25Needed() only
+  // reports Ki data, which such a world cannot have, so it must not be allowed to gate this.
+  if (before25 && !before23 && !update.migrationPre25Needed()) {
     endMigration = false;
     await game.settings.set("eclipsephase", "migrationVersion", "2.5");
   }
   else if (before25) {
     endMigration = false;
     const messageCopy = "ep2e.migration.25";
-    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+    const messageCopyExtra = update.migrationPre25Needed() ? "ep2e.migration.25ki" : undefined;
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 1000, messageCopyExtra);
 
     if (migration.cancelled) return;
     startMigration = migration.start;
@@ -649,12 +637,13 @@ Hooks.once("ready", async function() {
 
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
-  async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
+  async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth, messageCopyExtra) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
     const content = await foundry.applications.handlebars.renderTemplate(template, {
       endMigration,
       messageHeadline,
-      messageCopy
+      messageCopy,
+      messageCopyExtra
     });
 
     const width = messageWidth ?? 600;

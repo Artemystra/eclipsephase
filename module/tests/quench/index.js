@@ -1,6 +1,6 @@
 import { RollCheck, TaskRollModifier } from "../../rolls/dice.js";
 import { confirmation } from "../../common/general-sheet-functions.js";
-import { _ep23_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
+import { _ep25_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
 import { getStrainFamily, listStrainFamilies, hasStrainFamily } from "../../rolls/strain-families.js";
 import { strainSubstrate } from "../../common/body-markers.js";
 import {
@@ -491,14 +491,14 @@ Hooks.on("quenchReady", quench => {
           const mode = CONFIG.compatibility.mode;
           CONFIG.compatibility.mode = CONST.COMPATIBILITY_MODES.FAILURE;
           try {
-            await actor.update(_ep23_migrateSubStrainByArchetype(actor));
+            await actor.update(_ep25_migrateSubStrainByArchetype(actor));
           } finally {
             CONFIG.compatibility.mode = mode;
           }
 
           assert.notProperty(actor._source.system.subStrain, "influence2", "the server has to return the deletion in its diff");
           assert.deepEqual(actor._source.system.subStrain.byArchetype.architect.influence2, legacy);
-          assert.isNull(_ep23_migrateSubStrainByArchetype(actor), "a second run has nothing left to do");
+          assert.isNull(_ep25_migrateSubStrainByArchetype(actor), "a second run has nothing left to do");
         });
       });
     });

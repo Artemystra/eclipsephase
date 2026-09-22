@@ -1,4 +1,4 @@
-import { _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../module/common/migration.js";
+import { _ep25_migrateKiSubStrain, migrationPre25Needed, _ep25_ACTOR_STEPS } from "../../module/common/migration.js";
 
 const { ForcedDeletion } = foundry.data.operators;
 const KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
@@ -141,5 +141,61 @@ describe("whether the migration is offered at all", () => {
   test("an actor type the migration ignores does not trigger it", () => {
     world([{ ...actorWith(["colony"]), type: "shop" }]);
     expect(migrationPre25Needed()).toBe(false);
+  });
+});
+
+describe("the precheck and the migration loop cannot drift apart", () => {
+  /**
+   * Puts the given actors in the world.
+   * @param {Object[]} actors - Stand-in actors
+   * @returns {void}
+   */
+  function world(actors) {
+    game.actors.clear();
+    actors.forEach((actor, index) => game.actors.set(`a${index}`, actor));
+  }
+
+  /**
+   * An actor of a given type carrying one archetype's choices.
+   * @param {String} type - The actor type
+   * @param {String} archetype - The sub-strain to fill
+   * @returns {Object} A stand-in actor
+   */
+  function member(type, archetype) {
+    return { ...actorWith([archetype]), type };
+  }
+
+  test("every step the loop runs is a step the precheck asks about", () => {
+    for (const archetype of [...KI_STRAINS, ...PSI_ARCHETYPES]) {
+      const actor = member("character", archetype);
+      world([actor]);
+
+      const anyStepHasWork = _ep25_ACTOR_STEPS.some(step => step.map(actor) !== null);
+
+      expect(migrationPre25Needed()).toEqual(anyStepHasWork);
+    }
+  });
+
+  test("an unmigrated Psi character is work the precheck reports, now that 2.3 rides along with 2.5", () => {
+    world([{ type: "character", name: "Pre-2.3", system: { subStrain: { label: "architect", influence2: { label: "l", description: "d" } } } }]);
+    expect(migrationPre25Needed()).toBe(true);
+  });
+
+  test("a Psi character whose table already moved is not offered again", () => {
+    world([member("character", "architect")]);
+    expect(migrationPre25Needed()).toBe(false);
+  });
+
+  test("an actor with nothing for any step reports no work", () => {
+    world([{ type: "character", name: "Blank", system: { subStrain: { byArchetype: {} } } }]);
+    expect(migrationPre25Needed()).toBe(false);
+  });
+
+  test("each step carries a label, so a failure names itself in the log", () => {
+    for (const step of _ep25_ACTOR_STEPS) {
+      expect(typeof step.label).toEqual("string");
+      expect(step.label.length).toBeGreaterThan(0);
+      expect(typeof step.map).toEqual("function");
+    }
   });
 });

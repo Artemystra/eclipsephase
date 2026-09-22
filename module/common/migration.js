@@ -1581,6 +1581,21 @@ export async function migrationPre150(startMigration, endMigration) {
     await new Promise(r => setTimeout(r, 0));
   }
 
+  try {
+    const worldUpdates = game.items
+      .filter(i => i.type === "aspect" && _ep25_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
+      .map(i => ({ _id: i.id, "system.damage": _ep25_SLEIGHT_DAMAGE[i.name] }));
+    if (worldUpdates.length) await Item.updateDocuments(worldUpdates);
+  } catch (err) {
+    console.error(`[EP Migration ${latestUpdate}] world items: psi sleight damage backfill failed`, err);
+  }
+
+  try {
+    for (const item of game.items) await _ep25_addBrainWareMarker(item);
+  } catch (err) {
+    console.error(`[EP Migration ${latestUpdate}] world items: brain ware marker backfill failed`, err);
+  }
+
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   uiBar.done(`Migration finished (${doneCount}/${total})`);
   return { endMigration: true };
@@ -2066,8 +2081,7 @@ export async function migrationPre196(startMigration, endMigration) {
   const latestUpdate = "1.9.6";
   if (!startMigration) return { endMigration: false };
 
-  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
-  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+  const actors = game.actors.filter(a => _ep25_ACTOR_TYPES.has(a.type));
 
   const targets = [];
   for (const actor of game.actors) {
@@ -2445,7 +2459,7 @@ export async function migrationPre215(startMigration, endMigration) {
 }
 
 // Damage defaults for the standard psi sleights, matched by name since they aren't localized.
-const _ep23_SLEIGHT_DAMAGE = {
+const _ep25_SLEIGHT_DAMAGE = {
   "Psychic Stab": { target: "physical", d10: 2, d6: 0, bonus: 0 },
   "Nightmare": { target: "mental", d10: 2, d6: 0, bonus: 0 }
 };
@@ -2453,7 +2467,7 @@ const _ep23_SLEIGHT_DAMAGE = {
 // Moves an actor's currently-selected archetype's flat influence2-6 fields into the new
 // per-archetype subStrain.byArchetype.<label> bucket, and clears the old flat fields. Those keys
 // left the schema in 2.3, so nothing refills them and the deletion is real work.
-export function _ep23_migrateSubStrainByArchetype(actor) {
+export function _ep25_migrateSubStrainByArchetype(actor) {
   const ARCHETYPES = new Set(["architect", "beast", "haunter", "stranger", "xenomorph"]);
   const subStrain = actor.system?.subStrain;
   const label = subStrain?.label;
@@ -2477,13 +2491,13 @@ export function _ep23_migrateSubStrainByArchetype(actor) {
 }
 
 // Adds the Cyberbrain marker effect to a pre-existing Cyberbrain or Core System Ware item, matched by name.
-const _ep23_BRAIN_WARE_MARKERS = {
+const _ep25_BRAIN_WARE_MARKERS = {
   "Cyberbrain": "flags.eclipsephase.grantsCyberbrain",
   "Core System": "flags.eclipsephase.grantsCyberbrain"
 };
 
-async function _ep23_addBrainWareMarker(item) {
-  const markerKey = item.type === "ware" ? _ep23_BRAIN_WARE_MARKERS[item.name] : undefined;
+async function _ep25_addBrainWareMarker(item) {
+  const markerKey = item.type === "ware" ? _ep25_BRAIN_WARE_MARKERS[item.name] : undefined;
   if (!markerKey) return;
   const hasMarker = item.effects.some(e => e.changes?.some(c => c.key === markerKey));
   if (hasMarker) return;
@@ -2494,80 +2508,6 @@ async function _ep23_addBrainWareMarker(item) {
   await item.createEmbeddedDocuments("ActiveEffect", [effectData]);
 }
 
-export async function migrationPre23(startMigration, endMigration) {
-  const latestUpdate = "2.3";
-  if (!startMigration) return { endMigration: false };
-
-  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
-  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
-
-  const total = actors.length || 1;
-  const uiBar = epCreateProgressDialog(`EP Migration ${latestUpdate}`);
-  uiBar.set(0, "Preparing migration…", `0/${total}`);
-
-  let doneCount = 0;
-
-  for (const actor of actors) {
-    if (uiBar.state.cancelled) {
-      uiBar.fail(`Migration cancelled (${doneCount}/${total})`);
-      return { endMigration: false };
-    }
-
-    uiBar.set(
-      Math.floor((doneCount / total) * 100),
-      `Processing: ${actor.name}`,
-      `${doneCount + 1}/${total}`
-    );
-
-    try {
-      const updates = actor.items
-        .filter(i => i.type === "aspect" && _ep23_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
-        .map(i => ({ _id: i.id, "system.damage": _ep23_SLEIGHT_DAMAGE[i.name] }));
-      if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-    } catch (err) {
-      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: psi sleight damage backfill failed`, err);
-    }
-
-    try {
-      const subStrainUpdate = _ep23_migrateSubStrainByArchetype(actor);
-      if (subStrainUpdate) await actor.update(subStrainUpdate);
-    } catch (err) {
-      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: sub-strain per-archetype migration failed`, err);
-    }
-
-    try {
-      for (const item of actor.items) await _ep23_addBrainWareMarker(item);
-    } catch (err) {
-      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: brain ware marker backfill failed`, err);
-    }
-
-    doneCount++;
-    uiBar.set(
-      Math.floor((doneCount / total) * 100),
-      `Processed: ${actor.name}`,
-      `${doneCount}/${total}`
-    );
-  }
-
-  try {
-    const worldUpdates = game.items
-      .filter(i => i.type === "aspect" && _ep23_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
-      .map(i => ({ _id: i.id, "system.damage": _ep23_SLEIGHT_DAMAGE[i.name] }));
-    if (worldUpdates.length) await Item.updateDocuments(worldUpdates);
-  } catch (err) {
-    console.error(`[EP Migration ${latestUpdate}] world items: psi sleight damage backfill failed`, err);
-  }
-
-  try {
-    for (const item of game.items) await _ep23_addBrainWareMarker(item);
-  } catch (err) {
-    console.error(`[EP Migration ${latestUpdate}] world items: brain ware marker backfill failed`, err);
-  }
-
-  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
-  uiBar.done(`Migration finished (${doneCount}/${total})`);
-  return { endMigration: true };
-}
 
 // The sub-strains the Ki module owns. The five Psi archetypes stay in system data.
 const _ep25_KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
@@ -2589,12 +2529,24 @@ export function _ep25_migrateKiSubStrain(actor) {
   return Object.keys(update).length ? update : null;
 }
 
-// Whether any actor still carries Ki sub-strain data in system data. Ki only ever reached a world
-// through the unreleased 2.3 branch, so most worlds have nothing to move and should not be asked.
-// Anything migrationPre25 learns to do later has to be reflected here, or those worlds skip it.
+// Every step that turns one actor into an update payload. The precheck below and the migration
+// loop both walk this list, so a step added here is automatically offered as well as run - the
+// two cannot drift apart. Steps that do not produce an actor update (the sleight damage and the
+// brain marker backfills, which write embedded items) stay separate and are covered instead by
+// the before23 condition on the trigger, which forces a full run for any world off 2.1.5.
+export const _ep25_ACTOR_STEPS = [
+  { label: "sub-strain per-archetype migration", map: _ep25_migrateSubStrainByArchetype },
+  { label: "Ki sub-strain migration", map: _ep25_migrateKiSubStrain }
+];
+
+const _ep25_ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+
+// Whether any actor still has work waiting from one of the steps above. Ki data only ever
+// reached a world through the unreleased 2.3 branch, so a world on the released line has
+// nothing here and is not asked - it is sent through the full run by the trigger instead.
 export function migrationPre25Needed() {
-  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
-  return game.actors.some(actor => ACTOR_TYPES.has(actor.type) && _ep25_migrateKiSubStrain(actor) !== null);
+  return game.actors.some(actor => _ep25_ACTOR_TYPES.has(actor.type) &&
+    _ep25_ACTOR_STEPS.some(step => step.map(actor) !== null));
 }
 
 export async function migrationPre25(startMigration, endMigration) {
@@ -2623,10 +2575,28 @@ export async function migrationPre25(startMigration, endMigration) {
     );
 
     try {
-      const update = _ep25_migrateKiSubStrain(actor);
-      if (update) await actor.update(update);
+      const updates = actor.items
+        .filter(i => i.type === "aspect" && _ep25_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
+        .map(i => ({ _id: i.id, "system.damage": _ep25_SLEIGHT_DAMAGE[i.name] }));
+      if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
     } catch (err) {
-      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: Ki sub-strain migration failed`, err);
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: psi sleight damage backfill failed`, err);
+    }
+
+
+    try {
+      for (const item of actor.items) await _ep25_addBrainWareMarker(item);
+    } catch (err) {
+      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: brain ware marker backfill failed`, err);
+    }
+
+    for (const step of _ep25_ACTOR_STEPS) {
+      try {
+        const update = step.map(actor);
+        if (update) await actor.update(update);
+      } catch (err) {
+        console.error(`[EP Migration ${latestUpdate}] ${actor.name}: ${step.label} failed`, err);
+      }
     }
 
     doneCount++;

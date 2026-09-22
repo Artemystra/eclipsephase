@@ -18,9 +18,9 @@ function findMigrationReadyHook() {
 
 /**
  * Runs the migration ladder against a world last migrated at the given version, recording which
- * migration dialogs it renders.
+ * migration dialogs it renders and what copy each was given.
  * @param {String} from - The world's stored migrationVersion
- * @returns {Promise<String[]>} The copy key of every migration dialog rendered, in order
+ * @returns {Promise<Object[]>} One entry per dialog, with its copy key and any extra block
  */
 async function runLadderFrom(from) {
   global.__ep.setSetting("eclipsephase", "migrationVersion", from);
@@ -28,7 +28,7 @@ async function runLadderFrom(from) {
   const rendered = [];
   const realRender = foundry.applications.handlebars.renderTemplate;
   foundry.applications.handlebars.renderTemplate = async (template, data = {}) => {
-    if (String(template).includes("migration-dialog")) rendered.push(data.messageCopy);
+    if (String(template).includes("migration-dialog")) rendered.push({ copy: data.messageCopy, extra: data.messageCopyExtra });
     return realRender(template, data);
   };
 
@@ -50,7 +50,7 @@ beforeAll(async () => {
 describe("the migration ladder's closing dialog", () => {
   test("a world coming from the last released version is told it is done exactly once", async () => {
     const rendered = await runLadderFrom("2.1.5");
-    const done = rendered.filter(key => key === "ep2e.migration.done");
+    const done = rendered.filter(entry => entry.copy === "ep2e.migration.done");
 
     expect(done).toHaveLength(1);
   });
@@ -63,5 +63,48 @@ describe("the migration ladder's closing dialog", () => {
   test("a world with nothing to migrate is not told anything at all", async () => {
     const rendered = await runLadderFrom("2.5");
     expect(rendered).toEqual([]);
+  });
+});
+
+describe("2.2 and 2.3 arrive as part of 2.5", () => {
+  /**
+   * The copy keys of the dialogs a run offered, ignoring the closing "all set" one.
+   * @param {Object[]} rendered - What runLadderFrom reported
+   * @returns {Object[]} The offer dialogs
+   */
+  function offers(rendered) {
+    return rendered.filter(entry => entry.copy !== "ep2e.migration.done");
+  }
+
+  test("a world from the last released version is offered exactly one migration", async () => {
+    const rendered = await runLadderFrom("2.1.5");
+
+    expect(offers(rendered).map(entry => entry.copy)).toEqual(["ep2e.migration.25"]);
+  });
+
+  test("that one migration is not the retired 2.3 notice", async () => {
+    const rendered = await runLadderFrom("2.1.5");
+
+    expect(rendered.some(entry => entry.copy === "ep2e.migration.23")).toBe(false);
+  });
+
+  test("a world off the released line is never silently stamped, whatever the Ki gate says", async () => {
+    const rendered = await runLadderFrom("2.1.5");
+
+    expect(offers(rendered)).toHaveLength(1);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.5");
+  });
+
+  test("a world with no Ki data is offered the notice without the Ki block", async () => {
+    const rendered = await runLadderFrom("2.1.5");
+
+    expect(offers(rendered)[0].extra).toBeUndefined();
+  });
+
+  test("a world already on 2.3 with nothing to move is told nothing at all", async () => {
+    const rendered = await runLadderFrom("2.3");
+
+    expect(rendered).toEqual([]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.5");
   });
 });
