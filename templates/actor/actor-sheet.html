@@ -40,7 +40,7 @@
                         
                             <!-- Character Actor tabs-->
                             {{#if (eq tab.id 'psi')}}
-                                {{#if @root.actor.system.additionalSystems.hasPsi}}
+                                {{#if @root.actor.system.additionalSystems.hasSleightAccess}}
                                     <a class="item {{#if tab.active}}active{{/if}}" data-action="tab" data-group="primary" data-tab="{{tab.id}}">
                                         {{localize tab.label}}
                                     </a>

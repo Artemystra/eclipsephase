@@ -1,6 +1,7 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
-import { prepareRecipients } from "../common/general-sheet-functions.js";
+import { prepareRecipients, damageValueCalc } from "../common/general-sheet-functions.js";
+import { strainSubstrate } from "../common/body-markers.js";
 
 /*
  * Path constants for dialog templates
@@ -13,6 +14,7 @@ export const POOL_USAGE_OUTPUT = 'systems/eclipsephase/templates/chat/pool-usage
 export const WEAPON_DAMAGE_OUTPUT = 'systems/eclipsephase/templates/chat/damage-result.html'
 export const PSI_INFLUENCE_OUTPUT = 'systems/eclipsephase/templates/chat/psi-influence.html'
 export const DAMAGE_STATUS_OUTPUT = 'systems/eclipsephase/templates/chat/damage-status.html'
+export const SYSTEM_MESSAGE_OUTPUT = 'systems/eclipsephase/templates/chat/system-message.html'
 export const DEFAULT_ROLL = 'systems/eclipsephase/templates/chat/default-roll-to-chat.html'
 
 /*
@@ -178,8 +180,8 @@ async function poolCalc(actorType, actorModel, aptType, poolType, rollType, roll
     return calcPool
 }
 
-function defineRoll(dataset, actorWhole){
-    
+async function defineRoll(dataset, actorWhole){
+
     let type = dataset.key ? dataset.key.toLowerCase() : null;
     let names = ['globalMod', 'usePool', 'useSpec', 'rangedFray', 'raiseInfection', 'push', 'favorMod', 'burnMod', 'attackMode', 'sizeDifference', 'calledShot', 'numberOfTargets', 'touchOnly', 'smartlink', 'running', 'superiorPosition', 'inMelee', 'coverAttacker', 'aim', 'size', 'range', 'prone', 'hiddenDefender', 'coverDefender', 'visualImpairment', 'attackMode', 'ammoEffect', 'biomorphTarget', 'weaponFixated', 'rollMode', "exoticMorphology", "jammingRollTarget", "jammingUsePoolRemote", "jammingUsePoolOwn"]
     let sleight = {}
@@ -200,6 +202,11 @@ function defineRoll(dataset, actorWhole){
             sleight.action = sleightItem.system.actionName
             sleight.duration = sleightItem.system.durationName
             sleight.infection = sleightItem.system.infection
+            sleight.sleightID = dataset.itemid
+            if (sleightItem.system.damage?.d10 || sleightItem.system.damage?.d6 || sleightItem.system.damage?.bonus) {
+                sleight.damage = (await damageValueCalc(sleightItem, sleightItem.system.damage, null, "ammo")).dv
+                sleight.damageTarget = sleightItem.system.damage.target
+            }
             }
           break;
         case 'guns':
@@ -222,15 +229,14 @@ function defineRoll(dataset, actorWhole){
  * Interprets the roll visibility setting and returns the appropriate roll mode 
  */
 function setRollVisibility(activeRollTarget){
-    const rollModes = CONFIG.ChatMessage?.modes ?? CONST.DICE_ROLL_MODES;
     let rollModeSelection = null
-    console.log(activeRollTarget)
+
     if (activeRollTarget === "" || activeRollTarget === "public") {
-        rollModeSelection = rollModes.PUBLIC
+        rollModeSelection = "publicroll"
     } else if (activeRollTarget === "private") {
-        rollModeSelection = rollModes.GM ?? rollModes.PRIVATE
+        rollModeSelection = "gmroll"
     } else if (activeRollTarget === "blind") {
-        rollModeSelection = rollModes.BLIND
+        rollModeSelection = "blindroll"
     }
 
     return rollModeSelection
@@ -447,6 +453,18 @@ export class TaskRoll {
 
     data.itemdata = rollItem
 
+    data.activePushEffects = []
+    if (rolledFrom === "psiSleight" && actorWhole) {
+      const additionalSystems = actorWhole.system?.additionalSystems
+      const autoPush = additionalSystems?.autoPushSelection
+      if (additionalSystems?.psiGammaBoosted && autoPush && autoPush !== "none") {
+        data.activePushEffects.push({ label: game.i18n.localize("ep2e.roll.dialog.push." + autoPush), isAuto: true })
+      }
+      if (options?.push) {
+        data.activePushEffects.push({ label: game.i18n.localize("ep2e.roll.dialog.push." + options.push), isAuto: false })
+      }
+    }
+
     data.modifiers = []
     if(this.modifiers.length > 0) {
       for(let mod of this.modifiers) {
@@ -589,13 +607,19 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     let proceed
     let options = {}
     let specName = dataset.specname || "";
-    let roll = defineRoll(dataset, actorWhole)
+    let roll = await defineRoll(dataset, actorWhole)
 
-    // Psi never works over mesh/cyberbrain, which jamming requires - AE suppression (effects.js)
-    // handles passive Chi bonuses, but an active Psi (Gamma) roll needs to be blocked outright.
-    if (roll.type === "psi" && actorModel?.additionalSystems?.isJamming) {
-        ui.notifications.warn(game.i18n.localize("ep2e.roll.announce.jamming.noPsi"));
-        return;
+    // Brain/nervous-system rules, plus Psi's jamming block
+    if (roll.type === "psi" && dataset.itemid) {
+        const sleightItem = actorWhole.items.get(dataset.itemid);
+        const strainFamily = sleightItem?.system?.strainFamily ?? "psi";
+        const substrate = strainSubstrate(actorWhole, strainFamily);
+        if (substrate.blocked) {
+            ui.notifications.warn(game.i18n.localize(substrate.jamBlocked
+                ? "ep2e.roll.announce.jamming.noPsi"
+                : strainFamily === "ki" ? "ep2e.roll.announce.ki.noCyberbrain" : "ep2e.roll.announce.psi.noBioBrain"));
+            return;
+        }
     }
 
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
@@ -650,7 +674,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(roll.type === "psi" && actorWhole.type != "goon")
             options.totalInfection = await psi.infectionUpdate(actorWhole, options)
-        
+
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
 
@@ -696,11 +720,12 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
 
         if(proceed === "cancel")
             return
-        console.log("My outputData", outputData)
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
-        
+
+        const blindRollMode = options.rollMode === "blind" ? "blind" : undefined
+
         if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
-            psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions)
+            await psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions, undefined, blindRollMode)
 
         return rollResult;
     }
@@ -853,6 +878,12 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     if(trauma > 0 && rolledFrom !== "vehicleSkill")
         task.addModifier(new TaskRollModifier('ep2e.roll.announce.traumaModifier', -trauma))
 
+    if(rollType === "psi"){
+        const strainFamily = psi.actorStrainFamily(actorWhole)
+        if(strainSubstrate(actorWhole, strainFamily).penalised)
+            task.addModifier(new TaskRollModifier(strainFamily === "ki" ? 'ep2e.roll.announce.ki.substrateMismatch' : 'ep2e.roll.announce.psi.substrateMismatch', -30))
+    }
+
 
     /* Encumberance (Armor) Malus */
 
@@ -1003,7 +1034,6 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
         announce = "ep2e.roll.announce.combat.ranged.sizeXL";
         task.addModifier(new TaskRollModifier(announce, modValue))
     }
-    console.log("My options", options)
     if (options.range === "range" && options.prone) {
         modValue = -20
         announce = "ep2e.roll.announce.combat.ranged.rangeProne";
@@ -1275,7 +1305,7 @@ async function checkAmmo(actorWhole, weaponSelected, attackMode){
  * @param {Object} message - Provides all values to the html template
  * @param {Class} task - Result of the TaskRoll class 
  * @param {Array} recipientList - List of users to whisper the result to (empty if public)
- * @param {Boolean} blind - If the roll is blind or not (important: due to the API provided by DsN blind rolls will not trigger any 3D dice animations)
+ * @param {Boolean} blind - If the roll is blind or not (DsN suppresses the 3D dice animation for whoever triggers a blind roll, so it is forced on for GMs to keep it from looking broken)
  * @param {String} alias - Alias of the speaker
  * @param {String} htmlTemplate - Path to the html template to use for the chat message
  * @param {*} roll - The roll object (standard: Object. May be an array if multirolls are performed)
@@ -1286,6 +1316,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
     const diceArray = []
     let specialRules = dataset ? dataset : false;
     const showTo = recipientList != null ? recipientList.length > 0 ? recipientList : null : null
+    const hideDice = game.user.isGM ? false : blind
     if(roll){
         if(roll.length > 1){
              for(let array = 0; array < roll.length; array++){
@@ -1300,7 +1331,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
 
                 /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
                 if (game.dice3d) {
-                    game.dice3d.showForRoll(roll[array], game.user, true, showTo, blind)
+                    game.dice3d.showForRoll(roll[array], game.user, true, showTo, hideDice)
                 } else {
                     message.sound = CONFIG.sounds.dice
                 }
@@ -1315,7 +1346,7 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
             
             /* Rolls 3D dice if the module is enabled, otherwise plays the default sound */
             if (game.dice3d) {
-                await game.dice3d.showForRoll(roll, game.user, true, showTo, blind)
+                await game.dice3d.showForRoll(roll, game.user, true, showTo, hideDice)
             } else {
                 message.sound = CONFIG.sounds.dice
             }

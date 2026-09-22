@@ -1,100 +1,56 @@
 <div id="psiPane" class="tab psi scrolly main-tab-pc {{#if tabs.primary.psi.active}}active{{/if}}" data-group="primary" data-tab="psi">
     {{#if (ne actor.type "goon")}}
-        {{#if actor.system.additionalSystems.psiAutoClose}}
-            <div class="contentBox item" style="margin-bottom: 10px;">
-                <div class="flexrow subheader" style="min-width: 100%; height: 28px;">
-                    <h3 class="subheader" style ="max-width: 233px; height: 28px;">{{localize "ep2e.psi.infectionHeadline"}}</h3>
-                    <div class="alignRight flexGrowThreeQuarter" style ="height: 28px;">
-                        <span class="resource-label  input-XL"><strong>{{localize "ep2e.psi.ratingLabel"}}:</strong></span>
-                        {{#if isGM}}
-                            <input class="input-small" onFocus="this.select()" type="number" data-dtype="Number" style="text-align: center;" name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
-                        {{else}}
-                            <span class="resource-label  input-XL"><strong>{{actor.system.psiStrain.infection}}</strong></span>
-                        {{/if}}
-                    </div>
-                    <div class="slideShow flexrow" style="padding: 0 10px; max-width: max-content; min-width: max-content; align-items: center; min-height: 28px;">
-                        <span class="showFlex"><span class="icon-space">{{localize "ep2e.actorSheet.button.showDetails"}}</span> <i class="fas fa-plus icon-xsmall awesomeIcon"></i></span>
-                        <span class="noShow"><span class="icon-space">{{localize "ep2e.actorSheet.button.hideDetails"}}</span> <i class="fas fa-minus icon-xsmall awesomeIcon"></i></span>
-                    </div>
+        <div class="contentBox item" style="margin-bottom: 10px;">
+            <div class="flexrow subheader" style="min-width: 100%; height: 28px;">
+                <h3 class="subheader" style ="max-width: 233px; height: 28px;">{{localize "ep2e.psi.infectionHeadline"}}</h3>
+                <div class="alignRight flexGrowThreeQuarter" style ="height: 28px;">
+                    <span class="resource-label  input-XL"><strong>{{localize "ep2e.psi.ratingLabel"}}:</strong></span>
+                    {{#if isGM}}
+                        <input class="input-small" onFocus="this.select()" type="number" data-dtype="Number" style="text-align: center;" name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
+                    {{else}}
+                        <span class="resource-label  input-XL"><strong>{{actor.system.psiStrain.infection}}</strong></span>
+                    {{/if}}
                 </div>
-                <div class="listBackground noMargin item noShow showMore">
-                    <div class="flexrow grid" style="min-width: 100%;">
-                        <ol>
-                            <li>
-                                <div style="max-height: 415px; overflow-y: scroll;">
-                                    {{#if editable}}
-                                        <prose-mirror
-                                            name="system.psiStrain.description"
-                                            button="true"
-                                            editable="true"
-                                            toggled="false"
-                                            value="{{actor.system.psiStrain.description}}"
-                                            style="min-height: 400px">
-                                            {{{htmlPsiStrainDescription}}}
-                                        </prose-mirror>
-                                    {{else}}
-                                        {{{htmlPsiStrainDescription}}}
-                                    {{/if}}
-                                </div>
-                            </li>
-                            <li style="display: flex; align-items: center; margin-top: 20px;"><input class="checkBox" name="system.additionalSystems.psiAutoClose" data-dtype="Boolean" type="checkbox" {{checked actor.system.additionalSystems.psiAutoClose}}/>{{localize "ep2e.psi.autoClose"}}</li>
-                        </ol>
-                        <ol>
-                            
-                            {{> systems/eclipsephase/templates/actor/partials/tabs/psi-details.html }}
-
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        {{else}}
-            <div class="contentBox item" style="margin-bottom: 10px;">
-                <div class="flexrow subheader" style="min-width: 100%; height: 28px;">
-                    <h3 class="subheader" style ="max-width: 233px; height: 28px;">{{localize "ep2e.psi.infectionHeadline"}}</h3>
-                    <div class="alignRight flexGrowThreeQuarter" style ="height: 28px;">
-                        <span class="resource-label  input-XL"><strong>{{localize "ep2e.psi.ratingLabel"}}:</strong></span>
-                        {{#if isGM}}
-                            <input class="input-small infectionRating" type="text" style="text-align: center;" name="system.psiStrain.infection" value="{{actor.system.psiStrain.infection}}" placeholder="0"/>
-                        {{else}}
-                            <span class="resource-label  input-XL"><strong>{{actor.system.psiStrain.infection}}</strong></span>
-                        {{/if}}
-                    </div>
-                    <div class="slideShow flexrow" style="padding: 0 10px; max-width: max-content; min-width: max-content; align-items: center; min-height: 28px;">
+                <div class="psi-details-toggle flexrow" style="padding: 0 10px; max-width: max-content; min-width: max-content; align-items: center; min-height: 28px; cursor: pointer;">
+                    {{#if psiDetailsOpen}}
                         <span class="noShow"><span class="icon-space">{{localize "ep2e.actorSheet.button.showDetails"}}</span> <i class="fas fa-plus icon-xsmall awesomeIcon"></i></span>
                         <span class="showFlex"><span class="icon-space">{{localize "ep2e.actorSheet.button.hideDetails"}}</span> <i class="fas fa-minus icon-xsmall awesomeIcon"></i></span>
-                    </div>
-                </div>
-                <div class="listBackground noMargin item noShow showMore showFlex">
-                    <div class="flexrow grid" style="min-width: 100%;">
-                        <ol>
-                            <li>
-                                <div style="max-height: 415px; overflow-y: scroll;">
-                                    {{#if editable}}
-                                        <prose-mirror
-                                            name="system.psiStrain.description"
-                                            button="true"
-                                            editable="true"
-                                            toggled="false"
-                                            value="{{actor.system.psiStrain.description}}"
-                                            style="min-height: 400px">
-                                            {{{htmlPsiStrainDescription}}}
-                                        </prose-mirror>
-                                    {{else}}
-                                        {{{htmlPsiStrainDescription}}}
-                                    {{/if}}
-                                </div>
-                            </li>
-                            <li style="display: flex; align-items: center; margin-top: 20px;"><input class="checkBox" name="system.additionalSystems.psiAutoClose" data-dtype="Boolean" type="checkbox" {{checked actor.system.additionalSystems.psiAutoClose}}/>{{localize "ep2e.psi.autoClose"}}</li>
-                        </ol>
-                        <ol>
-                            
-                            {{> systems/eclipsephase/templates/actor/partials/tabs/psi-details.html }}
-
-                        </ol>
-                    </div>
+                    {{else}}
+                        <span class="showFlex"><span class="icon-space">{{localize "ep2e.actorSheet.button.showDetails"}}</span> <i class="fas fa-plus icon-xsmall awesomeIcon"></i></span>
+                        <span class="noShow"><span class="icon-space">{{localize "ep2e.actorSheet.button.hideDetails"}}</span> <i class="fas fa-minus icon-xsmall awesomeIcon"></i></span>
+                    {{/if}}
                 </div>
             </div>
-        {{/if}}
+            <div class="listBackground noMargin item {{#if psiDetailsOpen}}noShow showMore showFlex{{else}}noShow showMore{{/if}}">
+                <div class="grid" style="min-width: 100%;">
+                    <ol style="position: relative; margin: 0; padding: 0;">
+                        <li style="position: absolute; inset: 0; display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0;">
+                            <input type="text" class="psiFormElement" name="system.psiStrain.name" value="{{actor.system.psiStrain.name}}" data-dtype="String" placeholder="{{localize 'ep2e.psi.strainPlaceholder'}}" style="width: 100%; max-width: 100%; margin-bottom: 10px; flex: 0 0 auto;"/>
+                            <div style="flex: 1 1 auto; min-height: 0; overflow-y: auto;">
+                                {{#if editable}}
+                                    <prose-mirror
+                                        name="system.psiStrain.description"
+                                        button="true"
+                                        editable="true"
+                                        toggled="false"
+                                        value="{{actor.system.psiStrain.description}}"
+                                        style="display: block; min-height: 100%;">
+                                        {{{htmlPsiStrainDescription}}}
+                                    </prose-mirror>
+                                {{else}}
+                                    {{{htmlPsiStrainDescription}}}
+                                {{/if}}
+                            </div>
+                        </li>
+                    </ol>
+                    <ol style="margin: 0; padding: 0;">
+
+                        {{> systems/eclipsephase/templates/actor/partials/tabs/psi-details.html }}
+
+                    </ol>
+                </div>
+            </div>
+        </div>
     {{/if}}
     {{#if actor.aspect.gamma}}
         <div class="sideCarBox gammaBackground">

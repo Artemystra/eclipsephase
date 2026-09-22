@@ -80,7 +80,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       return { width: 620, height: 380 };
     }
     else if (item.type === "specialSkill" || item.type === "knowSkill") {
-      return { width: 600, height: 140 };
+      return { width: 600, height: 192 };
     }
     else if (item.system?.type === "seeker" || item.type === "grenade") {
       return { width: 680, height: 415 };

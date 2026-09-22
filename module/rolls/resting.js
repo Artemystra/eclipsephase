@@ -1,5 +1,6 @@
 import { tempEffectDeletion } from "../common/general-sheet-functions.js";
 import * as DICE from "./dice.js";
+import { endAllChiPushes } from "./psi.js";
 
 const REST_DISTRIBUTION_TEMPLATE = "systems/eclipsephase/templates/chat/rest-distribution.html";
 
@@ -34,6 +35,8 @@ async function _restCheckboxListener(html, actor) {
       const easeInfection = actorModel.psiStrain.infection - 10;
       const resetInfection = actorModel.psiStrain.minimumInfection;
       let poolSpend = null;
+
+      await endAllChiPushes(actorWhole);
 
       await actorWhole.update({
         "system.pools.update.insight": null,

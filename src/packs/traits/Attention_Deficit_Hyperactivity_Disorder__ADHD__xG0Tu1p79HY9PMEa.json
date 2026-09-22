@@ -6,7 +6,7 @@
   "img": "systems/eclipsephase/resources/icons/subtract.png",
   "system": {
     "additionalSystems": {},
-    "description": "Triggers: Overstimulation, sleep deprivation, the unknown, violence \n\nADHD is the inability to notice details and focus on any one task for an extended period. You may find yourself starting multiple tasks, beginning a new one after only a cursory attempt at the prior task. You may also have a manic edge that manifests as confidence in your ability to get a job done, even though you will quickly lose all interest in it.\n\nEffect: –30 modifier to Perceive Tests and task actions. Task action timeframes increased 50%.",
+    "description": "Triggers: Overstimulation, sleep deprivation, the unknown, violence\n\nADHD is the inability to notice details and focus on any one task for an extended period. You may find yourself starting multiple tasks, beginning a new one after only a cursory attempt at the prior task. You may also have a manic edge that manifests as confidence in your ability to get a job done, even though you will quickly lose all interest in it.\n\nEffect: –30 modifier to Perceive Tests and task actions. Task action timeframes increased 50%.",
     "active": true,
     "displayCategory": "",
     "updated": "",

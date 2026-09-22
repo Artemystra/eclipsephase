@@ -109,46 +109,50 @@
       },
       "ware6": {
         "label": "6.",
-        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
+        "value": "Compendium.eclipsephase.ware.Item.DsZJsZvcMBXVqqNK"
       },
       "ware7": {
         "label": "7.",
-        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
+        "value": "Compendium.eclipsephase.ware.Item.jprWDezD5jIg67PL"
       },
       "ware8": {
         "label": "8.",
-        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
+        "value": "Compendium.eclipsephase.ware.Item.McrVnwR80tq95nf3"
       },
       "ware9": {
         "label": "9.",
-        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
+        "value": "Compendium.eclipsephase.ware.Item.aTrxaE7KYXM00Leh"
       },
       "ware10": {
         "label": "10.",
-        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
+        "value": "Compendium.eclipsephase.ware.Item.BYdlE2yHd20XIkWZ"
       },
       "ware11": {
         "label": "11.",
-        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
+        "value": "Compendium.eclipsephase.ware.Item.11zlzkSiGyd7xPXQ"
       },
       "ware12": {
         "label": "12.",
-        "value": "Compendium.eclipsephase.ware.Item.VSb0jNadow4bNHrh"
+        "value": "Compendium.eclipsephase.ware.Item.Bw8EwVjZv9same48"
       },
       "ware13": {
         "label": "13.",
-        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
+        "value": "Compendium.eclipsephase.ware.Item.VSb0jNadow4bNHrh"
       },
       "ware14": {
         "label": "14.",
-        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
+        "value": "Compendium.eclipsephase.ware.Item.s8HHxjczED7PotEM"
       },
       "ware15": {
         "label": "15.",
-        "value": "Compendium.eclipsephase.ware.Item.j8eZ9xRZbp7aPZJh"
+        "value": "Compendium.eclipsephase.ware.Item.AWng0YXfn5GxJxJ3"
       },
       "ware16": {
         "label": "16.",
+        "value": "Compendium.eclipsephase.ware.Item.j8eZ9xRZbp7aPZJh"
+      },
+      "ware17": {
+        "label": "17.",
         "value": "none"
       }
     },

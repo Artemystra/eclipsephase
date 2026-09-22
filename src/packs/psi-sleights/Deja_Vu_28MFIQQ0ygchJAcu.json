@@ -14,6 +14,7 @@
     "updated": "",
     "infection": 8,
     "psiType": "gamma",
+    "strainFamily": "psi",
     "actionType": "complex",
     "duration": "minutes"
   },

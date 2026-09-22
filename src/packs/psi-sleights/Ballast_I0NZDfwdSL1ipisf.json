@@ -1,0 +1,42 @@
+{
+  "name": "Ballast",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You let mass flow into a target from its surroundings, or out of it. Target: a machine, synthmorph, or object within Close range. Choose one while sustained:\n\nShed - the target is lighter: Movement Rates +50%, +10 to Fray and Athletics, but it counts as one size category smaller when resisting knockback, shoves, and being knocked prone.\n\nLoad - the target is heavier: Movement Rates -50%, -10 to Fray and Athletics, but it counts as one size category larger when resisting knockback, shoves, and being knocked prone.\n\nThe mass has to come from or go to inert matter within reach - scrap, dust, regolith, paneling. In empty vacuum only Shed is possible. Shed mass is left behind as scrap; taken mass is visibly missing from the surroundings. Superior success: the size-category effect increases by one more step.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 6,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "sustained",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788479783392,
+    "modifiedTime": 1788479783392,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "I0NZDfwdSL1ipisf",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!I0NZDfwdSL1ipisf"
+}

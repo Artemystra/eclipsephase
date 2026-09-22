@@ -1,0 +1,88 @@
+{
+  "name": "Hot Standby",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [
+    {
+      "_id": "sNELrr7L3LXhwMzQ",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Hot Standby",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.additionalSystems.restChiMod",
+            "value": "+1",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!7EpL0CE7hqrUFs38.sNELrr7L3LXhwMzQ"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Part of your morph never fully powers down, keeping reserve capacity spun up and ready. You recover +1 pool point during short recharges.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": null,
+    "psiType": "chi",
+    "strainFamily": "ki",
+    "actionType": "",
+    "duration": "",
+    "pushed": false
+  },
+  "folder": "aH0mo0xpApB8HmNI",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "7EpL0CE7hqrUFs38",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!7EpL0CE7hqrUFs38"
+}

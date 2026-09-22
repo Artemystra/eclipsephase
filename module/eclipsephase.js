@@ -11,6 +11,7 @@ import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
+import  { registerPsiEffectSocket } from "./rolls/psi.js"
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
@@ -208,7 +209,8 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/item/partials/grenade-details.hbs",
     "systems/eclipsephase/templates/item/partials/item-traits.hbs",
     "systems/eclipsephase/templates/item/partials/additions-tab.hbs",
-    "systems/eclipsephase/templates/item/partials/movement-grid.hbs"
+    "systems/eclipsephase/templates/item/partials/movement-grid.hbs",
+    "systems/eclipsephase/templates/item/partials/aspect-damage-fields.hbs"
   ];
   await foundry.applications.handlebars.loadTemplates(templates);
   Handlebars.registerHelper('toLowerCase', function(str) {
@@ -223,6 +225,15 @@ Hooks.once('init', async function() {
   // Helper to set checked attribute on checkboxes within template
   Handlebars.registerHelper("checkedIf", function (condition) {
     return (condition) ? "checked" : "";
+  });
+
+  // Helper to build the info icon for a selected influence effect option (Psi/Ki sub-strains)
+  Handlebars.registerHelper("effectInfo", function (base, option) {
+    if (!option || option === "none" || typeof base !== "string") return "";
+    const labelKey = `${base}.${option}`;
+    const ruleKey = helperFunction.effectRuleKey(labelKey);
+    if (!ruleKey) return "";
+    return new Handlebars.SafeString(`<a class="moreInfoDialog icon-space" style="flex: 0 0 auto; margin-left: auto;" data-description="${ruleKey}" data-title="${labelKey}" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a>`);
   });
 
   registerSystemSettings();
@@ -305,6 +316,7 @@ Hooks.once("ready", async function() {
   let before196 = foundry.utils.isNewerVersion("1.9.6", gameVersion);
   let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
   let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
+  let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -563,6 +575,22 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
+  if (before23) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.23";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration23 = await update.migrationPre23(startMigration);
+    endMigration = Migration23["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
   async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
@@ -674,6 +702,16 @@ Hooks.once("ready", () => {
 // Helper to handle item transfers between players
 Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
+  registerPsiEffectSocket();
+});
+
+// Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll
+// or by editing the field, so neither the dialog nor the pool write happens on every client at once.
+Hooks.on("updateActor", async (actor, changed, options, userId) => {
+  if (userId !== game.user.id) return;
+  if (foundry.utils.getProperty(changed, "system.psiStrain.infection") === undefined) return;
+  await actor.applyChiBoostCrossing?.();
+  await actor.requestGammaAutoPushOnCrossing?.();
 });
 
 // Clears a character's shop sell-limit lockouts when they take a long rest.

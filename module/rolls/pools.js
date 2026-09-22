@@ -1,7 +1,7 @@
 import { eclipsephase } from "../config.js";
 import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
-import { prepareRecipients } from "../common/general-sheet-functions.js";
-import { prepareWeapon } from "./damage.js";
+import { inheritChatVisibility } from "../common/general-sheet-functions.js";
+import { prepareWeapon, dealPsiDamage } from "./damage.js";
 import { completeShopPurchase, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
@@ -23,7 +23,8 @@ export async function usePoolFromChat(data){
     const options = dataset.usepool
     const actor = await fromUuid(dataset.actorid)
     const rolledFrom = dataset.rolledfrom
-    const recipientList = await prepareRecipients(dataset.rollmode)
+    const messageId = data.currentTarget.closest("[data-message-id]")?.dataset.messageId
+    const {blind, recipientList} = inheritChatVisibility(messageId, dataset.rollmode)
 
     let updateResult = await update(options, pool, null, actor)
 
@@ -39,9 +40,12 @@ export async function usePoolFromChat(data){
         message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
         
         let html = await foundry.applications.handlebars.renderTemplate(POOL_USAGE_OUTPUT, message)
-        let attr = dataset.rollmode != "publicroll" ? {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html,whisper: recipientList} : {speaker: ChatMessage.getSpeaker({actor: actor}),flavor: html}
-
-        ChatMessage.create(attr)
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({actor: actor}),
+            flavor: html,
+            whisper: recipientList,
+            blind: blind
+        })
 
         if(rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
             let data = {}
@@ -55,8 +59,15 @@ export async function usePoolFromChat(data){
             data.touchonly = dataset.touchonly
             data.attackmode = dataset.attackmode
             data.rollmode = dataset.rollmode
+            data.messageid = messageId
 
             await prepareWeapon(false, result, data)
+        }
+        else if(rolledFrom === "psiSleight" && dataset.sleightid){
+            const sleightItem = actor.items.get(dataset.sleightid);
+            if(sleightItem?.system.damage?.d10 || sleightItem?.system.damage?.d6 || sleightItem?.system.damage?.bonus){
+                await dealPsiDamage(actor, sleightItem, parseInt(dataset.newresult), blind, recipientList, dataset.push);
+            }
         }
         else if(rolledFrom === "shopPurchase" && dataset.resultclass === "success"){
             const bodyBindings = {};
@@ -172,8 +183,9 @@ export async function outcomeAlternatives(outputData, pool, systemOptions){
         
         else if(((obj.originalResult + 1) < 6)  && obj.pools.available){
             obj.options["upgrade"] = true
+            obj.result = obj.originalResult + 1
             obj["resultText"] = resultText[(obj.originalResult+1)].text
-         }   
+         }
         
         else if(obj.resultClass === "success" && obj.originalResult === 5 && (obj.value > outputData.rollResult) && obj.pools.available)
             obj.options["swap"] = true

@@ -629,6 +629,10 @@
   margin-left: -7px;
 }
 
+.chat-message .footnote {
+  font-size: 12px;
+}
+
 .eclipsephase .items-list {
   list-style: none;
   margin: 7px 0;
@@ -831,6 +835,11 @@ span.neutral {
 
 .dialog .window-content{
   padding: 0.5rem;
+}
+
+.application.dialog .window-content {
+  flex: 0 1 auto;
+  overflow: hidden auto;
 }
 
 /* Native <dialog> backdrop (modal:true) - Foundry ships this unstyled, browser default is barely visible */
@@ -2187,7 +2196,7 @@ optgroup .Default .Roll .Mode,
 /* Foundry v13's native header-controls dropdown (<menu class="controls-dropdown">) - this class
    name is specific to that version's markup, so the rule has no effect wherever Foundry renders
    the same menu differently. Needs its own z-index above in-sheet content like the Rez overlay
-   (100) - raising an ancestor's z-index alone does not lift it. */
+   (110) - raising an ancestor's z-index alone does not lift it. */
 .controls-dropdown {
   z-index: 200;
 }
@@ -3553,7 +3562,7 @@ button.epTextlink:hover{
   top: -13px;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 110;
   color: var(--mainText);
 }
 
@@ -3567,7 +3576,7 @@ button.epTextlink:hover{
   top: -13px;
   right: 0;
   left: auto;
-  z-index: 100;
+  z-index: 110;
   color: var(--mainText);
 }
 
@@ -3795,6 +3804,47 @@ button.epTextlink:hover{
 .wantToKnowMoreFixed:hover .tooltipText {
   visibility: visible;
   opacity: 1;
+}
+
+.psiDamageFields .wantToKnowMore .tooltipText {
+  position: fixed;
+  top: auto;
+  left: auto;
+  transform: translateY(-40px);
+}
+
+.psiDamageFields .grid-3col .wantToKnowMore {
+  flex-wrap: nowrap;
+}
+
+.psiDamageFields .grid-3col .awesomeIcon {
+  flex: 0 0 auto;
+}
+
+.psiDamageFields .grid-3col select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.chiPushed {
+  background-color: var(--insanity);
+  border-radius: 6px;
+}
+
+.chiPushed .subheader {
+  background-color: var(--insanity);
+  border-bottom-color: var(--insanity);
+}
+
+.chiPushed .slideShow {
+  background-color: var(--insanity) !important;
+}
+
+.chiPushedBadge {
+  color: var(--mainText);
+  text-transform: uppercase;
+  font-size: 11px;
+  margin-right: 5px;
 }
 
 .insight,

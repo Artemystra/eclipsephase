@@ -9,6 +9,9 @@ import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
+import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
+import { strainSubstrate } from "../common/body-markers.js";
+import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -144,6 +147,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     limited: "physicalDescription"
   };
 
+  // Psi Infection details panel - client-local like tabGroups above, not actor data, so toggling
+  // it never syncs to other owners' simultaneously-open sheets of the same actor.
+  _psiDetailsOpen = true;
+
   static async _onEditImage(event, target) {
     const field = target.dataset.field || "img";
     const current = foundry.utils.getProperty(this.document, field) || "";
@@ -169,11 +176,24 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     context.config = CONFIG.eclipsephase;
     context.isGM = game.user.isGM;
 
+    const autoPushSelection = actor.system.additionalSystems?.autoPushSelection;
+    context.autoPushLabel = autoPushSelection && autoPushSelection !== "none" ? game.i18n.localize("ep2e.roll.dialog.push." + autoPushSelection) : "";
+
+    const substrateFamily = actorStrainFamily(actor) === "ki" ? "ki" : "psi";
+    const substrate = strainSubstrate(actor, substrateFamily);
+    context.sleightBlockedLabel = substrate.blocked ? game.i18n.localize(substrate.jamBlocked ? "ep2e.roll.announce.jamming.noPsiTooltip" : `ep2e.roll.announce.${substrateFamily}.substrateBlockedTooltip`) : "";
+    context.sleightPenaltyLabel = substrate.penalised ? game.i18n.localize(`ep2e.roll.announce.${substrateFamily}.substrateMismatch`) : "";
+
     await this._prepareCharacterItems(context);
     await this._prepareRenderedHTMLContent(context);
 
     context.editable = this.isEditable;
-    
+    context.psiDetailsOpen = this._psiDetailsOpen;
+
+    context.sleightFamily = actorStrainFamily(actor);
+    context.isKi = context.sleightFamily === "ki";
+    context.subStrainOptions = context.isKi ? CONFIG.eclipsephase.kiStrains : CONFIG.eclipsephase.strains;
+
     //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
     if (game.user.isGM || actor.isOwner){
       context.tabs = {
@@ -184,6 +204,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       };
 
       context.tabGroups = this.tabGroups;
+
+      if (context.tabs.primary?.psi) {
+        context.tabs.primary.psi.label = context.isKi ? "ep2e.actorSheet.rightTabs.kiTab" : "ep2e.actorSheet.rightTabs.psiTab";
+      }
     }
     else {
       context.tabGroups = { limited: this.tabGroups.limited };
@@ -819,17 +843,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actor.ids = id;
       actor.currentIdName = actor.ids.find(i => i.id === actor.system.activeID)?.name ?? "";
 
-      // Check if sleights are present and toggle Psi Tab based on this
-      if (actor.aspect.chi.length>0){
-        actorModel.additionalSystems.hasPsi = 1;
-      }
-      else if (actor.aspect.gamma.length>0){
-        actorModel.additionalSystems.hasPsi = 1;
-      }
+      actorModel.additionalSystems.hasSleightAccess = !!actorModel.additionalSystems.hasPsi;
       
 
     /* In case ACTOR DATA is needed */
-    console.log(this) 
+    //console.log(this)
 
   }
 
@@ -840,7 +858,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       await super._onRender(context, options);
 
       if (game.user.isGM || actor.isOwner){
-      await this.changeTab(this.tabGroups.primary, "primary", { force: true });
+      try {
+        await this.changeTab(this.tabGroups.primary, "primary", { force: true });
+      } catch (err) {
+        await this.changeTab(this.constructor.TABS.primary.initial, "primary", { force: true });
+      }
 
       //Sets the opened tab for PC sheets
       if (actor.type === "character"){
@@ -920,7 +942,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     };
 
-    console.log("This is my dragData", dragData)
+    //console.log("This is my dragData", dragData)
 
     event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
   }
@@ -1130,6 +1152,16 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     itemModel.updated = game.system.version;
 
+    if (itemData.type === "aspect") {
+      let allowed = true;
+      try {
+        allowed = await checkSleightPrerequisite(actor, itemData);
+      } catch (err) {
+        console.error(`[EP2e] ${actor.name}: sleight prerequisite check failed`, err);
+      }
+      if (!allowed) return null;
+    }
+
     const created = await actor.createEmbeddedDocuments("Item", [itemData]);
 
     if (pendingMessage) {
@@ -1187,6 +1219,22 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     root.querySelectorAll(`.tab[data-group="${group}"][data-tab]`).forEach(el => {
       el.classList.toggle("active", el.dataset.tab === activeTab);
     });
+  }
+
+  // Mirrors _syncManualTabGroup above for the Psi Infection details panel - .showFlex carries
+  // !important, so the content pane only needs that class toggled, .noShow/.showMore stay put.
+  _syncPsiDetailsPanel() {
+    const toggle = this.element?.querySelector(".psi-details-toggle");
+    const panel = toggle?.closest(".contentBox")?.querySelector(".listBackground");
+    if (!toggle || !panel) return;
+
+    const [showLabel, hideLabel] = toggle.children;
+    showLabel.classList.toggle("noShow", this._psiDetailsOpen);
+    showLabel.classList.toggle("showFlex", !this._psiDetailsOpen);
+    hideLabel.classList.toggle("noShow", !this._psiDetailsOpen);
+    hideLabel.classList.toggle("showFlex", this._psiDetailsOpen);
+
+    panel.classList.toggle("showFlex", this._psiDetailsOpen);
   }
 
   /**
@@ -1550,18 +1598,42 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       });
     });
 
-    //Reset Psi
-    html.querySelectorAll(".strainSelection").forEach(element => {
-      element.addEventListener("change", ev => {
-        actor.update({
-          "system.subStrain.influence2.label": "none",
-          "system.subStrain.influence2.description": "none",
-          "system.subStrain.influence3.label": "none",
-          "system.subStrain.influence3.description": "none",
-          "system.subStrain.influence4.description": "none",
-          "system.subStrain.influence5.description": "none",
-          "system.subStrain.influence6.description": "none"
-        });
+    // Psi Infection details panel - toggled only by clicking this header, synced locally like
+    // _syncManualTabGroup above instead of a full render, so it survives unrelated sheet changes.
+    html.querySelectorAll(".psi-details-toggle").forEach(element => {
+      element.addEventListener("click", () => {
+        this._psiDetailsOpen = !this._psiDetailsOpen;
+        this._syncPsiDetailsPanel();
+      });
+    });
+
+    html.querySelectorAll(".endChiPush").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.endChiPush");
+        const popUpCopy = "ep2e.psi.popUp.chiPushEndCopy";
+        const popUpPrimary = "ep2e.actorSheet.button.endChiPush";
+
+        const { confirm } = await confirmation(popUpTitle, popUpHeadline, popUpCopy, undefined, "", popUpPrimary);
+        if (!confirm) return;
+
+        await endChiPush(actor, itemId);
+      });
+    });
+
+    html.querySelectorAll(".pushChiSleight").forEach(element => {
+      element.addEventListener("click", async ev => {
+        const itemId = ev.currentTarget.dataset.itemId;
+        const popUpTitle = game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
+        const popUpHeadline = game.i18n.localize("ep2e.actorSheet.button.pushChiSleight");
+        const popUpCopy = "ep2e.psi.popUp.chiPushStartCopy";
+        const popUpPrimary = "ep2e.actorSheet.button.pushChiSleight";
+
+        const { confirm, rollMode } = await confirmation(popUpTitle, popUpHeadline, popUpCopy, undefined, "", popUpPrimary, false, true);
+        if (!confirm) return;
+
+        await confirmChiPush(actor, itemId, rollMode);
       });
     });
 
@@ -1743,7 +1815,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const dataset = element.dataset;
     const actorWhole = this.actor;
     let rolledFrom = dataset.rolledfrom? dataset.rolledfrom : "";
-    console.log("This is my rolled from", rolledFrom, "because my skillKey is", dataset.key)
+    //console.log("This is my rolled from", rolledFrom, "because my skillKey is", dataset.key)
     let weaponID = dataset.weaponid ? dataset.weaponid : "";
     const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
 

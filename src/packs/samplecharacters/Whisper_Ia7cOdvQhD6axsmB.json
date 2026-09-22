@@ -1222,6 +1222,7 @@
         "updated": "",
         "infection": 2,
         "psiType": "gamma",
+        "strainFamily": "psi",
         "actionType": "complex",
         "duration": "Actions Turns"
       },
@@ -1260,6 +1261,7 @@
         "updated": "",
         "infection": null,
         "psiType": "chi",
+        "strainFamily": "psi",
         "actionType": "",
         "duration": ""
       },
@@ -1345,6 +1347,7 @@
         "updated": "",
         "infection": null,
         "psiType": "chi",
+        "strainFamily": "psi",
         "actionType": "",
         "duration": ""
       },
@@ -1383,6 +1386,7 @@
         "updated": "",
         "infection": 6,
         "psiType": "gamma",
+        "strainFamily": "psi",
         "actionType": "complex",
         "duration": "instant"
       },
@@ -1421,6 +1425,7 @@
         "updated": "",
         "infection": 2,
         "psiType": "gamma",
+        "strainFamily": "psi",
         "actionType": "complex",
         "duration": "instant"
       },
@@ -1459,6 +1464,7 @@
         "updated": "",
         "infection": null,
         "psiType": "chi",
+        "strainFamily": "psi",
         "actionType": "",
         "duration": ""
       },

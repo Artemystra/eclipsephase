@@ -1,0 +1,42 @@
+{
+  "name": "Reverse Blueprint",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "When you have a machine in your hands long enough, your cyberbrain reads its construction and turns it into a blueprint. No test is made; the extraction simply takes time, by the machine's complexity: Minor 2 hours, Moderate 8 hours, Major 24 hours, Rare 48 hours. The time must pass in one uninterrupted stretch - if the work is interrupted, it starts over.\n\nThe blueprint carries no DRM, since it comes from the object itself - but it is exactly as restricted or illegal as the original, and fabbing it still takes materials and time. Proprietary technology (Proprietary Tech, GRM-locked designs) yields only a partial blueprint.\n\nYou can push this sleight to extract in minutes instead of hours (2, 8, 24, or 48 minutes), for the duration of the push. The stretch must still be uninterrupted.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": null,
+    "psiType": "chi",
+    "strainFamily": "ki",
+    "actionType": "",
+    "duration": "",
+    "pushed": false
+  },
+  "folder": "aH0mo0xpApB8HmNI",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788479783392,
+    "modifiedTime": 1788479783392,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "NHSEASTQspYozMTJ",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!NHSEASTQspYozMTJ"
+}

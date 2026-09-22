@@ -6,7 +6,7 @@
   "img": "systems/eclipsephase/resources/icons/subtract.png",
   "system": {
     "additionalSystems": {},
-    "description": "Triggers: Alienation, the unknown, violence\n\nYou suffer a neurological condition such as blindness, deafness,inability to speak, loss of balance, seizures, or paralysis in highstress situations. Some asyncs suffer from a similar condition, alien sensory disorder, where attempts to use phantom alien sensory organs disrupt one or more of their actual physical senses.\n\nEffect: WIL Check or suffer from one of the chosen conditions.",
+    "description": "Triggers: Alienation, the unknown, violence\n\nYou suffer a neurological condition such as blindness, deafness, inability to speak, loss of balance, seizures, or paralysis in high-stress situations. Some asyncs suffer from a similar condition, alien sensory disorder, where attempts to use phantom alien sensory organs disrupt one or more of their actual physical senses.\n\nEffect: WIL Check or suffer from one of the chosen conditions.",
     "active": true,
     "displayCategory": "",
     "updated": "",

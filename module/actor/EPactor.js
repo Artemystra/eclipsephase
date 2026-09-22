@@ -1,5 +1,9 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
+import { endAllChiPushes } from "../rolls/psi.js"
+import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
+
+const gammaAutoPushInFlight = new Set();
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -61,7 +65,7 @@ export default class EPactor extends Actor {
     const flags = actorModel.flags;
     const items = this.items;
     let gammaCount = 0;
-    let chiCount = 0;    
+    let chiCount = 0;
     let chiMultiplier = 1;
     if(actorWhole.type === "character" || actorWhole.type === "npc"){
       actorModel.psiStrain ??= { infection: 0, minimumInfection: 0 };
@@ -70,7 +74,7 @@ export default class EPactor extends Actor {
       }
     }
     actorModel.mods.psiMultiplier = chiMultiplier
-    actorModel.currentStatus = [];    
+    actorModel.currentStatus = [];
 
     // Homebrew Switch
     actorModel.homebrew = game.settings.get("eclipsephase", "superBrew");
@@ -112,6 +116,8 @@ export default class EPactor extends Actor {
       if (hasSockMarker) puppetSocked.push(wareCheck.system.boundTo);
     }
     actorModel.additionalSystems.puppetSocked = puppetSocked;
+
+    actorModel.additionalSystems.hasCyberbrainChain = chainHasWareMarker(actorWhole, CYBERBRAIN_MARKER);
 
     //Prepares information what type of psi a character uses
     for(let psiTypeCheck of items){
@@ -425,17 +431,48 @@ export default class EPactor extends Actor {
   _calculatePools(actorModel, morphValues, chiMultiplier) {
     actorModel.pools.flex.totalFlex = Number(morphValues.flex) +
       Number(actorModel.ego.egoFlex) +
-      eval(actorModel.pools.flex.mod) + 
+      eval(actorModel.pools.flex.mod) +
       (actorModel.pools.flex.chiMod ? (eval(actorModel.pools.flex.chiMod)*chiMultiplier) : 0)
     actorModel.pools.insight.totalInsight = Number(morphValues.insight) +
-      eval(actorModel.pools.insight.mod) + 
+      eval(actorModel.pools.insight.mod) +
       (actorModel.pools.insight.chiMod ? (eval(actorModel.pools.insight.chiMod)*chiMultiplier) : 0)
     actorModel.pools.moxie.totalMoxie = Number(morphValues.moxie) +
-      eval(actorModel.pools.moxie.mod) + 
+      eval(actorModel.pools.moxie.mod) +
       (actorModel.pools.moxie.chiMod ? (eval(actorModel.pools.moxie.chiMod)*chiMultiplier) : 0)
     actorModel.pools.vigor.totalVigor = Number(morphValues.vigor) +
-      eval(actorModel.pools.vigor.mod) + 
+      eval(actorModel.pools.vigor.mod) +
       (actorModel.pools.vigor.chiMod ? (eval(actorModel.pools.vigor.chiMod)*chiMultiplier) : 0)
+
+  }
+
+  /**
+   * Applies an Infection-33 chi boost crossing: ends any manual chi pushes when the free boost is
+   * gained, and moves each pool's current value by the same amount its max just moved. Called from
+   * the updateActor hook by the single client whose user changed the Infection Rating, so it never
+   * runs on a client that lacks permission to write this actor.
+   */
+  async applyChiBoostCrossing() {
+    const isBoosted = this.system.psiStrain?.infection >= 33;
+    if (isBoosted === (this.system.additionalSystems?.psiChiBoosted === true)) return;
+
+    if (isBoosted) await endAllChiPushes(this);
+    this._applyChiBoostToPoolValues(this.system, isBoosted ? 1 : -1, this);
+  }
+
+  // Moves each pool's CURRENT value by the same amount the Infection-33 chiMod boost moved its max.
+  _applyChiBoostToPoolValues(actorModel, chiBoostDelta, actorWhole) {
+    const POOLS = { insight: "totalInsight", moxie: "totalMoxie", vigor: "totalVigor", flex: "totalFlex" };
+    const updates = { "system.additionalSystems.psiChiBoosted": chiBoostDelta > 0 };
+
+    for (const [key, totalField] of Object.entries(POOLS)) {
+      const pool = actorModel.pools[key];
+      const chiModAmount = pool.chiMod ? eval(pool.chiMod) : 0;
+      if (!chiModAmount) continue;
+      const delta = chiModAmount * chiBoostDelta;
+      updates[`system.pools.${key}.value`] = Math.clamp((pool.value ?? 0) + delta, 0, pool[totalField]);
+    }
+
+    actorWhole.update(updates);
   }
 
   _calculateHomebrewEncumberance(actorModel) {
@@ -912,24 +949,36 @@ export default class EPactor extends Actor {
     actorModel.psiStrain.minimumInfection = minimumInfection
   }
 
-  async _autoPush(actorModel, actorWhole) {
-    let currentInfection = actorModel.psiStrain.infection ?? 0;
-    let autoPushSelection = actorModel.additionalSystems.autoPushSelection
+  /**
+   * Persists the Infection-66+ crossing state, if this actor just crossed it in either direction.
+   * Gaining the boost prompts for the free push effect (RAW: re-asked on every fresh crossing),
+   * losing it clears the pick. Called from the updateActor hook by the single client whose user
+   * made the change, so the dialog reaches that person alone - a roll and a manual edit of the
+   * Infection Rating both route through here.
+   */
+  async requestGammaAutoPushOnCrossing() {
+    const actorWhole = this;
+    const isGammaBoosted = this.system.psiStrain?.infection >= 66;
+    if (isGammaBoosted === (this.system.additionalSystems?.psiGammaBoosted === true)) return;
+    if (gammaAutoPushInFlight.has(actorWhole.id)) return;
+    gammaAutoPushInFlight.add(actorWhole.id);
 
-    switch(currentInfection){
-      case (currentInfection < 33):
-        actorModel.additionalSystems.autoPush = 0;
-        actorModel.additionalSystems.autoPushSelection = false;
-        break;
-      case (currentInfection > 66 && !autoPushSelection):
-        actorModel.additionalSystems.autoPush = 2;
-        let pushSelection = await autoPushSelector("selectAutoPush")
-        let selection = pushSelection.pushType;
-        actorModel.additionalSystems.autoPushSelection = selection;
+    try {
+      if (!isGammaBoosted) {
+        await actorWhole.update({
+          "system.additionalSystems.psiGammaBoosted": false,
+          "system.additionalSystems.autoPushSelection": "none"
+        });
+        return;
+      }
 
-        break;
-      default:
-        break;
+      const pushSelection = await autoPushSelector("selectAutoPush");
+      await actorWhole.update({
+        "system.additionalSystems.psiGammaBoosted": true,
+        "system.additionalSystems.autoPushSelection": pushSelection.pushType || "none"
+      });
+    } finally {
+      gammaAutoPushInFlight.delete(actorWhole.id);
     }
   }
 }

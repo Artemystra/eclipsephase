@@ -1,0 +1,88 @@
+{
+  "name": "Uncanny Heuristics",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/cpu.png",
+  "effects": [
+    {
+      "_id": "z7DifpTk2m9KQXr4",
+      "disabled": false,
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "origin": null,
+      "tint": "#ffffff",
+      "transfer": true,
+      "flags": {},
+      "name": "Uncanny Heuristics",
+      "description": "",
+      "statuses": [],
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "img": "/icons/svg/mystery-man.svg",
+      "type": "base",
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.iniChiMod",
+            "value": "+2",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "_key": "!items.effects!IXpNE84B0bDX8JKc.z7DifpTk2m9KQXr4"
+    }
+  ],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "Your cyberbrain's predictive scheduling runs ahead of events, estimating the most likely outcomes as they unfold in real time around you. In effect, you have an intuitive sense for what happens next. +2 Initiative.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": null,
+    "psiType": "chi",
+    "strainFamily": "ki",
+    "actionType": "",
+    "duration": "",
+    "pushed": false
+  },
+  "folder": "aH0mo0xpApB8HmNI",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "IXpNE84B0bDX8JKc",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!IXpNE84B0bDX8JKc"
+}

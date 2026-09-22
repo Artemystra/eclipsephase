@@ -15,6 +15,7 @@
     "updated": "",
     "infection": null,
     "psiType": "epsilon",
+    "strainFamily": "psi",
     "actionType": "complex",
     "duration": "sustained"
   },

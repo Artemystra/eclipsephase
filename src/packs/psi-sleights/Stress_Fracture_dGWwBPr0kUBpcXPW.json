@@ -1,0 +1,42 @@
+{
+  "name": "Stress Fracture",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You seed hairline fractures throughout the target's structure. The next time the target takes physical damage within the next WIL ÷ 5 minutes, that damage is increased by 1d6, +1d6 per superior success. The fractures fade unused once the duration ends.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 4,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "minutes",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "dGWwBPr0kUBpcXPW",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!dGWwBPr0kUBpcXPW"
+}

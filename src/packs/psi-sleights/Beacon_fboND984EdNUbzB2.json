@@ -1,0 +1,42 @@
+{
+  "name": "Beacon",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You force the target's transmitters open. For WIL ÷ 5 minutes, the target involuntarily broadcasts its exact location and cannot fall completely silent, no matter what stealth or privacy modes it engages. Anyone attempting to locate or track the target receives a +30 modifier.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 4,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "minutes",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "fboND984EdNUbzB2",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!fboND984EdNUbzB2"
+}

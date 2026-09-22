@@ -644,3 +644,15 @@ export async function postShopChatMessage(character, copyKey, copyData, boxConte
   });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: character }), content });
 }
+
+/**
+ * The rules-text key mirroring an effect option's label key: ep2e.psi.effect.motivation.hoard
+ * becomes ep2e.rule.psi.effect.motivation.hoard. Returns an empty string for anything that is not
+ * a complete label key, so callers can skip the info icon when nothing is selected.
+ * @param {string} labelKey
+ * @returns {string}
+ */
+export function effectRuleKey(labelKey) {
+  if (typeof labelKey !== "string" || !labelKey.startsWith("ep2e.") || labelKey.endsWith(".")) return "";
+  return "ep2e.rule." + labelKey.slice("ep2e.".length);
+}

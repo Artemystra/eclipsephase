@@ -1,0 +1,48 @@
+{
+  "name": "Rust Bite",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You trigger runaway corrosion and structural failure in the target. You inflict 2d10 DV, +1d6 per superior success, reduced by armor as normal. This sleight only affects machines and targets with a cyberbrain (synthmorphs, pods, bots, vehicles, and the like); it has no effect on biological brains.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 6,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "instant",
+    "pushed": false,
+    "damage": {
+      "target": "physical",
+      "d10": 2,
+      "d6": 0,
+      "bonus": 0
+    }
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "y7jtgoyIjNkmlmaz",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!y7jtgoyIjNkmlmaz"
+}

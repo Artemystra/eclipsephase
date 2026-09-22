@@ -313,7 +313,10 @@ export async function itemReduction(actor, itemID, itemQuantity){
     popUpInfo,
     popUpTarget,
     popUpPrimary,
-    singleButton
+    singleButton,
+    showRollMode,
+    popUpBoxLabel,
+    popUpBoxValue
   ) {
     const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
     const primaryButton = popUpPrimary
@@ -329,7 +332,10 @@ export async function itemReduction(actor, itemID, itemQuantity){
       popUpCopy,
       dialogType,
       popUpInfo,
-      popUpTarget
+      popUpTarget,
+      showRollMode,
+      popUpBoxLabel,
+      popUpBoxValue
     });
 
     const buttons = [];
@@ -338,7 +344,7 @@ export async function itemReduction(actor, itemID, itemQuantity){
       action: "confirm",
       label: primaryButton,
       default: true,
-      callback: () => true
+      callback: (event, button) => showRollMode ? { confirm: true, rollMode: button.form.rollMode.value } : true
     });
 
     if (!buttonLayout) {
@@ -359,6 +365,9 @@ export async function itemReduction(actor, itemID, itemQuantity){
       position: { width: 250 }
     });
 
+    if (showRollMode) {
+      return result && typeof result === "object" ? result : { confirm: false, rollMode: "private" };
+    }
     return { confirm: result === true || result === "confirm" };
   }
 
@@ -966,8 +975,6 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
       let weaponSelected
       const actorModel = actorWhole.system;
 
-      console.log("I rolled from", rolledFrom)
-
       if (rolledFrom === "psiSleight") {
         dataset.rollvalue = actorModel.skillsMox.psi.roll;
         dataset.specname = actorModel.skillsMox.psi.specname;
@@ -995,9 +1002,6 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
         rolledFrom = weaponSelected.rolledFrom
 
       }
-
-      console.log("my weapon", weaponSelected)
-      console.log("this is my dataset", dataset)
 
       DICE.RollCheck(dataset, actorModel, actorWhole, systemOptions, weaponSelected, rolledFrom)
     }
@@ -1035,6 +1039,22 @@ export function prepareRecipients(rollMode){
   }
 
   return recipientList
+}
+
+/**
+ * Reads the visibility of the chat message a clicked button sits in, so that follow-up rolls inherit
+ * the original roll's Public/Private/Blind setting instead of re-deriving it from the button.
+ * @param {String} messageId - The id of the originating chat message
+ * @param {String} rollMode - The button's own roll mode, used only if that message no longer exists
+ * @returns - An object holding the blind flag and the list of recipients
+ */
+export function inheritChatVisibility(messageId, rollMode){
+  const originMessage = messageId ? game.messages.get(messageId) : null;
+
+  if(originMessage)
+    return {blind: originMessage.blind, recipientList: originMessage.whisper}
+
+  return {blind: rollMode === "blindroll" && !game.user.isGM, recipientList: prepareRecipients(rollMode)}
 }
 
 //DV calculator (this translates the three given integers into a human readable roll formula)

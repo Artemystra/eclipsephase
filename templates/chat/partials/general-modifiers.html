@@ -162,11 +162,21 @@
             <label class="resource-labelDialog">{{localize "ep2e.roll.dialog.push.label"}}</label>
             <select name="push">
                 <option value="">{{localize "ep2e.roll.dialog.push.none"}}</option>
+                {{#unless (eq actorWhole.system.additionalSystems.autoPushSelection "range")}}
                 <option value="range">{{localize "ep2e.roll.dialog.push.range"}}</option>
+                {{/unless}}
+                {{#unless (eq actorWhole.system.additionalSystems.autoPushSelection "effect")}}
                 <option value="effect">{{localize "ep2e.roll.dialog.push.effect"}}</option>
+                {{/unless}}
+                {{#unless (eq actorWhole.system.additionalSystems.autoPushSelection "power")}}
                 <option value="power">{{localize "ep2e.roll.dialog.push.power"}}</option>
+                {{/unless}}
+                {{#unless (eq actorWhole.system.additionalSystems.autoPushSelection "penetration")}}
                 <option value="penetration">{{localize "ep2e.roll.dialog.push.penetration"}}</option>
+                {{/unless}}
+                {{#unless (eq actorWhole.system.additionalSystems.autoPushSelection "duration")}}
                 <option value="duration">{{localize "ep2e.roll.dialog.push.duration"}}</option>
+                {{/unless}}
                 <option value="target">{{localize "ep2e.roll.dialog.push.target"}}</option>
             </select>
         </div>

@@ -1,0 +1,42 @@
+{
+  "name": "Governor Override",
+  "type": "aspect",
+  "flags": {
+    "core": {}
+  },
+  "img": "systems/eclipsephase/resources/icons/mechanical-arm.png",
+  "effects": [],
+  "system": {
+    "tags": [],
+    "additionalSystems": {},
+    "description": "You override the target's movement governor. Choose one effect for WIL ÷ 5 minutes: Lock - the target may only use its lower listed movement rate; or Runaway - whenever the target moves, it must move its maximum possible distance for that action.",
+    "active": true,
+    "displayCategory": "",
+    "updated": "2.3",
+    "infection": 4,
+    "psiType": "gamma",
+    "strainFamily": "ki",
+    "actionType": "complex",
+    "duration": "minutes",
+    "pushed": false
+  },
+  "folder": "BdL8YvDVmJHwWscq",
+  "_stats": {
+    "coreVersion": "14.360",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.3",
+    "createdTime": 1788478240130,
+    "modifiedTime": 1788478240130,
+    "lastModifiedBy": "As9MwNgJsGddtEep",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_id": "uvyq2BrPWcOKF8s1",
+  "sort": 0,
+  "ownership": {
+    "default": 0,
+    "As9MwNgJsGddtEep": 3
+  },
+  "_key": "!items!uvyq2BrPWcOKF8s1"
+}

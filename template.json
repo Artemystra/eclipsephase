@@ -92,9 +92,13 @@
         },
         "additionalSystems": {
           "hasPsi": null,
+          "hasSleightAccess": false,
           "hasGear": null,
-          "psiAutoClose": false,
-          "puppetSocked": []
+          "psiChiBoosted": false,
+          "psiGammaBoosted": false,
+          "autoPushSelection": "none",
+          "puppetSocked": [],
+          "hasCyberbrainChain": false
         },
         "initiative": {
           "value": null,
@@ -332,25 +336,77 @@
         },
         "subStrain": {
           "label": "",
-          "influence2": {
-            "label": "",
-            "description": ""
-          },
-          "influence3": {
-            "label": "",
-            "description": ""
-          },
-          "influence4": {
-            "label": "",
-            "description": ""
-          },
-          "influence5": {
-            "label": "",
-            "description": ""
-          },
-          "influence6": {
-            "label": "",
-            "description": ""
+          "byArchetype": {
+            "architect": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "beast": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "haunter": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "stranger": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "xenomorph": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "crucible": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "redline": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "signal": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "ruin": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            },
+            "colony": {
+              "influence2": { "label": "", "description": "" },
+              "influence3": { "label": "", "description": "" },
+              "influence4": { "label": "", "description": "" },
+              "influence5": { "label": "", "description": "" },
+              "influence6": { "label": "", "description": "" }
+            }
           }
         },
         "strainInfluence": {
@@ -1383,8 +1439,16 @@
       ],
       "infection": null,
       "psiType": "",
+      "strainFamily": "psi",
       "actionType": "",
-      "duration": ""
+      "duration": "",
+      "pushed": false,
+      "damage": {
+        "target": "physical",
+        "d10": null,
+        "d6": null,
+        "bonus": null
+      }
     },
     "program": {
       "templates": [
