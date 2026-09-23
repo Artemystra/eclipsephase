@@ -42,11 +42,12 @@ describe("system.json", () => {
     expect(missing).toEqual([]);
   });
 
-  test("the manifest and download URLs point at the same ref, either master or this version's release branch", () => {
-    const refs = ["master", `Release-v${system.version}`];
-    const refOf = url => refs.find(ref => url.includes(ref)) ?? null;
-    expect(refOf(system.manifest)).not.toBeNull();
-    expect(refOf(system.download)).toEqual(refOf(system.manifest));
+  test("the manifest is the rolling latest-release alias, so an installed copy always finds the newest one", () => {
+    expect(system.manifest).toEqual("https://github.com/Artemystra/eclipsephase/releases/latest/download/system.json");
+  });
+
+  test("the download is pinned to the tag matching the declared version", () => {
+    expect(system.download).toEqual(`https://github.com/Artemystra/eclipsephase/releases/download/v${system.version}/eclipsephase.zip`);
   });
 });
 
@@ -63,7 +64,7 @@ describe("the modules the system recommends", () => {
 
   test("each carries a manifest URL Foundry can install from", () => {
     for (const entry of recommends) {
-      expect(entry.manifest).toMatch(/^https:\/\/raw\.githubusercontent\.com\/.+\/module\.json$/);
+      expect(entry.manifest).toMatch(/^https:\/\/github\.com\/.+\/releases\/latest\/download\/module\.json$/);
       expect(entry.manifest).toContain(entry.id);
     }
   });

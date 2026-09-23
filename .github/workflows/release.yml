@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Check the manifest version against the tag
+        run: |
+          tagged="${GITHUB_REF_NAME#v}"
+          declared="$(jq -r .version system.json)"
+          if [ "$tagged" != "$declared" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match system.json version $declared"
+            exit 1
+          fi
+
+      - name: Point the download at this release
+        run: |
+          jq --arg url "https://github.com/$GITHUB_REPOSITORY/releases/download/$GITHUB_REF_NAME/eclipsephase.zip" \
+             '.download = $url' system.json > system.json.tmp
+          mv system.json.tmp system.json
+
+      - name: Build the package
+        run: zip -r eclipsephase.zip system.json template.json module templates css lang packs lib docs resources/icons resources/img README.md
+
+      - name: Publish a draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            system.json eclipsephase.zip \
+            --draft --title "$GITHUB_REF_NAME"
