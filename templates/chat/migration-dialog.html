@@ -1,21 +1,11 @@
 <form>
-    {{#if endMigration}}
     <div class="contentBoxMargin">
         <div class="flexrow subheader">
             {{{localize messageHeadline}}}
         </div>
         <div class="form-group listBackgroundMain">
             {{{localize messageCopy}}}
+            {{#if messageCopyExtra}}{{{localize messageCopyExtra}}}{{/if}}
         </div>
     </div>
-    {{else}}
-    <div class="contentBoxMargin">
-        <div class="flexrow subheader">
-            {{{localize messageHeadline}}}
-        </div>
-        <div class="form-group listBackgroundMain">
-            {{{localize messageCopy}}}
-        </div>
-    </div>
-    {{/if}}
 </form>

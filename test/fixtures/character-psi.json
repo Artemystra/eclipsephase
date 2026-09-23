@@ -1,0 +1,75 @@
+{
+  "name": "Async",
+  "type": "character",
+  "system": {
+    "aptitudes": {
+      "cog": {
+        "value": 18
+      },
+      "int": {
+        "value": 18
+      },
+      "ref": {
+        "value": 18
+      },
+      "sav": {
+        "value": 18
+      },
+      "som": {
+        "value": 18
+      },
+      "wil": {
+        "value": 18
+      }
+    },
+    "activeMorph": "o4auLt59iyV8732k",
+    "skillsMox": {
+      "psi": {
+        "value": 45
+      }
+    },
+    "psiStrain": {
+      "name": "Watts-MacLeod",
+      "strainType": 1,
+      "infection": 40
+    },
+    "subStrain": {
+      "label": "architect"
+    }
+  },
+  "packItems": [
+    "morphs/Ghost_o4auLt59iyV8732k.json",
+    "traits/Psi_II_TY0Nu1Aat61Vz1qK.json"
+  ],
+  "items": [
+    {
+      "_id": "aspectchi000001",
+      "name": "Enhanced Behavior",
+      "type": "aspect",
+      "system": {
+        "psiType": "chi",
+        "strainFamily": "psi",
+        "infection": 0,
+        "actionType": "quick",
+        "duration": "sustained"
+      }
+    },
+    {
+      "_id": "aspectgamma0001",
+      "name": "Psychic Stab",
+      "type": "aspect",
+      "system": {
+        "psiType": "gamma",
+        "strainFamily": "psi",
+        "infection": 5,
+        "actionType": "complex",
+        "damage": {
+          "target": "physical",
+          "d10": 2,
+          "d6": null,
+          "bonus": null
+        }
+      }
+    }
+  ]
+}

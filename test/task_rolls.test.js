@@ -1,4 +1,4 @@
-import * as dice from '../module/dice.js'
+import * as dice from '../module/rolls/dice.js'
 import * as help from './helpers'
 
 describe('Task Rolls', () => {

@@ -1,0 +1,51 @@
+{
+  "name": "Jammer",
+  "type": "character",
+  "system": {
+    "aptitudes": {
+      "cog": {
+        "value": 15
+      },
+      "int": {
+        "value": 15
+      },
+      "ref": {
+        "value": 15
+      },
+      "sav": {
+        "value": 15
+      },
+      "som": {
+        "value": 15
+      },
+      "wil": {
+        "value": 15
+      }
+    },
+    "activeMorph": "o4auLt59iyV8732k",
+    "activeJam": "vehicledrone001",
+    "skillsVig": {
+      "guns": {
+        "value": 40
+      }
+    }
+  },
+  "items": [
+    {
+      "_id": "vehicledrone001",
+      "name": "Scout Drone",
+      "type": "vehicle",
+      "system": {
+        "chassisType": "robot",
+        "dur": 20,
+        "armor": {
+          "energy": 4,
+          "kinetic": 4
+        }
+      }
+    }
+  ],
+  "packItems": [
+    "morphs/Ghost_o4auLt59iyV8732k.json"
+  ]
+}

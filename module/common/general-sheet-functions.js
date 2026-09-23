@@ -1,6 +1,7 @@
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
+import { getRollSource } from "../api/registry.js";
 
 /**
  * Foundry VTTs item creation & deletion functions
@@ -318,6 +319,10 @@ export async function itemReduction(actor, itemID, itemQuantity){
     popUpBoxLabel,
     popUpBoxValue
   ) {
+    if (game.eclipsephase?.testing?.autoConfirm) {
+      return showRollMode ? { confirm: true, rollMode: popUpBoxValue || "public" } : { confirm: true };
+    }
+
     const cancelButton = game.i18n.localize("ep2e.roll.dialog.button.cancel");
     const primaryButton = popUpPrimary
       ? game.i18n.localize(popUpPrimary)
@@ -975,13 +980,19 @@ async function joinDiceRollMessage(rollsArray, messageData={}, {rollMode, create
       let weaponSelected
       const actorModel = actorWhole.system;
 
-      if (rolledFrom === "psiSleight") {
+      const registeredSkill = getRollSource(rolledFrom)?.skillRoll?.(actorModel, actorWhole.items, dataset);
+
+      if (registeredSkill) {
+        dataset.rollvalue = registeredSkill.rollvalue;
+        dataset.specname = registeredSkill.specname;
+        if (registeredSkill.poolType) dataset.pooltype = registeredSkill.poolType;
+      }
+      else if (rolledFrom === "psiSleight") {
         dataset.rollvalue = actorModel.skillsMox.psi.roll;
         dataset.specname = actorModel.skillsMox.psi.specname;
         dataset.pooltype = "Moxie";
       }
-
-      if (rolledFrom === "rangedWeapon") {
+      else if (rolledFrom === "rangedWeapon") {
         dataset.rollvalue = actorModel.skillsVig.guns.roll;
         dataset.specname = actorModel.skillsVig.guns.specname;
         dataset.pooltype = "Vigor";
@@ -1055,6 +1066,122 @@ export function inheritChatVisibility(messageId, rollMode){
     return {blind: originMessage.blind, recipientList: originMessage.whisper}
 
   return {blind: rollMode === "blindroll" && !game.user.isGM, recipientList: prepareRecipients(rollMode)}
+}
+
+/**
+ * Assembles everything a chat card's follow-up buttons need, so it can be stored once on the
+ * message instead of being serialised into every button.
+ * @param {Object} outputData - The task roll's output data, with its alternatives already attached
+ * @param {Actor} actorWhole - The rolling actor
+ * @param {Object} options - The options the roll dialog returned
+ * @param {Object} itemData - Weapon or sleight payload of the roll; a module's own payload arrives
+ *                            through the preRoll hook's flags instead
+ * @returns {Object} The roll context stored in the message flags
+ */
+export function buildRollContext(outputData, actorWhole, options, itemData){
+  const alternatives = outputData?.alternatives ?? {};
+  const pool = outputData?.pools ?? {};
+  const choice = alternatives.options ?? {};
+
+  return {
+    version: 1,
+    actorUuid: actorWhole?.uuid ?? "",
+    userId: game.user?._id ?? game.user?.id ?? "",
+    rolledFrom: outputData?.rolledFrom ?? "",
+    rollType: outputData?.skillKey ?? "",
+    pool: {
+      skillPoolValue: Number(pool.skillPoolValue) || 0,
+      flexPoolValue: Number(pool.flexPoolValue) || 0,
+      updatePoolPath: pool.updatePoolPath ?? "",
+      updateFlexPath: pool.updateFlexPath ?? "",
+      poolType: pool.poolType ?? ""
+    },
+    alternatives: {
+      usageType: choice.swap ? "swapped" : choice.upgrade ? "upgraded" : choice.mitigate ? "mitigated" : "",
+      result: Number.isFinite(alternatives.result) ? alternatives.result : null,
+      value: Number.isFinite(alternatives.value) ? alternatives.value : null,
+      originalResult: Number.isFinite(alternatives.originalResult) ? alternatives.originalResult : null,
+      resultClass: alternatives.resultClass ?? "",
+      resultText: alternatives.resultText ?? ""
+    },
+    options: {
+      push: options?.push || false,
+      attackMode: options?.attackMode ?? "",
+      biomorphTarget: options?.biomorphTarget === true || options?.biomorphTarget === "true",
+      touchOnly: options?.touchOnly === true || options?.touchOnly === "true",
+      rollMode: outputData?.rollMode || ""
+    },
+    item: {
+      weaponId: itemData?.weaponID ?? "",
+      weaponMode: itemData?.weaponMode ?? "",
+      sleightId: itemData?.sleightID ?? "",
+      damageTarget: itemData?.damageTarget ?? ""
+    }
+  };
+}
+
+/**
+ * Translates the data attributes of a chat button into the same shape buildRollContext produces.
+ * Needed for cards created before the context was stored on the message itself.
+ * @param {DOMStringMap} dataset - The clicked button's data attributes
+ * @returns {Object} The roll context in its stored shape
+ */
+export function legacyRollContext(dataset = {}){
+  const number = value => {
+    const parsed = parseInt(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+  const push = dataset.push ?? dataset.psipush;
+
+  return {
+    version: 0,
+    actorUuid: dataset.actorid ?? "",
+    userId: dataset.userid ?? "",
+    rolledFrom: dataset.rolledfrom ?? "",
+    rollType: "",
+    pool: {
+      skillPoolValue: number(dataset.skillpoolvalue) ?? 0,
+      flexPoolValue: number(dataset.flexpoolvalue) ?? 0,
+      updatePoolPath: dataset.updatepoolpath ?? "",
+      updateFlexPath: dataset.updateflexpath ?? "",
+      poolType: dataset.pooltype ?? ""
+    },
+    alternatives: {
+      usageType: dataset.usagetype ?? "",
+      result: number(dataset.newresult),
+      value: number(dataset.newvalue),
+      originalResult: number(dataset.rollresult),
+      resultClass: dataset.resultclass ?? "",
+      resultText: dataset.resulttext ?? ""
+    },
+    options: {
+      push: !push || push === "false" ? false : push,
+      attackMode: dataset.attackmode ?? "",
+      biomorphTarget: dataset.biomorphtarget === "true",
+      touchOnly: dataset.touchonly === "true",
+      rollMode: dataset.rollmode ?? ""
+    },
+    item: {
+      weaponId: dataset.weaponid ?? "",
+      weaponMode: dataset.weaponmode ?? "",
+      sleightId: dataset.sleightid ?? dataset.itemid ?? "",
+      damageTarget: dataset.damagetarget ?? ""
+    }
+  };
+}
+
+/**
+ * Resolves the roll context behind a clicked chat button, preferring the message flags and falling
+ * back to the button's own data attributes for cards created before the flags existed.
+ * @param {HTMLElement} element - The clicked button
+ * @returns {Object} The roll context, with the id of the message it came from
+ */
+export function readRollContext(element){
+  const messageId = element?.closest?.("[data-message-id]")?.dataset?.messageId ?? null;
+  const stored = messageId ? game.messages.get(messageId)?.flags?.eclipsephase?.roll : null;
+  const context = stored ? foundry.utils.deepClone(stored) : legacyRollContext(element?.dataset ?? {});
+  context.messageId = messageId;
+  return context;
 }
 
 //DV calculator (this translates the three given integers into a human readable roll formula)

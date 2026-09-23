@@ -1,7 +1,9 @@
 import  * as pools  from "./pools.js";
 import * as psi from "./psi.js";
-import { prepareRecipients, damageValueCalc } from "../common/general-sheet-functions.js";
+import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/general-sheet-functions.js";
 import { strainSubstrate } from "../common/body-markers.js";
+import { getStrainFamily } from "./strain-families.js";
+import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
 
 /*
  * Path constants for dialog templates
@@ -432,7 +434,7 @@ export class TaskRoll {
   outputData(options, actorWhole, pool, rollItem, rolledFrom, systemOptions) {
     let data = {}
     
-    let resultText = systemOptions.brewStatus ? HOMEBREW_TASK_RESULT_TEXT[this._result] : TASK_RESULT_TEXT[this._result]
+    let resultText = (getTaskResultText() ?? TASK_RESULT_TEXT)[this._result]
 
     data.userID = game.user._id
     data.actor = actorWhole
@@ -533,6 +535,9 @@ export class TaskRollModifier {
 // Reads the same base skill/aptitude value the sheet would set as data-rollvalue, but off an
 // arbitrary actorSystem/items pair - lets getOwnBodyEffectDelta diff the real actor vs. a clone.
 function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
+    const registered = getRollSource(rolledFrom)?.skillRoll?.(actorSystem, items, dataset);
+    if (registered?.rollvalue !== undefined && registered?.rollvalue !== null) return registered.rollvalue;
+
     if (rolledFrom === "rangedWeapon") return actorSystem.skillsVig?.guns?.roll;
     if (rolledFrom === "ccWeapon") return actorSystem.skillsVig?.melee?.roll;
     if (rolledFrom === "psiSleight") return actorSystem.skillsMox?.psi?.roll;
@@ -597,7 +602,7 @@ function getOwnBodyEffectDelta(actorWhole, dataset, rolledFrom) {
  * @param {Object} dataset - The dataset object that contains all the necessary information for the roll. It is derived from the html element that was clicked to trigger the roll
  * @param {Object} actorModel - The actor's system object that the roll is being performed from
  * @param {Object} actorWhole - The actor object that the roll is being performed from
- * @param {Object} systemOptions - The system options selected mainly to determine whether homebrew rules are in effect
+ * @param {Object} systemOptions - askForOptions/optionsSettings the dialog was opened with
  * @param {Object} weaponSelected - The weapon object that is being used for the roll (This is important for attack rolls (melee/guns) only)
  * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
  * @returns 
@@ -615,16 +620,29 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         const strainFamily = sleightItem?.system?.strainFamily ?? "psi";
         const substrate = strainSubstrate(actorWhole, strainFamily);
         if (substrate.blocked) {
-            ui.notifications.warn(game.i18n.localize(substrate.jamBlocked
-                ? "ep2e.roll.announce.jamming.noPsi"
-                : strainFamily === "ki" ? "ep2e.roll.announce.ki.noCyberbrain" : "ep2e.roll.announce.psi.noBioBrain"));
+            ui.notifications.warn(game.i18n.localize(substrate.reasonKey));
             return;
         }
     }
 
+    const rollContext = {
+        dataset, actor: actorWhole, actorModel, rolledFrom, roll,
+        rollType: roll.type, sections: [], cancelReason: null,
+        options: null, task: null, pool: null, modifiers: [], itemData: null, flags: {},
+        outputData: null, message: null, blind: false, rollMode: null
+    }
+
+    if (Hooks.call("eclipsephase.preRollDialog", rollContext) === false) {
+        if (rollContext.cancelReason) ui.notifications.warn(game.i18n.localize(rollContext.cancelReason))
+        return
+    }
+
     let pool = await poolCalc(actorWhole.type, actorModel, dataset.apttype, dataset.pooltype, roll.type, rolledFrom)
+    rollContext.pool = pool
     const isJammingRoll = actorModel?.additionalSystems?.isJamming && rolledFrom !== "integration" && rolledFrom !== "vehicleSkill";
-    let values = await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset)
+    let values = systemOptions?.skipDialog
+        ? { cancelled: false, ...systemOptions.presetOptions }
+        : await showOptionsDialog(roll, roll.type, specName, pool, actorWhole, weaponSelected ? weaponSelected.weaponTraits : null, rolledFrom, dataset, rollContext)
 
     if(values.cancelled)
         return
@@ -633,10 +651,9 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         options[entry] = values[entry] || false
     }
 
-    // Shop purchases with Loyalty active replace the player-facing favor-difficulty dropdown
-    // with an auto-calculated value (general-modifiers.html renders it disabled), but the value
-    // is force-applied here too since favorDifficultyModifier can legitimately be 0 (Moderate),
-    // which the `|| false` fallback above would otherwise wipe.
+    // A caller may pre-compute the favor difficulty and lock the dropdown (general-modifiers.html
+    // renders it disabled). The value is force-applied here too since favorDifficultyModifier can
+    // legitimately be 0 (Moderate), which the `|| false` fallback above would otherwise wipe.
     if (dataset.favorDifficultyLocked) {
         options.favorMod = Number(dataset.favorDifficultyModifier) || 0;
     }
@@ -678,14 +695,14 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         if(activePoolChoice != "poolIgnore" && activePoolChoice != "flexIgnore")
             addTaskModifiers(actorWhole, actorModel, options, task, roll.type, rolledFrom, weaponSelected)
 
-        // burnMod clamp must match _useGefallen()'s post-roll clamp (dataset.rollvalue/maxBurn).
-        let shopBurnAmount = 0;
-        if(rolledFrom === "shopPurchase"){
-            const sellBonus = Number(dataset.sellBonus) || 0;
-            if(sellBonus) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.sellBonusModifier', sellBonus))
-
-            shopBurnAmount = Math.max(0, Math.min(Number(options.burnMod) || 0, Number(dataset.maxBurn) || 0, Number(dataset.rollvalue) || 0));
-            if(shopBurnAmount) task.addModifier(new TaskRollModifier('ep2e.shop.purchase.burnBonusModifier', shopBurnAmount * 2))
+        rollContext.options = options
+        rollContext.task = task
+        rollContext.pool = activePool
+        rollContext.modifiers = []
+        Hooks.callAll("eclipsephase.preRoll", rollContext)
+        for(const modifier of rollContext.modifiers){
+            if(modifier instanceof TaskRollModifier) task.addModifier(modifier)
+            else if(modifier?.text) task.addModifier(new TaskRollModifier(modifier.text, modifier.value, modifier.comment))
         }
 
         await task.performRoll()
@@ -693,16 +710,17 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
         let itemData = {}
         if(weaponSelected)
             itemData = weaponSelected
-        // Must come before roll.sleight - defineRoll() always inits it to {}, a truthy empty object.
-        else if(rolledFrom === "shopPurchase")
-            itemData = { shopUuid: dataset.shopUuid, buyerActorId: dataset.buyerActorId, itemIds: dataset.itemIds, network: dataset.name, requiredTier: dataset.requiredTier, bodyBindings: dataset.bodyBindings, burnAmount: shopBurnAmount }
         else if(roll.sleight)
             itemData = roll.sleight
+
+        if(rollContext.itemData) itemData = foundry.utils.mergeObject(itemData, rollContext.itemData, {inplace: false})
 
         let outputData = task.outputData(options, actorWhole, activePool, itemData, rolledFrom, systemOptions)
 
         outputData.skillKey = roll.type
         outputData.alternatives = await pools.outcomeAlternatives(outputData, activePool, systemOptions)
+        outputData.rollContext = buildRollContext(outputData, actorWhole, options, itemData)
+        if(Object.keys(rollContext.flags).length) Object.assign(outputData.rollContext, rollContext.flags)
         let diceRoll = task.roll
         let actingPerson = actorWhole.name
 
@@ -722,10 +740,15 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
             return
         const rollResult = await rollToChat(dataset, outputData, TASK_RESULT_OUTPUT, diceRoll, actingPerson, recipientList, blind)
 
-        const blindRollMode = options.rollMode === "blind" ? "blind" : undefined
+        rollContext.outputData = outputData
+        rollContext.message = rollResult?.chatMessage ?? null
+        rollContext.blind = blind
+        rollContext.rollMode = options.rollMode
+        Hooks.callAll("eclipsephase.postRoll", rollContext)
+
 
         if (!outputData.alternatives.options.available && outputData.skillKey === "psi" && actorWhole.type != "goon" && activePoolChoice != "ignoreInfection")
-            await psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions, undefined, blindRollMode)
+            await psi.rollPsiEffect(actorWhole, game.user._id, options.push, systemOptions, undefined, options.rollMode)
 
         return rollResult;
     }
@@ -743,13 +766,15 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
  * @param {string} rolledFrom - The source of the roll (rangedWeapon, ccWeapon, psi, etc.)
  * @returns {Promise<Object>} - The values of the form when submitted
  */
-async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom, dataset) {
+async function showOptionsDialog(rollData, rollType, specName, pool, actorWhole, traits, rolledFrom, dataset, rollContext) {
 let specialEffects;
 const actorType = actorWhole.type;
 
 if (traits) {
     specialEffects = Object.keys(traits.confirmationEffects).length;
 }
+
+const poolOptions = applicablePoolOptions({rollType, rolledFrom, actor: actorWhole});
 
 const content = await foundry.applications.handlebars.renderTemplate(rollData.template, {
     specName,
@@ -761,7 +786,9 @@ const content = await foundry.applications.handlebars.renderTemplate(rollData.te
     specialEffects,
     rolledFrom,
     rollData,
-    dataset
+    dataset,
+    poolOptions,
+    rollContext
 });
 
 function extractFormValues(form) {
@@ -881,7 +908,7 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
     if(rollType === "psi"){
         const strainFamily = psi.actorStrainFamily(actorWhole)
         if(strainSubstrate(actorWhole, strainFamily).penalised)
-            task.addModifier(new TaskRollModifier(strainFamily === "ki" ? 'ep2e.roll.announce.ki.substrateMismatch' : 'ep2e.roll.announce.psi.substrateMismatch', -30))
+            task.addModifier(new TaskRollModifier(getStrainFamily(strainFamily).mismatchKey, -30))
     }
 
 
@@ -1367,7 +1394,8 @@ export async function rollToChat(dataset, message, htmlTemplate, roll, alias, re
         content: html,
         whisper: showTo,
         sound: message.sound,
-        blind: blind
+        blind: blind,
+        flags: message.rollContext ? {eclipsephase: {roll: message.rollContext}} : {}
     })
 
     return message;

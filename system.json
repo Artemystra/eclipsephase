@@ -4,7 +4,7 @@
   "background": "systems/eclipsephase/resources/img/bannerEclipsePhase.webp",
   "title": "Eclipse Phase 2e",
   "description": "Laph's hand tailored shot to create a EP 2e System for foundry VTT. I thank my mother.",
-  "version": "2.3",
+  "version": "2.5",
   "compatibility": {
     "verified": "14",
     "minimum": "14"
@@ -15,6 +15,20 @@
       "flags": {}
     }
   ],
+  "relationships": {
+    "recommends": [
+      {
+        "id": "eclipsephase-shop",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/Artemystra/eclipsephase-shop/main/module.json"
+      },
+      {
+        "id": "eclipsephase-ki",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/Artemystra/eclipsephase-ki/main/module.json"
+      }
+    ]
+  },
   "esmodules": [
     "module/eclipsephase.js",
     "module/effects.js"
@@ -66,7 +80,7 @@
     {
       "banner": "systems/eclipsephase/resources/img/Compendium Banners/bannerPsiSleights.webp",
       "name": "psi-sleights",
-      "label": "Sleights",
+      "label": "Psi Sleights",
       "system": "eclipsephase",
       "path": "packs/psi-sleights.db",
       "type": "Item",
@@ -185,6 +199,12 @@
       "lang": "de",
       "name": "Deutsch",
       "path": "lang/de.json",
+      "flags": {}
+    },
+    {
+      "lang": "es",
+      "name": "Español",
+      "path": "lang/es.json",
       "flags": {}
     },
     {

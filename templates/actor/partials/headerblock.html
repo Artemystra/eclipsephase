@@ -7,6 +7,7 @@
         <div style="max-height: 358px;">
             <img class="profile-img" src="{{actor.img}}" data-action="editImage" data-field="img" title="{{actor.name}}"/>
         </div>
+        {{{epSlot "actor.headerBadges" this}}}
     </div>
 </header>
     {{else}}
@@ -16,6 +17,7 @@
             <img class="profile-img" src="{{actor.img}}" data-action="editImage" data-field="img"
             title="{{actor.name}}"/>
         </div>
+        {{{epSlot "actor.headerBadges" this}}}
     </div>
 </header>
     {{/if}}

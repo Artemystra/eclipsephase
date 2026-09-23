@@ -1,5 +1,5 @@
 {
-  "SETTINGS":{
+  "SETTINGS": {
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -14,10 +14,6 @@
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
-    },
-    "enableShopSystem": {
-      "name": "Ativar Sistema de Loja",
-      "hint": "Ativa o tipo de ator Loja. Se desativado, lojas existentes ficam ocultas e novas não podem ser criadas."
     },
     "gmMenu": {
       "name": "Enable GM Menu",
@@ -52,29 +48,35 @@
       "hint": "Check this to activate Laph's special homebrew rules. WARNING: NOT THE REAL THING!"
     }
   },
-  "TYPES.Actor.character": "Personagem do Jogador",
-  "TYPES.Actor.npc": "Personagem Não Jogador",
-  "TYPES.Actor.goon": "Ameaça",
-  "TYPES.Actor.shop": "Loja",
-  "TYPES.Item.gear": "Equipamento",
-  "TYPES.Item.rangedWeapon": "Arma de Distância",
-  "TYPES.Item.ccWeapon": "Arma de Combate Próximo",
-  "TYPES.Item.armor": "Armadura",
-  "TYPES.Item.grenade": "Granada",
-  "TYPES.Item.trait": "Traço",
-  "TYPES.Item.flaw": "Falha",
-  "TYPES.Item.morphTrait": "Traço de Morfo",
-  "TYPES.Item.morphFlaw": "Falha de Morfo",
-  "TYPES.Item.ware": "Ware",
-  "TYPES.Item.aspect": "Truque Psi",
-  "TYPES.Item.program": "Programa",
-  "TYPES.Item.specialSkill": "Perícia Especial",
-  "TYPES.Item.knowSkill": "Perícia de Saber",
-  "TYPES.Item.vehicle": "Corpo Remoto",
-  "TYPES.Item.drug": "Droga",
-  "TYPES.Item.ammo" : "Ammo",
-  "TYPES.Item.id" : "ID",
-  "TYPES.Item.morph" : "Morph",
+  "TYPES": {
+    "Actor": {
+      "character": "Personagem do Jogador",
+      "npc": "Personagem Não Jogador",
+      "goon": "Ameaça",
+      "shop": "Loja"
+    },
+    "Item": {
+      "gear": "Equipamento",
+      "rangedWeapon": "Arma de Distância",
+      "ccWeapon": "Arma de Combate Próximo",
+      "armor": "Armadura",
+      "grenade": "Granada",
+      "trait": "Traço",
+      "flaw": "Falha",
+      "morphTrait": "Traço de Morfo",
+      "morphFlaw": "Falha de Morfo",
+      "ware": "Ware",
+      "aspect": "Truque Psi",
+      "program": "Programa",
+      "specialSkill": "Perícia Especial",
+      "knowSkill": "Perícia de Saber",
+      "vehicle": "Corpo Remoto",
+      "drug": "Droga",
+      "ammo": "Ammo",
+      "id": "ID",
+      "morph": "Morph"
+    }
+  },
   "ep2e": {
     "actorSheet": {
       "placeholders": {
@@ -109,7 +111,6 @@
         "inventoryTab": "Inventário",
         "peripheralsTab": "Periféricos",
         "psiTab": "Psi",
-        "kiTab": "Ki",
         "effectsTab": "Efeitos",
         "gmInfoTab": "GM Info"
       },
@@ -196,7 +197,7 @@
           "takeDamage": "Take Mental Damage"
         },
         "heal": {
-          "bodyFull":{
+          "bodyFull": {
             "bio": "Full Heal",
             "synth": "Full Repair",
             "info": "Full Defragmentation"
@@ -212,80 +213,80 @@
         "spendRez": {
           "label": "Spend Rez",
           "rep": {
-            "label" : "x 5 Rep Points",
+            "label": "x 5 Rep Points",
             "description": " (1 Rez each)"
           },
           "skill": {
-            "label" : "x 5 Skill Points",
+            "label": "x 5 Skill Points",
             "description": " (1 Rez each)"
           },
           "spec": {
-            "label" : "x 1 Specialization",
+            "label": "x 1 Specialization",
             "description": " (1 Rez each)"
           },
           "psi": {
-            "label" : "x 1 Psi Slieght",
+            "label": "x 1 Psi Slieght",
             "description": " (1 Rez each)"
           },
           "lang": {
-            "label" : "x 1 Language",
+            "label": "x 1 Language",
             "description": " (1 Rez each)"
           },
           "apt": {
-            "label" : "x 1 Aptitude",
+            "label": "x 1 Aptitude",
             "description": " (1 Rez each)"
           },
           "flex": {
-            "label" : "x 1 Ego-Flex (To a total of 3)",
+            "label": "x 1 Ego-Flex (To a total of 3)",
             "description": " (2 Rez each)"
           },
           "traits": {
-            "label" : "Any number of traits",
+            "label": "Any number of traits",
             "description": " (Put in the summed cost)"
           },
           "homebrew": {
             "rep": {
-              "label" : "x 1 Rep Points",
+              "label": "x 1 Rep Points",
               "description": " (1 Rez each)"
             },
             "spec": {
-              "label" : "x 1 Specialization",
+              "label": "x 1 Specialization",
               "description": " (5 Rez each)"
             },
             "psi": {
-              "label" : "x 1 Psi Slieght",
+              "label": "x 1 Psi Slieght",
               "description": " (5 Rez each)"
             },
             "lang": {
-              "label" : "x 1 Language",
+              "label": "x 1 Language",
               "description": " (5 Rez each)"
             },
             "apt": {
-              "label" : "x 1 Aptitude",
+              "label": "x 1 Aptitude",
               "description": " (5 Rez each)"
             },
             "flex": {
-              "label" : "x 1 Ego-Flex (To a total of 3)",
+              "label": "x 1 Ego-Flex (To a total of 3)",
               "description": " (10 Rez each)"
             },
             "traits": {
-              "label" : "Any number of traits",
+              "label": "Any number of traits",
               "description": " (Put in the summed cost)"
             },
             "skill33": {
-              "label" : "x 2 Skill Points (Skill < 34)",
+              "label": "x 2 Skill Points (Skill < 34)",
               "description": " (1 Rez each)"
             },
             "skill3366": {
-              "label" : "x 1 Skill Points (Skill 34 - 66)",
+              "label": "x 1 Skill Points (Skill 34 - 66)",
               "description": " (1 Rez each)"
             },
             "skill66": {
-              "label" : "x 1 Skill Points (Skill > 66)",
+              "label": "x 1 Skill Points (Skill > 66)",
               "description": " (2 Rez each)"
             }
-        }
-        }, 
+          }
+        },
         "durdr": "Dur/Dr",
         "woundswt": "Wounds/(WT)",
         "stressluc": "Stress/Luc",
@@ -745,165 +746,11 @@
       "noWare": "Nenhum Implante instalado",
       "noArmor": "Nenhuma Armadura instalada"
     },
-"ki": {
-      "strain": {
-        "none": "-Selecionar-",
-        "crucible": "O Crisol",
-        "redline": "A Linha Vermelha",
-        "signal": "O Sinal",
-        "ruin": "A Ruína",
-        "colony": "A Colônia"
-      },
-      "effect": {
-        "cognitiveFeedback": "Retroalimentação Cognitiva:",
-        "takeStrain": "Receba VE 1d6",
-        "crucible": {
-          "preoccupation": {
-            "label": "Motivação:",
-            "enhance": "Melhorar o Espaço Real",
-            "recycle": "Reciclar",
-            "research": "Pesquisa e Desenvolvimento"
-          },
-          "reconfiguration": {
-            "label": "Reconfiguração Compulsiva:",
-            "forced": "Ativação Forçada",
-            "shutdown": "Desligamento Total",
-            "rearranged": "Rearranjo Improvisado"
-          },
-          "recalibration": {
-            "label": "Recalibração:",
-            "weapon": "Arma",
-            "armor": "Armadura",
-            "accessory": "Acessório"
-          },
-          "motivation": {
-            "label": "Motivação:",
-            "text": "Eliminar a imperfeição"
-          },
-          "revision": {
-            "label": "Manifestação:",
-            "text": "Melhoria Inquietante"
-          }
-        },
-        "redline": {
-          "governor": {
-            "label": "Falha do Regulador de Movimento:",
-            "limited": "Limitado",
-            "overridden": "Sobreposto",
-            "runaway": "Desgovernado"
-          },
-          "compulsion": {
-            "label": "Compulsão Operacional:",
-            "overdoIt": "Exagere",
-            "testTheLimits": "Testar os limites",
-            "redTape": "Burocracia"
-          },
-          "calibration": {
-            "label": "Calibração Experimental:",
-            "efficiency": "Eficiência",
-            "experimental": "Experimental",
-            "pushTheLimit": "Forçar o limite"
-          },
-          "rerouting": {
-            "label": "Redirecionamento:",
-            "boost": "Impulso",
-            "support": "Apoio",
-            "switch": "Troca"
-          },
-          "pushing": {
-            "label": "Cruzar a Linha:",
-            "overclocking": "Sobrecarga",
-            "dampening": "Amortecimento",
-            "switching": "Comutação"
-          }
-        },
-        "signal": {
-          "carrier": {
-            "label": "Portadora Aberta:",
-            "location": "Posição Exata",
-            "diagnostics": "Diagnóstico Técnico",
-            "sensorFeed": "Trechos de Sensores"
-          },
-          "saturation": {
-            "label": "Saturação do Receptor:",
-            "text": "Ruído de Sensores"
-          },
-          "interference": {
-            "label": "Padrão de Interferência:",
-            "whiteNoise": "Ruído Branco",
-            "signalBoost": "Amplificação de Sinal"
-          },
-          "dependency": {
-            "label": "Dependência de Portadora:",
-            "tacticalNetwork": "Rede Tática",
-            "ping": "Ping",
-            "experimentalApi": "API Experimental"
-          },
-          "beacon": {
-            "label": "Manifestação:",
-            "text": "Interferência Anômala"
-          }
-        },
-        "ruin": {
-          "fatigue": {
-            "label": "Fadiga de Material:",
-            "brittleArmor": "Blindagem Quebradiça",
-            "fatiguedActuators": "Atuadores Fatigados",
-            "leakingConstruction": "Estrutura com Vazamentos"
-          },
-          "seized": {
-            "label": "Função Travada:",
-            "ware": "Uma Peça de Implante",
-            "sense": "Um Sentido",
-            "movement": "Um Modo de Movimento"
-          },
-          "intermittent": {
-            "label": "Falha Intermitente:",
-            "malfunction": "Falha de Subsistema",
-            "sensorDecay": "Degradação de Sensores",
-            "heuristicErrors": "Erros Heurísticos"
-          },
-          "shedding": {
-            "label": "Descarte:",
-            "wareComponent": "Entranhas",
-            "armorPlate": "Escamas"
-          },
-          "breakdown": {
-            "label": "Manifestação:",
-            "text": "Pane"
-          }
-        },
-        "colony": {
-          "witnesses": {
-            "label": "As Testemunhas:",
-            "eyes": "Olhos",
-            "attention": "Atenção"
-          },
-          "sympathetic": {
-            "label": "Retroalimentação Simpática:",
-            "text": "Mimetismo"
-          },
-          "borrowed": {
-            "label": "Corpo Emprestado:",
-            "eye": "Olho Emprestado",
-            "hand": "Mão Emprestada",
-            "voice": "Voz Emprestada",
-            "organ": "Órgão Emprestado"
-          },
-          "gathering": {
-            "label": "Reunião:",
-            "procession": "Procissão",
-            "encirclement": "Cerco",
-            "nest": "Ninho"
-          },
-          "avatar": {
-            "label": "Manifestação:",
-            "text": "Avatar"
-          }
-        }
-      }
-    },
     "psi": {
+      "moduleMissing": {
+        "headline": "Módulo ausente",
+        "copy": "Este personagem usa habilidades sobrenaturais baseadas em tensão de outro módulo, que não faz parte das regras básicas. Ative o módulo correspondente antes de usar essas habilidades."
+      },
       "infectionHeadline": "Tipo de Infecção",
       "ratingLabel": "Grau de Infecção",
       "strainPlaceholder": "Nome da Subcepa",
@@ -1027,7 +874,6 @@
         "spec": "Spec",
         "flex": "Flex",
         "traits": "Traits"
-
       }
     },
     "sideCar": {
@@ -1108,7 +954,7 @@
           "descriptionPlaceholder": "Adicione uma descrição"
         }
       },
-      "traits":{
+      "traits": {
         "traitLabel": "Positive",
         "flawLabel": "Negative"
       },
@@ -1136,8 +982,7 @@
           },
           "family": {
             "label": "Família",
-            "psi": "Psi",
-            "ki": "Ki"
+            "psi": "Psi"
           },
           "action": {
             "label": "Ação",
@@ -1508,10 +1353,10 @@
               "vms": "Very much smaller (-30)",
               "ms": "Much smaller (-20)",
               "s": "Smaller (-10)",
-              "none": "Equal Size" ,
-              "l": "Larger (+10)" ,
-              "ml": "Much larger (+20)" ,
-              "vml": "Very much larger (+30)" 
+              "none": "Equal Size",
+              "l": "Larger (+10)",
+              "ml": "Much larger (+20)",
+              "vml": "Very much larger (+30)"
             },
             "type": {
               "label": "Tipo de Ataque",
@@ -1559,7 +1404,7 @@
         }
       },
       "successType": {
-       "success": "Sucesso",
+        "success": "Sucesso",
         "superiorSuccess": "Sucesso Superior",
         "superiorTwoSuccess": "2 x Sucesso Superior",
         "criticalSuccess": "Successo Critico",
@@ -1592,6 +1437,7 @@
         "wounds": "Ferimentos/Traumas",
         "woundModifier": "Modificador de Ferimento",
         "traumaModifier": "Modificador de Trauma",
+        "strainFamilyMissing": "Este dom pertence a uma família de tensão que nenhum módulo ativo fornece. Suas rolagens e impulsos permanecem bloqueados até que esse módulo seja ativado.",
         "rolled": "rolou",
         "appliedMods": "Mods Aplicados",
         "baseValue": "Valor Base",
@@ -1615,14 +1461,10 @@
           "pushedLabel": "Empurrado",
           "autoLabel": "Auto",
           "autoPushTooltip": "Push Automático",
+          "actorGone": "O personagem ao qual este teste de infecção pertence não existe mais.",
           "noBioBrain": "Psi só funciona a partir de um cérebro biológico. Um Cérebro Cibernético o bloqueia, e um infomorfo não tem sistema nervoso algum.",
           "substrateBlockedTooltip": "Psi precisa de um cérebro biológico",
           "substrateMismatch": "Cérebro biológico em um corpo sintético"
-        },
-        "ki": {
-          "noCyberbrain": "Ki só funciona a partir de um Cérebro Cibernético. Ao fazer jamming, todos os corpos usados na cadeia de jamming devem ter um Cérebro Cibernético.",
-          "substrateBlockedTooltip": "Sem Cérebro Cibernético",
-          "substrateMismatch": "Cérebro Cibernético em um corpo biológico"
         },
         "armor": {
           "equipped": "Eu equipei {morph} com uma armadura."
@@ -1639,7 +1481,7 @@
           "long": "Eu usei o meu<p/><strong>Descanso Longo<p/></strong>para recuperar todas as paradas<p/>"
         },
         "spendRez": {
-          "spent": "You overspent your rez. <br> Spent:", 
+          "spent": "You overspent your rez. <br> Spent:",
           "available": "<br> Available:"
         },
         "heal": {
@@ -1706,7 +1548,7 @@
           "damageDone": "Seu dano causado",
           "additionalEffects": "Additional Effects",
           "melee": {
-            "sizeDifference": "Reach", 
+            "sizeDifference": "Reach",
             "charge": "Investida",
             "chargeAddition": "(+1d6VD)",
             "agressive": "Ataque Agressivo",
@@ -1878,130 +1720,6 @@
           }
         }
       },
-"ki": {
-        "effect": {
-          "takeStrain": "A infecção Ki reverbera pelo cibercérebro. Receba VE 1d6.",
-          "crucible": {
-            "preoccupation": {
-              "enhance": "Você fica obcecado por um objeto que considera inutilizável ou carente de melhorias; ele não precisa ser seu, e o Mestre decide qual é. Você precisa tentar melhorá-lo com um teste estendido de Hardware.",
-              "recycle": "Você fica obcecado por um objeto que considera inutilizável ou carente de melhorias; ele não precisa ser seu, e o Mestre decide qual é. Você quer desmontá-lo em seus componentes e dar a eles outro uso.",
-              "research": "Você fica obcecado por um objeto que considera inutilizável ou carente de melhorias; ele não precisa ser seu, e o Mestre decide qual é. Você quer desmontá-lo o bastante para extrair dele um projeto."
-            },
-            "reconfiguration": {
-              "forced": "Um sistema de implante instalado, escolhido pelo Mestre, se ativa e permanece continuamente ligado. O cibercérebro nunca pode ser escolhido.",
-              "shutdown": "Um sistema de implante instalado, escolhido pelo Mestre, é completamente desativado. O cibercérebro nunca pode ser escolhido.",
-              "rearranged": "O morfo rearranja componentes existentes em uma função de implante aleatória escolhida pelo Mestre e, em troca, desativa pelo menos outro sistema de implante. O cibercérebro nunca pode ser escolhido."
-            },
-            "recalibration": {
-              "weapon": "A infecção converte um dos seus próprios pertences em outra arma, escolhida pelo Mestre. A substituta tem massa e tamanho semelhantes e cumpre uma função parecida. Ela não volta automaticamente à sua forma original.",
-              "armor": "A infecção converte um dos seus próprios pertences em outra peça de armadura, escolhida pelo Mestre. A substituta tem aproximadamente os mesmos atributos combinados (+/- 20 %) e cumpre uma função parecida. Ela não volta automaticamente à sua forma original.",
-              "accessory": "A infecção converte um dos seus próprios pertences em outro acessório, escolhido pelo Mestre. A substituta tem massa e tamanho semelhantes e cumpre uma função parecida. Ela não volta automaticamente à sua forma original."
-            },
-            "motivation": {
-              "text": "Na próxima vez em que, nas próximas 12 horas, você tiver a oportunidade de aprimorar o próprio corpo, precisa aproveitá-la - ou lutar contra o seu instinto de se tornar algo melhor."
-            },
-            "revision": {
-              "text": "O Mestre define uma alteração física persistente. Ela pode ser limitante, perturbadora ou de utilidade ambígua, e sua gravidade e seu drama devem se ajustar à situação em que o efeito ocorre. A alteração não pode ser revogada durante a próxima 1 hora. Depois disso, uma oficina ou um tanque de cura com o projeto adequado do morfo a remove."
-            }
-          },
-          "redline": {
-            "governor": {
-              "limited": "Em combate: o morfo só pode usar sua taxa de movimento mais baixa. Fora de combate: o morfo se move e age deliberadamente devagar, como se tentasse se proteger do desgaste. Duração: 1d6 minutos.",
-              "overridden": "Em combate: sempre que o morfo se mover, ele precisa usar ao menos sua taxa de movimento mais alta. Fora de combate: o morfo se move deliberadamente rápido e age com pressa imprudente, como se tentasse economizar tempo. Duração: 1d6 minutos.",
-              "runaway": "Em combate: o morfo precisa percorrer sempre a maior distância possível a cada turno de ação. Fora de combate: o morfo não consegue ficar parado, como se parar e voltar a andar fosse uma imperfeição que gera mais desgaste e precisa ser evitada a todo custo. Duração: 1d6 minutos."
-            },
-            "compulsion": {
-              "overdoIt": "Ganhe a motivação Exagere por 12 horas: você executa cada tarefa com minúcia exagerada. Você não para de revisar uma tarefa e tentar melhorá-la, mesmo que ela esteja evidentemente pronta. Você pode tentar um teste de VON para se livrar dessa compulsão.",
-              "testTheLimits": "Ganhe a motivação Testar os limites por 12 horas: você sempre vai além do que a situação exige. Você chega a imaginar oportunidades adicionais de aprimorar a tarefa em curso e enche quem está por perto de ideias sobre como prosseguir num trabalho já concluído. Você pode tentar um teste de VON para se livrar dessa compulsão.",
-              "redTape": "Ganhe a motivação Burocracia por 12 horas: você age de modo ostensivamente lento e cauteloso, às vezes deixando o trabalho incompleto por medo de causar danos ou violar um limite de segurança. Você pode tentar um teste de VON para se livrar dessa compulsão."
-            },
-            "calibration": {
-              "efficiency": "Uma vez nas próximas 12 horas, depois de declarar uma ação, o Mestre pode decidir operar o morfo em modo Eficiência: +10, mas a tarefa leva o dobro do tempo ou um oponente ganha +10 em um teste oposto.",
-              "experimental": "Uma vez nas próximas 12 horas, depois de declarar uma ação, o Mestre pode decidir operar o morfo em modo Experimental: -10, mas um efeito bem-sucedido é dobrado quando fizer sentido.",
-              "pushTheLimit": "Uma vez nas próximas 12 horas, depois de declarar uma ação, o Mestre pode decidir levar o morfo além do seu limite: +10, e o morfo sofre VD 1d6 em seguida."
-            },
-            "rerouting": {
-              "boost": "-30 em uma perícia de uma categoria de reserva, escolhida pelo Mestre, compra +30 em uma perícia de outra categoria, também escolhida pelo Mestre. Duração: 1d6 minutos.",
-              "support": "-30 em uma perícia escolhida pelo Mestre compra +10 em todas as demais perícias da mesma categoria. Duração: 1d6 minutos.",
-              "switch": "-10 em todas as perícias de uma categoria escolhida pelo Mestre compra +10 em todas as perícias de outra, também escolhida pelo Mestre. Duração: 1d6 minutos."
-            },
-            "pushing": {
-              "overclocking": "Uma vez nas próximas 24 horas, depois de um teste rolado, o Mestre pode elevar seu resultado em um grau - por exemplo, transformando um sucesso simples em um sucesso superior. A direção do resultado original nunca é invertida. Esses efeitos tendem a ocorrer no pior momento possível. Eles nunca podem ocorrer se isso puser em risco a integridade física ou mental da própria usuária de Ki.",
-              "dampening": "Uma vez nas próximas 24 horas, depois de um teste rolado, o Mestre pode rebaixar seu resultado em um grau - por exemplo, transformando um sucesso superior em um sucesso simples. A direção do resultado original nunca é invertida. Esses efeitos tendem a ocorrer no pior momento possível. Eles nunca podem ocorrer se isso puser em risco a integridade física ou mental da própria usuária de Ki.",
-              "switching": "Uma vez nas próximas 24 horas o Mestre pode inverter os dois dígitos de um teste que já parou - o mesmo efeito que um ponto de reserva normalmente compra, por exemplo transformando um 71 em um 17 - exceto que aqui o Mestre o aplica diretamente a esse resultado sem custar um ponto de reserva. Esses efeitos tendem a ocorrer no pior momento possível. Eles nunca podem ocorrer se isso puser em risco a integridade física ou mental da própria usuária de Ki."
-            }
-          },
-          "signal": {
-            "carrier": {
-              "location": "Pelos próximos 1d6 minutos o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente sua posição exata.",
-              "diagnostics": "Pelos próximos 1d6 minutos o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente seus dados de diagnóstico técnico.",
-              "sensorFeed": "Pelos próximos 1d6 minutos o morfo não consegue ficar completamente silencioso. Ele transmite involuntariamente trechos de um feed de sensores ativo."
-            },
-            "saturation": {
-              "text": "Sinais recebidos invadem seus sentidos e interfaces sem motivo. Os testes de Interface e Perceber afetados sofrem -20 por 1d6 minutos."
-            },
-            "interference": {
-              "whiteNoise": "Por 1d6 minutos o morfo inunda o entorno de ruído eletromagnético. Os enlaces sem fio afetados na área imediata sofrem -30, inclusive os seus e os de seus aliados.",
-              "signalBoost": "Por 1d6 minutos o morfo, em vez disso, amplifica o ambiente eletromagnético local. Todo sinal nas redondezas, inclusive os seus, fica mais fácil de detectar e triangular: +30 para localizá-los."
-            },
-            "dependency": {
-              "tacticalNetwork": "Por 12 horas você precisa permanecer junto de cada integrante do seu grupo atual. Se os sinais se afastarem demais, a rede desmorona e você sofre -20 em todas as ações até o grupo se reunir novamente ou as 12 horas se esgotarem.",
-              "ping": "Por 12 horas você precisa executar um Ping - uma varredura de Malha - antes de agir em um ambiente novo, sempre que houver pessoas novas presentes ou o número de participantes mudar. Agir sem ele custa -20 em todas as ações.",
-              "experimentalApi": "Por 12 horas você não pode manter nenhuma criptografia passiva. Enquanto mantiver, você sofre -20 em todas as ações."
-            },
-            "beacon": {
-              "text": "Uma vez nas próximas 24 horas o Mestre pode disparar uma transmissão descontrolada de alta potência. Por 1d6 minutos o morfo é fácil de localizar e não consegue silenciar, e ele se enxerta discretamente em conexões já existentes por perto, sem de fato conceder qualquer acesso real ao usuário afetado nem à infecção. A transmissão carrega um padrão de dados desconhecido, como coordenadas, estruturas Exsurgentes ou fragmentos de telemetria alienígena, mas não transmite a infecção."
-            }
-          },
-          "ruin": {
-            "fatigue": {
-              "brittleArmor": "A blindagem do chassi do morfo fica quebradiça e se desfaz: -4/-4 na blindagem do chassi por 1d6 minutos.",
-              "fatiguedActuators": "-30 em todos os testes baseados em SOM por 1d6 minutos.",
-              "leakingConstruction": "Uma resistência ambiental existente deixa de funcionar por 1d6 minutos."
-            },
-            "seized": {
-              "ware": "Os implantes instalados no morfo infectado começam a se comportar mal - as falhas são frequentes. Uma peça de implante, escolhida pelo Mestre, fica completamente bloqueada por 1d6 minutos.",
-              "sense": "A percepção some no meio da frase, como se alguém simplesmente tivesse desligado um canal. Um sentido, escolhido pelo Mestre, fica completamente bloqueado por 1d6 minutos.",
-              "movement": "Transmissões e atuadores travam em pleno movimento e param de responder. Um modo de movimento, escolhido pelo Mestre, fica completamente bloqueado por 1d6 minutos."
-            },
-            "intermittent": {
-              "malfunction": "Os subsistemas que sustentam a carga respondem com mais relutância a cada vez que são exigidos. Por 12 horas o Mestre pode pedir um teste sempre que uma peça específica de implante for usada com muita força. Qual peça de implante é afetada o Mestre decide no momento em que o efeito dispara pela primeira vez.",
-              "sensorDecay": "As leituras dos sensores do morfo derivam e borram até que nada seja lido com clareza. Todos os testes de Perceber sofrem -20 por 1d6 horas.",
-              "heuristicErrors": "O reconhecimento de padrões do morfo se degrada e ele lê mal tanto máquinas quanto pessoas. Os testes de Interface e Cinésica sofrem -20 por 1d6 horas."
-            },
-            "shedding": {
-              "wareComponent": "Uma peça de implante decai visivelmente e murcha enquanto permanece presa ao morfo. Ela não pode ser reparada por 1d3 horas; passado esse tempo, ela se recupera e volta a funcionar sozinha, mas continua com aparência visivelmente danificada até receber um reparo de verdade que esconda o dano à vista.",
-              "armorPlate": "Uma placa da blindagem do chassi do morfo decai visivelmente e se esfarela enquanto permanece presa, e não oferece proteção alguma enquanto permanecer nesse estado quebradiço. Ela não pode ser reparada por 1d3 horas; passado esse tempo, ela se recupera e volta a funcionar sozinha, mas continua com aparência visivelmente danificada até receber um reparo de verdade que esconda o dano à vista."
-            },
-            "breakdown": {
-              "text": "Uma vez nas próximas 24 horas o Mestre pode disparar uma pane sistêmica em um momento adequado. A pane pode afetar no máximo dois sistemas - por exemplo um sentido e uma peça de implante, ou dois sentidos - e se mantém por 1d6 minutos antes de o corpo começar a se recuperar. Dependendo da situação, o efeito ainda pode ficar visível depois, caso não seja devidamente reparado, mas a usuária de Ki se recupera por completo do episódio."
-            }
-          },
-          "colony": {
-            "witnesses": {
-              "eyes": "Dispositivos com sensores por perto giram na sua direção de uma só vez: câmeras, escâneres, cada lente ao alcance. O efeito atravessa paredes e obstáculos e dispara mesmo onde nada poderia realmente ver você. Ele é instantâneo e passa assim que a atenção é atraída uma única vez. O que ainda não estava ao alcance - poucos metros, no máximo, a critério do Mestre - não é afetado se chegar depois. Tudo o que estava gravando pode ser usado contra você depois.",
-              "attention": "Drones e synthmorfos por perto se voltam para você. Quando um synth é pilotado por um ego, esse ego olha involuntariamente na sua direção; se você estiver escondido, precisa de um teste correspondente para não ser avistado, e os egos afetados nunca sabem por que olharam. O efeito atravessa paredes e obstáculos e dispara mesmo onde nada poderia realmente ver você. Ele é instantâneo e passa assim que a atenção é atraída uma única vez. O que ainda não estava ao alcance - poucos metros, no máximo, a critério do Mestre - não é afetado se chegar depois."
-            },
-            "sympathetic": {
-              "text": "Por 1d6 minutos o Mestre pode disparar implantes ou objetos próximos cuja função se pareça com a que você está usando no momento, causando uma confusão menor e normalmente um modificador de -10. Lentes ficam embaçadas ou nitidamente artificiais, membros se movem sozinhos, luzes se acendem ou se apagam. Cibercérebros e sistemas de suporte vital estão excluídos."
-            },
-            "borrowed": {
-              "eye": "Por 1d6 minutos os dispositivos ao seu redor substituem a sua própria visão: em vez de enxergar normalmente, você enxerga pelas câmeras da sala. O Mestre pode exigir testes de Perceber mais difíceis para refletir o ponto de vista incomum. A função emprestada não é registrada pela Malha normal, mas outros meios e outros observadores ainda podem percebê-la.",
-              "hand": "Por 1d6 minutos os dispositivos ao seu redor substituem as suas próprias mãos: em vez de manusear as coisas você mesmo, você agarra e move pelos manipuladores da sala. O Mestre pode exigir testes mais difíceis para qualquer manipulação fina. A função emprestada não é registrada pela Malha normal, mas outros meios e outros observadores ainda podem percebê-la.",
-              "voice": "Por 1d6 minutos os dispositivos ao seu redor substituem a sua própria voz: em vez de falar normalmente, você fala pelos alto-falantes da sala. Qualquer um presente que ouça pode tentar um teste para perceber que algo está errado. A função emprestada não é registrada pela Malha normal, mas outros meios e outros observadores ainda podem percebê-la.",
-              "organ": "Por 1d6 minutos o seu morfo mantém todas as próprias funções - em vez disso, o estado dele ecoa para o ambiente. Seus pensamentos surgem em janelas de chat próximas, seus sinais vitais aparecem como sendo de outra pessoa, e portas, bombas, ventilação ou iluminação pulsam nos seus ritmos corporais. Qualquer um presente que note esses efeitos pode tentar um teste para perceber que algo está errado. O eco não é registrado pela Malha normal, mas outros meios e outros observadores ainda podem percebê-lo."
-            },
-            "gathering": {
-              "procession": "Por 1d6 minutos dispositivos móveis ou deslocáveis abandonam suas tarefas e seguem atrás de você em uma fila desalinhada. Eles não atacam deliberadamente, mas marcam o seu caminho: quem rastrear você ganha um bônus a critério do Mestre.",
-              "encirclement": "Por 1d6 minutos dispositivos móveis ou deslocáveis se amontoam ao seu redor e bloqueiam o caminho para onde quer que você vá. Eles não atacam deliberadamente, mas você se move mal e tropeça neles o tempo todo pelos 1d6 minutos completos.",
-              "nest": "Por 1d6 minutos dispositivos móveis ou deslocáveis se empilham sobre você e incorporam cada objeto ao alcance em uma estrutura improvisada. Eles não atacam deliberadamente, mas a pilha bloqueia suas linhas de visão: você conta como distraído, -20 em tudo, ou no mínimo sofre uma visibilidade gravemente degradada."
-            },
-            "avatar": {
-              "text": "Uma vez nas próximas 24 horas o Mestre pode despertar vários dispositivos locais conectados à Malha como uma única presença por 1d6 minutos, usando toda esta lista ou parte dela para construir algo que soe alienígena: alto-falantes, telas e saídas da Malha se comunicando em conjunto; bots, manipuladores e portas se movendo como partes de um só organismo; sensores, luzes e rádios formando uma rede perceptiva responsiva. Os sensores envolvidos não alimentam as saídas normais dos dispositivos afetados, que exibem uma assinatura de interferência de Malha enquanto durar. O Mestre controla o comportamento da presença e você não recebe nenhum comando sobre ela."
-            }
-          }
-        }
-      },
       "weapon": {
         "effect": {
           "armorPiercing": "This weapon penetrates armor. The attack inflicts –1d10 DV, but armor is halved. Weapons and ammo types listed as armor-piercing already incorporate the DV modifier. Additional armor-piercing effects are ignored.",
@@ -2091,144 +1809,6 @@
         "itemRebound": "{name} reatribuída a {body}.",
         "unknownTraitType": "Tipo de Trait desconhecido. Selecione pelo menos uma opção - ego ou morfo - para usar este trait.",
         "enhancementsAdded": "{count} aprimoramento(s) adicionado(s) a {body}."
-      }
-    },
-    "shop": {
-      "tabs": {
-        "shop": "Loja",
-        "settings": "Configurações"
-      },
-      "filter": {
-        "placeholder": "Filtrar por tipo de item..."
-      },
-      "dialog": {
-        "selectNetwork": {
-          "label": "Rede de Reputação",
-          "placeholder": "- Selecionar -",
-          "headline": "Escolher rede"
-        },
-        "loyaltyDiscount": {
-          "label": "Desconto",
-          "none": "Sem desconto",
-          "option": "{levels} Nível(is) ({percent}%)"
-        }
-      },
-      "placeholders": {
-        "shopName": "Nome da Loja",
-        "noItems": "Esta loja ainda não tem itens."
-      },
-      "settings": {
-        "generalHeadline": "Geral",
-        "repHeadline": "Redes de Rep Aceitas",
-        "repDescription": "Quais redes de Rep esta loja aceita - apenas estas aparecem como opção de pagamento ao comprar, vender ou resgatar um Favor aqui.",
-        "acceptsSales": "Loja aceita vendas",
-        "valuationHeadline": "Avaliação de Itens",
-        "valuationDescription": "Mapeia o próprio nível de custo de cada item para o nível de custo efetivo desta loja, de Free a Rare. Rare é bloqueado pela Lealdade (se ativada), independentemente do preço; a dificuldade do Teste de Rep e o preço são definidos separadamente abaixo, em Mapeamento de Dificuldade.",
-        "costTierFree": "Grátis",
-        "difficultyMappingHeadline": "Mapeamento de Dificuldade",
-        "difficultyMappingDescription": "Remapeia os próprios níveis de custo efetivos desta loja (definidos acima em Avaliação de Itens) para o Nível de Favor usado na dificuldade do Teste de Rep e no preço - permite fazer com que todo item de nível Minor aqui role ou custe como Moderate, sem alterar quais itens são Minor. Um item Free permanece grátis, a menos que sua linha Trivial seja remapeada aqui.",
-        "loyaltyHeadline": "Lealdade",
-        "loyaltyEnabled": "Rastrear lealdade para esta loja",
-        "loyaltyPerTierHeadline": "Lealdade por Nível",
-        "loyaltyPerTierDescription": "Comprar um item ou resgatar um Favor concede ao comprador lealdade com esta loja, escalada de acordo com o próprio tipo de custo do item (não a avaliação por nível de Rep da loja). Vender nunca concede lealdade.",
-        "loyaltyRecordsHeadline": "Lealdade Atual dos Personagens",
-        "loyaltyRecordsDescription": "Uma lista em tempo real da lealdade atual de cada personagem nesta loja - não é uma configuração, apenas o valor de Lealdade rastreado. Edite um valor diretamente para corrigi-lo manualmente.",
-        "loyaltyRecordsEmpty": "Esta loja ainda não tem clientes fiéis.",
-        "loyaltyRecordDelete": "Excluir o registro de lealdade deste personagem",
-        "loyaltyRecordDeleteConfirm": "Isso excluirá permanentemente o registro de lealdade deste personagem com esta loja.",
-        "loyaltyRecordAdd": "Adicionar personagem",
-        "loyaltyRecordAddTitle": "Adicionar Personagem",
-        "loyaltyRecordAddHeadline": "Selecione um personagem para adicionar à lista de lealdade desta loja.",
-        "loyaltyRecordAddWindowTitle": "Mexendo no Quadro de Lealdade",
-        "loyaltyBarMaxHeadline": "Lealdade Máxima para esta Loja",
-        "loyaltyBarMaxDescription": "O valor máximo de Lealdade que esta loja rastreia. A barra colorida e o marcador do rodapé são escalados de acordo com este número.",
-        "loyaltyBarHeadline": "Segmentos da Barra de Lealdade em %",
-        "loyaltyBarDescription": "Divide a barra em quatro faixas percentuais (Vermelho/Laranja/Amarelo/Verde). Juntas, elas nunca podem ultrapassar 100% da Lealdade Máxima acima.",
-        "loyaltyBarRed": "Vermelho (T1)",
-        "loyaltyBarOrange": "Laranja (T2)",
-        "loyaltyBarYellow": "Amarelo (T3)",
-        "loyaltyBarGreen": "Verde (T4)",
-        "sellLimitTimeframeHeadline": "Limites de Venda por Período",
-        "sellLimitsDescription": "Limita quanto um personagem pode vender a esta loja em uma única transação. Ao atingir um limite, o personagem fica impedido de vender mais aqui até um descanso longo, ou até que o Proprietário remova a restrição abaixo.",
-        "sellLimitMaxItems": "Máx. Itens",
-        "sellLimitMaxRep": "Máx. Rep",
-        "sellLockoutsHeadline": "Personagens Bloqueados",
-        "sellLockoutsEmpty": "Nenhum personagem atingiu os limites de venda ainda.",
-        "sellLockoutsDescription": "Personagens atualmente impedidos de vender aqui por terem atingido um Limite de Venda acima - remova um bloqueio para que possam vender novamente antes do próximo descanso longo.",
-        "sellLockoutClear": "Remover o bloqueio deste personagem",
-                "loyaltyBuyDiscountHeadline": "Desconto de Compra",
-        "loyaltyBuyDiscountDescription": "Desconto percentual ao Comprar, resgatável por Nível de Lealdade - resgatá-lo reduz a Lealdade exatamente por essa quantidade de Níveis.",
-        "loyaltyBuyDiscountLevel2": "Nível 2 (%)",
-        "loyaltyBuyDiscountLevel3": "Nível 3 (%)",
-        "loyaltyBuyDiscountLevel4": "Nível 4 (%)",
-"rateOverridesHeadline": "Substituições de Custo",
-        "generalOverridesHeadline": "Substituições Gerais",
-        "generalOverridesDescription": "Define os preços base da loja. Permite tornar esta loja mais cara ou mais barata de forma rápida e geral.",
-        "morphPointOverridesHeadline": "Substituições de Pontos de Morfo",
-        "morphPointOverridesDescription": "Esta opção só existe no Homebrew, já que Morfos normalmente não podem ser comprados e são contabilizados através de outro sistema de pontos. Cada valor é o limite de Pontos de Morfo a partir do qual esse nível começa - custos menores caem automaticamente para o nível inferior. Se dois limites forem definidos com o mesmo valor, o nível mais alto vence.",
-        "specificOverridesHeadline": "Substituições Específicas por Reputação",
-        "specificOverridesDescription": "Para um ajuste mais fino da loja - por exemplo, se determinada Reputação é menos bem-vinda em alguns lugares do que em outros. Qualquer campo deixado em branco recorre ao valor base, ou à Substituição Geral, se houver uma definida.",
-        "rateTableBuysFor": "Compra por",
-        "rateTableRollBonus": "Bônus de Rolagem",
-        "rateTableSellsFor": "Vende por"
-      },
-      "inventory": {
-        "headline": "Inventário"
-      },
-      "acceptedRep": {
-        "label": "Shop Accepts:",
-        "loyaltyLabel": "Lealdade da Loja:",
-        "noCharacter": "Você não tem um personagem ativo. Escolha um personagem seu e volte aqui."
-      },
-      "purchase": {
-        "confirm": "Comprar",
-        "trade": "Trocar",
-        "favorConfirm": "Resgatar Favor",
-        "required": "Favor necessário:",
-        "flatBuyCost": "Custo de compra:",
-        "netCost": "Custo líquido:",
-        "otherwiseLabel": "Caso contrário:",
-        "sellBonus": "Bônus de Rolagem de Venda:",
-        "sellForRep": "Vender por Reputação:",
-        "repBenefitsHeadline": "Benefícios de Reputação",
-        "burnRep": "Queimar Reputação:",
-        "burnRepHint": "Bônus: Reputação queimada x 2<br>(Máx. 15 Reputação)",
-        "sellBonusModifier": "Bônus de venda",
-        "burnBonusModifier": "Reputação queimada",
-                "favorDifficultyLockedHint": "Definido automaticamente pela Lealdade nesta loja e por quantos itens você está pedindo de uma vez.",
-        "successMessage": "{character} comprou {items} de {shop} com Reputação {network}.",
-        "favorMessage": "{character} cobrou um favor para conseguir {items}.",
-        "favorBurnMessage": "{character} cobrou um favor para conseguir {items} e queimou Reputação {network} no processo.",
-        "tradeInMessage": "{character} comprou {items}, dando {soldCount} item(ns) por Reputação {network} como parte de pagamento desta compra.",
-        "tradeReceived": "Recebido",
-        "tradeSpend": "Gasto"
-      },
-      "toSell": {
-        "headline": "Para Vender",
-        "empty": "Arraste itens da sua própria ficha para cá para vendê-los a esta loja.",
-        "confirm": "Vender",
-        "remove": "Remover de Para Vender",
-        "confirmMessage": "Você está prestes a vender os itens em espera para esta loja.",
-        "ownerWarning": "Esta loja é sua. Tem certeza de que quer vender algo para si mesmo?",
-        "repGainMessage": "{character} ganhou Reputação {network} ao vender."
-      },
-      "warnings": {
-        "systemDisabled": "O sistema de loja está desativado no momento - você pode ativá-lo nas configurações do sistema Eclipse Phase.",
-        "sellFailed": "Não foi possível concluir a venda.",
-        "purchaseFailed": "Não foi possível concluir a compra.",
-        "purchaseItemsGone": "Alguns dos itens comprados não estão mais disponíveis.",
-        "favorLimitExhausted": "Nenhum favor deste nível está disponível agora - o limite semanal ou de arco de história já foi usado.",
-        "notEnoughRepToBurn": "Não há Reputação suficiente disponível para queimar essa quantidade - reduzido ao disponível.",
-        "notEnoughRepToBuy": "Não há Reputação suficiente disponível para comprar isto.",
-        "shopClosed": "Esta loja está fechada no momento.",
-        "salesClosed": "Esta loja está atualmente fechada para vendas.",
-        "differentActingCharacter": "Você já está vendendo itens para outro personagem - termine ou remova esses itens primeiro.",
-        "noEligibleCharacters": "Não há mais personagens elegíveis para adicionar - todo personagem vinculado a um jogador já possui um registro de lealdade aqui.",
-                "sellLockedOut": "Você vendeu demais para esta loja recentemente. Descanse para ser bem-vindo novamente, ou peça ao Proprietário para remover a restrição.",
-        "sellLimitExceeded": "Isso é demais para uma única transação aqui. Reduza sua seleção e tente novamente.",
-        "rareLoyaltyRequired": "Este item é Raro - você precisa de pelo menos nível de Lealdade Laranja com esta loja para adquiri-lo.",
-        "favorBatchTooLarge": "São itens demais para pedir como um único favor aqui - reduza sua seleção.",
-"morphsBlocked": "Morfos não podem ser comprados com Reputação. Eles são adquiridos através dos Pontos de Morfo da missão."
       }
     }
   }

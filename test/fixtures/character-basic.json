@@ -1,0 +1,83 @@
+{
+  "name": "Basic Character",
+  "type": "character",
+  "system": {
+    "aptitudes": {
+      "cog": {
+        "value": 15
+      },
+      "int": {
+        "value": 15
+      },
+      "ref": {
+        "value": 15
+      },
+      "sav": {
+        "value": 15
+      },
+      "som": {
+        "value": 15
+      },
+      "wil": {
+        "value": 15
+      }
+    },
+    "activeMorph": "o4auLt59iyV8732k",
+    "skillsVig": {
+      "guns": {
+        "value": 40
+      },
+      "fray": {
+        "value": 30
+      }
+    },
+    "skillsIns": {
+      "infosec": {
+        "value": 25
+      }
+    },
+    "skillsMox": {
+      "deceive": {
+        "value": 20
+      }
+    },
+    "rezPoints": {
+      "value": 5,
+      "spent": 0,
+      "ledger": []
+    }
+  },
+  "items": [
+    {
+      "_id": "wpnranged000001",
+      "name": "Light Pistol",
+      "type": "rangedWeapon",
+      "system": {
+        "active": true,
+        "cost": "minor"
+      }
+    },
+    {
+      "_id": "armorbasic00001",
+      "name": "Armor Vest",
+      "type": "armor",
+      "system": {
+        "boundTo": "o4auLt59iyV8732k",
+        "energy": 6,
+        "kinetic": 8,
+        "cost": "minor"
+      }
+    },
+    {
+      "_id": "gearbasic000001",
+      "name": "Multitool",
+      "type": "gear",
+      "system": {
+        "cost": "minor"
+      }
+    }
+  ],
+  "packItems": [
+    "morphs/Ghost_o4auLt59iyV8732k.json"
+  ]
+}

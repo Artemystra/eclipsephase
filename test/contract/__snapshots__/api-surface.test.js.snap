@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`game.eclipsephase.api surface matches the recorded snapshot 1`] = `
+Object {
+  "actors": Object {
+    "CYBERBRAIN_MARKER": "flags.eclipsephase.grantsCyberbrain",
+    "applyFrame": [Function],
+    "applyStandardEnhancements": [Function],
+    "bodyBindingKey": [Function],
+    "bodyHasWareMarker": [Function],
+    "bodyNervousSystem": [Function],
+    "chainHasWareMarker": [Function],
+    "getBodyBindingInfo": [Function],
+    "requestGMItemTransfer": [Function],
+    "resolveBodyForItem": [Function],
+    "sleevedNervousSystem": [Function],
+    "tempEffectCreation": [Function],
+    "tempEffectDeletion": [Function],
+    "transferItemBetweenActors": [Function],
+  },
+  "chat": Object {
+    "readRollContext": [Function],
+  },
+  "migration": Object {
+    "createProgressDialog": [Function],
+    "forEachActor": [Function],
+    "forEachItem": [Function],
+    "postNotice": [Function],
+  },
+  "registry": Object {
+    "getStrainFamily": [Function],
+    "hasStrainFamily": [Function],
+    "listStrainFamilies": [Function],
+    "registerPoolOption": [Function],
+    "registerRezSpendOptions": [Function],
+    "registerRollSource": [Function],
+    "registerSlot": [Function],
+    "registerStrainFamily": [Function],
+    "registerTaskResultText": [Function],
+  },
+  "rolls": Object {
+    "RollCheck": [Function],
+    "TaskRoll": [Function],
+    "TaskRollModifier": [Function],
+    "applySuccessTierBonus": [Function],
+    "damageValueCalc": [Function],
+    "gmList": [Function],
+    "inheritChatVisibility": [Function],
+    "prepareRecipients": [Function],
+    "rollCalc": [Function],
+    "rollToChat": [Function],
+    "usePoolFromChat": [Function],
+  },
+  "ui": Object {
+    "addDragSupport": [Function],
+    "addMinimizeSupport": [Function],
+    "addWindowControls": [Function],
+    "confirmation": [Function],
+    "itemTypeFilterPills": [Function],
+    "moreInfo": [Function],
+    "registerCommonHandlers": [Function],
+    "selectBody": [Function],
+    "slideToggleVisibility": [Function],
+    "systemMessage": [Function],
+  },
+}
+`;

@@ -14,12 +14,22 @@ export function restingListeners(html, actor) {
   _restResetListener(html, actor);
 }
 
+/**
+ * Fires the rest hook so a feature can extend the payload, then writes it to the actor.
+ * @param {Actor} actorWhole - The resting actor
+ * @param {String} restType - Either "short" or "long"
+ * @param {Object} updates - The update payload the rest branch assembled
+ * @returns {Promise} The actor update
+ */
+async function applyRest(actorWhole, restType, updates) {
+  Hooks.callAll("eclipsephase.postRest", actorWhole, restType, updates);
+  return actorWhole.update(updates);
+}
+
 async function _restCheckboxListener(html, actor) {
   html.querySelectorAll(".rest").forEach(element => {
     element.addEventListener("click", async func => {
       const dataset = func.currentTarget.dataset;
-      const brewStatus = false;
-      //const brewStatus = game.settings.get("eclipsephase", "superBrew"); -> Out of order for the time being (25.07.2025)
       const restReset = game.settings.get("eclipsephase", "restReset");
       const actorWhole = actor;
       const actorModel = actor.system;
@@ -52,12 +62,7 @@ async function _restCheckboxListener(html, actor) {
         await tempEffectDeletion(actorWhole, "eclipsephase", "effectKey", ["woundIgnore", "traumaIgnore"]);
       }
 
-      if (!brewStatus) {
-        poolSpend = (maxInsight - curInsight) + (maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
-      }
-      else {
-        poolSpend = (maxInsight - curInsight) + (maxVigor - curVigor) + (maxMoxie - curMoxie);
-      }
+      poolSpend = (maxInsight - curInsight) + (maxVigor - curVigor) + (maxMoxie - curMoxie) + (maxFlex - curFlex);
 
       let rollFormula = "1d6" + (actorModel.additionalSystems.restChiMod ? " + " + eval(actorModel.additionalSystems.restChiMod) * actorModel.mods.psiMultiplier : "") + (actorModel.mods.recoverBonus ? " + " + eval(actorModel.mods.recoverBonus) : "");
       let roll = await new Roll(rollFormula).evaluate();
@@ -74,13 +79,13 @@ async function _restCheckboxListener(html, actor) {
         restValue = roll.total;
       }
 
-      if (restType === "long" && !brewStatus) {
+      if (restType === "long") {
         let label = game.i18n.localize("ep2e.roll.announce.rest.long");
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker({ actor: actor }),
           flavor: label
         });
-        return actorWhole.update({
+        return applyRest(actorWhole, restType, {
           "system.pools.insight.value": maxInsight,
           "system.pools.vigor.value": maxVigor,
           "system.pools.moxie.value": maxMoxie,
@@ -89,41 +94,18 @@ async function _restCheckboxListener(html, actor) {
           "system.psiStrain.infection": resetInfection
         });
       }
-      else if (restType === "long" && brewStatus) {
-        let label = game.i18n.localize("ep2e.roll.announce.rest.long");
-        ChatMessage.create({
-          speaker: ChatMessage.getSpeaker({ actor: actor }),
-          flavor: label
-        });
-        return actorWhole.update({
-          "system.pools.insight.value": maxInsight,
-          "system.pools.vigor.value": maxVigor,
-          "system.pools.moxie.value": maxMoxie,
-          "system.rest.restValue": null,
-          "system.psiStrain.infection": resetInfection
-        });
-      }
-      else if (restValue >= poolSpend && !brewStatus) {
-        return actorWhole.update({
+      else if (restValue >= poolSpend) {
+        return applyRest(actorWhole, restType, {
           "system.pools.insight.value": maxInsight,
           "system.pools.vigor.value": maxVigor,
           "system.pools.moxie.value": maxMoxie,
           "system.pools.flex.value": maxFlex,
-          "system.rest.restValue": null,
-          "system.psiStrain.infection": easeInfection
-        });
-      }
-      else if (restValue >= poolSpend && brewStatus) {
-        return actorWhole.update({
-          "system.pools.insight.value": maxInsight,
-          "system.pools.vigor.value": maxVigor,
-          "system.pools.moxie.value": maxMoxie,
           "system.rest.restValue": null,
           "system.psiStrain.infection": easeInfection
         });
       }
       else {
-        await actorWhole.update({
+        await applyRest(actorWhole, restType, {
           "system.psiStrain.infection": easeInfection
         });
         await _showDistributionDialog(actorWhole, restValue, maxInsight, maxVigor, maxMoxie, maxFlex, curInsight, curVigor, curMoxie, curFlex);

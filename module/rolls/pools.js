@@ -1,8 +1,8 @@
 import { eclipsephase } from "../config.js";
-import { TaskRollModifier, TaskRoll, rollCalc, HOMEBREW_TASK_RESULT_TEXT, TASK_RESULT_TEXT } from "./dice.js";
-import { inheritChatVisibility } from "../common/general-sheet-functions.js";
+import { TaskRollModifier, TaskRoll, rollCalc, TASK_RESULT_TEXT } from "./dice.js";
+import { inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
+import { getTaskResultText } from "../api/registry.js";
 import { prepareWeapon, dealPsiDamage } from "./damage.js";
-import { completeShopPurchase, postShopChatMessage, shopRepIconHtml } from "../common/general-helper-functions.js";
 
 const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
 
@@ -12,33 +12,26 @@ const POOL_USAGE_OUTPUT = "systems/eclipsephase/templates/chat/pool-usage.html"
  * @param {Object} data - Pulls all necessary data from the button clicked on the chat message
  */
 export async function usePoolFromChat(data){
-    const dataset = data.currentTarget.dataset;
-    const pool = {
-        skillPoolValue: dataset.skillpoolvalue ? parseInt(dataset.skillpoolvalue) : 0, 
-        flexPoolValue: dataset.flexpoolvalue ? parseInt(dataset.flexpoolvalue) : 0, 
-        updatePoolPath : dataset.updatepoolpath ? dataset.updatepoolpath : "", 
-        updateFlexPath : dataset.updateflexpath ? dataset.updateflexpath : "", 
-        poolType: dataset.pooltype ? dataset.pooltype : ""
-    }
-    const options = dataset.usepool
-    const actor = await fromUuid(dataset.actorid)
-    const rolledFrom = dataset.rolledfrom
-    const messageId = data.currentTarget.closest("[data-message-id]")?.dataset.messageId
-    const {blind, recipientList} = inheritChatVisibility(messageId, dataset.rollmode)
+    const context = readRollContext(data.currentTarget)
+    const pool = {...context.pool}
+    const options = data.currentTarget.dataset.usepool
+    const actor = await fromUuid(context.actorUuid)
+    const rolledFrom = context.rolledFrom
+    const {blind, recipientList} = inheritChatVisibility(context.messageId, context.options.rollMode)
 
     let updateResult = await update(options, pool, null, actor)
 
     if(updateResult){
 
         let message = {}
-            
-        message.resultText = dataset.resulttext;
-        
-        message.type = dataset.usagetype;
-        message.newResult = dataset.newresult ? parseInt(dataset.newresult) : false;
-        message.newValue = dataset.newvalue ? parseInt(dataset.newvalue) : false;
+
+        message.resultText = context.alternatives.resultText;
+
+        message.type = context.alternatives.usageType;
+        message.newResult = context.alternatives.result ?? false;
+        message.newValue = context.alternatives.value ?? false;
         message.poolName = pool.poolType ? pool.poolType : game.i18n.localize("ep2e.skills.flex.poolHeadline");
-        
+
         let html = await foundry.applications.handlebars.renderTemplate(POOL_USAGE_OUTPUT, message)
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({actor: actor}),
@@ -47,53 +40,15 @@ export async function usePoolFromChat(data){
             blind: blind
         })
 
+        Hooks.callAll("eclipsephase.poolResult", {context, actor, rolledFrom, newResult: context.alternatives.result, blind, recipientList})
+
         if(rolledFrom === "ccWeapon" || rolledFrom === "rangedWeapon"){
-            let data = {}
-            const result = parseInt(dataset.newresult)
-
-            data.actorid = dataset.actorid
-            data.weaponid = dataset.weaponid
-            data.weaponmode = dataset.weaponmode
-            data.rolledfrom = dataset.rolledfrom
-            data.biomorphtarget = dataset.biomorphtarget
-            data.touchonly = dataset.touchonly
-            data.attackmode = dataset.attackmode
-            data.rollmode = dataset.rollmode
-            data.messageid = messageId
-
-            await prepareWeapon(false, result, data)
+            await prepareWeapon(false, context.alternatives.result, context)
         }
-        else if(rolledFrom === "psiSleight" && dataset.sleightid){
-            const sleightItem = actor.items.get(dataset.sleightid);
+        else if(rolledFrom === "psiSleight" && context.item.sleightId){
+            const sleightItem = actor.items.get(context.item.sleightId);
             if(sleightItem?.system.damage?.d10 || sleightItem?.system.damage?.d6 || sleightItem?.system.damage?.bonus){
-                await dealPsiDamage(actor, sleightItem, parseInt(dataset.newresult), blind, recipientList, dataset.push);
-            }
-        }
-        else if(rolledFrom === "shopPurchase" && dataset.resultclass === "success"){
-            const bodyBindings = {};
-            (dataset.bodybindings || "").split(",").filter(Boolean).forEach(pair => {
-                const [id, boundTo] = pair.split(":");
-                bodyBindings[id] = boundTo;
-            });
-            const boughtItems = await completeShopPurchase({
-                shopUuid: dataset.shopuuid,
-                buyerActorId: dataset.buyeractorid,
-                itemIds: dataset.itemids,
-                network: dataset.network,
-                favorTier: dataset.requiredtier,
-                bodyBindings
-            })
-            if (boughtItems.length) {
-                // Only fires for shopPurchase rolls (Cash in Favor, Buy has no roll to rescue) -
-                // the favor-tier box is right here too, mirroring _useGefallen()'s success path.
-                const burnAmount = Number(dataset.burnamount) || 0;
-                const tierLabel = `<span style="font-size: 16px;">${game.i18n.localize(eclipsephase.favorTiers[dataset.requiredtier])}</span>`;
-                const boxContent = burnAmount > 0
-                    ? `${tierLabel} + ${shopRepIconHtml(dataset.network)} ${burnAmount}`
-                    : `${shopRepIconHtml(dataset.network)} ${tierLabel}`;
-                await postShopChatMessage(actor, burnAmount > 0 ? "ep2e.shop.purchase.favorBurnMessage" : "ep2e.shop.purchase.favorMessage",
-                    { character: actor.name, items: boughtItems.map(item => item.name).join(", "), network: dataset.network.replace("-rep", "") },
-                    boxContent);
+                await dealPsiDamage(actor, sleightItem, context.alternatives.result, blind, recipientList, context.options.push);
             }
         }
     }
@@ -167,7 +122,7 @@ export async function update(options, pool, task, actorWhole){
  * @returns - An object containing the outcome of the analysis
  */
 export async function outcomeAlternatives(outputData, pool, systemOptions){
-    let resultText = systemOptions.brewStatus ? HOMEBREW_TASK_RESULT_TEXT : TASK_RESULT_TEXT;
+    let resultText = getTaskResultText() ?? TASK_RESULT_TEXT;
     let obj = {options: {swap: false, upgrade: false, mitigate: false}} 
     obj.value = await swapDice(outputData.rollResult);
     obj.result =  rollCalc(obj.value, outputData.targetNumber)

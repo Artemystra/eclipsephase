@@ -1,0 +1,42 @@
+{
+  "name": "Cyberbrain Character",
+  "type": "character",
+  "system": {
+    "aptitudes": {
+      "cog": {
+        "value": 18
+      },
+      "int": {
+        "value": 18
+      },
+      "ref": {
+        "value": 18
+      },
+      "sav": {
+        "value": 18
+      },
+      "som": {
+        "value": 18
+      },
+      "wil": {
+        "value": 18
+      }
+    },
+    "activeMorph": "wjoBBYD1ZRDtVMTm",
+    "skillsMox": {
+      "psi": {
+        "value": 45
+      }
+    },
+    "psiStrain": {
+      "name": "Crucible",
+      "strainType": 1,
+      "infection": 40
+    }
+  },
+  "packItems": [
+    "morphs/Splicer_Liquid_Silver_wjoBBYD1ZRDtVMTm.json",
+    "ware/Cyberbrain_DsZJsZvcMBXVqqNK.json"
+  ],
+  "items": []
+}

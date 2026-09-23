@@ -1,5 +1,5 @@
 {
-  "SETTINGS":{
+  "SETTINGS": {
     "ammoRules": {
       "name": "Munitionsregeln",
       "hint": "Entscheidet wie Munitionsitems in Spielerinventaren beim nachladen behandelt werden. Standard: Munitionsitems sind unendlich und werden niemals reduziert/gelöscht. Überleben: Nachladen löscht/reduziert die entsprechenden Munitionsitems. Nur Granaten: Nur Spezialmunition (z.B. Granaten/Drogen) werden beim nachladen reduziert/gelöscht.",
@@ -14,10 +14,6 @@
     "editAll": {
       "name": "Keine Editiereinschränkungen",
       "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Rast mit ein."
-    },
-    "enableShopSystem": {
-      "name": "Shop-System aktivieren",
-      "hint": "Aktiviert den Shop-Actor-Typ. Wenn deaktiviert, werden bestehende Shops versteckt und es können keine neuen erstellt werden."
     },
     "gmMenu": {
       "name": "SL Menü",
@@ -52,30 +48,35 @@
       "hint": "Macht Dinge die Laph in der eigenen Runde benutzt. ACHTUNG: Keine Originalregeln!"
     }
   },
-  "TYPES.Actor.character" : "Spielercharakter",
-  "TYPES.Actor.npc" : "Nichtspielercharakter",
-  "TYPES.Actor.goon" : "Bedrohung",
-  "TYPES.Actor.shop" : "Shop",
-  "TYPES.Item.gear" : "Spezialausrüstung",
-  "TYPES.Item.rangedWeapon" : "Fernkampfwaffe",
-  "TYPES.Item.ccWeapon" : "Nahkampfwaffe",
-  "TYPES.Item.armor" : "Rüstung",
-  "TYPES.Item.grenade" : "Granate",
-  "TYPES.Item.trait" : "Ego-Vorteil",
-  "TYPES.Item.flaw" : "Ego-Nachteil",
-  "TYPES.Item.morphTrait" : "Morph-Vorteil",
-  "TYPES.Item.morphFlaw" : "Morph-Nachteil",
-  "TYPES.Item.ware" : "Körpermodifikation",
-  "TYPES.Item.aspect" : "Psi-Kraft",
-  "TYPES.Item.program" : "Programm",
-  "TYPES.Item.specialSkill" : "Spezial-Skill",
-  "TYPES.Item.knowSkill" : "Wissens-Skill",
-  "TYPES.Item.vehicle" : "Remotekörper",
-  "TYPES.Item.drug" : "Droge",
-  "TYPES.Item.ammo" : "Munition",
-  "TYPES.Item.id" : "ID",
-  "TYPES.Item.morph" : "Morph",
-
+  "TYPES": {
+    "Actor": {
+      "character": "Spielercharakter",
+      "npc": "Nichtspielercharakter",
+      "goon": "Bedrohung",
+      "shop": "Shop"
+    },
+    "Item": {
+      "gear": "Spezialausrüstung",
+      "rangedWeapon": "Fernkampfwaffe",
+      "ccWeapon": "Nahkampfwaffe",
+      "armor": "Rüstung",
+      "grenade": "Granate",
+      "trait": "Ego-Vorteil",
+      "flaw": "Ego-Nachteil",
+      "morphTrait": "Morph-Vorteil",
+      "morphFlaw": "Morph-Nachteil",
+      "ware": "Körpermodifikation",
+      "aspect": "Psi-Kraft",
+      "program": "Programm",
+      "specialSkill": "Spezial-Skill",
+      "knowSkill": "Wissens-Skill",
+      "vehicle": "Remotekörper",
+      "drug": "Droge",
+      "ammo": "Munition",
+      "id": "ID",
+      "morph": "Morph"
+    }
+  },
   "ep2e": {
     "actorSheet": {
       "placeholders": {
@@ -113,7 +114,6 @@
         "inventoryTab": "Inventar",
         "peripheralsTab": "Peripherie",
         "psiTab": "Psi",
-        "kiTab": "Ki",
         "effectsTab": "Effekte",
         "gmInfoTab": "GM Info"
       },
@@ -204,7 +204,7 @@
           "takeDamage": "Mentaler Schaden"
         },
         "heal": {
-          "bodyFull":{
+          "bodyFull": {
             "bio": "Voll Heilen",
             "synth": "Voll Reparieren",
             "info": "Voll Defragmentieren"
@@ -220,80 +220,80 @@
         "spendRez": {
           "label": "Rez Ausgeben",
           "rep": {
-            "label" : "x 5 Rep Punkte",
+            "label": "x 5 Rep Punkte",
             "description": " (1 Rez pro)"
           },
           "skill": {
-            "label" : "x 5 Skill Punkte",
+            "label": "x 5 Skill Punkte",
             "description": " (1 Rez pro)"
           },
           "spec": {
-            "label" : "x 1 Spezialisierung",
+            "label": "x 1 Spezialisierung",
             "description": " (1 Rez pro)"
           },
           "psi": {
-            "label" : "x 1 Psi Sleight",
+            "label": "x 1 Psi Sleight",
             "description": " (1 Rez pro)"
           },
           "lang": {
-            "label" : "x 1 Sprache",
+            "label": "x 1 Sprache",
             "description": " (1 Rez pro)"
           },
           "apt": {
-            "label" : "x 1 Anlage",
+            "label": "x 1 Anlage",
             "description": " (1 Rez pro)"
           },
           "flex": {
-            "label" : "x 1 Ego-Flex (Maximum 3)",
+            "label": "x 1 Ego-Flex (Maximum 3)",
             "description": " (2 Rez pro)"
           },
           "traits": {
-            "label" : "Beliebige Anzahl von Vorteilen",
+            "label": "Beliebige Anzahl von Vorteilen",
             "description": " (Summe der Kosten eintragen)"
           },
           "homebrew": {
             "rep": {
-              "label" : "x 1 Rep Punkt",
+              "label": "x 1 Rep Punkt",
               "description": " (1 Rez pro)"
             },
             "spec": {
-              "label" : "x 1 Spezialisierung",
+              "label": "x 1 Spezialisierung",
               "description": " (5 Rez pro)"
             },
             "psi": {
-              "label" : "x 1 Psi Sleight",
+              "label": "x 1 Psi Sleight",
               "description": " (5 Rez pro)"
             },
             "lang": {
-              "label" : "x 1 Sprache",
+              "label": "x 1 Sprache",
               "description": " (5 Rez pro)"
             },
             "apt": {
-              "label" : "x 1 Anlage",
+              "label": "x 1 Anlage",
               "description": " (5 Rez pro)"
             },
             "flex": {
-              "label" : "x 1 Ego-Flex (Maximum 3)",
+              "label": "x 1 Ego-Flex (Maximum 3)",
               "description": " (10 Rez pro)"
             },
             "traits": {
-              "label" : "Beliebige Anzahl von Vorteilen",
+              "label": "Beliebige Anzahl von Vorteilen",
               "description": " (Summe der Kosten eintragen)"
             },
             "skill33": {
-              "label" : "x 2 Skill Punkte (Skill < 34)",
+              "label": "x 2 Skill Punkte (Skill < 34)",
               "description": " (1 Rez pro)"
             },
             "skill3366": {
-              "label" : "x 1 Skill Punkt (Skill 34 - 66)",
+              "label": "x 1 Skill Punkt (Skill 34 - 66)",
               "description": " (1 Rez pro)"
             },
             "skill66": {
-              "label" : "x 1 Skill Punkt (Skill > 66)",
+              "label": "x 1 Skill Punkt (Skill > 66)",
               "description": " (2 Rez pro)"
             }
-        }
-        }, 
+          }
+        },
         "durdr": "Aus/Tr",
         "woundswt": "Wunden/(WG)",
         "stressluc": "Stress/Kla",
@@ -452,7 +452,7 @@
       "bracketsMuse": "(Muse)",
       "museOf": "Muse von:"
     },
-    "skills":{
+    "skills": {
       "placeholders": {
         "specialization": "Spezialisierung",
         "additionalSpec": "No Spec"
@@ -481,7 +481,7 @@
         },
         "button": {
           "resetRest": "Rast Zurücksetzen",
-          "distribute": "Verteilen" 
+          "distribute": "Verteilen"
         }
       },
       "insightSkills": {
@@ -564,24 +564,24 @@
         "Psychosurgery": "Psychochirurgie"
       },
       "pool": {
-      "label": "pool",
-      "dialogHeadline": "Pool nutzen",
-      "dialogCopy": "Dies verbraucht einen Poolpunkt um den folgenden Effekt zu erlangen:",
-      "subheadline": "Information",
-      "inputSubheadline": "Eingabe Nötig",
-      "chatHeadline": "Nutzt einen Pool",
-      "chatEffect": "Erhaltener Effekt:",
-      "considerResting": "Du kannst ihn mit einer 'Ausruhen'-Aktion wieder füllen",
-      "numberWounds": "Anzahl Wunden zu ignorieren",
-      "numberTrauma": "Anzahl Trauma zu ignorieren",
-      "repSize": "Größe des Gefallens",
-      "use": {
-        "insight": "Insight Nutzen",
-        "vigor": "Vigor Nutzen",
-        "moxie": "Moxie Nutzen",
-        "threat": "Threat Nutzen",
-        "flex": "Flex Nutzen"
-      }
+        "label": "pool",
+        "dialogHeadline": "Pool nutzen",
+        "dialogCopy": "Dies verbraucht einen Poolpunkt um den folgenden Effekt zu erlangen:",
+        "subheadline": "Information",
+        "inputSubheadline": "Eingabe Nötig",
+        "chatHeadline": "Nutzt einen Pool",
+        "chatEffect": "Erhaltener Effekt:",
+        "considerResting": "Du kannst ihn mit einer 'Ausruhen'-Aktion wieder füllen",
+        "numberWounds": "Anzahl Wunden zu ignorieren",
+        "numberTrauma": "Anzahl Trauma zu ignorieren",
+        "repSize": "Größe des Gefallens",
+        "use": {
+          "insight": "Insight Nutzen",
+          "vigor": "Vigor Nutzen",
+          "moxie": "Moxie Nutzen",
+          "threat": "Threat Nutzen",
+          "flex": "Flex Nutzen"
+        }
       },
       "addSkill": "Skill",
       "chooseAptitude": "Anlage Wählen",
@@ -758,165 +758,11 @@
       "noWare": "Keine Ware installiert",
       "noArmor": "Keine Rüstung installiert"
     },
-"ki": {
-      "strain": {
-        "none": "-Auswahl-",
-        "crucible": "Der Schmelztiegel",
-        "redline": "Die Rote Linie",
-        "signal": "Das Signal",
-        "ruin": "Der Verfall",
-        "colony": "Die Kolonie"
-      },
-      "effect": {
-        "cognitiveFeedback": "Kognitive Rückkopplung:",
-        "takeStrain": "Erleide SW 1W6",
-        "crucible": {
-          "preoccupation": {
-            "label": "Motivation:",
-            "enhance": "Realraum verbessern",
-            "recycle": "Wiederverwerten",
-            "research": "Forschung & Entwicklung"
-          },
-          "reconfiguration": {
-            "label": "Zwanghafte Rekonfiguration:",
-            "forced": "Erzwungene Aktivierung",
-            "shutdown": "Vollständige Abschaltung",
-            "rearranged": "Improvisierter Umbau"
-          },
-          "recalibration": {
-            "label": "Neukalibrierung:",
-            "weapon": "Waffe",
-            "armor": "Panzerung",
-            "accessory": "Zubehör"
-          },
-          "motivation": {
-            "label": "Motivation:",
-            "text": "Unvollkommenheit beseitigen"
-          },
-          "revision": {
-            "label": "Manifestation:",
-            "text": "Unheimliches Upgrade"
-          }
-        },
-        "redline": {
-          "governor": {
-            "label": "Ausfall des Bewegungsreglers:",
-            "limited": "Begrenzt",
-            "overridden": "Übersteuert",
-            "runaway": "Außer Kontrolle"
-          },
-          "compulsion": {
-            "label": "Betriebszwang:",
-            "overdoIt": "Übertreib es",
-            "testTheLimits": "Grenzen ausloten",
-            "redTape": "Vorschrift ist Vorschrift"
-          },
-          "calibration": {
-            "label": "Experimentelle Kalibrierung:",
-            "efficiency": "Effizienz",
-            "experimental": "Experimentell",
-            "pushTheLimit": "Grenze überschreiten"
-          },
-          "rerouting": {
-            "label": "Umleitung:",
-            "boost": "Schub",
-            "support": "Unterstützung",
-            "switch": "Umschaltung"
-          },
-          "pushing": {
-            "label": "Die Linie überschreiten:",
-            "overclocking": "Übertaktung",
-            "dampening": "Dämpfung",
-            "switching": "Umschlagen"
-          }
-        },
-        "signal": {
-          "carrier": {
-            "label": "Offener Träger:",
-            "location": "Genaue Position",
-            "diagnostics": "Technische Diagnosedaten",
-            "sensorFeed": "Auszüge eines Sensor-Feeds"
-          },
-          "saturation": {
-            "label": "Empfängersättigung:",
-            "text": "Sensorrauschen"
-          },
-          "interference": {
-            "label": "Störmuster:",
-            "whiteNoise": "Weißes Rauschen",
-            "signalBoost": "Signalverstärkung"
-          },
-          "dependency": {
-            "label": "Trägerabhängigkeit:",
-            "tacticalNetwork": "Taktisches Netzwerk",
-            "ping": "Ping",
-            "experimentalApi": "Experimentelle API"
-          },
-          "beacon": {
-            "label": "Manifestation:",
-            "text": "Anomale Störung"
-          }
-        },
-        "ruin": {
-          "fatigue": {
-            "label": "Materialermüdung:",
-            "brittleArmor": "Brüchige Panzerung",
-            "fatiguedActuators": "Ermüdete Aktuatoren",
-            "leakingConstruction": "Undichte Konstruktion"
-          },
-          "seized": {
-            "label": "Blockierte Funktion:",
-            "ware": "Ein Ware-Teil",
-            "sense": "Ein Sinn",
-            "movement": "Ein Bewegungsmodus"
-          },
-          "intermittent": {
-            "label": "Sporadischer Ausfall:",
-            "malfunction": "Subsystem-Fehlfunktion",
-            "sensorDecay": "Sensorverfall",
-            "heuristicErrors": "Heuristikfehler"
-          },
-          "shedding": {
-            "label": "Fellwechsel:",
-            "wareComponent": "Eingeweide",
-            "armorPlate": "Schuppen"
-          },
-          "breakdown": {
-            "label": "Manifestation:",
-            "text": "Zusammenbruch"
-          }
-        },
-        "colony": {
-          "witnesses": {
-            "label": "Die Zeugen:",
-            "eyes": "Augen",
-            "attention": "Aufmerksamkeit"
-          },
-          "sympathetic": {
-            "label": "Sympathetische Rückkopplung:",
-            "text": "Nachahmung"
-          },
-          "borrowed": {
-            "label": "Geliehener Körper:",
-            "eye": "Geliehenes Auge",
-            "hand": "Geliehene Hand",
-            "voice": "Geliehene Stimme",
-            "organ": "Geliehenes Organ"
-          },
-          "gathering": {
-            "label": "Versammlung:",
-            "procession": "Prozession",
-            "encirclement": "Einkreisung",
-            "nest": "Nest"
-          },
-          "avatar": {
-            "label": "Manifestation:",
-            "text": "Avatar"
-          }
-        }
-      }
-    },
     "psi": {
+      "moduleMissing": {
+        "headline": "Modul fehlt",
+        "copy": "Dieser Charakter nutzt übernatürliche, strain-basierte Fähigkeiten aus einem anderen Modul, das nicht Teil der Grundregeln ist. Bitte aktiviere zuerst das entsprechende Modul, um diese Fähigkeiten zu verwenden."
+      },
       "infectionHeadline": "Infektionstyp",
       "ratingLabel": "Infektionsgrad",
       "strainPlaceholder": "Name des Virenstamms",
@@ -934,7 +780,7 @@
         "prerequisiteConflictCopy": "Dieser Charakter hat bereits einen Vorteil aus der jeweils anderen Disziplin und kann diesen Sleight nicht nutzen.",
         "prerequisiteMissing": "{trait} konnte nicht im Kompendium gefunden werden."
       },
-      "strain" : {
+      "strain": {
         "none": "-Wähle-",
         "architect": "Der Architekt",
         "beast": "Die Bestie",
@@ -943,11 +789,11 @@
         "xenomorph": "Das Alien",
         "custom": "Das Eigene"
       },
-      "effect" : {
-        "physicalDamage" : "Physischer Schaden:",
-        "takeDamage" : "Nimm 1d6 Schaden",
-        "frenzy" : "Raserei",
-        "hallucination" : "Halluzinationen",
+      "effect": {
+        "physicalDamage": "Physischer Schaden:",
+        "takeDamage": "Nimm 1d6 Schaden",
+        "frenzy": "Raserei",
+        "hallucination": "Halluzinationen",
         "other": "Andere",
         "enhancedBehaviour": {
           "label": "Verstärktes Verhalten:",
@@ -1040,7 +886,6 @@
         "spec": "Spec",
         "flex": "Flex",
         "traits": "Traits"
-
       }
     },
     "sideCar": {
@@ -1124,7 +969,7 @@
           "descriptionPlaceholder": "Beschreibung hinzufügen"
         }
       },
-      "traits":{
+      "traits": {
         "traitLabel": "Positiv",
         "flawLabel": "Negativ"
       },
@@ -1152,8 +997,7 @@
           },
           "family": {
             "label": "Familie",
-            "psi": "Psi",
-            "ki": "Ki"
+            "psi": "Psi"
           },
           "action": {
             "label": "Aktion",
@@ -1201,7 +1045,7 @@
             "none": "Keine",
             "kinetic": "Kinetisch",
             "energy": "Energie"
-            },
+          },
           "firingMode": {
             "label": "Feuermodus",
             "ss": "ES",
@@ -1325,7 +1169,7 @@
             "intruder": "Eindringling",
             "user": "Nutzer",
             "admin": "Admin",
-            "owner": "Besitzer"            
+            "owner": "Besitzer"
           }
         }
       },
@@ -1349,7 +1193,7 @@
             "robot": "Roboter",
             "vehicle": "Fahrzeug",
             "morph": "Morph",
-            "animal": "Smart-Animal"          
+            "animal": "Smart-Animal"
           },
           "size": {
             "label": "Grösse",
@@ -1490,7 +1334,7 @@
               "beyond": "Ausser Reichweite (-20)",
               "beyondPlus": "Weit Ausser Reichweite (-30)",
               "ignoreMalus": "Waffe ignoriert Reichweitenmalus",
-              "ignore" : "Keine Reichweitemodifikatoren"
+              "ignore": "Keine Reichweitemodifikatoren"
             },
             "visual": {
               "label": "Visueller Malus",
@@ -1530,10 +1374,10 @@
               "vms": "Sehr viel kleiner (-30)",
               "ms": "Viel kleiner (-20)",
               "s": "kleiner (-10)",
-              "none": "Gleichgross" ,
-              "l": "Grösser (+10)" ,
-              "ml": "Viel Grösser (+20)" ,
-              "vml": "Sehr viel grösser (+30)" 
+              "none": "Gleichgross",
+              "l": "Grösser (+10)",
+              "ml": "Viel Grösser (+20)",
+              "vml": "Sehr viel grösser (+30)"
             },
             "type": {
               "label": "Angriffstyp",
@@ -1614,6 +1458,7 @@
         "wounds": "Wunde(n)/Trauma",
         "woundModifier": "Woundmodifikator",
         "traumaModifier": "Traumamodifikator",
+        "strainFamilyMissing": "Diese Fertigkeit gehört zu einer Strain-Familie, die kein aktives Modul bereitstellt. Ihre Würfe und Pushes bleiben gesperrt, bis dieses Modul aktiviert ist.",
         "rolled": "würfelt",
         "appliedMods": "Angewandte Modifikatoren",
         "baseValue": "Grundwert",
@@ -1638,14 +1483,10 @@
           "pushedLabel": "Gepusht",
           "autoLabel": "Auto",
           "autoPushTooltip": "Auto-Push",
+          "actorGone": "Der Charakter, zu dem dieser Infektionstest gehört, existiert nicht mehr.",
           "noBioBrain": "Psi funktioniert nur aus einem biologischen Gehirn. Ein Cyberhirn blockiert es, und ein Infomorph hat gar kein Nervensystem.",
           "substrateBlockedTooltip": "Psi braucht ein biologisches Gehirn",
           "substrateMismatch": "Biologisches Gehirn in einem synthetischen Körper"
-        },
-        "ki": {
-          "noCyberbrain": "Ki funktioniert nur aus einem Cyberhirn. Beim Jammen muss jeder in der Jamming-Kette genutzte Körper ein Cyberhirn haben.",
-          "substrateBlockedTooltip": "Kein Cyberhirn",
-          "substrateMismatch": "Cyberhirn in einem biologischen Körper"
         },
         "armor": {
           "equipped": "Ich habe {morph} mit Rüstung ausgerüstet."
@@ -1662,7 +1503,7 @@
           "long": "Ich habe meine<p/><strong>lange Rast<p/></strong>um zu regenerieren<p/>"
         },
         "spendRez": {
-          "spent": "Zuviel Rez verteilt. <br> Ausgegeben:", 
+          "spent": "Zuviel Rez verteilt. <br> Ausgegeben:",
           "available": "<br> Verfügbar:"
         },
         "heal": {
@@ -1729,7 +1570,7 @@
           "damageDone": "Mit dem folgenden Ergebnis",
           "additional Effects": "Zusatzeffekte",
           "melee": {
-            "sizeDifference": "Reichweite", 
+            "sizeDifference": "Reichweite",
             "charge": "Sturmangriff",
             "chargeAddition": "(+1d6SW)",
             "agressive": "Agressiver Angriff",
@@ -1909,130 +1750,6 @@
           }
         }
       },
-"ki": {
-        "effect": {
-          "takeStrain": "Die Ki-Infektion schlägt durch das Cyberhirn zurück. Erleide SW 1W6.",
-          "crucible": {
-            "preoccupation": {
-              "enhance": "Du bist wie besessen von einem Gegenstand, den du als unbrauchbar oder verbesserungswürdig empfindest - er muss nicht dir gehören, und die SL entscheidet, um welchen Gegenstand es sich handelt. Du musst versuchen, ihn mit einer erweiterten Hardware-Probe zu verbessern.",
-              "recycle": "Du bist wie besessen von einem Gegenstand, den du als unbrauchbar oder verbesserungswürdig empfindest - er muss nicht dir gehören, und die SL entscheidet, um welchen Gegenstand es sich handelt. Du willst ihn in seine Bestandteile zerlegen und diese anderweitig verwenden.",
-              "research": "Du bist wie besessen von einem Gegenstand, den du als unbrauchbar oder verbesserungswürdig empfindest - er muss nicht dir gehören, und die SL entscheidet, um welchen Gegenstand es sich handelt. Du willst ihn so weit auseinandernehmen, dass du einen Bauplan daraus gewinnst."
-            },
-            "reconfiguration": {
-              "forced": "Ein installiertes Ware-System, von der SL bestimmt, schaltet sich ein und bleibt dauerhaft aktiv. Das Cyberhirn darf nie gewählt werden.",
-              "shutdown": "Ein installiertes Ware-System, von der SL bestimmt, wird vollständig deaktiviert. Das Cyberhirn darf nie gewählt werden.",
-              "rearranged": "Der Morph baut vorhandene Komponenten zu einer zufälligen, von der SL bestimmten Ware-Funktion um und deaktiviert dafür mindestens ein anderes Ware-System. Das Cyberhirn darf nie gewählt werden."
-            },
-            "recalibration": {
-              "weapon": "Die Infektion wandelt einen deiner eigenen Besitzgegenstände in eine andere Waffe um, die die SL bestimmt. Der Ersatz hat ähnliche Masse und Größe und erfüllt eine ähnliche Funktion. Er kehrt nicht automatisch in seine ursprüngliche Form zurück.",
-              "armor": "Die Infektion wandelt einen deiner eigenen Besitzgegenstände in ein anderes Panzerungsteil um, das die SL bestimmt. Der Ersatz hat ungefähr dieselben Gesamtwerte (+/- 20 %) und erfüllt eine ähnliche Funktion. Es kehrt nicht automatisch in seine ursprüngliche Form zurück.",
-              "accessory": "Die Infektion wandelt einen deiner eigenen Besitzgegenstände in ein anderes Zubehörteil um, das die SL bestimmt. Der Ersatz hat ähnliche Masse und Größe und erfüllt eine ähnliche Funktion. Es kehrt nicht automatisch in seine ursprüngliche Form zurück."
-            },
-            "motivation": {
-              "text": "Sobald sich dir das nächste Mal in den nächsten 12 Stunden die Gelegenheit bietet, deinen eigenen Körper aufzuwerten, musst du sie nutzen - oder gegen deinen Drang ankämpfen, etwas Besseres zu werden."
-            },
-            "revision": {
-              "text": "Die SL legt eine dauerhafte körperliche Veränderung fest. Sie darf einschränkend, verstörend oder zweideutig nützlich sein, und ihre Schwere und Dramatik sollte zu der Situation passen, in der der Effekt auftritt. Die Veränderung lässt sich in der nächsten 1 Stunde nicht rückgängig machen. Danach entfernt sie eine Werkstatt oder ein Heiltank mit passendem Morph-Bauplan."
-            }
-          },
-          "redline": {
-            "governor": {
-              "limited": "Im Kampf: Der Morph darf nur seine niedrigere angegebene Bewegungsrate nutzen. Außerhalb des Kampfes: Der Morph bewegt und verhält sich betont langsam, als wolle er sich vor Verschleiß schützen. Dauer: 1W6 Minuten.",
-              "overridden": "Im Kampf: Sobald der Morph sich bewegt, muss er stets mindestens seine höhere angegebene Bewegungsrate nutzen. Außerhalb des Kampfes: Der Morph bewegt sich betont schnell und handelt waghalsig hastig, als wolle er Zeit sparen. Dauer: 1W6 Minuten.",
-              "runaway": "Im Kampf: Der Morph muss in jeder Handlungsrunde stets seine maximal mögliche Strecke zurücklegen. Außerhalb des Kampfes: Der Morph kann nicht stillstehen, als wäre Anhalten und Wiederanfahren eine Unvollkommenheit, die zu mehr Verschleiß führt und um jeden Preis vermieden werden muss. Dauer: 1W6 Minuten."
-            },
-            "compulsion": {
-              "overdoIt": "Erhalte für 12 Stunden die Motivation Übertreib es: Du erledigst jede Aufgabe mit übertriebener Gründlichkeit. Du hörst nicht auf, eine Aufgabe immer weiter zu überarbeiten und verbessern zu wollen, selbst wenn sie erkennbar fertig ist. Du darfst eine WIL-Probe versuchen, um dich aus diesem Zwang zu befreien.",
-              "testTheLimits": "Erhalte für 12 Stunden die Motivation Grenzen ausloten: Du gehst stets weiter, als die Situation es verlangt. Dir fallen sogar noch zusätzliche Möglichkeiten ein, die vorliegende Aufgabe aufzuwerten, und du drängst deinen Mitmenschen Ideen auf, wie mit einer längst erledigten Aufgabe weiterzuverfahren sei. Du darfst eine WIL-Probe versuchen, um dich aus diesem Zwang zu befreien.",
-              "redTape": "Erhalte für 12 Stunden die Motivation Vorschrift ist Vorschrift: Du handelst auffällig langsam und vorsichtig und lässt Arbeiten manchmal unvollendet, aus Angst, Schaden zu verursachen oder eine Sicherheitsgrenze zu verletzen. Du darfst eine WIL-Probe versuchen, um dich aus diesem Zwang zu befreien."
-            },
-            "calibration": {
-              "efficiency": "Einmal in den nächsten 12 Stunden darf die SL nach dem Ansagen einer Handlung entscheiden, den Morph im Modus Effizienz zu betreiben: +10, aber die Aufgabe dauert doppelt so lange oder ein Gegner erhält +10 in einer vergleichenden Probe.",
-              "experimental": "Einmal in den nächsten 12 Stunden darf die SL nach dem Ansagen einer Handlung entscheiden, den Morph im Modus Experimentell zu betreiben: -10, aber ein erfolgreicher Effekt wird verdoppelt, wo es sinnvoll ist.",
-              "pushTheLimit": "Einmal in den nächsten 12 Stunden darf die SL nach dem Ansagen einer Handlung entscheiden, den Morph über seine Grenze zu treiben: +10, und der Morph erleidet danach SW 1W6."
-            },
-            "rerouting": {
-              "boost": "-30 auf eine von der SL bestimmte Fertigkeit einer Pool-Kategorie erkauft +30 auf eine ebenfalls von der SL bestimmte Fertigkeit einer anderen Kategorie. Dauer: 1W6 Minuten.",
-              "support": "-30 auf eine von der SL bestimmte Fertigkeit erkauft +10 auf alle übrigen Fertigkeiten derselben Kategorie. Dauer: 1W6 Minuten.",
-              "switch": "-10 auf alle Fertigkeiten einer von der SL bestimmten Kategorie erkauft +10 auf alle Fertigkeiten einer anderen, ebenfalls von der SL bestimmten Kategorie. Dauer: 1W6 Minuten."
-            },
-            "pushing": {
-              "overclocking": "Einmal in den nächsten 24 Stunden darf die SL nach einer gewürfelten Probe deren Ergebnis um einen Grad anheben - zum Beispiel, indem sie einen einfachen Erfolg zu einem überlegenen Erfolg macht. Die Richtung des ursprünglichen Ergebnisses wird nie umgekehrt. Diese Effekte treten mit Vorliebe im denkbar ungünstigsten Moment auf. Sie können nie eintreten, wenn sie die körperliche oder geistige Unversehrtheit der Ki-Nutzerin selbst gefährden würden.",
-              "dampening": "Einmal in den nächsten 24 Stunden darf die SL nach einer gewürfelten Probe deren Ergebnis um einen Grad absenken - zum Beispiel, indem sie einen überlegenen Erfolg zu einem einfachen Erfolg macht. Die Richtung des ursprünglichen Ergebnisses wird nie umgekehrt. Diese Effekte treten mit Vorliebe im denkbar ungünstigsten Moment auf. Sie können nie eintreten, wenn sie die körperliche oder geistige Unversehrtheit der Ki-Nutzerin selbst gefährden würden.",
-              "switching": "Einmal in den nächsten 24 Stunden darf die SL die beiden Ziffern eines bereits liegenden Wurfs vertauschen - denselben Effekt, den sonst ein Pool-Punkt erkauft, zum Beispiel eine 71 in eine 17 zu verwandeln - nur wendet die SL es hier direkt auf dieses eine Ergebnis an, ohne dass es einen Pool-Punkt kostet. Diese Effekte treten mit Vorliebe im denkbar ungünstigsten Moment auf. Sie können nie eintreten, wenn sie die körperliche oder geistige Unversehrtheit der Ki-Nutzerin selbst gefährden würden."
-            }
-          },
-          "signal": {
-            "carrier": {
-              "location": "Die nächsten 1W6 Minuten lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig deine genaue Position.",
-              "diagnostics": "Die nächsten 1W6 Minuten lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig seine technischen Diagnosedaten.",
-              "sensorFeed": "Die nächsten 1W6 Minuten lang kann der Morph nicht völlig verstummen. Er sendet unfreiwillig Auszüge eines aktiven Sensor-Feeds."
-            },
-            "saturation": {
-              "text": "Eingehende Signale drängen sich grundlos in deine Sinne und Interfaces. Betroffene Interface- und Wahrnehmungsproben erleiden 1W6 Minuten lang -20."
-            },
-            "interference": {
-              "whiteNoise": "1W6 Minuten lang flutet der Morph seine Umgebung mit elektromagnetischem Rauschen. Betroffene Funkverbindungen in unmittelbarer Umgebung erleiden -30, deine eigenen und die deiner Verbündeten eingeschlossen.",
-              "signalBoost": "1W6 Minuten lang verstärkt der Morph stattdessen die lokale elektromagnetische Umgebung. Jedes Signal in der Nähe, deine eigenen eingeschlossen, lässt sich leichter aufspüren und anpeilen: +30 darauf, es zu orten."
-            },
-            "dependency": {
-              "tacticalNetwork": "12 Stunden lang musst du mit jedem Mitglied deiner aktuellen Gruppe zusammenbleiben. Trennen sich die Signale zu weit, bricht das Netzwerk zusammen und du erleidest -20 auf alle Handlungen, bis die Gruppe wieder zusammenfindet oder die 12 Stunden ablaufen.",
-              "ping": "12 Stunden lang musst du vor jeder Handlung in einer neuen Umgebung einen Ping ausführen - einen Mesh-Scan -, ebenso, sobald neue Personen anwesend sind oder sich die Zahl der Beteiligten ändert. Handelst du ohne ihn, kostet dich das -20 auf alle Handlungen.",
-              "experimentalApi": "12 Stunden lang darfst du keine passive Verschlüsselung aufrechterhalten. Solange du es doch tust, erleidest du -20 auf alle Handlungen."
-            },
-            "beacon": {
-              "text": "Einmal in den nächsten 24 Stunden darf die SL eine unkontrollierte Hochleistungssendung auslösen. 1W6 Minuten lang ist der Morph leicht zu orten und kann nicht verstummen, und er klinkt sich still in bestehende Verbindungen in der Nähe ein, ohne der betroffenen Person oder der Infektion dadurch tatsächlich echten Zugriff zu verschaffen. Die Sendung enthält ein unbekanntes Datenmuster wie Koordinaten, exsurgente Strukturen oder Bruchstücke fremder Telemetrie, überträgt die Infektion aber nicht."
-            }
-          },
-          "ruin": {
-            "fatigue": {
-              "brittleArmor": "Die Frame-Panzerung des Morphs wird brüchig und blättert ab: 1W6 Minuten lang -4/-4 auf seine Frame-Panzerung.",
-              "fatiguedActuators": "1W6 Minuten lang -30 auf alle KON-basierten Proben.",
-              "leakingConstruction": "Eine vorhandene Umweltresistenz stellt 1W6 Minuten lang ihren Dienst ein."
-            },
-            "seized": {
-              "ware": "Die im infizierten Morph verbaute Ware fängt an zu spinnen - Aussetzer sind an der Tagesordnung. Ein Ware-Teil, von der SL bestimmt, ist 1W6 Minuten lang vollständig blockiert.",
-              "sense": "Die Wahrnehmung fällt mitten im Satz aus, als hätte jemand schlicht einen Kanal abgezogen. Ein Sinn, von der SL bestimmt, ist 1W6 Minuten lang vollständig blockiert.",
-              "movement": "Antriebe und Aktuatoren verklemmen mitten in der Bewegung und reagieren nicht mehr. Ein Bewegungsmodus, von der SL bestimmt, ist 1W6 Minuten lang vollständig blockiert."
-            },
-            "intermittent": {
-              "malfunction": "Tragende Subsysteme antworten jedes Mal widerwilliger, wenn man sie fordert. 12 Stunden lang darf die SL eine Probe verlangen, sobald ein bestimmtes Ware-Teil besonders hart beansprucht wird. Welches Ware-Teil betroffen ist, legt die SL in dem Moment fest, in dem der Effekt zum ersten Mal auslöst.",
-              "sensorDecay": "Die Sensordaten des Morphs driften und verschmieren, bis nichts mehr sauber ablesbar ist. Alle Wahrnehmungsproben erleiden 1W6 Stunden lang -20.",
-              "heuristicErrors": "Die Mustererkennung des Morphs zerfällt, und er liest Maschinen wie Menschen falsch. Interface- und Kinesik-Proben erleiden 1W6 Stunden lang -20."
-            },
-            "shedding": {
-              "wareComponent": "Ein Ware-Teil verfällt sichtbar und verkümmert, bleibt dabei aber am Morph angebracht. Es lässt sich 1W3 Stunden lang nicht reparieren; danach erholt es sich von selbst und funktioniert wieder, sieht aber weiterhin sichtbar beschädigt aus, bis es tatsächlich repariert wird, um den Schaden zu verbergen.",
-              "armorPlate": "Eine Platte der Frame-Panzerung verfällt sichtbar und blättert ab, bleibt dabei aber angebracht, und bietet, solange sie in diesem brüchigen Zustand ist, überhaupt keinen Schutz. Sie lässt sich 1W3 Stunden lang nicht reparieren; danach erholt sie sich von selbst und funktioniert wieder, sieht aber weiterhin sichtbar beschädigt aus, bis sie tatsächlich repariert wird, um den Schaden zu verbergen."
-            },
-            "breakdown": {
-              "text": "Einmal in den nächsten 24 Stunden kann die SL in einem passenden Moment einen systemischen Zusammenbruch auslösen. Der Zusammenbruch darf höchstens zwei Systeme betreffen - etwa einen Sinn und ein Ware-Teil oder zwei Sinne - und hält 1W6 Minuten an, bevor der Körper sich zu erholen beginnt. Je nach Situation kann der Effekt danach sichtbar bleiben, wenn er nicht ordentlich repariert wird, doch die Ki-Nutzerin erholt sich vollständig von dem Vorfall."
-            }
-          },
-          "colony": {
-            "witnesses": {
-              "eyes": "Sensorbestückte Geräte in der Nähe schwenken auf einen Schlag zu dir herum: Kameras, Scanner, jede Linse in Reichweite. Der Effekt wirkt durch Wände und Hindernisse hindurch und greift auch dort, wo dich nichts tatsächlich sehen könnte. Er ist augenblicklich und vergeht, sobald die Aufmerksamkeit einmal erregt wurde. Was nicht bereits in Reichweite war - höchstens wenige Meter, nach Ermessen der SL -, bleibt unberührt, wenn es erst danach eintrifft. Was dabei aufgezeichnet hat, kann später gegen dich verwendet werden.",
-              "attention": "Drohnen und Synthmorphe in der Nähe drehen sich zu dir. Wird ein Synth von einem Ego gesteuert, blickt dieses Ego unwillkürlich in deine Richtung; versteckst du dich, brauchst du eine entsprechende Probe, um nicht entdeckt zu werden, und die betroffenen Egos wissen nie, warum sie hingesehen haben. Der Effekt wirkt durch Wände und Hindernisse hindurch und greift auch dort, wo dich nichts tatsächlich sehen könnte. Er ist augenblicklich und vergeht, sobald die Aufmerksamkeit einmal erregt wurde. Was nicht bereits in Reichweite war - höchstens wenige Meter, nach Ermessen der SL -, bleibt unberührt, wenn es erst danach eintrifft."
-            },
-            "sympathetic": {
-              "text": "1W6 Minuten lang darf die SL Ware oder Gegenstände in der Nähe auslösen, deren Funktion dem ähnelt, was du gerade selbst benutzt; das stiftet kleinere Verwirrung und meist einen Modifikator von -10. Linsen werden unscharf oder unnatürlich scharf, Gliedmaßen bewegen sich von allein, Lichter schalten sich ein oder aus. Cyberhirne und lebenserhaltende Systeme sind ausgenommen."
-            },
-            "borrowed": {
-              "eye": "1W6 Minuten lang ersetzen die Geräte um dich herum dein eigenes Sehen: Statt normal zu sehen, siehst du durch die Kameras des Raums. Die SL kann für die ungewohnte Perspektive schwerere Wahrnehmen-Proben verlangen. Die geliehene Funktion wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen.",
-              "hand": "1W6 Minuten lang ersetzen die Geräte um dich herum deine eigenen Hände: Statt selbst zuzugreifen, greifst und bewegst du dich durch die Manipulatoren des Raums. Die SL kann für jede feinmotorische Handlung schwerere Proben verlangen. Die geliehene Funktion wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen.",
-              "voice": "1W6 Minuten lang ersetzen die Geräte um dich herum deine eigene Stimme: Statt normal zu sprechen, redest du durch die Lautsprecher des Raums. Wer es hört, darf eine Probe versuchen, um zu bemerken, dass etwas nicht stimmt. Die geliehene Funktion wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen.",
-              "organ": "1W6 Minuten lang behält dein Morph all seine eigenen Funktionen - stattdessen hallt sein Zustand in die Umgebung hinaus. Deine Gedanken tauchen in Chatfenstern in der Nähe auf, deine Vitalwerte werden als die einer anderen Person angezeigt, Türen, Pumpen, Lüftung oder Beleuchtung pulsieren in deinen körperlichen Rhythmen. Wer diese Effekte bemerkt, darf eine Probe versuchen, um zu erkennen, dass etwas nicht stimmt. Das Echo wird nicht über das normale Mesh aufgezeichnet, lässt sich aber auf anderen Wegen und von anderen Beobachtern durchaus wahrnehmen."
-            },
-            "gathering": {
-              "procession": "1W6 Minuten lang lösen sich mobile und bewegliche Geräte von ihren Aufgaben und ziehen in einer unordentlichen Reihe hinter dir her. Sie greifen nicht absichtlich an, markieren aber deinen Weg: Wer dich verfolgt, erhält nach Ermessen der SL einen Bonus.",
-              "encirclement": "1W6 Minuten lang drängen sich mobile und bewegliche Geräte um dich und versperren dir den Weg, wohin du dich auch wendest. Sie greifen nicht absichtlich an, doch du kommst schlecht voran und stolperst die vollen 1W6 Minuten lang immer wieder über sie.",
-              "nest": "1W6 Minuten lang häufen sich mobile und bewegliche Geräte auf dir auf und verbauen jedes erreichbare Objekt zu einer improvisierten Struktur. Sie greifen nicht absichtlich an, doch der Haufen verstellt dir die Sichtlinien: Du giltst als abgelenkt, -20 auf alles, oder erleidest zumindest stark eingeschränkte Sicht."
-            },
-            "avatar": {
-              "text": "Einmal in den nächsten 24 Stunden darf die SL mehrere mesh-verbundene Geräte vor Ort 1W6 Minuten lang als eine einzige Präsenz erwachen lassen und sich dabei aus dieser Liste ganz oder teilweise bedienen, um etwas Fremdartiges zu bauen: Lautsprecher, Displays und Mesh-Ausgaben, die gemeinsam kommunizieren; Bots, Manipulatoren und Türen, die sich wie Teile eines Organismus bewegen; Sensoren, Leuchten und Funkgeräte, die ein reagierendes Wahrnehmungsnetz bilden. Die beteiligten Sensoren speisen nicht in die normalen Ausgaben der betroffenen Geräte ein - diese zeigen für die Dauer stattdessen eine Mesh-Störsignatur. Die SL steuert das Verhalten der Präsenz, und du erhältst keine Befehlsgewalt über sie."
-            }
-          }
-        }
-      },
       "weapon": {
         "effect": {
           "armSlide": "Diese Schieberhalterung kann eine einhändige Waffe unter deinem Ärmel halten und die Waffe mit einem elektronischen Signal oder einer spezifischen Abfolge von Arm-Bewegungen in deine Hand schieben. Du kannst die Waffe ziehen und mit einer einzigen komplexen Aktion angreifen.",
@@ -2115,144 +1832,6 @@
         "itemRebound": "{name} wurde {body} zugewiesen.",
         "unknownTraitType": "Unbekannter Trait-Typ. Bitte wähle mindestens eine Option - Ego oder Morph - um diesen Trait zu nutzen.",
         "enhancementsAdded": "{count} Verbesserung(en) zu {body} hinzugefügt."
-      }
-    },
-    "shop": {
-      "tabs": {
-        "shop": "Shop",
-        "settings": "Einstellungen"
-      },
-      "filter": {
-        "placeholder": "Nach Itemart filtern..."
-      },
-      "dialog": {
-        "selectNetwork": {
-          "label": "Rep-Netzwerk",
-          "placeholder": "- Wählen -",
-          "headline": "Netzwerk wählen"
-        },
-        "loyaltyDiscount": {
-          "label": "Rabatt",
-          "none": "Kein Rabatt",
-          "option": "{levels} Stufe(n) ({percent}%)"
-        }
-      },
-      "placeholders": {
-        "shopName": "Shop-Name",
-        "noItems": "Dieser Shop hat noch keine Items."
-      },
-      "settings": {
-        "generalHeadline": "Allgemein",
-        "repHeadline": "Akzeptierte Rep-Netzwerke",
-        "repDescription": "Welche Rep-Netzwerke dieser Shop akzeptiert - nur diese stehen beim Kaufen, Verkaufen oder Einlösen eines Gefallens hier als Zahlungsoption zur Verfügung.",
-        "acceptsSales": "Shop nimmt Verkäufe entgegen",
-        "valuationHeadline": "Item-Bewertung",
-        "valuationDescription": "Ordnet jeder eigenen Item-Kostenstufe die effektive Kostenstufe dieses Shops zu, Free bis Rare. Rare sperrt bei aktivierter Loyalty unabhängig vom Preis; Schwierigkeit des Rep-Tests und Preis werden separat weiter unten unter Difficulty Mapping festgelegt.",
-        "costTierFree": "Frei",
-        "difficultyMappingHeadline": "Schwierigkeits-Zuordnung",
-        "difficultyMappingDescription": "Ordnet die effektiven Kostenstufen dieses Shops (oben unter Item-Bewertung festgelegt) der Favor-Stufe zu, die für die Schwierigkeit des Rep-Tests und den Preis verwendet wird - so kannst du z.B. jedes Minor-Item hier wie Moderate würfeln oder kosten lassen, ohne dass sich ändert, welche Items als Minor gelten. Ein Free-Item bleibt frei, solange seine Trivial-Zeile hier nicht umgemappt wird.",
-        "loyaltyHeadline": "Loyalität",
-        "loyaltyEnabled": "Loyalität für diesen Shop verfolgen",
-        "loyaltyPerTierHeadline": "Loyalität pro Stufe",
-        "loyaltyPerTierDescription": "Der Kauf eines Items oder das Einlösen eines Gefallens gewährt dem Käufer Loyalität bei diesem Shop, gestaffelt nach der eigenen Kostenstufe des Items (nicht nach der Rep-Stufen-Bewertung des Shops). Verkaufen gewährt niemals Loyalität.",
-        "loyaltyRecordsHeadline": "Aktuelle Charakter-Loyalität",
-        "loyaltyRecordsDescription": "Eine Live-Liste des aktuellen Loyalitätsstands jedes Charakters bei diesem Shop - keine Einstellung, nur der verfolgte Wert. Ein Wert kann direkt bearbeitet werden, um ihn manuell zu korrigieren.",
-        "loyaltyRecordsEmpty": "Dieser Shop hat noch keine treuen Kunden.",
-        "loyaltyRecordDelete": "Loyalitätseintrag dieses Charakters löschen",
-        "loyaltyRecordDeleteConfirm": "Dies löscht den Loyalitätseintrag dieses Charakters bei diesem Shop dauerhaft.",
-        "loyaltyRecordAdd": "Charakter hinzufügen",
-        "loyaltyRecordAddTitle": "Charakter hinzufügen",
-        "loyaltyRecordAddHeadline": "Wähle einen Charakter aus, der zur Loyalitäts-Liste dieses Shops hinzugefügt werden soll.",
-        "loyaltyRecordAddWindowTitle": "Am Loyalitäts-Brett herumpfuschen",
-        "loyaltyBarMaxHeadline": "Maximale Loyalität für diesen Shop",
-        "loyaltyBarMaxDescription": "Der höchste Loyalitätswert, den dieser Shop erfasst. Der Farbbalken und die Markierung im Footer werden anhand dieser Zahl skaliert.",
-        "loyaltyBarHeadline": "Loyalitätsbalken-Segmente in %",
-        "loyaltyBarDescription": "Teilt den Balken in vier prozentuale Bereiche auf (Rot/Orange/Gelb/Grün). Zusammen dürfen sie nie mehr als 100% der oben angegebenen maximalen Loyalität ergeben.",
-        "loyaltyBarRed": "Rot (T1)",
-        "loyaltyBarOrange": "Orange (T2)",
-        "loyaltyBarYellow": "Gelb (T3)",
-        "loyaltyBarGreen": "Grün (T4)",
-        "sellLimitTimeframeHeadline": "Verkaufslimits pro Zeitraum",
-        "sellLimitsDescription": "Begrenzt, wie viel ein Charakter in einer einzigen Transaktion an diesen Shop verkaufen kann. Wird ein Limit erreicht, ist der Charakter von weiteren Verkäufen hier gesperrt, bis eine lange Ruhe stattfindet oder der Owner die Sperre unten aufhebt.",
-        "sellLimitMaxItems": "Max. Items",
-        "sellLimitMaxRep": "Max. Rep",
-        "sellLockoutsHeadline": "Gesperrte Charaktere",
-        "sellLockoutsEmpty": "Noch kein Charakter hat die Verkaufslimits erreicht.",
-        "sellLockoutsDescription": "Charaktere, die aktuell vom Verkaufen hier gesperrt sind, weil sie ein Verkaufslimit oben erreicht haben - eine Sperre aufheben, damit sie schon vor der nächsten langen Ruhe wieder verkaufen können.",
-        "sellLockoutClear": "Sperre dieses Charakters aufheben",
-                "loyaltyBuyDiscountHeadline": "Kauf-Rabatt",
-        "loyaltyBuyDiscountDescription": "Prozentualer Rabatt beim Kaufen, einlösbar pro Loyalitäts-Stufe - das Einlösen senkt die Loyalität um genau so viele Stufen wieder ab.",
-        "loyaltyBuyDiscountLevel2": "Stufe 2 (%)",
-        "loyaltyBuyDiscountLevel3": "Stufe 3 (%)",
-        "loyaltyBuyDiscountLevel4": "Stufe 4 (%)",
-"rateOverridesHeadline": "Preis-Overrides",
-        "generalOverridesHeadline": "Allgemeine Overrides",
-        "generalOverridesDescription": "Stellt die voreingestellten Preise fest. Erlaubt einfach und schnell, einen Shop teurer oder billiger zu machen.",
-        "morphPointOverridesHeadline": "Morph-Point-Overrides",
-        "morphPointOverridesDescription": "Diese Option existiert nur im Homebrew, da Morphs normalerweise nicht kaufbar sind und stattdessen über ein anderes Punktesystem verrechnet werden. Jeder Wert ist der Morph-Points-Schwellenwert, ab dem diese Stufe beginnt - niedrigere Punktkosten fallen automatisch auf die nächstniedrigere Stufe zurück. Sind zwei Schwellenwerte gleich gesetzt, gewinnt die höhere Stufe.",
-        "specificOverridesHeadline": "Rep-spezifische Overrides",
-        "specificOverridesDescription": "Für eine feingranularere Einstellung von Shops - zum Beispiel, wenn es Orte gibt, an denen bestimmtes Rep weniger gern gesehen ist als anderes. Alle nicht ausgefüllten Felder fallen auf den Grundwert oder den allgemeinen Override (falls vorhanden) zurück.",
-        "rateTableBuysFor": "Kauft für",
-        "rateTableRollBonus": "Wurf-Bonus",
-        "rateTableSellsFor": "Verkauft für"
-      },
-      "inventory": {
-        "headline": "Inventar"
-      },
-      "acceptedRep": {
-        "label": "Shop Accepts:",
-        "loyaltyLabel": "Shop-Loyalität:",
-        "noCharacter": "Du hast keinen aktiven Charakter. Wähle einen dir gehörenden Charakter und komm dann zurück."
-      },
-      "purchase": {
-        "confirm": "Kaufen",
-        "trade": "Tauschen",
-        "favorConfirm": "Gefallen einlösen",
-        "required": "Benötigter Gefallen:",
-        "flatBuyCost": "Kaufkosten:",
-        "netCost": "Nettokosten:",
-        "otherwiseLabel": "Sonst:",
-        "sellBonus": "Verkaufswurf-Bonus:",
-        "sellForRep": "Verkauf für Rep:",
-        "repBenefitsHeadline": "Rep-Vorteile",
-        "burnRep": "Rep verbrennen:",
-        "burnRepHint": "Bonus: Verbrannter Rep x 2<br>(Max. 15 Rep)",
-        "sellBonusModifier": "Verkaufs-Bonus",
-        "burnBonusModifier": "Verbrannter Rep",
-                "favorDifficultyLockedHint": "Wird automatisch anhand der Loyalität bei diesem Shop und der Anzahl gleichzeitig erbetener Items bestimmt.",
-        "successMessage": "{character} hat {items} von {shop} mit {network}-Rep gekauft.",
-        "favorMessage": "{character} hat einen Gefallen eingelöst, um {items} zu erhalten.",
-        "favorBurnMessage": "{character} hat einen Gefallen eingelöst, um {items} zu erhalten, und dabei {network}-Rep verbrannt.",
-        "tradeInMessage": "{character} hat {items} gekauft und dafür {soldCount} Gegenstände in {network}-Rep in Zahlung gegeben.",
-        "tradeReceived": "Erhalten",
-        "tradeSpend": "Ausgegeben"
-      },
-      "toSell": {
-        "headline": "To Sell",
-        "empty": "Ziehe Items von deinem eigenen Bogen hierher, um sie an diesen Shop zu verkaufen.",
-        "confirm": "Verkaufen",
-        "remove": "Aus To Sell entfernen",
-        "confirmMessage": "Du bist dabei, die vorgemerkten Items an diesen Shop zu verkaufen.",
-        "ownerWarning": "Dir gehört dieser Shop. Bist du sicher, dass du etwas an dich selbst verkaufen möchtest?",
-        "repGainMessage": "{character} hat durch den Verkauf {network}-Rep erhalten."
-      },
-      "warnings": {
-        "systemDisabled": "Das Shop-System ist aktuell deaktiviert - du kannst es in den Eclipse-Phase-Systemeinstellungen aktivieren.",
-        "sellFailed": "Der Verkauf konnte nicht abgeschlossen werden.",
-        "purchaseFailed": "Der Kauf konnte nicht abgeschlossen werden.",
-        "purchaseItemsGone": "Einige der gekauften Items sind nicht mehr verfügbar.",
-        "favorLimitExhausted": "Kein Gefallen dieser Stufe mehr verfügbar - das Wochen- bzw. Story-Arc-Limit ist bereits ausgeschöpft.",
-        "notEnoughRepToBurn": "Nicht genug Rep zum Verbrennen vorhanden - auf das Verfügbare reduziert.",
-        "notEnoughRepToBuy": "Nicht genug Rep zum Kaufen vorhanden.",
-        "shopClosed": "Der Shop ist derzeitig geschlossen.",
-        "salesClosed": "Der Shop ist derzeit für Verkäufe geschlossen.",
-        "differentActingCharacter": "Du verkaufst gerade schon Items für einen anderen Charakter - schließe das erst ab oder entferne diese Items.",
-        "noEligibleCharacters": "Keine passenden Charaktere mehr übrig - jeder mit einem Spieler verbundene Charakter hat hier bereits einen Loyalitäts-Eintrag.",
-                "sellLockedOut": "Du hast diesem Shop zuletzt zu viel verkauft. Ruhe dich aus, um wieder willkommen zu sein, oder bitte den Owner, die Sperre aufzuheben.",
-        "sellLimitExceeded": "Das ist zu viel für eine einzelne Transaktion hier. Verkleinere deine Auswahl und versuch es erneut.",
-        "rareLoyaltyRequired": "Dieses Item ist Rare - du brauchst mindestens Orange-Loyalität bei diesem Shop, um es zu erwerben.",
-        "favorBatchTooLarge": "Das sind zu viele Items für einen einzigen Gefallen hier - verkleinere deine Auswahl.",
-"morphsBlocked": "Morphs können nicht mit Rep erstanden werden. Sie werden stattdessen über die Morph-Points der Mission erworben."
       }
     }
   }

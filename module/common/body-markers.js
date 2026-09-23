@@ -1,3 +1,5 @@
+import { getStrainFamily } from "../rolls/strain-families.js";
+
 export const CYBERBRAIN_MARKER = "flags.eclipsephase.grantsCyberbrain";
 
 /**
@@ -81,22 +83,12 @@ export function sleevedNervousSystem(actor){
 }
 
 /**
- * Whether a strain family works in the body the ego currently acts through. Psi needs a biological
- * brain and never works while jamming, Ki needs a Cyberbrain, and an infomorph has no nervous
- * system for either. Using the right brain on the opposite nervous system works but is penalised.
+ * Whether a strain family works in the body the ego currently acts through. Each family brings its
+ * own rule; a family nobody registered is refused outright rather than treated as Psi.
  * @param {Actor} actor - The actor to check
- * @param {String} strainFamily - Either "psi" or "ki"
- * @returns - An object holding whether the family is blocked, whether jamming is what blocks it, and whether it is penalised
+ * @param {String} strainFamily - The family a sleight names
+ * @returns - An object holding whether the family is blocked, whether jamming is what blocks it, whether it is penalised, and the keys explaining why
  */
 export function strainSubstrate(actor, strainFamily){
-  const nervousSystem = sleevedNervousSystem(actor);
-  const hasCyberbrain = chainHasWareMarker(actor, CYBERBRAIN_MARKER);
-  const isKi = strainFamily === "ki";
-  const jamBlocked = !isKi && (!!actor?.system?.activeJam ||
-    !!foundry.utils.getProperty(actor, "flags.eclipsephase.psiJamSuppression"));
-
-  const blocked = jamBlocked || nervousSystem === "info" || (isKi ? !hasCyberbrain : hasCyberbrain);
-  const penalised = !blocked && nervousSystem === (isKi ? "bio" : "synth");
-
-  return {blocked, jamBlocked, penalised};
+  return getStrainFamily(strainFamily).substrate(actor);
 }

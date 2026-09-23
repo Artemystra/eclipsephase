@@ -10,8 +10,9 @@ import * as MORPHFUNCTION from "../common/morp-functions.js"
 import itemRoll from "../item/EPitem.js";
 import { restingListeners } from "../rolls/resting.js";
 import { endChiPush, confirmChiPush, actorStrainFamily } from "../rolls/psi.js";
-import { strainSubstrate } from "../common/body-markers.js";
+import { getStrainFamily } from "../rolls/strain-families.js";
 import { checkSleightPrerequisite } from "../common/sleight-prerequisite.js";
+import { getRezSpendOptions } from "../api/registry.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -23,7 +24,77 @@ function hasAnyMovement(bodyItem) {
 }
 
 
+/**
+ * The label the strain tab carries. A family whose module is missing has no localised name to
+ * offer, so its own id stands in - that still tells the reader which discipline the character
+ * uses, where a fallback to "Psi" would name the wrong one.
+ * @param {Object} strainFamily - The registry entry, registered or missing
+ * @returns {String} A localisation key, or the family id when there is none
+ */
+function strainTabLabel(strainFamily) {
+  if (strainFamily.tabLabel) return strainFamily.tabLabel;
+  if (!strainFamily.missing || !strainFamily.id) return "ep2e.actorSheet.rightTabs.psiTab";
+  return strainFamily.id.charAt(0).toUpperCase() + strainFamily.id.slice(1);
+}
+
 export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+
+  // The Rez spending dialog: what a point of Rez may be spent on, and what each entry costs.
+  // A registered table replaces both wholesale; see rezSpendTable().
+  static REZ_COST_MATRIX = {
+    "rep": 1,
+    "skill": 1,
+    "spec": 1,
+    "psi": 1,
+    "lang": 1,
+    "apt": 1,
+    "flex": 2,
+    "traits": 1,
+    "repH": 1,
+    "skill33": 1,
+    "skill3366": 1,
+    "skill66": 1,
+    "specH": 5,
+    "psiH": 5,
+    "langH": 5,
+    "aptH": 5,
+    "flexH": 10,
+    "traitsH": 1
+  }
+
+  static REZ_SPEND_RAW = { options: {
+    0: { id: "rep", label: "ep2e.healthbar.tooltip.spendRez.rep.label", description: "ep2e.healthbar.tooltip.spendRez.rep.description", type: "input" },
+    1: { id: "skill", label: "ep2e.healthbar.tooltip.spendRez.skill.label", description: "ep2e.healthbar.tooltip.spendRez.skill.description", type: "input" },
+    2: { id: "spec", label: "ep2e.healthbar.tooltip.spendRez.spec.label", description: "ep2e.healthbar.tooltip.spendRez.spec.description", type: "input" },
+    3: { id: "psi", label: "ep2e.healthbar.tooltip.spendRez.psi.label", description: "ep2e.healthbar.tooltip.spendRez.psi.description", type: "input" },
+    4: { id: "lang", label: "ep2e.healthbar.tooltip.spendRez.lang.label", description: "ep2e.healthbar.tooltip.spendRez.lang.description", type: "input" },
+    5: { id: "apt", label: "ep2e.healthbar.tooltip.spendRez.apt.label", description: "ep2e.healthbar.tooltip.spendRez.apt.description", type: "input" },
+    6: { id: "flex", label: "ep2e.healthbar.tooltip.spendRez.flex.label", description: "ep2e.healthbar.tooltip.spendRez.flex.description", type: "input" },
+    7: { id: "traits", label: "ep2e.healthbar.tooltip.spendRez.traits.label", description: "ep2e.healthbar.tooltip.spendRez.traits.description", type: "input" }
+  }, costMatrix: EPactorSheet.REZ_COST_MATRIX }
+
+  static REZ_SPEND_HOMEBREW = { options: {
+    0: { id: "repH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.description", type: "input" },
+    1: { id: "skill33", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.description", type: "input" },
+    2: { id: "skill3366", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.description", type: "input" },
+    3: { id: "skill66", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.description", type: "input" },
+    4: { id: "specH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.description", type: "input" },
+    5: { id: "psiH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.description", type: "input" },
+    6: { id: "langH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.description", type: "input" },
+    7: { id: "aptH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.description", type: "input" },
+    8: { id: "flexH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.description", type: "input" },
+    9: { id: "traitsH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.description", type: "input" }
+  }, costMatrix: EPactorSheet.REZ_COST_MATRIX }
+
+  /**
+   * The table the Rez spending dialog offers. A registered table replaces the core one entirely.
+   * @param {Boolean} brewStatus - Whether the house rules are active
+   * @returns {Object} An object holding the dialog options and their Rez cost by id
+   */
+  static rezSpendTable(brewStatus) {
+    return getRezSpendOptions() ?? (brewStatus ? EPactorSheet.REZ_SPEND_HOMEBREW : EPactorSheet.REZ_SPEND_RAW);
+  }
+
   
   //Fallback config for sheets in general
   // Foundry's own ApplicationV2 already walks the class chain and merges each level's DEFAULT_OPTIONS
@@ -179,10 +250,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const autoPushSelection = actor.system.additionalSystems?.autoPushSelection;
     context.autoPushLabel = autoPushSelection && autoPushSelection !== "none" ? game.i18n.localize("ep2e.roll.dialog.push." + autoPushSelection) : "";
 
-    const substrateFamily = actorStrainFamily(actor) === "ki" ? "ki" : "psi";
-    const substrate = strainSubstrate(actor, substrateFamily);
-    context.sleightBlockedLabel = substrate.blocked ? game.i18n.localize(substrate.jamBlocked ? "ep2e.roll.announce.jamming.noPsiTooltip" : `ep2e.roll.announce.${substrateFamily}.substrateBlockedTooltip`) : "";
-    context.sleightPenaltyLabel = substrate.penalised ? game.i18n.localize(`ep2e.roll.announce.${substrateFamily}.substrateMismatch`) : "";
+    const strainFamily = getStrainFamily(actorStrainFamily(actor));
+    const substrate = strainFamily.substrate(actor);
+    context.sleightBlockedLabel = substrate.blocked ? game.i18n.localize(substrate.tooltipKey) : "";
+    context.sleightPenaltyLabel = substrate.penalised ? game.i18n.localize(strainFamily.mismatchKey) : "";
 
     await this._prepareCharacterItems(context);
     await this._prepareRenderedHTMLContent(context);
@@ -190,9 +261,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     context.editable = this.isEditable;
     context.psiDetailsOpen = this._psiDetailsOpen;
 
-    context.sleightFamily = actorStrainFamily(actor);
-    context.isKi = context.sleightFamily === "ki";
-    context.subStrainOptions = context.isKi ? CONFIG.eclipsephase.kiStrains : CONFIG.eclipsephase.strains;
+    context.sleightFamily = strainFamily.id;
+    context.subStrainOptions = strainFamily.subStrains;
+    context.strainDetailsPartial = strainFamily.detailsPartial;
+    context.strainFamilyMissing = strainFamily.missing === true;
 
     //Tabs are getting prepared AFTER the items are created, as some items define the tabs (e.g. morph/id)
     if (game.user.isGM || actor.isOwner){
@@ -206,12 +278,14 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       context.tabGroups = this.tabGroups;
 
       if (context.tabs.primary?.psi) {
-        context.tabs.primary.psi.label = context.isKi ? "ep2e.actorSheet.rightTabs.kiTab" : "ep2e.actorSheet.rightTabs.psiTab";
+        context.tabs.primary.psi.label = strainTabLabel(strainFamily);
       }
     }
     else {
       context.tabGroups = { limited: this.tabGroups.limited };
     }
+
+    Hooks.callAll("eclipsephase.prepareActorSheetContext", this, context);
 
     return context;
   }
@@ -846,8 +920,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       actorModel.additionalSystems.hasSleightAccess = !!actorModel.additionalSystems.hasPsi;
       
 
-    /* In case ACTOR DATA is needed */
-    //console.log(this)
 
   }
 
@@ -942,7 +1014,6 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     };
 
-    //console.log("This is my dragData", dragData)
 
     event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
   }
@@ -1446,7 +1517,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           return actor.update({ [poolUpdate]: newPoolValue });
 
         } else {
-          let chatData = { type: "notEnoughPool", poolName: poolName, brewStatus: brewStatus, poolType: pool };
+          let chatData = { type: "notEnoughPool", poolName: poolName, poolType: pool };
           let renderedHtml = await foundry.applications.handlebars.renderTemplate(result, chatData);
 
           ChatMessage.create({
@@ -1505,7 +1576,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       element.addEventListener("click", ev => {
         ev.preventDefault();
         const dataset = ev.currentTarget.dataset;
-        const systemOptions = { "askForOptions": ev.shiftKey, "optionsSettings": game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus": game.settings.get("eclipsephase", "superBrew") };
+        const systemOptions = { "askForOptions": ev.shiftKey, "optionsSettings": game.settings.get("eclipsephase", "showTaskOptions") };
         DICE.RollCheck({
           "name": dataset.name,
           "rolltype": "skill",
@@ -1660,53 +1731,10 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const spentRez = actorModel.rezPoints.spent;
         const ledger = actorModel.rezPoints.ledger;
 
-        if (!brewStatus) {
-          object = {
-            0: { id: "rep", label: "ep2e.healthbar.tooltip.spendRez.rep.label", description: "ep2e.healthbar.tooltip.spendRez.rep.description", type: "input" },
-            1: { id: "skill", label: "ep2e.healthbar.tooltip.spendRez.skill.label", description: "ep2e.healthbar.tooltip.spendRez.skill.description", type: "input" },
-            2: { id: "spec", label: "ep2e.healthbar.tooltip.spendRez.spec.label", description: "ep2e.healthbar.tooltip.spendRez.spec.description", type: "input" },
-            3: { id: "psi", label: "ep2e.healthbar.tooltip.spendRez.psi.label", description: "ep2e.healthbar.tooltip.spendRez.psi.description", type: "input" },
-            4: { id: "lang", label: "ep2e.healthbar.tooltip.spendRez.lang.label", description: "ep2e.healthbar.tooltip.spendRez.lang.description", type: "input" },
-            5: { id: "apt", label: "ep2e.healthbar.tooltip.spendRez.apt.label", description: "ep2e.healthbar.tooltip.spendRez.apt.description", type: "input" },
-            6: { id: "flex", label: "ep2e.healthbar.tooltip.spendRez.flex.label", description: "ep2e.healthbar.tooltip.spendRez.flex.description", type: "input" },
-            7: { id: "traits", label: "ep2e.healthbar.tooltip.spendRez.traits.label", description: "ep2e.healthbar.tooltip.spendRez.traits.description", type: "input" }
-          };
-        }
-        else {
-          object = {
-            0: { id: "repH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.rep.description", type: "input" },
-            1: { id: "skill33", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill33.description", type: "input" },
-            2: { id: "skill3366", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill3366.description", type: "input" },
-            3: { id: "skill66", label: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.skill66.description", type: "input" },
-            4: { id: "specH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.spec.description", type: "input" },
-            5: { id: "psiH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.psi.description", type: "input" },
-            6: { id: "langH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.lang.description", type: "input" },
-            7: { id: "aptH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.apt.description", type: "input" },
-            8: { id: "flexH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.flex.description", type: "input" },
-            9: { id: "traitsH", label: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.label", description: "ep2e.healthbar.tooltip.spendRez.homebrew.traits.description", type: "input" }
-          };
-        }
+        const rezTable = EPactorSheet.rezSpendTable(brewStatus);
+        object = rezTable.options;
 
-        const costMatrix = {
-          "rep": 1,
-          "skill": 1,
-          "spec": 1,
-          "psi": 1,
-          "lang": 1,
-          "apt": 1,
-          "flex": 2,
-          "traits": 1,
-          "repH": 1,
-          "skill33": 1,
-          "skill3366": 1,
-          "skill66": 1,
-          "specH": 5,
-          "psiH": 5,
-          "langH": 5,
-          "aptH": 5,
-          "flexH": 10,
-          "traitsH": 1
-        };
+        const costMatrix = rezTable.costMatrix;
 
         let total = 0;
         const date = new Date().toLocaleDateString("en-EN");
@@ -1815,9 +1843,8 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     const dataset = element.dataset;
     const actorWhole = this.actor;
     let rolledFrom = dataset.rolledfrom? dataset.rolledfrom : "";
-    //console.log("This is my rolled from", rolledFrom, "because my skillKey is", dataset.key)
     let weaponID = dataset.weaponid ? dataset.weaponid : "";
-    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions"), "brewStatus" : game.settings.get("eclipsephase", "superBrew")}
+    const systemOptions = {"askForOptions" : event.shiftKey, "optionsSettings" : game.settings.get("eclipsephase", "showTaskOptions")}
 
     SHEET.rollFromSheet(actorWhole, dataset, rolledFrom, weaponID, systemOptions)
     

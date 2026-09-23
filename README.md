@@ -203,6 +203,12 @@ Creating your own active effect items is simpel, but as for now you need to now 
 #### Special Mods
 - `system.mods.recoverBonus` = adds a modifier to every pool recovery roll.
 
+## Extending / Modules
+
+Starting with 2.5 the system exposes an extension surface - hooks, registries and a
+`game.eclipsephase.api` object - so a Foundry module can add content and rules without patching
+the system's own files. See [docs/EXTENDING.md](docs/EXTENDING.md) for the full reference.
+
 ## Disclaimers
 
 ### Personal

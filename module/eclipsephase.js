@@ -5,16 +5,20 @@ import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
-import  EPshopSheet from "./actor/EPshopSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
 import  { eclipsephase } from "./config.js";
 import  * as effectsPrep from "./effects.js"
 import  * as sheetFunction from "./common/general-sheet-functions.js"
 import  * as helperFunction from "./common/general-helper-functions.js"
 import  { registerPsiEffectSocket } from "./rolls/psi.js"
+import { HOMEBREW_TASK_RESULT_TEXT } from "./rolls/dice.js";
 import  * as update from "./common/migration.js";
 import EPtoken from "./canvas/EPtoken.js";
 import EPtokenRuler from "./canvas/EPtokenRuler.js";
+import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
+import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
+import { api } from "./api/index.js";
+import "./tests/quench/index.js";
 
 async function registerSystemSettings() {
   game.settings.register("eclipsephase", "showTaskOptions", {
@@ -77,15 +81,6 @@ async function registerSystemSettings() {
     default: true
   });
 
-  game.settings.register("eclipsephase", "enableShopSystem", {
-    config: true,
-    scope: "world",
-    name: "SETTINGS.enableShopSystem.name",
-    hint: "SETTINGS.enableShopSystem.hint",
-    type: Boolean,
-    default: true
-  });
-
   game.settings.register("eclipsephase", "effectPanel", {
     config: true,
     scope: "world",
@@ -138,7 +133,10 @@ Hooks.once('init', async function() {
     EPactor,
     EPitem,
     rollItemMacro,
-    rollWeaponMacro: sheetFunction.rollFromSheet
+    rollWeaponMacro: sheetFunction.rollFromSheet,
+    version: game.system.version,
+    api,
+    testing: { autoConfirm: false }
   };
 
   /**
@@ -153,6 +151,7 @@ Hooks.once('init', async function() {
   // Define custom Entity classes
   CONFIG.Actor.documentClass = EPactor;
   CONFIG.eclipsephase = eclipsephase;
+  registerCoreStrainFamilies();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;
@@ -160,7 +159,6 @@ Hooks.once('init', async function() {
   // Register sheet application classes
   foundry.documents.collections.Actors.unregisterSheet("core", foundry.applications.sheets.ActorSheetV2);
   foundry.documents.collections.Actors.registerSheet("eclipsephase", EPactorSheet, {types: ["character", "npc", "goon"], makeDefault: true });
-  foundry.documents.collections.Actors.registerSheet("eclipsephase", EPshopSheet, {types: ["shop"], makeDefault: true });
   foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   foundry.documents.collections.Items.registerSheet("eclipsephase", EPitemSheet, {types: ["gear", "ccWeapon", "grenade", "armor", "ware", "drug", "rangedWeapon", "ammo", "id", "morph", "specialSkill", "knowSkill", "traits", "aspect", "program", "vehicle"], makeDefault: true });
   Handlebars.registerHelper('concat', function() {
@@ -177,15 +175,13 @@ Hooks.once('init', async function() {
     "systems/eclipsephase/templates/actor/partials/headerblock.html",
     "systems/eclipsephase/templates/actor/partials/health-bar.html",
     "systems/eclipsephase/templates/actor/partials/multiselect-pills.html",
-    "systems/eclipsephase/templates/actor/partials/shop-footer.html",
-    "systems/eclipsephase/templates/actor/partials/shop-inventory-panel.html",
-    "systems/eclipsephase/templates/actor/partials/shop-to-sell-list.html",
     "systems/eclipsephase/templates/actor/partials/tabs/vehicles-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/morph-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/skills-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/npcgear.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/psi-details.html",
+    "systems/eclipsephase/templates/actor/partials/tabs/strain-details-psi.html",
     "systems/eclipsephase/templates/actor/partials/tabs/gm-info-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/ego-tab.html",
     "systems/eclipsephase/templates/actor/partials/tabs/gear-tab.html",
@@ -236,8 +232,47 @@ Hooks.once('init', async function() {
     return new Handlebars.SafeString(`<a class="moreInfoDialog icon-space" style="flex: 0 0 auto; margin-left: auto;" data-description="${ruleKey}" data-title="${labelKey}" data-rolledfrom="info"><i class="fa-regular fa-circle-info awesomeIcon"></i></a>`);
   });
 
+  registerRegistryHelpers();
+  registerCoreRollSources();
+
   registerSystemSettings();
 });
+
+Hooks.once("ready", () => {
+  if (game.settings.get("eclipsephase", "superBrew")) registerTaskResultText(HOMEBREW_TASK_RESULT_TEXT);
+});
+
+// Signals that game.eclipsephase.api is in place, so a module can register against it.
+Hooks.once("ready", () => {
+  Hooks.callAll("eclipsephase.ready", game.eclipsephase);
+});
+
+/**
+ * Registers the roll sources and pool options the core system owns, so the roll pipeline resolves
+ * them through the same registry an external module would use.
+ * @returns {void}
+ */
+function registerCoreRollSources() {
+  registerRollSource("rangedWeapon", {
+    skillRoll: actorSystem => ({
+      rollvalue: actorSystem.skillsVig?.guns?.roll,
+      specname: actorSystem.skillsVig?.guns?.specname,
+      poolType: "Vigor"
+    })
+  });
+  registerRollSource("ccWeapon", {
+    skillRoll: actorSystem => ({
+      rollvalue: actorSystem.skillsVig?.melee?.roll,
+      specname: actorSystem.skillsVig?.melee?.specname,
+      poolType: "Vigor"
+    })
+  });
+  registerPoolOption({
+    value: "ignoreInfection",
+    label: "ep2e.roll.dialog.ignoreInfection",
+    when: context => context.rollType === "psi"
+  });
+}
 
 /**
  * Helper to build itemlists of all traits/flaws/wares available via compendiums for various items 
@@ -317,6 +352,7 @@ Hooks.once("ready", async function() {
   let before200 = foundry.utils.isNewerVersion("2.0", gameVersion);
   let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
   let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
+  let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -575,16 +611,24 @@ Hooks.once("ready", async function() {
       await migrationEnd(endMigration)
   }
 
-  if (before23) {
+  // 2.2 and 2.3 never shipped, so their work rides along with 2.5 as one migration and one notice.
+  // A world off the released line (before23) always gets the full run: migrationPre25Needed() only
+  // reports Ki data, which such a world cannot have, so it must not be allowed to gate this.
+  if (before25 && !before23 && !update.migrationPre25Needed()) {
     endMigration = false;
-    const messageCopy = "ep2e.migration.23";
-    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 850);
+    await game.settings.set("eclipsephase", "migrationVersion", "2.5");
+  }
+  else if (before25) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.25";
+    const messageCopyExtra = update.migrationPre25Needed() ? "ep2e.migration.25ki" : undefined;
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 1000, messageCopyExtra);
 
     if (migration.cancelled) return;
     startMigration = migration.start;
 
-    let Migration23 = await update.migrationPre23(startMigration);
-    endMigration = Migration23["endMigration"];
+    let Migration25 = await update.migrationPre25(startMigration);
+    endMigration = Migration25["endMigration"];
   }
 
     if(endMigration){
@@ -593,12 +637,13 @@ Hooks.once("ready", async function() {
 
   console.log("\n" + "%c Eclipse Phase System migrated to the latest version ", "background-color: #2bb42b; color: #000000; font-weight: bold;")
 
-  async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth) {
+  async function migrationStart(endMigration, messageHeadline, messageCopy, messageWidth, messageCopyExtra) {
     const template = "systems/eclipsephase/templates/chat/migration-dialog.html";
     const content = await foundry.applications.handlebars.renderTemplate(template, {
       endMigration,
       messageHeadline,
-      messageCopy
+      messageCopy,
+      messageCopyExtra
     });
 
     const width = messageWidth ?? 600;
@@ -838,38 +883,21 @@ Hooks.on("renderTokenApplication", (app, html) => {
 // Foundry doesn't reliably apply the system.json bar-attribute/actorLink schema defaults on actor
 // creation - set them explicitly instead. Goons unlinked (mook tokens), character/npc linked.
 Hooks.on("preCreateActor", (actor, data, options, userId) => {
-  // Shops have no health bars, but still get their own token defaults - gated by their own
-  // setting instead of the character/npc/goon logic below.
-  if (data.type === "shop") {
-    if (!game.settings.get("eclipsephase", "enableShopSystem")) {
-      ui.notifications.warn(game.i18n.localize("ep2e.shop.warnings.systemDisabled"));
-      return false;
-    }
-    actor.updateSource({
-      "img": "systems/eclipsephase/resources/icons/Currency/currency-c.svg",
-      "prototypeToken.displayName": CONST.TOKEN_DISPLAY_MODES.HOVER,
-      "prototypeToken.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL,
-      "prototypeToken.actorLink": false
-    });
-    return;
-  }
+  // Token defaults only make sense for the actor types this system prepares data for.
+  if (!EPactor.MANAGED_TYPES.includes(data.type)) return;
   const update = {
     "prototypeToken.bar1.attribute": "health.physical",
     "prototypeToken.displayBars": CONST.TOKEN_DISPLAY_MODES.HOVER
   };
-  if (data.type === "goon") {
-    update["prototypeToken.actorLink"] = false;
-  } else {
-    update["prototypeToken.actorLink"] = true;
-    // NPCs don't get bar2 automatically (no default Mental Health bar) - GMs can still set it by hand.
-    if (data.type === "character") update["prototypeToken.bar2.attribute"] = "health.mental";
-  }
+  // null, not omission: system.json's secondaryTokenAttribute would otherwise give every type a bar2.
+  update["prototypeToken.bar2.attribute"] = data.type === "character" ? "health.mental" : null;
+  update["prototypeToken.actorLink"] = data.type !== "goon";
   actor.updateSource(update);
 });
 
 //Gives every character a flat-morph from start using the compendiumpack as a source
 Hooks.on("createActor", async (actor, options, userId) => {
-  if (actor.type === "shop") return;
+  if (!EPactor.MANAGED_TYPES.includes(actor.type)) return;
   if (actor.system.activeMorph || actor.system.activeID) {
     await actor.setFlag("eclipsephase", "defaultIdAdded", true);
     await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
@@ -893,15 +921,6 @@ Hooks.on("createActor", async (actor, options, userId) => {
 
   await actor.setFlag("eclipsephase", "defaultIdAdded", true);
   await actor.setFlag("eclipsephase", "defaultMorphAdded", true);
-});
-
-// First-pass behavior for a disabled shop system: hide existing shops from the sidebar directory
-// rather than making them read-only or deleting them.
-Hooks.on("renderActorDirectory", (app, html) => {
-  if (game.settings.get("eclipsephase", "enableShopSystem")) return;
-  html.querySelectorAll("li.directory-item[data-entry-id]").forEach(li => {
-    if (game.actors.get(li.dataset.entryId)?.type === "shop") li.remove();
-  });
 });
 
 // Core puts CharArt first (ActorDirectory#_getEntryContextOptions) - insert after it, not push, so ours lead the menu.
@@ -1041,8 +1060,7 @@ const dataset = {
 
 const systemOptions = {
   askForOptions: false,
-  optionsSettings: game.settings.get("eclipsephase", "showTaskOptions"),
-  brewStatus: game.settings.get("eclipsephase", "superBrew")
+  optionsSettings: game.settings.get("eclipsephase", "showTaskOptions")
 };
 
 await game.eclipsephase.rollWeaponMacro(actor, dataset, "${rolledFrom}", "${itemId}", systemOptions);

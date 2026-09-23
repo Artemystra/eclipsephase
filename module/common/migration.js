@@ -1581,6 +1581,21 @@ export async function migrationPre150(startMigration, endMigration) {
     await new Promise(r => setTimeout(r, 0));
   }
 
+  try {
+    const worldUpdates = game.items
+      .filter(i => i.type === "aspect" && _ep25_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
+      .map(i => ({ _id: i.id, "system.damage": _ep25_SLEIGHT_DAMAGE[i.name] }));
+    if (worldUpdates.length) await Item.updateDocuments(worldUpdates);
+  } catch (err) {
+    console.error(`[EP Migration ${latestUpdate}] world items: psi sleight damage backfill failed`, err);
+  }
+
+  try {
+    for (const item of game.items) await _ep25_addBrainWareMarker(item);
+  } catch (err) {
+    console.error(`[EP Migration ${latestUpdate}] world items: brain ware marker backfill failed`, err);
+  }
+
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   uiBar.done(`Migration finished (${doneCount}/${total})`);
   return { endMigration: true };
@@ -2066,8 +2081,7 @@ export async function migrationPre196(startMigration, endMigration) {
   const latestUpdate = "1.9.6";
   if (!startMigration) return { endMigration: false };
 
-  const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
-  const actors = game.actors.filter(a => ACTOR_TYPES.has(a.type));
+  const actors = game.actors.filter(a => _ep25_ACTOR_TYPES.has(a.type));
 
   const targets = [];
   for (const actor of game.actors) {
@@ -2445,14 +2459,15 @@ export async function migrationPre215(startMigration, endMigration) {
 }
 
 // Damage defaults for the standard psi sleights, matched by name since they aren't localized.
-const _ep23_SLEIGHT_DAMAGE = {
+const _ep25_SLEIGHT_DAMAGE = {
   "Psychic Stab": { target: "physical", d10: 2, d6: 0, bonus: 0 },
   "Nightmare": { target: "mental", d10: 2, d6: 0, bonus: 0 }
 };
 
 // Moves an actor's currently-selected archetype's flat influence2-6 fields into the new
-// per-archetype subStrain.byArchetype.<label> bucket, and clears the old flat fields.
-function _ep23_migrateSubStrainByArchetype(actor) {
+// per-archetype subStrain.byArchetype.<label> bucket, and clears the old flat fields. Those keys
+// left the schema in 2.3, so nothing refills them and the deletion is real work.
+export function _ep25_migrateSubStrainByArchetype(actor) {
   const ARCHETYPES = new Set(["architect", "beast", "haunter", "stranger", "xenomorph"]);
   const subStrain = actor.system?.subStrain;
   const label = subStrain?.label;
@@ -2464,36 +2479,76 @@ function _ep23_migrateSubStrainByArchetype(actor) {
   }
   if (!Object.keys(legacy).length) return null;
 
+  const { ForcedDeletion } = foundry.data.operators;
   return {
     [`system.subStrain.byArchetype.${label}`]: legacy,
-    "system.subStrain.-=influence2": null,
-    "system.subStrain.-=influence3": null,
-    "system.subStrain.-=influence4": null,
-    "system.subStrain.-=influence5": null,
-    "system.subStrain.-=influence6": null
+    "system.subStrain.influence2": new ForcedDeletion(),
+    "system.subStrain.influence3": new ForcedDeletion(),
+    "system.subStrain.influence4": new ForcedDeletion(),
+    "system.subStrain.influence5": new ForcedDeletion(),
+    "system.subStrain.influence6": new ForcedDeletion()
   };
 }
 
 // Adds the Cyberbrain marker effect to a pre-existing Cyberbrain or Core System Ware item, matched by name.
-const _ep23_BRAIN_WARE_MARKERS = {
+const _ep25_BRAIN_WARE_MARKERS = {
   "Cyberbrain": "flags.eclipsephase.grantsCyberbrain",
   "Core System": "flags.eclipsephase.grantsCyberbrain"
 };
 
-async function _ep23_addBrainWareMarker(item) {
-  const markerKey = item.type === "ware" ? _ep23_BRAIN_WARE_MARKERS[item.name] : undefined;
+async function _ep25_addBrainWareMarker(item) {
+  const markerKey = item.type === "ware" ? _ep25_BRAIN_WARE_MARKERS[item.name] : undefined;
   if (!markerKey) return;
   const hasMarker = item.effects.some(e => e.changes?.some(c => c.key === markerKey));
   if (hasMarker) return;
   const changes = [{ key: markerKey, value: "true", priority: null, type: "override" }];
-  const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
-  const effectData = { name: item.name, icon: "/icons/svg/mystery-man.svg", disabled: true, transfer: true, changes, flags: {} };
-  if (isV14Plus) effectData.system = { changes };
+  const effectData = { name: item.name, icon: "/icons/svg/mystery-man.svg", disabled: true, transfer: true, changes, flags: {}, system: { changes } };
   await item.createEmbeddedDocuments("ActiveEffect", [effectData]);
 }
 
-export async function migrationPre23(startMigration, endMigration) {
-  const latestUpdate = "2.3";
+
+// The sub-strains the Ki module owns. The five Psi archetypes stay in system data.
+const _ep25_KI_STRAINS = ["crucible", "redline", "signal", "ruin", "colony"];
+
+// Moves an actor's Ki sub-strain choices out of system data and into the Ki module's flags,
+// leaving the Psi archetypes where they are. Returns null when there is nothing to move, so an
+// actor is only written to once and a second run finds nothing left to do.
+export function _ep25_migrateKiSubStrain(actor) {
+  const byArchetype = actor.system?.subStrain?.byArchetype ?? {};
+  const update = {};
+
+  for (const strain of _ep25_KI_STRAINS) {
+    const stored = byArchetype[strain];
+    if (!stored || !Object.keys(stored).length) continue;
+    update[`flags.eclipsephase-ki.subStrain.${strain}`] = foundry.utils.deepClone(stored);
+    update[`system.subStrain.byArchetype.${strain}`] = new foundry.data.operators.ForcedDeletion();
+  }
+
+  return Object.keys(update).length ? update : null;
+}
+
+// Every step that turns one actor into an update payload. The precheck below and the migration
+// loop both walk this list, so a step added here is automatically offered as well as run - the
+// two cannot drift apart. Steps that do not produce an actor update (the sleight damage and the
+// brain marker backfills, which write embedded items) stay separate and are covered instead by
+// the before23 condition on the trigger, which forces a full run for any world off 2.1.5.
+export const _ep25_ACTOR_STEPS = [
+  { label: "sub-strain per-archetype migration", map: _ep25_migrateSubStrainByArchetype },
+  { label: "Ki sub-strain migration", map: _ep25_migrateKiSubStrain }
+];
+
+const _ep25_ACTOR_TYPES = new Set(["character", "npc", "goon"]);
+
+// Whether any actor still has work waiting from one of the steps above. Ki data only ever
+// reached a world through the unreleased 2.3 branch, so a world on the released line has
+// nothing here and is not asked - it is sent through the full run by the trigger instead.
+export function migrationPre25Needed() {
+  return game.actors.some(actor => _ep25_ACTOR_TYPES.has(actor.type) &&
+    _ep25_ACTOR_STEPS.some(step => step.map(actor) !== null));
+}
+
+export async function migrationPre25(startMigration, endMigration) {
+  const latestUpdate = "2.5";
   if (!startMigration) return { endMigration: false };
 
   const ACTOR_TYPES = new Set(["character", "npc", "goon"]);
@@ -2519,24 +2574,27 @@ export async function migrationPre23(startMigration, endMigration) {
 
     try {
       const updates = actor.items
-        .filter(i => i.type === "aspect" && _ep23_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
-        .map(i => ({ _id: i.id, "system.damage": _ep23_SLEIGHT_DAMAGE[i.name] }));
+        .filter(i => i.type === "aspect" && _ep25_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
+        .map(i => ({ _id: i.id, "system.damage": _ep25_SLEIGHT_DAMAGE[i.name] }));
       if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
     } catch (err) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: psi sleight damage backfill failed`, err);
     }
 
-    try {
-      const subStrainUpdate = _ep23_migrateSubStrainByArchetype(actor);
-      if (subStrainUpdate) await actor.update(subStrainUpdate);
-    } catch (err) {
-      console.error(`[EP Migration ${latestUpdate}] ${actor.name}: sub-strain per-archetype migration failed`, err);
-    }
 
     try {
-      for (const item of actor.items) await _ep23_addBrainWareMarker(item);
+      for (const item of actor.items) await _ep25_addBrainWareMarker(item);
     } catch (err) {
       console.error(`[EP Migration ${latestUpdate}] ${actor.name}: brain ware marker backfill failed`, err);
+    }
+
+    for (const step of _ep25_ACTOR_STEPS) {
+      try {
+        const update = step.map(actor);
+        if (update) await actor.update(update);
+      } catch (err) {
+        console.error(`[EP Migration ${latestUpdate}] ${actor.name}: ${step.label} failed`, err);
+      }
     }
 
     doneCount++;
@@ -2545,21 +2603,6 @@ export async function migrationPre23(startMigration, endMigration) {
       `Processed: ${actor.name}`,
       `${doneCount}/${total}`
     );
-  }
-
-  try {
-    const worldUpdates = game.items
-      .filter(i => i.type === "aspect" && _ep23_SLEIGHT_DAMAGE[i.name] && !i.system.damage?.d10)
-      .map(i => ({ _id: i.id, "system.damage": _ep23_SLEIGHT_DAMAGE[i.name] }));
-    if (worldUpdates.length) await Item.updateDocuments(worldUpdates);
-  } catch (err) {
-    console.error(`[EP Migration ${latestUpdate}] world items: psi sleight damage backfill failed`, err);
-  }
-
-  try {
-    for (const item of game.items) await _ep23_addBrainWareMarker(item);
-  } catch (err) {
-    console.error(`[EP Migration ${latestUpdate}] world items: brain ware marker backfill failed`, err);
   }
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
@@ -2587,8 +2630,6 @@ function _ep200_resolveLegacyMorphType(actor) {
 async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
   const STALE_KEY = "system.additionalSystems.sleeving.aversion.type";
   const STALE_VALUE_KEY = "system.additionalSystems.sleeving.aversion.value";
-  const isV14Plus = !!foundry.data?.ActiveEffectTypeDataModel;
-
   const staleTraits = actor.items.filter(i =>
     i.type === "traits" &&
     i.effects?.some(e => e.changes?.some(c => c.key === STALE_KEY))
@@ -2612,9 +2653,9 @@ async function _ep200_fixCollidingAversionTraits(actor, latestUpdate) {
       origin: staleEffect.origin,
       disabled: staleEffect.disabled,
       transfer: staleEffect.transfer,
-      changes: newChanges
+      changes: newChanges,
+      system: { changes: newChanges }
     };
-    if (isV14Plus) newEffectData.system = { changes: newChanges };
 
     await trait.deleteEmbeddedDocuments("ActiveEffect", [staleEffect.id]);
     await trait.createEmbeddedDocuments("ActiveEffect", [newEffectData]);
@@ -2664,7 +2705,7 @@ async function _ep200_migrateArmorToBoundBodies(actor, latestUpdate) {
   });
 }
 
-function epCreateProgressDialog(title = "Migration") {
+export function epCreateProgressDialog(title = "Migration") {
   const state = { cancelled: false };
 
   const content = `
@@ -2720,4 +2761,96 @@ function epCreateProgressDialog(title = "Migration") {
   };
 
   return { dlg, set, done, fail, state };
-}
+}
+/**
+ * Runs fn once per document, showing a cancellable progress dialog and isolating each document's
+ * own error so one broken document does not stop the rest. Shared by forEachActor and forEachItem.
+ * @param {Array} documents - The documents to process
+ * @param {Function} fn - async (document) => void, run once per document
+ * @param {String} label - The progress dialog's title
+ * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
+ */
+async function runOverDocuments(documents, fn, label) {
+  const total = documents.length;
+  const uiBar = total ? epCreateProgressDialog(label) : null;
+  const errors = [];
+  let completed = 0;
+
+  for (const document of documents) {
+    if (uiBar?.state.cancelled) {
+      uiBar.fail(`Cancelled (${completed}/${total})`);
+      return { completed, total, cancelled: true, errors };
+    }
+
+    uiBar?.set(Math.floor((completed / total) * 100), document.name ?? "", `${completed + 1}/${total}`);
+
+    try {
+      await fn(document);
+    } catch (error) {
+      console.error(`[EP Migration] ${document.name ?? document.id}: failed`, error);
+      errors.push({ document, error });
+    }
+
+    completed++;
+    uiBar?.set(Math.floor((completed / total) * 100), document.name ?? "", `${completed}/${total}`);
+  }
+
+  uiBar?.done(`Finished (${completed}/${total})`);
+  return { completed, total, cancelled: false, errors };
+}
+
+/**
+ * Runs fn once for every actor in the world, so a module can migrate its own data the same way
+ * the system's own migrations do.
+ * @param {Function} fn - async (actor) => void, run once per actor
+ * @param {Object} [options] - label for the progress dialog; filter(actor) => boolean to narrow the set
+ * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
+ */
+export async function forEachActor(fn, { label = "Migration", filter } = {}) {
+  const actors = game.actors.filter(actor => typeof filter !== "function" || filter(actor));
+  return runOverDocuments(actors, fn, label);
+}
+
+/**
+ * Runs fn once for every item in the world: unembedded world items, every actor's embedded items,
+ * and optionally items inside world item compendiums.
+ * @param {Function} fn - async (item) => void, run once per item
+ * @param {Object} [options] - label; filter(item) => boolean; includeCompendiums to also cover world item packs
+ * @returns {Promise<{completed: Number, total: Number, cancelled: Boolean, errors: Array}>}
+ */
+export async function forEachItem(fn, { label = "Migration", filter, includeCompendiums = false } = {}) {
+  const items = [];
+  const passes = item => typeof filter !== "function" || filter(item);
+
+  for (const item of game.items) if (passes(item)) items.push(item);
+  for (const actor of game.actors) for (const item of actor.items) if (passes(item)) items.push(item);
+
+  if (includeCompendiums) {
+    const worldItemPacks = game.packs.filter(pack => pack.metadata?.type === "Item" && pack.metadata?.package === "world");
+    for (const pack of worldItemPacks) {
+      for (const item of await pack.getDocuments()) if (passes(item)) items.push(item);
+    }
+  }
+
+  return runOverDocuments(items, fn, label);
+}
+
+/**
+ * Whispers a localized notice to an actor's non-GM owners, the pattern the migration self-whisper
+ * notices use (e.g. the armor stash notice). Does nothing when the actor has no such owner.
+ * @param {Actor} actor - The actor the notice is about
+ * @param {String} key - A localization key, formatted with data
+ * @param {Object} [data] - Values interpolated into the localized string
+ * @returns {Promise<Boolean>} Whether a message was posted
+ */
+export async function postNotice(actor, key, data = {}) {
+  const playerOwners = game.users.filter(user => !user.isGM && actor.testUserPermission(user, "OWNER"));
+  if (playerOwners.length === 0) return false;
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    whisper: playerOwners.map(user => user.id),
+    content: game.i18n.format(key, data)
+  });
+  return true;
+}

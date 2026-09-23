@@ -1,0 +1,235 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EPitem.prepareData derives stable data for a morph 1`] = `
+Object {
+  "cost": "moderate",
+  "customToken": null,
+  "description": "",
+  "dur": 30,
+  "flaws": Object {
+    "flaw1": Object {
+      "label": "1.",
+      "value": "",
+    },
+    "flaw10": Object {
+      "label": "10.",
+      "value": "",
+    },
+    "flaw2": Object {
+      "label": "2.",
+      "value": "",
+    },
+    "flaw3": Object {
+      "label": "3.",
+      "value": "",
+    },
+    "flaw4": Object {
+      "label": "4.",
+      "value": "",
+    },
+    "flaw5": Object {
+      "label": "5.",
+      "value": "",
+    },
+    "flaw6": Object {
+      "label": "6.",
+      "value": "",
+    },
+    "flaw7": Object {
+      "label": "7.",
+      "value": "",
+    },
+    "flaw8": Object {
+      "label": "8.",
+      "value": "",
+    },
+    "flaw9": Object {
+      "label": "9.",
+      "value": "",
+    },
+  },
+  "flex": null,
+  "frame": "none",
+  "homebrew": false,
+  "img": "",
+  "insight": null,
+  "morphPoints": 2,
+  "movement": Object {
+    "move1": Object {
+      "active": true,
+      "base": null,
+      "full": null,
+      "label": "1.",
+      "type": null,
+    },
+    "move10": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "10.",
+      "type": null,
+    },
+    "move2": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "2.",
+      "type": null,
+    },
+    "move3": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "3.",
+      "type": null,
+    },
+    "move4": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "4.",
+      "type": null,
+    },
+    "move5": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "5.",
+      "type": null,
+    },
+    "move6": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "6.",
+      "type": null,
+    },
+    "move7": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "7.",
+      "type": null,
+    },
+    "move8": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "8.",
+      "type": null,
+    },
+    "move9": Object {
+      "active": false,
+      "base": null,
+      "full": null,
+      "label": "9.",
+      "type": null,
+    },
+  },
+  "moxie": null,
+  "traits": Object {
+    "trait1": Object {
+      "label": "1.",
+      "value": "",
+    },
+    "trait10": Object {
+      "label": "10.",
+      "value": "",
+    },
+    "trait2": Object {
+      "label": "2.",
+      "value": "",
+    },
+    "trait3": Object {
+      "label": "3.",
+      "value": "",
+    },
+    "trait4": Object {
+      "label": "4.",
+      "value": "",
+    },
+    "trait5": Object {
+      "label": "5.",
+      "value": "",
+    },
+    "trait6": Object {
+      "label": "6.",
+      "value": "",
+    },
+    "trait7": Object {
+      "label": "7.",
+      "value": "",
+    },
+    "trait8": Object {
+      "label": "8.",
+      "value": "",
+    },
+    "trait9": Object {
+      "label": "9.",
+      "value": "",
+    },
+  },
+  "type": "bio",
+  "vigor": null,
+  "ware": Object {
+    "ware1": Object {
+      "label": "1.",
+      "value": "",
+    },
+    "ware10": Object {
+      "label": "10.",
+      "value": "",
+    },
+    "ware2": Object {
+      "label": "2.",
+      "value": "",
+    },
+    "ware3": Object {
+      "label": "3.",
+      "value": "",
+    },
+    "ware4": Object {
+      "label": "4.",
+      "value": "",
+    },
+    "ware5": Object {
+      "label": "5.",
+      "value": "",
+    },
+    "ware6": Object {
+      "label": "6.",
+      "value": "",
+    },
+    "ware7": Object {
+      "label": "7.",
+      "value": "",
+    },
+    "ware8": Object {
+      "label": "8.",
+      "value": "",
+    },
+    "ware9": Object {
+      "label": "9.",
+      "value": "",
+    },
+  },
+}
+`;
+
+exports[`EPitem.prepareData derives stable data for armor 1`] = `
+Object {
+  "active": true,
+  "additionalSystems": Object {},
+  "boundTo": null,
+  "cost": "minor",
+  "description": "",
+  "displayCategory": "armor",
+  "energy": 6,
+  "homebrew": false,
+  "isFrame": false,
+  "kinetic": 8,
+  "slotType": "",
+  "tags": Array [],
+  "updated": "",
+}
+`;

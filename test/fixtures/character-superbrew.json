@@ -1,0 +1,88 @@
+{
+  "name": "Overloaded",
+  "type": "character",
+  "settings": {
+    "superBrew": true
+  },
+  "system": {
+    "aptitudes": {
+      "cog": {
+        "value": 12
+      },
+      "int": {
+        "value": 12
+      },
+      "ref": {
+        "value": 12
+      },
+      "sav": {
+        "value": 12
+      },
+      "som": {
+        "value": 12
+      },
+      "wil": {
+        "value": 12
+      }
+    },
+    "activeMorph": "o4auLt59iyV8732k",
+    "skillsVig": {
+      "guns": {
+        "value": 40
+      }
+    }
+  },
+  "items": [
+    {
+      "_id": "sbwpn0000000001",
+      "name": "Rifle",
+      "type": "rangedWeapon",
+      "system": {
+        "active": true,
+        "bulky": true,
+        "cost": "moderate"
+      }
+    },
+    {
+      "_id": "sbwpn0000000002",
+      "name": "Pistol",
+      "type": "rangedWeapon",
+      "system": {
+        "active": true,
+        "cost": "minor"
+      }
+    },
+    {
+      "_id": "sbwpn0000000003",
+      "name": "Blade",
+      "type": "ccWeapon",
+      "system": {
+        "active": true,
+        "cost": "minor"
+      }
+    },
+    {
+      "_id": "sbgear000000001",
+      "name": "Big Crate",
+      "type": "gear",
+      "system": {
+        "active": true,
+        "slotType": "bulky",
+        "cost": "minor"
+      }
+    },
+    {
+      "_id": "sbgear000000002",
+      "name": "Stim Pack",
+      "type": "gear",
+      "system": {
+        "active": true,
+        "slotType": "consumable",
+        "cost": "minor"
+      }
+    }
+  ],
+  "packItems": [
+    "morphs/Ghost_o4auLt59iyV8732k.json"
+  ]
+}
