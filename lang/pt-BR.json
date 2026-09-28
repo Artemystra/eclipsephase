@@ -11,6 +11,16 @@
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
     },
+    "timeFormat": {
+      "name": "Formato de hora",
+      "hint": "Como o Painel de Tempo mostra a hora do dia. Horas usa um relógio de 24 horas, Beats usa o Swatch Internet Time, em que um dia tem 1000 beats.",
+      "hours": "Horas e minutos",
+      "beats": "Beats"
+    },
+    "timePanelPlayers": {
+      "name": "Mostrar o Painel de Tempo aos jogadores",
+      "hint": "Permite que os jogadores abram o Painel de Tempo e vejam o dia e a hora atuais. Eles recebem o mesmo painel sem nenhum controle."
+    },
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
@@ -1766,6 +1776,37 @@
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
         }
+      }
+    },
+    "time": {
+      "title": "Tempo",
+      "day": "Dia",
+      "year": "Ano",
+      "timeOfDay": "Hora do dia",
+      "advance": "Deixar o tempo passar",
+      "setDay": "Definir dia",
+      "custom": "Personalizado",
+      "customHint": "Minutos",
+      "effects": "Efeitos ativos",
+      "noEffects": "Nada está ativo no momento",
+      "endNow": "Encerrar",
+      "remaining": "Restante",
+      "owner": "Personagem",
+      "toggleFormat": "Alternar entre horas e beats",
+      "hoursTooltip": "cerca de {hours} h",
+      "dayTooltip": "1 dia",
+      "minutesTooltip": "cerca de {minutes} min",
+      "restoreRest": "Redefinir recargas",
+      "restRestored": "Recargas redefinidas.",
+      "advanceSteps": {
+        "min10": "+10 min",
+        "hour1": "+1 hora",
+        "hour4": "+4 horas",
+        "hour8": "+8 horas",
+        "day1": "+1 dia",
+        "day3": "+3 dias",
+        "day7": "+7 dias",
+        "beats": "{beats} beats"
       }
     },
     "migration": {

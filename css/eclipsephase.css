@@ -3697,3 +3697,153 @@ li:has(.ep-system-notice) .message-header {
   justify-content: center;
   overflow-y: hidden;
 }
+
+/* Time panel */
+.ep-time-panel .ep-time-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ep-time-panel .ep-time-titlebar {
+  margin-bottom: 4px;
+}
+
+.ep-time-panel .ep-time-titlebar-date {
+  padding: 10px 0 0 16px;
+  background-color: var(--pitchBorder);
+  box-shadow: none;
+}
+
+.ep-time-panel .ep-time-date-fields {
+  align-items: center;
+  gap: 8px;
+}
+
+/* Labels take only the room their text needs, so each field centres in what is left over. */
+.ep-time-panel .ep-time-date-fields > .resource-label {
+  flex: 0 0 auto;
+  width: max-content;
+  white-space: nowrap;
+}
+
+.ep-time-panel .ep-time-date-fields > .ep-time-date-input,
+.ep-time-panel .ep-time-date-fields > .resource-value {
+  flex: 1 1 auto;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ep-time-panel .ep-time-date-input {
+  background: transparent;
+  border: none;
+  border-bottom: solid 1px var(--accentBackground);
+  color: var(--highlight);
+  font-family: var(--font-body);
+  font-size: 17px;
+  text-shadow: 0 0 5px #161616;
+  max-width: 62px;
+  min-width: 42px;
+}
+
+.ep-time-panel .ep-time-clock {
+  justify-content: center;
+  min-height: 0;
+  padding: 6px;
+  background: var(--pitchBackground);
+}
+
+.ep-time-panel .ep-time-big {
+  font-size: 26px;
+  color: var(--highlight);
+}
+
+.ep-time-panel .ep-time-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.ep-time-panel .ep-time-custom {
+  display: flex;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ep-time-panel .ep-time-custom-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ep-time-panel .ep-time-custom-go {
+  flex: 0 0 auto;
+  padding: 6px 7px;
+}
+
+.ep-time-panel .ep-time-manual {
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+
+.ep-time-panel .ep-time-step {
+  background: var(--highlightBackground);
+  border: solid 1px var(--accentBackground);
+  color: var(--mainText);
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 8px;
+  width: auto;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.ep-time-panel .ep-time-step:hover {
+  background: var(--accentBackground);
+}
+
+.ep-time-panel .ep-time-step.ep-time-wide {
+  flex: 1 0 100%;
+}
+
+.ep-time-panel .ep-time-effects-header {
+  cursor: pointer;
+}
+
+.ep-time-panel .ep-time-effect-row {
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.ep-time-panel .ep-time-effect-owner {
+  flex: 1.2;
+  font-size: 12px;
+  color: var(--iconGrey);
+}
+
+.ep-time-panel .ep-time-effect-name {
+  flex: 2;
+}
+
+.ep-time-panel .ep-time-effect-remaining {
+  flex: 1;
+  font-size: 12px;
+  color: var(--highlight);
+}
+
+.ep-time-panel .ep-time-effect-controls {
+  max-width: 24px;
+  min-width: 24px;
+}
+
+.ep-time-panel .ep-time-expired .ep-time-effect-name,
+.ep-time-panel .ep-time-expired .ep-time-effect-remaining {
+  color: var(--inactive);
+  text-decoration: line-through;
+}
+
+.ep-time-panel .ep-time-empty {
+  padding: 8px 0;
+}

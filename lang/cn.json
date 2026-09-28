@@ -11,6 +11,16 @@
       "name": "Enable Effect Panel",
       "hint": "Enable the Effect Panel on Actors (for GMs)"
     },
+    "timeFormat": {
+      "name": "时间格式",
+      "hint": "时间面板如何显示一天中的时间。小时使用 24 小时制，Beats 使用斯沃琪网络时间，一天为 1000 beats。",
+      "hours": "小时与分钟",
+      "beats": "Beats"
+    },
+    "timePanelPlayers": {
+      "name": "向玩家显示时间面板",
+      "hint": "允许玩家打开时间面板并查看当前的天数与时间。他们看到的面板相同，但没有任何操作按钮。"
+    },
     "editAll": {
       "name": "No edit restrictions",
       "hint": "Enables players to edit all values normally restricted to the GM. This includes values like ammunition, pools and reset rest."
@@ -1759,6 +1769,37 @@
           "touchOnly": "This melee attack just requires a touch. +20 to hit, but no DV is inflicted. If you want to inflict your damage in addition roll a normal attack roll without any bonus.",
           "twoHanded": "This weapon requires two hands (or an equivalent prehensile limb) to use. Apply a –20 modifier to attack if used single-handed."
         }
+      }
+    },
+    "time": {
+      "title": "时间",
+      "day": "天",
+      "year": "年",
+      "timeOfDay": "当前时间",
+      "advance": "让时间流逝",
+      "setDay": "设置天数",
+      "custom": "自定义",
+      "customHint": "分钟",
+      "effects": "进行中的效果",
+      "noEffects": "目前没有任何效果在进行",
+      "endNow": "结束",
+      "remaining": "剩余",
+      "owner": "角色",
+      "toggleFormat": "在小时与 Beats 之间切换",
+      "hoursTooltip": "约 {hours} 小时",
+      "dayTooltip": "1 天",
+      "minutesTooltip": "约 {minutes} 分钟",
+      "restoreRest": "重置恢复次数",
+      "restRestored": "恢复次数已重置。",
+      "advanceSteps": {
+        "min10": "+10 分钟",
+        "hour1": "+1 小时",
+        "hour4": "+4 小时",
+        "hour8": "+8 小时",
+        "day1": "+1 天",
+        "day3": "+3 天",
+        "day7": "+7 天",
+        "beats": "{beats} Beats"
       }
     },
     "migration": {

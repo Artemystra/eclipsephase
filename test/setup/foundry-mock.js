@@ -339,6 +339,8 @@ class MockActiveEffect {
     this.disabled = data.disabled ?? false;
     this.transfer = data.transfer ?? true;
     this.statuses = data.statuses ?? [];
+    this.duration = { value: null, units: "seconds", expiry: null, expired: false, ...(data.duration ?? {}) };
+    this.flags = deepClone(data.flags ?? {});
     const changes = data.system?.changes ?? data.changes ?? [];
     const Model = getEffectDataModel();
     this.system = new Model({ changes: deepClone(changes) }, { parent: this });
@@ -350,6 +352,15 @@ class MockActiveEffect {
 
   get isSuppressed() {
     return this.system.isSuppressed === true;
+  }
+
+  // Foundry: an effect is temporary when it names an expiry event or carries a finite duration.
+  get isTemporary() {
+    return !!this.duration.expiry || Number.isFinite(this.duration.value);
+  }
+
+  getFlag(scope, key) {
+    return this.flags?.[scope]?.[key];
   }
 
   get active() {

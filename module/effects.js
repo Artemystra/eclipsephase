@@ -13,8 +13,23 @@ export class EP2eActiveEffectData extends EP2eActiveEffectBaseDataModel {
     return {};
   }
 
-  /** @returns {boolean} */
+  /**
+   * Whether this effect should be left out of the actor's data. An effect whose duration has run
+   * out is suppressed whatever else is true of it - that is how a timed effect stops applying,
+   * since Foundry marks it expired rather than deleting it.
+   * @returns {boolean}
+   */
   get isSuppressed() {
+    if (this.parent?.duration?.expired === true) return true;
+    return this.#suppressedByBodyRules();
+  }
+
+  /**
+   * The system's own suppression rules: morph binding for ware and traits, the equipped flag for
+   * carried items, and the nervous-system rules for sleights.
+   * @returns {boolean}
+   */
+  #suppressedByBodyRules() {
     const effect = this.parent;
     const item = effect.parent;
     if (!(item instanceof Item)) return false;

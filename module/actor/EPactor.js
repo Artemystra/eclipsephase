@@ -36,6 +36,21 @@ export default class EPactor extends Actor {
   // The actor types this class prepares data for. Everything else, including a type a module
   // contributes, is left to whoever owns it.
   static MANAGED_TYPES = ["character", "npc", "goon"]
+
+  /**
+   * Called by Foundry on every client whenever the remaining duration of one of this actor's
+   * tracked effects changed - because world time moved, or a combat turn passed. Re-broadcast as a
+   * system hook so anything watching timed effects has one place to listen instead of reaching
+   * into core's effect registry.
+   * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
+   * @param {String} event - What triggered the refresh, e.g. "updateWorldTime" or "turnStart"
+   * @param {Object} [context] - Foundry's contextual data for that event
+   * @returns {Promise<void>} Resolves once listeners have run
+   */
+  async onUpdateEffectDurations(effects, event, context) {
+    Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
+  }
+
   /**
    * Augment the basic actor data with additional dynamic data.
    */

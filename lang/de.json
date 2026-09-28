@@ -11,6 +11,16 @@
       "name": "Active Effect Tab",
       "hint": "Aktiviert Active Effect Tabs für Spielleiter:innen"
     },
+    "timeFormat": {
+      "name": "Zeitformat",
+      "hint": "Wie das Zeit-Panel die Tageszeit anzeigt. Stunden nutzt eine 24-Stunden-Uhr, Beats die Swatch Internet Time, bei der ein Tag 1000 Beats hat.",
+      "hours": "Stunden und Minuten",
+      "beats": "Beats"
+    },
+    "timePanelPlayers": {
+      "name": "Zeit-Panel für Spieler anzeigen",
+      "hint": "Erlaubt Spielern, das Zeit-Panel zu öffnen und Tag und Uhrzeit zu sehen. Sie bekommen dasselbe Panel ohne die Bedienelemente."
+    },
     "editAll": {
       "name": "Keine Editiereinschränkungen",
       "hint": "Befähigt Spieler:innen alle Werte zu editieren, die eigentlich der SL vorbehalten sind. Das schliesst Werte wie Munition, Pools und Rast mit ein."
@@ -1796,6 +1806,37 @@
           "touchOnly": "Dieser Nahkampfangriff erfordert lediglich eine Berührung. Du erhältst einen Bonus von +20 auf den Trefferwurf, aber es wird kein Schaden verursacht. Wenn du zusätzlich Schaden verursachen möchtest, würfle einen normalen Angriffswurf ohne jeden Bonus.",
           "twoHanded": "Diese Waffe erfordert zwei Hände (oder eine äquivalente greifende Gliedmaße), um verwendet zu werden. Bei einhändiger Nutzung gilt ein Malus von -20 auf den Angriff."
         }
+      }
+    },
+    "time": {
+      "title": "Zeit",
+      "day": "Tag",
+      "year": "Jahr",
+      "timeOfDay": "Tageszeit",
+      "advance": "Zeit vergehen lassen",
+      "setDay": "Tag setzen",
+      "custom": "Eigene",
+      "customHint": "Minuten",
+      "effects": "Laufende Effekte",
+      "noEffects": "Aktuell läuft nichts",
+      "endNow": "Beenden",
+      "remaining": "Verbleibend",
+      "owner": "Charakter",
+      "toggleFormat": "Zwischen Stunden und Beats wechseln",
+      "hoursTooltip": "etwa {hours} Std",
+      "dayTooltip": "1 Tag",
+      "minutesTooltip": "etwa {minutes} Min",
+      "restoreRest": "Erholungen zurücksetzen",
+      "restRestored": "Erholungs-Kontingente zurückgesetzt.",
+      "advanceSteps": {
+        "min10": "+10 Min",
+        "hour1": "+1 Stunde",
+        "hour4": "+4 Stunden",
+        "hour8": "+8 Stunden",
+        "day1": "+1 Tag",
+        "day3": "+3 Tage",
+        "day7": "+7 Tage",
+        "beats": "{beats} Beats"
       }
     },
     "migration": {

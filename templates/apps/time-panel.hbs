@@ -1,0 +1,90 @@
+<div class="ep-time-panel-body">
+
+    <div class="ep-sheet-titlebar ep-time-titlebar">
+        <div class="ep-titlebar-name ep-time-titlebar-date">
+            <div class="flexrow flex-group-left ep-time-date-fields">
+                <label class="resource-label">{{localize "ep2e.time.year"}}</label>
+                {{#if canControl}}
+                <input class="input-medium alignCenter ep-time-date-input" type="number" name="year" min="1" value="{{year}}"/>
+                {{else}}
+                <span class="resource-value">{{year}}</span>
+                {{/if}}
+                <label class="resource-label">{{localize "ep2e.time.day"}}</label>
+                {{#if canControl}}
+                <input class="input-medium alignCenter ep-time-date-input" type="number" name="dayOfYear" min="1" value="{{dayOfYear}}"/>
+                {{else}}
+                <span class="resource-value">{{dayOfYear}}</span>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <div class="contentBox">
+        <div class="centerBackground flexrow flex-group-center ep-time-clock">
+            <span class="resource-value ep-time-big">{{timeOfDay}}</span>
+        </div>
+    </div>
+
+    {{#if canControl}}
+    <div class="contentBox">
+        <div class="flexrow subheader">
+            <h3 class="subheader">{{localize "ep2e.time.advance"}}</h3>
+        </div>
+        <div class="itemBackground">
+            <div class="ep-time-presets">
+                {{#each presets as |preset|}}
+                <button type="button" class="ep-time-step" data-action="advance" data-seconds="{{preset.seconds}}"
+                        {{#if preset.tooltip}}data-tooltip="{{preset.tooltip}}"{{/if}}>{{preset.label}}</button>
+                {{/each}}
+                <div class="ep-time-custom">
+                    <input class="alignCenter ep-time-custom-input" type="number" name="customMinutes" placeholder="{{localize 'ep2e.time.customHint'}}"/>
+                    <button type="button" class="ep-time-step ep-time-custom-go" data-action="advanceCustom" data-tooltip="{{localize 'ep2e.time.custom'}}"><i class="fas fa-forward awesomeIcon"></i></button>
+                </div>
+            </div>
+            <div class="flexrow flex-group-center ep-time-manual">
+                <button type="button" class="ep-time-step ep-time-wide" data-action="restoreRest">
+                    <i class="fas fa-battery-full awesomeIcon"></i>{{localize "ep2e.time.restoreRest"}}
+                </button>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    <div class="contentBox">
+        <div class="flexrow subheader ep-time-effects-header" data-action="toggleEffects">
+            <h3 class="subheader">{{localize "ep2e.time.effects"}}</h3>
+            <div class="alignRight flexGrowThreeQuarter">
+                <i class="fas fa-{{#if effectsOpen}}minus{{else}}plus{{/if}} icon-xsmall awesomeIcon alignRight"></i>
+            </div>
+        </div>
+        {{#if effectsOpen}}
+        <div class="itemBackground">
+            {{#if effects.length}}
+            {{#each effects as |row|}}
+            <div class="item flexrow flex-group-center ep-time-effect-row{{#if row.expired}} ep-time-expired{{/if}}">
+                <label class="truncate alignLeft ep-time-effect-owner"><i>{{row.owner}}</i></label>
+                <label class="truncate alignLeft ep-time-effect-name"><strong>{{row.name}}</strong></label>
+                <label class="alignRight ep-time-effect-remaining">{{row.remaining}}</label>
+                {{#if @root.canControl}}
+                <div class="flexrow item-controls flex-group-right ep-time-effect-controls">
+                    <a class="item-control resource-label editWithLabel input-xs alignRight"
+                       data-action="endEffect"
+                       data-actor-id="{{row.actorId}}"
+                       data-parent-id="{{row.parentId}}"
+                       data-effect-id="{{row.effectId}}"
+                       data-on-item="{{row.onItem}}"
+                       title="{{localize 'ep2e.time.endNow'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+                </div>
+                {{/if}}
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="flexrow flex-group-center ep-time-empty">
+                <span class="resource-label">{{localize "ep2e.time.noEffects"}}</span>
+            </div>
+            {{/if}}
+        </div>
+        {{/if}}
+    </div>
+
+</div>
