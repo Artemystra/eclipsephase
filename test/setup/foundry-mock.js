@@ -3,6 +3,9 @@ const path = require("path");
 
 const SYSTEM_ROOT = path.resolve(__dirname, "..", "..");
 
+// Read from the manifest rather than pinned here, so a version bump cannot leave the mock behind.
+const SYSTEM_VERSION = JSON.parse(fs.readFileSync(path.join(SYSTEM_ROOT, "system.json"), "utf8")).version;
+
 /**
  * Foundry's utils.getType: distinguishes null, Array, Set and plain objects.
  * @param {*} value - Any value
@@ -862,7 +865,7 @@ global.ui = {
 };
 
 global.game = {
-  system: { id: "eclipsephase", version: "2.5" },
+  system: { id: "eclipsephase", version: SYSTEM_VERSION },
   model: buildModel(),
   settings: {
     get: (namespace, key) => settingValues.get(`${namespace}.${key}`),

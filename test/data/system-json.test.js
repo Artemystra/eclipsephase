@@ -14,6 +14,16 @@ function exists(relativePath) {
   return fs.existsSync(path.join(SYSTEM_ROOT, relativePath));
 }
 
+/**
+ * The branch a manifest URL is served from, for the branch-style URL a release branch carries.
+ * Master uses the release-scheme URL instead and has no branch.
+ * @param {String} url - The manifest URL from system.json
+ * @returns {String|null} The branch name, or null when the URL names a release
+ */
+function manifestBranch(url) {
+  return /^https:\/\/github\.com\/Artemystra\/eclipsephase\/raw\/([^/]+)\/system\.json$/.exec(url)?.[1] ?? null;
+}
+
 describe("system.json", () => {
   test("declares Foundry 14 as its minimum", () => {
     expect(system.compatibility.minimum).toEqual("14");
@@ -42,12 +52,18 @@ describe("system.json", () => {
     expect(missing).toEqual([]);
   });
 
-  test("the manifest is the rolling latest-release alias, so an installed copy always finds the newest one", () => {
-    expect(system.manifest).toEqual("https://github.com/Artemystra/eclipsephase/releases/latest/download/system.json");
+  test("the manifest is either the rolling latest-release alias or a branch of this repository", () => {
+    expect(system.manifest).toMatch(
+      /^https:\/\/github\.com\/Artemystra\/eclipsephase\/(releases\/latest\/download\/system\.json|raw\/[^/]+\/system\.json)$/
+    );
   });
 
-  test("the download is pinned to the tag matching the declared version", () => {
-    expect(system.download).toEqual(`https://github.com/Artemystra/eclipsephase/releases/download/v${system.version}/eclipsephase.zip`);
+  test("the download comes from the same source the manifest names", () => {
+    const ref = manifestBranch(system.manifest);
+    const expected = ref
+      ? `https://github.com/Artemystra/eclipsephase/archive/${ref}/eclipsephase-${ref}.zip`
+      : `https://github.com/Artemystra/eclipsephase/releases/download/v${system.version}/eclipsephase.zip`;
+    expect(system.download).toEqual(expected);
   });
 });
 
