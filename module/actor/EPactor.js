@@ -1,6 +1,6 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
-import { endAllChiPushes } from "../rolls/psi.js"
+import { endAllChiPushes, endExpiredChiPushes } from "../rolls/psi.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
 
 const gammaAutoPushInFlight = new Set();
@@ -49,6 +49,7 @@ export default class EPactor extends Actor {
    */
   async onUpdateEffectDurations(effects, event, context) {
     Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
+    if (game.users.activeGM?.isSelf) await endExpiredChiPushes(this, effects);
   }
 
   /**

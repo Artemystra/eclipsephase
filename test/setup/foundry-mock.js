@@ -306,6 +306,22 @@ class MockDocument {
     return this;
   }
 
+  // Foundry keeps ActiveEffects as embedded documents on both Actors and Items. Only that
+  // collection is modelled here, which is all the system creates and deletes at runtime.
+  async createEmbeddedDocuments(documentName, dataArray = []) {
+    if (documentName !== "ActiveEffect") return [];
+    const created = dataArray.map(data => new MockActiveEffect(data, { parent: this }));
+    this.effects.push(...created);
+    return created;
+  }
+
+  async deleteEmbeddedDocuments(documentName, ids = []) {
+    if (documentName !== "ActiveEffect") return [];
+    const removed = this.effects.filter(effect => ids.includes(effect.id));
+    this.effects = this.effects.filter(effect => !ids.includes(effect.id));
+    return removed;
+  }
+
   toObject() {
     return deepClone(this._source);
   }
@@ -340,6 +356,7 @@ class MockActiveEffect {
     this.transfer = data.transfer ?? true;
     this.statuses = data.statuses ?? [];
     this.duration = { value: null, units: "seconds", expiry: null, expired: false, ...(data.duration ?? {}) };
+    this.start = data.start ? deepClone(data.start) : null;
     this.flags = deepClone(data.flags ?? {});
     const changes = data.system?.changes ?? data.changes ?? [];
     const Model = getEffectDataModel();
@@ -348,6 +365,11 @@ class MockActiveEffect {
 
   get changes() {
     return this.system.changes;
+  }
+
+  // Foundry's own helper, which fills every field of the start stamp rather than just the time.
+  static getEffectStart() {
+    return { time: global.game.time.worldTime, combat: null, combatant: null, initiative: null, round: null, turn: null };
   }
 
   get isSuppressed() {
@@ -723,6 +745,9 @@ function resetMock() {
   hookCalls.length = 0;
   hookHandlers.clear();
   uuidRegistry.clear();
+  global.game.time.worldTime = 0;
+  global.game.user.isGM = true;
+  global.game.user.character = null;
   global.game.messages.clear();
   global.game.actors.clear();
   global.game.items.clear();
@@ -877,6 +902,11 @@ global.ui = {
 
 global.game = {
   system: { id: "eclipsephase", version: SYSTEM_VERSION },
+  time: {
+    worldTime: 0,
+    async advance(seconds) { this.worldTime += Number(seconds) || 0; return this.worldTime; },
+    async set(seconds) { this.worldTime = Number(seconds) || 0; return this.worldTime; }
+  },
   model: buildModel(),
   settings: {
     get: (namespace, key) => settingValues.get(`${namespace}.${key}`),

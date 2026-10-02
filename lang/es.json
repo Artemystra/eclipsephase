@@ -1,5 +1,9 @@
 {
   "SETTINGS": {
+    "rechargeAutoReset": {
+      "name": "Reiniciar recargas cada día",
+      "hint": "Cuando el reloj del mundo pasa la medianoche, cada personaje recupera sus recargas cortas y largas. Desactívalo para reiniciarlas a mano."
+    },
     "ammoRules": {
       "name": "Ammunition Rules",
       "hint": "Decides how and if ammunnition items are automatically reduced/deleted on reload. Default: Ammunition items never deplete. Survival: Reloading reduces ammunition items. Grenades Only: Only special items (e.g. Grenades/Drugs) are deleted/reduced on reload.",
@@ -39,7 +43,7 @@
     },
     "restReset": {
       "name": "Reset Temporary Bonuses",
-      "hint": "If activated ANY rest (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long rests reset them."
+      "hint": "If activated ANY recharge (short an long) will reset all temporary bonuses like 'ignore wound' or 'ignore trauma'. Keep this deactivated so only long recharges reset them."
     },
     "showDamageOptions": {
       "name": "Default Show Damage Dialog",
@@ -311,7 +315,7 @@
         "rezSpent": "Spent"
       },
       "rest": {
-        "label": "Rest",
+        "label": "Recharge",
         "jammedLabel": "Sin recarga durante el jamming"
       }
     },
@@ -462,8 +466,8 @@
       },
       "restingMenu": {
         "headline": "Recover Pools",
-        "shortRest": "Short Rest:",
-        "longRest": "Long Rest:",
+        "shortRest": "Short Recharge:",
+        "longRest": "Long Recharge:",
         "labelInsight": "Insight",
         "labelVigor": "Vigor",
         "labelMoxie": "Moxie",
@@ -474,16 +478,16 @@
           "distributionDone": "Ready to go! No pool points left"
         },
         "restInfo": {
-          "headline": "Resting",
+          "headline": "Recharging",
           "subheadline1": "General",
-          "copy1": "You need to use a 'rest' action in order to recover pools. Choose the type of rest you want to use by clicking the checkbox next to it. You have 1 long and 2 short rest during the cycle of 24 in-game hours.",
-          "subheadline2": "Short Rest",
-          "copy2": "A short rest takes the common transhuman being approximately 10 minutes and requires them to do nothing else than rest, talk and just come down. This requires biomods. Flats use up to 1 hour.<p/><label class='resource-value'>A short rest recovers 1d6 pool points</label>",
-          "subheadline3": "Long Rest",
-          "copy3": "A person with biomods takes about 4 hours for a long rest. This requires them to do nothing else than rest, talk and just come down. Flats need 8 hours to achieve the same.<p/><label class='resource-value'>A long rest recovers all your pool points</label>"
+          "copy1": "You need to use a 'recharge' action in order to recover pools. Choose the type of recharge you want to use by clicking the checkbox next to it. You have 1 long and 2 short recharge during the cycle of 24 in-game hours.",
+          "subheadline2": "Short Recharge",
+          "copy2": "A short recharge takes the common transhuman being approximately 10 minutes and requires them to do nothing else than recharge, talk and just come down. This requires biomods. Flats use up to 1 hour.<p/><label class='resource-value'>A short recharge recovers 1d6 pool points</label>",
+          "subheadline3": "Long Recharge",
+          "copy3": "A person with biomods takes about 4 hours for a long recharge. This requires them to do nothing else than recharge, talk and just come down. Flats need 8 hours to achieve the same.<p/><label class='resource-value'>A long recharge recovers all your pool points</label>"
         },
         "button": {
-          "resetRest": "Reset Rest",
+          "resetRest": "Reset Recharges",
           "distribute": "Distribute"
         }
       },
@@ -574,7 +578,7 @@
         "inputSubheadline": "Input Needed",
         "chatHeadline": "Used a Pool",
         "chatEffect": "Received Effect:",
-        "considerResting": "Consider using a 'rest'-action",
+        "considerResting": "Consider using a 'recharge'-action",
         "numberWounds": "Wounds to Ignore",
         "numberTrauma": "Trauma to Ignore",
         "repSize": "Size of Favor",
@@ -1451,7 +1455,7 @@
           "noPsiTooltip": "Sin Psi mientras jammeas"
         },
         "psi": {
-          "chiPushActive": "Activo durante {minutes} minuto(s), o hasta tu próximo descanso.",
+          "chiPushActive": "Activo durante {minutes} minuto(s), o hasta tu próximo recarga.",
           "pushingSleight": "Empujando {name}",
           "pushedSleightFeedback": "Sleight Empujado",
           "pushedLabel": "Empujado",
@@ -1473,8 +1477,8 @@
           "adaptability": "Adaptability"
         },
         "rest": {
-          "short": "I used a<p/><strong>Short Rest<p/></strong>to recover some pool points<p/>",
-          "long": "I used my<p/><strong>Long Rest<p/></strong>to recover all pools<p/>"
+          "short": "He tardado <strong>{time}</strong><p/>en una <strong>recarga corta</strong><p/>para recuperar algunos puntos de reserva<p/>",
+          "long": "He tardado {time} en una recarga larga para recuperar todas las reservas"
         },
         "spendRez": {
           "spent": "You overspent your rez. <br> Spent:",
@@ -1764,6 +1768,14 @@
         }
       }
     },
+    "recharge": {
+      "duration": {
+        "shortBiomods": "10 minutos",
+        "shortFlat": "1 hora",
+        "longBiomods": "4 horas",
+        "longFlat": "8 horas"
+      }
+    },
     "time": {
       "title": "Tiempo",
       "day": "Día",
@@ -1782,6 +1794,7 @@
       "hoursTooltip": "unas {hours} h",
       "dayTooltip": "1 día",
       "minutesTooltip": "unos {minutes} min",
+      "autoReset": "Reiniciar cada día",
       "restoreRest": "Reiniciar recargas",
       "restRestored": "Recargas reiniciadas.",
       "advanceSteps": {

@@ -5,6 +5,7 @@ import  EPactor from "./actor/EPactor.js";
 import  EPitem  from "./item/EPitem.js";
 import { EPmenu } from './menu.js';
 import EPtimePanel from './apps/time-panel.js';
+import { resetRechargesForNewDay } from './common/recharge.js';
 import  EPactorSheet from "./actor/EPactorSheet.js";
 import EPitemSheet from "./item/EPitemSheet.js";
 import  { eclipsephase } from "./config.js";
@@ -102,6 +103,15 @@ async function registerSystemSettings() {
       beats: "SETTINGS.timeFormat.beats"
     },
     default: "hours"
+  });
+
+  game.settings.register("eclipsephase", "rechargeAutoReset", {
+    config: true,
+    scope: "world",
+    name: "SETTINGS.rechargeAutoReset.name",
+    hint: 'SETTINGS.rechargeAutoReset.hint',
+    type: Boolean,
+    default: true
   });
 
   game.settings.register("eclipsephase", "timePanelPlayers", {
@@ -860,6 +870,9 @@ Hooks.on('renderSceneControls', (app, html) => {
 for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected"]) {
   Hooks.on(hook, () => EPtimePanel.refresh());
 }
+
+// A new campaign day hands every character its recharges back.
+Hooks.on("updateWorldTime", () => resetRechargesForNewDay());
 
 // The sidebar tray changes how much room is left, so the panel re-parks beside it.
 Hooks.on("collapseSidebar", () => EPtimePanel.reposition());

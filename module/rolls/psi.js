@@ -121,6 +121,45 @@ function chiPushAllowed(actorWhole){
 }
 
 /**
+ * How many minutes a chi push lasts: WIL divided by five, per RAW, and never less than one.
+ * @param {Actor} actorWhole - The pushing actor
+ * @returns {Number} The duration in minutes
+ */
+export function chiPushMinutes(actorWhole){
+    return Math.max(1, Math.floor((actorWhole?.system?.aptitudes?.wil?.value ?? 0) / 5));
+}
+
+/**
+ * Whether an effect's duration has run out. Checked on the remaining time rather than on the
+ * expired flag, because Foundry reports the change to the actor before it writes that flag.
+ * @param {ActiveEffect} effect - The effect to judge
+ * @returns {Boolean} True when nothing is left to run
+ */
+function runOut(effect){
+    if (effect.duration?.expired === true) return true;
+    const remaining = effect.duration?.remaining;
+    return Number.isFinite(remaining) && remaining <= 0;
+}
+
+/**
+ * Ends every chi push whose duration has run out, called when Foundry reports that a tracked
+ * effect's remaining time changed. Expiry only marks an effect, so the pool bump a push applied
+ * has to be reversed here rather than left to core.
+ * @param {Actor} actorWhole - The actor whose effects were refreshed
+ * @param {ActiveEffect[]} effects - The effects whose remaining duration changed
+ * @returns {Promise<void>} Resolves once every expired push is cleaned up
+ */
+export async function endExpiredChiPushes(actorWhole, effects){
+    const expired = effects.filter(effect =>
+        effect.getFlag?.("eclipsephase", "chiPushBoost") === true && runOut(effect));
+
+    for (const effect of expired) {
+        const item = effect.parent;
+        if (item?.id) await endChiPush(actorWhole, item.id);
+    }
+}
+
+/**
  * Duplicates a chi sleight's own ActiveEffect(s) onto itself, flagged as a temporary push boost,
  * moves any boosted pool's current value in step, and marks the item pushed. No-ops entirely if
  * the actor is already Infection-33+ boosted (that already doubles the sleight's bonus globally,
@@ -145,6 +184,12 @@ export async function pushChiSleight(actorWhole, itemId){
             disabled: false,
             transfer: true,
             changes,
+            // expiry null, so the push runs down on the world clock rather than on a combat turn,
+            // which is what Foundry would otherwise default to once a duration value is present.
+            duration: { value: chiPushMinutes(actorWhole), units: "minutes", expiry: null },
+            // Foundry stamps start only on actor-owned effects, and this one lives on the item, so
+            // it has to be supplied here or the duration would never be tracked.
+            start: ActiveEffect.getEffectStart(),
             flags: { eclipsephase: { chiPushBoost: true } }
         };
         if (isV14Plus) newEffectData.system = { changes };
@@ -221,7 +266,7 @@ export async function confirmChiPush(actorWhole, itemId, rollMode){
     await actorWhole.update({ "system.psiStrain.infection": raisedInfection });
 
     await pushChiSleight(actorWhole, itemId);
-    const minutes = Math.floor(actorWhole.system.aptitudes.wil.value / 5);
+    const minutes = chiPushMinutes(actorWhole);
     const chiPushMessage = game.i18n.format("ep2e.roll.announce.psi.chiPushActive", { minutes });
     await rollToChat(null, { message: chiPushMessage }, CHI_PUSH_OUTPUT, null, actingPerson, recipientList, false);
 

@@ -41,10 +41,14 @@
                     <button type="button" class="ep-time-step ep-time-custom-go" data-action="advanceCustom" data-tooltip="{{localize 'ep2e.time.custom'}}"><i class="fas fa-forward awesomeIcon"></i></button>
                 </div>
             </div>
-            <div class="flexrow flex-group-center ep-time-manual">
-                <button type="button" class="ep-time-step ep-time-wide" data-action="restoreRest">
+            <div class="flexrow ep-time-manual ep-time-reset-row">
+                <button type="button" class="ep-time-step" data-action="restoreRest">
                     <i class="fas fa-battery-full awesomeIcon"></i>{{localize "ep2e.time.restoreRest"}}
                 </button>
+                <label class="resource-label ep-time-auto-reset">
+                    <input type="checkbox" data-action="toggleAutoReset" {{checked autoReset}}/>
+                    {{localize "ep2e.time.autoReset"}}
+                </label>
             </div>
         </div>
     </div>

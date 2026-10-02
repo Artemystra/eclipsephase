@@ -1,4 +1,4 @@
-import { isRunningEffect, watchedActors, runningEffectRows } from "../../module/apps/time-panel.js";
+import { isRunningEffect, watchedActors, rechargeTargets, runningEffectRows } from "../../module/apps/time-panel.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
 /**
@@ -34,16 +34,40 @@ describe("isRunningEffect", () => {
   });
 });
 
-describe("watchedActors", () => {
+describe("who the recharge reset applies to", () => {
   test("it lists the assigned characters of connected players", () => {
     const player = makeActor({ type: "character", name: "Hex" });
     assignToPlayer(player);
-    expect(watchedActors().map(actor => actor.name)).toEqual(["Hex"]);
+    expect(rechargeTargets().map(actor => actor.name)).toEqual(["Hex"]);
   });
 
   test("it leaves out the GM and anyone not connected", () => {
     assignToPlayer(makeActor({ type: "character", name: "Keeper" }), { isGM: true });
     assignToPlayer(makeActor({ type: "character", name: "Away" }), { active: false });
+    expect(rechargeTargets()).toEqual([]);
+  });
+});
+
+describe("whose effects the list shows", () => {
+  test("a GM sees every actor in the world, npcs included", () => {
+    game.user.isGM = true;
+    makeActor({ type: "character", name: "Hex" });
+    makeActor({ type: "npc", name: "Exhuman Brute" });
+    expect(watchedActors().map(actor => actor.name).sort()).toEqual(["Exhuman Brute", "Hex"]);
+  });
+
+  test("a player sees only their own character, never the GM's", () => {
+    const mine = makeActor({ type: "character", name: "Hex" });
+    makeActor({ type: "npc", name: "Exhuman Brute" });
+    game.user.isGM = false;
+    game.user.character = mine;
+    expect(watchedActors().map(actor => actor.name)).toEqual(["Hex"]);
+  });
+
+  test("a player without a character sees nothing", () => {
+    makeActor({ type: "npc", name: "Exhuman Brute" });
+    game.user.isGM = false;
+    game.user.character = null;
     expect(watchedActors()).toEqual([]);
   });
 });

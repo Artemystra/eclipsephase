@@ -1,6 +1,7 @@
 import { tempEffectDeletion } from "../common/general-sheet-functions.js";
 import * as DICE from "./dice.js";
 import { endAllChiPushes } from "./psi.js";
+import { rechargeDurationKey } from "../common/recharge.js";
 
 const REST_DISTRIBUTION_TEMPLATE = "systems/eclipsephase/templates/chat/rest-distribution.html";
 
@@ -72,7 +73,9 @@ async function _restCheckboxListener(html, actor) {
         let message = {};
 
         message.rollTitle = "ep2e.roll.announce.total";
-        message.mainMessage = "ep2e.roll.announce.rest.short";
+        message.mainMessage = game.i18n.format("ep2e.roll.announce.rest.short", {
+          time: game.i18n.localize(rechargeDurationKey(actorWhole, "short"))
+        });
 
         await DICE.rollToChat(null, message, DICE.DEFAULT_ROLL, roll, actorWhole.name, null, false, "rollOutput");
 
@@ -80,7 +83,9 @@ async function _restCheckboxListener(html, actor) {
       }
 
       if (restType === "long") {
-        let label = game.i18n.localize("ep2e.roll.announce.rest.long");
+        let label = game.i18n.format("ep2e.roll.announce.rest.long", {
+          time: game.i18n.localize(rechargeDurationKey(actorWhole, "long"))
+        });
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker({ actor: actor }),
           flavor: label

@@ -17,16 +17,27 @@ export function isRunningEffect(effect) {
 }
 
 /**
- * The characters the panel reports on: the assigned characters of every connected player.
+ * The characters the recharge reset applies to: the assigned characters of every connected player.
  * @returns {Actor[]} The actors, without duplicates
  */
-export function watchedActors() {
+export function rechargeTargets() {
   const actors = new Map();
   for (const user of game.users) {
     if (user.isGM || !user.active || !user.character) continue;
     actors.set(user.character.id, user.character);
   }
   return [...actors.values()];
+}
+
+/**
+ * The actors whose running effects the list shows. A GM sees everything in the world, since a
+ * toxin ticking on an enemy is exactly what they need to keep track of; a player sees only their
+ * own character, so the panel never leaks what the GM has running elsewhere.
+ * @returns {Actor[]} The actors to read effects from
+ */
+export function watchedActors() {
+  if (!game.user.isGM) return game.user.character ? [game.user.character] : [];
+  return [...game.actors];
 }
 
 /**
@@ -75,6 +86,7 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       advanceCustom: EPtimePanel._onAdvanceCustom,
       endEffect: EPtimePanel._onEndEffect,
       restoreRest: EPtimePanel._onRestoreRest,
+      toggleAutoReset: EPtimePanel._onToggleAutoReset,
       toggleEffects: EPtimePanel._onToggleEffects,
       toggleFormat: EPtimePanel._onToggleFormat
     }
@@ -165,6 +177,7 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
           tooltip: inBeats ? spanTooltip(seconds) : ""
         };
       }),
+      autoReset: game.settings.get("eclipsephase", "rechargeAutoReset"),
       effectsOpen: this.#effectsOpen,
       effects: runningEffectRows()
     };
@@ -307,7 +320,7 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
    * @returns {Promise<void>} Resolves once every character is updated
    */
   static async _onRestoreRest() {
-    for (const actor of watchedActors()) {
+    for (const actor of rechargeTargets()) {
       await actor.update({
         "system.rest.short1": false,
         "system.rest.short2": false,
@@ -316,6 +329,17 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       });
     }
     ui.notifications.info(game.i18n.localize("ep2e.time.restRestored"));
+  }
+
+  /**
+   * Turns the automatic day-change reset on or off, for a table that would rather clear the
+   * recharges by hand.
+   * @returns {Promise<void>} Resolves once the new state is stored
+   */
+  static async _onToggleAutoReset() {
+    const current = game.settings.get("eclipsephase", "rechargeAutoReset");
+    await game.settings.set("eclipsephase", "rechargeAutoReset", !current);
+    await this.render();
   }
 
   /**

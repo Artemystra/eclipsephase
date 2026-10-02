@@ -3847,3 +3847,30 @@ li:has(.ep-system-notice) .message-header {
 .ep-time-panel .ep-time-empty {
   padding: 8px 0;
 }
+
+.ep-time-panel .ep-time-reset-row {
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+/* Button and checkbox split the row evenly. */
+.ep-time-panel .ep-time-reset-row > .ep-time-step,
+.ep-time-panel .ep-time-auto-reset {
+  flex: 1 1 50%;
+  min-width: 0;
+}
+
+.ep-time-panel .ep-time-auto-reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.ep-time-panel .ep-time-auto-reset input {
+  flex: 0 0 auto;
+  margin: 0;
+}
