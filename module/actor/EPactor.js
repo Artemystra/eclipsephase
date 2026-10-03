@@ -1,6 +1,7 @@
 import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
 import { endAllChiPushes, endExpiredChiPushes } from "../rolls/psi.js"
+import { deleteRunOutTempEffects } from "../common/general-sheet-functions.js"
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
 
 const gammaAutoPushInFlight = new Set();
@@ -49,7 +50,9 @@ export default class EPactor extends Actor {
    */
   async onUpdateEffectDurations(effects, event, context) {
     Hooks.callAll("eclipsephase.effectDurations", this, effects, event, context);
-    if (game.users.activeGM?.isSelf) await endExpiredChiPushes(this, effects);
+    if (!game.users.activeGM?.isSelf) return;
+    await endExpiredChiPushes(this, effects);
+    await deleteRunOutTempEffects(this, effects);
   }
 
   /**
@@ -755,7 +758,7 @@ export default class EPactor extends Actor {
     }
 
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
-      actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "appeal" : actorModel.additionalSystems.sleeving.integrationIssues.appeal, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
+      actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
     }
 
     Hooks.callAll("eclipsephase.prepareActorStatus", actorWhole, actorModel);

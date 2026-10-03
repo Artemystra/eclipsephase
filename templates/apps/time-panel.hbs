@@ -5,23 +5,37 @@
             <div class="flexrow flex-group-left ep-time-date-fields">
                 <label class="resource-label">{{localize "ep2e.time.year"}}</label>
                 {{#if canControl}}
-                <input class="input-medium alignCenter ep-time-date-input" type="number" name="year" min="1" value="{{year}}"/>
+                <input class="alignCenter ep-time-date-input" type="number" name="year" min="1" value="{{year}}"/>
                 {{else}}
-                <span class="resource-value">{{year}}</span>
+                <span class="ep-time-date-value">{{year}}</span>
                 {{/if}}
                 <label class="resource-label">{{localize "ep2e.time.day"}}</label>
                 {{#if canControl}}
-                <input class="input-medium alignCenter ep-time-date-input" type="number" name="dayOfYear" min="1" value="{{dayOfYear}}"/>
+                <input class="alignCenter ep-time-date-input" type="number" name="dayOfYear" min="1" value="{{dayOfYear}}"/>
                 {{else}}
-                <span class="resource-value">{{dayOfYear}}</span>
+                <span class="ep-time-date-value">{{dayOfYear}}</span>
                 {{/if}}
             </div>
         </div>
     </div>
 
     <div class="contentBox">
-        <div class="centerBackground flexrow flex-group-center ep-time-clock">
+        <div class="centerBackground flexrow flex-group-center ep-time-clock"{{#if clockTooltip}} data-tooltip="{{clockTooltip}}"{{/if}}>
+            {{#if canControl}}
+                {{#if inBeats}}
+                <span class="resource-value ep-time-big">@</span>
+                <input class="alignCenter ep-time-big ep-time-clock-input ep-time-beat-input" type="number" name="beat" min="0" max="999" value="{{beat}}"/>
+                {{else}}
+                <input class="alignCenter ep-time-big ep-time-clock-input" type="number" name="hour" min="0" max="23" value="{{hour}}"/>
+                <span class="resource-value ep-time-big">:</span>
+                <input class="alignCenter ep-time-big ep-time-clock-input" type="number" name="minute" min="0" max="59" value="{{minute}}"/>
+                {{/if}}
+            {{else}}
             <span class="resource-value ep-time-big">{{timeOfDay}}</span>
+            {{/if}}
+            {{#if inBeats}}
+            <a class="ep-time-beats-info" data-action="beatsInfo" data-tooltip="{{localize 'ep2e.time.beatsInfo.tip'}}"><i class="fas fa-circle-info awesomeIcon"></i></a>
+            {{/if}}
         </div>
     </div>
 
@@ -29,6 +43,7 @@
     <div class="contentBox">
         <div class="flexrow subheader">
             <h3 class="subheader">{{localize "ep2e.time.advance"}}</h3>
+            <div class="alignRight flexGrowThreeQuarter"></div>
         </div>
         <div class="itemBackground">
             <div class="ep-time-presets">
@@ -63,22 +78,42 @@
         </div>
         {{#if effectsOpen}}
         <div class="itemBackground">
-            {{#if effects.length}}
-            {{#each effects as |row|}}
-            <div class="item flexrow flex-group-center ep-time-effect-row{{#if row.expired}} ep-time-expired{{/if}}">
-                <label class="truncate alignLeft ep-time-effect-owner"><i>{{row.owner}}</i></label>
-                <label class="truncate alignLeft ep-time-effect-name"><strong>{{row.name}}</strong></label>
-                <label class="alignRight ep-time-effect-remaining">{{row.remaining}}</label>
-                {{#if @root.canControl}}
-                <div class="flexrow item-controls flex-group-right ep-time-effect-controls">
-                    <a class="item-control resource-label editWithLabel input-xs alignRight"
-                       data-action="endEffect"
-                       data-actor-id="{{row.actorId}}"
-                       data-parent-id="{{row.parentId}}"
-                       data-effect-id="{{row.effectId}}"
-                       data-on-item="{{row.onItem}}"
-                       title="{{localize 'ep2e.time.endNow'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+            {{#if grouped}}
+            {{#if groups.length}}
+            {{#each groups as |group|}}
+            <div class="ep-time-actor-group">
+                <div class="item flexrow flex-group-center ep-time-actor-row" data-action="toggleActor" data-actor-id="{{group.actorId}}">
+                    <i class="fas fa-caret-{{#if group.open}}down{{else}}right{{/if}} awesomeIcon ep-time-actor-caret"></i>
+                    <label class="truncate alignLeft ep-time-actor-name"><strong>{{group.name}}</strong></label>
+                    <label class="alignRight ep-time-actor-count">{{group.count}}</label>
                 </div>
+                {{#if group.open}}
+                {{#each group.effects as |row|}}
+                <div class="item flexrow flex-group-center ep-time-effect-row{{#if row.expired}} ep-time-expired{{/if}}">
+                    <label class="truncate alignLeft ep-time-effect-name">{{row.name}}</label>
+                    <label class="alignRight ep-time-effect-remaining">{{row.remaining}}</label>
+                    <div class="flexrow item-controls flex-group-right ep-time-effect-controls">
+                        {{#if row.hasInfo}}
+                        <a class="item-control resource-label editWithLabel input-xs alignRight"
+                           data-action="effectInfo"
+                           data-actor-id="{{row.actorId}}"
+                           data-parent-id="{{row.parentId}}"
+                           data-effect-id="{{row.effectId}}"
+                           data-on-item="{{row.onItem}}"
+                           data-tooltip="{{localize 'ep2e.time.moreInfo'}}"><i class="fas fa-circle-info awesomeIcon"></i></a>
+                        {{/if}}
+                        {{#if @root.canControl}}
+                        <a class="item-control resource-label editWithLabel input-xs alignRight"
+                           data-action="endEffect"
+                           data-actor-id="{{row.actorId}}"
+                           data-parent-id="{{row.parentId}}"
+                           data-effect-id="{{row.effectId}}"
+                           data-on-item="{{row.onItem}}"
+                           data-tooltip="{{localize 'ep2e.time.endNow'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+                        {{/if}}
+                    </div>
+                </div>
+                {{/each}}
                 {{/if}}
             </div>
             {{/each}}
@@ -86,6 +121,34 @@
             <div class="flexrow flex-group-center ep-time-empty">
                 <span class="resource-label">{{localize "ep2e.time.noEffects"}}</span>
             </div>
+            {{/if}}
+
+            {{else}}
+
+            {{#if effects.length}}
+            {{#each effects as |row|}}
+            <div class="item flexrow flex-group-center ep-time-effect-row{{#if row.expired}} ep-time-expired{{/if}}">
+                <label class="truncate alignLeft ep-time-effect-name">{{row.name}}</label>
+                <label class="alignRight ep-time-effect-remaining">{{row.remaining}}</label>
+                <div class="flexrow item-controls flex-group-right ep-time-effect-controls">
+                    {{#if row.hasInfo}}
+                    <a class="item-control resource-label editWithLabel input-xs alignRight"
+                       data-action="effectInfo"
+                       data-actor-id="{{row.actorId}}"
+                       data-parent-id="{{row.parentId}}"
+                       data-effect-id="{{row.effectId}}"
+                       data-on-item="{{row.onItem}}"
+                       data-tooltip="{{localize 'ep2e.time.moreInfo'}}"><i class="fas fa-circle-info awesomeIcon"></i></a>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="flexrow flex-group-center ep-time-empty">
+                <span class="resource-label">{{localize "ep2e.time.noEffects"}}</span>
+            </div>
+            {{/if}}
+
             {{/if}}
         </div>
         {{/if}}

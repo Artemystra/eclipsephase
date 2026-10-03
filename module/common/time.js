@@ -55,6 +55,41 @@ export function worldTimeForDay(day) {
   return Math.max(0, (Math.floor(Number(day) || 1) - 1)) * SECONDS_PER_DAY;
 }
 
+/**
+ * The world time that keeps the current day but moves to a given time of day, for the panel's
+ * editable clock.
+ * @param {Number} worldTime - The current world time, which decides the day
+ * @param {Number} secondsIntoDay - How far into that day to land, clamped to the day
+ * @returns {Number} The new world time in seconds
+ */
+export function worldTimeAtTimeOfDay(worldTime, secondsIntoDay) {
+  const { totalDays } = elapsedTime(worldTime);
+  const within = Math.min(SECONDS_PER_DAY - 1, Math.max(0, Math.floor(Number(secondsIntoDay) || 0)));
+  return totalDays * SECONDS_PER_DAY + within;
+}
+
+/**
+ * How far into a day a wall-clock time is.
+ * @param {Number} hour - The hour, clamped to 0-23
+ * @param {Number} minute - The minute, clamped to 0-59
+ * @returns {Number} The seconds into the day
+ */
+export function secondsForClock(hour, minute) {
+  const h = Math.min(23, Math.max(0, Math.floor(Number(hour) || 0)));
+  const m = Math.min(59, Math.max(0, Math.floor(Number(minute) || 0)));
+  return h * SECONDS_PER_HOUR + m * SECONDS_PER_MINUTE;
+}
+
+/**
+ * How far into a day a beat is.
+ * @param {Number} beat - The beat, clamped to 0-999
+ * @returns {Number} The seconds into the day
+ */
+export function secondsForBeat(beat) {
+  const b = Math.min(BEATS_PER_DAY - 1, Math.max(0, Math.floor(Number(beat) || 0)));
+  return Math.floor((b * SECONDS_PER_DAY) / BEATS_PER_DAY);
+}
+
 // The advance steps the panel offers. Minutes and hours carry a beat label for beats mode; the
 // multi-day steps stay in days, where beats would say nothing a GM thinks in.
 export const ADVANCE_PRESETS = [
@@ -151,4 +186,16 @@ export function advanceLabel(preset, format = HOURS) {
  */
 export function crossedDayBoundary(before, after) {
   return elapsedTime(before).totalDays !== elapsedTime(after).totalDays;
+}
+
+/**
+ * Whether an effect's duration has run out. Checked on the remaining time as well as on the
+ * expired flag, because Foundry reports the change to the actor before it writes that flag.
+ * @param {ActiveEffect} effect - The effect to judge
+ * @returns {Boolean} True when nothing is left to run
+ */
+export function durationRunOut(effect) {
+  if (effect?.duration?.expired === true) return true;
+  const remaining = effect?.duration?.remaining;
+  return Number.isFinite(remaining) && remaining <= 0;
 }

@@ -1801,6 +1801,13 @@
       "hoursTooltip": "约 {hours} 小时",
       "dayTooltip": "1 天",
       "minutesTooltip": "约 {minutes} 分钟",
+      "beatsInfo": {
+        "title": "Beats",
+        "tip": "什么是 Beats？",
+        "copy": "<p>Beats 即斯沃琪网络时间，由这家瑞士钟表商于 1998 年提出。其构想是让整个星球只用一种时间，完全取消时区——但从未真正流行起来。</p><p>一个 beat 为 1 分 26.4 秒，一天正好是 1000 个，书写时在前面加上 @。</p><p>在没有任何两个居住地共享同一次日出的太阳系中，这反而相当实用：每个空间站都可以保留自己的昼夜循环，同时仍能与他人指称同一时刻。</p>"
+      },
+      "moreInfo": "更多信息",
+      "close": "关闭",
       "autoReset": "每天自动重置",
       "restoreRest": "重置恢复次数",
       "restRestored": "恢复次数已重置。",

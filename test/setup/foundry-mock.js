@@ -357,6 +357,8 @@ class MockActiveEffect {
     this.statuses = data.statuses ?? [];
     this.duration = { value: null, units: "seconds", expiry: null, expired: false, ...(data.duration ?? {}) };
     this.start = data.start ? deepClone(data.start) : null;
+    this.showIcon = data.showIcon ?? global.CONST.ACTIVE_EFFECT_SHOW_ICON.CONDITIONAL;
+    this.description = data.description ?? "";
     this.flags = deepClone(data.flags ?? {});
     const changes = data.system?.changes ?? data.changes ?? [];
     const Model = getEffectDataModel();
@@ -867,6 +869,7 @@ global.CONST = {
   TOKEN_DISPLAY_MODES: { HOVER: 20, NONE: 0 },
   TOKEN_DISPOSITIONS: { NEUTRAL: 0, FRIENDLY: 1, HOSTILE: -1 },
   ACTIVE_EFFECT_MODES: { ADD: 2, OVERRIDE: 5 },
+  ACTIVE_EFFECT_SHOW_ICON: { NEVER: 0, CONDITIONAL: 1, ALWAYS: 2 },
   DOCUMENT_OWNERSHIP_LEVELS: { NONE: 0, LIMITED: 1, OBSERVER: 2, OWNER: 3 }
 };
 

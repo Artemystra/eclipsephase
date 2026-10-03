@@ -94,7 +94,7 @@ async function registerSystemSettings() {
 
   game.settings.register("eclipsephase", "timeFormat", {
     config: true,
-    scope: "world",
+    scope: "client",
     name: "SETTINGS.timeFormat.name",
     hint: 'SETTINGS.timeFormat.hint',
     type: String,
@@ -850,20 +850,28 @@ Hooks.on("renderChatLog", (app,html,data) => {
 //Hooks.on('getSceneControlButtons', EPmenu.getButtons)
 Hooks.on('renderSceneControls', EPmenu.renderControls)
 
-// The time panel's own control button, which players get too when the world allows it.
+// The time panel's own control button, which players get too when the world allows it. Appended as
+// a proper menu entry rather than hung off another control, which a player may not have at all.
 Hooks.on('renderSceneControls', (app, html) => {
   if (!game.user.isGM && !game.settings.get("eclipsephase", "timePanelPlayers")) return;
 
   const root = html instanceof HTMLElement ? html : html[0] ?? html;
-  const anchor = root.querySelector('.fa-bookmark')?.parentElement;
-  if (!anchor || root.querySelector('.ep-time-panel-button')) return;
+  if (root.querySelector('.ep-time-panel-button')) return;
+
+  const menu = root.querySelector('[data-application-part="layers"] menu') ?? root.querySelector('menu');
+  if (!menu) return;
 
   const button = document.createElement("button");
-  button.classList.add("scene-control", "ep-menu", "ep-time-panel-button", "control", "ui-control", "layer", "icon", "fa-regular", "fa-clock");
-  button.title = game.i18n.localize('ep2e.time.title');
-  button.role = "tab";
-  anchor.insertAdjacentElement("afterend", button);
+  button.type = "button";
+  button.classList.add("control", "ui-control", "layer", "icon", "fa-regular", "fa-clock", "ep-time-panel-button");
+  button.setAttribute("role", "tab");
+  button.dataset.tooltip = game.i18n.localize('ep2e.time.title');
+  button.setAttribute("aria-label", game.i18n.localize('ep2e.time.title'));
   button.addEventListener("click", () => EPtimePanel.open());
+
+  const entry = document.createElement("li");
+  entry.appendChild(button);
+  menu.appendChild(entry);
 });
 
 // Everything that changes what the panel shows: the clock itself, and effects coming and going.
@@ -879,7 +887,7 @@ Hooks.on("collapseSidebar", () => EPtimePanel.reposition());
 
 Hooks.once("ready", () => {
   window.addEventListener("resize", () => EPtimePanel.reposition());
-  if (game.user.isGM) EPtimePanel.open();
+  if (game.user.isGM || game.settings.get("eclipsephase", "timePanelPlayers")) EPtimePanel.open();
 });
 
 // #token-hud's own bar1/bar2 rows live inside .col.middle, which core pads with a fixed, non-scaling

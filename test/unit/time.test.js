@@ -3,6 +3,10 @@ import {
   formatTimeOfDay,
   worldTimeForDay,
   worldTimeForDate,
+  worldTimeAtTimeOfDay,
+  secondsForClock,
+  secondsForBeat,
+  durationRunOut,
   advanceSeconds,
   minutesForSeconds,
   spanTooltip,
@@ -191,5 +195,78 @@ describe("spanTooltip", () => {
 
   test("a full day reads as a day rather than as hours", () => {
     expect(spanTooltip(DAY)).toEqual("ep2e.time.dayTooltip");
+  });
+});
+
+describe("setting the time of day", () => {
+  test("it keeps the day it is already on", () => {
+    const start = 40 * DAY + 3 * HOUR;
+    expect(elapsedTime(worldTimeAtTimeOfDay(start, secondsForClock(22, 15))))
+      .toMatchObject({ day: 41, hour: 22, minute: 15 });
+  });
+
+  test("midnight and the last second of the day both stay on that day", () => {
+    const start = 7 * DAY + 5 * HOUR;
+    expect(elapsedTime(worldTimeAtTimeOfDay(start, 0)).day).toEqual(8);
+    expect(elapsedTime(worldTimeAtTimeOfDay(start, DAY - 1)).day).toEqual(8);
+  });
+
+  test("a time past the end of the day is clamped rather than rolling over", () => {
+    const start = 7 * DAY;
+    expect(elapsedTime(worldTimeAtTimeOfDay(start, DAY * 5)).day).toEqual(8);
+    expect(elapsedTime(worldTimeAtTimeOfDay(start, -500)).day).toEqual(8);
+  });
+});
+
+describe("secondsForClock", () => {
+  test.each([[0, 0, 0], [6, 14, 6 * HOUR + 840], [23, 59, 23 * HOUR + 59 * 60]])(
+    "%i:%i is %i seconds into the day",
+    (hour, minute, expected) => expect(secondsForClock(hour, minute)).toEqual(expected)
+  );
+
+  test("values outside a clock are clamped, never wrapped", () => {
+    expect(secondsForClock(99, 99)).toEqual(23 * HOUR + 59 * 60);
+    expect(secondsForClock(-5, -5)).toEqual(0);
+  });
+
+  test("anything unusable reads as midnight", () => {
+    expect(secondsForClock(null, undefined)).toEqual(0);
+    expect(secondsForClock("x", "y")).toEqual(0);
+  });
+});
+
+describe("secondsForBeat", () => {
+  test("beat zero is midnight and beat 500 is midday", () => {
+    expect(secondsForBeat(0)).toEqual(0);
+    expect(secondsForBeat(500)).toEqual(DAY / 2);
+  });
+
+  test("it round-trips through elapsedTime for every hundredth beat", () => {
+    for (let beat = 0; beat < 1000; beat += 100) {
+      expect(elapsedTime(secondsForBeat(beat)).beat).toEqual(beat);
+    }
+  });
+
+  test("beats outside the day are clamped", () => {
+    expect(secondsForBeat(1500)).toEqual(secondsForBeat(999));
+    expect(secondsForBeat(-10)).toEqual(0);
+  });
+});
+
+describe("durationRunOut", () => {
+  test("it is true once the remaining time reaches zero, before the expired flag is written", () => {
+    expect(durationRunOut({ duration: { remaining: 0 } })).toBe(true);
+    expect(durationRunOut({ duration: { remaining: -30 } })).toBe(true);
+  });
+
+  test("it is true for an effect already flagged expired", () => {
+    expect(durationRunOut({ duration: { expired: true } })).toBe(true);
+  });
+
+  test("it is false while time is left, and for an effect with no duration at all", () => {
+    expect(durationRunOut({ duration: { remaining: 5 } })).toBe(false);
+    expect(durationRunOut({ duration: { remaining: Infinity } })).toBe(false);
+    expect(durationRunOut({ duration: {} })).toBe(false);
+    expect(durationRunOut({})).toBe(false);
   });
 });

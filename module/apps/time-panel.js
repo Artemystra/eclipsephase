@@ -1,5 +1,5 @@
 import { addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
-import { elapsedTime, formatTimeOfDay, worldTimeForDate, advanceLabel, advanceSeconds, spanTooltip, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
+import { elapsedTime, formatTimeOfDay, worldTimeForDate, worldTimeAtTimeOfDay, secondsForClock, secondsForBeat, advanceLabel, advanceSeconds, spanTooltip, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -41,31 +41,40 @@ export function watchedActors() {
 }
 
 /**
- * Every running effect on the watched characters, flattened into rows the template can render.
- * Item-owned effects are included, since that is where a sleight's or a drug's own effect lives.
- * @returns {Object[]} One row per effect, with its owner, name, remaining label and ids
+ * Every running effect on the watched actors, grouped under the actor carrying them. Item-owned
+ * effects are included, since that is where a sleight's or a drug's own effect lives.
+ * @returns {Object[]} One group per actor, each with its name, count and effect rows
  */
-export function runningEffectRows() {
-  const rows = [];
+export function runningEffectGroups() {
+  const groups = [];
+
   for (const actor of watchedActors()) {
     const owned = [...actor.effects];
     for (const item of actor.items) owned.push(...item.effects);
 
+    const rows = [];
     for (const effect of owned) {
       if (effect.disabled || !isRunningEffect(effect)) continue;
+      const description = effect.description || effect.parent?.system?.description || "";
       rows.push({
         actorId: actor.id,
         effectId: effect.id,
         parentId: effect.parent?.id ?? null,
         onItem: effect.parent !== actor,
-        owner: actor.name,
         name: effect.name,
         expired: effect.duration?.expired === true,
-        remaining: effect.duration?.label ?? ""
+        remaining: effect.duration?.label ?? "",
+        hasInfo: !!description,
+        description
       });
     }
+
+    if (!rows.length) continue;
+    rows.sort((a, b) => a.name.localeCompare(b.name));
+    groups.push({ actorId: actor.id, name: actor.name, count: rows.length, effects: rows });
   }
-  return rows.sort((a, b) => a.owner.localeCompare(b.owner) || a.name.localeCompare(b.name));
+
+  return groups.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -88,13 +97,15 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       restoreRest: EPtimePanel._onRestoreRest,
       toggleAutoReset: EPtimePanel._onToggleAutoReset,
       toggleEffects: EPtimePanel._onToggleEffects,
+      toggleActor: EPtimePanel._onToggleActor,
+      effectInfo: EPtimePanel._onEffectInfo,
+      beatsInfo: EPtimePanel._onBeatsInfo,
       toggleFormat: EPtimePanel._onToggleFormat
     }
   };
 
   /** @inheritDoc */
   _getHeaderControls() {
-    if (!game.user.isGM) return [];
     return [{
       icon: "fas fa-stopwatch",
       label: "ep2e.time.toggleFormat",
@@ -115,6 +126,9 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
 
   // Set once the panel has been dragged, after which it stays where it was put.
   #userMoved = false;
+
+  // Which actors' effect lists are expanded, per client and per session.
+  #openActors = new Set();
 
   static #instance = null;
 
@@ -157,7 +171,8 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
   async _prepareContext() {
     const worldTime = game.time.worldTime;
     const format = game.settings.get("eclipsephase", "timeFormat");
-    const { year, dayOfYear, day } = elapsedTime(worldTime);
+    const { year, dayOfYear, day, hour, minute, beat } = elapsedTime(worldTime);
+    const inBeats = format === BEATS;
 
     return {
       canControl: this.canControl,
@@ -166,7 +181,12 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       day,
       showYear: year > 1,
       timeOfDay: formatTimeOfDay(worldTime, format),
-      inBeats: format === BEATS,
+      inBeats,
+      hour: String(hour).padStart(2, "0"),
+      minute: String(minute).padStart(2, "0"),
+      beat: String(beat).padStart(3, "0"),
+      // Each format's tooltip shows the other one, so either reading is a hover away.
+      clockTooltip: formatTimeOfDay(worldTime, inBeats ? HOURS : BEATS),
       presets: ADVANCE_PRESETS.map(preset => {
         const seconds = advanceSeconds(preset, format);
         const inBeats = format === BEATS && preset.beatLabel;
@@ -179,7 +199,11 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
       }),
       autoReset: game.settings.get("eclipsephase", "rechargeAutoReset"),
       effectsOpen: this.#effectsOpen,
-      effects: runningEffectRows()
+      // A player only ever sees their own character, so grouping by actor would add a level that
+      // never has anything to choose between.
+      grouped: this.canControl,
+      groups: runningEffectGroups().map(group => ({ ...group, open: this.#openActors.has(group.actorId) })),
+      effects: runningEffectGroups().flatMap(group => group.effects)
     };
   }
 
@@ -202,6 +226,9 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
 
     for (const input of html.querySelectorAll(".ep-time-date-input")) {
       input.addEventListener("change", () => this.setDateFromHeader());
+    }
+    for (const input of html.querySelectorAll(".ep-time-clock-input")) {
+      input.addEventListener("change", () => this.setTimeOfDayFromClock());
     }
     EPtimePanel.watchSidebar();
     this.pinToSidebar();
@@ -291,6 +318,21 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
   }
 
   /**
+   * Sets the time of day from the clock fields, keeping the current day. Reads beats or hours and
+   * minutes depending on which the panel is showing.
+   * @returns {Promise<void>} Resolves once the clock is set
+   */
+  async setTimeOfDayFromClock() {
+    const field = name => Number(this.element.querySelector(`[name='${name}']`)?.value);
+    const inBeats = game.settings.get("eclipsephase", "timeFormat") === BEATS;
+    const secondsIntoDay = inBeats
+      ? secondsForBeat(field("beat"))
+      : secondsForClock(field("hour"), field("minute"));
+
+    await game.time.set(worldTimeAtTimeOfDay(game.time.worldTime, secondsIntoDay));
+  }
+
+  /**
    * Switches the panel between hours and beats without going through the settings menu.
    * @returns {Promise<void>} Resolves once the new format is stored
    */
@@ -340,6 +382,54 @@ export default class EPtimePanel extends HandlebarsApplicationMixin(ApplicationV
     const current = game.settings.get("eclipsephase", "rechargeAutoReset");
     await game.settings.set("eclipsephase", "rechargeAutoReset", !current);
     await this.render();
+  }
+
+  /**
+   * Explains what beats are, for anyone meeting Swatch Internet Time for the first time.
+   * @returns {Promise<void>} Resolves once the dialog is dismissed
+   */
+  static async _onBeatsInfo() {
+    await foundry.applications.api.DialogV2.prompt({
+      window: { title: game.i18n.localize("ep2e.time.beatsInfo.title") },
+      content: `<div class="ep-time-effect-info">${game.i18n.localize("ep2e.time.beatsInfo.copy")}</div>`,
+      ok: { label: game.i18n.localize("ep2e.time.close") },
+      modal: true
+    });
+  }
+
+  /**
+   * Expands or collapses one actor's list of running effects.
+   * @param {Event} event - The originating click
+   * @param {HTMLElement} target - The actor row, carrying its id
+   * @returns {Promise<void>} Resolves once the panel has re-rendered
+   */
+  static async _onToggleActor(event, target) {
+    const actorId = target.dataset.actorId;
+    if (this.#openActors.has(actorId)) this.#openActors.delete(actorId);
+    else this.#openActors.add(actorId);
+    await this.render();
+  }
+
+  /**
+   * Shows one effect's description in the system's standard dialog.
+   * @param {Event} event - The originating click
+   * @param {HTMLElement} target - The info icon, carrying the actor, parent and effect ids
+   * @returns {Promise<void>} Resolves once the dialog is dismissed
+   */
+  static async _onEffectInfo(event, target) {
+    const { actorId, parentId, effectId, onItem } = target.dataset;
+    const actor = game.actors.get(actorId);
+    const parent = onItem === "true" ? actor?.items.get(parentId) : actor;
+    const effect = parent?.effects.find(entry => entry.id === effectId);
+    if (!effect) return;
+
+    const description = effect.description || parent?.system?.description || "";
+    await foundry.applications.api.DialogV2.prompt({
+      window: { title: effect.name },
+      content: `<div class="ep-time-effect-info">${description}</div>`,
+      ok: { label: game.i18n.localize("ep2e.time.close") },
+      modal: true
+    });
   }
 
   /**

@@ -1866,6 +1866,13 @@
       "hoursTooltip": "about {hours} h",
       "dayTooltip": "1 day",
       "minutesTooltip": "about {minutes} min",
+      "beatsInfo": {
+        "title": "Beats",
+        "tip": "What are Beats?",
+        "copy": "<p>Beats are Swatch Internet Time, invented by the Swiss watchmaker in 1998. The idea was one single time for the whole planet, with no time zones at all - it never caught on.</p><p>One beat is 1 minute and 26.4 seconds, and a day is exactly 1000 of them, written with an @ in front.</p><p>In a solar system where no two habitats share a sunrise, that turns out to be rather useful: every station can keep its own day and night cycle and still name the same moment as everyone else.</p>"
+      },
+      "moreInfo": "More information",
+      "close": "Close",
       "autoReset": "Auto reset each day",
       "restoreRest": "Reset recharges",
       "restRestored": "Recharge allowances reset.",

@@ -3710,9 +3710,17 @@ li:has(.ep-system-notice) .message-header {
 }
 
 .ep-time-panel .ep-time-titlebar-date {
-  padding: 10px 0 0 16px;
+  /* The titlebar name box is 40px tall, so the fields centre in it rather than being pushed
+     past its bottom edge by the padding the item sheets use for their plain text. */
+  padding: 0 0 0 16px;
   background-color: var(--pitchBorder);
   box-shadow: none;
+  display: flex;
+  align-items: center;
+}
+
+.ep-time-panel .ep-time-date-fields {
+  width: 100%;
 }
 
 .ep-time-panel .ep-time-date-fields {
@@ -3720,41 +3728,62 @@ li:has(.ep-system-notice) .message-header {
   gap: 8px;
 }
 
-/* Labels take only the room their text needs, so each field centres in what is left over. */
+/* Labels stay small and grey, as on the player's side; the numbers big and blue, as on the GM's. */
 .ep-time-panel .ep-time-date-fields > .resource-label {
   flex: 0 0 auto;
   width: max-content;
   white-space: nowrap;
+  font-size: 11px;
+  color: var(--iconGrey);
 }
 
 .ep-time-panel .ep-time-date-fields > .ep-time-date-input,
-.ep-time-panel .ep-time-date-fields > .resource-value {
+.ep-time-panel .ep-time-date-fields > .ep-time-date-value {
   flex: 1 1 auto;
   margin: 0 auto;
   text-align: center;
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--highlight);
+}
+
+.ep-time-panel .ep-time-date-value {
+  font-weight: bold;
+}
+
+/* Inputs follow the system's standard field: pitch ground, grey border, text sized to fit. */
+.ep-time-panel .ep-time-date-input,
+.ep-time-panel .ep-time-clock-input {
+  background: var(--pitchBackground);
+  border: solid 1px var(--highlightBackground);
+  border-radius: 3px;
+  font-family: var(--font-body);
+  height: 28px;
+  padding: 0 4px;
 }
 
 .ep-time-panel .ep-time-date-input {
-  background: transparent;
-  border: none;
-  border-bottom: solid 1px var(--accentBackground);
-  color: var(--highlight);
-  font-family: var(--font-body);
-  font-size: 17px;
-  text-shadow: 0 0 5px #161616;
-  max-width: 62px;
-  min-width: 42px;
+  width: 3.4em;
 }
 
 .ep-time-panel .ep-time-clock {
+  position: relative;
+  display: flex;
+  align-items: baseline;
   justify-content: center;
+  gap: 2px;
   min-height: 0;
   padding: 6px;
   background: var(--pitchBackground);
 }
 
+/* flexrow would give every child flex: 1 and spread the clock apart. */
+.ep-time-panel .ep-time-clock > * {
+  flex: 0 0 auto;
+}
+
 .ep-time-panel .ep-time-big {
-  font-size: 26px;
+  font-size: 22px;
   color: var(--highlight);
 }
 
@@ -3787,21 +3816,24 @@ li:has(.ep-system-notice) .message-header {
   align-items: center;
 }
 
+/* The system's standard button: pitch ground with a grey border. */
 .ep-time-panel .ep-time-step {
-  background: var(--highlightBackground);
-  border: solid 1px var(--accentBackground);
+  background: var(--pitchBackground);
+  border-color: var(--highlightBackground);
   color: var(--mainText);
   font-family: var(--font-body);
   font-size: 12px;
   line-height: 1;
+  min-height: 32px;
   padding: 6px 8px;
   width: auto;
   flex: 0 0 auto;
   cursor: pointer;
 }
 
-.ep-time-panel .ep-time-step:hover {
-  background: var(--accentBackground);
+.ep-time-panel .ep-time-step:hover,
+.ep-time-panel .ep-time-step:focus {
+  box-shadow: 0 0 5px 2px var(--highlight);
 }
 
 .ep-time-panel .ep-time-step.ep-time-wide {
@@ -3873,4 +3905,71 @@ li:has(.ep-system-notice) .message-header {
 .ep-time-panel .ep-time-auto-reset input {
   flex: 0 0 auto;
   margin: 0;
+}
+
+.ep-time-panel .ep-time-clock-input {
+  color: var(--highlight);
+  font-size: 22px;
+  text-align: center;
+  width: 2.6em;
+}
+
+.ep-time-panel .ep-time-beat-input {
+  width: 3.6em;
+}
+
+.ep-time-panel .ep-time-actor-group {
+  margin-bottom: 4px;
+}
+
+.ep-time-panel .ep-time-actor-row {
+  gap: 6px;
+  padding: 4px 0;
+  cursor: pointer;
+  border-bottom: solid 1px var(--pitchBorder);
+}
+
+.ep-time-panel .ep-time-actor-caret {
+  flex: 0 0 auto;
+  width: 12px;
+  color: var(--iconGrey);
+}
+
+.ep-time-panel .ep-time-actor-name {
+  flex: 1 1 auto;
+}
+
+.ep-time-panel .ep-time-actor-count {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--highlight);
+  padding-right: 4px;
+}
+
+.ep-time-panel .ep-time-actor-group .ep-time-effect-row {
+  padding-left: 18px;
+}
+
+.ep-time-panel .ep-time-effect-controls {
+  max-width: 48px;
+  min-width: 48px;
+}
+
+.ep-time-effect-info {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* Parked at the right edge so it never shifts the centred clock. */
+.ep-time-panel .ep-time-beats-info {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--iconGrey);
+  cursor: pointer;
+}
+
+.ep-time-panel .ep-time-beats-info:hover {
+  color: var(--highlight);
 }

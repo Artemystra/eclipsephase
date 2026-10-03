@@ -1,4 +1,4 @@
-import { isRunningEffect, watchedActors, rechargeTargets, runningEffectRows } from "../../module/apps/time-panel.js";
+import { isRunningEffect, watchedActors, rechargeTargets, runningEffectGroups } from "../../module/apps/time-panel.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
 /**
@@ -72,33 +72,67 @@ describe("whose effects the list shows", () => {
   });
 });
 
-describe("runningEffectRows", () => {
-  test("it reports a timed effect with its owner and marks whether it sits on an item", () => {
-    const actor = makeActor({
+describe("the running-effects list", () => {
+  test("it groups effects under the actor carrying them, with a count", () => {
+    makeActor({
       type: "character",
       name: "Hex",
       effects: [{ name: "Kick", duration: { value: 8, units: "hours" } }],
       items: [{ _id: "sleight1", name: "Bolt", type: "aspect", system: { active: true }, effects: [{ name: "Bolt", flags: { eclipsephase: { chiPushBoost: true } } }] }]
     });
-    assignToPlayer(actor);
 
-    const rows = runningEffectRows();
-    expect(rows.map(row => row.name)).toEqual(["Bolt", "Kick"]);
-    expect(rows.find(row => row.name === "Kick")).toMatchObject({ owner: "Hex", onItem: false });
-    expect(rows.find(row => row.name === "Bolt")).toMatchObject({ owner: "Hex", onItem: true });
+    const groups = runningEffectGroups();
+    expect(groups).toHaveLength(1);
+    expect(groups[0]).toMatchObject({ name: "Hex", count: 2 });
+    expect(groups[0].effects.map(row => row.name)).toEqual(["Bolt", "Kick"]);
   });
 
-  test("a permanent effect is left out", () => {
-    assignToPlayer(makeActor({ type: "character", name: "Hex", effects: [{ name: "Neurachem" }] }));
-    expect(runningEffectRows()).toEqual([]);
+  test("it marks which effects sit on an item", () => {
+    makeActor({
+      type: "character",
+      name: "Hex",
+      effects: [{ name: "Kick", duration: { value: 8, units: "hours" } }],
+      items: [{ _id: "sleight1", name: "Bolt", type: "aspect", system: { active: true }, effects: [{ name: "Bolt", flags: { eclipsephase: { chiPushBoost: true } } }] }]
+    });
+
+    const rows = runningEffectGroups()[0].effects;
+    expect(rows.find(row => row.name === "Kick").onItem).toBe(false);
+    expect(rows.find(row => row.name === "Bolt").onItem).toBe(true);
+  });
+
+  test("an actor with nothing running is left out entirely", () => {
+    makeActor({ type: "character", name: "Hex", effects: [{ name: "Neurachem" }] });
+    expect(runningEffectGroups()).toEqual([]);
   });
 
   test("an expired effect is still listed, flagged as expired", () => {
-    assignToPlayer(makeActor({
+    makeActor({
       type: "character",
       name: "Hex",
       effects: [{ name: "Kick", duration: { value: 8, units: "hours", expired: true } }]
-    }));
-    expect(runningEffectRows()[0]).toMatchObject({ name: "Kick", expired: true });
+    });
+    expect(runningEffectGroups()[0].effects[0]).toMatchObject({ name: "Kick", expired: true });
+  });
+
+  test("an effect carrying a description offers an info icon, one without does not", () => {
+    makeActor({
+      type: "character",
+      name: "Hex",
+      effects: [
+        { name: "Kick", description: "A strong stimulant.", duration: { value: 8, units: "hours" } },
+        { name: "Bare", duration: { value: 1, units: "hours" } }
+      ]
+    });
+
+    const rows = runningEffectGroups()[0].effects;
+    expect(rows.find(row => row.name === "Kick")).toMatchObject({ hasInfo: true, description: "A strong stimulant." });
+    expect(rows.find(row => row.name === "Bare").hasInfo).toBe(false);
+  });
+
+  test("groups come back in actor-name order", () => {
+    for (const name of ["Zara", "Alix"]) {
+      makeActor({ type: "character", name, effects: [{ name: "Kick", duration: { value: 1, units: "hours" } }] });
+    }
+    expect(runningEffectGroups().map(group => group.name)).toEqual(["Alix", "Zara"]);
   });
 });

@@ -71,6 +71,13 @@ describe("pushing a chi sleight", () => {
     expect(boost.duration.expiry).toBeNull();
   });
 
+  test("the boost puts no icon on the token", async () => {
+    const actor = asyncWithChiSleight(25);
+    await pushChiSleight(actor, "chi1");
+    const boost = actor.items.get("chi1").effects.find(effect => effect.getFlag("eclipsephase", "chiPushBoost"));
+    expect(boost.showIcon).toEqual(CONST.ACTIVE_EFFECT_SHOW_ICON.NEVER);
+  });
+
   test("the sleight is marked pushed", async () => {
     const actor = asyncWithChiSleight(25);
     await pushChiSleight(actor, "chi1");

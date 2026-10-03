@@ -1,4 +1,5 @@
-import { hasBiomods, rechargeDurationKey, stampedDay, rechargeResetUpdate } from "../../module/common/recharge.js";
+import { hasBiomods, rechargeDurationKey, stampedDay, rechargeResetUpdate, resetRechargesForNewDay } from "../../module/common/recharge.js";
+import { setSetting } from "../setup/factories.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
 /**
@@ -63,5 +64,63 @@ describe("the day-change reset", () => {
     }
     const shop = makeActor({ type: "vehicle", flags: { eclipsephase: { rechargeDay: 1 } } });
     expect(rechargeResetUpdate(shop, 2)).toBeNull();
+  });
+});
+
+describe("resetting the whole world on a day change", () => {
+  /**
+   * A character already stamped on an earlier day, with every allowance spent.
+   * @param {String} name - The character's name
+   * @returns {Actor} The character
+   */
+  function spentCharacter(name) {
+    return makeActor({
+      type: "character",
+      name,
+      system: { rest: { short1: true, short2: true, shortExtra: true, long: true } },
+      flags: { eclipsephase: { rechargeDay: 1 } }
+    });
+  }
+
+  beforeEach(() => {
+    setSetting("eclipsephase", "rechargeAutoReset", true);
+    game.users.activeGM = { isSelf: true };
+    game.time.worldTime = 86400 * 5;
+  });
+
+  test("every spent allowance comes back", async () => {
+    const actor = spentCharacter("Hex");
+    await resetRechargesForNewDay();
+    expect(actor.system.rest).toMatchObject({ short1: false, short2: false, shortExtra: false, long: false });
+  });
+
+  test("the actor is stamped with the new day, so it does not reset twice", async () => {
+    const actor = spentCharacter("Hex");
+    await resetRechargesForNewDay();
+    expect(stampedDay(actor)).toEqual(6);
+
+    await actor.update({ "system.rest.long": true });
+    await resetRechargesForNewDay();
+    expect(actor.system.rest.long).toBe(true);
+  });
+
+  test("nothing happens while the setting is off", async () => {
+    setSetting("eclipsephase", "rechargeAutoReset", false);
+    const actor = spentCharacter("Hex");
+    await resetRechargesForNewDay();
+    expect(actor.system.rest.long).toBe(true);
+  });
+
+  test("it runs only on the active GM's client, so it is not done once per player", async () => {
+    game.users.activeGM = { isSelf: false };
+    const actor = spentCharacter("Hex");
+    await resetRechargesForNewDay();
+    expect(actor.system.rest.long).toBe(true);
+  });
+
+  test("it runs with no GM connected at all without throwing", async () => {
+    game.users.activeGM = null;
+    spentCharacter("Hex");
+    await expect(resetRechargesForNewDay()).resolves.toBeUndefined();
   });
 });

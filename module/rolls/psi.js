@@ -4,6 +4,7 @@ import * as pools from "./pools.js";
 import { gmList, prepareRecipients, inheritChatVisibility, readRollContext } from "../common/general-sheet-functions.js";
 import { effectRuleKey } from "../common/general-helper-functions.js";
 import { getStrainFamily, listStrainFamilies } from "./strain-families.js";
+import { durationRunOut } from "../common/time.js";
 import { strainSubstrate } from "../common/body-markers.js";
 
 const CHI_PUSH_OUTPUT = "systems/eclipsephase/templates/chat/chi-push.html";
@@ -130,18 +131,6 @@ export function chiPushMinutes(actorWhole){
 }
 
 /**
- * Whether an effect's duration has run out. Checked on the remaining time rather than on the
- * expired flag, because Foundry reports the change to the actor before it writes that flag.
- * @param {ActiveEffect} effect - The effect to judge
- * @returns {Boolean} True when nothing is left to run
- */
-function runOut(effect){
-    if (effect.duration?.expired === true) return true;
-    const remaining = effect.duration?.remaining;
-    return Number.isFinite(remaining) && remaining <= 0;
-}
-
-/**
  * Ends every chi push whose duration has run out, called when Foundry reports that a tracked
  * effect's remaining time changed. Expiry only marks an effect, so the pool bump a push applied
  * has to be reversed here rather than left to core.
@@ -151,7 +140,7 @@ function runOut(effect){
  */
 export async function endExpiredChiPushes(actorWhole, effects){
     const expired = effects.filter(effect =>
-        effect.getFlag?.("eclipsephase", "chiPushBoost") === true && runOut(effect));
+        effect.getFlag?.("eclipsephase", "chiPushBoost") === true && durationRunOut(effect));
 
     for (const effect of expired) {
         const item = effect.parent;
@@ -190,6 +179,8 @@ export async function pushChiSleight(actorWhole, itemId){
             // Foundry stamps start only on actor-owned effects, and this one lives on the item, so
             // it has to be supplied here or the duration would never be tracked.
             start: ActiveEffect.getEffectStart(),
+            // A duration would otherwise put an icon on the token, which this system does not want.
+            showIcon: CONST.ACTIVE_EFFECT_SHOW_ICON.NEVER,
             flags: { eclipsephase: { chiPushBoost: true } }
         };
         if (isV14Plus) newEffectData.system = { changes };
