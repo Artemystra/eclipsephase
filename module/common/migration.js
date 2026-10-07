@@ -1,3 +1,5 @@
+import { normaliseDrugSystem } from "./drugs.js";
+
 export async function migrationLegacy(startMigration, endMigration){
     if (startMigration){
   
@@ -2607,6 +2609,55 @@ export async function migrationPre25(startMigration, endMigration) {
 
   await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   uiBar.done(`Migration finished (${doneCount}/${total})`);
+  return { endMigration: true };
+}
+
+/**
+ * The repairs a drug's stored data needs to match the 2.7 schema, where a duration written as
+ * free text becomes a span and a pack gains the dose counter it is bought with. Read from the
+ * stored source rather than the prepared data, which repairs itself on every read and would
+ * therefore always look migrated.
+ * @param {Item} item - The drug item
+ * @returns {Object|null} The system changes to apply, or null when it is already current
+ */
+function _ep27_drugRepairs(item) {
+  return normaliseDrugSystem(item._source?.system ?? item.system);
+}
+
+/**
+ * Whether any drug in the world still carries data from before the 2.7 schema.
+ * @returns {Boolean} True when at least one drug needs rewriting
+ */
+export function migrationPre27Needed() {
+  const needs = item => item.type === "drug" && _ep27_drugRepairs(item) !== null;
+  return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
+}
+
+/**
+ * Rewrites every drug in the world into the 2.7 schema: the world's own items, every actor's
+ * embedded ones and the world's item compendiums. A duration that cannot be read lands as
+ * open-ended instead of stopping the run.
+ * @param {Boolean} startMigration - Whether the user confirmed the migration
+ * @returns {Promise<Object>} Whether the closing notice is due
+ */
+export async function migrationPre27(startMigration) {
+  const latestUpdate = "2.7";
+  if (!startMigration) return { endMigration: false };
+
+  await forEachItem(async item => {
+    const repairs = _ep27_drugRepairs(item);
+    if (!repairs) return;
+
+    const update = {};
+    for (const [key, value] of Object.entries(repairs)) update[`system.${key}`] = value;
+    await item.update(update);
+  }, {
+    label: `EP Migration ${latestUpdate}`,
+    filter: item => item.type === "drug",
+    includeCompendiums: true
+  });
+
+  await game.settings.set("eclipsephase", "migrationVersion", latestUpdate);
   return { endMigration: true };
 }
 

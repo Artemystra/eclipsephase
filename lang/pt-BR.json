@@ -166,6 +166,8 @@
       "popUp": {
         "needPuppetSockToJam": "Requer um Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Aviso:</b> Isto excluirá o item de sua ficha permanentemente",
+        "deleteStackCopy": "<b>Aviso:</b> Voce vai excluir de uma pilha. Escolha quantos devem sair - o resto permanece na sua ficha.",
+        "deleteStackLabel": "Quantidade a excluir",
         "deleteArmorWithBodyCopy": "<b>Aviso:</b>Você está prestes a excluir {body}. Este corpo tem Armadura atribuída a ele - excluir {body} também excluirá sua Armadura.",
         "stashArmorCopy": "Deseja guardar {name}? Você o encontrará no seu inventário quando quiser.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Para excluir itens sem ver esse pop-up segure SHIFT enquanto pressiona o botão Excluir.</p></i>",
@@ -1116,6 +1118,17 @@
       "drug": {
         "table": {
           "duration": "Duração",
+          "durationUnits": {
+            "label": "Unidade",
+            "none": "Indefinido",
+            "rounds": "Turnos de acao",
+            "seconds": "Segundos",
+            "minutes": "Minutos",
+            "hours": "Horas",
+            "days": "Dias"
+          },
+          "usagesMax": "Doses",
+          "usagesTip": "Usadas / Max",
           "addictionModifier": "Mod de Vício",
           "addictionType": "Tipo de Vício",
           "applicationVectors": {

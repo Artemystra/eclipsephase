@@ -4,6 +4,7 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
+import { packIsSealed } from "../common/drugs.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
@@ -766,7 +767,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
             if (item.type === "drug"){
               itemModel.slotName = "ep2e.item.general.table.slot.drug";
-              if (item.system.active){
+              if (item.system.active && packIsSealed(item.system)){
                 ammo.chemical.push(item);
               }
             }
@@ -1233,7 +1234,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       if (!allowed) return null;
     }
 
-    const created = await actor.createEmbeddedDocuments("Item", [itemData]);
+    const created = SHEET.STACKABLE_TYPES.includes(itemData.type)
+      ? [await SHEET.mergeOrCreateItem(actor, itemData)]
+      : await actor.createEmbeddedDocuments("Item", [itemData]);
 
     if (pendingMessage) {
       systemMessage(pendingMessage.type, pendingMessage.key, pendingMessage.data);
@@ -1346,6 +1349,21 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (!askForOptions) {
           const item = actor.items.get(itemId);
           const itemName = li.dataset.itemName ? li.dataset.itemName : null;
+          const stackSize = Number(item?.system?.quantity);
+
+          if (SHEET.STACKABLE_TYPES.includes(item?.type) && stackSize > 1) {
+            const chosen = await SHEET.stackDeletion(itemName, stackSize);
+            if (!chosen.confirm) return;
+
+            if (chosen.count >= stackSize) {
+              await actor.deleteEmbeddedDocuments("Item", [itemId]);
+              HELPER.slideUp(li, 200, () => this.render(false));
+            }
+            else {
+              await item.update({ "system.quantity": stackSize - chosen.count });
+            }
+            return;
+          }
 
           if (item?.type === "morph" || item?.type === "vehicle") {
             let bucketKey = itemId;
@@ -1842,7 +1860,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     
   }
 
-  _onSkillEdit(event) {
+  async _onSkillEdit(event) {
     event.preventDefault();
 
     const element = event.currentTarget;
@@ -1857,6 +1875,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
 
     const field = element.dataset.field;
     if (!field) return;
+
+    if (SHEET.emptiesStack(item, field, element.value)) {
+      await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+      HELPER.slideUp(itemElement, 200, () => this.render(false));
+      return;
+    }
 
     return item.update({ [field]: element.value });
   }

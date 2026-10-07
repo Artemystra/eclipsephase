@@ -13,7 +13,7 @@
     "additionalSystems": {},
     "description": "Neural Damage: Logorrhea, –30 Deceive,  –30 SAV/WIL Checks vs. interrogation.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "moderate",
     "slotType": "consumable",
@@ -23,10 +23,15 @@
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "1 hour",
+    "duration": {
+      "value": 1,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5
   },
   "ownership": {
     "default": 0,

@@ -13,7 +13,7 @@
     "additionalSystems": {},
     "description": "+10 Psi skill.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "major",
     "slotType": "consumable",
@@ -23,10 +23,15 @@
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "8 hours",
+    "duration": {
+      "value": 8,
+      "units": "hours"
+    },
     "addictionMod": "-10",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5
   },
   "ownership": {
     "default": 0,

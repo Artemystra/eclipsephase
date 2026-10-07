@@ -296,6 +296,29 @@
       {{/if}}
       {{/if}}
 
+      <!-- How many of a stacked item to delete (EPactorSheet.js item-delete handler)-->
+      {{#if (eq dialogType "deleteStack")}}
+      <div class="item" style="margin-bottom: 10px;">
+          {{#if popUpHeadline}}
+          <div class="flexrow subheader">
+              <h3 class="subheader dialog" style="clip-path: none;">{{localize popUpHeadline}}</h3>
+          </div>
+          {{/if}}
+          <div class="listBackgroundMain alignLeft">
+            <p>{{{localize popUpCopy}}}</p>
+            {{{localize popUpInfo}}}
+          </div>
+      </div>
+      <div class="contentBoxMargin">
+          <div class="flexrow subheader">
+              <h3 class="subheader dialog">{{localize "ep2e.actorSheet.popUp.deleteStackLabel"}}</h3>
+          </div>
+          <div class="form-group listBackgroundMain" style="display: flex; justify-content: center;">
+              <input class="input-small alignCenter" type="number" name="count" min="1" max="{{stackSize}}" value="1"/>
+          </div>
+      </div>
+      {{/if}}
+
       <!-- Replace Skills with bot AI skills (Confirm/Cancel) (EPvehicleSheet.js line 63 onwards)-->
       {{#if (eq dialogType "autoBot")}}
       <div class="item" style="margin-bottom: 10px;">

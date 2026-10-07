@@ -214,6 +214,15 @@ eclipsephase.drugTypes = {
     electronic: "Electronic"
 }
 
+eclipsephase.drugDurationUnits = {
+    "": "ep2e.item.drug.table.durationUnits.none",
+    rounds: "ep2e.item.drug.table.durationUnits.rounds",
+    seconds: "ep2e.item.drug.table.durationUnits.seconds",
+    minutes: "ep2e.item.drug.table.durationUnits.minutes",
+    hours: "ep2e.item.drug.table.durationUnits.hours",
+    days: "ep2e.item.drug.table.durationUnits.days"
+}
+
 eclipsephase.drugAddicitonTypes = {
     none: "Select",
     physical: "Physical",

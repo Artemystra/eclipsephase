@@ -391,6 +391,7 @@ Hooks.once("ready", async function() {
   let before215 = foundry.utils.isNewerVersion("2.1.5", gameVersion);
   let before23 = foundry.utils.isNewerVersion("2.3", gameVersion);
   let before25 = foundry.utils.isNewerVersion("2.5", gameVersion);
+  let before27 = foundry.utils.isNewerVersion("2.7", gameVersion);
   //For testing against the latest version: game.system.version
 
 
@@ -667,6 +668,28 @@ Hooks.once("ready", async function() {
 
     let Migration25 = await update.migrationPre25(startMigration);
     endMigration = Migration25["endMigration"];
+  }
+
+    if(endMigration){
+      await migrationEnd(endMigration)
+  }
+
+  // 2.6 changed no data, so the drug schema is the first migration since 2.5. A world holding no
+  // drug that predates it is stamped silently rather than being asked about nothing.
+  if (before27 && !update.migrationPre27Needed()) {
+    endMigration = false;
+    await game.settings.set("eclipsephase", "migrationVersion", "2.7");
+  }
+  else if (before27) {
+    endMigration = false;
+    const messageCopy = "ep2e.migration.27";
+    let migration = await migrationStart(endMigration, messageHeadline, messageCopy, 900);
+
+    if (migration.cancelled) return;
+    startMigration = migration.start;
+
+    let Migration27 = await update.migrationPre27(startMigration);
+    endMigration = Migration27["endMigration"];
   }
 
     if(endMigration){

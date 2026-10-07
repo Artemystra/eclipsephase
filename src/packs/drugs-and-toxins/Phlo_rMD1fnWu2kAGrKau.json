@@ -13,7 +13,7 @@
     "additionalSystems": {},
     "description": "+1 Vigor, can use Vigor twice on same test.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "major",
     "slotType": "consumable",
@@ -23,10 +23,15 @@
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "3 hours",
+    "duration": {
+      "value": 3,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5
   },
   "ownership": {
     "default": 0,

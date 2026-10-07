@@ -57,7 +57,7 @@ describe("the migration ladder's closing dialog", () => {
 
   test("it still ends up stamped at the current version", async () => {
     await runLadderFrom("2.1.5");
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.5");
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
   });
 
   test("a world with nothing to migrate is not told anything at all", async () => {
@@ -92,7 +92,7 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
     const rendered = await runLadderFrom("2.1.5");
 
     expect(offers(rendered)).toHaveLength(1);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.5");
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
   });
 
   test("a world with no Ki data is offered the notice without the Ki block", async () => {
@@ -105,6 +105,70 @@ describe("2.2 and 2.3 arrive as part of 2.5", () => {
     const rendered = await runLadderFrom("2.3");
 
     expect(rendered).toEqual([]);
-    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual("2.5");
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+  });
+});
+
+describe("the 2.7 drug schema", () => {
+  /**
+   * Puts a world item into the world for the length of one test.
+   * @param {Object} data - The item source data
+   * @returns {Item} The item, already registered
+   */
+  function worldItem(data) {
+    const item = new CONFIG.Item.documentClass(data);
+    game.items.set(item.id, item);
+    return item;
+  }
+
+  test("a world holding a drug from before the schema is offered the notice", async () => {
+    const drug = worldItem({ name: "Grin", type: "drug", system: { duration: "3 hours" } });
+
+    try {
+      const rendered = await runLadderFrom("2.5");
+      expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.27");
+    } finally {
+      game.items.delete(drug.id);
+    }
+  });
+
+  test("running it rewrites that drug's duration into a span and gives it an untouched pack", async () => {
+    const drug = worldItem({ name: "Grin", type: "drug", system: { duration: "3 hours" } });
+
+    try {
+      await runLadderFrom("2.5");
+      expect(drug.system.duration).toEqual({ value: 3, units: "hours" });
+      expect(drug.system.usagesUsed).toEqual(0);
+      expect(drug.system.usagesMax).toEqual(5);
+    } finally {
+      game.items.delete(drug.id);
+    }
+  });
+
+  test("a drug whose duration never ended on its own is left open-ended rather than refused", async () => {
+    const drug = worldItem({ name: "Retcon", type: "drug", system: { duration: "Permanent" } });
+
+    try {
+      await runLadderFrom("2.5");
+      expect(drug.system.duration).toEqual({ value: null, units: "" });
+    } finally {
+      game.items.delete(drug.id);
+    }
+  });
+
+  test("a world whose drugs are already current is stamped without being asked", async () => {
+    const drug = worldItem({
+      name: "Grin",
+      type: "drug",
+      system: { duration: { value: 3, units: "hours" }, usagesUsed: 0, usagesMax: 5 }
+    });
+
+    try {
+      const rendered = await runLadderFrom("2.5");
+      expect(rendered).toEqual([]);
+      expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+    } finally {
+      game.items.delete(drug.id);
+    }
   });
 });

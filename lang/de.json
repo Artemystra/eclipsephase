@@ -169,6 +169,8 @@
       },
       "popUp": {
         "deleteCopyGeneral": "<b>Vorsicht:</b>Das Item wird permanent gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        "deleteStackCopy": "<b>Vorsicht:</b>Du loeschst aus einem Stapel. Waehle, wie viele verschwinden sollen - der Rest bleibt auf deinem Bogen.",
+        "deleteStackLabel": "Anzahl zu loeschen",
         "deleteArmorWithBodyCopy": "<b>Vorsicht:</b>Du bist dabei, {body} zu löschen. Diesem Körper ist Rüstung zugewiesen - beim Löschen von {body} wird auch seine Rüstung gelöscht.",
         "stashArmorCopy": "Möchtest du {name} verstauen? Du findest es jederzeit in deinem Inventar wieder.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>Um Items direkt zu löschen ohne diese Nachricht zu sehen halte SHIFT gedrückt, während du auf den Löschen-Button klickst.</p></i>",
@@ -1137,6 +1139,17 @@
       "drug": {
         "table": {
           "duration": "Dauer",
+          "durationUnits": {
+            "label": "Einheit",
+            "none": "Offen",
+            "rounds": "Handlungsrunden",
+            "seconds": "Sekunden",
+            "minutes": "Minuten",
+            "hours": "Stunden",
+            "days": "Tage"
+          },
+          "usagesMax": "Dosen",
+          "usagesTip": "Benutzt / Max",
           "addictionModifier": "Suchtmod",
           "addictionType": "Suchttyp",
           "applicationVectors": {

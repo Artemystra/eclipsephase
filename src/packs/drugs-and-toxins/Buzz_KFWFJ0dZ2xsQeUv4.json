@@ -13,7 +13,7 @@
     "additionalSystems": {},
     "description": "Hallucinations, –30 suggestive SAV/WIL Checks.",
     "active": true,
-    "displayCategory": "gear",
+    "displayCategory": "consumable",
     "updated": "",
     "cost": "moderate",
     "slotType": "consumable",
@@ -23,10 +23,15 @@
     "injection": true,
     "oral": true,
     "drugType": "biochem",
-    "duration": "36 hours",
+    "duration": {
+      "value": 36,
+      "units": "hours"
+    },
     "addictionMod": "-",
     "addictionType": "none",
-    "quantity": 1
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5
   },
   "ownership": {
     "default": 0,

@@ -165,6 +165,8 @@
       "popUp": {
         "needPuppetSockToJam": "需要 Puppet Sock 才能 Jam",
         "deleteCopyGeneral": "<b>警告:</b>这会将物品从你的人物卡中永远删除。",
+        "deleteStackCopy": "<b>警告:</b>你将从一组物品中删除。请选择删除数量，其余的会留在你的人物卡上。",
+        "deleteStackLabel": "删除数量",
         "deleteArmorWithBodyCopy": "<b>警告:</b>你即将删除{body}。这具身体上绑定了护甲——删除{body}也会一并删除其护甲。",
         "stashArmorCopy": "要收纳{name}吗？你可以随时在物品栏中找到它。",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>若需略过删除物品时的提示框，请按住SHIFT建的同时点击删除键。</p></i>",
@@ -1115,6 +1117,17 @@
       "drug": {
         "table": {
           "duration": "持续时间",
+          "durationUnits": {
+            "label": "单位",
+            "none": "无限",
+            "rounds": "行动轮",
+            "seconds": "秒",
+            "minutes": "分钟",
+            "hours": "小时",
+            "days": "天"
+          },
+          "usagesMax": "剂量",
+          "usagesTip": "已用 / 上限",
           "addictionModifier": "成瘾调整值",
           "addictionType": "成瘾类型",
           "applicationVectors": {

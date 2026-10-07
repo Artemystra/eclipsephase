@@ -1188,10 +1188,20 @@
       "injection": false,
       "oral": false,
       "drugType": "",
-      "duration": null,
+      "duration": {
+        "value": null,
+        "units": ""
+      },
       "addictionMod": null,
       "addictionType": "",
       "quantity": 1,
+      "usagesUsed": 0,
+      "usagesMax": 5,
+      "wearOff": {
+        "sv": ""
+      },
+      "rollOptions": [],
+      "blocksPsi": false,
       "displayCategory": "consumable",
       "slotType": "consumable"
     },

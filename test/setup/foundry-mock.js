@@ -48,6 +48,22 @@ function deepClone(value) {
 }
 
 /**
+ * Whether a dot-notation path exists on an object, matching foundry.utils.hasProperty.
+ * @param {Object} object - The object to look in
+ * @param {String} key - The dot-notation path
+ * @returns {Boolean} True when the path resolves to a defined value
+ */
+function hasProperty(object, key) {
+  if (!object || !key) return false;
+  let target = object;
+  for (const step of String(key).split(".")) {
+    if (target === null || typeof target !== "object" || !(step in target)) return false;
+    target = target[step];
+  }
+  return true;
+}
+
+/**
  * Recursive merge of source into target, matching foundry.utils.mergeObject with default options.
  * @param {Object} target - The object mutated in place
  * @param {Object} source - The object read from
@@ -277,6 +293,18 @@ class MockDocument {
     return `${parentPart}${this.documentName}.${this.id}`;
   }
 
+  async _preCreate() {}
+
+  async _preUpdate() {}
+
+  updateSource(changes = {}) {
+    for (const [key, value] of Object.entries(changes)) {
+      setProperty(this._source, key, deepClone(value));
+      setProperty(this, key, deepClone(value));
+    }
+    return changes;
+  }
+
   getFlag(scope, key) {
     return getProperty(this.flags, `${scope}.${key}`);
   }
@@ -463,6 +491,53 @@ class MockActor extends MockDocument {
 
   get isOwner() {
     return true;
+  }
+
+  // Items are embedded documents too, and the system creates, updates and deletes them at runtime
+  // for stacking, reloading and using up a consumable. Anything else still goes to MockDocument,
+  // which models the ActiveEffect collection.
+  async createEmbeddedDocuments(documentName, dataArray = []) {
+    if (documentName !== "Item") return super.createEmbeddedDocuments(documentName, dataArray);
+
+    const created = [];
+    for (const data of dataArray) {
+      const type = data.type ?? "gear";
+      const defaults = deepClone(global.game.model?.Item?.[type] ?? {});
+      const item = new global.CONFIG.Item.documentClass(
+        { ...data, type, system: mergeObject(defaults, data.system ?? {}) },
+        { parent: this }
+      );
+      if (typeof item._preCreate === "function") await item._preCreate(data, {}, global.game.user);
+      await item.prepareData();
+      this.items.set(item.id, item);
+      uuidRegistry.set(item.uuid, item);
+      created.push(item);
+    }
+    this.prepareData();
+    return created;
+  }
+
+  async updateEmbeddedDocuments(documentName, updates = []) {
+    if (documentName !== "Item") return super.updateEmbeddedDocuments?.(documentName, updates) ?? [];
+
+    const updated = [];
+    for (const { _id, ...changes } of updates) {
+      const item = this.items.get(_id);
+      if (!item) continue;
+      await item.update(changes);
+      updated.push(item);
+    }
+    this.prepareData();
+    return updated;
+  }
+
+  async deleteEmbeddedDocuments(documentName, ids = []) {
+    if (documentName !== "Item") return super.deleteEmbeddedDocuments(documentName, ids);
+
+    const removed = ids.map(id => this.items.get(id)).filter(Boolean);
+    for (const item of removed) this.items.delete(item.id);
+    this.prepareData();
+    return removed;
   }
 
   *allApplicableEffects() {
@@ -763,6 +838,7 @@ global.foundry = {
     duplicate: deepClone,
     getProperty,
     setProperty,
+    hasProperty,
     expandObject,
     getType,
     isNewerVersion,

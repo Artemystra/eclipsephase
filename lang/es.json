@@ -166,6 +166,8 @@
       "popUp": {
         "needPuppetSockToJam": "Se necesita un Puppet Sock para usar Jam",
         "deleteCopyGeneral": "<b>Warning:</b>This will delete the item from your sheet permanently",
+        "deleteStackCopy": "<b>Advertencia:</b>Vas a eliminar de una pila. Elige cuantos deben desaparecer - el resto permanece en tu hoja.",
+        "deleteStackLabel": "Cantidad a eliminar",
         "deleteArmorWithBodyCopy": "<b>Advertencia:</b>Estás a punto de eliminar {body}. Este cuerpo tiene Armadura asignada - al eliminar {body} también se eliminará su Armadura.",
         "stashArmorCopy": "¿Quieres guardar {name}? Lo encontrarás en tu inventario cuando quieras.",
         "deleteAdditionalInfo": "<i><p style='font-size: 11px;'>To delete items without seeing this pop-up press SHIFT while hitting the delete button.</p></i>",
@@ -1116,6 +1118,17 @@
       "drug": {
         "table": {
           "duration": "Duration",
+          "durationUnits": {
+            "label": "Unidad",
+            "none": "Indefinido",
+            "rounds": "Turnos de accion",
+            "seconds": "Segundos",
+            "minutes": "Minutos",
+            "hours": "Horas",
+            "days": "Dias"
+          },
+          "usagesMax": "Dosis",
+          "usagesTip": "Usadas / Max",
           "addictionModifier": "Addiction Mod",
           "addictionType": "Addiction Type",
           "applicationVectors": {

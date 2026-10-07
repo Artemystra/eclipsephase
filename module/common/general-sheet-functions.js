@@ -305,6 +305,68 @@ export function itemCreate(event,callerobj){
  * @param {String} itemID - The ID of the item to be deleted
  * @param {Number} itemQuantity - The quantity of the items to be deleted
  */
+/**
+ * Whether an inline quantity edit has emptied a stack, which takes the item off the sheet rather
+ * than leaving a row holding nothing. Only the types carried as a stack are removed this way.
+ * Clearing the field counts the same as typing a nought, since both leave the stack at nothing.
+ * @param {Object} item - The item being edited
+ * @param {String} field - The edited field's data path
+ * @param {*} value - The value just entered
+ * @returns {Boolean} True when the item should go
+ */
+export function emptiesStack(item, field, value){
+  if (field !== "system.quantity") return false;
+  if (!STACKABLE_TYPES.includes(item?.type)) return false;
+  if (value === null || value === undefined) return false;
+  const quantity = Number(value);
+  return Number.isFinite(quantity) && quantity <= 0;
+}
+
+/**
+ * Asks how many of a stacked item to delete. Defaults to one, so pressing delete on a stack never
+ * takes the whole stack with it by accident.
+ * @param {String} itemName - The item's name, shown in the headline
+ * @param {Number} stackSize - How many the stack holds, which caps the answer
+ * @returns {Promise<Object>} confirm, plus the count to delete clamped to the stack
+ */
+export async function stackDeletion(itemName, stackSize){
+  if (game.eclipsephase?.testing?.autoConfirm) return { confirm: true, count: 1 };
+
+  const template = "systems/eclipsephase/templates/chat/pop-up.html";
+  const content = await foundry.applications.handlebars.renderTemplate(template, {
+    dialogType: "deleteStack",
+    popUpHeadline: `${game.i18n.localize("ep2e.actorSheet.button.delete")} ${itemName ?? ""}`,
+    popUpCopy: "ep2e.actorSheet.popUp.deleteStackCopy",
+    popUpInfo: "ep2e.actorSheet.popUp.deleteAdditionalInfo",
+    stackSize
+  });
+
+  const result = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded") },
+    classes: ["ep2e-primary-right"],
+    content,
+    buttons: [
+      {
+        action: "confirm",
+        label: game.i18n.localize("ep2e.actorSheet.button.delete"),
+        default: true,
+        callback: (event, button) => Number(button.form.count.value)
+      },
+      {
+        action: "cancel",
+        label: game.i18n.localize("ep2e.roll.dialog.button.cancel"),
+        callback: () => false
+      }
+    ],
+    modal: true,
+    rejectClose: false,
+    position: { width: 250 }
+  });
+
+  if (!Number.isFinite(result)) return { confirm: false, count: 0 };
+  return { confirm: true, count: Math.min(stackSize, Math.max(1, Math.floor(result))) };
+}
+
 export async function itemReduction(actor, itemID, itemQuantity){
   let quantity = Number(itemQuantity) - 1;
   let ammoUpdate = [];
@@ -1393,6 +1455,32 @@ export function addMinimizeSupport(sheet, handle) {
   });
 }
 
+// The item types carried as a stack rather than as one object per instance: each holds a quantity
+// and sits in the consumable slot, so a second copy of the same name is simply a bigger stack.
+export const STACKABLE_TYPES = ["drug", "ammo", "grenade"];
+
+/**
+ * Adds an incoming item to the actor's existing stack of the same type and name, or creates it
+ * when there is none to join. Shared by the actor-to-actor transfer and the drop of a fresh item
+ * from a compendium, so the two paths cannot disagree about what stacks.
+ * @param {Actor} actor - The actor receiving the item
+ * @param {Object} itemData - The incoming item's source data
+ * @returns {Promise<Item>} The stack that grew, or the item that was created
+ */
+export async function mergeOrCreateItem(actor, itemData) {
+  const existing = actor.items.find(i => i.type === itemData.type && i.name === itemData.name);
+
+  if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
+    const currentQty = Number(existing.system.quantity ?? 0);
+    const incomingQty = Number(itemData.system?.quantity ?? 1) || 1;
+    await existing.update({ "system.quantity": currentQty + incomingQty });
+    return existing;
+  }
+
+  const [created] = await actor.createEmbeddedDocuments("Item", [itemData]);
+  return created;
+}
+
 export async function transferItemBetweenActors({
   sourceActor,
   targetActor,
@@ -1418,21 +1506,7 @@ export async function transferItemBetweenActors({
     itemData.system.boundTo = boundToOverride;
   }
 
-  const existing = targetActor.items.find(i =>
-    i.type === item.type &&
-    i.name === item.name
-  );
-
-  let createdOrUpdated;
-  if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
-    const currentQty = Number(existing.system.quantity ?? 0);
-    await existing.update({
-      "system.quantity": currentQty + Math.min(sourceQty, transferQty)
-    });
-    createdOrUpdated = existing;
-  } else {
-    [createdOrUpdated] = await targetActor.createEmbeddedDocuments("Item", [itemData]);
-  }
+  const createdOrUpdated = await mergeOrCreateItem(targetActor, itemData);
 
   if (sourceQty <= transferQty) {
     await sourceActor.deleteEmbeddedDocuments("Item", [item.id]);

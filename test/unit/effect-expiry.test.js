@@ -32,16 +32,34 @@ describe("expiry and the body rules together", () => {
   test("an expired effect on an item is suppressed even where the body rules would allow it", () => {
     const actor = makeActor({
       type: "character",
-      items: [{ _id: "kick1", name: "Kick", type: "drug", system: { active: true }, effects: [{ name: "Kick", duration: { expired: true }, changes: CHANGE }] }]
+      items: [{ _id: "shades1", name: "Shades", type: "gear", system: { active: true }, effects: [{ name: "Shades", duration: { expired: true }, changes: CHANGE }] }]
     });
-    expect(actor.items.get("kick1").effects[0].isSuppressed).toBe(true);
+    expect(actor.items.get("shades1").effects[0].isSuppressed).toBe(true);
   });
 
   test("the body rules still suppress an unexpired effect on an item that is not at hand", () => {
     const actor = makeActor({
       type: "character",
-      items: [{ _id: "kick2", name: "Kick", type: "drug", system: { active: false }, effects: [{ name: "Kick", changes: CHANGE }] }]
+      items: [{ _id: "shades2", name: "Shades", type: "gear", system: { active: false }, effects: [{ name: "Shades", changes: CHANGE }] }]
     });
-    expect(actor.items.get("kick2").effects[0].isSuppressed).toBe(true);
+    expect(actor.items.get("shades2").effects[0].isSuppressed).toBe(true);
+  });
+});
+
+describe("a drug's own effects", () => {
+  test.each([true, false])("they never apply from the item, at hand or not (active: %s)", active => {
+    const actor = makeActor({
+      type: "character",
+      items: [{ _id: "kick1", name: "Kick", type: "drug", system: { active }, effects: [{ name: "Kick", changes: CHANGE }] }]
+    });
+    expect(actor.items.get("kick1").effects[0].isSuppressed).toBe(true);
+  });
+
+  test("carrying a drug therefore leaves the pool it would boost untouched", () => {
+    const actor = makeActor({
+      type: "character",
+      items: [{ _id: "kick2", name: "Kick", type: "drug", system: { active: true }, effects: [{ name: "Kick", changes: CHANGE }] }]
+    });
+    expect(actor.items.get("kick2").effects[0].active).toBe(false);
   });
 });
