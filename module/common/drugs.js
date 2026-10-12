@@ -81,6 +81,123 @@ export function parseAddictionMod(text) {
   return match ? Number(match[0]) : null;
 }
 
+// The forms a drug is sold in, and how soon a dose taken that way takes hold (Core p.330). Listed
+// in the order the item sheet shows them. Labels are the sheet's own, already translated.
+export const VECTORS = [
+  { key: "dermal", label: "ep2e.item.drug.table.applicationVectors.dermalLabel", onset: "ep2e.item.drug.onset.turn" },
+  { key: "inhalation", label: "ep2e.item.drug.table.applicationVectors.inhalationLabel", onset: "ep2e.item.drug.onset.immediate" },
+  { key: "injection", label: "ep2e.item.drug.table.applicationVectors.injectionLabel", onset: "ep2e.item.drug.onset.turn" },
+  { key: "oral", label: "ep2e.item.drug.table.applicationVectors.oralLabel", onset: "ep2e.item.drug.onset.minutes15" }
+];
+
+export const VECTOR_KEYS = VECTORS.map(vector => vector.key);
+
+// An electronic drug is an app rather than a substance: it has no application vector at all and
+// runs for as long as it is left running.
+const APP_ONSET = "ep2e.item.drug.onset.app";
+
+/**
+ * The forms a drug is sold in, as its own data records them. The compendium ships what the book
+ * prints, which for most drugs is several forms; a pack somebody owns should carry exactly one.
+ * @param {Object} system - The drug's system data
+ * @returns {Object[]} The matching VECTORS entries, in sheet order
+ */
+export function drugVectors(system) {
+  return VECTORS.filter(vector => system?.[vector.key] === true);
+}
+
+/**
+ * The one form a dose of this drug is taken in, or null where its data does not pin a single one
+ * down - an electronic drug, or a pack that predates the choice being asked for.
+ * @param {Object} system - The drug's system data
+ * @returns {Object|null} The VECTORS entry, or null
+ */
+export function drugVector(system) {
+  const offered = drugVectors(system);
+  return offered.length === 1 ? offered[0] : null;
+}
+
+/**
+ * Whether a drug still offers more than one form, which is what has to be settled when somebody
+ * acquires it: a pack you own is one physical thing, not every form at once.
+ * @param {Object} system - The drug's system data
+ * @returns {Boolean} True when a form still has to be picked
+ */
+export function needsVectorChoice(system) {
+  return drugVectors(system).length > 1;
+}
+
+/**
+ * How soon a dose of this drug takes hold, by the form it is taken in.
+ * @param {Object} system - The drug's system data
+ * @returns {String|null} The localization key, or null where no single form is recorded
+ */
+export function doseOnset(system) {
+  if (system?.drugType === "electronic") return APP_ONSET;
+  return drugVector(system)?.onset ?? null;
+}
+
+/**
+ * Whether two drugs are the same substance bought in the same form. A second purchase only joins
+ * an existing stack when it matches, so an injected and an oral pack of the same drug stay apart.
+ * @param {Object} a - One drug's system data
+ * @param {Object} b - The other drug's system data
+ * @returns {Boolean} True when both record the same set of forms
+ */
+export function sameDrugForm(a, b) {
+  return VECTOR_KEYS.every(key => (a?.[key] === true) === (b?.[key] === true));
+}
+
+/**
+ * How many doses a drug still holds across every pack it carries. A drug is a number of packs of
+ * which one is open, so the count is every pack's worth less the doses already taken out of the
+ * open one.
+ * @param {Object} system - The drug's system data
+ * @returns {Number} The doses left, never below zero
+ */
+export function dosesRemaining(system) {
+  const max = packSize(system);
+  const packs = Math.max(0, Math.floor(Number(system?.quantity) || 0));
+  const used = Math.min(max, Math.max(0, Math.floor(Number(system?.usagesUsed) || 0)));
+  return Math.max(0, packs * max - used);
+}
+
+/**
+ * What a drug holds after one dose is taken out of it. Derived from the dose count rather than by
+ * stepping the counters, so that a pack somebody has typed into an impossible state still lands
+ * somewhere sensible: the open pack gives up a dose, an emptied pack hands over to the next one,
+ * and the last dose leaves nothing behind.
+ * @param {Object} system - The drug's system data
+ * @returns {Object} taken says whether there was a dose to take at all; emptied says the drug is
+ *   spent and should go; quantity and usagesUsed are what to write back when it is not
+ */
+export function afterDose(system) {
+  const remaining = dosesRemaining(system);
+  if (remaining < 1) return { taken: false, emptied: false };
+
+  const left = remaining - 1;
+  if (left < 1) return { taken: true, emptied: true };
+
+  const max = packSize(system);
+  const packs = Math.ceil(left / max);
+  return {
+    taken: true,
+    emptied: false,
+    quantity: packs,
+    usagesUsed: max - (left - (packs - 1) * max)
+  };
+}
+
+/**
+ * How many doses one pack of a drug holds, falling back to what a purchase buys.
+ * @param {Object} system - The drug's system data
+ * @returns {Number} The pack size, at least one
+ */
+function packSize(system) {
+  const max = Math.floor(Number(system?.usagesMax));
+  return Number.isFinite(max) && max >= 1 ? max : DOSES_PER_PACK;
+}
+
 /**
  * Whether a drug's open pack is still sealed. Loading a sprayer empties a whole pack into its
  * reservoir, so a pack somebody has already taken doses out of cannot be loaded.

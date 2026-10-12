@@ -2827,6 +2827,12 @@ input[type="text"].multiselect-input:focus {
   opacity: 1;
 }
 
+/* A drug's dose control is revealed from anywhere on its row, not only over the thumbnail, so the
+   name is a hover target too. Scoped to the row list, where the drug rows live. */
+.item-row-list-entry:hover .drug-use .item-image-zoom-icon {
+  opacity: 1;
+}
+
 .noBG {
   background: none;
 }

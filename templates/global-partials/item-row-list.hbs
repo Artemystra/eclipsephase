@@ -5,7 +5,14 @@
         {{!-- id, not just class - lets core's focus-restore find it back after a re-render --}}
         <input type="checkbox" id="purchase-select-{{item._id}}" class="item-purchase-select" data-item-id="{{item._id}}" {{checked (lookup ../selected item._id)}}/>
         {{/if}}
-        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+        {{#if item.system.canTakeDose}}
+        <div class="item-image flex-group-left input-small item-image-zoomable drug-use" data-item-id="{{item._id}}">
+            <img src="{{item.img}}" alt="{{item.name}}" width="24" height="24"/>
+            <i class="fas fa-syringe item-image-zoom-icon"></i>
+        </div>
+        {{else}}
+        <div class="item-image flex-group-left input-small"><img src="{{item.img}}" alt="{{item.name}}" width="24" height="24"/></div>
+        {{/if}}
         <label class="truncate alignLeft" style="flex: 3.5;"><strong>{{item.name}}</strong></label>
         {{#if item.system.slotName}}
         <label class="flex-group-center alignCenter" style="background: none; font-size: 12px; flex: 0.4; margin-left: 10px;"><i>{{localize item.system.slotName}}</i></label>
@@ -15,7 +22,11 @@
         {{/if}}
         {{#if item.system.quantity}}
         {{#unless ../hideQuantity}}
+        {{#if item.system.canTakeDose}}
+        <label class="flex-group-center alignCenter" style="background: none; margin-left: 10px;" data-tooltip="{{localize 'ep2e.item.drug.dosesLeft'}}">{{item.system.dosesLeft}}</label>
+        {{else}}
         <label class="flex-group-center alignCenter" style="background: none; margin-left: 10px;">{{item.system.quantity}}</label>
+        {{/if}}
         {{/unless}}
         {{/if}}
         <div class="flexrow item-controls flex-group-right" style="max-width: 50px; min-width: 50px;">
@@ -24,7 +35,7 @@
             {{/unless}}
             {{!-- Same .item-edit class either way - the click handler just opens item.sheet; whether
                  that sheet ends up editable is decided by the item's own permission, not this icon. --}}
-            <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight" title="{{#if ../readOnly}}View Item{{else}}Edit Item{{/if}}"><i class="far fa-{{#if ../readOnly}}eye{{else}}edit{{/if}} awesomeIcon"></i></a>
+            <a class="item-control item-edit resource-label editWithLabel  input-xs alignRight"{{#if ../readOnly}} data-view-only="true"{{/if}}><i class="far fa-{{#if ../readOnly}}eye{{else}}edit{{/if}} awesomeIcon"></i></a>
         </div>
         <div class="flex-group-right slideShow input-xs">
             <a class="showFlex"><i class="fas fa-plus icon-xsmall awesomeIcon"></i></a>

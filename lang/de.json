@@ -136,6 +136,7 @@
         "registeredId": "Registrierte ID: {name}"
       },
       "warnings": {
+        "noDosesLeft": "{name} hat keine Dosen mehr.",
         "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert."
       },
       "button": {
@@ -1137,6 +1138,14 @@
         }
       },
       "drug": {
+        "takeDose": "Dosis nehmen",
+        "dosesLeft": "Verbleibende Dosen",
+        "onset": {
+          "immediate": "Wirkt sofort",
+          "turn": "Wirkt nach einer Handlungsrunde",
+          "minutes15": "Wirkt nach 15 Minuten",
+          "app": "Laeuft wie Software und endet, sobald sie pausiert wird"
+        },
         "table": {
           "duration": "Dauer",
           "durationUnits": {
@@ -1659,6 +1668,10 @@
       }
     },
     "dialog": {
+      "selectDrugVector": {
+        "header": "Welche Form?",
+        "copy": "Diese Droge gibt es in verschiedenen Formen: Welche hast du gekauft? Die gewaehlte Form bestimmt, wie eine Dosis genommen wird und wie schnell sie wirkt."
+      },
       "selectTrait": {
         "header": "Trait Typ Wählen",
         "copy": "Hinweis: Diese Eigenschaft kann für Egos oder Morphs gewählt werden. Morpheigenschaften sind an den derzeitig bewohnten Körper gebunden, während Egoeigenschaften immer erhalten bleiben, auch wenn der Körper gewechselt wird."

@@ -4,7 +4,7 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
-import { packIsSealed } from "../common/drugs.js";
+import { packIsSealed, drugVector, drugVectors, needsVectorChoice, dosesRemaining, VECTOR_KEYS } from "../common/drugs.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
@@ -766,7 +766,9 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
           }
           else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
             if (item.type === "drug"){
-              itemModel.slotName = "ep2e.item.general.table.slot.drug";
+              itemModel.slotName = drugVector(item.system)?.label ?? "ep2e.item.general.table.slot.drug";
+              itemModel.canTakeDose = true;
+              itemModel.dosesLeft = dosesRemaining(item.system);
               if (item.system.active && packIsSealed(item.system)){
                 ammo.chemical.push(item);
               }
@@ -1222,6 +1224,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     }
 
+    if (itemData.type === "drug" && needsVectorChoice(itemModel)) {
+      const chosen = await SHEET.selectDrugVector(itemData.name, drugVectors(itemModel));
+      if (chosen.cancelled || !chosen.vector) return null;
+      for (const key of VECTOR_KEYS) itemModel[key] = key === chosen.vector;
+    }
+
     itemModel.updated = game.system.version;
 
     if (itemData.type === "aspect") {
@@ -1332,7 +1340,18 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         if (!li) return;
 
         const item = actor.items.get(li.dataset.itemId);
-        item?.sheet?.render(true);
+        if (!item) return;
+
+        if (ev.currentTarget.dataset.viewOnly === "true") {
+          const SheetClass = item.sheet.constructor;
+          new SheetClass({
+            document: item,
+            editPermission: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER + 1
+          }).render(true);
+          return;
+        }
+
+        item.sheet?.render(true);
       });
     });
 
@@ -1561,6 +1580,22 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
     multiSelectPills(html, actor);
 
     //show on hover
+    html.querySelectorAll(".drug-use").forEach(element => {
+      element.addEventListener("click", async ev => {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        const itemId = ev.currentTarget.dataset.itemId;
+        const item = actor.items.get(itemId);
+        if (!item) return;
+
+        const outcome = await SHEET.consumeDose(actor, item);
+        if (!outcome.taken) {
+          ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.noDosesLeft", { name: item.name }));
+        }
+      });
+    });
+
     html.querySelectorAll(".reveal").forEach(element => {
       element.addEventListener("mouseover", this._onToggleReveal.bind(this));
       element.addEventListener("mouseout", this._onToggleReveal.bind(this));

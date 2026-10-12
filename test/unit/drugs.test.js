@@ -5,6 +5,14 @@ import {
   parseAddictionMod,
   normaliseDrugSystem,
   packIsSealed,
+  dosesRemaining,
+  afterDose,
+  drugVectors,
+  drugVector,
+  needsVectorChoice,
+  doseOnset,
+  sameDrugForm,
+  VECTOR_KEYS,
   DOSES_PER_PACK,
   DURATION_UNITS
 } from "../../module/common/drugs.js";
@@ -141,6 +149,189 @@ describe("parseAddictionMod", () => {
     for (const drug of packDrugs()) {
       const parsed = parseAddictionMod(drug.system.addictionMod);
       expect(parsed === null || Number.isInteger(parsed)).toBe(true);
+    }
+  });
+});
+
+describe("the forms a drug comes in", () => {
+  test("the four forms are the ones the item sheet lists", () => {
+    expect(VECTOR_KEYS).toEqual(["dermal", "inhalation", "injection", "oral"]);
+  });
+
+  test("a drug sold in several forms reports them all, in sheet order", () => {
+    const grin = { dermal: true, inhalation: true, injection: true, oral: true };
+    expect(drugVectors(grin).map(v => v.key)).toEqual(["dermal", "inhalation", "injection", "oral"]);
+  });
+
+  test("a drug sold in several forms still needs one picked, and names none on its own", () => {
+    const grin = { injection: true, oral: true };
+    expect(needsVectorChoice(grin)).toBe(true);
+    expect(drugVector(grin)).toBeNull();
+  });
+
+  test("once one form is kept, that is the form of the pack", () => {
+    const injected = { dermal: false, inhalation: false, injection: true, oral: false };
+    expect(needsVectorChoice(injected)).toBe(false);
+    expect(drugVector(injected).key).toEqual("injection");
+  });
+
+  test("a drug with no form at all needs no choice", () => {
+    expect(needsVectorChoice({})).toBe(false);
+    expect(drugVector({})).toBeNull();
+  });
+
+  test("across the shipped compendium, 45 drugs need a form picked and 1 already has one", () => {
+    const needing = packDrugs().filter(drug => needsVectorChoice(drug.system));
+    const settled = packDrugs().filter(drug => drugVector(drug.system));
+
+    expect(needing).toHaveLength(45);
+    expect(settled).toHaveLength(1);
+    expect(needing.length + settled.length + 3).toEqual(49);
+  });
+});
+
+describe("how soon a dose takes hold", () => {
+  test.each([
+    ["inhalation", "ep2e.item.drug.onset.immediate"],
+    ["dermal", "ep2e.item.drug.onset.turn"],
+    ["injection", "ep2e.item.drug.onset.turn"],
+    ["oral", "ep2e.item.drug.onset.minutes15"]
+  ])("a %s dose: %s", (vector, expected) => {
+    expect(doseOnset({ [vector]: true })).toEqual(expected);
+  });
+
+  test("an electronic drug runs like software, whatever forms its data lists", () => {
+    expect(doseOnset({ drugType: "electronic" })).toEqual("ep2e.item.drug.onset.app");
+    expect(doseOnset({ drugType: "electronic", oral: true })).toEqual("ep2e.item.drug.onset.app");
+  });
+
+  test("a pack with no single form recorded states no onset rather than guessing one", () => {
+    expect(doseOnset({ injection: true, oral: true })).toBeNull();
+    expect(doseOnset({})).toBeNull();
+  });
+
+  test("every electronic drug in the compendium reads as an app", () => {
+    const electronic = packDrugs().filter(drug => drug.system.drugType === "electronic");
+
+    expect(electronic.map(drug => drug.name).sort()).toEqual(["DDR", "Linkstate", "Randomizer"]);
+    for (const drug of electronic) expect(doseOnset(drug.system)).toEqual("ep2e.item.drug.onset.app");
+  });
+});
+
+describe("sameDrugForm", () => {
+  test("two packs bought in the same form match", () => {
+    expect(sameDrugForm({ injection: true }, { injection: true })).toBe(true);
+  });
+
+  test("an injected and an oral pack of the same drug do not", () => {
+    expect(sameDrugForm({ injection: true }, { oral: true })).toBe(false);
+  });
+
+  test("a pack that still lists every form does not match one narrowed to a single form", () => {
+    const offered = { dermal: true, inhalation: true, injection: true, oral: true };
+    expect(sameDrugForm(offered, { injection: true })).toBe(false);
+  });
+
+  test("two formless drugs match, which is what keeps electronic ones stacking", () => {
+    expect(sameDrugForm({}, {})).toBe(true);
+  });
+
+  test("it never throws on junk", () => {
+    expect(() => sameDrugForm(null, undefined)).not.toThrow();
+  });
+});
+
+describe("dosesRemaining", () => {
+  test.each([
+    [{ quantity: 1, usagesUsed: 0, usagesMax: 5 }, 5],
+    [{ quantity: 1, usagesUsed: 3, usagesMax: 5 }, 2],
+    [{ quantity: 2, usagesUsed: 0, usagesMax: 5 }, 10],
+    [{ quantity: 2, usagesUsed: 4, usagesMax: 5 }, 6],
+    [{ quantity: 3, usagesUsed: 0, usagesMax: 1 }, 3],
+    [{ quantity: 0, usagesUsed: 0, usagesMax: 5 }, 0],
+    [{ quantity: 1, usagesUsed: 5, usagesMax: 5 }, 0]
+  ])("%j holds %i doses", (system, expected) => {
+    expect(dosesRemaining(system)).toEqual(expected);
+  });
+
+  test("a pack size that was never set falls back to what a purchase buys", () => {
+    expect(dosesRemaining({ quantity: 1, usagesUsed: 0 })).toEqual(DOSES_PER_PACK);
+  });
+
+  test("it never reports a negative count, whatever has been typed in", () => {
+    expect(dosesRemaining({ quantity: 1, usagesUsed: 99, usagesMax: 5 })).toEqual(0);
+    expect(dosesRemaining({ quantity: -4, usagesUsed: -4, usagesMax: 5 })).toEqual(0);
+  });
+
+  test("it never throws on junk", () => {
+    for (const system of [null, undefined, {}, { quantity: "x" }]) {
+      expect(() => dosesRemaining(system)).not.toThrow();
+    }
+  });
+});
+
+describe("afterDose", () => {
+  test("a dose comes out of the open pack while it still has some", () => {
+    expect(afterDose({ quantity: 1, usagesUsed: 0, usagesMax: 5 }))
+      .toEqual({ taken: true, emptied: false, quantity: 1, usagesUsed: 1 });
+  });
+
+  test("emptying the open pack hands over to the next one, unopened", () => {
+    expect(afterDose({ quantity: 2, usagesUsed: 4, usagesMax: 5 }))
+      .toEqual({ taken: true, emptied: false, quantity: 1, usagesUsed: 0 });
+  });
+
+  test("the last dose of the last pack leaves nothing behind", () => {
+    expect(afterDose({ quantity: 1, usagesUsed: 4, usagesMax: 5 }))
+      .toEqual({ taken: true, emptied: true });
+  });
+
+  test("a pack that holds a single dose is spent in one go", () => {
+    expect(afterDose({ quantity: 1, usagesUsed: 0, usagesMax: 1 }))
+      .toEqual({ taken: true, emptied: true });
+  });
+
+  test("a drug with nothing left reports that, and asks for no change", () => {
+    expect(afterDose({ quantity: 1, usagesUsed: 5, usagesMax: 5 }))
+      .toEqual({ taken: false, emptied: false });
+    expect(afterDose({ quantity: 0, usagesUsed: 0, usagesMax: 5 }))
+      .toEqual({ taken: false, emptied: false });
+  });
+
+  test("every dose taken removes exactly one from the count, across every pack arrangement", () => {
+    for (const max of [1, 2, 5, 10]) {
+      for (const packs of [1, 2, 4]) {
+        for (let used = 0; used < max; used++) {
+          const system = { quantity: packs, usagesUsed: used, usagesMax: max };
+          const before = dosesRemaining(system);
+          const next = afterDose(system);
+
+          expect(next.taken).toBe(true);
+          const after = next.emptied ? 0 : dosesRemaining({ ...next, usagesMax: max });
+          expect(after).toEqual(before - 1);
+        }
+      }
+    }
+  });
+
+  test("spending a two-pack drug down reports its doses one at a time and then goes", () => {
+    let system = { quantity: 2, usagesUsed: 0, usagesMax: 3 };
+    const seen = [];
+
+    for (let i = 0; i < 6; i++) {
+      const next = afterDose(system);
+      expect(next.taken).toBe(true);
+      if (next.emptied) { seen.push("gone"); break; }
+      system = { ...next, usagesMax: 3 };
+      seen.push(dosesRemaining(system));
+    }
+
+    expect(seen).toEqual([5, 4, 3, 2, 1, "gone"]);
+  });
+
+  test("it never throws on junk", () => {
+    for (const system of [null, undefined, {}, { quantity: "x", usagesUsed: "y" }]) {
+      expect(() => afterDose(system)).not.toThrow();
     }
   });
 });

@@ -1,6 +1,6 @@
 import { makeActor, makeActorFromFixture, resetWorld, seedDialogs } from "../setup/factories.js";
-import { mergeOrCreateItem, emptiesStack, stackDeletion, STACKABLE_TYPES } from "../../module/common/general-sheet-functions.js";
-import { DOSES_PER_PACK } from "../../module/common/drugs.js";
+import { mergeOrCreateItem, emptiesStack, stackDeletion, selectDrugVector, consumeDose, STACKABLE_TYPES } from "../../module/common/general-sheet-functions.js";
+import { DOSES_PER_PACK, VECTORS, dosesRemaining } from "../../module/common/drugs.js";
 
 /**
  * A drug item as the compendium authors one: one pack, a full set of doses, at hand.
@@ -241,5 +241,160 @@ describe("deleting from a stack", () => {
 
   test("closing the dialog removes nothing either", async () => {
     expect(await stackDeletion("Grin", 5)).toEqual({ confirm: false, count: 0 });
+  });
+});
+
+describe("stacking a drug by the form it was bought in", () => {
+  /**
+   * A drug pack narrowed to a single application form, the way one lands after acquisition.
+   * @param {String} vector - The form key
+   * @param {Object} overrides - Item fields to override
+   * @returns {Object} The item source data
+   */
+  function bought(vector, overrides = {}) {
+    const forms = Object.fromEntries(["dermal", "inhalation", "injection", "oral"].map(k => [k, k === vector]));
+    const { system, ...rest } = overrides;
+    return pack({ system: { ...forms, ...system }, ...rest });
+  }
+
+  test("a second pack of the same form joins the stack", async () => {
+    const actor = makeActor({ items: [bought("injection", { _id: "grin1" })] });
+
+    await mergeOrCreateItem(actor, bought("injection"));
+
+    expect(actor.items.filter(i => i.type === "drug")).toHaveLength(1);
+    expect(actor.items.get("grin1").system.quantity).toEqual(2);
+  });
+
+  test("the same drug bought in another form sits beside it instead of merging", async () => {
+    const actor = makeActor({ items: [bought("injection", { _id: "grin1" })] });
+
+    await mergeOrCreateItem(actor, bought("oral"));
+
+    expect(actor.items.filter(i => i.type === "drug")).toHaveLength(2);
+    expect(actor.items.get("grin1").system.quantity).toEqual(1);
+  });
+
+  test("all four forms of one drug can be carried side by side", async () => {
+    const actor = makeActor({ items: [] });
+
+    for (const vector of ["dermal", "inhalation", "injection", "oral"]) {
+      await mergeOrCreateItem(actor, bought(vector));
+    }
+
+    expect(actor.items.filter(i => i.type === "drug")).toHaveLength(4);
+  });
+
+  test("a pack still offering every form does not absorb one narrowed to a single form", async () => {
+    const actor = makeActor({
+      items: [pack({ _id: "grin1", system: { dermal: true, inhalation: true, injection: true, oral: true } })]
+    });
+
+    await mergeOrCreateItem(actor, bought("injection"));
+
+    expect(actor.items.filter(i => i.type === "drug")).toHaveLength(2);
+  });
+
+  test("ammunition still stacks on name alone, since it has no form to match", async () => {
+    const actor = makeActor({
+      items: [{ _id: "ammo1", name: "Regular", type: "ammo", system: { active: true, quantity: 10 } }]
+    });
+
+    await mergeOrCreateItem(actor, { name: "Regular", type: "ammo", system: { active: true, quantity: 5 } });
+
+    expect(actor.items.filter(i => i.type === "ammo")).toHaveLength(1);
+    expect(actor.items.get("ammo1").system.quantity).toEqual(15);
+  });
+});
+
+describe("choosing the form on acquisition", () => {
+  test("the form the user picks is what comes back", async () => {
+    seedDialogs({ selection: "oral" });
+    expect(await selectDrugVector("Grin", VECTORS)).toEqual({ vector: "oral" });
+  });
+
+  test("cancelling reports that, so the drop can be abandoned", async () => {
+    seedDialogs({ cancelled: true });
+    expect(await selectDrugVector("Grin", VECTORS)).toEqual({ cancelled: true });
+  });
+
+  test("closing the dialog counts as cancelling", async () => {
+    expect(await selectDrugVector("Grin", VECTORS)).toEqual({ cancelled: true });
+  });
+
+  test("it offers one choice per form the drug is sold in, each with its onset", async () => {
+    const offered = VECTORS.filter(v => ["injection", "oral"].includes(v.key));
+    seedDialogs({ selection: "injection" });
+
+    expect(await selectDrugVector("Grin", offered)).toEqual({ vector: "injection" });
+    expect(offered.map(v => v.onset)).toEqual([
+      "ep2e.item.drug.onset.turn",
+      "ep2e.item.drug.onset.minutes15"
+    ]);
+  });
+});
+
+describe("taking a dose off a carried drug", () => {
+  test("one dose comes out of the open pack", async () => {
+    const actor = makeActor({ items: [pack({ _id: "grin1" })] });
+
+    const outcome = await consumeDose(actor, actor.items.get("grin1"));
+
+    expect(outcome).toMatchObject({ taken: true, emptied: false });
+    expect(actor.items.get("grin1").system.usagesUsed).toEqual(1);
+    expect(actor.items.get("grin1").system.quantity).toEqual(1);
+  });
+
+  test("emptying the open pack opens the next one", async () => {
+    const actor = makeActor({ items: [pack({ _id: "grin1", system: { quantity: 2, usagesUsed: 4 } })] });
+
+    await consumeDose(actor, actor.items.get("grin1"));
+
+    expect(actor.items.get("grin1").system.quantity).toEqual(1);
+    expect(actor.items.get("grin1").system.usagesUsed).toEqual(0);
+  });
+
+  test("the last dose takes the drug off the sheet", async () => {
+    const actor = makeActor({ items: [pack({ _id: "grin1", system: { quantity: 1, usagesUsed: 4 } })] });
+
+    const outcome = await consumeDose(actor, actor.items.get("grin1"));
+
+    expect(outcome).toMatchObject({ taken: true, emptied: true });
+    expect(actor.items.get("grin1")).toBeUndefined();
+  });
+
+  test("a single pack is spent dose by dose and then goes", async () => {
+    const actor = makeActor({ items: [pack({ _id: "grin1" })] });
+    const seen = [];
+
+    for (let i = 0; i < DOSES_PER_PACK; i++) {
+      await consumeDose(actor, actor.items.get("grin1"));
+      const still = actor.items.get("grin1");
+      seen.push(still ? dosesRemaining(still.system) : "gone");
+    }
+
+    expect(seen).toEqual([4, 3, 2, 1, "gone"]);
+  });
+
+  test("a drug with nothing left is reported untouched rather than removed", async () => {
+    const actor = makeActor({
+      items: [pack({ _id: "grin1", system: { quantity: 1, usagesUsed: DOSES_PER_PACK } })]
+    });
+
+    const outcome = await consumeDose(actor, actor.items.get("grin1"));
+
+    expect(outcome).toEqual({ taken: false, emptied: false });
+    expect(actor.items.get("grin1")).toBeDefined();
+  });
+
+  test("taking a dose leaves the drug's own form alone", async () => {
+    const actor = makeActor({
+      items: [pack({ _id: "grin1", system: { injection: true, oral: false } })]
+    });
+
+    await consumeDose(actor, actor.items.get("grin1"));
+
+    expect(actor.items.get("grin1").system.injection).toBe(true);
+    expect(actor.items.get("grin1").system.oral).toBe(false);
   });
 });

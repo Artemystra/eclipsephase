@@ -137,6 +137,7 @@
         "registeredId": "Registered ID: {name}"
       },
       "warnings": {
+        "noDosesLeft": "{name} has no doses left.",
         "noPlacedToken": "This actor isn't represented by a placed token right now."
       },
       "button": {
@@ -1153,6 +1154,14 @@
         }
       },
       "drug": {
+        "takeDose": "Take a dose",
+        "dosesLeft": "Doses left",
+        "onset": {
+          "immediate": "Takes hold at once",
+          "turn": "Takes hold after one action turn",
+          "minutes15": "Takes hold after 15 minutes",
+          "app": "Runs like software, and stops the moment it is paused"
+        },
         "table": {
           "duration": "Duration",
           "durationUnits": {
@@ -1686,6 +1695,10 @@
       }
     },
     "dialog": {
+      "selectDrugVector": {
+        "header": "Which Form?",
+        "copy": "This drug comes in different shapes: which one did you buy? The form you pick is how a dose gets taken, and it decides how soon that dose takes hold."
+      },
       "selectTrait": {
         "header": "Select Trait Type",
         "copy": "Hint: This trait can be added as an ego or a morph trait. Morph traits only effect the body they are bound to, while ego traits effect your character always, no matter the morph they're sleeved into."

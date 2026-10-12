@@ -1,4 +1,5 @@
 import { durationRunOut } from "./time.js";
+import { sameDrugForm, afterDose } from "./drugs.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
@@ -270,7 +271,7 @@ export function registerCommonHandlers(html, callerobj) {
     wrapper.appendChild(icon);
 
     wrapper.addEventListener("click", () => {
-      new foundry.applications.apps.ImagePopout({ src: img.src, window: { title: img.title || "" } }).render(true);
+      new foundry.applications.apps.ImagePopout({ src: img.src, window: { title: img.title || img.alt || "" } }).render(true);
     });
   });
 }
@@ -320,6 +321,24 @@ export function emptiesStack(item, field, value){
   if (value === null || value === undefined) return false;
   const quantity = Number(value);
   return Number.isFinite(quantity) && quantity <= 0;
+}
+
+/**
+ * Takes one dose out of a drug the actor is carrying: the open pack gives one up, an emptied pack
+ * hands over to the next, and the last dose takes the drug off the sheet. A drug with nothing left
+ * is reported back untouched rather than being removed.
+ * @param {Object} actor - The actor carrying the drug
+ * @param {Object} item - The drug item
+ * @returns {Promise<Object>} The outcome, per afterDose
+ */
+export async function consumeDose(actor, item){
+  const outcome = afterDose(item.system);
+  if (!outcome.taken) return outcome;
+
+  if (outcome.emptied) await actor.deleteEmbeddedDocuments("Item", [item.id]);
+  else await item.update({ "system.quantity": outcome.quantity, "system.usagesUsed": outcome.usagesUsed });
+
+  return outcome;
 }
 
 /**
@@ -869,6 +888,33 @@ export function itemToggle(html, item) {
     });
 
     return result ?? { cancelled: true };
+  }
+
+/**
+ * Asks which form a drug was bought in, for a drug the book sells in several. The chosen form is
+ * the only one kept on the pack, and it decides how a dose is taken and how soon it takes hold.
+ * @param {String} itemName - The drug's name, shown above the choice
+ * @param {Object[]} vectors - The VECTORS entries the drug offers
+ * @returns {Promise<Object>} The chosen vector key, or cancelled
+ */
+  export async function selectDrugVector(itemName, vectors) {
+    const options = vectors.map(vector => ({
+      id: vector.key,
+      label: vector.label,
+      description: vector.onset
+    }));
+
+    const result = await listSelection(
+      options,
+      "standardSelectionList",
+      320,
+      "ep2e.dialog.selectDrugVector.header",
+      itemName,
+      "ep2e.dialog.selectDrugVector.copy"
+    );
+
+    if (result?.cancelled) return { cancelled: true };
+    return { vector: result?.selection ?? null };
   }
 
   function listSelectionOutcome(form) {
@@ -1462,13 +1508,18 @@ export const STACKABLE_TYPES = ["drug", "ammo", "grenade"];
 /**
  * Adds an incoming item to the actor's existing stack of the same type and name, or creates it
  * when there is none to join. Shared by the actor-to-actor transfer and the drop of a fresh item
- * from a compendium, so the two paths cannot disagree about what stacks.
+ * from a compendium, so the two paths cannot disagree about what stacks. Drugs additionally have
+ * to match on the form they were bought in - an injected and an oral pack are not one stack.
  * @param {Actor} actor - The actor receiving the item
  * @param {Object} itemData - The incoming item's source data
  * @returns {Promise<Item>} The stack that grew, or the item that was created
  */
 export async function mergeOrCreateItem(actor, itemData) {
-  const existing = actor.items.find(i => i.type === itemData.type && i.name === itemData.name);
+  const existing = actor.items.find(i =>
+    i.type === itemData.type &&
+    i.name === itemData.name &&
+    (i.type !== "drug" || sameDrugForm(i.system, itemData.system))
+  );
 
   if (existing && foundry.utils.hasProperty(existing.system, "quantity")) {
     const currentQty = Number(existing.system.quantity ?? 0);
