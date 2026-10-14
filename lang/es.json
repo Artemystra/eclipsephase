@@ -133,6 +133,8 @@
         "registeredId": "Identidad Registrada: {name}"
       },
       "warnings": {
+        "doseNeedsBiomorph": "Esta droga solo actua en un cuerpo biologico.",
+        "doseNeedsCyberbrain": "Esta droga solo funciona en un infomorfo o un cibercerebro.",
         "noDosesLeft": "{name} no tiene dosis restantes.",
         "noPlacedToken": "Este actor no está representado por un token colocado en este momento."
       },

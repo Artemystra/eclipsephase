@@ -5,6 +5,7 @@ import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
 import { packIsSealed, drugVector, drugVectors, needsVectorChoice, dosesRemaining, VECTOR_KEYS } from "../common/drugs.js";
+import { takeDose } from "../common/doses.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
@@ -1589,10 +1590,7 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const item = actor.items.get(itemId);
         if (!item) return;
 
-        const outcome = await SHEET.consumeDose(actor, item);
-        if (!outcome.taken) {
-          ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.noDosesLeft", { name: item.name }));
-        }
+        await takeDose(actor, item);
       });
     });
 

@@ -1,0 +1,98 @@
+{
+  "name": "Drive",
+  "type": "drug",
+  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "effects": [
+    {
+      "_id": "zD4OjGnjsrXxM8Xx",
+      "name": "Drive",
+      "img": "systems/eclipsephase/resources/icons/drug.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.pools.insight.mod",
+            "value": "+1",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!mTFmFHguRCRVvesq.zD4OjGnjsrXxM8Xx"
+    }
+  ],
+  "folder": null,
+  "sort": 0,
+  "flags": {
+    "core": {}
+  },
+  "_id": "mTFmFHguRCRVvesq",
+  "system": {
+    "additionalSystems": {},
+    "description": "This nootropic speeds up left-right brain hemisphere communication, stimulates idea production, and improves concentration. +1 Insight pool for 8 hours.",
+    "active": true,
+    "displayCategory": "consumable",
+    "updated": "",
+    "cost": "moderate",
+    "slotType": "consumable",
+    "category": "cognitive",
+    "dermal": true,
+    "inhalation": true,
+    "injection": true,
+    "oral": true,
+    "drugType": "biochem",
+    "duration": {
+      "value": 8,
+      "units": "hours"
+    },
+    "addictionMod": "-10",
+    "addictionType": "mental",
+    "quantity": 1,
+    "usagesUsed": 0,
+    "usagesMax": 5
+  },
+  "ownership": {
+    "default": 0,
+    "KR8BPH3pLwhjfZfZ": 3
+  },
+  "_stats": {
+    "systemId": "eclipsephase",
+    "systemVersion": "0.8.0.1",
+    "coreVersion": "13.346",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": "bYyHIjslCiShkdKL",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!items!mTFmFHguRCRVvesq"
+}

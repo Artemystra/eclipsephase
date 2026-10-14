@@ -1,20 +1,9 @@
 import { addWindowControls, addDragSupport, addMinimizeSupport } from "../common/general-sheet-functions.js";
-import { elapsedTime, formatTimeOfDay, worldTimeForDate, worldTimeAtTimeOfDay, secondsForClock, secondsForBeat, advanceLabel, advanceSeconds, spanTooltip, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
+import { elapsedTime, formatTimeOfDay, worldTimeForDate, worldTimeAtTimeOfDay, secondsForClock, secondsForBeat, advanceLabel, advanceSeconds, spanTooltip, isRunningEffect, ADVANCE_PRESETS, HOURS, BEATS } from "../common/time.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-const TEMP_EFFECT_FLAGS = ["effectKey", "chiPushBoost", "dose"];
-
-/**
- * Whether an effect is one the panel should list: anything Foundry tracks a duration for, plus the
- * system's own temporary effects, which end on an event rather than on a clock.
- * @param {ActiveEffect} effect - The effect to judge
- * @returns {Boolean} True when the effect belongs in the list
- */
-export function isRunningEffect(effect) {
-  if (effect.isTemporary) return true;
-  return TEMP_EFFECT_FLAGS.some(flag => effect.getFlag?.("eclipsephase", flag) !== undefined);
-}
+export { isRunningEffect };
 
 /**
  * The characters the recharge reset applies to: the assigned characters of every connected player.

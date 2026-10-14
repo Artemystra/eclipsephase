@@ -81,32 +81,6 @@ export async function preparePsi(data){
     await rollPsiEffect(actorWhole, psiOwner, push, systemOptions, undefined, rollMode)
 }
 
-const POOL_CHIMOD_KEYS = {
-    "system.pools.insight.chiMod": { pool: "insight", total: "totalInsight" },
-    "system.pools.moxie.chiMod": { pool: "moxie", total: "totalMoxie" },
-    "system.pools.vigor.chiMod": { pool: "vigor", total: "totalVigor" },
-    "system.pools.flex.chiMod": { pool: "flex", total: "totalFlex" }
-};
-
-/**
- * Moves each pool's current value by the same amount a set of chi-push ActiveEffect changes
- * moved its max, mirroring EPactor.js's _applyChiBoostToPoolValues but scoped to one sleight.
- * @param {Actor} actorWhole
- * @param {Array} changes
- * @param {number} sign - 1 when the boost was just gained, -1 when it was just lost
- */
-async function _adjustPoolValuesForChiPush(actorWhole, changes, sign){
-    const updates = {};
-    for (const change of changes) {
-        const mapping = POOL_CHIMOD_KEYS[change.key];
-        if (!mapping) continue;
-        const pool = actorWhole.system.pools[mapping.pool];
-        const delta = eval(change.value) * sign;
-        updates[`system.pools.${mapping.pool}.value`] = Math.clamp((pool.value ?? 0) + delta, 0, pool[mapping.total]);
-    }
-    if (Object.keys(updates).length) await actorWhole.update(updates);
-}
-
 /**
  * Whether the actor's own strain family works in the body they currently act through, warning
  * the user when it does not. A Chi push runs entirely off the sheet and never reaches the roll
@@ -150,7 +124,7 @@ export async function endExpiredChiPushes(actorWhole, effects){
 
 /**
  * Duplicates a chi sleight's own ActiveEffect(s) onto itself, flagged as a temporary push boost,
- * moves any boosted pool's current value in step, and marks the item pushed. No-ops entirely if
+ * and marks the item pushed; the pool rule hands over any pool point the boost adds. No-ops entirely if
  * the actor is already Infection-33+ boosted (that already doubles the sleight's bonus globally,
  * so pushing it individually would double-count) or if the item is already pushed.
  * @param {Actor} actorWhole
@@ -185,15 +159,14 @@ export async function pushChiSleight(actorWhole, itemId){
         };
         if (isV14Plus) newEffectData.system = { changes };
         await item.createEmbeddedDocuments("ActiveEffect", [newEffectData]);
-        await _adjustPoolValuesForChiPush(actorWhole, changes, 1);
     }
 
     await item.update({ "system.pushed": true });
 }
 
 /**
- * Ends a chi sleight's temporary push boost: deletes the duplicated effect (reverting any pool
- * current-value bump it caused) and clears the flag.
+ * Ends a chi sleight's temporary push boost: deletes the duplicated effect, which hands the pool
+ * point back through the pool rule, and clears the flag.
  * @param {Actor} actorWhole
  * @param {string} itemId
  */
@@ -203,9 +176,7 @@ export async function endChiPush(actorWhole, itemId){
 
     const boostEffects = item.effects.filter(e => e.getFlag("eclipsephase", "chiPushBoost"));
     if (boostEffects.length) {
-        const changes = boostEffects.flatMap(e => e.changes);
         await item.deleteEmbeddedDocuments("ActiveEffect", boostEffects.map(e => e.id));
-        await _adjustPoolValuesForChiPush(actorWhole, changes, -1);
     }
 
     await item.update({ "system.pushed": false });

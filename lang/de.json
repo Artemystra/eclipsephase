@@ -136,6 +136,8 @@
         "registeredId": "Registrierte ID: {name}"
       },
       "warnings": {
+        "doseNeedsBiomorph": "Diese Droge wirkt nur in einem biologischen Koerper.",
+        "doseNeedsCyberbrain": "Diese Droge laeuft nur auf einem Infomorph oder einem Cyberbrain.",
         "noDosesLeft": "{name} hat keine Dosen mehr.",
         "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert."
       },

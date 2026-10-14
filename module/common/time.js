@@ -199,3 +199,20 @@ export function durationRunOut(effect) {
   const remaining = effect?.duration?.remaining;
   return Number.isFinite(remaining) && remaining <= 0;
 }
+
+// The flags the system puts on its own temporary effects - a wound or trauma being ignored, a chi
+// push, a dose. These end on an event rather than on the clock, so Foundry does not always track
+// them, and the flag is what marks them as running.
+export const TEMP_EFFECT_FLAGS = ["effectKey", "chiPushBoost", "dose"];
+
+/**
+ * Whether an effect is a running temporary one: anything Foundry tracks a duration for, plus the
+ * system's own temporary effects. The Time Panel lists these, and a pool one of them raises is
+ * handed to the actor's current value for as long as it runs.
+ * @param {ActiveEffect} effect - The effect to judge
+ * @returns {Boolean} True when the effect is temporary
+ */
+export function isRunningEffect(effect) {
+  if (effect?.isTemporary) return true;
+  return TEMP_EFFECT_FLAGS.some(flag => effect?.getFlag?.("eclipsephase", flag) !== undefined);
+}

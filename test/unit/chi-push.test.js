@@ -1,5 +1,6 @@
 import { chiPushMinutes, pushChiSleight, endExpiredChiPushes } from "../../module/rolls/psi.js";
 import { registerCoreStrainFamilies, resetStrainFamilies } from "../../module/rolls/strain-families.js";
+import { registerPoolRule } from "../../module/common/pool-rule.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
 const BOOST = [{ key: "system.pools.insight.mod", value: "+1", type: "add" }];
@@ -28,6 +29,7 @@ beforeEach(() => {
   resetWorld();
   resetStrainFamilies();
   registerCoreStrainFamilies();
+  registerPoolRule();
   game.time.worldTime = 5000;
 });
 
@@ -76,6 +78,20 @@ describe("pushing a chi sleight", () => {
     await pushChiSleight(actor, "chi1");
     const boost = actor.items.get("chi1").effects.find(effect => effect.getFlag("eclipsephase", "chiPushBoost"));
     expect(boost.showIcon).toEqual(CONST.ACTIVE_EFFECT_SHOW_ICON.NEVER);
+  });
+
+  test("the pool point the push adds is handed over, and taken back when the push ends", async () => {
+    const actor = asyncWithChiSleight(25);
+    const before = actor.system.pools.insight.value ?? 0;
+
+    await pushChiSleight(actor, "chi1");
+    expect(actor.system.pools.insight.value).toEqual(before + 1);
+
+    await endExpiredChiPushes(actor, actor.items.get("chi1").effects.map(effect => {
+      effect.duration.expired = true;
+      return effect;
+    }));
+    expect(actor.system.pools.insight.value).toEqual(before);
   });
 
   test("the sleight is marked pushed", async () => {

@@ -2,6 +2,7 @@ import { eclipsephase } from "../config.js"
 import { takeDamage } from "../rolls/damage.js"
 import { endAllChiPushes, endExpiredChiPushes } from "../rolls/psi.js"
 import { deleteRunOutTempEffects } from "../common/general-sheet-functions.js"
+import { endRunOutDoses } from "../common/doses.js";
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
 
 const gammaAutoPushInFlight = new Set();
@@ -53,6 +54,7 @@ export default class EPactor extends Actor {
     if (!game.users.activeGM?.isSelf) return;
     await endExpiredChiPushes(this, effects);
     await deleteRunOutTempEffects(this, effects);
+    await endRunOutDoses(this, effects);
   }
 
   /**

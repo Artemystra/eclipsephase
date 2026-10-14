@@ -92,8 +92,8 @@ describe("parseDurationText", () => {
     }
   });
 
-  test("the compendium is the 49 drugs the plan counted", () => {
-    expect(packDrugs()).toHaveLength(49);
+  test("the compendium is the 50 drugs the book lists", () => {
+    expect(packDrugs()).toHaveLength(50);
   });
 });
 
@@ -130,8 +130,96 @@ describe("the shipped drug compendium", () => {
     }
   });
 
-  test("no drug carries effects of its own yet, so none can apply before a dose is taken", () => {
-    for (const drug of packDrugs()) expect(drug.effects).toEqual([]);
+});
+
+describe("the blueprint effects authored from the book", () => {
+  const ACTOR_BASE = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../template.json"), "utf8")).Actor.templates.base;
+  const RAW_INT_TARGETS = ["system.mods.woundMod", "system.mods.traumaMod"];
+  const DEAD_OR_DERIVED = [
+    "system.mods.globalMod",
+    "system.physical.wt", "system.physical.dr", "system.mental.tt", "system.mental.ir",
+    "system.health.physical.max", "system.health.mental.max"
+  ];
+
+  /**
+   * Every change on every drug's own effects, with the drug it belongs to.
+   * @returns {Object[]} {drug, key, value}
+   */
+  function allChanges() {
+    const out = [];
+    for (const drug of packDrugs()) {
+      for (const effect of drug.effects) {
+        for (const change of effect.system?.changes ?? []) out.push({ drug: drug.name, key: change.key, value: change.value });
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Whether a change key names a field that exists on the actor's base template.
+   * @param {String} key - The dot path, starting with "system."
+   * @returns {Boolean} True when every segment resolves
+   */
+  function resolvesOnActor(key) {
+    let node = ACTOR_BASE;
+    for (const step of key.replace(/^system\./, "").split(".")) {
+      if (node === null || typeof node !== "object" || !(step in node)) return false;
+      node = node[step];
+    }
+    return true;
+  }
+
+  test("exactly the flat, unconditional modifiers carry a blueprint effect", () => {
+    const withEffects = packDrugs().filter(drug => drug.effects.length > 0).map(drug => drug.name).sort();
+    expect(withEffects).toEqual([
+      "Blab", "Brutalitea", "Comfurt", "Drive", "Grin", "Inhibitor", "Kick", "Klar",
+      "MRDR", "Nofux", "Orbital Hash", "Phlo", "Psike-Out", "TGS", "Tongzhi"
+    ]);
+  });
+
+  test("every change targets a field that actually exists on an actor", () => {
+    for (const { drug, key } of allChanges()) {
+      expect({ drug, key, resolves: resolvesOnActor(key) }).toEqual({ drug, key, resolves: true });
+    }
+  });
+
+  test("no change targets a dead key or a derived stat - those follow from DUR, LUC and the roll pipeline", () => {
+    for (const { key } of allChanges()) expect(DEAD_OR_DERIVED).not.toContain(key);
+  });
+
+  test("the targets the actor reads raw carry ints, the ones it evals carry strings", () => {
+    for (const { drug, key, value } of allChanges()) {
+      const expectedType = RAW_INT_TARGETS.includes(key) ? "number" : "string";
+      expect({ drug, key, type: typeof value }).toEqual({ drug, key, type: expectedType });
+    }
+  });
+
+  test("ignoring a wound or a trauma is written as a negative count, the way the sheet reads it", () => {
+    for (const { key, value } of allChanges()) {
+      if (RAW_INT_TARGETS.includes(key)) expect(value).toBeLessThan(0);
+    }
+  });
+
+  test("the derived-stat drugs move only the stat the others follow from", () => {
+    const keysOf = name => allChanges().filter(c => c.drug === name).map(c => c.key);
+    expect(keysOf("Brutalitea")).toEqual(["system.mods.durmod"]);
+    expect(keysOf("Comfurt")).toEqual(["system.mods.lucmod"]);
+  });
+
+  test("a WIL Check bonus is a check modifier, never a change to WIL itself", () => {
+    const tgs = allChanges().filter(c => c.drug === "TGS").map(c => c.key);
+    expect(tgs).toContain("system.aptitudes.wil.mod");
+    expect(tgs).not.toContain("system.aptitudes.wil.value");
+  });
+
+  test("every blueprint stays a blueprint: no duration and the drug's own name", () => {
+    for (const drug of packDrugs()) {
+      for (const effect of drug.effects) {
+        expect(effect.duration.value).toBeNull();
+        expect(effect.name).toEqual(drug.name);
+        expect(effect._key).toEqual(`!items.effects!${drug._id}.${effect._id}`);
+      }
+    }
   });
 });
 
@@ -180,13 +268,13 @@ describe("the forms a drug comes in", () => {
     expect(drugVector({})).toBeNull();
   });
 
-  test("across the shipped compendium, 45 drugs need a form picked and 1 already has one", () => {
+  test("across the shipped compendium, 46 drugs need a form picked and 1 already has one", () => {
     const needing = packDrugs().filter(drug => needsVectorChoice(drug.system));
     const settled = packDrugs().filter(drug => drugVector(drug.system));
 
-    expect(needing).toHaveLength(45);
+    expect(needing).toHaveLength(46);
     expect(settled).toHaveLength(1);
-    expect(needing.length + settled.length + 3).toEqual(49);
+    expect(needing.length + settled.length + 3).toEqual(50);
   });
 });
 

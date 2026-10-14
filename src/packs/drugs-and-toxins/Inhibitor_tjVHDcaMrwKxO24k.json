@@ -2,7 +2,53 @@
   "name": "Inhibitor",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "FODZH5GgGZL7DBCk",
+      "name": "Inhibitor",
+      "img": "systems/eclipsephase/resources/icons/drug.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.skillsMox.psi.mod",
+            "value": "-30",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!tjVHDcaMrwKxO24k.FODZH5GgGZL7DBCk"
+    }
+  ],
   "folder": null,
   "sort": 0,
   "flags": {

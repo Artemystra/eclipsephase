@@ -133,6 +133,8 @@
         "registeredId": "注册身份：{name}"
       },
       "warnings": {
+        "doseNeedsBiomorph": "这种药物只对生物躯体有效。",
+        "doseNeedsCyberbrain": "这种药物只能在信息形体或赛博脑上运行。",
         "noDosesLeft": "{name} 没有剩余剂量。",
         "noPlacedToken": "该角色当前没有已放置的指令牌。"
       },
