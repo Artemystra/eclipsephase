@@ -1,0 +1,19 @@
+<div class="alignCenter">
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 15px 10px 0 10px;">
+    <i class="fa-solid fa-syringe" style="font-size: 36px; color: var(--positive);"></i>
+    <div style="text-align: center; font-size: 14px;">{{{headline}}}</div>
+  </div>
+
+  <div style="display: block; margin: 15px 0 20px 0; padding: 15px 0; background-color: var(--pitchBorder);">
+    <div style="font-size: 14px; line-height: 1.6;">
+      <span>{{localize "ep2e.chat.dose.form"}}: <b>{{form}}</b></span><br>
+      {{#if onset}}<span>{{localize "ep2e.chat.dose.onset"}}: <b>{{onset}}</b></span><br>{{/if}}
+      <span>{{localize "ep2e.chat.dose.duration"}}: <b>{{duration}}</b></span><br>
+      {{#if emptied}}
+      <span><i>{{localize "ep2e.chat.dose.lastDose"}}</i></span>
+      {{else}}
+      <span>{{localize "ep2e.item.drug.dosesLeft"}}: <b>{{dosesLeft}}</b></span>
+      {{/if}}
+    </div>
+  </div>
+</div>

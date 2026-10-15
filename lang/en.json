@@ -1733,6 +1733,16 @@
       }
     },
     "chat": {
+      "dose": {
+        "taken": "I took a dose of <strong>{name}</strong>",
+        "renewed": "I took another dose of <strong>{name}</strong>, which starts its clock over",
+        "form": "Form",
+        "onset": "Onset",
+        "duration": "Duration",
+        "untilEnded": "Until ended",
+        "lastDose": "That was the last dose.",
+        "app": "App"
+      },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
         "swapResult": "Swap Result",

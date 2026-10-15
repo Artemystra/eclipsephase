@@ -333,6 +333,7 @@ class MockDocument {
     }
     (this.actor ?? this).prepareData?.();
     global.Hooks.callAll(`update${this.documentName}`, this, changes, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
     return this;
   }
 
@@ -348,6 +349,7 @@ class MockDocument {
     this.prepareData?.();
     for (const effect of created) global.Hooks.callAll("createActiveEffect", effect, {}, global.game.user.id);
     this.actor?.prepareData?.();
+    await new Promise(resolve => setTimeout(resolve, 0));
     return created;
   }
 
@@ -359,6 +361,7 @@ class MockDocument {
     this.prepareData?.();
     for (const effect of removed) global.Hooks.callAll("deleteActiveEffect", effect, {}, global.game.user.id);
     this.actor?.prepareData?.();
+    await new Promise(resolve => setTimeout(resolve, 0));
     return removed;
   }
 
@@ -437,6 +440,7 @@ class MockActiveEffect {
     const owner = this.parent?.actor ?? this.parent;
     owner?.prepareData?.();
     global.Hooks.callAll("updateActiveEffect", this, changes, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
     return this;
   }
 
@@ -541,6 +545,7 @@ class MockActor extends MockDocument {
     }
     this.prepareData();
     for (const item of created) global.Hooks.callAll("createItem", item, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
     return created;
   }
 
@@ -566,6 +571,7 @@ class MockActor extends MockDocument {
     for (const item of removed) this.items.delete(item.id);
     this.prepareData();
     for (const item of removed) global.Hooks.callAll("deleteItem", item, {}, global.game.user.id);
+    await new Promise(resolve => setTimeout(resolve, 0));
     return removed;
   }
 

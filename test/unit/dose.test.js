@@ -2,6 +2,8 @@ import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses 
 import { registerPoolRule } from "../../module/common/pool-rule.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
+const { createdMessages } = global.__ep;
+
 const KICK_BOOST = [{ key: "system.pools.vigor.mod", value: "+1", type: "add" }];
 
 /**
@@ -317,5 +319,93 @@ describe("a dose running out", () => {
     game.users.activeGM = { isSelf: true };
     await actor.onUpdateEffectDurations([dose], "updateWorldTime", {});
     expect(doseOn(actor)).toBeUndefined();
+  });
+});
+
+describe("the card a dose posts", () => {
+  test("taking a dose posts exactly one card, naming the drug", async () => {
+    const actor = carrying();
+
+    await takeDose(actor, actor.items.get("kick1"));
+
+    expect(createdMessages).toHaveLength(1);
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.taken");
+    expect(createdMessages[0].content).toContain("Kick");
+  });
+
+  test("it states the form, the onset, the duration and what is left of the pack", async () => {
+    const actor = carrying();
+
+    await takeDose(actor, actor.items.get("kick1"));
+
+    const card = createdMessages[0].content;
+    expect(card).toContain("ep2e.item.drug.table.applicationVectors.injectionLabel");
+    expect(card).toContain("ep2e.item.drug.onset.turn");
+    expect(card).toContain("8 ep2e.item.drug.table.durationUnits.hours");
+    expect(card).toContain("ep2e.item.drug.dosesLeft");
+    expect(card).toContain("<b>4</b>");
+  });
+
+  test("taking the same drug again says the clock started over", async () => {
+    const actor = carrying();
+
+    await takeDose(actor, actor.items.get("kick1"));
+    await takeDose(actor, actor.items.get("kick1"));
+
+    expect(createdMessages).toHaveLength(2);
+    expect(createdMessages[1].content).toContain("ep2e.chat.dose.renewed");
+  });
+
+  test("the last dose says so instead of counting what is left", async () => {
+    const actor = carrying({ usagesUsed: 4 });
+
+    await takeDose(actor, actor.items.get("kick1"));
+
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.lastDose");
+    expect(createdMessages[0].content).not.toContain("ep2e.item.drug.dosesLeft");
+  });
+
+  test("a drug with no duration recorded runs until ended, and the card says that", async () => {
+    const actor = carrying({ duration: { value: null, units: "" } });
+
+    await takeDose(actor, actor.items.get("kick1"));
+
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.untilEnded");
+  });
+
+  test("an electronic drug is an app, with no form to name", async () => {
+    const actor = carrying({ drugType: "electronic", injection: false }, "info");
+
+    await takeDose(actor, actor.items.get("kick1"));
+
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.app");
+    expect(createdMessages[0].content).toContain("ep2e.item.drug.onset.app");
+  });
+
+  test("a refused dose and an empty pack post nothing", async () => {
+    const synth = carrying({}, "synth");
+    await takeDose(synth, synth.items.get("kick1"));
+
+    const empty = carrying({ usagesUsed: 5 });
+    await takeDose(empty, empty.items.get("kick1"));
+
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("a character's card is public, anyone else's goes to the GMs", async () => {
+    const character = carrying();
+    await takeDose(character, character.items.get("kick1"));
+    expect(createdMessages[0].whisper).toBeUndefined();
+
+    const npc = makeActor({
+      type: "npc",
+      system: { activeMorph: "morph1" },
+      items: [
+        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, duration: { value: 8, units: "hours" } } }
+      ]
+    });
+    await takeDose(npc, npc.items.get("kick1"));
+    expect(Array.isArray(createdMessages[1].whisper)).toBe(true);
   });
 });

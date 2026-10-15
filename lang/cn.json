@@ -1669,6 +1669,16 @@
       }
     },
     "chat": {
+      "dose": {
+        "taken": "我服用了一剂 <strong>{name}</strong>",
+        "renewed": "我又服用了一剂 <strong>{name}</strong>，持续时间重新开始",
+        "form": "形态",
+        "onset": "起效",
+        "duration": "持续时间",
+        "untilEnded": "直到手动结束",
+        "lastDose": "这是最后一剂。",
+        "app": "应用"
+      },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
         "swapResult": "Swap Result",

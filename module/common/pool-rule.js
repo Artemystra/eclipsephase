@@ -55,8 +55,10 @@ export function rememberPoolTotals(actor) {
 
 /**
  * Measures how a change moved the actor's pool totals and moves the current values along with
- * them. The actor is re-prepared first: for an effect on one of its items Foundry fires the hook
- * before the actor has caught up, and the old totals would read as no change at all. A change that
+ * them. It waits one tick first: for an effect on one of the actor's items Foundry fires the hook
+ * before it has re-prepared the actor, and reading then would show no change at all. Re-preparing
+ * the actor here instead is not an option - EPactor.prepareData issues updates of its own, and run
+ * inside a delete hook those reach the server for a document that is already gone. A change that
  * writes a pool's value itself is left as written. Consumes the snapshot, so a batch that lands
  * several documents at once settles exactly once.
  * @param {Actor|null} actor - The actor that changed
@@ -68,7 +70,7 @@ export async function settlePools(actor, changes = {}) {
   if (!before) return;
   snapshots.delete(actor);
 
-  actor.reset?.();
+  await new Promise(resolve => setTimeout(resolve, 0));
   const after = poolTotals(actor);
   const updates = {};
   for (const pool of POOLS) {

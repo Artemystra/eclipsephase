@@ -1706,6 +1706,16 @@
       }
     },
     "chat": {
+      "dose": {
+        "taken": "Ich habe eine Dosis <strong>{name}</strong> genommen",
+        "renewed": "Ich habe noch eine Dosis <strong>{name}</strong> genommen, was die Wirkdauer neu startet",
+        "form": "Form",
+        "onset": "Wirkungseintritt",
+        "duration": "Dauer",
+        "untilEnded": "Bis zum Beenden",
+        "lastDose": "Das war die letzte Dosis.",
+        "app": "App"
+      },
       "buttonLabel": {
         "mitigateResult": "Ergebnis Retten",
         "swapResult": "Würfel Drehen",

@@ -1,7 +1,9 @@
-import { drugVector, doseOnset } from "./drugs.js";
+import { drugVector, doseOnset, dosesRemaining } from "./drugs.js";
 import { durationRunOut } from "./time.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
-import { consumeDose } from "./general-sheet-functions.js";
+import { consumeDose, gmList } from "./general-sheet-functions.js";
+
+const DOSE_CARD = "systems/eclipsephase/templates/chat/dose-taken.html";
 
 // What a drug's type can act on (Core p.330): biochem and nano are substances and need a
 // biological body; an electronic drug is software and needs an infomorph or a cyberbrain.
@@ -100,6 +102,52 @@ export function activeDoseFor(actor, drugName) {
 }
 
 /**
+ * How long a dose lasts, in words, for the card. A drug with no duration recorded runs until it is
+ * ended by hand.
+ * @param {Object} span - The drug's {value, units} duration
+ * @returns {String} The localized span
+ */
+function durationLabel(span) {
+  const timed = Number.isFinite(span?.value) && span.value > 0 && !!span.units;
+  if (!timed) return game.i18n.localize("ep2e.chat.dose.untilEnded");
+  return `${span.value} ${game.i18n.localize(`ep2e.item.drug.table.durationUnits.${span.units}`)}`;
+}
+
+/**
+ * Posts the card announcing a dose: what was taken, in which form, how soon it takes hold, how
+ * long it lasts and what is left of the pack. A character's card is public; anyone else's goes to
+ * the GMs, as the reload card does. Posted by the client that took the dose, so it posts once.
+ * @param {Actor} actor - The actor who took the dose
+ * @param {Item} item - The drug, as it is after the dose was spent
+ * @param {Object} outcome - What consumeDose reported
+ * @param {Boolean} renewed - Whether the dose restarted a running one rather than starting fresh
+ * @returns {Promise<void>} Resolves once the card is posted
+ */
+async function postDoseCard(actor, item, outcome, renewed) {
+  const system = item.system;
+  const vector = drugVector(system);
+  const onsetKey = doseOnset(system);
+  const form = system.drugType === "electronic"
+    ? game.i18n.localize("ep2e.chat.dose.app")
+    : (vector ? game.i18n.localize(vector.label) : "-");
+
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, {
+    headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
+    form,
+    onset: onsetKey ? game.i18n.localize(onsetKey) : "",
+    duration: durationLabel(system.duration),
+    emptied: outcome.emptied,
+    dosesLeft: outcome.emptied ? 0 : dosesRemaining(system)
+  });
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    ...(actor.type === "character" ? {} : { whisper: gmList() })
+  });
+}
+
+/**
  * Takes one dose of a drug: refuses it in a body it cannot act on, spends it from the pack, and
  * puts the dose's effect on the actor - or, when the same drug is already running, restarts that
  * effect's clock instead of stacking a second one. The effect data is read before the dose is
@@ -126,10 +174,12 @@ export async function takeDose(actor, item) {
 
   if (running) {
     await running.update({ start: ActiveEffect.getEffectStart(), "duration.expired": false });
+    await postDoseCard(actor, item, outcome, true);
     return { ...outcome, refused: false, effect: running };
   }
 
   const [effect] = await actor.createEmbeddedDocuments("ActiveEffect", [data]);
+  await postDoseCard(actor, item, outcome, false);
   return { ...outcome, refused: false, effect };
 }
 

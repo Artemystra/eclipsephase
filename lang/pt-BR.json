@@ -1676,6 +1676,16 @@
       }
     },
     "chat": {
+      "dose": {
+        "taken": "Tomei uma dose de <strong>{name}</strong>",
+        "renewed": "Tomei outra dose de <strong>{name}</strong>, o que reinicia sua duracao",
+        "form": "Forma",
+        "onset": "Inicio",
+        "duration": "Duracao",
+        "untilEnded": "Ate ser encerrada",
+        "lastDose": "Essa foi a ultima dose.",
+        "app": "App"
+      },
       "buttonLabel": {
         "mitigateResult": "Mitigate Result",
         "swapResult": "Swap Result",
