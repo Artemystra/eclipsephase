@@ -1086,6 +1086,7 @@ Object.defineProperty(global.game.eclipsephase, "api", {
 
 global.fromUuid = async uuid => uuidRegistry.get(uuid) ?? null;
 global.fromUuidSync = uuid => uuidRegistry.get(uuid) ?? null;
+global.DEFAULT_TOKEN = "icons/svg/mystery-man.svg";
 global.getDocumentClass = name => (name === "Actor" ? MockActor : MockItem);
 
 global.__ep = {

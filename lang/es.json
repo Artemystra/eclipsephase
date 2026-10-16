@@ -1670,6 +1670,9 @@
         "duration": "Duracion",
         "untilEnded": "Hasta que se termine",
         "lastDose": "Esa fue la ultima dosis.",
+        "woreOff": "Mi dosis de <strong>{name}</strong> ha dejado de hacer efecto",
+        "endedEarly": "Mi dosis de <strong>{name}</strong> se terminó antes de tiempo",
+        "wearOffSv": "Estrés al pasar el efecto (SV)",
         "app": "App"
       },
       "buttonLabel": {

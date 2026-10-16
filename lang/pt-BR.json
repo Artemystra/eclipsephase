@@ -1684,6 +1684,9 @@
         "duration": "Duracao",
         "untilEnded": "Ate ser encerrada",
         "lastDose": "Essa foi a ultima dose.",
+        "woreOff": "Minha dose de <strong>{name}</strong> passou",
+        "endedEarly": "Minha dose de <strong>{name}</strong> foi encerrada antes da hora",
+        "wearOffSv": "Estresse ao passar o efeito (SV)",
         "app": "App"
       },
       "buttonLabel": {

@@ -1677,6 +1677,9 @@
         "duration": "持续时间",
         "untilEnded": "直到手动结束",
         "lastDose": "这是最后一剂。",
+        "woreOff": "我的 <strong>{name}</strong> 药效已经消退",
+        "endedEarly": "我的 <strong>{name}</strong> 被提前终止",
+        "wearOffSv": "药效消退压力 (SV)",
         "app": "应用"
       },
       "buttonLabel": {

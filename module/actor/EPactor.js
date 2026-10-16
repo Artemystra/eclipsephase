@@ -639,7 +639,7 @@ export default class EPactor extends Actor {
       else if(gearCheck.system.displayCategory === "gear" && gearCheck.system.active && gearCheck.system.slotType != "consumable"){
         gearCount++
       }
-      else if(gearCheck.system.slotType === "consumable" && gearCheck.system.active){
+      else if(gearCheck.system.slotType === "consumable" && (ignoreActive || gearCheck.system.active)){
         consumableCount++
       }
     }

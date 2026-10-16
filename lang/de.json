@@ -1714,6 +1714,9 @@
         "duration": "Dauer",
         "untilEnded": "Bis zum Beenden",
         "lastDose": "Das war die letzte Dosis.",
+        "woreOff": "Meine Dosis <strong>{name}</strong> hat nachgelassen",
+        "endedEarly": "Meine Dosis <strong>{name}</strong> wurde vorzeitig beendet",
+        "wearOffSv": "Stress beim Nachlassen (SV)",
         "app": "App"
       },
       "buttonLabel": {

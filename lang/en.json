@@ -1741,6 +1741,9 @@
         "duration": "Duration",
         "untilEnded": "Until ended",
         "lastDose": "That was the last dose.",
+        "woreOff": "My dose of <strong>{name}</strong> wore off",
+        "endedEarly": "My dose of <strong>{name}</strong> was ended early",
+        "wearOffSv": "Wear-off stress (SV)",
         "app": "App"
       },
       "buttonLabel": {

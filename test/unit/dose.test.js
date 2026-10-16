@@ -1,4 +1,4 @@
-import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses } from "../../module/common/doses.js";
+import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks } from "../../module/common/doses.js";
 import { registerPoolRule } from "../../module/common/pool-rule.js";
 import { makeActor, resetWorld } from "../setup/factories.js";
 
@@ -407,5 +407,101 @@ describe("the card a dose posts", () => {
     });
     await takeDose(npc, npc.items.get("kick1"));
     expect(Array.isArray(createdMessages[1].whisper)).toBe(true);
+  });
+});
+
+describe("the card when a dose stops acting", () => {
+  /**
+   * A character who has taken one dose of Kick, with the taking card already cleared away.
+   * @param {Object} [drug] - Drug system fields to override
+   * @returns {Promise<Actor>} The actor
+   */
+  async function dosed(drug = {}) {
+    registerDoseHooks();
+    const actor = carrying(drug);
+    await takeDose(actor, actor.items.get("kick1"));
+    createdMessages.length = 0;
+    return actor;
+  }
+
+  test("a dose that ran out on the clock posts exactly one card saying it wore off", async () => {
+    const actor = await dosed();
+    const dose = doseOn(actor);
+    dose.duration.expired = true;
+
+    await endRunOutDoses(actor, [dose]);
+
+    expect(createdMessages).toHaveLength(1);
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.woreOff");
+    expect(createdMessages[0].content).toContain("Kick");
+  });
+
+  test("a dose ended by hand while it still had time to run says it was ended early", async () => {
+    const actor = await dosed();
+
+    await actor.deleteEmbeddedDocuments("ActiveEffect", [doseOn(actor).id]);
+
+    expect(createdMessages).toHaveLength(1);
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.endedEarly");
+  });
+
+  test("a dose with no duration, ended by hand, simply wore off", async () => {
+    const actor = await dosed({ duration: { value: null, units: "" } });
+
+    await actor.deleteEmbeddedDocuments("ActiveEffect", [doseOn(actor).id]);
+
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.woreOff");
+  });
+
+  test("it names the wear-off stress when the drug records one, and nothing when it does not", async () => {
+    const stressed = await dosed({ wearOff: { sv: "1d6" } });
+    await stressed.deleteEmbeddedDocuments("ActiveEffect", [doseOn(stressed).id]);
+    expect(createdMessages[0].content).toContain("ep2e.chat.dose.wearOffSv");
+    expect(createdMessages[0].content).toContain("<b>1d6</b>");
+
+    createdMessages.length = 0;
+    const calm = await dosed();
+    await calm.deleteEmbeddedDocuments("ActiveEffect", [doseOn(calm).id]);
+    expect(createdMessages[0].content).not.toContain("ep2e.chat.dose.wearOffSv");
+  });
+
+  test("it shares the dose card's layout, in the inactive colour", async () => {
+    const actor = await dosed();
+
+    await actor.deleteEmbeddedDocuments("ActiveEffect", [doseOn(actor).id]);
+
+    expect(createdMessages[0].content).toContain("fa-syringe");
+    expect(createdMessages[0].content).toContain("var(--inactive)");
+  });
+
+  test("a removal made on somebody else's client is theirs to announce", async () => {
+    const actor = await dosed();
+    const dose = doseOn(actor);
+
+    Hooks.callAll("deleteActiveEffect", dose, {}, "somebody-else");
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("removing an effect that is not a dose posts nothing", async () => {
+    registerDoseHooks();
+    const actor = makeActor({ type: "character", effects: [{ _id: "fx1", name: "Neurachem" }] });
+
+    await actor.deleteEmbeddedDocuments("ActiveEffect", ["fx1"]);
+
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("a non-character's card goes to the GMs only", async () => {
+    registerDoseHooks();
+    const npc = makeActor({
+      type: "npc",
+      effects: [{ _id: "fx1", name: "Kick", flags: { eclipsephase: { dose: { name: "Kick", wearOff: "" } } } }]
+    });
+
+    await npc.deleteEmbeddedDocuments("ActiveEffect", ["fx1"]);
+
+    expect(Array.isArray(createdMessages[0].whisper)).toBe(true);
   });
 });

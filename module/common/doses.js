@@ -3,7 +3,7 @@ import { durationRunOut } from "./time.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
 import { consumeDose, gmList } from "./general-sheet-functions.js";
 
-const DOSE_CARD = "systems/eclipsephase/templates/chat/dose-taken.html";
+const DOSE_CARD = "systems/eclipsephase/templates/chat/dose.html";
 
 // What a drug's type can act on (Core p.330): biochem and nano are substances and need a
 // biological body; an electronic drug is software and needs an infomorph or a cyberbrain.
@@ -114,9 +114,27 @@ function durationLabel(span) {
 }
 
 /**
+ * Posts one of the drug cards - a dose taken or a dose worn off - in the shared dose layout: an
+ * icon, a headline and an optional box of labelled rows, a row without a label reading as a note.
+ * A character's card is public; anyone else's goes to the GMs, as the reload card does.
+ * @param {Actor} actor - The actor the card is about
+ * @param {Object} card - icon, color (a CSS variable), headline and rows of {label, value}
+ * @returns {Promise<void>} Resolves once the card is posted
+ */
+async function postDrugCard(actor, { icon, color, headline, rows = [] }) {
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { icon, color, headline, rows });
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    ...(actor.type === "character" ? {} : { whisper: gmList() })
+  });
+}
+
+/**
  * Posts the card announcing a dose: what was taken, in which form, how soon it takes hold, how
- * long it lasts and what is left of the pack. A character's card is public; anyone else's goes to
- * the GMs, as the reload card does. Posted by the client that took the dose, so it posts once.
+ * long it lasts and what is left of the pack. Posted by the client that took the dose, so it
+ * posts once.
  * @param {Actor} actor - The actor who took the dose
  * @param {Item} item - The drug, as it is after the dose was spent
  * @param {Object} outcome - What consumeDose reported
@@ -131,19 +149,54 @@ async function postDoseCard(actor, item, outcome, renewed) {
     ? game.i18n.localize("ep2e.chat.dose.app")
     : (vector ? game.i18n.localize(vector.label) : "-");
 
-  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, {
-    headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
-    form,
-    onset: onsetKey ? game.i18n.localize(onsetKey) : "",
-    duration: durationLabel(system.duration),
-    emptied: outcome.emptied,
-    dosesLeft: outcome.emptied ? 0 : dosesRemaining(system)
-  });
+  const rows = [{ label: game.i18n.localize("ep2e.chat.dose.form"), value: form }];
+  if (onsetKey) rows.push({ label: game.i18n.localize("ep2e.chat.dose.onset"), value: game.i18n.localize(onsetKey) });
+  rows.push({ label: game.i18n.localize("ep2e.chat.dose.duration"), value: durationLabel(system.duration) });
+  rows.push(outcome.emptied
+    ? { label: "", value: game.i18n.localize("ep2e.chat.dose.lastDose") }
+    : { label: game.i18n.localize("ep2e.item.drug.dosesLeft"), value: dosesRemaining(system) });
 
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content,
-    ...(actor.type === "character" ? {} : { whisper: gmList() })
+  await postDrugCard(actor, {
+    icon: "fa-syringe",
+    color: "--positive",
+    headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
+    rows
+  });
+}
+
+/**
+ * Posts the card for a dose that stopped acting: worn off on the clock, or ended early by hand
+ * while it still had time to run. Names the wear-off stress when the drug records one.
+ * @param {Actor} actor - The actor the dose was on
+ * @param {ActiveEffect} effect - The dose's effect, as it was when it was removed
+ * @returns {Promise<void>} Resolves once the card is posted
+ */
+export async function postWearOffCard(actor, effect) {
+  const dose = effect.getFlag("eclipsephase", "dose");
+  const timed = Number.isFinite(effect.duration?.value) && effect.duration.value > 0;
+  const endedEarly = timed && !durationRunOut(effect);
+  const rows = dose.wearOff ? [{ label: game.i18n.localize("ep2e.chat.dose.wearOffSv"), value: dose.wearOff }] : [];
+
+  await postDrugCard(actor, {
+    icon: "fa-syringe",
+    color: "--inactive",
+    headline: game.i18n.format(endedEarly ? "ep2e.chat.dose.endedEarly" : "ep2e.chat.dose.woreOff", { name: dose.name ?? effect.name }),
+    rows
+  });
+}
+
+/**
+ * Hangs the wear-off card on the removal of a dose from an actor, however it was removed: run out
+ * on the clock, ended from the Time Panel or deleted on the sheet. Only the client that removed it
+ * posts, so the card appears once.
+ * @returns {void}
+ */
+export function registerDoseHooks() {
+  Hooks.on("deleteActiveEffect", (effect, options, userId) => {
+    if (userId !== game.user.id) return;
+    if (effect.getFlag?.("eclipsephase", "dose") === undefined) return;
+    if (!(effect.parent instanceof Actor)) return;
+    postWearOffCard(effect.parent, effect);
   });
 }
 

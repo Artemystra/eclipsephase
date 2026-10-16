@@ -37,9 +37,9 @@
         {{/if}}
     </div>
 
-    {{!-- Gear & Consumables are character-only; NPCs/Goons just get Armor + Weapons --}}
+    {{!-- Gear is character-only; Consumables show for every actor type, so an NPC or Goon can take a dose --}}
     {{#if (eq actor.type "character")}}
         {{> systems/eclipsephase/templates/actor/partials/currentStatus/gearSummary.html }}
-        {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
     {{/if}}
+    {{> systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html }}
 </div>
