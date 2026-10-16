@@ -117,9 +117,29 @@ function resetWorld() {
   resetMock();
 }
 
+/**
+ * Builds an unlinked token on a scene: the token's own copy of an actor, parented to the token and
+ * kept out of the world's actor list, the way Foundry holds it. Build the copy before the world
+ * actor it shares an id with, so the world actor keeps the plain actor uuid.
+ * @param {Object} scene - A scene stand-in with a uuid and a tokens array
+ * @param {Object} data - Actor data, as makeActor takes it
+ * @param {Object} [tokenData] - The token's id and name
+ * @returns {Actor} The token's actor copy
+ */
+function makeUnlinkedToken(scene, data, { id = `token-${scene.tokens.length + 1}`, name } = {}) {
+  const actor = makeActor(data);
+  global.game.actors.delete(actor.id);
+  const token = { documentName: "Token", id, name: name ?? actor.name, actorLink: false, actor, uuid: `${scene.uuid}.Token.${id}` };
+  actor.parent = token;
+  global.__ep.uuidRegistry.set(actor.uuid, actor);
+  scene.tokens.push(token);
+  return actor;
+}
+
 module.exports = {
   makeActor,
   makeItem,
+  makeUnlinkedToken,
   makeActorFromFixture,
   fixtureNames,
   loadPackItem,
@@ -129,3 +149,4 @@ module.exports = {
   seedRolls,
   seedDialogs
 };
+

@@ -79,40 +79,50 @@
         {{#if effectsOpen}}
         <div class="itemBackground">
             {{#if grouped}}
-            {{#if groups.length}}
-            {{#each groups as |group|}}
-            <div class="ep-time-actor-group">
-                <div class="item flexrow flex-group-center ep-time-actor-row" data-action="toggleActor" data-actor-id="{{group.actorId}}">
-                    <i class="fas fa-caret-{{#if group.open}}down{{else}}right{{/if}} awesomeIcon ep-time-actor-caret"></i>
-                    <label class="truncate alignLeft ep-time-actor-name"><strong>{{group.name}}</strong></label>
-                    <label class="alignRight ep-time-actor-count">{{group.count}}</label>
+            {{#if sections.length}}
+            {{#each sections as |section|}}
+            <div class="ep-time-section">
+                <div class="flexrow ep-time-section-header{{#if section.collapsible}} ep-time-section-toggle{{/if}}"{{#if section.collapsible}} data-action="toggleThreats"{{/if}}>
+                    <label class="resource-label alignLeft">{{localize section.label}}</label>
+                    {{#if section.collapsible}}<i class="fas fa-{{#if section.open}}minus{{else}}plus{{/if}} icon-xsmall awesomeIcon alignRight"></i>{{/if}}
                 </div>
-                {{#if group.open}}
-                {{#each group.effects as |row|}}
-                <div class="item flexrow flex-group-center ep-time-effect-row{{#if row.expired}} ep-time-expired{{/if}}">
-                    <label class="truncate alignLeft ep-time-effect-name">{{row.name}}</label>
-                    <label class="alignRight ep-time-effect-remaining">{{row.remaining}}</label>
-                    <div class="flexrow item-controls flex-group-right ep-time-effect-controls">
-                        {{#if row.hasInfo}}
-                        <a class="item-control resource-label editWithLabel input-xs alignRight"
-                           data-action="effectInfo"
-                           data-actor-id="{{row.actorId}}"
-                           data-parent-id="{{row.parentId}}"
-                           data-effect-id="{{row.effectId}}"
-                           data-on-item="{{row.onItem}}"
-                           data-tooltip="{{localize 'ep2e.time.moreInfo'}}"><i class="fas fa-circle-info awesomeIcon"></i></a>
-                        {{/if}}
-                        {{#if @root.canControl}}
-                        <a class="item-control resource-label editWithLabel input-xs alignRight"
-                           data-action="endEffect"
-                           data-actor-id="{{row.actorId}}"
-                           data-parent-id="{{row.parentId}}"
-                           data-effect-id="{{row.effectId}}"
-                           data-on-item="{{row.onItem}}"
-                           data-tooltip="{{localize 'ep2e.time.endNow'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+                {{#if section.open}}
+                {{#each section.groups as |group|}}
+                    <div class="ep-time-actor-group">
+                        <div class="item flexrow flex-group-center ep-time-actor-row" data-action="toggleActor" data-actor-uuid="{{group.actorUuid}}">
+                            <i class="fas fa-caret-{{#if group.open}}down{{else}}right{{/if}} awesomeIcon ep-time-actor-caret"></i>
+                            <label class="truncate alignLeft ep-time-actor-name"><strong>{{group.name}}</strong></label>
+                            <label class="alignRight ep-time-actor-count">{{group.count}}</label>
+                        </div>
+                        {{#if group.open}}
+                        {{#each group.effects as |row|}}
+                        <div class="item flexrow flex-group-center ep-time-effect-row{{#if row.expired}} ep-time-expired{{/if}}">
+                            <label class="truncate alignLeft ep-time-effect-name">{{row.name}}</label>
+                            <label class="alignRight ep-time-effect-remaining">{{row.remaining}}</label>
+                            <div class="flexrow item-controls flex-group-right ep-time-effect-controls">
+                                {{#if row.hasInfo}}
+                                <a class="item-control resource-label editWithLabel input-xs alignRight"
+                                   data-action="effectInfo"
+                                   data-actor-uuid="{{row.actorUuid}}"
+                                   data-parent-id="{{row.parentId}}"
+                                   data-effect-id="{{row.effectId}}"
+                                   data-on-item="{{row.onItem}}"
+                                   data-tooltip="{{localize 'ep2e.time.moreInfo'}}"><i class="fas fa-circle-info awesomeIcon"></i></a>
+                                {{/if}}
+                                {{#if @root.canControl}}
+                                <a class="item-control resource-label editWithLabel input-xs alignRight"
+                                   data-action="endEffect"
+                                   data-actor-uuid="{{row.actorUuid}}"
+                                   data-parent-id="{{row.parentId}}"
+                                   data-effect-id="{{row.effectId}}"
+                                   data-on-item="{{row.onItem}}"
+                                   data-tooltip="{{localize 'ep2e.time.endNow'}}"><i class="far fa-times-circle awesomeIcon"></i></a>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{/each}}
                         {{/if}}
                     </div>
-                </div>
                 {{/each}}
                 {{/if}}
             </div>
@@ -134,7 +144,7 @@
                     {{#if row.hasInfo}}
                     <a class="item-control resource-label editWithLabel input-xs alignRight"
                        data-action="effectInfo"
-                       data-actor-id="{{row.actorId}}"
+                       data-actor-uuid="{{row.actorUuid}}"
                        data-parent-id="{{row.parentId}}"
                        data-effect-id="{{row.effectId}}"
                        data-on-item="{{row.onItem}}"

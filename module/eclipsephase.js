@@ -677,8 +677,9 @@ Hooks.once("ready", async function() {
   }
 
   // 2.6 changed no data, so the drug schema is the first migration since 2.5. A world holding no
-  // drug that predates it is stamped silently rather than being asked about nothing.
-  if (before27 && !update.migrationPre27Needed()) {
+  // drug that predates it or lacks its compendium blueprints is stamped silently rather than being
+  // asked about nothing.
+  if (before27 && !(await update.migrationPre27Needed())) {
     endMigration = false;
     await game.settings.set("eclipsephase", "migrationVersion", "2.7");
   }
@@ -899,8 +900,9 @@ Hooks.on('renderSceneControls', (app, html) => {
   menu.appendChild(entry);
 });
 
-// Everything that changes what the panel shows: the clock itself, and effects coming and going.
-for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected"]) {
+// Everything that changes what the panel shows: the clock itself, effects coming and going, and
+// the scene in view or its tokens changing, since a GM's list covers the unlinked tokens on it.
+for (const hook of ["updateWorldTime", "createActiveEffect", "updateActiveEffect", "deleteActiveEffect", "userConnected", "canvasReady", "createToken", "deleteToken"]) {
   Hooks.on(hook, () => EPtimePanel.refresh());
 }
 

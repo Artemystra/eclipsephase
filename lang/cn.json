@@ -1832,6 +1832,8 @@
       "customHint": "分钟",
       "effects": "进行中的效果",
       "noEffects": "目前没有任何效果在进行",
+      "sectionPlayers": "玩家角色",
+      "sectionThreats": "非玩家角色与威胁",
       "endNow": "结束",
       "remaining": "剩余",
       "owner": "角色",

@@ -1869,6 +1869,8 @@
       "customHint": "Minuten",
       "effects": "Laufende Effekte",
       "noEffects": "Aktuell läuft nichts",
+      "sectionPlayers": "Spielercharaktere",
+      "sectionThreats": "Nichtspielercharaktere & Bedrohungen",
       "endNow": "Beenden",
       "remaining": "Verbleibend",
       "owner": "Charakter",

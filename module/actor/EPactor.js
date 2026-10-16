@@ -58,6 +58,24 @@ export default class EPactor extends Actor {
   }
 
   /**
+   * Hands a world actor's change on to its unlinked tokens, then registers the effects their
+   * copies now carry with Foundry's duration tracking. Foundry rebuilds a token copy's effects from
+   * the world actor here but never registers the rebuilt ones, so a dose the world actor took would
+   * sit on every unlinked copy without ever running down on the clock.
+   * @param {Object} [update] - The update delta
+   * @param {Object} [options] - The database operation that was performed
+   * @returns {void}
+   */
+  _updateDependentTokens(update = {}, options = {}) {
+    super._updateDependentTokens(update, options);
+    const registry = foundry.documents.ActiveEffect?.registry;
+    if (!registry?.initialized) return;
+    for (const token of this.getDependentTokens()) {
+      if (token.actor) registry.addFromParent(token.actor);
+    }
+  }
+
+  /**
    * Augment the basic actor data with additional dynamic data.
    */
   // Keep synchronous - Foundry never awaits prepareData(), an early await breaks unlinked-token actors.

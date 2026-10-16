@@ -1825,6 +1825,8 @@
       "customHint": "Minutos",
       "effects": "Efectos activos",
       "noEffects": "Ahora mismo no hay nada activo",
+      "sectionPlayers": "Personajes jugadores",
+      "sectionThreats": "Personajes no jugadores y amenazas",
       "endNow": "Terminar",
       "remaining": "Restante",
       "owner": "Personaje",

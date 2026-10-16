@@ -518,6 +518,22 @@ class MockActor extends MockDocument {
     return "Actor";
   }
 
+  // Foundry hands a world actor's change on to the unlinked tokens built from it.
+  _updateDependentTokens() {}
+
+  getDependentTokens() {
+    return [];
+  }
+
+  // An unlinked token's actor is its own copy, parented to the TokenDocument it belongs to.
+  get isToken() {
+    return this.parent?.documentName === "Token";
+  }
+
+  get token() {
+    return this.isToken ? this.parent : null;
+  }
+
   get isOwner() {
     return true;
   }
@@ -770,6 +786,7 @@ function getHandlebars() {
     concat: (...args) => args.slice(0, -1).join(""),
     toLowerCase: value => String(value ?? "").toLowerCase(),
     checkedIf: condition => (condition ? "checked" : ""),
+    checked: condition => (condition ? "checked" : ""),
     numberFormat: value => String(value ?? "")
   });
   handlebarsReady = true;
@@ -868,6 +885,8 @@ function resetMock() {
   global.game.actors.clear();
   global.game.items.clear();
   global.game.packs.clear();
+  global.game.scenes.viewed = null;
+  global.game.scenes.active = null;
 }
 
 global.foundry = {
@@ -1045,6 +1064,7 @@ global.game = {
   actors: new MockCollection(),
   items: new MockCollection(),
   packs: new MockCollection(),
+  scenes: { viewed: null, active: null },
   macros: new MockCollection(),
   modules: new MockCollection(),
   socket: { on: () => {}, emit: () => {} },
@@ -1065,6 +1085,7 @@ Object.defineProperty(global.game.eclipsephase, "api", {
 });
 
 global.fromUuid = async uuid => uuidRegistry.get(uuid) ?? null;
+global.fromUuidSync = uuid => uuidRegistry.get(uuid) ?? null;
 global.getDocumentClass = name => (name === "Actor" ? MockActor : MockItem);
 
 global.__ep = {

@@ -3928,6 +3928,21 @@ li:has(.ep-system-notice) .message-header {
   margin-bottom: 4px;
 }
 
+.ep-time-panel .ep-time-section-header {
+  align-items: center;
+  padding: 6px 0 2px;
+  color: var(--iconGrey);
+  border-bottom: solid 1px var(--pitchBorder);
+}
+
+.ep-time-panel .ep-time-section-toggle {
+  cursor: pointer;
+}
+
+.ep-time-panel .ep-time-section + .ep-time-section {
+  margin-top: 8px;
+}
+
 .ep-time-panel .ep-time-actor-row {
   gap: 6px;
   padding: 4px 0;

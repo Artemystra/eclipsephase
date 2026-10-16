@@ -2624,19 +2624,55 @@ function _ep27_drugRepairs(item) {
   return normaliseDrugSystem(item._source?.system ?? item.system);
 }
 
+const _ep27_DRUG_PACK = "eclipsephase.drugs-and-toxins";
+
 /**
- * Whether any drug in the world still carries data from before the 2.7 schema.
- * @returns {Boolean} True when at least one drug needs rewriting
+ * The blueprint effects of every drug in the system's own compendium that carries any, keyed by
+ * the drug's name. Ids and stats are dropped so each copy is created as a fresh effect.
+ * @returns {Promise<Map<String, Object[]>>} Drug name to effect data
  */
-export function migrationPre27Needed() {
-  const needs = item => item.type === "drug" && _ep27_drugRepairs(item) !== null;
+async function _ep27_drugBlueprints() {
+  const blueprints = new Map();
+  const pack = game.packs.get(_ep27_DRUG_PACK);
+  if (!pack) return blueprints;
+
+  for (const drug of await pack.getDocuments()) {
+    const effects = (drug.toObject().effects ?? []).map(({ _id, _stats, _key, ...effect }) => effect);
+    if (effects.length) blueprints.set(drug.name, effects);
+  }
+  return blueprints;
+}
+
+/**
+ * The blueprint effects a drug dragged before 2.7 is missing. A dose copies the drug's own effects,
+ * so a drug that has none does nothing when taken. Only a drug with no effects at all is filled,
+ * by name from the compendium; one that already carries effects may be homebrew and is left alone.
+ * @param {Item} item - The drug item
+ * @param {Map<String, Object[]>} blueprints - What _ep27_drugBlueprints read
+ * @returns {Object[]|null} The effects to add, or null when there is nothing to add
+ */
+function _ep27_missingBlueprints(item, blueprints) {
+  if (Array.from(item.effects ?? []).length) return null;
+  return blueprints.get(item.name) ?? null;
+}
+
+/**
+ * Whether any drug in the world still carries data from before the 2.7 schema or lacks the
+ * blueprint effects its compendium entry has.
+ * @returns {Promise<Boolean>} True when at least one drug needs work
+ */
+export async function migrationPre27Needed() {
+  const blueprints = await _ep27_drugBlueprints();
+  const needs = item => item.type === "drug"
+    && (_ep27_drugRepairs(item) !== null || _ep27_missingBlueprints(item, blueprints) !== null);
   return game.items.some(needs) || game.actors.some(actor => actor.items.some(needs));
 }
 
 /**
  * Rewrites every drug in the world into the 2.7 schema: the world's own items, every actor's
  * embedded ones and the world's item compendiums. A duration that cannot be read lands as
- * open-ended instead of stopping the run.
+ * open-ended instead of stopping the run. A drug without effects gets the blueprints of its
+ * compendium namesake, so a dose of it does what a fresh one from the compendium does.
  * @param {Boolean} startMigration - Whether the user confirmed the migration
  * @returns {Promise<Object>} Whether the closing notice is due
  */
@@ -2644,13 +2680,18 @@ export async function migrationPre27(startMigration) {
   const latestUpdate = "2.7";
   if (!startMigration) return { endMigration: false };
 
+  const blueprints = await _ep27_drugBlueprints();
+
   await forEachItem(async item => {
     const repairs = _ep27_drugRepairs(item);
-    if (!repairs) return;
+    if (repairs) {
+      const update = {};
+      for (const [key, value] of Object.entries(repairs)) update[`system.${key}`] = value;
+      await item.update(update);
+    }
 
-    const update = {};
-    for (const [key, value] of Object.entries(repairs)) update[`system.${key}`] = value;
-    await item.update(update);
+    const missing = _ep27_missingBlueprints(item, blueprints);
+    if (missing) await item.createEmbeddedDocuments("ActiveEffect", foundry.utils.deepClone(missing));
   }, {
     label: `EP Migration ${latestUpdate}`,
     filter: item => item.type === "drug",

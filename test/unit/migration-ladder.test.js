@@ -1,3 +1,6 @@
+import { makeActor } from "../setup/factories.js";
+
+
 // module/eclipsephase.js pulls in the canvas/token classes at import time, which need a little more
 // of Foundry's canvas API stubbed than the rest of the suite needs.
 foundry.canvas = {
@@ -170,5 +173,110 @@ describe("the 2.7 drug schema", () => {
     } finally {
       game.items.delete(drug.id);
     }
+  });
+});
+
+describe("the 2.7 blueprint backfill", () => {
+  const GRIN_BLUEPRINT = {
+    _id: "Bxx64DyBJ7XYb89n",
+    name: "Grin",
+    transfer: true,
+    system: { changes: [{ key: "system.mods.woundMod", value: -1, type: "add" }] },
+    _stats: { coreVersion: "14.356" }
+  };
+  const CURRENT = { duration: { value: 3, units: "hours" }, usagesUsed: 0, usagesMax: 5 };
+
+  /**
+   * Registers the system's drug compendium for the length of one test.
+   * @param {Object[]} drugs - The compendium's drug source data
+   * @returns {void}
+   */
+  function drugPack(drugs) {
+    game.packs.set("eclipsephase.drugs-and-toxins", {
+      metadata: { type: "Item", package: "eclipsephase" },
+      getDocuments: async () => drugs.map(data => new CONFIG.Item.documentClass(data))
+    });
+  }
+
+  /**
+   * Puts a world item into the world for the length of one test.
+   * @param {Object} data - The item source data
+   * @returns {Item} The item, already registered
+   */
+  function worldItem(data) {
+    const item = new CONFIG.Item.documentClass(data);
+    game.items.set(item.id, item);
+    return item;
+  }
+
+  beforeEach(() => {
+    drugPack([
+      { name: "Grin", type: "drug", system: CURRENT, effects: [GRIN_BLUEPRINT] },
+      { name: "Retcon", type: "drug", system: CURRENT, effects: [] }
+    ]);
+  });
+
+  afterEach(() => {
+    game.packs.delete("eclipsephase.drugs-and-toxins");
+    game.items.clear();
+    game.actors.clear();
+  });
+
+  test("a world whose drugs are current but lack their blueprints is still offered the notice", async () => {
+    worldItem({ name: "Grin", type: "drug", system: CURRENT });
+
+    const rendered = await runLadderFrom("2.5");
+
+    expect(rendered.map(entry => entry.copy)).toContain("ep2e.migration.27");
+  });
+
+  test("running it gives a drug on a sheet the effects of its compendium namesake", async () => {
+    const actor = makeActor({ type: "character", items: [{ _id: "grin1", name: "Grin", type: "drug", system: CURRENT }] });
+
+    await runLadderFrom("2.5");
+
+    const effects = Array.from(actor.items.get("grin1").effects);
+    expect(effects).toHaveLength(1);
+    expect(effects[0].changes).toEqual([expect.objectContaining({ key: "system.mods.woundMod", type: "add" })]);
+  });
+
+  test("a world item gets them too, and the copy is a fresh effect rather than the compendium's own", async () => {
+    const drug = worldItem({ name: "Grin", type: "drug", system: { duration: "3 hours" } });
+
+    await runLadderFrom("2.5");
+
+    const effects = Array.from(drug.effects);
+    expect(effects).toHaveLength(1);
+    expect(effects[0].id).not.toEqual(GRIN_BLUEPRINT._id);
+  });
+
+  test("a drug that already carries effects of its own is left as it is", async () => {
+    const homebrew = { name: "House Grin", system: { changes: [{ key: "system.mods.lucmod", value: 5, type: "add" }] } };
+    const drug = worldItem({ name: "Grin", type: "drug", system: CURRENT, effects: [homebrew] });
+
+    const rendered = await runLadderFrom("2.5");
+
+    expect(rendered).toEqual([]);
+    expect(Array.from(drug.effects).map(effect => effect.name)).toEqual(["House Grin"]);
+  });
+
+  test("a drug whose namesake has no blueprint, or which has no namesake, asks nothing", async () => {
+    worldItem({ name: "Retcon", type: "drug", system: CURRENT });
+    worldItem({ name: "Garage Brew", type: "drug", system: CURRENT });
+
+    const rendered = await runLadderFrom("2.5");
+
+    expect(rendered).toEqual([]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
+  });
+
+  test("a world without the drug compendium still migrates its schema", async () => {
+    game.packs.delete("eclipsephase.drugs-and-toxins");
+    const drug = worldItem({ name: "Grin", type: "drug", system: { duration: "3 hours" } });
+
+    await runLadderFrom("2.5");
+
+    expect(drug.system.duration).toEqual({ value: 3, units: "hours" });
+    expect(Array.from(drug.effects)).toEqual([]);
   });
 });
