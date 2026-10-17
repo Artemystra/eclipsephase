@@ -2,7 +2,53 @@
   "name": "Nervex",
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/toxic-512.png",
-  "effects": [],
+  "effects": [
+    {
+      "_id": "ANWUJTOJLrBqWvED",
+      "name": "Nervex",
+      "img": "systems/eclipsephase/resources/icons/toxic-512.png",
+      "type": "base",
+      "disabled": false,
+      "transfer": true,
+      "origin": null,
+      "tint": "#ffffff",
+      "duration": {
+        "value": null,
+        "units": "seconds",
+        "expiry": null,
+        "expired": false
+      },
+      "description": "",
+      "statuses": [],
+      "flags": {},
+      "sort": 0,
+      "start": null,
+      "showIcon": 1,
+      "folder": null,
+      "system": {
+        "changes": [
+          {
+            "key": "system.mods.globalMod",
+            "value": "-20",
+            "priority": null,
+            "type": "add"
+          }
+        ]
+      },
+      "_stats": {
+        "coreVersion": "14.356",
+        "systemId": null,
+        "systemVersion": null,
+        "createdTime": null,
+        "modifiedTime": null,
+        "lastModifiedBy": null,
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "_key": "!items.effects!mVSXCYZrRpXpwbFl.ANWUJTOJLrBqWvED"
+    }
+  ],
   "folder": null,
   "sort": 0,
   "flags": {

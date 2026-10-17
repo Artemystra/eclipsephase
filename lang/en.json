@@ -1516,6 +1516,8 @@
       },
       "announce": {
         "global": "Situational",
+        "globalEffects": "Ongoing effects",
+        "intoxicated": "Intoxicated",
         "favor": "Favor Modifier",
         "specialization": "Specialization",
         "encumberance": "Encumberance",

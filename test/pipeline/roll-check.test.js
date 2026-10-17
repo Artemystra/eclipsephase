@@ -261,3 +261,59 @@ describe("a module's own chat-context block", () => {
     expect(stored.item.weaponId).toEqual("");
   });
 });
+
+describe("modifiers to all actions", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * The roller, under a running dose of a drug that costs every action something.
+   * @param {String} name - The drug's name
+   * @param {String} value - The modifier
+   * @returns {Object} The prepared actor
+   */
+  function dosedRoller(name, value) {
+    const actor = makeRoller();
+    actor._source.effects = [];
+    actor.effects.push(new ActiveEffect({
+      name,
+      duration: { value: 1, units: "hours" },
+      changes: [{ key: "system.mods.globalMod", value, type: "add" }],
+      flags: { eclipsephase: { dose: { name } } }
+    }, { parent: actor }));
+    actor.prepareData();
+    return actor;
+  }
+
+  test("a running dose's penalty lands on every check as intoxicated, naming the drug beneath", async () => {
+    const actor = dosedRoller("Twitch", "-20");
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+
+    const card = global.__ep.createdMessages[0];
+    expect(card.content).toContain("ep2e.roll.announce.intoxicated");
+    expect(card.content).toContain("Twitch (-20)");
+    expect(card.content).toContain("ep-mod-breakdown");
+  });
+
+  test("a check by a vehicle's own skill is not the ego acting, and is left alone", async () => {
+    const actor = dosedRoller("Twitch", "-20");
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "vehicleSkill");
+
+    expect(global.__ep.createdMessages[0].content).not.toContain("Twitch");
+  });
+
+  test("without a dose nothing is added", async () => {
+    const actor = makeRoller();
+    seedDialogs(plainDialogAnswer());
+    seedRolls([42]);
+
+    await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+
+    expect(global.__ep.createdMessages[0].content).not.toContain("ep2e.roll.announce.globalEffects");
+  });
+});

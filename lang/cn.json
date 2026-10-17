@@ -1462,6 +1462,8 @@
       },
       "announce": {
         "global": "状态",
+        "globalEffects": "持续效果",
+        "intoxicated": "受药物影响",
         "favor": "支援调整值",
         "specialization": "专精",
         "encumberance": "妨碍",

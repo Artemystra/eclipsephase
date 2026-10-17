@@ -136,7 +136,6 @@ describe("the blueprint effects authored from the book", () => {
   const ACTOR_BASE = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../template.json"), "utf8")).Actor.templates.base;
   const RAW_INT_TARGETS = ["system.mods.woundMod", "system.mods.traumaMod"];
   const DEAD_OR_DERIVED = [
-    "system.mods.globalMod",
     "system.physical.wt", "system.physical.dr", "system.mental.tt", "system.mental.ir",
     "system.health.physical.max", "system.health.mental.max"
   ];
@@ -172,9 +171,18 @@ describe("the blueprint effects authored from the book", () => {
   test("exactly the flat, unconditional modifiers carry a blueprint effect", () => {
     const withEffects = packDrugs().filter(drug => drug.effects.length > 0).map(drug => drug.name).sort();
     expect(withEffects).toEqual([
-      "Blab", "Brutalitea", "Comfurt", "Drive", "Grin", "Inhibitor", "Kick", "Klar",
-      "MRDR", "Nofux", "Orbital Hash", "Phlo", "Psike-Out", "TGS", "Tongzhi"
+      "Blab", "Brutalitea", "CR Gas", "Comfurt", "DDR", "Drive", "Grin", "Inhibitor", "Kick", "Klar",
+      "MRDR", "Nervex", "Neuropath", "Nofux", "Orbital Hash", "Phlo", "Psike-Out", "TGS", "Tongzhi", "Twitch"
     ]);
+  });
+
+  test("the penalties to all actions sit on the global modifier, at the book's values", () => {
+    const globalOf = name => allChanges().filter(c => c.drug === name).map(c => [c.key, c.value]);
+    expect(globalOf("Twitch")).toEqual([["system.mods.globalMod", "-20"]]);
+    expect(globalOf("Nervex")).toEqual([["system.mods.globalMod", "-20"]]);
+    expect(globalOf("DDR")).toEqual([["system.mods.globalMod", "-20"]]);
+    expect(globalOf("Neuropath")).toEqual([["system.mods.globalMod", "-30"]]);
+    expect(globalOf("CR Gas")).toEqual([["system.mods.globalMod", "-20"]]);
   });
 
   test("every change targets a field that actually exists on an actor", () => {

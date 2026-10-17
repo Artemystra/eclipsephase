@@ -3994,3 +3994,10 @@ li:has(.ep-system-notice) .message-header {
 .ep-time-panel .ep-time-beats-info:hover {
   color: var(--highlight);
 }
+
+/* A modifier's breakdown, one source per line, set close together. */
+.ep-mod-breakdown {
+  display: inline-block;
+  white-space: pre-line;
+  line-height: 1.2;
+}

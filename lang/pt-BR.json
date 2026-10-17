@@ -1469,6 +1469,8 @@
       },
       "announce": {
         "global": "Situacional",
+        "globalEffects": "Efeitos ativos",
+        "intoxicated": "Intoxicado",
         "favor": "Modificador de Favor",
         "specialization": "Especialização",
         "encumberance": "Sobrecarga",

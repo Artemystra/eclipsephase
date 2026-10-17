@@ -4,6 +4,7 @@ import { endAllChiPushes, endExpiredChiPushes } from "../rolls/psi.js"
 import { deleteRunOutTempEffects } from "../common/general-sheet-functions.js"
 import { endRunOutDoses } from "../common/doses.js";
 import { chainHasWareMarker, CYBERBRAIN_MARKER } from "../common/body-markers.js"
+import { globalModifiers } from "../common/global-mod.js";
 
 const gammaAutoPushInFlight = new Set();
 
@@ -779,6 +780,10 @@ export default class EPactor extends Actor {
 
     if (actorModel?.additionalSystems?.sleeving?.integrationIssues !== undefined){
       actorModel.currentStatus.specialModifiers.push({"label" : actorModel.additionalSystems.sleeving.integrationIssues.title, "modifier" : actorModel.additionalSystems.sleeving.integrationIssues.value, "flag" : actorModel.additionalSystems.sleeving.integrationIssues.identifier});
+    }
+
+    for (const { label, modifier, comment } of globalModifiers(actorWhole)) {
+      actorModel.currentStatus.specialModifiers.push({ label, modifier, comment, flag: "globalMod" });
     }
 
     Hooks.callAll("eclipsephase.prepareActorStatus", actorWhole, actorModel);

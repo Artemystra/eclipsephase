@@ -4,6 +4,7 @@ import { prepareRecipients, damageValueCalc, buildRollContext } from "../common/
 import { strainSubstrate } from "../common/body-markers.js";
 import { getStrainFamily } from "./strain-families.js";
 import { getRollSource, applicablePoolOptions, getTaskResultText } from "../api/registry.js";
+import { globalModifiers } from "../common/global-mod.js";
 
 /*
  * Path constants for dialog templates
@@ -1217,6 +1218,11 @@ function addTaskModifiers(actorWhole, actorModel, options, task, rollType, rolle
             modValue = actorModel.additionalSystems.sleeving.integrationIssues.value
             announce = actorModel.additionalSystems.sleeving.integrationIssues.title;
             task.addModifier(new TaskRollModifier(announce, modValue))
+    }
+
+    if (rolledFrom !== "vehicleSkill"){
+        for (const { label, modifier, comment } of globalModifiers(actorWhole))
+            task.addModifier(new TaskRollModifier(label, modifier, comment))
     }
 
     if (rolledFrom === "integration"){

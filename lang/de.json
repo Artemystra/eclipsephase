@@ -1490,6 +1490,8 @@
       },
       "announce": {
         "global": "Situationsmod",
+        "globalEffects": "Laufende Effekte",
+        "intoxicated": "Berauscht",
         "favor": "Gefallenmod",
         "specialization": "Spezialisierung",
         "encumberance": "Überlastung",
