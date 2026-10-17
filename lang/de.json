@@ -66,8 +66,7 @@
     "Actor": {
       "character": "Spielercharakter",
       "npc": "Nichtspielercharakter",
-      "goon": "Bedrohung",
-      "shop": "Shop"
+      "goon": "Bedrohung"
     },
     "Item": {
       "gear": "Spezialausrüstung",
