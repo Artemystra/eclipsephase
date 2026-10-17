@@ -227,7 +227,7 @@
   "primaryTokenAttribute": "health.physical",
   "secondaryTokenAttribute": "health.mental",
   "url": "https://github.com/Artemystra/eclipsephase",
-  "manifest": "https://github.com/Artemystra/eclipsephase/raw/v2.6/system.json",
-  "download": "https://github.com/Artemystra/eclipsephase/archive/v2.6/eclipsephase-v2.6.zip",
+  "manifest": "https://github.com/Artemystra/eclipsephase/releases/latest/download/system.json",
+  "download": "https://github.com/Artemystra/eclipsephase/releases/download/v2.6/eclipsephase.zip",
   "license": "LICENSE.txt"
 }
