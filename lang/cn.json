@@ -1150,17 +1150,8 @@
           },
           "category": {
             "label": "类别",
-            "cognitive": "认知药物",
-            "combat": "战斗药物",
-            "health": "健康药物",
-            "nano": "纳米药物",
-            "narco": "药物算法",
-            "petals": "万花镜",
-            "psi": "灵能药物",
-            "rec": "娱乐药物",
-            "social": "社交药物",
-            "toxins": "毒素",
-            "nanotox": "纳米毒素"
+            "drug": "药物",
+            "toxin": "毒素"
           },
           "type": {
             "label": "药物类型",

@@ -49,7 +49,7 @@
       "_key": "!items.effects!mVSXCYZrRpXpwbFl.ANWUJTOJLrBqWvED"
     }
   ],
-  "folder": null,
+  "folder": "MkcHmBpWHVEwxF2x",
   "sort": 0,
   "flags": {
     "core": {}
@@ -63,7 +63,7 @@
     "updated": "",
     "cost": "major",
     "slotType": "consumable",
-    "category": "toxins",
+    "category": "toxin",
     "dermal": true,
     "inhalation": true,
     "injection": true,

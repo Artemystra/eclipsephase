@@ -1151,17 +1151,8 @@
           },
           "category": {
             "label": "Category",
-            "cognitive": "Cognitive Drug",
-            "combat": "Combat Drug",
-            "health": "Health Drug",
-            "nano": "Nanodrug",
-            "narco": "Narcoalgorithm",
-            "petals": "Petal",
-            "psi": "Psi Drug",
-            "rec": "Recreational",
-            "social": "Social Drug",
-            "toxins": "Toxin",
-            "nanotox": "Nanotoxin"
+            "drug": "Droga",
+            "toxin": "Toxina"
           },
           "type": {
             "label": "Drug Type",

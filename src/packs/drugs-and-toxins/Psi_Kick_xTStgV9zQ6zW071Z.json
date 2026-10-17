@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
   "effects": [],
-  "folder": null,
+  "folder": "Z6bLrNt6OU1jrEbV",
   "sort": 0,
   "flags": {
     "core": {}
@@ -17,7 +17,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "psi",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,

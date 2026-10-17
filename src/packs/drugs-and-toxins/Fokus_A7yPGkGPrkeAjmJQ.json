@@ -3,7 +3,7 @@
   "type": "drug",
   "img": "systems/eclipsephase/resources/icons/drug.png",
   "effects": [],
-  "folder": null,
+  "folder": "C5oMRm2aIaMqJz22",
   "sort": 0,
   "flags": {
     "core": {}
@@ -17,7 +17,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "cognitive",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,

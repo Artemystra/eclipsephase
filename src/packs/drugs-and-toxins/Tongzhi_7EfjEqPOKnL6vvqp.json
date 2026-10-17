@@ -49,7 +49,7 @@
       "_key": "!items.effects!7EfjEqPOKnL6vvqp.TStdUJqZfNaUr1Vx"
     }
   ],
-  "folder": null,
+  "folder": "Ew1sB0iagLW7KP0Q",
   "sort": 0,
   "flags": {
     "core": {}
@@ -63,7 +63,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "social",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,

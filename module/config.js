@@ -230,17 +230,8 @@ eclipsephase.drugAddicitonTypes = {
 }
 
 eclipsephase.drugCategories = {
-    cognitive: "ep2e.item.drug.table.category.cognitive",
-    combat: "ep2e.item.drug.table.category.combat",
-    health: "ep2e.item.drug.table.category.health",
-    nano: "ep2e.item.drug.table.category.nano",
-    narco: "ep2e.item.drug.table.category.narco",
-    petals: "ep2e.item.drug.table.category.petals",
-    psi: "ep2e.item.drug.table.category.psi",
-    rec: "ep2e.item.drug.table.category.rec",
-    social: "ep2e.item.drug.table.category.social",
-    toxins: "ep2e.item.drug.table.category.toxins",
-    nanotox: "ep2e.item.drug.table.category.nanotox"
+    drug: "ep2e.item.drug.table.category.drug",
+    toxin: "ep2e.item.drug.table.category.toxin"
 }
 
 eclipsephase.grenadeArmorVector = {

@@ -1,0 +1,23 @@
+{
+  "name": "Petals",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "Np9f8fyZM6WqpPyt",
+  "sort": 600000,
+  "color": null,
+  "description": "",
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.7",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!folders!Np9f8fyZM6WqpPyt"
+}

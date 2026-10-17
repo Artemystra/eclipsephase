@@ -149,6 +149,20 @@ describe("the 2.7 drug schema", () => {
     }
   });
 
+  test("a drug from the old fine-grained categories becomes a drug or a toxin", async () => {
+    const toxin = worldItem({ name: "BTX2", type: "drug", system: { duration: "1 hour", category: "toxins" } });
+    const drug = worldItem({ name: "Grin", type: "drug", system: { duration: "3 hours", category: "combat" } });
+
+    try {
+      await runLadderFrom("2.5");
+      expect(toxin._source.system.category).toEqual("toxin");
+      expect(drug._source.system.category).toEqual("drug");
+    } finally {
+      game.items.delete(toxin.id);
+      game.items.delete(drug.id);
+    }
+  });
+
   test("a drug whose duration never ended on its own is left open-ended rather than refused", async () => {
     const drug = worldItem({ name: "Retcon", type: "drug", system: { duration: "Permanent" } });
 

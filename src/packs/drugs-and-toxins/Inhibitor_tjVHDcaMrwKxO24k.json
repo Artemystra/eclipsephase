@@ -49,7 +49,7 @@
       "_key": "!items.effects!tjVHDcaMrwKxO24k.FODZH5GgGZL7DBCk"
     }
   ],
-  "folder": null,
+  "folder": "Z6bLrNt6OU1jrEbV",
   "sort": 0,
   "flags": {
     "core": {}
@@ -63,7 +63,7 @@
     "updated": "",
     "cost": "major",
     "slotType": "consumable",
-    "category": "psi",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,

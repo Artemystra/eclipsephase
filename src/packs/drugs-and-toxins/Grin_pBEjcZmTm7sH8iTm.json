@@ -49,7 +49,7 @@
       "_key": "!items.effects!pBEjcZmTm7sH8iTm.Bxx64DyBJ7XYb89n"
     }
   ],
-  "folder": null,
+  "folder": "3LgPDiPKo14RtxW5",
   "sort": 0,
   "flags": {
     "core": {}
@@ -63,7 +63,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "combat",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,

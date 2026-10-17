@@ -99,7 +99,7 @@ describe("taking a dose", () => {
     await takeDose(actor, actor.items.get("kick1"));
 
     expect(doseOn(actor).getFlag("eclipsephase", "dose")).toMatchObject({
-      itemId: "kick1", name: "Kick", drugType: "biochem", category: "combat",
+      itemId: "kick1", name: "Kick", drugType: "biochem", category: "drug",
       vector: "injection", onset: "ep2e.item.drug.onset.turn", blocksPsi: false
     });
   });

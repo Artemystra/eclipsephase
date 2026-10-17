@@ -61,7 +61,7 @@
       "_key": "!items.effects!3XKHoDsUPOry6RQe.WKSOYpnsQaNs0uKf"
     }
   ],
-  "folder": null,
+  "folder": "XLpKIp0Q6benJzPo",
   "sort": 0,
   "flags": {
     "core": {}
@@ -75,7 +75,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "rec",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,

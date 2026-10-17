@@ -49,7 +49,7 @@
       "_key": "!items.effects!Kne4ELzSf2tc6BRC.7OFcGToM1GOqxgfu"
     }
   ],
-  "folder": null,
+  "folder": "MkcHmBpWHVEwxF2x",
   "sort": 0,
   "flags": {
     "core": {}
@@ -63,7 +63,7 @@
     "updated": "",
     "cost": "moderate",
     "slotType": "consumable",
-    "category": "nanotox",
+    "category": "toxin",
     "dermal": true,
     "inhalation": false,
     "injection": true,

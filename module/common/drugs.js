@@ -230,10 +230,27 @@ function durationNeedsRewrite(duration) {
   return !("value" in duration) || !("units" in duration);
 }
 
+// A drug is either a drug or a toxin. The book's finer groupings - combat, social, petals - are
+// chapters, kept as compendium folders; what a drug can act on is its type, not its category.
+export const DRUG_CATEGORIES = ["drug", "toxin"];
+const LEGACY_TOXIN_CATEGORIES = ["toxins", "nanotox"];
+
+/**
+ * The category a stored value stands for: one of the two current ones, with the old toxin and
+ * nanotoxin groupings read as toxin and every other old grouping as drug.
+ * @param {*} category - The stored category
+ * @returns {String} "drug" or "toxin"
+ */
+export function drugCategory(category) {
+  if (DRUG_CATEGORIES.includes(category)) return category;
+  return LEGACY_TOXIN_CATEGORIES.includes(category) ? "toxin" : "drug";
+}
+
 /**
  * The repairs a drug's data needs to match the current schema: a duration held as free text
- * becomes a span, a missing or unusable dose counter is read as an untouched pack, and a pack
- * recorded as more used up than it has room for is trimmed to its size. Used both by
+ * becomes a span, a missing or unusable dose counter is read as an untouched pack, a pack
+ * recorded as more used up than it has room for is trimmed to its size, and a category from the
+ * old fine-grained list becomes drug or toxin. Used both by
  * the 2.7 migration and on item creation, so that a drug arriving from an un-migrated source -
  * a world item, a compendium that was not repacked - is fixed on the way in.
  * @param {Object} system - The drug's system data
@@ -253,6 +270,9 @@ export function normaliseDrugSystem(system) {
   const used = doseCount(system?.usagesUsed);
   if (used === null) update.usagesUsed = 0;
   else if (used > max) update.usagesUsed = max;
+
+  const category = system?.category;
+  if (typeof category === "string" && category && !DRUG_CATEGORIES.includes(category)) update.category = drugCategory(category);
 
   return Object.keys(update).length ? update : null;
 }

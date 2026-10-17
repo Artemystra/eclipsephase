@@ -49,7 +49,7 @@
       "_key": "!items.effects!hu1ImLkGb4cgIpPa.HGp2jbLmrb5xeXLy"
     }
   ],
-  "folder": null,
+  "folder": "C5oMRm2aIaMqJz22",
   "sort": 0,
   "flags": {
     "core": {}
@@ -63,7 +63,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "cognitive",
+    "category": "drug",
     "dermal": true,
     "inhalation": true,
     "injection": true,

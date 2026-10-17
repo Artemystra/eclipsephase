@@ -1,0 +1,23 @@
+{
+  "name": "Recreational Drugs",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "XLpKIp0Q6benJzPo",
+  "sort": 800000,
+  "color": null,
+  "description": "",
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.7",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!folders!XLpKIp0Q6benJzPo"
+}

@@ -4,6 +4,8 @@ import {
   parseDurationText,
   parseAddictionMod,
   normaliseDrugSystem,
+  drugCategory,
+  DRUG_CATEGORIES,
   packIsSealed,
   dosesRemaining,
   afterDose,
@@ -519,6 +521,41 @@ describe("normaliseDrugSystem", () => {
   test("it never throws on junk", () => {
     for (const system of [null, undefined, {}, { duration: [] }]) {
       expect(() => normaliseDrugSystem(system)).not.toThrow();
+    }
+  });
+});
+
+describe("drug or toxin", () => {
+  test.each([
+    ["drug", "drug"], ["toxin", "toxin"],
+    ["toxins", "toxin"], ["nanotox", "toxin"],
+    ["combat", "drug"], ["petals", "drug"], ["narco", "drug"], ["nano", "drug"],
+    ["", "drug"], [undefined, "drug"]
+  ])("a stored %p reads as %p", (stored, expected) => expect(drugCategory(stored)).toEqual(expected));
+
+  test("an old fine-grained category is repaired into drug or toxin", () => {
+    const current = { duration: { value: 1, units: "hours" }, usagesUsed: 0, usagesMax: 5 };
+    expect(normaliseDrugSystem({ ...current, category: "nanotox" })).toEqual({ category: "toxin" });
+    expect(normaliseDrugSystem({ ...current, category: "social" })).toEqual({ category: "drug" });
+    expect(normaliseDrugSystem({ ...current, category: "toxin" })).toBeNull();
+    expect(normaliseDrugSystem({ ...current, category: "" })).toBeNull();
+  });
+
+  test("every compendium drug is a drug or a toxin, in its book chapter's folder", () => {
+    const folders = new Map(fs.readdirSync(PACK_DIR)
+      .map(file => JSON.parse(fs.readFileSync(path.join(PACK_DIR, file), "utf8")))
+      .filter(doc => doc._key?.startsWith("!folders!"))
+      .map(folder => [folder._id, folder.name]));
+
+    expect([...folders.values()].sort()).toEqual([
+      "Cognitive Drugs", "Combat Drugs", "Health Drugs", "Nanodrugs", "Narcoalgorithms",
+      "Petals", "Psi Drugs", "Recreational Drugs", "Social Drugs", "Toxins"
+    ]);
+    for (const drug of packDrugs()) {
+      expect(DRUG_CATEGORIES).toContain(drug.system.category);
+      expect(folders.has(drug.folder)).toBe(true);
+      expect({ name: drug.name, toxin: drug.system.category === "toxin" })
+        .toEqual({ name: drug.name, toxin: folders.get(drug.folder) === "Toxins" });
     }
   });
 });

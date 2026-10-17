@@ -1,0 +1,23 @@
+{
+  "name": "Toxins",
+  "sorting": "a",
+  "folder": null,
+  "type": "Item",
+  "_id": "MkcHmBpWHVEwxF2x",
+  "sort": 1000000,
+  "color": null,
+  "description": "",
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.356",
+    "systemId": "eclipsephase",
+    "systemVersion": "2.7",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null,
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": null
+  },
+  "_key": "!folders!MkcHmBpWHVEwxF2x"
+}

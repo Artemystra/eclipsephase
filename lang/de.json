@@ -1172,17 +1172,8 @@
           },
           "category": {
             "label": "Kategorie",
-            "cognitive": "Kognitive Droge",
-            "combat": "Kampfdroge",
-            "health": "Heildroge",
-            "nano": "Nanodroge",
-            "narco": "Narcoalgorithmus",
-            "petals": "Blatt",
-            "psi": "Psidroge",
-            "rec": "Widerherstellung",
-            "social": "Soziale Droge",
-            "toxins": "Toxin",
-            "nanotox": "Nanotoxin"
+            "drug": "Droge",
+            "toxin": "Toxin"
           },
           "type": {
             "label": "Drogentyp",

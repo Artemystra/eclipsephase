@@ -49,7 +49,7 @@
       "_key": "!items.effects!DFNgd2o8xyx92zeo.vjQhOVCqlbnx4fgl"
     }
   ],
-  "folder": null,
+  "folder": "3bMSONnpfeHBWZUs",
   "sort": 0,
   "flags": {
     "core": {}
@@ -63,7 +63,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "narco",
+    "category": "drug",
     "dermal": false,
     "inhalation": false,
     "injection": false,

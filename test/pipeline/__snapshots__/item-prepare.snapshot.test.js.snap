@@ -7,7 +7,7 @@ Object {
   "addictionType": "none",
   "additionalSystems": Object {},
   "blocksPsi": false,
-  "category": "combat",
+  "category": "drug",
   "cost": "minor",
   "dermal": true,
   "description": "Ignore 1 wound.",

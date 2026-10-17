@@ -1,9 +1,9 @@
 {
   "name": "Xsense",
   "type": "drug",
-  "img": "systems/eclipsephase/resources/icons/drug.png",
+  "img": "systems/eclipsephase/resources/icons/toxic-512.png",
   "effects": [],
-  "folder": null,
+  "folder": "MkcHmBpWHVEwxF2x",
   "sort": 0,
   "flags": {
     "core": {}
@@ -17,7 +17,7 @@
     "updated": "",
     "cost": "minor",
     "slotType": "consumable",
-    "category": "nanotox",
+    "category": "toxin",
     "dermal": false,
     "inhalation": false,
     "injection": true,

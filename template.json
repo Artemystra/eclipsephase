@@ -1182,7 +1182,7 @@
         "base",
         "buyable"
       ],
-      "category": "",
+      "category": "drug",
       "dermal": false,
       "inhalation": false,
       "injection": false,
