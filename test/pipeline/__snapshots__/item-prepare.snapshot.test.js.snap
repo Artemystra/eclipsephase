@@ -20,6 +20,7 @@ Object {
   "homebrew": false,
   "inhalation": true,
   "injection": true,
+  "isAmmo": false,
   "oral": true,
   "quantity": 1,
   "rollOptions": Array [],

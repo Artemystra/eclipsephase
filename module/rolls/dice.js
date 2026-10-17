@@ -629,7 +629,7 @@ export async function RollCheck(dataset, actorModel, actorWhole, systemOptions, 
     const rollContext = {
         dataset, actor: actorWhole, actorModel, rolledFrom, roll,
         rollType: roll.type, sections: [], cancelReason: null,
-        options: null, task: null, pool: null, modifiers: [], itemData: null, flags: {},
+        options: null, task: null, pool: null, modifiers: [], itemData: null, flags: { ...(dataset.contextFlags ?? {}) },
         outputData: null, message: null, blind: false, rollMode: null
     }
 

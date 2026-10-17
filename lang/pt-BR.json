@@ -136,6 +136,13 @@
         "doseNeedsBiomorph": "Esta droga so funciona em um corpo biologico.",
         "doseNeedsCyberbrain": "Esta droga so funciona em um infomorfo ou um cibercerebro.",
         "noDosesLeft": "{name} nao tem doses restantes.",
+        "doseTargetPrompt": "Clique no token que recebe a dose. Clique fora ou pressione Escape para cancelar.",
+        "doseNoScene": "Abra uma cena para escolher um alvo nela.",
+        "doseNeedsGM": "Um GM precisa estar conectado para entregar esta dose.",
+        "doseNoSelection": "Selecione um token primeiro.",
+        "doseNeedsClaimant": "Atribua um personagem a si mesmo ou, como GM, selecione um token para tomar esta dose.",
+        "doseAlreadyUsed": "Esta dose já foi usada.",
+        "ammoPackNotTaken": "{name} é um pacote de munição: carregue-o numa arma em vez de tomá-lo.",
         "noPlacedToken": "Este ator não está representado por um token posicionado no momento."
       },
       "button": {
@@ -1065,7 +1072,8 @@
             "kinetic": "Kinetic",
             "seeker": "Seeker",
             "spray": "Spray",
-            "rail": "Rail"
+            "rail": "Rail",
+            "chemical": "Químico ou droga"
           },
           "trait": {
             "armorPiercing": "Armor Piercing",
@@ -1139,6 +1147,7 @@
             "days": "Dias"
           },
           "usagesMax": "Doses",
+          "isAmmo": "Pacote de munição",
           "usagesTip": "Usadas / Max",
           "addictionModifier": "Mod de Vício",
           "addictionType": "Tipo de Vício",
@@ -1635,7 +1644,22 @@
     "dialog": {
       "selectDrugVector": {
         "header": "Qual forma?",
-        "copy": "Esta droga vem em formas diferentes: qual voce comprou? A forma escolhida define como uma dose e tomada e quanto tempo leva para agir."
+        "copy": "Esta droga vem em formas diferentes: qual voce comprou? A forma escolhida define como uma dose e tomada e quanto tempo leva para agir.",
+        "asAmmo": "Pacote de munição: é carregado numa arma em vez de ser tomado"
+      },
+      "doseRecipient": {
+        "header": "Para quem é?",
+        "copy": "Você toma a dose ou a oferece a outra pessoa? Shift+clique faz você tomá-la na hora.",
+        "self": "Para mim",
+        "other": "Alvo disposto",
+        "otherHint": "Um alvo que não tenta impedir que você aplique uma dose.",
+        "unwilling": "Alvo relutante",
+        "unwillingHint": "Um alvo que resiste à sua aproximação."
+      },
+      "selectDoseNpc": {
+        "header": "Escolher um PdM",
+        "copy": "Quem recebe a dose? Digite para filtrar a lista.",
+        "search": "Buscar…"
       },
       "selectTrait": {
         "header": "Select Trait Type",
@@ -1677,6 +1701,13 @@
         "duration": "Duracao",
         "untilEnded": "Ate ser encerrada",
         "lastDose": "Essa foi a ultima dose.",
+        "usedBy": "Usada por {name}",
+        "chooseNpc": "Selecionar um PdM",
+        "chooseTarget": "Escolher no canvas",
+        "useOnMe": "Usar em mim",
+        "useOnSelection": "Usar na seleção",
+        "offered": "Ofereço uma dose de <strong>{name}</strong>",
+        "forced": "Apliquei no meu alvo uma dose de <strong>{name}</strong>",
         "woreOff": "Minha dose de <strong>{name}</strong> passou",
         "endedEarly": "Minha dose de <strong>{name}</strong> foi encerrada antes da hora",
         "wearOffSv": "Estresse ao passar o efeito (SV)",

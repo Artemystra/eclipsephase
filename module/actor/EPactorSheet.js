@@ -4,8 +4,8 @@ import * as damage from "../rolls/damage.js";
 import { weaponPreparation,reloadWeapon } from "../common/weapon-functions.js";
 import { traitAndAccessoryFinder } from "../common/sheet-preparation.js";
 import * as SHEET from "../common/general-sheet-functions.js"
-import { packIsSealed, drugVector, drugVectors, needsVectorChoice, dosesRemaining, VECTOR_KEYS } from "../common/drugs.js";
-import { takeDose } from "../common/doses.js";
+import { drugVector, drugVectors, needsVectorChoice, offersAmmoChoice, isAmmoPack, dosesRemaining, VECTOR_KEYS } from "../common/drugs.js";
+import { takeDose, offerDose, forceDose } from "../common/doses.js";
 import * as HELPER from "../common/general-helper-functions.js"
 import * as DICE from "../rolls/dice.js";
 import * as MORPHFUNCTION from "../common/morp-functions.js"
@@ -766,13 +766,17 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
             gear.push(item);
           }
           else if (item.system.slotType === 'consumable' && item.system.slotType != 'digital' && item.type != "grenade" && item.type != "ammo") {
-            if (item.type === "drug"){
+            if (item.type === "drug" && isAmmoPack(item.system)){
+              itemModel.slotName = "ep2e.item.drug.table.isAmmo";
+              itemModel.canTakeDose = false;
+              if (item.system.active || actor.type !== "character"){
+                ammo.chemical.push(item);
+              }
+            }
+            else if (item.type === "drug"){
               itemModel.slotName = drugVector(item.system)?.label ?? "ep2e.item.general.table.slot.drug";
               itemModel.canTakeDose = true;
               itemModel.dosesLeft = dosesRemaining(item.system);
-              if (item.system.active && packIsSealed(item.system)){
-                ammo.chemical.push(item);
-              }
             }
             else {
               itemModel.slotName = "ep2e.item.general.table.slot.consumable";
@@ -1225,10 +1229,11 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
       }
     }
 
-    if (itemData.type === "drug" && needsVectorChoice(itemModel)) {
+    if (itemData.type === "drug" && (needsVectorChoice(itemModel) || offersAmmoChoice(itemModel))) {
       const chosen = await SHEET.selectDrugVector(itemData.name, drugVectors(itemModel));
       if (chosen.cancelled || !chosen.vector) return null;
       for (const key of VECTOR_KEYS) itemModel[key] = key === chosen.vector;
+      itemModel.isAmmo = chosen.isAmmo === true;
     }
 
     itemModel.updated = game.system.version;
@@ -1589,8 +1594,12 @@ export default class EPactorSheet extends HandlebarsApplicationMixin(ActorSheetV
         const itemId = ev.currentTarget.dataset.itemId;
         const item = actor.items.get(itemId);
         if (!item) return;
+        if (ev.shiftKey) return takeDose(actor, item);
 
-        await takeDose(actor, item);
+        const recipient = await SHEET.selectDoseRecipient(item.name);
+        if (recipient === "self") await takeDose(actor, item);
+        else if (recipient === "other") await offerDose(actor, item);
+        else if (recipient === "unwilling") await forceDose(actor, item);
       });
     });
 

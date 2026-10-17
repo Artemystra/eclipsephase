@@ -3,6 +3,8 @@ import { confirmation } from "../../common/general-sheet-functions.js";
 import { _ep25_migrateSubStrainByArchetype, _ep25_migrateKiSubStrain, migrationPre25Needed } from "../../common/migration.js";
 import { getStrainFamily, listStrainFamilies, hasStrainFamily } from "../../rolls/strain-families.js";
 import { strainSubstrate } from "../../common/body-markers.js";
+import { forceDose } from "../../common/doses.js";
+import { usePoolFromChat } from "../../rolls/pools.js";
 import {
   withTempActor,
   withTempItem,
@@ -503,4 +505,105 @@ Hooks.on("quenchReady", quench => {
       });
     });
   }, { displayName: "Eclipse Phase: Migrations" });
+
+  quench.registerBatch("eclipsephase.drugs.forcedDose", context => {
+    const { describe, it, assert } = context;
+
+    const KICK = {
+      name: "Quench Kick", type: "drug",
+      system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } }
+    };
+    const ATTACKER = { type: "character", system: { skillsVig: { melee: { value: 40 } }, pools: { vigor: { value: 2 } } }, items: [KICK] };
+
+    /**
+     * The dose offer cards posted since a given point in the chat log.
+     * @param {Set<String>} before - Message ids that existed before the test
+     * @returns {ChatMessage[]} The offer cards
+     */
+    function newOffers(before) {
+      return game.messages.contents.filter(message => !before.has(message.id) && message.getFlag("eclipsephase", "doseOffer"));
+    }
+
+    /**
+     * Forces a dose with the percentile die landing on a given face, answering the dialog with
+     * nothing ticked, and cleans up every message the test posted.
+     * @param {Number} face - The face the d100 shows
+     * @param {Function} fn - Called with the attacker, the drug, the attack card and the ids from before
+     * @returns {Promise<void>} Resolves once fn has run and the chat is tidied
+     */
+    async function attackWithFace(face, fn) {
+      const before = new Set(game.messages.contents.map(message => message.id));
+      try {
+        await withTempActor(ATTACKER, async actor => {
+          await awaitDefaultMorph(actor);
+          const drug = actor.items.find(item => item.name === KICK.name);
+          seedDice([uniformForFace(face, 100)]);
+          try {
+            await withoutDiceAnimation(() => forceDose(actor, drug, skipDialogOptions()));
+          } finally {
+            restoreDice();
+          }
+          const attack = game.messages.contents.filter(message => message.getFlag("eclipsephase", "roll")?.doseAttempt).at(-1);
+          await fn(actor, drug, attack, before);
+        });
+      } finally {
+        const posted = game.messages.contents.filter(message => !before.has(message.id)).map(message => message.id);
+        if (posted.length) await ChatMessage.deleteDocuments(posted);
+      }
+    }
+
+    /**
+     * Spends a pool point from the attack card's pool button, the way a click on the card does.
+     * @param {ChatMessage} attack - The attack's chat card
+     * @returns {Promise<void>} Resolves once the spend has run
+     */
+    async function spendPoolOn(attack) {
+      const row = document.createElement("li");
+      row.dataset.messageId = attack.id;
+      const button = document.createElement("button");
+      button.dataset.usepool = "pool";
+      row.append(button);
+      await usePoolFromChat({ currentTarget: button });
+    }
+
+    describe("forcing a dose on an unwilling target", function () {
+      it("a hit posts the dose card and takes the dose out of the pack", async function () {
+        await attackWithFace(5, async (actor, drug, attack, before) => {
+          await waitUntil(() => newOffers(before).length === 1);
+          assert.strictEqual(newOffers(before).length, 1);
+          assert.strictEqual(drug.system.usagesUsed, 1);
+          assert.isTrue(attack.getFlag("eclipsephase", "roll").doseAttempt.delivered);
+        });
+      });
+
+      it("a miss posts no dose card and spends nothing", async function () {
+        await attackWithFace(95, async (actor, drug, attack, before) => {
+          await new Promise(resolve => setTimeout(resolve, 300));
+          assert.strictEqual(newOffers(before).length, 0);
+          assert.strictEqual(drug.system.usagesUsed, 0);
+          assert.isFalse(attack.getFlag("eclipsephase", "roll").doseAttempt.delivered);
+        });
+      });
+
+      it("a miss a pool spend turns into a hit posts the dose card then", async function () {
+        await attackWithFace(91, async (actor, drug, attack, before) => {
+          assert.strictEqual(newOffers(before).length, 0, "the flipped 19 must not count before the pool is spent");
+          await spendPoolOn(attack);
+          await waitUntil(() => newOffers(before).length === 1);
+          assert.strictEqual(newOffers(before).length, 1);
+          assert.strictEqual(drug.system.usagesUsed, 1);
+        });
+      });
+
+      it("a pool spend on an attack that already hit delivers nothing a second time", async function () {
+        await attackWithFace(5, async (actor, drug, attack, before) => {
+          await waitUntil(() => newOffers(before).length === 1);
+          await spendPoolOn(attack);
+          await new Promise(resolve => setTimeout(resolve, 300));
+          assert.strictEqual(newOffers(before).length, 1);
+          assert.strictEqual(drug.system.usagesUsed, 1);
+        });
+      });
+    });
+  }, { displayName: "Eclipse Phase: Forced doses" });
 });

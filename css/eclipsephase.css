@@ -4001,3 +4001,29 @@ li:has(.ep-system-notice) .message-header {
   white-space: pre-line;
   line-height: 1.2;
 }
+
+/* A dialog's extra option reads as unavailable while its box is switched off. */
+.ep-dialog-extra-option input:disabled + label {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* A GM picking who receives an offered dose: the canvas shows a red syringe until the click. */
+body.ep-dose-targeting #board {
+  cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><g transform='rotate(45 16 16)' fill='%23d62828' stroke='white' stroke-width='1.5' stroke-linejoin='round'><rect x='12.5' y='0.8' width='7' height='2'/><rect x='15' y='2.8' width='2' height='3'/><rect x='10.5' y='5.8' width='11' height='2.4'/><rect x='12.5' y='8.2' width='7' height='13' rx='1'/><path d='M15.2 21.2 L16 30.5 L16.8 21.2 Z'/></g></svg>") 6 26, crosshair !important;
+}
+
+/* Chat card buttons stacked one above the other: secondaries in the dark ground, the primary last
+   and set a little apart. */
+.chatControls.ep-chat-stack {
+  flex-direction: column;
+  gap: 5px;
+}
+
+.chatControls.ep-chat-stack .ep-chat-secondary {
+  background-color: var(--mainBackground);
+}
+
+.chatControls.ep-chat-stack .ep-chat-primary {
+  margin-top: 5px;
+}

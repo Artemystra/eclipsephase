@@ -310,7 +310,7 @@ describe("stacking a drug by the form it was bought in", () => {
 describe("choosing the form on acquisition", () => {
   test("the form the user picks is what comes back", async () => {
     seedDialogs({ selection: "oral" });
-    expect(await selectDrugVector("Grin", VECTORS)).toEqual({ vector: "oral" });
+    expect(await selectDrugVector("Grin", VECTORS)).toEqual({ vector: "oral", isAmmo: false });
   });
 
   test("cancelling reports that, so the drop can be abandoned", async () => {
@@ -322,11 +322,39 @@ describe("choosing the form on acquisition", () => {
     expect(await selectDrugVector("Grin", VECTORS)).toEqual({ cancelled: true });
   });
 
+  test("ticking the ammunition box on a form that can be loaded makes the pack ammunition", async () => {
+    seedDialogs({ selection: "inhalation", extraOption: true });
+    expect(await selectDrugVector("Grin", VECTORS)).toEqual({ vector: "inhalation", isAmmo: true });
+  });
+
+  test("a pill is never ammunition, whatever the box says", async () => {
+    seedDialogs({ selection: "oral", extraOption: true });
+    expect(await selectDrugVector("Grin", VECTORS)).toEqual({ vector: "oral", isAmmo: false });
+  });
+
+  test("the ammunition box is only offered when some form could be loaded", async () => {
+    const offeredBox = [];
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      offeredBox.push(!!data?.checkbox);
+      return realRender(template, data);
+    };
+    try {
+      seedDialogs({ selection: "oral" });
+      await selectDrugVector("Grin", VECTORS.filter(v => v.key === "oral"));
+      seedDialogs({ selection: "dermal" });
+      await selectDrugVector("Grin", VECTORS);
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    expect(offeredBox).toEqual([false, true]);
+  });
+
   test("it offers one choice per form the drug is sold in, each with its onset", async () => {
     const offered = VECTORS.filter(v => ["injection", "oral"].includes(v.key));
     seedDialogs({ selection: "injection" });
 
-    expect(await selectDrugVector("Grin", offered)).toEqual({ vector: "injection" });
+    expect(await selectDrugVector("Grin", offered)).toEqual({ vector: "injection", isAmmo: false });
     expect(offered.map(v => v.onset)).toEqual([
       "ep2e.item.drug.onset.turn",
       "ep2e.item.drug.onset.minutes15"

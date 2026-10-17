@@ -80,3 +80,45 @@ describe("the sheet templates", () => {
     expect(html).toContain("ep2e.item.drug.table.applicationVectors.oralLabel");
   });
 });
+
+describe("ammunition packs on the sheet", () => {
+  /**
+   * An actor carrying one inhaled ammunition pack, switched off as an NPC's drop leaves it.
+   * @param {String} type - The actor type
+   * @returns {Promise<Actor>} The sorted actor
+   */
+  async function withAmmoPack(type) {
+    return sorted(makeActor({
+      type,
+      system: { activeMorph: "morph1" },
+      items: [
+        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+        { _id: "gas1", name: "CR Gas", type: "drug", system: { active: type === "character", slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 1 } }
+      ]
+    }));
+  }
+
+  test.each(["character", "npc", "goon"])("a %s's ammunition pack is loadable chemical ammunition", async type => {
+    const actor = await withAmmoPack(type);
+
+    expect(actor.ammo.chemical.map(item => item.name)).toEqual(["CR Gas"]);
+  });
+
+  test("an ammunition pack offers no take control and no dose count", async () => {
+    const actor = await withAmmoPack("character");
+
+    const html = await foundry.applications.handlebars.renderTemplate(
+      "systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html", { actor });
+
+    expect(actor.consumable[0].system.canTakeDose).toBe(false);
+    expect(html).not.toContain("drug-use");
+  });
+
+  test("a drug meant to be taken is never chemical ammunition", async () => {
+    const actor = await sorted(carrying("character"));
+    await actor.items.get("grin1").update({ "system.active": true });
+    await sorted(actor);
+
+    expect(actor.ammo.chemical).toEqual([]);
+  });
+});

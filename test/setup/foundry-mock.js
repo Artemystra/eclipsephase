@@ -708,10 +708,21 @@ const hookHandlers = new Map();
 
 class MockChatMessage {
   static async create(data = {}) {
-    const message = { ...data, id: randomID() };
+    const message = Object.assign(new MockChatMessage(), deepClone(data), { id: randomID() });
     createdMessages.push(message);
     global.game.messages.set(message.id, message);
     return message;
+  }
+
+  getFlag(scope, key) {
+    return this.flags?.[scope]?.[key];
+  }
+
+  // Foundry lets the author or a GM change a message; dotted keys reach into flags.
+  async update(changes = {}) {
+    for (const [key, value] of Object.entries(changes)) setProperty(this, key, deepClone(value));
+    global.Hooks.callAll("updateChatMessage", this, changes, {}, global.game.user.id);
+    return this;
   }
   static getSpeaker({ actor } = {}) {
     return { actor: actor?.id ?? null, alias: actor?.name ?? "" };
@@ -965,7 +976,7 @@ global.foundry = {
       DialogV2: class DialogV2 {
         constructor(options = {}) {
           this.options = options;
-          this.element = { querySelector: () => null };
+          this.element = { querySelector: () => null, style: {} };
         }
         render() { return this; }
         close() { return this; }

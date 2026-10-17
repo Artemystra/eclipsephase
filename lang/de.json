@@ -139,6 +139,13 @@
         "doseNeedsBiomorph": "Diese Droge wirkt nur in einem biologischen Koerper.",
         "doseNeedsCyberbrain": "Diese Droge laeuft nur auf einem Infomorph oder einem Cyberbrain.",
         "noDosesLeft": "{name} hat keine Dosen mehr.",
+        "doseTargetPrompt": "Klicke auf das Token, das die Dosis bekommt. Ein Klick daneben oder Escape bricht ab.",
+        "doseNoScene": "Öffne eine Szene, um dort ein Ziel zu wählen.",
+        "doseNeedsGM": "Ein GM muss verbunden sein, damit die Dosis übergeben werden kann.",
+        "doseNoSelection": "Wähle zuerst ein Token aus.",
+        "doseNeedsClaimant": "Weise dir einen Charakter zu oder wähle als GM ein Token aus, um diese Dosis zu nehmen.",
+        "doseAlreadyUsed": "Diese Dosis wurde schon genommen.",
+        "ammoPackNotTaken": "{name} ist ein Munitionspack: Lade es in eine Waffe, statt es einzunehmen.",
         "noPlacedToken": "Dieser Actor wird gerade von keinem platzierten Token repräsentiert."
       },
       "button": {
@@ -1087,7 +1094,8 @@
             "kinetic": "Kinetisch",
             "seeker": "Zielsuchend",
             "spray": "Flüssigkeit",
-            "rail": "Magnetisch"
+            "rail": "Magnetisch",
+            "chemical": "Chemikalie oder Droge"
           },
           "trait": {
             "armorPiercing": "Panzerbrechend",
@@ -1160,6 +1168,7 @@
             "days": "Tage"
           },
           "usagesMax": "Dosen",
+          "isAmmo": "Munitionspack",
           "usagesTip": "Benutzt / Max",
           "addictionModifier": "Suchtmod",
           "addictionType": "Suchttyp",
@@ -1665,7 +1674,22 @@
     "dialog": {
       "selectDrugVector": {
         "header": "Welche Form?",
-        "copy": "Diese Droge gibt es in verschiedenen Formen: Welche hast du gekauft? Die gewaehlte Form bestimmt, wie eine Dosis genommen wird und wie schnell sie wirkt."
+        "copy": "Diese Droge gibt es in verschiedenen Formen: Welche hast du gekauft? Die gewaehlte Form bestimmt, wie eine Dosis genommen wird und wie schnell sie wirkt.",
+        "asAmmo": "Munitionspack: wird in eine Waffe geladen statt eingenommen"
+      },
+      "doseRecipient": {
+        "header": "Für wen?",
+        "copy": "Nimmst du die Dosis selbst, oder bietest du sie jemand anderem an? Mit Shift-Klick nimmst du sie sofort selbst.",
+        "self": "Für mich",
+        "other": "Freiwilliges Ziel",
+        "otherHint": "Ein Ziel, das nicht versucht, dich daran zu hindern, ihm eine Dosis zu verabreichen.",
+        "unwilling": "Unfreiwilliges Ziel",
+        "unwillingHint": "Ein Ziel, das sich gegen deine Annäherung wehrt."
+      },
+      "selectDoseNpc": {
+        "header": "NSC wählen",
+        "copy": "Wer bekommt die Dosis? Tippe, um die Liste zu filtern.",
+        "search": "Suchen…"
       },
       "selectTrait": {
         "header": "Trait Typ Wählen",
@@ -1707,6 +1731,13 @@
         "duration": "Dauer",
         "untilEnded": "Bis zum Beenden",
         "lastDose": "Das war die letzte Dosis.",
+        "usedBy": "Genommen von {name}",
+        "chooseNpc": "NSC auswählen",
+        "chooseTarget": "Auf dem Canvas wählen",
+        "useOnMe": "Auf mich anwenden",
+        "useOnSelection": "Auf Auswahl anwenden",
+        "offered": "Ich biete eine Dosis <strong>{name}</strong> an",
+        "forced": "Ich habe meinem Ziel eine Dosis <strong>{name}</strong> verabreicht",
         "woreOff": "Meine Dosis <strong>{name}</strong> hat nachgelassen",
         "endedEarly": "Meine Dosis <strong>{name}</strong> wurde vorzeitig beendet",
         "wearOffSv": "Stress beim Nachlassen (SV)",

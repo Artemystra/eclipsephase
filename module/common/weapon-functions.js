@@ -317,6 +317,18 @@ export async function weaponListConstructor(actor, skillKey){
   
   }
 
+/**
+ * The ammunition type a weapon takes, as the reload card names it: its translated label where the
+ * system has one, the type itself otherwise.
+ * @param {String} ammoType - The weapon's ammunition type, e.g. "kinetic" or "chemical"
+ * @returns {String} The label to show
+ */
+function ammoTypeLabel(ammoType) {
+  const key = `ep2e.item.weapon.table.ammoUsed.${ammoType}`;
+  const label = game.i18n.localize(key);
+  return label !== key ? label : ammoType[0].toUpperCase() + ammoType.slice(1);
+}
+
 //Reload Weapons
 export async function reloadWeapon(html, actor) {
   html.querySelectorAll(".reload").forEach(element => {
@@ -490,7 +502,7 @@ export async function reloadWeapon(html, actor) {
         message.type = "reload";
         message.copy = "ep2e.roll.announce.combat.ranged.noAmmoPresent";
         message.weaponName = weaponName;
-        message.ammoLoadedName = ammoType[0].toUpperCase() + ammoType.slice(1);
+        message.ammoLoadedName = ammoTypeLabel(ammoType);
 
         const renderedHtml = await foundry.applications.handlebars.renderTemplate(WEAPON_DAMAGE_OUTPUT, message);
 

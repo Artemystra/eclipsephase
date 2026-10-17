@@ -136,6 +136,13 @@
         "doseNeedsBiomorph": "这种药物只对生物躯体有效。",
         "doseNeedsCyberbrain": "这种药物只能在信息形体或赛博脑上运行。",
         "noDosesLeft": "{name} 没有剩余剂量。",
+        "doseTargetPrompt": "点击接受这一剂的令牌。点击其他位置或按 Esc 取消。",
+        "doseNoScene": "请先打开一个场景，再在其中选择目标。",
+        "doseNeedsGM": "必须有 GM 在线才能交付这一剂。",
+        "doseNoSelection": "请先选中一个令牌。",
+        "doseNeedsClaimant": "请为自己指定角色，或以 GM 身份选中一个令牌，来服用这一剂。",
+        "doseAlreadyUsed": "这一剂已经被使用。",
+        "ammoPackNotTaken": "{name} 是弹药包：请将其装入武器，而不是服用。",
         "noPlacedToken": "该角色当前没有已放置的指令牌。"
       },
       "button": {
@@ -1064,7 +1071,8 @@
             "kinetic": "Kinetic",
             "seeker": "Seeker",
             "spray": "Spray",
-            "rail": "Rail"
+            "rail": "Rail",
+            "chemical": "化学品或药物"
           },
           "trait": {
             "armorPiercing": "Armor Piercing",
@@ -1138,6 +1146,7 @@
             "days": "天"
           },
           "usagesMax": "剂量",
+          "isAmmo": "弹药包",
           "usagesTip": "已用 / 上限",
           "addictionModifier": "成瘾调整值",
           "addictionType": "成瘾类型",
@@ -1628,7 +1637,22 @@
     "dialog": {
       "selectDrugVector": {
         "header": "哪种形态？",
-        "copy": "这种药物有多种形态：你买的是哪一种？所选形态决定了如何服用一剂，以及多久之后生效。"
+        "copy": "这种药物有多种形态：你买的是哪一种？所选形态决定了如何服用一剂，以及多久之后生效。",
+        "asAmmo": "弹药包：装入武器而非服用"
+      },
+      "doseRecipient": {
+        "header": "给谁？",
+        "copy": "你自己服用这剂，还是把它交给别人？按住 Shift 点击会立即由你自己服用。",
+        "self": "我自己",
+        "other": "自愿的目标",
+        "otherHint": "不会阻止你给它施用一剂的目标。",
+        "unwilling": "不自愿的目标",
+        "unwillingHint": "会抵抗你靠近的目标。"
+      },
+      "selectDoseNpc": {
+        "header": "选择 NPC",
+        "copy": "谁接受这一剂？输入文字以筛选列表。",
+        "search": "搜索…"
       },
       "selectTrait": {
         "header": "Select Trait Type",
@@ -1670,6 +1694,13 @@
         "duration": "持续时间",
         "untilEnded": "直到手动结束",
         "lastDose": "这是最后一剂。",
+        "usedBy": "已由 {name} 使用",
+        "chooseNpc": "选择一个 NPC",
+        "chooseTarget": "在画布上选择",
+        "useOnMe": "用在我身上",
+        "useOnSelection": "用在选中对象上",
+        "offered": "我提供一剂 <strong>{name}</strong>",
+        "forced": "我给目标打入了一剂 <strong>{name}</strong>",
         "woreOff": "我的 <strong>{name}</strong> 药效已经消退",
         "endedEarly": "我的 <strong>{name}</strong> 被提前终止",
         "wearOffSv": "药效消退压力 (SV)",

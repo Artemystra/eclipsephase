@@ -1,6 +1,8 @@
-import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks } from "../../module/common/doses.js";
+import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, forceDose, registerForcedDoseHooks, deliverForcedDose } from "../../module/common/doses.js";
+import { selectDoseRecipient } from "../../module/common/general-sheet-functions.js";
 import { registerPoolRule } from "../../module/common/pool-rule.js";
-import { makeActor, resetWorld } from "../setup/factories.js";
+import { makeActor, resetWorld, seedDialogs, seedRolls } from "../setup/factories.js";
+import { TASK_RESULT } from "../../module/rolls/dice.js";
 
 const { createdMessages } = global.__ep;
 
@@ -322,6 +324,19 @@ describe("a dose running out", () => {
   });
 });
 
+describe("an ammunition pack", () => {
+  test("cannot be taken: nothing is spent, no effect starts, the player is told why", async () => {
+    const actor = carrying({ isAmmo: true });
+
+    const outcome = await takeDose(actor, actor.items.get("kick1"));
+
+    expect(outcome).toMatchObject({ taken: false, refused: true });
+    expect(actor.items.get("kick1").system.usagesUsed).toEqual(0);
+    expect(doseOn(actor)).toBeUndefined();
+    expect(ui.notifications.warn).toHaveBeenCalledWith(expect.stringContaining("ep2e.actorSheet.warnings.ammoPackNotTaken"));
+  });
+});
+
 describe("the card a dose posts", () => {
   test("taking a dose posts exactly one card, naming the drug", async () => {
     const actor = carrying();
@@ -513,5 +528,320 @@ describe("the card when a dose stops acting", () => {
     await npc.deleteEmbeddedDocuments("ActiveEffect", ["fx1"]);
 
     expect(Array.isArray(createdMessages[0].whisper)).toBe(true);
+  });
+});
+
+describe("giving a dose to someone else", () => {
+  /**
+   * A character sleeved in a body of the given type, ready to claim an offered dose.
+   * @param {String} name - The character's name
+   * @param {String} morphType - The sleeved morph's type
+   * @returns {Actor} The prepared actor
+   */
+  function claimant(name = "Dinah", morphType = "bio") {
+    return makeActor({
+      type: "character", name,
+      system: { activeMorph: "morph1" },
+      items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: morphType } }]
+    });
+  }
+
+  /**
+   * The giver's offer card, posted from a fresh pack of Kick.
+   * @returns {Promise<Object>} giver and the offer message
+   */
+  async function offered() {
+    const giver = carrying();
+    const { message } = await offerDose(giver, giver.items.get("kick1"));
+    return { giver, message };
+  }
+
+  test("the dose comes out of the giver's pack and onto nobody yet", async () => {
+    const { giver, message } = await offered();
+
+    expect(giver.items.get("kick1").system.usagesUsed).toEqual(1);
+    expect(doseOn(giver)).toBeUndefined();
+    expect(message.getFlag("eclipsephase", "doseOffer")).toMatchObject({ name: "Kick", usedBy: null });
+  });
+
+  test("the offer is public, even from an NPC, so the person it is for can click it", async () => {
+    const npc = makeActor({
+      type: "npc", system: { activeMorph: "morph1" },
+      items: [
+        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
+      ]
+    });
+
+    const { message } = await offerDose(npc, npc.items.get("kick1"));
+
+    expect(message.whisper).toBeUndefined();
+    expect(message.content).toContain("useDose");
+  });
+
+  test("claiming puts the dose on the claimant and turns the card into a record without a button", async () => {
+    const { message } = await offered();
+    const dinah = claimant();
+
+    const result = await claimDose(message, dinah);
+
+    expect(result.claimed).toBe(true);
+    expect(doseOn(dinah)).toBeDefined();
+    expect(message.getFlag("eclipsephase", "doseOffer").usedBy).toEqual("Dinah");
+    expect(message.content).toContain("ep2e.chat.dose.usedBy");
+    expect(message.content).not.toContain("useDose");
+  });
+
+  test("the clock starts when the dose is claimed, not when it was offered", async () => {
+    const { message } = await offered();
+    game.time.worldTime = 9000;
+    const dinah = claimant();
+
+    await claimDose(message, dinah);
+
+    expect(doseOn(dinah).start.time).toEqual(9000);
+  });
+
+  test("two claims racing for the same card: only the first one gets the dose", async () => {
+    const { message } = await offered();
+    await claimDose(message, claimant("Dinah"));
+
+    const second = claimant("Velkora");
+    const result = await claimDose(message, second);
+
+    expect(result).toEqual({ claimed: false, reasonKey: "ep2e.actorSheet.warnings.doseAlreadyUsed" });
+    expect(doseOn(second)).toBeUndefined();
+  });
+
+  test("a body the drug cannot act on is refused, and the card stays open for someone else", async () => {
+    const { message } = await offered();
+
+    const result = await claimDose(message, claimant("Synthie", "synth"));
+
+    expect(result.claimed).toBe(false);
+    expect(result.reasonKey).toEqual("ep2e.actorSheet.warnings.doseNeedsBiomorph");
+    expect(message.getFlag("eclipsephase", "doseOffer").usedBy).toBeNull();
+  });
+
+  test("claiming a drug already running on the claimant restarts it instead of stacking", async () => {
+    const dinah = carrying();
+    await takeDose(dinah, dinah.items.get("kick1"));
+    const { message } = await offered();
+
+    await claimDose(message, dinah);
+
+    expect(dinah.effects.filter(effect => effect.getFlag("eclipsephase", "dose"))).toHaveLength(1);
+  });
+
+  test("an ammunition pack cannot be offered", async () => {
+    const giver = carrying({ isAmmo: true });
+
+    expect((await offerDose(giver, giver.items.get("kick1"))).offered).toBe(false);
+    expect(createdMessages).toHaveLength(0);
+  });
+});
+
+describe("clicking use on me", () => {
+  let emitted;
+  let socketHandler;
+
+  beforeEach(() => {
+    emitted = [];
+    socketHandler = null;
+    game.socket.emit = (name, payload) => emitted.push(payload);
+    game.socket.on = (name, fn) => { socketHandler = fn; };
+    registerDoseSocket();
+  });
+
+  const realSocket = { ...game.socket };
+
+  afterEach(() => {
+    Object.assign(game.socket, realSocket);
+    game.user.isGM = true;
+    game.user.character = null;
+  });
+
+  test("a player's click is sent to the GM rather than made on the player's own client", async () => {
+    const { message } = await (async () => { const giver = carrying(); return offerDose(giver, giver.items.get("kick1")); })();
+    game.user.isGM = false;
+    game.user.character = makeActor({ type: "character", name: "Dinah" });
+    game.users.activeGM = { id: "gm-1" };
+
+    await requestDoseClaim(message.id);
+
+    expect(emitted).toEqual([expect.objectContaining({ action: "claimDose", messageId: message.id, actorUuid: game.user.character.uuid })]);
+    expect(message.getFlag("eclipsephase", "doseOffer").usedBy).toBeNull();
+  });
+
+  test("the active GM makes the claim it receives", async () => {
+    const giver = carrying();
+    const { message } = await offerDose(giver, giver.items.get("kick1"));
+    const dinah = makeActor({ type: "character", name: "Dinah", system: { activeMorph: "morph1" }, items: [{ _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } }] });
+    game.users.activeGM = { id: game.user.id, isSelf: true };
+
+    await socketHandler({ action: "claimDose", messageId: message.id, actorUuid: dinah.uuid, userId: "player-1" });
+
+    expect(message.getFlag("eclipsephase", "doseOffer").usedBy).toEqual("Dinah");
+  });
+
+  test("a refused claim is answered to the player who asked, and only to them", async () => {
+    const giver = carrying();
+    const { message } = await offerDose(giver, giver.items.get("kick1"));
+    const synth = makeActor({ type: "character", name: "Synthie", system: { activeMorph: "morph1" }, items: [{ _id: "morph1", name: "Shell", type: "morph", system: { type: "synth" } }] });
+    game.users.activeGM = { id: game.user.id, isSelf: true };
+
+    await socketHandler({ action: "claimDose", messageId: message.id, actorUuid: synth.uuid, userId: "player-1" });
+
+    expect(emitted).toEqual([{ action: "claimDoseRefused", userId: "player-1", reasonKey: "ep2e.actorSheet.warnings.doseNeedsBiomorph" }]);
+  });
+
+  test("a GM who is not the active one leaves the claim alone", async () => {
+    const giver = carrying();
+    const { message } = await offerDose(giver, giver.items.get("kick1"));
+    game.users.activeGM = { id: "other-gm" };
+
+    await socketHandler({ action: "claimDose", messageId: message.id, actorUuid: giver.uuid, userId: "player-1" });
+
+    expect(message.getFlag("eclipsephase", "doseOffer").usedBy).toBeNull();
+  });
+
+  test("a player with no character is told to get one", async () => {
+    const giver = carrying();
+    const { message } = await offerDose(giver, giver.items.get("kick1"));
+    game.user.isGM = false;
+    game.user.character = null;
+    game.users.activeGM = { id: "gm-1" };
+
+    await requestDoseClaim(message.id);
+
+    expect(emitted).toEqual([]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.doseNeedsClaimant");
+  });
+
+  test("without a GM connected a player cannot claim", async () => {
+    const giver = carrying();
+    const { message } = await offerDose(giver, giver.items.get("kick1"));
+    game.user.isGM = false;
+    game.user.character = makeActor({ type: "character", name: "Dinah" });
+    game.users.activeGM = null;
+
+    await requestDoseClaim(message.id);
+
+    expect(emitted).toEqual([]);
+    expect(ui.notifications.warn).toHaveBeenCalledWith("ep2e.actorSheet.warnings.doseNeedsGM");
+  });
+});
+
+describe("who a dose is for", () => {
+  test.each([[{ selection: "self" }, "self"], [{ selection: "other" }, "other"], [{ selection: "unwilling" }, "unwilling"], [{ cancelled: true }, null]])(
+    "the dialog answering %p means %p", async (answer, expected) => {
+      seedDialogs(answer);
+      expect(await selectDoseRecipient("Kick")).toEqual(expected);
+    });
+});
+
+describe("forcing a dose on an unwilling target", () => {
+  const SKIP_DIALOG = { skipDialog: true, presetOptions: { rollMode: "public", usePool: "", globalMod: 0 } };
+
+  /**
+   * An attacker with a fair Melee skill, carrying one fresh pack of Kick.
+   * @returns {Actor} The prepared actor
+   */
+  function attacker() {
+    return makeActor({
+      type: "character",
+      system: { activeMorph: "morph1", aptitudes: { som: { value: 15 } }, skillsVig: { melee: { value: 40 } }, pools: { vigor: { value: 2 } } },
+      items: [
+        { _id: "morph1", name: "Morph", type: "morph", system: { type: "bio" } },
+        { _id: "kick1", name: "Kick", type: "drug", system: { active: true, drugType: "biochem", injection: true, quantity: 1, usagesUsed: 0, usagesMax: 5, duration: { value: 8, units: "hours" } } }
+      ]
+    });
+  }
+
+  /**
+   * The dose offer cards posted so far.
+   * @returns {Object[]} The offer messages
+   */
+  function offers() {
+    return createdMessages.filter(message => message.getFlag?.("eclipsephase", "doseOffer"));
+  }
+
+  beforeEach(() => registerForcedDoseHooks());
+
+  test("the attack carries what it is trying to deliver", async () => {
+    const actor = attacker();
+    seedRolls([95]);
+
+    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
+
+    expect(createdMessages[0].flags.eclipsephase.roll.doseAttempt).toEqual({ actorUuid: actor.uuid, itemId: "kick1", delivered: false });
+  });
+
+  test("a hit spends the dose and posts its card, worded as forced", async () => {
+    const actor = attacker();
+    seedRolls([5]);
+
+    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(offers()).toHaveLength(1);
+    expect(offers()[0].content).toContain("ep2e.chat.dose.forced");
+    expect(actor.items.get("kick1").system.usagesUsed).toEqual(1);
+  });
+
+  test("a miss spends nothing and posts no card", async () => {
+    const actor = attacker();
+    seedRolls([95]);
+
+    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(offers()).toHaveLength(0);
+    expect(actor.items.get("kick1").system.usagesUsed).toEqual(0);
+  });
+
+  test("a pool spend that turns the miss into a hit delivers the dose then, and only once", async () => {
+    const actor = attacker();
+    seedRolls([95]);
+    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
+    const attack = createdMessages[0];
+    const context = { ...attack.flags.eclipsephase.roll, messageId: attack.id };
+
+    Hooks.callAll("eclipsephase.poolResult", { context, newResult: TASK_RESULT.SUCCESS });
+    await new Promise(resolve => setTimeout(resolve, 0));
+    Hooks.callAll("eclipsephase.poolResult", { context, newResult: TASK_RESULT.SUCCESS });
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(offers()).toHaveLength(1);
+    expect(actor.items.get("kick1").system.usagesUsed).toEqual(1);
+  });
+
+  test("a pool spend that leaves it a miss delivers nothing", async () => {
+    const actor = attacker();
+    seedRolls([95]);
+    await forceDose(actor, actor.items.get("kick1"), SKIP_DIALOG);
+    const attack = createdMessages[0];
+
+    Hooks.callAll("eclipsephase.poolResult", { context: { ...attack.flags.eclipsephase.roll, messageId: attack.id }, newResult: TASK_RESULT.FAILURE });
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    expect(offers()).toHaveLength(0);
+  });
+
+  test("an ammunition pack or an empty pack is refused before any attack is rolled", async () => {
+    const ammo = carrying({ isAmmo: true });
+    const empty = carrying({ usagesUsed: 5 });
+
+    expect(await forceDose(ammo, ammo.items.get("kick1"), SKIP_DIALOG)).toBeNull();
+    expect(await forceDose(empty, empty.items.get("kick1"), SKIP_DIALOG)).toBeNull();
+    expect(createdMessages).toHaveLength(0);
+  });
+
+  test("a drug gone from the sheet before the hit lands is not delivered", async () => {
+    const actor = attacker();
+    const attempt = { actorUuid: actor.uuid, itemId: "gone", delivered: false };
+
+    expect(await deliverForcedDose(attempt, "no-such-message")).toBeNull();
+    expect(offers()).toHaveLength(0);
   });
 });

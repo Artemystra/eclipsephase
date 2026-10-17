@@ -1183,6 +1183,7 @@
         "buyable"
       ],
       "category": "drug",
+      "isAmmo": false,
       "dermal": false,
       "inhalation": false,
       "injection": false,

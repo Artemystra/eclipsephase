@@ -20,7 +20,7 @@ import EPtokenRuler from "./canvas/EPtokenRuler.js";
 import { registerRegistryHelpers, registerRollSource, registerPoolOption, registerTaskResultText } from "./api/registry.js";
 import { registerCoreStrainFamilies } from "./rolls/strain-families.js";
 import { registerPoolRule } from "./common/pool-rule.js";
-import { registerDoseHooks } from "./common/doses.js";
+import { registerDoseHooks, registerDoseSocket, registerForcedDoseHooks } from "./common/doses.js";
 import { api } from "./api/index.js";
 import "./tests/quench/index.js";
 
@@ -193,6 +193,7 @@ Hooks.once('init', async function() {
   registerCoreStrainFamilies();
   registerPoolRule();
   registerDoseHooks();
+  registerForcedDoseHooks();
   CONFIG.Item.documentClass = EPitem;
   CONFIG.Token.objectClass = EPtoken;
   CONFIG.Token.rulerClass = EPtokenRuler;
@@ -814,6 +815,7 @@ Hooks.once("ready", () => {
 Hooks.once("ready", () => {
   helperFunction.registerItemTransferSocket();
   registerPsiEffectSocket();
+  registerDoseSocket();
 });
 
 // Both Infection thresholds are handled by whoever raised or lowered the rating, whether by a roll

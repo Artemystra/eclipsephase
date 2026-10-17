@@ -1,9 +1,11 @@
-import { drugVector, doseOnset, dosesRemaining } from "./drugs.js";
+import { drugVector, doseOnset, dosesRemaining, isAmmoPack } from "./drugs.js";
 import { durationRunOut } from "./time.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
 import { consumeDose, gmList } from "./general-sheet-functions.js";
+import { RollCheck, TASK_RESULT } from "../rolls/dice.js";
 
 const DOSE_CARD = "systems/eclipsephase/templates/chat/dose.html";
+const DOSE_SOCKET = "system.eclipsephase";
 
 // What a drug's type can act on (Core p.330): biochem and nano are substances and need a
 // biological body; an electronic drug is software and needs an infomorph or a cyberbrain.
@@ -132,17 +134,13 @@ async function postDrugCard(actor, { icon, color, headline, rows = [] }) {
 }
 
 /**
- * Posts the card announcing a dose: what was taken, in which form, how soon it takes hold, how
- * long it lasts and what is left of the pack. Posted by the client that took the dose, so it
- * posts once.
- * @param {Actor} actor - The actor who took the dose
- * @param {Item} item - The drug, as it is after the dose was spent
+ * The rows a dose card lists: the form, how soon it takes hold, how long it lasts and what is left
+ * of the pack once this dose is out of it.
+ * @param {Object} system - The drug's system data, as it is after the dose was spent
  * @param {Object} outcome - What consumeDose reported
- * @param {Boolean} renewed - Whether the dose restarted a running one rather than starting fresh
- * @returns {Promise<void>} Resolves once the card is posted
+ * @returns {Object[]} label and value per row; a row without a label reads as a note
  */
-async function postDoseCard(actor, item, outcome, renewed) {
-  const system = item.system;
+function doseRows(system, outcome) {
   const vector = drugVector(system);
   const onsetKey = doseOnset(system);
   const form = system.drugType === "electronic"
@@ -155,12 +153,25 @@ async function postDoseCard(actor, item, outcome, renewed) {
   rows.push(outcome.emptied
     ? { label: "", value: game.i18n.localize("ep2e.chat.dose.lastDose") }
     : { label: game.i18n.localize("ep2e.item.drug.dosesLeft"), value: dosesRemaining(system) });
+  return rows;
+}
 
+/**
+ * Posts the card announcing a dose: what was taken, in which form, how soon it takes hold, how
+ * long it lasts and what is left of the pack. Posted by the client that took the dose, so it
+ * posts once.
+ * @param {Actor} actor - The actor who took the dose
+ * @param {Item} item - The drug, as it is after the dose was spent
+ * @param {Object} outcome - What consumeDose reported
+ * @param {Boolean} renewed - Whether the dose restarted a running one rather than starting fresh
+ * @returns {Promise<void>} Resolves once the card is posted
+ */
+async function postDoseCard(actor, item, outcome, renewed) {
   await postDrugCard(actor, {
     icon: "fa-syringe",
     color: "--positive",
     headline: game.i18n.format(renewed ? "ep2e.chat.dose.renewed" : "ep2e.chat.dose.taken", { name: item.name }),
-    rows
+    rows: doseRows(item.system, outcome)
   });
 }
 
@@ -201,23 +212,45 @@ export function registerDoseHooks() {
 }
 
 /**
- * Takes one dose of a drug: refuses it in a body it cannot act on, spends it from the pack, and
- * puts the dose's effect on the actor - or, when the same drug is already running, restarts that
- * effect's clock instead of stacking a second one. The effect data is read before the dose is
- * spent, because the last dose takes the drug itself off the sheet.
+ * Puts a dose's effect on an actor, or - when the same drug is already running there - restarts
+ * that effect's clock instead of stacking a second one. The clock starts now, not when the effect
+ * data was read, so a dose handed over later still runs its full span.
+ * @param {Actor} actor - The actor receiving the dose
+ * @param {Object} data - The dose's effect data, as doseEffectData built it
+ * @returns {Promise<Object>} The effect now running and whether it was a renewal
+ */
+async function putDoseOn(actor, data) {
+  const running = activeDoseFor(actor, data.flags?.eclipsephase?.dose?.name ?? data.name);
+  if (running) {
+    await running.update({ start: ActiveEffect.getEffectStart(), "duration.expired": false });
+    return { effect: running, renewed: true };
+  }
+  const [effect] = await actor.createEmbeddedDocuments("ActiveEffect", [{ ...data, start: ActiveEffect.getEffectStart() }]);
+  return { effect, renewed: false };
+}
+
+/**
+ * Takes one dose of a drug: refuses an ammunition pack, which only loads into a weapon, refuses a
+ * dose in a body it cannot act on, spends it from the pack and puts its effect on the actor. The
+ * effect data is read before the dose is spent, because the last dose takes the drug itself off
+ * the sheet.
  * @param {Actor} actor - The actor taking the dose
  * @param {Item} item - The drug
  * @returns {Promise<Object>} taken and emptied as consumeDose reports them, refused when the body
  *   would not take it, and the effect now running
  */
 export async function takeDose(actor, item) {
+  if (isAmmoPack(item.system)) {
+    ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.ammoPackNotTaken", { name: item.name }));
+    return { taken: false, emptied: false, refused: true, effect: null };
+  }
+
   const substrate = doseSubstrate(actor, item);
   if (!substrate.allowed) {
     ui.notifications.warn(game.i18n.localize(substrate.reasonKey));
     return { taken: false, emptied: false, refused: true, effect: null };
   }
 
-  const running = activeDoseFor(actor, item.name);
   const data = doseEffectData(item);
   const outcome = await consumeDose(actor, item);
   if (!outcome.taken) {
@@ -225,15 +258,216 @@ export async function takeDose(actor, item) {
     return { ...outcome, refused: false, effect: null };
   }
 
-  if (running) {
-    await running.update({ start: ActiveEffect.getEffectStart(), "duration.expired": false });
-    await postDoseCard(actor, item, outcome, true);
-    return { ...outcome, refused: false, effect: running };
+  const { effect, renewed } = await putDoseOn(actor, data);
+  await postDoseCard(actor, item, outcome, renewed);
+  return { ...outcome, refused: false, effect };
+}
+
+/**
+ * Offers one dose of a drug to somebody else: spends it from the giver's pack and posts a public
+ * card whose "use on me" button hands it to whoever claims it first. The card carries everything
+ * the dose needs, since the last dose takes the drug itself off the giver's sheet.
+ * @param {Actor} actor - The actor handing the dose over
+ * @param {Item} item - The drug
+ * @param {Object} [options] - forced: the dose got into an unwilling target through a melee hit
+ * @returns {Promise<Object>} offered, and the message posted
+ */
+export async function offerDose(actor, item, { forced = false } = {}) {
+  if (isAmmoPack(item.system)) {
+    ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.ammoPackNotTaken", { name: item.name }));
+    return { offered: false, message: null };
   }
 
-  const [effect] = await actor.createEmbeddedDocuments("ActiveEffect", [data]);
-  await postDoseCard(actor, item, outcome, false);
-  return { ...outcome, refused: false, effect };
+  const data = doseEffectData(item);
+  const drugType = item.system.drugType ?? "";
+  const outcome = await consumeDose(actor, item);
+  if (!outcome.taken) {
+    ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.noDosesLeft", { name: item.name }));
+    return { offered: false, message: null };
+  }
+
+  const card = {
+    icon: "fa-syringe",
+    color: "--positive",
+    headline: game.i18n.format(forced ? "ep2e.chat.dose.forced" : "ep2e.chat.dose.offered", { name: item.name }),
+    rows: doseRows(item.system, outcome)
+  };
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...card, offer: true });
+  const message = await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    flags: { eclipsephase: { doseOffer: { data, drugType, name: item.name, card, usedBy: null } } }
+  });
+  return { offered: true, message };
+}
+
+/**
+ * Hands an offered dose to an actor: refuses a card already used and a body the drug cannot act
+ * on, puts the dose on the actor and turns the card into a record of who took it, with no button
+ * left for anyone else. The used-card refusal only matters when two people click before the card
+ * has re-rendered. Runs where the card may be changed - the GM's client - so two people
+ * claiming at once cannot both get it.
+ * @param {ChatMessage} message - The offer card
+ * @param {Actor} actor - The actor claiming the dose
+ * @returns {Promise<Object>} claimed, or the localization key explaining why not
+ */
+export async function claimDose(message, actor) {
+  const offer = message?.getFlag?.("eclipsephase", "doseOffer");
+  if (!offer || !actor) return { claimed: false, reasonKey: null };
+  if (offer.usedBy) return { claimed: false, reasonKey: "ep2e.actorSheet.warnings.doseAlreadyUsed" };
+
+  const substrate = doseSubstrate(actor, { system: { drugType: offer.drugType } });
+  if (!substrate.allowed) return { claimed: false, reasonKey: substrate.reasonKey };
+
+  await putDoseOn(actor, offer.data);
+  const footnote = game.i18n.format("ep2e.chat.dose.usedBy", { name: actor.name });
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { ...offer.card, footnote, offer: false });
+  await message.update({ content, "flags.eclipsephase.doseOffer.usedBy": actor.name });
+  return { claimed: true, reasonKey: null };
+}
+
+/**
+ * Who a claim click is for: the token the user has selected when they asked for the selection -
+ * the GM's "use on selection" - and otherwise the user's own character.
+ * @param {User} user - The clicking user
+ * @param {Boolean} selection - Whether the click asked for the selected token
+ * @returns {Actor|null} The actor, or null when there is none
+ */
+function claimantFor(user, selection) {
+  if (selection) return globalThis.canvas?.tokens?.controlled?.[0]?.actor ?? null;
+  return user?.character ?? null;
+}
+
+/**
+ * Answers a "use on me" or "use on selection" click. The claim itself runs on the GM's client; a
+ * player's click is sent there, and a refusal comes back as a notice on the player's own screen.
+ * @param {String} messageId - The offer card's id
+ * @param {Object} [options] - selection: claim for the selected token instead of the own character
+ * @returns {Promise<void>} Resolves once the claim is made or sent
+ */
+export async function requestDoseClaim(messageId, { selection = false } = {}) {
+  const message = game.messages.get(messageId);
+  if (!message?.getFlag?.("eclipsephase", "doseOffer")) return;
+
+  const actor = claimantFor(game.user, selection);
+  if (!actor) {
+    const key = selection ? "ep2e.actorSheet.warnings.doseNoSelection" : "ep2e.actorSheet.warnings.doseNeedsClaimant";
+    ui.notifications.warn(game.i18n.localize(key));
+    return;
+  }
+
+  if (game.user.isGM) {
+    const result = await claimDose(message, actor);
+    if (result.reasonKey) ui.notifications.warn(game.i18n.localize(result.reasonKey));
+    return;
+  }
+
+  if (!game.users.activeGM) {
+    ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.doseNeedsGM"));
+    return;
+  }
+
+  game.socket.emit(DOSE_SOCKET, { action: "claimDose", messageId, actorUuid: actor.uuid, userId: game.user.id });
+}
+
+const HIT_RESULTS = [TASK_RESULT.SUCCESS, TASK_RESULT.SUCCESS_ONE, TASK_RESULT.SUCCESS_TWO, TASK_RESULT.CRITICAL_SUCCESS, TASK_RESULT.AUTOSUCCESS];
+
+/**
+ * Whether a task result is a hit.
+ * @param {Number} result - A TASK_RESULT value
+ * @returns {Boolean} True for any success
+ */
+function isHit(result) {
+  return HIT_RESULTS.includes(result);
+}
+
+/**
+ * Forces a dose on an unwilling target: a melee attack first (Core p.330: a patch goes on with a
+ * touch-only attack, +20 - the attacker ticks Touch only in the dialog; a coated blade or a needle
+ * is an ordinary attack). Nothing is spent yet - the dose leaves the pack, and its card appears,
+ * only once the attack hits.
+ * @param {Actor} actor - The attacker
+ * @param {Item} item - The drug
+ * @param {Object} [systemOptions] - Passed on to RollCheck; tests answer the dialog through it
+ * @returns {Promise<*>} Whatever the roll returned, or nothing when refused
+ */
+export async function forceDose(actor, item, systemOptions = {}) {
+  if (isAmmoPack(item.system)) {
+    ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.ammoPackNotTaken", { name: item.name }));
+    return null;
+  }
+  if (dosesRemaining(item.system) < 1) {
+    ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.noDosesLeft", { name: item.name }));
+    return null;
+  }
+
+  const dataset = {
+    name: game.i18n.localize("ep2e.skills.vigorSkills.melee"),
+    key: "melee",
+    type: "skill",
+    rollvalue: actor.system.skillsVig?.melee?.roll ?? 0,
+    pooltype: "Vigor",
+    contextFlags: { doseAttempt: { actorUuid: actor.uuid, itemId: item.id, delivered: false } }
+  };
+  return RollCheck(dataset, actor.system, actor, systemOptions, null, "skill");
+}
+
+/**
+ * Delivers a forced dose once its attack has hit: marks the attack's card so a later pool spend
+ * cannot deliver it twice, then spends the dose and posts its card for the GM to place.
+ * @param {Object} attempt - The doseAttempt the attack carried
+ * @param {String} messageId - The attack's chat card
+ * @returns {Promise<Object|null>} What offerDose reported, or null when nothing was delivered
+ */
+export async function deliverForcedDose(attempt, messageId) {
+  const message = game.messages.get(messageId);
+  if (!attempt || message?.getFlag?.("eclipsephase", "roll")?.doseAttempt?.delivered) return null;
+
+  const actor = await fromUuid(attempt.actorUuid);
+  const item = actor?.items?.get(attempt.itemId);
+  if (!item) {
+    ui.notifications.warn(game.i18n.format("ep2e.actorSheet.warnings.noDosesLeft", { name: "" }));
+    return null;
+  }
+
+  if (message) await message.update({ "flags.eclipsephase.roll.doseAttempt.delivered": true });
+  return offerDose(actor, item, { forced: true });
+}
+
+/**
+ * Hangs the forced dose on the attack's outcome: a hit delivers it at once, and a miss a pool
+ * spend later turns into a hit delivers it then. Both run on the client that rolled or spent.
+ * @returns {void}
+ */
+export function registerForcedDoseHooks() {
+  Hooks.on("eclipsephase.postRoll", context => {
+    const attempt = context?.flags?.doseAttempt;
+    if (attempt && isHit(context.outputData?.alternatives?.originalResult)) deliverForcedDose(attempt, context.message?.id);
+  });
+  Hooks.on("eclipsephase.poolResult", ({ context, newResult }) => {
+    if (context?.doseAttempt && isHit(newResult)) deliverForcedDose(context.doseAttempt, context.messageId);
+  });
+}
+
+/**
+ * Registers the socket the dose claims travel on: the active GM makes a player's claim, and the
+ * player who asked hears back when it was refused.
+ * @returns {void}
+ */
+export function registerDoseSocket() {
+  game.socket.on(DOSE_SOCKET, async payload => {
+    if (payload?.action === "claimDose") {
+      if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
+      const message = game.messages.get(payload.messageId);
+      const actor = await fromUuid(payload.actorUuid);
+      const result = await claimDose(message, actor);
+      if (result.reasonKey) game.socket.emit(DOSE_SOCKET, { action: "claimDoseRefused", userId: payload.userId, reasonKey: result.reasonKey });
+      return;
+    }
+    if (payload?.action === "claimDoseRefused" && payload.userId === game.user.id) {
+      ui.notifications.warn(game.i18n.localize(payload.reasonKey));
+    }
+  });
 }
 
 /**

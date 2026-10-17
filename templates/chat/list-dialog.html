@@ -176,13 +176,14 @@
                         {{/if}}
                     </div>
                     <div style="width: 100%; display: flex; flex-wrap: wrap; padding-top: 2px;">
-                        <div>
+                        <div style="width: 100%;">
                             <label for="{{id}}" style="min-width: 100%; margin-right: 10px;">{{localize label}}</label>
                         </div>
-                        <div style="margin-top: 5px;"></div>
-                        <div>
+                        {{#if description}}
+                        <div style="width: 100%; margin-top: 5px;">
                             <label for="{{id}}" style="font-size: 10px;"><i>{{localize description}}</i></label>
                         </div>
+                        {{/if}}
                         {{#if bodyOptions}}
                         <div style="width: 100%; margin-top: 8px;">
                             <select name="BodySelect" style="width: 100%;" disabled>
@@ -201,6 +202,24 @@
                 </div>
             {{/each}}
         </div>
+        {{#if checkbox}}
+        <div class="flexrow ep-dialog-extra-option" style="align-items: center; gap: 8px; padding: 0 0 10px 0;">
+            <input type="checkbox" name="ExtraOption" id="extraOption" style="flex: 0 0 auto; margin: 0;">
+            <label for="extraOption">{{localize checkbox.label}}</label>
+        </div>
+        {{/if}}
+
+    {{else if (eq dialogType "searchableList")}}
+
+        {{#if copy}}
+            <div style="padding: 10px 0;">{{localize copy}}</div>
+        {{/if}}
+        <input type="search" name="Filter" placeholder="{{localize 'ep2e.dialog.selectDoseNpc.search'}}" autocomplete="off" style="width: 100%; margin-bottom: 8px;">
+        <select name="ItemSelect" size="10" style="width: 100%; height: auto; margin-bottom: 10px;">
+            {{#each objectList}}
+            <option value="{{id}}">{{label}}</option>
+            {{/each}}
+        </select>
 
     {{else if (eq dialogType "selectBody")}}
 

@@ -1,5 +1,5 @@
 import { durationRunOut } from "./time.js";
-import { sameDrugForm, afterDose } from "./drugs.js";
+import { sameDrugForm, afterDose, AMMO_VECTOR_KEYS } from "./drugs.js";
 import * as HELPER from "./general-helper-functions.js";
 import * as DICE from "../rolls/dice.js";
 import * as WEAPON from "./weapon-functions.js";
@@ -847,9 +847,11 @@ export function itemToggle(html, item) {
  * @param {String} dialogTitle - The title displayed in the dialog. Has a fallback if none.
  * @param {String} headline - The headline within the dialog
  * @param {String} copy - The copy within the dialog
+ * @param {Function} [renderHook] - Called once the dialog is rendered, to wire live behaviour
+ * @param {Object} [extras] - Further template data, e.g. a checkbox below a standard list
  * @returns 
  */
-  export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy, renderHook) {
+  export async function listSelection(objectList, dialogType, width, dialogTitle, headline, copy, renderHook, extras = {}) {
     const title = dialogTitle
       ? game.i18n.localize(dialogTitle)
       : game.i18n.localize("ep2e.actorSheet.dialogHeadline.confirmationNeeded");
@@ -861,7 +863,8 @@ export function itemToggle(html, item) {
       objectList,
       dialogType,
       headline,
-      copy
+      copy,
+      ...extras
     });
 
     const result = await foundry.applications.api.DialogV2.wait({
@@ -891,11 +894,12 @@ export function itemToggle(html, item) {
   }
 
 /**
- * Asks which form a drug was bought in, for a drug the book sells in several. The chosen form is
- * the only one kept on the pack, and it decides how a dose is taken and how soon it takes hold.
+ * Asks which form a drug was bought in and whether the pack is ammunition. The chosen form is the
+ * only one kept on the pack and decides how a dose is taken and how soon it takes hold. The
+ * ammunition box is only open while a form that can be loaded into a weapon is picked.
  * @param {String} itemName - The drug's name, shown above the choice
  * @param {Object[]} vectors - The VECTORS entries the drug offers
- * @returns {Promise<Object>} The chosen vector key, or cancelled
+ * @returns {Promise<Object>} The chosen vector key and whether it is an ammunition pack, or cancelled
  */
   export async function selectDrugVector(itemName, vectors) {
     const options = vectors.map(vector => ({
@@ -903,6 +907,20 @@ export function itemToggle(html, item) {
       label: vector.label,
       description: vector.onset
     }));
+    const ammoCapable = vectors.some(vector => AMMO_VECTOR_KEYS.includes(vector.key));
+
+    const renderHook = (event, dialog) => {
+      const root = dialog.element;
+      const box = root.querySelector('input[name="ExtraOption"]');
+      if (!box) return;
+      const sync = () => {
+        const picked = root.querySelector('input[name="ItemSelect"]:checked')?.value;
+        box.disabled = !AMMO_VECTOR_KEYS.includes(picked);
+        if (box.disabled) box.checked = false;
+      };
+      root.querySelectorAll('input[name="ItemSelect"]').forEach(radio => radio.addEventListener("change", sync));
+      sync();
+    };
 
     const result = await listSelection(
       options,
@@ -910,11 +928,70 @@ export function itemToggle(html, item) {
       320,
       "ep2e.dialog.selectDrugVector.header",
       itemName,
-      "ep2e.dialog.selectDrugVector.copy"
+      "ep2e.dialog.selectDrugVector.copy",
+      ammoCapable ? renderHook : undefined,
+      ammoCapable ? { checkbox: { label: "ep2e.dialog.selectDrugVector.asAmmo" } } : {}
     );
 
     if (result?.cancelled) return { cancelled: true };
-    return { vector: result?.selection ?? null };
+    const vector = result?.selection ?? null;
+    return { vector, isAmmo: result?.extraOption === true && AMMO_VECTOR_KEYS.includes(vector) };
+  }
+
+/**
+ * Asks who a dose is for: the actor themselves, a willing target the dose is offered to through a
+ * card in the chat, or an unwilling one it has to be forced on with a melee attack first. A
+ * shift-click skips this and takes the dose at once.
+ * @param {String} itemName - The drug's name, shown above the choice
+ * @returns {Promise<String|null>} "self", "other", "unwilling", or null when cancelled
+ */
+  export async function selectDoseRecipient(itemName) {
+    const result = await listSelection(
+      [
+        { id: "self", label: "ep2e.dialog.doseRecipient.self" },
+        { id: "other", label: "ep2e.dialog.doseRecipient.other", description: "ep2e.dialog.doseRecipient.otherHint" },
+        { id: "unwilling", label: "ep2e.dialog.doseRecipient.unwilling", description: "ep2e.dialog.doseRecipient.unwillingHint" }
+      ],
+      "standardSelectionList",
+      320,
+      "ep2e.dialog.doseRecipient.header",
+      itemName,
+      "ep2e.dialog.doseRecipient.copy"
+    );
+    if (result?.cancelled) return null;
+    return result?.selection ?? null;
+  }
+
+/**
+ * Asks for one entry out of a list long enough to need a filter: a search field above a list that
+ * narrows as the user types. Enter takes the first entry still shown.
+ * @param {Object[]} entries - id and label per entry
+ * @param {String} header - The dialog title's localization key
+ * @param {String} copy - The explanation's localization key
+ * @returns {Promise<String|null>} The chosen id, or null when cancelled or nothing was chosen
+ */
+  export async function selectFromSearchableList(entries, header, copy) {
+    const renderHook = (event, dialog) => {
+      const root = dialog.element;
+      const filter = root.querySelector('input[name="Filter"]');
+      const select = root.querySelector('select[name="ItemSelect"]');
+      if (!filter || !select) return;
+      const narrow = () => {
+        const query = filter.value.trim().toLowerCase();
+        const shown = [...select.options].filter(option => {
+          option.hidden = !option.text.toLowerCase().includes(query);
+          return !option.hidden;
+        });
+        if (!shown.includes(select.selectedOptions[0])) select.value = shown[0]?.value ?? "";
+      };
+      filter.addEventListener("input", narrow);
+      narrow();
+      filter.focus();
+    };
+
+    const result = await listSelection(entries, "searchableList", 320, header, "", copy, renderHook);
+    if (result?.cancelled) return null;
+    return result?.selection || null;
   }
 
   function listSelectionOutcome(form) {
@@ -925,6 +1002,7 @@ export function itemToggle(html, item) {
       // Only present when a dialog embeds a nested body-picker dropdown next to a radio option
       // (e.g. the Ego/Morph trait dialog's "Morph" option) - absent for every other radio-only caller.
       if (form?.BodySelect) result.body = form.BodySelect.value;
+      if (form?.ExtraOption) result.extraOption = form.ExtraOption.checked === true;
       return result;
     }
 

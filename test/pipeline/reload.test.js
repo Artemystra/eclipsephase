@@ -161,12 +161,12 @@ describe("loading a sprayer with a drug", () => {
       type: "character",
       items: [sprayer, {
         _id: "drug1", name: "Grin", type: "drug",
-        system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, quantity: 2, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" }, ...drug }
+        system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 2, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" }, ...drug }
       }]
     });
   }
 
-  test("a sealed pack fills the sprayer, with no damage of its own", async () => {
+  test("an ammunition pack fills the sprayer, with no damage of its own", async () => {
     const actor = sprayerWith({});
 
     await pressReload(actor);
@@ -177,7 +177,7 @@ describe("loading a sprayer with a drug", () => {
     expect(sprayer.system.ammoSelected.dvModifier).toMatchObject({ d10: 0, d6: 0, bonus: 0 });
   });
 
-  test("under survival rules loading uses up a whole pack, however many doses it held", async () => {
+  test("under survival rules loading uses up one ammunition pack", async () => {
     setSetting("eclipsephase", "ammoRules", "survival");
     const actor = sprayerWith({ quantity: 2 });
 
@@ -187,8 +187,22 @@ describe("loading a sprayer with a drug", () => {
     expect(actor.items.get("drug1").system.usagesUsed).toEqual(0);
   });
 
-  test("an opened pack cannot be loaded", async () => {
-    const actor = sprayerWith({ usagesUsed: 1 });
+  test("an empty-handed reload names what the sprayer takes: a chemical or a drug", async () => {
+    const actor = sprayerWith({ isAmmo: false });
+    const realLocalize = game.i18n.localize;
+    game.i18n.localize = key => (key === "ep2e.item.weapon.table.ammoUsed.chemical" ? "Chemical or Drug" : key);
+
+    try {
+      await pressReload(actor);
+    } finally {
+      game.i18n.localize = realLocalize;
+    }
+
+    expect(createdMessages[0].content).toContain("(Chemical or Drug)");
+  });
+
+  test("a pack meant to be taken cannot be loaded", async () => {
+    const actor = sprayerWith({ isAmmo: false });
 
     await pressReload(actor);
 
@@ -196,7 +210,7 @@ describe("loading a sprayer with a drug", () => {
     expect(createdMessages[0].content).toContain("ep2e.roll.announce.combat.ranged.noAmmoPresent");
   });
 
-  test("a drug that is not at hand cannot be loaded", async () => {
+  test("a character's ammunition pack that is not at hand cannot be loaded", async () => {
     const actor = sprayerWith({ active: false });
 
     await pressReload(actor);
@@ -223,7 +237,7 @@ describe("the grenades-only ammunition rule", () => {
       type: "character",
       items: [sprayer, {
         _id: "drug1", name: "Grin", type: "drug",
-        system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, quantity: 2, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" } }
+        system: { active: true, slotType: "consumable", drugType: "biochem", inhalation: true, isAmmo: true, quantity: 2, usagesUsed: 0, usagesMax: 5, duration: { value: 3, units: "hours" } }
       }]
     });
 

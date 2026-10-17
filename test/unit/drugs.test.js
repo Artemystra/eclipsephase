@@ -6,7 +6,9 @@ import {
   normaliseDrugSystem,
   drugCategory,
   DRUG_CATEGORIES,
-  packIsSealed,
+  canBeAmmo,
+  offersAmmoChoice,
+  isAmmoPack,
   dosesRemaining,
   afterDose,
   drugVectors,
@@ -434,29 +436,31 @@ describe("afterDose", () => {
   });
 });
 
-describe("packIsSealed", () => {
-  test("an untouched pack is sealed, so it can go into a sprayer", () => {
-    expect(packIsSealed({ usagesUsed: 0, usagesMax: 5 })).toBe(true);
+describe("ammunition packs", () => {
+  test.each([
+    [{ dermal: true }, true], [{ inhalation: true }, true], [{ injection: true }, true],
+    [{ oral: true }, false], [{ drugType: "electronic", inhalation: true }, false], [{ dermal: true, oral: true }, false]
+  ])("a pack in %p can be ammunition: %p", (system, expected) => expect(canBeAmmo(system)).toBe(expected));
+
+  test("the acquisition dialog offers the choice when any offered form could be ammunition", () => {
+    expect(offersAmmoChoice({ dermal: true, oral: true })).toBe(true);
+    expect(offersAmmoChoice({ oral: true })).toBe(false);
+    expect(offersAmmoChoice({ drugType: "electronic" })).toBe(false);
   });
 
-  test("a pack somebody has taken a dose out of is not", () => {
-    expect(packIsSealed({ usagesUsed: 1, usagesMax: 5 })).toBe(false);
-    expect(packIsSealed({ usagesUsed: 5, usagesMax: 5 })).toBe(false);
+  test("a pack to take and a pack to load never stack, even in the same form", () => {
+    expect(sameDrugForm({ inhalation: true, isAmmo: true }, { inhalation: true, isAmmo: false })).toBe(false);
+    expect(sameDrugForm({ inhalation: true, isAmmo: true }, { inhalation: true, isAmmo: true })).toBe(true);
   });
 
-  test("how many doses a pack holds does not decide whether it is sealed", () => {
-    expect(packIsSealed({ usagesUsed: 0, usagesMax: 1 })).toBe(true);
-    expect(packIsSealed({ usagesUsed: 0, usagesMax: 20 })).toBe(true);
+  test("an ammunition flag on a form that cannot be ammunition is cleared", () => {
+    const current = { duration: { value: 1, units: "hours" }, usagesUsed: 0, usagesMax: 5 };
+    expect(normaliseDrugSystem({ ...current, oral: true, isAmmo: true })).toEqual({ isAmmo: false });
+    expect(normaliseDrugSystem({ ...current, inhalation: true, isAmmo: true })).toBeNull();
   });
 
-  test("every drug in the shipped compendium ships sealed", () => {
-    for (const drug of packDrugs()) expect(packIsSealed(drug.system)).toBe(true);
-  });
-
-  test("anything unusable is not sealed, rather than throwing", () => {
-    for (const system of [null, undefined, {}, { usagesUsed: "x" }]) {
-      expect(packIsSealed(system)).toBe(false);
-    }
+  test("no shipped drug is an ammunition pack - that is decided when a pack is acquired", () => {
+    for (const drug of packDrugs()) expect(isAmmoPack(drug.system)).toBe(false);
   });
 });
 

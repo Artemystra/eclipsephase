@@ -137,15 +137,52 @@ export function doseOnset(system) {
   return drugVector(system)?.onset ?? null;
 }
 
+// The forms a drug can be loaded into a weapon in (Core p.219, p.330): a dermal or inhaled
+// substance fills a sprayer or a splash or gas round, an injected one a capsule round or a coated
+// blade. Pills and apps are never ammunition.
+export const AMMO_VECTOR_KEYS = ["dermal", "inhalation", "injection"];
+
 /**
- * Whether two drugs are the same substance bought in the same form. A second purchase only joins
- * an existing stack when it matches, so an injected and an oral pack of the same drug stay apart.
+ * Whether a drug is offered in at least one form that could be ammunition, which is when the
+ * acquisition dialog asks whether the pack is one.
+ * @param {Object} system - The drug's system data
+ * @returns {Boolean} True when some offered form can be loaded into a weapon
+ */
+export function offersAmmoChoice(system) {
+  if (system?.drugType === "electronic") return false;
+  return drugVectors(system).some(vector => AMMO_VECTOR_KEYS.includes(vector.key));
+}
+
+/**
+ * Whether this pack, in the one form it was bought in, may be an ammunition pack.
+ * @param {Object} system - The drug's system data
+ * @returns {Boolean} True for a single dermal, inhaled or injected form of a substance
+ */
+export function canBeAmmo(system) {
+  if (system?.drugType === "electronic") return false;
+  return AMMO_VECTOR_KEYS.includes(drugVector(system)?.key);
+}
+
+/**
+ * Whether a pack is an ammunition pack: it loads into a weapon and is never taken, and its doses
+ * are not counted, as with any other ammunition.
+ * @param {Object} system - The drug's system data
+ * @returns {Boolean} True for an ammunition pack
+ */
+export function isAmmoPack(system) {
+  return system?.isAmmo === true;
+}
+
+/**
+ * Whether two drugs are the same substance bought in the same form, and both as ammunition or
+ * both not. A second purchase only joins an existing stack when it matches, so an injected and an
+ * oral pack of the same drug stay apart, and so do a pack to take and a pack to load.
  * @param {Object} a - One drug's system data
  * @param {Object} b - The other drug's system data
- * @returns {Boolean} True when both record the same set of forms
+ * @returns {Boolean} True when both record the same forms and the same ammunition flag
  */
 export function sameDrugForm(a, b) {
-  return VECTOR_KEYS.every(key => (a?.[key] === true) === (b?.[key] === true));
+  return VECTOR_KEYS.every(key => (a?.[key] === true) === (b?.[key] === true)) && isAmmoPack(a) === isAmmoPack(b);
 }
 
 /**
@@ -199,16 +236,6 @@ function packSize(system) {
 }
 
 /**
- * Whether a drug's open pack is still sealed. Loading a sprayer empties a whole pack into its
- * reservoir, so a pack somebody has already taken doses out of cannot be loaded.
- * @param {Object} system - The drug's system data
- * @returns {Boolean} True when no dose has been taken out of the open pack
- */
-export function packIsSealed(system) {
-  return doseCount(system?.usagesUsed) === 0;
-}
-
-/**
  * A dose count as it is stored, or null where none is recorded. An empty pack is a real state and
  * must be told apart from a missing counter, which a plain numeric cast cannot do: both read zero.
  * @param {*} raw - The stored value
@@ -249,8 +276,9 @@ export function drugCategory(category) {
 /**
  * The repairs a drug's data needs to match the current schema: a duration held as free text
  * becomes a span, a missing or unusable dose counter is read as an untouched pack, a pack
- * recorded as more used up than it has room for is trimmed to its size, and a category from the
- * old fine-grained list becomes drug or toxin. Used both by
+ * recorded as more used up than it has room for is trimmed to its size, a category from the
+ * old fine-grained list becomes drug or toxin, and an ammunition flag on a form that cannot be
+ * ammunition is cleared. Used both by
  * the 2.7 migration and on item creation, so that a drug arriving from an un-migrated source -
  * a world item, a compendium that was not repacked - is fixed on the way in.
  * @param {Object} system - The drug's system data
@@ -270,6 +298,8 @@ export function normaliseDrugSystem(system) {
   const used = doseCount(system?.usagesUsed);
   if (used === null) update.usagesUsed = 0;
   else if (used > max) update.usagesUsed = max;
+
+  if (isAmmoPack(system) && !canBeAmmo(system)) update.isAmmo = false;
 
   const category = system?.category;
   if (typeof category === "string" && category && !DRUG_CATEGORIES.includes(category)) update.category = drugCategory(category);
