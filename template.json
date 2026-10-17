@@ -3,8 +3,7 @@
     "types": [
       "character",
       "npc",
-      "goon",
-      "shop"
+      "goon"
     ],
     "templates": {
       "morph": {
@@ -575,8 +574,7 @@
           ]
         }
       }
-    },
-    "shop": {}
+    }
   },
   "Item": { 
     "types": [

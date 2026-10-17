@@ -66,8 +66,7 @@
     "Actor": {
       "character": "玩家角色",
       "npc": "NPC",
-      "goon": "威胁",
-      "shop": "商店"
+      "goon": "威胁"
     },
     "Item": {
       "gear": "装备",

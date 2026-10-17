@@ -66,8 +66,7 @@
     "Actor": {
       "character": "Personagem do Jogador",
       "npc": "Personagem Não Jogador",
-      "goon": "Ameaça",
-      "shop": "Loja"
+      "goon": "Ameaça"
     },
     "Item": {
       "gear": "Equipamento",
