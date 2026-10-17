@@ -696,6 +696,9 @@ class MockRoll {
   get _total() {
     return this.total;
   }
+  async toMessage(data = {}) {
+    return MockChatMessage.create({ ...data, rolls: [this.toJSON()] });
+  }
   toJSON() {
     return { formula: this.formula, total: this.total };
   }
@@ -708,7 +711,7 @@ const hookHandlers = new Map();
 
 class MockChatMessage {
   static async create(data = {}) {
-    const message = Object.assign(new MockChatMessage(), deepClone(data), { id: randomID() });
+    const message = Object.assign(new MockChatMessage(), deepClone(data), { id: randomID(), author: data.author ?? global.game.user.id });
     createdMessages.push(message);
     global.game.messages.set(message.id, message);
     return message;
@@ -716,6 +719,10 @@ class MockChatMessage {
 
   getFlag(scope, key) {
     return this.flags?.[scope]?.[key];
+  }
+
+  get isOwner() {
+    return global.game.user.isGM || this.author === global.game.user.id;
   }
 
   // Foundry lets the author or a GM change a message; dotted keys reach into flags.

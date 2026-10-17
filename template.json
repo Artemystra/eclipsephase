@@ -1197,7 +1197,9 @@
       "usagesUsed": 0,
       "usagesMax": 5,
       "wearOff": {
-        "sv": ""
+        "d10": 0,
+        "d6": 0,
+        "bonus": 0
       },
       "rollOptions": [],
       "blocksPsi": false,

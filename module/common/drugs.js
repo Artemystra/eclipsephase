@@ -274,11 +274,24 @@ export function drugCategory(category) {
 }
 
 /**
+ * Reads a dice formula written as text - the wear-off stress drugs carried before it became three
+ * number fields - into d10s, d6s and a flat bonus. Anything else in the text is ignored.
+ * @param {String} text - e.g. "1d10 + 2"
+ * @returns {Object} d10, d6 and bonus
+ */
+export function parseDiceValue(text) {
+  const compact = String(text ?? "").replace(/\s+/g, "");
+  const count = sides => Number(compact.match(new RegExp(`(\\d+)d${sides}(?!\\d)`))?.[1]) || 0;
+  const bonus = compact.replace(/\d+d\d+/g, "").match(/[+-]\d+/g)?.reduce((sum, part) => sum + Number(part), 0) ?? 0;
+  return { d10: count(10), d6: count(6), bonus };
+}
+
+/**
  * The repairs a drug's data needs to match the current schema: a duration held as free text
  * becomes a span, a missing or unusable dose counter is read as an untouched pack, a pack
  * recorded as more used up than it has room for is trimmed to its size, a category from the
- * old fine-grained list becomes drug or toxin, and an ammunition flag on a form that cannot be
- * ammunition is cleared. Used both by
+ * old fine-grained list becomes drug or toxin, an ammunition flag on a form that cannot be
+ * ammunition is cleared, and a wear-off stress written as text becomes dice values. Used both by
  * the 2.7 migration and on item creation, so that a drug arriving from an un-migrated source -
  * a world item, a compendium that was not repacked - is fixed on the way in.
  * @param {Object} system - The drug's system data
@@ -300,6 +313,8 @@ export function normaliseDrugSystem(system) {
   else if (used > max) update.usagesUsed = max;
 
   if (isAmmoPack(system) && !canBeAmmo(system)) update.isAmmo = false;
+
+  if (typeof system?.wearOff?.sv === "string") update.wearOff = parseDiceValue(system.wearOff.sv);
 
   const category = system?.category;
   if (typeof category === "string" && category && !DRUG_CATEGORIES.includes(category)) update.category = drugCategory(category);

@@ -1,8 +1,8 @@
 import { drugVector, doseOnset, dosesRemaining, isAmmoPack } from "./drugs.js";
 import { durationRunOut } from "./time.js";
 import { sleevedNervousSystem, chainHasWareMarker, CYBERBRAIN_MARKER } from "./body-markers.js";
-import { consumeDose, gmList } from "./general-sheet-functions.js";
-import { RollCheck, TASK_RESULT } from "../rolls/dice.js";
+import { consumeDose, gmList, diceFormula } from "./general-sheet-functions.js";
+import { RollCheck, TASK_RESULT, rollToChat, WEAPON_DAMAGE_OUTPUT } from "../rolls/dice.js";
 
 const DOSE_CARD = "systems/eclipsephase/templates/chat/dose.html";
 const DOSE_SOCKET = "system.eclipsephase";
@@ -81,7 +81,7 @@ export function doseEffectData(item) {
           drugType: system.drugType ?? "",
           vector: drugVector(system)?.key ?? null,
           onset: doseOnset(system),
-          wearOff: system.wearOff?.sv ?? "",
+          wearOff: diceFormula(system.wearOff),
           rollOptions: Array.isArray(system.rollOptions) ? system.rollOptions : [],
           blocksPsi: system.blocksPsi === true
         }
@@ -120,15 +120,18 @@ function durationLabel(span) {
  * icon, a headline and an optional box of labelled rows, a row without a label reading as a note.
  * A character's card is public; anyone else's goes to the GMs, as the reload card does.
  * @param {Actor} actor - The actor the card is about
- * @param {Object} card - icon, color (a CSS variable), headline and rows of {label, value}
- * @returns {Promise<void>} Resolves once the card is posted
+ * @param {Object} card - icon, color (a CSS variable), headline, rows of {label, value}, and any
+ *   further template data such as a wear-off roll button
+ * @param {Object} [flags] - Flags stored on the message
+ * @returns {Promise<ChatMessage>} The posted card
  */
-async function postDrugCard(actor, { icon, color, headline, rows = [] }) {
-  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { icon, color, headline, rows });
+async function postDrugCard(actor, { icon, color, headline, rows = [], ...extra }, flags = {}) {
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, { icon, color, headline, rows, ...extra });
 
-  await ChatMessage.create({
+  return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content,
+    flags,
     ...(actor.type === "character" ? {} : { whisper: gmList() })
   });
 }
@@ -186,14 +189,66 @@ export async function postWearOffCard(actor, effect) {
   const dose = effect.getFlag("eclipsephase", "dose");
   const timed = Number.isFinite(effect.duration?.value) && effect.duration.value > 0;
   const endedEarly = timed && !durationRunOut(effect);
-  const rows = dose.wearOff ? [{ label: game.i18n.localize("ep2e.chat.dose.wearOffSv"), value: dose.wearOff }] : [];
-
-  await postDrugCard(actor, {
+  const sv = dose.wearOff || "";
+  const name = dose.name ?? effect.name;
+  const card = {
     icon: "fa-syringe",
     color: "--inactive",
-    headline: game.i18n.format(endedEarly ? "ep2e.chat.dose.endedEarly" : "ep2e.chat.dose.woreOff", { name: dose.name ?? effect.name }),
-    rows
-  });
+    headline: game.i18n.format(endedEarly ? "ep2e.chat.dose.endedEarly" : "ep2e.chat.dose.woreOff", { name }),
+    rows: sv ? [{ label: game.i18n.localize("ep2e.chat.dose.wearOffSv"), value: sv }] : []
+  };
+  const flags = sv ? { eclipsephase: { wearOff: { actorUuid: actor.uuid, sv, name, card, rolled: false } } } : {};
+
+  await postDrugCard(actor, { ...card, wearOffRoll: !!sv, actorUuid: actor.uuid }, flags);
+}
+
+/**
+ * Rolls the stress a drug leaves behind as it wears off - through the system's roll output, so the
+ * 3D dice play before the result shows - and applies it through the ordinary damage path, trauma
+ * included. The card loses its button. Runs where the card may be changed - its author or a GM -
+ * so the stress is rolled once.
+ * @param {ChatMessage} message - The wear-off card
+ * @returns {Promise<Number|null>} The stress taken, or null when nothing was rolled
+ */
+export async function rollWearOffStress(message) {
+  const wearOff = message?.getFlag?.("eclipsephase", "wearOff");
+  if (!wearOff || wearOff.rolled) return null;
+  const actor = await fromUuid(wearOff.actorUuid);
+  if (!actor) return null;
+
+  await message.update({ "flags.eclipsephase.wearOff.rolled": true });
+  const roll = await new Roll(wearOff.sv).evaluate();
+  const output = {
+    type: "defaultDamage",
+    copy: game.i18n.format("ep2e.chat.dose.wearOffFlavor", { name: wearOff.name }),
+    rollTitle: "ep2e.roll.announce.total"
+  };
+  await rollToChat(null, output, WEAPON_DAMAGE_OUTPUT, roll, actor.name, actor.type === "character" ? null : gmList(), false, "rollOutput");
+  await actor.modifyTokenAttribute("health.mental", roll.total, true, true);
+
+  const content = await foundry.applications.handlebars.renderTemplate(DOSE_CARD, wearOff.card);
+  await message.update({ content });
+  return roll.total;
+}
+
+/**
+ * Answers a "roll stress" click: rolled at once where the card may be changed, otherwise sent to
+ * the active GM.
+ * @param {String} messageId - The wear-off card's id
+ * @returns {Promise<void>} Resolves once the roll is made or sent
+ */
+export async function requestWearOffRoll(messageId) {
+  const message = game.messages.get(messageId);
+  if (!message?.getFlag?.("eclipsephase", "wearOff")) return;
+  if (message.isOwner || game.user.isGM) {
+    await rollWearOffStress(message);
+    return;
+  }
+  if (!game.users.activeGM) {
+    ui.notifications.warn(game.i18n.localize("ep2e.actorSheet.warnings.doseNeedsGM"));
+    return;
+  }
+  game.socket.emit(DOSE_SOCKET, { action: "rollWearOff", messageId });
 }
 
 /**
@@ -462,6 +517,11 @@ export function registerDoseSocket() {
       const actor = await fromUuid(payload.actorUuid);
       const result = await claimDose(message, actor);
       if (result.reasonKey) game.socket.emit(DOSE_SOCKET, { action: "claimDoseRefused", userId: payload.userId, reasonKey: result.reasonKey });
+      return;
+    }
+    if (payload?.action === "rollWearOff") {
+      if (!game.user.isGM || game.users.activeGM?.id !== game.user.id) return;
+      await rollWearOffStress(game.messages.get(payload.messageId));
       return;
     }
     if (payload?.action === "claimDoseRefused" && payload.userId === game.user.id) {

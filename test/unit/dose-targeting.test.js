@@ -1,7 +1,7 @@
 import { doseTargetCandidates, tokenAt, chooseDoseTarget } from "../../module/common/dose-targeting.js";
 import { offerDose, requestDoseClaim } from "../../module/common/doses.js";
 import { selectFromSearchableList } from "../../module/common/general-sheet-functions.js";
-import { GMvision } from "../../module/rolls/chat.js";
+import { GMvision, ownerVision } from "../../module/rolls/chat.js";
 import { makeActor, resetWorld, seedDialogs } from "../setup/factories.js";
 
 /**
@@ -206,5 +206,20 @@ describe("the GM-only card controls", () => {
 
     expect(controls.some(control => control.classList.has("noShow"))).toBe(false);
     expect(playerControl.classList.has("noShow")).toBe(true);
+  });
+});
+
+describe("controls only an actor's owners may use", () => {
+  test("are hidden from anyone who does not own the actor", async () => {
+    global.__ep.uuidRegistry.set("Actor.mine", { isOwner: true });
+    global.__ep.uuidRegistry.set("Actor.theirs", { isOwner: false });
+    const mine = { dataset: { actorUuid: "Actor.mine" }, classList: new Set() };
+    const theirs = { dataset: { actorUuid: "Actor.theirs" }, classList: new Set() };
+    const html = { querySelectorAll: selector => (selector === ".ownerOnlyControl" ? [mine, theirs] : []) };
+
+    await ownerVision(html);
+
+    expect(mine.classList.has("noShow")).toBe(false);
+    expect(theirs.classList.has("noShow")).toBe(true);
   });
 });

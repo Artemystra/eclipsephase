@@ -29,7 +29,7 @@
         <div class="tab {{#if (eq tabGroups.primary 'details')}}active{{/if}}" data-group="primary" data-tab="details">
 
             <div class="flexrow flex-group-center">
-                <table>
+                <table style="width: 100%; flex: 0 0 100%;">
                     <tr>
                         <td>
                             <label class="resource-label">{{localize "ep2e.item.drug.table.category.label"}}</label>
@@ -70,7 +70,7 @@
                     </tr>
                 </table>
 
-                <table>
+                <table style="width: 100%; flex: 0 0 100%;">
                     <tr>
                         <td>
                             <label class="resource-label">{{localize "ep2e.item.drug.table.duration"}}</label>
@@ -79,10 +79,7 @@
                             <label class="resource-label">{{localize "ep2e.item.drug.table.durationUnits.label"}}</label>
                         </td>
                         <td>
-                            <label class="resource-label">{{localize "ep2e.item.drug.table.addictionModifier"}}</label>
-                        </td>
-                        <td>
-                            <label class="resource-label">{{localize "ep2e.item.drug.table.addictionType"}}</label>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.wearOffSv"}}</label>
                         </td>
                     </tr>
                     <tr>
@@ -95,6 +92,29 @@
                             </select>
                         </td>
                         <td>
+                            <div class="flexrow alignCenter" style="justify-content: center; gap: 4px;">
+                                <img src="icons/svg/d10-grey.svg" class="icon-xsmall"/>
+                                <input class="input-xs" type="number" name="system.wearOff.d10" value="{{item.system.wearOff.d10}}" placeholder="0"/>
+                                <img src="icons/svg/d6-grey.svg" class="icon-xsmall"/>
+                                <input class="input-xs" type="number" name="system.wearOff.d6" value="{{item.system.wearOff.d6}}" placeholder="0"/>
+                                <i class="fas fa-plus awesomeIcon"></i>
+                                <input class="input-xs" type="number" name="system.wearOff.bonus" value="{{item.system.wearOff.bonus}}" placeholder="0"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; flex: 0 0 100%;">
+                    <tr>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.addictionModifier"}}</label>
+                        </td>
+                        <td>
+                            <label class="resource-label">{{localize "ep2e.item.drug.table.addictionType"}}</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <input class="input-large alignCenter" type="text" name="system.addictionMod" value="{{item.system.addictionMod}}" placeholder="-10"/>
                         </td>
                         <td>
@@ -106,9 +126,8 @@
                 </table>
             </div>
 
-            <p></p>
-            <div class="flexrow flex-group-center">
-                <h3>{{localize "ep2e.item.drug.table.applicationVectors.headline"}}</h2>
+            <div class="flexrow subheader" style="margin-top: 10px;">
+                <h3 class="subheader dialog">{{localize "ep2e.item.drug.table.applicationVectors.headline"}}</h3>
             </div>
 
             <div class="flexrow flex-group-center">

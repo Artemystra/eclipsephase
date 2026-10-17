@@ -1,4 +1,4 @@
-import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, forceDose, registerForcedDoseHooks, deliverForcedDose } from "../../module/common/doses.js";
+import { takeDose, doseSubstrate, doseEffectData, activeDoseFor, endRunOutDoses, registerDoseHooks, offerDose, claimDose, requestDoseClaim, registerDoseSocket, forceDose, registerForcedDoseHooks, deliverForcedDose, rollWearOffStress, requestWearOffRoll } from "../../module/common/doses.js";
 import { registerExpiryCleanup, cleanUpExpired } from "../../module/common/expiry.js";
 import { selectDoseRecipient } from "../../module/common/general-sheet-functions.js";
 import { registerPoolRule } from "../../module/common/pool-rule.js";
@@ -892,5 +892,83 @@ describe("forcing a dose on an unwilling target", () => {
 
     expect(await deliverForcedDose(attempt, "no-such-message")).toBeNull();
     expect(offers()).toHaveLength(0);
+  });
+});
+
+describe("the stress a drug leaves behind as it wears off", () => {
+  /**
+   * A character dosed with Kick that leaves 1d6 stress behind, its wear-off card already posted.
+   * @returns {Promise<Object>} The actor and the wear-off card
+   */
+  async function woreOff() {
+    registerDoseHooks();
+    const actor = carrying({ wearOff: { d10: 0, d6: 1, bonus: 0 } });
+    actor._source.system.aptitudes.wil.value = 15;
+    actor.prepareData();
+    await takeDose(actor, actor.items.get("kick1"));
+    createdMessages.length = 0;
+    await actor.deleteEmbeddedDocuments("ActiveEffect", [doseOn(actor).id]);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    return { actor, card: createdMessages[0] };
+  }
+
+  test("the wear-off card offers the roll and remembers what to roll", async () => {
+    const { actor, card } = await woreOff();
+
+    expect(card.content).toContain("rollWearOff");
+    expect(card.getFlag("eclipsephase", "wearOff")).toMatchObject({ actorUuid: actor.uuid, sv: "1d6", rolled: false });
+  });
+
+  test("a drug with no wear-off stress offers no roll", async () => {
+    registerDoseHooks();
+    const actor = carrying();
+    await takeDose(actor, actor.items.get("kick1"));
+    createdMessages.length = 0;
+    await actor.deleteEmbeddedDocuments("ActiveEffect", [doseOn(actor).id]);
+
+    expect(createdMessages[0].content).not.toContain("rollWearOff");
+    expect(createdMessages[0].getFlag("eclipsephase", "wearOff")).toBeUndefined();
+  });
+
+  test("rolling applies the stress to the actor, posts the roll and leaves the card as a record", async () => {
+    const { actor, card } = await woreOff();
+    const before = actor.system.health.mental.value ?? 0;
+    seedRolls([4]);
+
+    const taken = await rollWearOffStress(card);
+
+    expect(taken).toEqual(4);
+    expect(actor.system.health.mental.value).toEqual(before + 4);
+    expect(createdMessages.some(message => message.content?.includes("ep2e.chat.dose.wearOffFlavor"))).toBe(true);
+    expect(card.content).not.toContain("rollWearOff");
+  });
+
+  test("the stress is rolled once, however often the button is pressed", async () => {
+    const { card } = await woreOff();
+    seedRolls([4, 6]);
+
+    await rollWearOffStress(card);
+
+    expect(await rollWearOffStress(card)).toBeNull();
+  });
+
+  test("a player who cannot change the card sends the roll to the GM", async () => {
+    const { card } = await woreOff();
+    const emitted = [];
+    const realEmit = game.socket.emit;
+    game.socket.emit = (name, payload) => emitted.push(payload);
+    card.author = "someone-else";
+    game.user.isGM = false;
+    game.users.activeGM = { id: "gm-1" };
+
+    try {
+      await requestWearOffRoll(card.id);
+    } finally {
+      game.socket.emit = realEmit;
+      game.user.isGM = true;
+    }
+
+    expect(emitted).toEqual([{ action: "rollWearOff", messageId: card.id }]);
+    expect(card.getFlag("eclipsephase", "wearOff").rolled).toBe(false);
   });
 });

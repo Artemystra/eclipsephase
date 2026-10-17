@@ -1162,6 +1162,7 @@
           },
           "usagesMax": "剂量",
           "isAmmo": "弹药包",
+          "wearOffSv": "药效消退压力 (SV)",
           "usagesTip": "已用 / 上限",
           "addictionModifier": "成瘾调整值",
           "addictionType": "成瘾类型",
@@ -1720,6 +1721,8 @@
         "woreOff": "我的 <strong>{name}</strong> 药效已经消退",
         "endedEarly": "我的 <strong>{name}</strong> 被提前终止",
         "wearOffSv": "药效消退压力 (SV)",
+        "rollWearOff": "掷压力",
+        "wearOffFlavor": "药效消退压力：{name}",
         "app": "应用"
       },
       "buttonLabel": {

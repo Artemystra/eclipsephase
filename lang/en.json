@@ -1200,6 +1200,7 @@
           },
           "usagesMax": "Doses",
           "isAmmo": "Ammunition pack",
+          "wearOffSv": "Wear-off stress (SV)",
           "usagesTip": "Used / Max",
           "addictionModifier": "Addiction Mod",
           "addictionType": "Addiction Type",
@@ -1784,6 +1785,8 @@
         "woreOff": "My dose of <strong>{name}</strong> wore off",
         "endedEarly": "My dose of <strong>{name}</strong> was ended early",
         "wearOffSv": "Wear-off stress (SV)",
+        "rollWearOff": "Roll stress",
+        "wearOffFlavor": "Wear-off stress: {name}",
         "app": "App"
       },
       "buttonLabel": {

@@ -1396,26 +1396,28 @@ export function readRollContext(element){
 }
 
 //DV calculator (this translates the three given integers into a human readable roll formula)
+/**
+ * The dice formula a damage-style value stands for: d10s, d6s and a flat bonus, e.g. "1d10+2".
+ * Used for weapon and ammo damage and for a drug's wear-off stress alike.
+ * @param {Object} value - d10, d6 and bonus as the sheets store them
+ * @returns {String} The formula, or "" when there are no dice
+ */
+export function diceFormula(value) {
+  const d10 = Number(value?.d10) || 0;
+  const d6 = Number(value?.d6) || 0;
+  const bonus = Number(value?.bonus) || 0;
+  const bonusValue = bonus ? "+" + bonus : "";
+  if (d10 && d6) return d10 + "d10+" + d6 + "d6" + bonusValue;
+  if (d10) return d10 + "d10" + bonusValue;
+  if (d6) return d6 + "d6" + bonusValue;
+  return "";
+}
+
 export async function damageValueCalc (object, dvPath, traits, calcType){
   let dv = "";
   if(calcType === "ammo"){
     //Ammo Damage Calculation
-    dv = "ep2e.item.weapon.table.noDamageValueModifier"
-    const d10 = object.type != "drug" ? Number(dvPath.d10) : 0;
-    const d6 = object.type != "drug" ? dvPath.d6 : 0;
-    const bonus = object.type != "drug" ? dvPath.bonus : 0;
-    let bonusValue = bonus ? "+"  + bonus : "";
-  
-    if (d10 && d6){
-      dv = d10 + "d10+" + d6 + "d6" + bonusValue;
-    }
-    else if (d10 && !d6){
-      dv = d10 + "d10" + bonusValue;
-    }
-    else if (!d10 && d6){
-      dv = d6 + "d6" + bonusValue;
-    }
-    
+    dv = (object.type != "drug" ? diceFormula(dvPath) : "") || "ep2e.item.weapon.table.noDamageValueModifier";
   }
   else if (calcType === "weapon"){
     //if the weapon has the noDamage Trait the calculation is skipped

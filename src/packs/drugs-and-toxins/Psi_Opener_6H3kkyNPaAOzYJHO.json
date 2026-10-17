@@ -31,7 +31,12 @@
     "addictionType": "none",
     "quantity": 1,
     "usagesUsed": 0,
-    "usagesMax": 5
+    "usagesMax": 5,
+    "wearOff": {
+      "d10": 0,
+      "d6": 1,
+      "bonus": 0
+    }
   },
   "ownership": {
     "default": 0,

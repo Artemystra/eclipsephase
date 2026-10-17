@@ -3,7 +3,7 @@ import * as poolFunctions from "./pools.js";
 import * as psiFunctions from "./psi.js";
 import * as damageFunctions from "./damage.js";
 import * as resleeving from "./resleeving.js";
-import { requestDoseClaim } from "../common/doses.js";
+import { requestDoseClaim, requestWearOffRoll } from "../common/doses.js";
 import { chooseDoseTarget } from "../common/dose-targeting.js";
 
 /**
@@ -46,6 +46,10 @@ export async function ownerVision(html){
         if(actor && !actor.isOwner){
             button.classList.add("noShow")
         }
+    }
+    for(const control of html.querySelectorAll(".ownerOnlyControl")){
+        const actor = fromUuidSync(control.dataset.actorUuid ?? "")
+        if(!actor?.isOwner) control.classList.add("noShow")
     }
 }
 
@@ -103,6 +107,13 @@ export async function addChatListeners(html) {
     if (useDose) {
       const messageId = useDose.closest("[data-message-id]")?.dataset.messageId;
       if (messageId) requestDoseClaim(messageId, { selection: useDose.dataset.selection === "true" });
+      return;
+    }
+
+    const rollWearOff = event.target.closest("button.rollWearOff");
+    if (rollWearOff) {
+      const messageId = rollWearOff.closest("[data-message-id]")?.dataset.messageId;
+      if (messageId) requestWearOffRoll(messageId);
       return;
     }
 

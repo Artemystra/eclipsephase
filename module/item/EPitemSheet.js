@@ -74,7 +74,7 @@ export default class EPitemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
       return { width: 755, height: 445 };
     }
     else if (item.type === "drug") {
-      return { width: 520, height: 420 };
+      return { width: 520, height: 445 };
     }
     else if (item.type === "morph") {
       return { width: 620, height: 380 };

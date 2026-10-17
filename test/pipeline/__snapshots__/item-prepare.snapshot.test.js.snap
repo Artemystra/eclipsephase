@@ -30,7 +30,9 @@ Object {
   "usagesMax": 5,
   "usagesUsed": 0,
   "wearOff": Object {
-    "sv": "",
+    "bonus": 0,
+    "d10": 0,
+    "d6": 0,
   },
 }
 `;

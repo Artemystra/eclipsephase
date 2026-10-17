@@ -1,10 +1,12 @@
 import fs from "fs";
+import { diceFormula } from "../../module/common/general-sheet-functions.js";
 import path from "path";
 import {
   parseDurationText,
   parseAddictionMod,
   normaliseDrugSystem,
   drugCategory,
+  parseDiceValue,
   DRUG_CATEGORIES,
   canBeAmmo,
   offersAmmoChoice,
@@ -588,5 +590,27 @@ describe("the conditional options authored from the book", () => {
   test("CR Gas's sight-based Perceive replaces its -20 to all actions with the book's -30", () => {
     const crGas = packDrugs().find(drug => drug.name === "CR Gas");
     expect(crGas.system.rollOptions).toEqual([expect.objectContaining({ value: -30, appliesTo: ["perceive"], replacesGlobal: true })]);
+  });
+});
+
+describe("the stress a drug leaves behind, authored from the book", () => {
+  test("exactly Psi-Opener, Psi-Kick and Schizo carry it, at the book's values", () => {
+    const withStress = packDrugs().filter(drug => diceFormula(drug.system.wearOff)).map(drug => [drug.name, diceFormula(drug.system.wearOff)]).sort();
+    expect(withStress).toEqual([["Psi-Kick", "1d10+2"], ["Psi-Opener", "1d6"], ["Schizo", "1d10"]]);
+  });
+});
+
+describe("a wear-off stress written as text", () => {
+  test.each([
+    ["1d10+2", { d10: 1, d6: 0, bonus: 2 }],
+    ["1d6", { d10: 0, d6: 1, bonus: 0 }],
+    ["1d10 + 2", { d10: 1, d6: 0, bonus: 2 }],
+    ["", { d10: 0, d6: 0, bonus: 0 }]
+  ])("%p becomes %p", (text, expected) => expect(parseDiceValue(text)).toEqual(expected));
+
+  test("is repaired into dice values, the way the sheet now stores it", () => {
+    const current = { duration: { value: 1, units: "hours" }, usagesUsed: 0, usagesMax: 5 };
+    expect(normaliseDrugSystem({ ...current, wearOff: { sv: "1d10+2" } })).toEqual({ wearOff: { d10: 1, d6: 0, bonus: 2 } });
+    expect(normaliseDrugSystem({ ...current, wearOff: { d10: 1, d6: 0, bonus: 0 } })).toBeNull();
   });
 });

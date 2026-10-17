@@ -1163,6 +1163,7 @@
           },
           "usagesMax": "Dosis",
           "isAmmo": "Paquete de munición",
+          "wearOffSv": "Estrés al pasar el efecto (SV)",
           "usagesTip": "Usadas / Max",
           "addictionModifier": "Addiction Mod",
           "addictionType": "Addiction Type",
@@ -1713,6 +1714,8 @@
         "woreOff": "Mi dosis de <strong>{name}</strong> ha dejado de hacer efecto",
         "endedEarly": "Mi dosis de <strong>{name}</strong> se terminó antes de tiempo",
         "wearOffSv": "Estrés al pasar el efecto (SV)",
+        "rollWearOff": "Tirar estrés",
+        "wearOffFlavor": "Estrés al pasar el efecto: {name}",
         "app": "App"
       },
       "buttonLabel": {

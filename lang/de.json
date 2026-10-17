@@ -1184,6 +1184,7 @@
           },
           "usagesMax": "Dosen",
           "isAmmo": "Munitionspack",
+          "wearOffSv": "Stress beim Nachlassen (SV)",
           "usagesTip": "Benutzt / Max",
           "addictionModifier": "Suchtmod",
           "addictionType": "Suchttyp",
@@ -1757,6 +1758,8 @@
         "woreOff": "Meine Dosis <strong>{name}</strong> hat nachgelassen",
         "endedEarly": "Meine Dosis <strong>{name}</strong> wurde vorzeitig beendet",
         "wearOffSv": "Stress beim Nachlassen (SV)",
+        "rollWearOff": "Stress würfeln",
+        "wearOffFlavor": "Stress beim Nachlassen: {name}",
         "app": "App"
       },
       "buttonLabel": {
