@@ -1,3 +1,4 @@
+import { strainTabLabel } from "../../module/actor/EPactorSheet.js";
 import {
   registerStrainFamily,
   getStrainFamily,
@@ -135,24 +136,13 @@ describe("the family the core registers", () => {
 });
 
 describe("what the strain tab is called", () => {
-  /**
-   * The label the sheet would put on the strain tab for a given family.
-   * @param {Object} strainFamily - A registry entry, registered or missing
-   * @returns {String} The label key, or the family's own id
-   */
-  function tabLabelFor(strainFamily) {
-    if (strainFamily.tabLabel) return strainFamily.tabLabel;
-    if (!strainFamily.missing || !strainFamily.id) return "ep2e.actorSheet.rightTabs.psiTab";
-    return strainFamily.id.charAt(0).toUpperCase() + strainFamily.id.slice(1);
-  }
-
   test("a registered family uses its own localised label", () => {
     registerCoreStrainFamilies();
-    expect(tabLabelFor(getStrainFamily("psi"))).toEqual("ep2e.actorSheet.rightTabs.psiTab");
+    expect(strainTabLabel(getStrainFamily("psi"))).toEqual("ep2e.actorSheet.rightTabs.psiTab");
   });
 
   test("a family whose module is missing is named after itself, not after Psi", () => {
-    expect(tabLabelFor(getStrainFamily("ki"))).toEqual("Ki");
-    expect(tabLabelFor(getStrainFamily("gamma-wave"))).toEqual("Gamma-wave");
+    expect(strainTabLabel(getStrainFamily("ki"))).toEqual("Ki");
+    expect(strainTabLabel(getStrainFamily("gamma-wave"))).toEqual("Gamma-wave");
   });
 });

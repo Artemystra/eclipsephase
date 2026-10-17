@@ -1,4 +1,4 @@
-import { RollCheck, TaskRollModifier } from "../../module/rolls/dice.js";
+import { RollCheck, TaskRollModifier, resolveSkillRollValue } from "../../module/rolls/dice.js";
 import { registerRollSource, registerPoolOption, resetRegistry } from "../../module/api/registry.js";
 import { makeActor, resetWorld, seedRolls, seedDialogs } from "../setup/factories.js";
 
@@ -183,10 +183,12 @@ describe("RollCheck registry use", () => {
 
   test("a registered roll source supplies the skill value used by the jamming comparison", () => {
     registerRollSource("spikeSource", {
-      skillRoll: actorSystem => ({ rollvalue: actorSystem.skillsVig?.infiltrate?.roll, specname: "", poolType: "Vigor" })
+      skillRoll: () => ({ rollvalue: 77, specname: "", poolType: "Vigor" })
     });
     const actor = makeRoller();
-    expect(actor.system.skillsVig.infiltrate.roll).toBeGreaterThan(0);
+
+    expect(resolveSkillRollValue(actor.system, actor.items, { key: "infiltrate" }, "spikeSource")).toEqual(77);
+    expect(resolveSkillRollValue(actor.system, actor.items, { key: "infiltrate" }, "unregistered")).not.toEqual(77);
   });
 });
 
@@ -315,5 +317,74 @@ describe("modifiers to all actions", () => {
     await RollCheck(skillDataset(), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
 
     expect(global.__ep.createdMessages[0].content).not.toContain("ep2e.roll.announce.globalEffects");
+  });
+});
+
+describe("the roll dialog", () => {
+  beforeEach(() => { resetWorld(); resetRegistry(); });
+
+  /**
+   * Runs a check while recording which dialog template it opened.
+   * @param {Object} dataset - The dataset a sheet click hands RollCheck
+   * @param {Object} answer - What the dialog answers
+   * @returns {Promise<String[]>} The templates rendered, in order
+   */
+  async function checkRecordingTemplates(dataset, answer) {
+    const actor = makeRoller();
+    const rendered = [];
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      rendered.push(template);
+      return realRender(template, data);
+    };
+    seedDialogs(answer);
+    seedRolls([42]);
+    try {
+      await RollCheck(dataset, actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
+    return rendered;
+  }
+
+  test.each([
+    ["infiltrate", "systems/eclipsephase/templates/chat/skill-test-dialog.html"],
+    ["fray", "systems/eclipsephase/templates/chat/skill-test-dialog.html"],
+    ["guns", "systems/eclipsephase/templates/chat/gun-test-dialog.html"],
+    ["melee", "systems/eclipsephase/templates/chat/melee-test-dialog.html"]
+  ])("a %s check opens its own dialog", async (key, template) => {
+    const rendered = await checkRecordingTemplates(skillDataset({ key }), { cancelled: true });
+
+    expect(rendered[0]).toEqual(template);
+  });
+
+  test("cancelling the dialog rolls nothing and posts nothing", async () => {
+    await checkRecordingTemplates(skillDataset(), { cancelled: true });
+
+    expect(global.__ep.createdMessages).toHaveLength(0);
+  });
+
+  test("a specialization ticked in the dialog adds its +10", async () => {
+    await checkRecordingTemplates(skillDataset(), plainDialogAnswer({ useSpec: true }));
+
+    expect(global.__ep.createdMessages[0].content).toContain("ep2e.roll.announce.specialization");
+  });
+
+  test("a favor difficulty picked in the dialog lands on the roll", async () => {
+    await checkRecordingTemplates(skillDataset(), plainDialogAnswer({ favorMod: "-20" }));
+
+    expect(global.__ep.createdMessages[0].content).toContain("ep2e.roll.announce.favor");
+  });
+
+  test("a favor difficulty the sheet locked wins over the dialog, even when it is Moderate", async () => {
+    const actor = makeRoller();
+    seedDialogs(plainDialogAnswer({ favorMod: "-30" }));
+    seedRolls([42]);
+    let seen = null;
+    Hooks.on("eclipsephase.preRoll", context => { seen = context.options.favorMod; });
+
+    await RollCheck(skillDataset({ favorDifficultyLocked: true, favorDifficultyModifier: 0 }), actor.system, actor, SYSTEM_OPTIONS, null, "skill");
+
+    expect(seen).toEqual(0);
   });
 });

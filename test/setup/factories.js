@@ -136,10 +136,42 @@ function makeUnlinkedToken(scene, data, { id = `token-${scene.tokens.length + 1}
   return actor;
 }
 
+/**
+ * Registers every system compendium as a pack read straight from its source files under
+ * src/packs, so code that reads a compendium - an old migration fetching a replacement item, the
+ * drug backfill - meets the real content. Documents are built fresh on every read.
+ * @returns {void}
+ */
+function registerSystemPacks() {
+  const root = path.join(SYSTEM_ROOT, "src", "packs");
+  for (const name of fs.readdirSync(root)) {
+    const dir = path.join(root, name);
+    if (!fs.statSync(dir).isDirectory()) continue;
+    const sources = () => fs.readdirSync(dir)
+      .filter(file => file.endsWith(".json"))
+      .map(file => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")))
+      .filter(doc => doc._key?.startsWith("!items!") || doc._key?.startsWith("!actors!"));
+    const build = doc => doc._key.startsWith("!actors!")
+      ? new global.CONFIG.Actor.documentClass(doc)
+      : new global.CONFIG.Item.documentClass(doc);
+    const type = sources()[0]?._key?.startsWith("!actors!") ? "Actor" : "Item";
+    global.game.packs.set(`eclipsephase.${name}`, {
+      collection: `eclipsephase.${name}`,
+      metadata: { package: "eclipsephase", name, type },
+      getDocument: async id => {
+        const doc = sources().find(entry => entry._id === id);
+        return doc ? build(doc) : null;
+      },
+      getDocuments: async () => sources().map(build)
+    });
+  }
+}
+
 module.exports = {
   makeActor,
   makeItem,
   makeUnlinkedToken,
+  registerSystemPacks,
   makeActorFromFixture,
   fixtureNames,
   loadPackItem,

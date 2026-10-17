@@ -465,13 +465,23 @@ describe("the card when a dose stops acting", () => {
     expect(createdMessages[0].content).not.toContain("ep2e.chat.dose.wearOffSv");
   });
 
-  test("it shares the dose card's layout, in the inactive colour", async () => {
+  test("it is rendered from the same template as the card for taking a dose", async () => {
     const actor = await dosed();
+    const realRender = foundry.applications.handlebars.renderTemplate;
+    const templates = [];
+    foundry.applications.handlebars.renderTemplate = async (template, data) => {
+      templates.push(template);
+      return realRender(template, data);
+    };
 
-    await actor.deleteEmbeddedDocuments("ActiveEffect", [doseOn(actor).id]);
+    try {
+      await takeDose(actor, actor.items.get("kick1"));
+      await actor.deleteEmbeddedDocuments("ActiveEffect", [doseOn(actor).id]);
+    } finally {
+      foundry.applications.handlebars.renderTemplate = realRender;
+    }
 
-    expect(createdMessages[0].content).toContain("fa-syringe");
-    expect(createdMessages[0].content).toContain("var(--inactive)");
+    expect(new Set(templates)).toEqual(new Set(["systems/eclipsephase/templates/chat/dose.html"]));
   });
 
   test("a removal made on somebody else's client is theirs to announce", async () => {

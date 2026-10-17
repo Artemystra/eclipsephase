@@ -58,16 +58,15 @@ describe("drugs on an NPC or Goon", () => {
 });
 
 describe("the sheet templates", () => {
-  test.each(["npc", "goon"])("a %s's sideCar shows the consumables box, with the take control", async type => {
-    const actor = await sorted(carrying(type));
+  test.each(["npc", "goon", "character"])("a %s's sidebar offers the take control for a drug at hand", async type => {
+    const actor = carrying(type);
+    if (type === "character") await actor.items.get("grin1").update({ "system.active": true });
+    await sorted(actor);
 
     const html = await foundry.applications.handlebars.renderTemplate(
-      "systems/eclipsephase/templates/actor/partials/currentStatus/consumableSummary.html", { actor });
-    const sideCar = await import("fs").then(fs => fs.readFileSync(
-      `${global.__ep.SYSTEM_ROOT}/templates/actor/partials/currentStatus/sideCar.html`, "utf8"));
+      "systems/eclipsephase/templates/actor/partials/currentStatus/sideCar.html", { actor });
 
     expect(html).toContain("drug-use");
-    expect(sideCar).toMatch(/\{\{\/if\}\}\s*\{\{> systems\/eclipsephase\/templates\/actor\/partials\/currentStatus\/consumableSummary\.html \}\}/);
   });
 
   test("the NPC gear tab lists consumables with their form", async () => {

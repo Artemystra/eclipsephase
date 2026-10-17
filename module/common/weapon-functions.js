@@ -424,7 +424,7 @@ export async function reloadWeapon(html, actor) {
 
         //Grenades only mode (deduction/deletion)
         if (ammoRules === "grenadesOnly" && actor.type === "character") {
-          if (ammoSelected.system.type === "seeker" || ammoSelected.type === "chemical") {
+          if (ammoSelected.system.type === "seeker" || ammoType === "chemical") {
             if (difference > 0 || ammoPresent != ammoSelected.id) {
               await itemReduction(actor, ammoSelected.id, ammoSelected.system.quantity);
             }

@@ -1,4 +1,4 @@
-import { makeActor } from "../setup/factories.js";
+import { makeActor, makeActorFromFixture, fixtureNames, registerSystemPacks } from "../setup/factories.js";
 
 
 // module/eclipsephase.js pulls in the canvas/token classes at import time, which need a little more
@@ -23,9 +23,10 @@ function findMigrationReadyHook() {
  * Runs the migration ladder against a world last migrated at the given version, recording which
  * migration dialogs it renders and what copy each was given.
  * @param {String} from - The world's stored migrationVersion
+ * @param {Object} [answer] - What every dialog answers; by default the offer to migrate is accepted
  * @returns {Promise<Object[]>} One entry per dialog, with its copy key and any extra block
  */
-async function runLadderFrom(from) {
+async function runLadderFrom(from, answer = { start: true }) {
   global.__ep.setSetting("eclipsephase", "migrationVersion", from);
 
   const rendered = [];
@@ -36,7 +37,7 @@ async function runLadderFrom(from) {
   };
 
   const realWait = foundry.applications.api.DialogV2.wait;
-  foundry.applications.api.DialogV2.wait = async () => ({ start: true });
+  foundry.applications.api.DialogV2.wait = async () => ({ ...answer });
   try {
     await findMigrationReadyHook()();
   } finally {
@@ -278,5 +279,24 @@ describe("the 2.7 blueprint backfill", () => {
 
     expect(drug.system.duration).toEqual({ value: 3, units: "hours" });
     expect(Array.from(drug.effects)).toEqual([]);
+  });
+});
+
+describe("the whole ladder on an old world", () => {
+  afterEach(() => {
+    game.actors.clear();
+    game.packs.clear();
+    jest.restoreAllMocks();
+  });
+
+  test.each(["1.5", "2.0"])("a world last migrated at %s with every sample actor climbs to the current version without an error", async from => {
+    registerSystemPacks();
+    for (const name of fixtureNames()) makeActorFromFixture(name);
+    const errors = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    await runLadderFrom(from, { start: true, weaponUpdateList: [] });
+
+    expect(errors.mock.calls).toEqual([]);
+    expect(game.settings.get("eclipsephase", "migrationVersion")).toEqual(game.system.version);
   });
 });

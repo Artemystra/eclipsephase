@@ -535,7 +535,7 @@ export class TaskRollModifier {
 
 // Reads the same base skill/aptitude value the sheet would set as data-rollvalue, but off an
 // arbitrary actorSystem/items pair - lets getOwnBodyEffectDelta diff the real actor vs. a clone.
-function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
+export function resolveSkillRollValue(actorSystem, items, dataset, rolledFrom) {
     const registered = getRollSource(rolledFrom)?.skillRoll?.(actorSystem, items, dataset);
     if (registered?.rollvalue !== undefined && registered?.rollvalue !== null) return registered.rollvalue;
 

@@ -692,6 +692,10 @@ class MockRoll {
   async render() {
     return "";
   }
+  // Foundry keeps the evaluated total in _total behind the total getter; some system code reads it.
+  get _total() {
+    return this.total;
+  }
   toJSON() {
     return { formula: this.formula, total: this.total };
   }
@@ -711,6 +715,9 @@ class MockChatMessage {
   }
   static getSpeaker({ actor } = {}) {
     return { actor: actor?.id ?? null, alias: actor?.name ?? "" };
+  }
+  static getWhisperRecipients(name) {
+    return name === "GM" ? [{ id: "gm-user", isGM: true }] : [];
   }
 }
 

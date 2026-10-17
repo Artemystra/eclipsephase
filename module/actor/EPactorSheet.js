@@ -33,7 +33,7 @@ function hasAnyMovement(bodyItem) {
  * @param {Object} strainFamily - The registry entry, registered or missing
  * @returns {String} A localisation key, or the family id when there is none
  */
-function strainTabLabel(strainFamily) {
+export function strainTabLabel(strainFamily) {
   if (strainFamily.tabLabel) return strainFamily.tabLabel;
   if (!strainFamily.missing || !strainFamily.id) return "ep2e.actorSheet.rightTabs.psiTab";
   return strainFamily.id.charAt(0).toUpperCase() + strainFamily.id.slice(1);

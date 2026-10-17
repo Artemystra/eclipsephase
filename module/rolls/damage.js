@@ -565,7 +565,7 @@ async function healDamage(currentDamage, bar, overBar, currentModifier, threshol
     let html = await foundry.applications.handlebars.renderTemplate(DAMAGE_STATUS_OUTPUT, message);
 
     ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      speaker: ChatMessage.getSpeaker({ actor }),
       flavor: html
     });
   }
@@ -573,7 +573,7 @@ async function healDamage(currentDamage, bar, overBar, currentModifier, threshol
     let html = await foundry.applications.handlebars.renderTemplate(DAMAGE_STATUS_OUTPUT, message);
 
     ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      speaker: ChatMessage.getSpeaker({ actor }),
       flavor: html,
       whisper: ChatMessage.getWhisperRecipients("GM")
     });

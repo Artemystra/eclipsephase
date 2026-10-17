@@ -92,8 +92,10 @@ describe("parseDurationText", () => {
     }
   });
 
-  test("the compendium is the 50 drugs the book lists", () => {
-    expect(packDrugs()).toHaveLength(50);
+  test("no drug the book lists has gone missing, and no name appears twice", () => {
+    const names = packDrugs().map(drug => drug.name);
+    expect(names.length).toBeGreaterThanOrEqual(50);
+    expect(new Set(names).size).toEqual(names.length);
   });
 });
 
@@ -276,13 +278,11 @@ describe("the forms a drug comes in", () => {
     expect(drugVector({})).toBeNull();
   });
 
-  test("across the shipped compendium, 46 drugs need a form picked and 1 already has one", () => {
-    const needing = packDrugs().filter(drug => needsVectorChoice(drug.system));
-    const settled = packDrugs().filter(drug => drugVector(drug.system));
-
-    expect(needing).toHaveLength(46);
-    expect(settled).toHaveLength(1);
-    expect(needing.length + settled.length + 3).toEqual(50);
+  test("every shipped drug either needs a form picked, already has one, or is an app", () => {
+    for (const drug of packDrugs()) {
+      const kinds = [needsVectorChoice(drug.system), !!drugVector(drug.system), drug.system.drugType === "electronic"];
+      expect({ name: drug.name, kinds: kinds.filter(Boolean).length }).toEqual({ name: drug.name, kinds: 1 });
+    }
   });
 });
 

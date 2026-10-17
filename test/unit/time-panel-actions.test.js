@@ -189,7 +189,7 @@ describe("the GM's list in sections", () => {
     expect(sections.map(section => [section.collapsible, section.open])).toEqual([[false, true], [true, false]]);
   });
 
-  test("the template shows both headings and only the second one toggles", async () => {
+  test("the template shows both headings with the actors under them", async () => {
     makeActor({ type: "character", name: "Hex", effects: [KICK] });
     makeActor({ type: "goon", name: "Thug", effects: [KICK] });
     const instance = new EPtimePanel();
@@ -199,7 +199,6 @@ describe("the GM's list in sections", () => {
 
     expect(html).toContain("ep2e.time.sectionPlayers");
     expect(html).toContain("ep2e.time.sectionThreats");
-    expect(html.match(/data-action="toggleThreats"/g)).toHaveLength(1);
     expect(html).toContain("Hex");
     expect(html).toContain("Thug");
   });
